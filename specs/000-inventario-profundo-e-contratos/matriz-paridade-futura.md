@@ -1,6 +1,6 @@
 # Matriz de Paridade Futura — SPEC-000
 
-> Matriz incremental após inventário das três referências e T052/T053. Define comportamentos que devem sobreviver e owners funcionais já resolvidos. **Não define schema final nem encerra T059.** T050/T051/T054/T056/T057/T055/T058 ainda precisam ser concluídas.
+> Matriz incremental após inventário das três referências e conclusão de T050–T053. Define comportamentos que devem sobreviver, owners funcionais e contratos de persistência/integração já consolidados. **Não define schema final nem encerra T059.** T054/T056/T057/T055/T058 ainda precisam ser concluídas.
 
 ## Legenda
 
@@ -157,7 +157,18 @@ Responsabilidades mantidas separadas:
 - qualidade de conteúdo != qualidade de Search;
 - classificação editorial existente != futura classificação sistêmica sem migração explícita.
 
-## 6. Matriz WordPress-first preliminar
+## 6. Persistência e integração — T050/T051
+
+- dados são classificados como canônicos, projections, observacionais, operacionais, configuração ou compatibilidade;
+- chaves/stores legados não definem owner futuro;
+- dual-write permanente é proibido;
+- adapter/dual-read é temporário e exige gate de remoção;
+- evento de domínio ocorre somente após persistência confirmada;
+- consumers de projection são idempotentes e falham sem corromper fonte canônica;
+- server-rendered/admin-post é baseline; AJAX é enhancement de live UX; REST exige consumidor real;
+- shortcodes/hooks históricos são compatibilidade a provar por preflight.
+
+## 7. Matriz WordPress-first preliminar
 
 | Necessidade | Primitive a testar primeiro | Infra própria só se... |
 |---|---|---|
@@ -181,7 +192,7 @@ Responsabilidades mantidas separadas:
 | analytics | facts mínimos | volume/journey/outcome exigirem relational store |
 | coverage/reports | queries/cache bounded | materialização só após benchmark |
 
-## 7. Contratos cross-module obrigatórios
+## 8. Contratos cross-module obrigatórios
 
 ### Content pipeline
 
@@ -222,7 +233,7 @@ Baseline histórica: publish + approved + Summary 8/8 + include_ai. Evolução s
 - IA é melhoria opcional;
 - JS é progressive enhancement.
 
-## 8. Candidatos a IA/vetor — ainda opcionais
+## 9. Candidatos a IA/vetor — ainda opcionais
 
 1. expansão semântica após normalização lexical;
 2. hybrid lexical+vector candidate retrieval;
@@ -235,7 +246,7 @@ Baseline histórica: publish + approved + Summary 8/8 + include_ai. Evolução s
 
 Nenhum entra antes de baseline lexical/metadata/extractor/Golden estar estável.
 
-## 9. Itens ainda AINDA NÃO SABEMOS antes do fechamento T059
+## 10. Itens ainda AINDA NÃO SABEMOS antes do fechamento T059
 
 - taxonomy versus postmeta campo a campo;
 - nomes/chaves/cardinalidade finais de classificação;
@@ -250,6 +261,4 @@ Nenhum entra antes de baseline lexical/metadata/extractor/Golden estar estável.
 - MariaDB Vector/chunks/embeddings;
 - provider Foundry/IA.
 
-**Não está mais em aberto:** owner lógico de audiência/serviço/tecnologia/classificação e owner visual do Design System. Esses pontos foram resolvidos em T052/T053; apenas a forma física/runtime continua pendente.
-
-O próximo refinamento desta matriz virá depois de T050/T051/T054/T056/T057/T055/T058; somente então T059 poderá ser marcada concluída.
+**Não está mais em aberto:** ownership lógico, sobreposição funcional e regras gerais de persistência/integração. T054 agora fecha drifts/compatibilidade; depois T056/T057/T055/T058 alimentam o fechamento T059.

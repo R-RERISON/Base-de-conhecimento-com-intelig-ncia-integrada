@@ -8,245 +8,244 @@ Você é o Orquestrador Principal do projeto "Base de Conhecimento com Inteligê
 Idioma obrigatório: português do Brasil.
 Mantra: "Quem não sabe onde está, não sabe para onde quer ir".
 
-Antes de qualquer alteração:
+ANTES DE QUALQUER ALTERAÇÃO
 1. Leia AGENTS.md.
 2. Leia .specify/PROJECT_MANIFEST.md.
 3. Leia .specify/memory/constitution.md.
 4. Leia todos os artefatos de specs/000-inventario-profundo-e-contratos/.
 5. Leia docs/DEFINITION-OF-DONE.md.
 6. Leia este CONTINUIDADE.md inteiro.
-7. Confirme o HEAD atual no GitHub.
-8. Se qualquer baseline ou estado divergir, investigue antes de modificar documentos ou runtime.
+7. Confirme HEAD/branch no GitHub.
+8. Se baseline/estado divergir, investigue antes de escrever.
 
 PROJETO
 - Repositório: R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
 - Branch: main
-- HEAD confirmado na entrada do bloco T052/T053: d03ecce4d3618ea0eddbf23d03f7fe65a8901dec
-- O commit que contém esta versão de CONTINUIDADE.md representa o fechamento documental de T052/T053; confirme seu SHA atual no GitHub antes da próxima escrita.
+- HEAD confirmado antes do bloco T050/T051: b42cffc6090f4c66857113738e1838c93f0e3c48
+- O commit que contém esta versão de CONTINUIDADE.md representa o fechamento documental T050/T051; confirme seu SHA atual antes da próxima escrita.
 - SPEC ativa: SPEC-000 — Inventário Profundo e Contratos dos Projetos de Referência
-- Estado: inventários individuais + ownership T052 + sobreposição T053 concluídos documentalmente; runtime novo continua bloqueado.
+- Estado: inventários individuais + T050/T051/T052/T053 concluídos documentalmente; runtime novo bloqueado.
 
-BASELINES CONFIRMADAS
-- ASI: R-RERISON/Advanced-search-Intelligence 4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1
-- GRE: R-RERISON/Gerenciador-de-Resumo-Executivo-da-Base-de-Conhecimento 0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365
-- KB2Ops: R-RERISON/KB2Ops-Operational-Knowledge-Engine 0.2.1 hardened @ f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94
+BASELINES FIXADAS
+- ASI 4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1
+- GRE 0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365
+- KB2Ops 0.2.1 hardened @ f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94
 
 TAREFAS CONCLUÍDAS
-- T000–T002: preparação/governança.
-- T010–T019: KB2Ops.
-- T020–T034: Advanced Search Intelligence.
-- T040–T047: Gerenciador de Resumo Executivo.
-- T052: mapa de ownership de dados.
-- T053: matriz de sobreposição funcional.
+- T000–T002 preparação/governança.
+- T010–T019 KB2Ops.
+- T020–T034 ASI.
+- T040–T047 GRE.
+- T050 catálogo unificado de persistência.
+- T051 catálogo unificado de integrações/hooks/superfícies.
+- T052 ownership de dados.
+- T053 sobreposição funcional.
 
-ARTEFATOS NOVOS DO CRUZAMENTO
-- specs/000-inventario-profundo-e-contratos/mapa-ownership-dados.md
-- specs/000-inventario-profundo-e-contratos/matriz-sobreposicoes.md
+ARTEFATOS CENTRAIS DO CRUZAMENTO
+- mapa-ownership-dados.md
+- matriz-sobreposicoes.md
+- catalogo-persistencia.md
+- catalogo-integracoes.md
+- riscos-e-drifts.md
+- research.md
 
-PRÓXIMO BLOCO EXATO
-T050 + T051 — consolidar catálogo de persistência e catálogo de integrações usando ownership e sobreposição já resolvidos.
-
-ORDEM RESTANTE OBRIGATÓRIA
-1. T050 + T051 — persistência/hooks/rotas/integrações consolidados.
-2. T054 — consolidar contratos quebrados/drifts e sua política de compatibilidade.
-3. T056 — matriz WordPress-first: escolher primitive nativa campo/capacidade por campo/capacidade.
-4. T057 — justificar somente a infraestrutura própria que realmente sobrar.
-5. T055 — consolidar regressão/Golden/gates já alinhados às decisões de arquitetura.
-6. T058 — priorizar IA/vetor como extensão opcional, com dependências/custo/risco.
-7. T059 — matriz de paridade futura final.
-8. T090–T097 — revisões/gate final e autorização ou bloqueio da SPEC-001.
-
-Não inverter essa ordem para começar por tabela, taxonomia, vetor, Foundry ou runtime.
-
-INVARIANTES VIGENTES
+INVARIANTES
 - WordPress-first.
-- Princípio de negação antes de complexidade.
+- Princípio de negação.
 - WordPress/Elementor são fonte editorial absoluta.
-- O plugin não faz manutenção editorial dos posts.
 - Nunca escrever _elementor_data por pipeline derivado.
 - Nunca reescrever post_content silenciosamente.
-- Um conceito canônico possui um único owner lógico.
-- Um Content Extractor canônico alimenta todos os consumidores derivados.
-- Qualidade da extração precede qualidade de Search/RAG.
-- Persistência confirmada precede qualquer evento de domínio.
-- Projection/cache/index/vector nunca substitui fonte canônica.
-- IA sugere; humano decide; owner do domínio persiste.
+- Um conceito canônico = um owner lógico.
+- Projection/index/cache/vector nunca é fonte da verdade.
+- Um Content Extractor canônico alimenta downstream.
+- Qualidade da extração precede Search/RAG.
+- Persistência confirmada precede evento de domínio.
+- Consumers de eventos devem ser idempotentes.
+- Dual-write permanente é proibido.
+- Adapter/dual-read só pode ser temporário e ter gate de remoção.
+- IA sugere; humano decide; owner persiste.
 - Retrieval precede síntese.
-- IA/vetor são opcionais/degradáveis.
+- IA/vetor opcionais/degradáveis.
 - Lexical continua funcional sem IA.
-- Golden blockers são obrigatórios quando Search muda.
-- Compatibilidade/migração não pode virar ownership permanente.
 - Nenhum runtime antes de T097 autorizar SPEC-001.
 
-CONCLUSÕES ASI QUE NÃO DEVEM SER PERDIDAS
-1. Não copiar as 12 tabelas como arquitetura futura.
-2. Preservar lexical degradável, QueryContext limitado, explicabilidade e Golden Queries.
-3. Preservar Item Knowledge/identity/deep-link, reconstruindo sobre extractor único.
-4. PostIndex, Item Knowledge, Structural Audit e Word Cloud não podem ter parsers independentes.
-5. Vocabulary/bindings/rules têm valor e pertencem a Search Knowledge; storage final continua aberto.
-6. Queue só nasce se durabilidade/workload justificarem.
-7. Migrations/Reconciler/Orchestrator ASI carregam história e não pertencem automaticamente ao greenfield.
-8. Events/Interactions/Outcomes têm valor, mas privacy/query retention precisam ser redesenhadas.
-9. Tracking público: nonce + rate limit + HMAC + server authority + idempotência.
-10. Golden suite vazia não é PASS.
-11. Site Health é primitive preferida para diagnostics.
-12. GAC fica fora do core.
+OWNERS LÓGICOS JÁ RESOLVIDOS — T052
+- Editorial WP/Elementor: post_title, post_content, _elementor_data, publicação.
+- Resumo Executivo: objective, escalation, important.
+- Classificação: responsible_team, catalog_item, audience, service, affected_service, technologies, systems_involved, knowledge_type, keywords, versions.
+- Revisão/Governança: review state, notes, reviewer/time, include_ai, history.
+- Content Extraction: texto/estrutura/hash derivados.
+- Search Knowledge: vocabulary/bindings/relevance rules.
+- Search Indexing: post/item/deep-link/vector projections.
+- Search Quality: Golden Queries/evidências.
+- Analytics: search events/interactions/outcomes.
+- Core Configuration: settings/runtime version.
+- Operations: queue/migration/rebuild/purge state.
+- AI Assist: sugestões não canônicas.
 
-CONCLUSÕES GRE
-1. Oito _bdc_es_* são contrato de compatibilidade conhecido.
-2. post_title é título canônico; _bdc_es_title proibida.
-3. Metadata API + edit_post + nonce + allowlist + sanitização são baseline.
-4. Reads são side-effect free; vazio remove meta.
-5. Multi-campo não tem atomicidade compensatória comprovada.
-6. Coverage Dashboard atual é read-only mas sem workload bound.
-7. Não há evidência para tabela/REST/AJAX/cron próprios de Resumo.
-8. Objective_Provider e bdc_es_objective_updated esperados pelo ASI não existem.
-9. Futuro: Summary Store interno único + evento após write confirmado.
+DECISÕES T053 — SOBREPOSIÇÃO
+- um Summary Store/Resumo;
+- uma Search;
+- um domínio de Classificação;
+- um Analytics/Search Intelligence;
+- um Design System/shell;
+- uma navegação de Insights/Settings/Operations.
 
-CONCLUSÕES KB2OPS
-1. Content Extractor é principal contrato técnico: _elementor_data read-only -> parser determinístico -> render fallback -> post_content fallback.
-2. Gap crítico: extração parcialmente não vazia pode omitir custom widget sem acionar render fallback.
-3. Knowledge Studio/review states/checklist/suggestions são fortes contratos de produto.
-4. AI READY runtime = publish + approved + Resumo 8/8 + include_ai.
-5. save_review() emite approval sem comprovar todos os writes; não portar esse comportamento.
-6. Summary_Bridge é read-only/duplicado e deve desaparecer no bounded context unificado.
-7. Search atual é provisória e não deve ser motor futuro.
-8. Analytics option/view count são leves mas insuficientes para privacy/concurrency/outcomes.
-9. Design System KB2Ops é principal referência visual.
-10. Activation/migration/uninstall são reversíveis/não destrutivos por default; preservar princípio, não hardcodes.
-11. Build determinístico é valioso; contratos documentados apenas no audit precisam virar testes executáveis.
-
-T052 — OWNERSHIP RESOLVIDO
-Arquivo canônico: mapa-ownership-dados.md.
-
-Owners lógicos futuros:
-- WP_Post/Elementor -> Editorial WordPress/Elementor.
-- objective/escalation/important -> Resumo Executivo.
-- responsible_team/catalog_item/audience/services/systems/technologies/knowledge_type/keywords/versions -> Classificação de Conhecimento.
-- review_state/notes/reviewer/time/include_ai/history -> Revisão e Governança.
-- texto/estrutura derivados -> Content Extraction (projection).
-- vocabulary/bindings/rules -> Search Knowledge.
-- post/item/vector indexes -> Search Indexing (projections).
-- Golden Queries -> Search Quality.
-- events/interactions/outcomes -> Analytics/Search Intelligence.
-- settings -> Core Configuration.
-- queue/migration -> Operations, estado operacional/transitório.
-- sugestões de IA -> AI Assist, nunca canônicas sem aprovação humana.
-
-Decisões críticas T052:
-- audiência GRE/KB2Ops é um único conceito canônico.
-- service e affected_service ficam no mesmo domínio, mas NÃO foram declarados equivalentes.
-- technologies e systems_involved ficam no mesmo domínio, mas NÃO foram declarados equivalentes.
-- Search não é owner de classificação.
-- Summary UI pode compor classificações sem possuir semanticamente esses dados.
-- GAC é owner externo; adapter opcional somente se requisito real.
-- storage físico permanece aberto.
-
-T053 — SOBREPOSIÇÃO RESOLVIDA
-Arquivo canônico: matriz-sobreposicoes.md.
-
-Convergências funcionais:
-1. um único Summary Store/Resumo Executivo;
-2. uma única experiência de Search;
-3. um único domínio de Classificação;
-4. um único Analytics/Search Intelligence;
-5. um único Design System/shell;
-6. uma única navegação de Insights/Reports/Settings.
-
-Combinação de referências:
-- motor/qualidade de Search: contratos ASI;
-- Content Extraction/UX/Design System: contratos KB2Ops;
-- Summary Store/WordPress-first: contratos GRE;
-- release futuro: integração WordPress real GRE + regressão/Golden ASI + package determinístico KB2Ops/GRE.
-
-RESPONSABILIDADES QUE NÃO DEVEM SER FUNDIDAS
-- review approval != Apply de Search Knowledge;
+NÃO FUNDIR
+- aprovação do artigo != Apply de Search Knowledge;
 - qualidade de conteúdo != Search Quality;
 - service != affected_service sem profiling;
 - technologies != systems_involved sem profiling;
-- categorias/tags editoriais != eventual taxonomia sistêmica.
+- categorias/tags editoriais != eventual classificação sistêmica.
 
-DRIFTS ESTADO ATUAL
-- D-001 ASI -> Objective_Provider: QUEBRADO CONFIRMADO.
-- D-002 ASI -> bdc_es_objective_updated: QUEBRADO CONFIRMADO.
-- D-003 ASI post_content vs Elementor: direção funcional resolvida por extractor único.
-- D-004 múltiplos extractors: direção funcional resolvida; downstream não reparseia fonte.
-- D-005 GAC: dependência ambiental, fora do core.
-- D-006 classificação GRE/KB2Ops: ownership resolvido; storage/migração abertos.
-- D-007 UI fragmentada: owner visual resolvido em DS único; runtime ainda não existe.
-- D-008 AI READY docs/runtime: drift interno confirmado; runtime baseline é referência histórica.
+T050 — PERSISTÊNCIA CONSOLIDADA
+Arquivo canônico: catalogo-persistencia.md.
 
-RISCOS CROSS-MODULE IMPORTANTES
+Decisões:
+1. persistência está organizada por owner/conceito, não por plugin antigo;
+2. chaves _bdc_es_*, _kb2ops_* e stores asi_* são rastreabilidade histórica/compatibilidade;
+3. canônico, derivado, observacional, operacional, configuração e compat são classes separadas;
+4. dual-write permanente proibido;
+5. dual-read/adapter temporário apenas com consumidor + gate de remoção;
+6. Resumo não justifica tabela própria;
+7. Search Index/Items são capacidades necessárias, mas schema/tabela dependem de T057;
+8. quality_daily/migrations históricas/tracking option-viewcount KB2Ops não nascem automaticamente;
+9. Search Knowledge/Golden storage segue T056/T057;
+10. query text/retention continua bloqueado até política explícita.
+
+Dados que não podem ser perdidos sem decisão:
+- WP_Post/Elementor/taxonomias editoriais;
+- oito valores GRE históricos;
+- review/include AI/notas/revisor/histórico válidos;
+- classificações KB2Ops efetivamente usadas;
+- vocabulary/bindings/rules/Golden manuais ASI quando houver dados reais;
+- telemetria somente quando política/requisito justificar retenção.
+
+T051 — INTEGRAÇÕES CONSOLIDADAS
+Arquivo canônico: catalogo-integracoes.md.
+
+Contratos documentais:
+- EVT-001 Summary/Classificação changed -> Indexing/cache invalidation.
+- EVT-002 Review State Confirmed -> scope/readiness/Insights/AI opcional.
+- EVT-003 Classification Changed -> Indexing/Insights/filtros.
+- EVT-004 Search Knowledge Applied -> Search/cache/Golden stale.
+- EVT-005 Content source changed/invalidation -> projections.
+- EVT-006 Search Fact -> Analytics non-fatal.
+
+Nomes EVT-* são IDs documentais, NÃO nomes finais de hooks WordPress.
+
+Regras:
+- evento somente após write confirmado;
+- failure de projection não desfaz dado canônico;
+- admin-post/server-rendered é baseline;
+- AJAX apenas se live Search/tracking exigir;
+- REST negado sem consumidor;
+- Search pública aplica scope antes de exposição e revalida detail;
+- tracking, se existir: nonce + rate-limit + HMAC + server authority + idempotência;
+- WP-Cron pode disparar trabalho, mas queue própria ainda não foi aprovada;
+- rebuild massivo nunca ocorre silenciosamente em activation/save.
+
+SHORTCODES/COMPATIBILIDADE
+- [asi_search_form] — compat a provar.
+- [bdc_word_cloud] — opcional/compat a provar.
+- [bdc_resumo_executivo] — compat a provar; current-post-only se alias existir.
+- [kb2ops_search] — compat a provar.
+- [kb2ops_portal] — compat a provar.
+- side panel GRE — não canônico.
+
+Nenhum alias deve ser portado sem preflight de uso real.
+
+DRIFTS D-001–D-008 — ESTADO ANTES DE T054
+- D-001 Objective_Provider: quebrado histórico; futuro Summary Store interno.
+- D-002 bdc_es_objective_updated: quebrado histórico; contrato pós-write futuro definido.
+- D-003 raw post_content vs Elementor: direção resolvida por extractor único.
+- D-004 múltiplos parsers: direção resolvida; downstream não reparseia.
+- D-005 GAC: fora do core; adapter opcional/preflight.
+- D-006 classificação GRE/KB2Ops: ownership resolvido; primitive/profiling/migration abertos.
+- D-007 UI fragmentada: DS único; runtime ainda inexistente.
+- D-008 AI READY docs/runtime: drift confirmado; baseline runtime = publish+approved+8/8+include_ai.
+
+RISCOS PRIORITÁRIOS
+- R-KB-001: extractor pode omitir custom widgets quando saída parcial não vazia; blocker técnico para Search/RAG final.
+- X-001: adapter/dual-read virar permanente.
 - X-002: evento antes de consistência.
-- X-003: índice correto construído sobre extração incompleta.
-- X-004: Analytics super ou subdimensionado.
-- X-005: migração virar arquitetura permanente.
-- X-007: confundir aprovação de artigo com curadoria de Search.
-- X-008: dashboard único virar scan/mega agregador caro.
-- X-009: DS compartilhado gerar acoplamento lateral de domínio.
-- X-010: compatibility adapters virarem duplicação permanente.
+- X-003: índice correto sobre extração incompleta.
+- X-004: Analytics super/subdimensionado.
+- X-005: migration virar arquitetura permanente.
+- X-007: aprovação de artigo confundida com Search Apply.
+- X-008: dashboard único virar scans ilimitados.
+- X-010: shortcodes/aliases portados sem consumidor.
+- X-011: tempestade de invalidações/eventos; consumers precisam ser idempotentes/coalescíveis.
+- X-012: hook interno virar API pública acidental.
+- X-013: projection stale sem observabilidade.
 
-O QUE NÃO FOI DECIDIDO
-- taxonomy versus postmeta por classificação;
-- nomes/chaves finais;
-- cardinalidade mono/multivalor;
-- profiling de valores atuais;
-- schema de search_index/search_items;
-- storage de vocabulary/bindings/rules/Golden;
-- necessidade concreta de queue;
-- analytics facts/schema/retention;
-- revisions/histórico;
-- shortcodes/aliases de compatibilidade;
-- deep-link/anchors finais;
-- coexistência/migração detalhada;
-- chunks/MariaDB Vector/embeddings;
-- Foundry/provider contract;
-- layout final de runtime.
+O QUE AINDA NÃO FOI DECIDIDO
+- taxonomy versus postmeta final;
+- nomes/chaves finais e cardinalidade;
+- profiling/migração de classificações;
+- schema Search Index/Items;
+- storage Search Knowledge/Golden;
+- queue durável no primeiro slice;
+- Analytics facts/schema/query retention;
+- revisions/history;
+- preflight de shortcodes/consumidores;
+- anchors/deep links finais;
+- chunks/vector/embeddings;
+- Foundry/provider;
+- layout/runtime final.
 
 O QUE NÃO DEVE SER FEITO AGORA
-- Não criar bootstrap/runtime.
-- Não registrar taxonomy.
-- Não criar tabela.
-- Não implementar migration.
-- Não integrar Foundry.
-- Não criar chunks/vectors/embeddings.
-- Não copiar classes dos plugins de referência.
-- Não alterar ASI/GRE/KB2Ops.
-- Não iniciar SPEC-001.
+- não criar bootstrap/runtime;
+- não registrar taxonomy;
+- não criar tabela/schema;
+- não implementar migration;
+- não integrar Foundry;
+- não criar chunks/vectors/embeddings;
+- não copiar classes legadas;
+- não alterar ASI/GRE/KB2Ops;
+- não iniciar SPEC-001.
 
-PRÓXIMO PASSO EXATO — T050/T051
-1. Abrir catalogo-persistencia.md e substituir o formato “por plugin” por uma visão consolidada por conceito/owner, preservando rastreabilidade de origem.
-2. Para cada dado, registrar: owner lógico, fonte histórica, canônico/derivado/observacional/operacional, leitores, escritores, reconstruibilidade, compatibilidade e decisão preliminar de primitive sem ainda fechar T056 onde faltar evidência.
-3. Abrir catalogo-integracoes.md e consolidar hooks/rotas/superfícies por responsabilidade futura, não por plugin histórico.
-4. Marcar bridges/actions/shortcodes como canonical, compat temporário, descartado ou ainda dependente de preflight.
-5. Formalizar contratos cross-module mínimos: Summary changed -> invalidation; Review approved -> readiness/downstream; Content Extractor -> Search; Search facts -> Analytics; Search Knowledge Apply separado de Review.
-6. Não escolher infraestrutura própria antes de terminar T056/T057.
-7. Atualizar research/tasks/checklist/CONTINUIDADE ao concluir o bloco.
+PRÓXIMO PASSO EXATO — T054
+Criar o mapa final de contratos quebrados/drifts/compatibilidade.
 
-CRITÉRIO PARA FECHAR T050/T051
-- catálogos deixam de ser apenas inventário por plugin e passam a representar o produto unificado;
-- toda persistência tem owner lógico definido ou unknown explicitamente justificado;
-- nenhuma projection é tratada como dado canônico;
-- toda integração cross-module tem produtor/consumidor/falha/idempotência preliminar;
-- bridges/aliases têm status de compatibilidade explícito;
-- nenhum schema/taxonomy/runtime é criado por antecipação;
-- próximos passos T054/T056 ficam pequenos, verificáveis e sem adivinhação estrutural.
+Para cada D-001–D-008 e cada compatibilidade relevante:
+1. descrever contrato histórico e evidência;
+2. indicar produtor/consumidor atual;
+3. classificar como: CORRIGIDO PELA ARQUITETURA FUTURA | COMPAT TEMPORÁRIO | DESCARTADO | DEPENDE DE PREFLIGHT/PROFILING | BLOCKER;
+4. definir risco se ignorado;
+5. definir mecanismo de coexistência, quando necessário, sem escolher schema prematuramente;
+6. definir gate de remoção do adapter/alias;
+7. identificar regressão futura necessária;
+8. listar blockers que precisam estar fechados até T095.
+
+T054 não cria migration/runtime. Ela transforma drift em decisão de compatibilidade e gate.
+
+CRITÉRIO PARA FECHAR T054
+- D-001–D-008 têm classificação final clara;
+- shortcodes/hooks/bridges/adapters históricos têm status explícito;
+- todo compat temporário possui consumidor/preflight e gate de remoção;
+- blockers reais para SPEC-001 estão separados de dívidas postergáveis;
+- nenhuma divergência é escondida como “resolvida” apenas porque o design futuro é melhor;
+- T056 pode começar sem dúvida sobre o que precisa coexistir.
+
+ORDEM RESTANTE
+T054 -> T056 -> T057 -> T055 -> T058 -> T059 -> T090–T097.
 
 REGRA DE CONTINUIDADE
-Repositório, Constituição, Manifesto e SPEC prevalecem sobre memória de chat. Se houver divergência, pare a decisão correspondente e investigue. Não transformar intenção em estado concluído sem evidência versionada.
+Repositório/Constituição/Manifesto/SPEC prevalecem sobre memória de chat. Não transformar intenção em conclusão sem evidência versionada.
 ```
 
 ## 2. Estado resumido para humanos
 
-- **SPEC:** SPEC-000 — Inventário Profundo e Contratos.
-- **HEAD confirmado antes de T052/T053:** `d03ecce4d3618ea0eddbf23d03f7fe65a8901dec`.
-- **Inventários individuais:** concluídos.
-- **T052:** concluída — mapa de ownership criado.
-- **T053:** concluída — matriz de sobreposição criada.
-- **Próximo bloco:** T050/T051.
-- **SPEC-001:** bloqueada.
-- **Runtime novo:** inexistente por decisão arquitetural.
+- **SPEC:** SPEC-000.
+- **HEAD antes do bloco T050/T051:** `b42cffc6090f4c66857113738e1838c93f0e3c48`.
+- **T050:** concluída documentalmente.
+- **T051:** concluída documentalmente.
+- **T052/T053:** já concluídas.
+- **Próximo:** T054.
+- **Runtime novo:** inexistente.
+- **SPEC-001:** bloqueada até T097.
 
 ## 3. Regra de atualização
 
-Atualizar este arquivo ao concluir T050/T051. Substituir estado obsoleto; não acumular versões contraditórias no mesmo handoff.
+Atualizar este arquivo ao concluir T054. Substituir estado obsoleto; não acumular handoffs contraditórios.

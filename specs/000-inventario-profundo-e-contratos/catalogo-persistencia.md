@@ -1,185 +1,283 @@
-# Catálogo de Persistência — SPEC-000
+# Catálogo Unificado de Persistência — SPEC-000 — T050
 
-> Documento incremental. Os três blocos de referência estão inventariados. **T052 definiu ownership lógico**, registrado em `mapa-ownership-dados.md`. Este catálogo ainda **não** fecha schema/taxonomias nem está consolidado por conceito; essa consolidação é T050.
+> Estado: **T050 concluída documentalmente**.  
+> Baselines cruzadas: ASI `4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1`, GRE `0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365`, KB2Ops `0.2.1 @ f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94`.
+>
+> Este documento consolida persistência por **conceito/owner do produto futuro**, preservando rastreabilidade histórica. Ele **não** autoriza schema, taxonomias, tabelas, migração ou runtime. A escolha física final pertence a T056/T057.
 
-## 1. Advanced Search Intelligence 4.6.8
+## 1. Regras de persistência do produto futuro
 
-Baseline: `R-RERISON/Advanced-search-Intelligence@c0ddff89caad529ce1bcdc645eb795e4a9b187a1`.
+1. **Um conceito canônico possui um único owner lógico.**
+2. Chaves históricas (`_bdc_es_*`, `_kb2ops_*`, `asi_*`) são evidência/origem de compatibilidade, não arquitetura futura por si só.
+3. Projections, índices, caches, chunks, embeddings e agregados nunca são fonte da verdade.
+4. Dados derivados devem ser reconstruíveis sempre que tecnicamente possível.
+5. Compatibilidade pode usar adapter/dual-read temporário, mas **dual-write permanente é proibido**.
+6. Todo adapter de cutover precisa de owner canônico, consumidor comprovado, condição de entrada e gate de remoção.
+7. Query text, identidade, IP/UA e demais telemetrias não ganham direito automático de retenção.
+8. Nenhuma tabela própria nasce antes de T057 justificar volume, consulta, durabilidade ou performance.
+9. Metadata/taxonomy/options permanecem primitives candidatas; a decisão campo a campo pertence a T056.
+10. Uninstall/purge é não destrutivo por default; remoção definitiva é deliberada e auditável.
 
-### Tabelas próprias
+## 2. Classes de dados
 
-| Chave lógica | Papel | Natureza | Owner futuro lógico após T052 | Futuro preliminar |
-|---|---|---|---|---|
-| `search_index` | documento lexical derivado por post | derivado/reconstruível | Search Indexing | MANTER comportamento; REDESENHAR |
-| `search_items` | projection de trechos | derivado/reconstruível | Search Indexing | MANTER comportamento; REDESENHAR |
-| `term_bindings` | curadoria termo→alvo | domínio/manual | Search Knowledge | MANTER; storage T056/T057 |
-| `vocabulary` | canonical/variants | domínio/manual | Search Knowledge | MANTER; storage T056/T057 |
-| `relevance_rules` | promote/demote | domínio/manual | Search Knowledge | MANTER; storage T056/T057 |
-| `index_queue` | jobs assíncronos duráveis | operacional | Search Operations | semântica só se workload justificar |
-| `audit_log` | trilha operacional/mutação | governança | Governança/Audit | MANTER mínimo; REDESENHAR |
-| `search_events` | execução de consultas | telemetria | Analytics / Search Intelligence | facts mínimos; privacy/retention |
-| `search_interactions` | clicks/ações correlacionadas | telemetria | Analytics / Search Intelligence | MANTER comportamento se necessário |
-| `golden_queries` | expectativas de ranking | QA/governança | Search Quality | MANTER; storage T056/T057 |
-| `quality_daily` | agregados diários | projection | Analytics projection | DESCARTAR inicialmente |
-| `migrations` | registry/checkpoints ASI | operacional/histórico | Operations/Migration | DESCARTAR histórico; mecanismo futuro mínimo |
-
-### Options/transients
-
-- `asi4_settings` e opções de activation/bootstrap/Golden/migrations/orchestration;
-- conjunto `asi4_word_cloud_*` para settings/snapshot/state/history/retention;
-- transients de busca, schema metadata, rate-limit, evidência temporária e módulos auxiliares.
-
-**Direção:** preservar semântica de settings/cache quando necessária, não a quantidade de stores. Estados operacionais grandes ou de alta mutação devem passar pelo princípio de negação.
-
-### Natureza dos dados
-
-- **canônicos/manual:** vocabulary, bindings, relevance rules, Golden expectations, settings/decisões humanas;
-- **derivados:** post/item index, caches, rollups;
-- **observacionais:** search events/interactions/audit;
-- **operacionais:** queue/migration/orchestration.
-
----
-
-## 2. Gerenciador de Resumo Executivo 0.6.0
-
-Baseline: `R-RERISON/Gerenciador-de-Resumo-Executivo-da-Base-de-Conhecimento@1120a534d8eb2288460c2c675730deef0d67c365`.
-
-### Oito metas históricas e ownership lógico após T052
-
-| Campo lógico | Meta key | Owner futuro lógico | Observação de storage |
+| Classe | Definição | Exemplos | Regra |
 |---|---|---|---|
-| `objective` | `_bdc_es_objective` | Resumo Executivo | postmeta é baseline forte; confirmar T056 |
-| `responsible_team` | `_bdc_es_responsible_team` | Classificação de Conhecimento | storage/cardinalidade T056 |
-| `catalog_item` | `_bdc_es_catalog_item` | Classificação de Conhecimento | storage/cardinalidade T056 |
-| `affected_service` | `_bdc_es_affected_service` | Classificação de Conhecimento | manter conceito distinto de `service` até profiling |
-| `systems_involved` | `_bdc_es_systems_involved` | Classificação de Conhecimento | manter distinto de `technologies` até profiling |
-| `target_audience` | `_bdc_es_target_audience` | Classificação de Conhecimento | mesmo conceito lógico de audiência KB2Ops |
-| `escalation` | `_bdc_es_escalation` | Resumo Executivo | postmeta é baseline forte; confirmar T056 |
-| `important` | `_bdc_es_important` | Resumo Executivo | postmeta é baseline forte; confirmar T056 |
+| **Canônico editorial** | conteúdo oficial do artigo | `post_title`, `post_content`, `_elementor_data`, status | WordPress/Elementor é owner absoluto |
+| **Canônico de domínio** | decisão humana/metadata do produto | resumo, classificação, review state, vocabulary | um owner; writer controlado |
+| **Projection derivada** | reconstruível a partir de canônicos | texto extraído, índice, item index, AI READY | pode ficar stale; nunca reescreve fonte |
+| **Observacional** | fato de uso/comportamento | search event, interaction, outcome | minimizar e reter por política |
+| **Operacional** | estado de execução/lifecycle | queue, migration checkpoint | não é dado de negócio |
+| **Configuração** | parâmetro do produto/runtime | settings, versão instalada | Options/Settings API primeiro |
+| **Compatibilidade** | representação antiga lida no cutover | metas/shortcodes/stores legados | temporária, com gate de remoção |
 
-As metas históricas são `string`, `single`, default vazio, `show_in_rest=false`, `revisions_enabled=false`, sanitizer central e `edit_post` por objeto.
+## 3. Editorial WordPress / Elementor
 
-`post_title` é título canônico; `_bdc_es_title` é proibida.
+| Conceito | Origem histórica | Owner | Writers futuros | Readers futuros | Natureza | Reconstruível? | Direção |
+|---|---|---|---|---|---|---:|---|
+| título | `post_title` | Editorial WP | autores/editores | Resumo, Search, UI, IA | canônico editorial | NÃO | MANTER nativo |
+| corpo WordPress | `post_content` | Editorial WP | autores/editores | Content Extraction fallback | canônico editorial | NÃO | MANTER nativo |
+| estrutura Elementor | `_elementor_data` | Elementor | Elementor | Content Extraction | canônico editorial | NÃO | read-only pelo plugin |
+| status/publicação | `WP_Post` | Editorial WP | fluxo WP | Review, Search scope, IA | canônico editorial | NÃO | MANTER nativo |
+| categorias/tags existentes | taxonomias WP | Editorial WP | fluxo editorial atual | Search/Classificação como sinal | canônico editorial | NÃO | consumir; não sequestrar ownership |
 
-### Infraestrutura ausente por design
+**Invariante:** nenhum downstream de Search, IA, Analytics ou Revisão escreve `_elementor_data` ou reescreve `post_content` silenciosamente.
 
-Não há tabela própria, options/transients de domínio, cron, REST, AJAX ou migration/schema próprio.
+## 4. Resumo Executivo
 
-Leitura é side-effect free; vazio sanitizado remove a meta. Cobertura (`empty/partial/complete`) é derivada sob demanda.
+### 4.1 Dados narrativos canônicos
 
-**Conclusão:** não existe justificativa observada para tabela de Resumo Executivo.
+| Conceito | Chave histórica | Owner | Writers | Readers | Natureza | Primitive preliminar |
+|---|---|---|---|---|---|---|
+| objetivo | `_bdc_es_objective` | Resumo Executivo | fluxo autenticado do owner | UI, Search, IA | canônico de domínio | postmeta é baseline forte; T056 confirma |
+| escalonamento | `_bdc_es_escalation` | Resumo Executivo | owner | UI, Search, IA | canônico de domínio | postmeta forte; T056 |
+| informação importante | `_bdc_es_important` | Resumo Executivo | owner | UI, Search, IA | canônico de domínio | postmeta forte; T056 |
 
----
+### 4.2 Campos históricos do GRE cujo owner futuro é Classificação
 
-## 3. KB2Ops 0.2.1
-
-Baseline: `R-RERISON/KB2Ops-Operational-Knowledge-Engine@f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94`.
-
-### 3.1 Post metadata de curadoria/uso
-
-| Meta key | Papel | Registro explícito? | Owner futuro lógico | Futuro preliminar |
-|---|---|---:|---|---|
-| `_kb2ops_review_state` | estado de revisão | SIM | Revisão e Governança | MANTER semântica |
-| `_kb2ops_knowledge_type` | tipo de conhecimento | SIM | Classificação de Conhecimento | primitive T056 |
-| `_kb2ops_technologies` | tecnologias/contexto | SIM | Classificação de Conhecimento | distinto de systems até profiling |
-| `_kb2ops_review_notes` | notas humanas | SIM | Revisão e Governança | Metadata API forte |
-| `_kb2ops_reviewed_at` | data da revisão | SIM | Revisão e Governança | MANTER semântica |
-| `_kb2ops_reviewed_by` | usuário revisor | SIM | Revisão e Governança | MANTER semântica |
-| `_kb2ops_target_audience` | audiência | SIM | Classificação de Conhecimento | mesmo conceito do GRE target audience |
-| `_kb2ops_service` | serviço | SIM | Classificação de Conhecimento | distinto de affected_service até profiling |
-| `_kb2ops_keywords` | keywords | SIM | Classificação de Conhecimento | storage T056 |
-| `_kb2ops_versions` | versões | SIM | Classificação de Conhecimento | storage T056 |
-| `_kb2ops_include_ai` | opt-in humano para base IA | SIM | Revisão e Governança | MANTER intenção |
-| `_kb2ops_review_history` | histórico bounded 50 | NÃO | Revisão e Governança | REDESENHAR/contrato explícito |
-| `_kb2ops_view_count` | contador aproximado de views | NÃO | Analytics / Search Intelligence | store atual não deve continuar como fonte principal |
-
-O Meta Contract KB2Ops é incompleto em relação ao runtime porque history/view count ficam fora do registro explícito.
-
-### 3.2 Resumo Executivo como dependência de dados
-
-`Summary_Bridge` lê diretamente as oito `_bdc_es_*` e não escreve. O KB2Ops replica o mapa de chaves/labels em seu próprio código.
-
-**Valor histórico:** compatibilidade read-only quando GRE não está ativo.
-
-**Decisão T053:** no produto unificado não existe bridge interna permanente; um Summary Store único e o domínio de Classificação fornecem os valores. Adapter só pode existir no cutover com consumidor/gate de remoção.
-
-### 3.3 Options ativas
-
-| Option | Papel | Owner futuro | Futuro preliminar |
+| Conceito | Chave histórica | Owner futuro | Compatibilidade |
 |---|---|---|---|
-| `kb2ops_options` | settings de Studio/Search | Core Configuration | Settings/Options API, reorganizar por domínio |
-| `kb2ops_search_analytics` | até 500 queries normalizadas/count/last | Analytics / Search Intelligence | não manter como store paralelo |
-| `kb2ops_runtime_version` | versão instalada | Core Lifecycle | manter se upgrade exigir |
-| `kb2ops_legacy_cleanup_v1` | relatório de retirada legado | Operations/Migration | DESCARTAR no greenfield |
-| `kb2ops_migration_verification` | último preflight manual | Operations/Migration | somente se coexistência exigir |
-| `kb2ops_legacy_file_cleanup_warning` | aviso de cópia antiga | Operations/Migration | DESCARTAR histórico |
-| `kb2ops_legacy_purge_report` | evidência de purge | Operations/Migration | princípio útil; mecanismo futuro próprio |
+| equipe responsável | `_bdc_es_responsible_team` | Classificação de Conhecimento | preservar leitura até cutover |
+| item de catálogo | `_bdc_es_catalog_item` | Classificação de Conhecimento | preservar leitura até cutover |
+| serviço afetado | `_bdc_es_affected_service` | Classificação de Conhecimento | conceito distinto de `service` até profiling |
+| sistemas envolvidos | `_bdc_es_systems_involved` | Classificação de Conhecimento | conceito distinto de `technologies` até profiling |
+| audiência | `_bdc_es_target_audience` | Classificação de Conhecimento | mesmo conceito lógico da audiência KB2Ops |
 
-Options antigas apenas preservadas para migração: `kb2ops_db_version`, `kb2ops_settings`, `kb2ops_secure_secrets`.
+**Decisão:** o workspace de Resumo pode exibir/editar classificações por conveniência de UX, mas os writes passam pelo owner Classificação. O Resumo não mantém cópia canônica paralela.
 
-### 3.4 Tabelas, cron e transients
+## 5. Classificação de Conhecimento
 
-O runtime novo não cria tabelas nem agenda cron. Installer/Migration apenas detectam/preservam/purgam explicitamente tabelas e hooks legados.
+| Conceito | Fontes históricas | Owner | Natureza | Leitores | Estado da primitive |
+|---|---|---|---|---|---|
+| audiência | `_bdc_es_target_audience`, `_kb2ops_target_audience` | Classificação | canônico | Resumo, Review, Search, Insights, IA | **um conceito**; taxonomy/meta T056 |
+| equipe responsável | `_bdc_es_responsible_team` | Classificação | canônico | UI, Search, Insights | T056 |
+| item de catálogo | `_bdc_es_catalog_item` | Classificação | canônico | UI, Search | T056 |
+| serviço | `_kb2ops_service` | Classificação | canônico | UI, Search, Insights | manter distinto de serviço afetado; T056 |
+| serviço afetado | `_bdc_es_affected_service` | Classificação | canônico | Resumo, Search, IA | profiling antes de qualquer merge; T056 |
+| tecnologias | `_kb2ops_technologies` | Classificação | canônico | Search, Review, Insights | manter distinto de sistemas; T056 |
+| sistemas envolvidos | `_bdc_es_systems_involved` | Classificação | canônico | Resumo, Search, IA | profiling; T056 |
+| tipo de conhecimento | `_kb2ops_knowledge_type` | Classificação | canônico | Review, Search, Insights | forte candidato a taxonomy; T056 decide |
+| keywords | `_kb2ops_keywords` | Classificação | canônico/manual | Search, Review | primitive/cardinalidade T056 |
+| versões | `_kb2ops_versions` | Classificação | canônico/manual | Search, Review | primitive/cardinalidade T056 |
 
-Nenhum transient ativo foi identificado. A ativação remove transients legados por prefixo.
+### Política de cutover classificatório
 
-**Direção:** não importar essas estruturas históricas. Activation/purge reversível é o comportamento a preservar.
+- nenhum campo é mesclado apenas por nome parecido;
+- audiência possui equivalência semântica suficiente para um owner único, mas migração física ainda exige profiling;
+- `service`/`affected_service` e `technologies`/`systems_involved` permanecem separados até análise dos valores/cardinalidade/uso;
+- categorias/tags editoriais existentes não são convertidas silenciosamente em classificações sistêmicas.
 
-### 3.5 Taxonomias nativas/custom
+## 6. Revisão e Governança
 
-- nenhuma taxonomia KB2Ops própria registrada;
-- categorias WordPress nativas entram no checklist;
-- filtros atuais usam string postmeta para tipo/tecnologia/serviço/audiência.
-
-**Após T052:** owner lógico desses conceitos é Classificação de Conhecimento. **Ainda não implica Taxonomy API.** T056 deve avaliar cardinalidade, reutilização, filtros, governança, migração e consultas antes de escolher primitive.
-
-### 3.6 Dados derivados versus canônicos
-
-**Canônicos editoriais:** `WP_Post` + Elementor.  
-**Canônicos de Resumo:** objective/escalation/important.  
-**Canônicos classificatórios:** team/catalog/audience/services/systems/technologies/type/keywords/versions, com forma física ainda aberta.  
-**Canônicos de revisão:** review state, include_ai, notes/reviewer/time e política de histórico.  
-**Derivados:** AI READY, scores, checklist, suggestions, facts/structure, excerpts, métricas de cobertura.  
-**Observacionais:** queries/views históricos; futuro owner Analytics.  
-**Históricos/transitórios:** review history e relatórios de migração/purge, cada um sujeito à política específica.
-
----
-
-## 4. Sobreposições de persistência — estado após T052
-
-| Conceito | GRE histórico | KB2Ops histórico | Owner lógico futuro | Estado |
+| Conceito | Chave histórica | Owner | Natureza | Direção |
 |---|---|---|---|---|
-| audiência | `_bdc_es_target_audience` | `_kb2ops_target_audience` | Classificação de Conhecimento | **um conceito; storage/migração T056** |
-| serviço | `_bdc_es_affected_service` | `_kb2ops_service` | Classificação de Conhecimento | conceitos relacionados, não fundidos |
-| sistemas/tecnologias | `_bdc_es_systems_involved` | `_kb2ops_technologies` | Classificação de Conhecimento | eixos relacionados, não fundidos |
-| histórico de revisão | nenhum | `_kb2ops_review_history` | Revisão e Governança | mecanismo final aberto |
-| inclusão IA | nenhum | `_kb2ops_include_ai` | Revisão e Governança | decisão humana útil |
-| analytics | tabelas ASI | option/meta KB2Ops | Analytics / Search Intelligence | store mínimo será T057 |
+| review state | `_kb2ops_review_state` | Revisão/Governança | canônico workflow | MANTER semântica |
+| notas | `_kb2ops_review_notes` | Revisão/Governança | canônico local | Metadata API forte |
+| revisado em | `_kb2ops_reviewed_at` | Revisão/Governança | evidência canônica | MANTER |
+| revisado por | `_kb2ops_reviewed_by` | Revisão/Governança | referência WP User | MANTER |
+| incluir em IA | `_kb2ops_include_ai` | Revisão/Governança | decisão humana | MANTER |
+| histórico | `_kb2ops_review_history` | Revisão/Governança | histórico | mecanismo/revisions T056/T095 |
 
-Nenhuma migração/conversão deve ser feita antes de T050/T056/T057.
+**Regra:** `validar -> persistir -> reler/confirmar -> emitir evento`. O evento nunca antecipa a confirmação do estado final.
 
-## 5. WordPress-first: evidência combinada
+## 7. Estados e métricas derivadas
 
-Os três projetos indicam que:
+| Projection | Fontes | Owner da regra | Persistir? |
+|---|---|---|---|
+| completude 0/8–8/8 | contrato do Resumo | Resumo Executivo | derivar; cache só com benchmark |
+| AI READY | publish + approved + 8/8 + include_ai | Revisão/Governança | derivar/projetar; não duplicar canônico |
+| checklist/scores/suggestions | extractor + metadata | Qualidade de Conteúdo/Revisão | derivar |
+| excerpt/quick steps/facts | Content Extractor | Content Extraction | derivar/cache reconstruível |
+| dashboard coverage | canônicos | domain owners + Insights leitor | não criar owner paralelo |
 
-- posts/Elementor permanecem fonte editorial;
-- metadata funciona bem para atributos locais por post;
-- taxonomy deve ser considerada para classificação compartilhada antes de tabela própria;
-- Options API atende configuração/evidência pequena;
-- tabelas próprias são justificáveis sobretudo para projections de busca, telemetria relacional, Golden e jobs duráveis — nunca por default;
-- dados derivados devem ser reconstruíveis sempre que possível;
-- uninstall/purge deve ser não destrutivo por default.
+## 8. Content Extraction
 
-## 6. Próxima consolidação — T050
+| Projection | Fonte | Owner | Reconstruível | Uso |
+|---|---|---|---:|---|
+| HTML/texto derivado | WP/Elementor | Content Extraction | SIM | Search, Review, IA |
+| estrutura/headings/tabelas | WP/Elementor | Content Extraction | SIM | items/deep-links/quality |
+| hash de conteúdo extraído | representação versionada | Content Extraction | SIM | NO_CHANGE/invalidation futura |
 
-T050 deve reescrever este catálogo de uma visão predominantemente **por plugin histórico** para uma visão **por conceito/owner futuro**, preservando a rastreabilidade das chaves antigas.
+**Regra:** downstream não relê `_elementor_data`/`post_content` com parser próprio. O risco de extração parcial de custom widgets precisa de regressão antes de index/RAG final.
 
-T050 ainda precisa decidir/documentar, sem implementar:
+## 9. Search Knowledge — dados canônicos da recuperação
 
-- canonical/derived/observational/operational por conceito;
-- leitores/writers futuros;
-- compatibilidade/dual-read temporário;
-- o que pode ser eliminado antes de T056;
-- quais decisões de primitive precisam permanecer explicitamente abertas.
+| Conceito ASI | Owner | Natureza | Writer | Readers | Primitive |
+|---|---|---|---|---|---|
+| vocabulary | Search Knowledge | canônico/manual | curador de Search | QueryContext/ranker | T056/T057 |
+| term bindings | Search Knowledge | canônico/manual | curador de Search | retrieval/ranker | T056/T057 |
+| relevance rules | Search Knowledge | canônico/manual | curador de Search | ranker/simulation | T056/T057 |
 
-Não fazem parte de T050: criar taxonomy/tabela/schema/runtime.
+Esses dados não são classificação editorial. Apply de Search Knowledge é workflow próprio e não é efeito colateral de aprovação do artigo.
+
+## 10. Search Indexing — projections reconstruíveis
+
+| Projection histórica | Owner | Fonte futura | Reconstruível | Estado |
+|---|---|---|---:|---|
+| `search_index` | Search Indexing | extractor + metadata/classificação | SIM | comportamento necessário; schema T057 |
+| `search_items` | Search Indexing | extractor/estrutura | SIM | necessário para trecho/deep-link; schema T057 |
+| item identity/deep-link | Search Indexing | estrutura versionada | SIM | contrato permanece; estratégia final aberta |
+| cache de query | Search Indexing | query + versions | SIM | usar Object Cache/transient primeiro; T056 |
+| Word Cloud snapshot | Search/Analytics projection | índice + facts | SIM | opcional; não ter pipeline paralelo |
+| embeddings/vectors | semantic projection futura | chunks extraídos + model version | SIM | **não autorizados**; T058/Specs futuras |
+
+**Regra:** projection stale/falha não altera fonte canônica. Rebuild nunca edita post/Elementor.
+
+## 11. Search Quality
+
+| Dado | Origem | Owner | Natureza | Estado |
+|---|---|---|---|---|
+| Golden Query | ASI | Search Quality | canônico QA/governança | MANTER |
+| expected target/rank/blocking | ASI | Search Quality | canônico QA | MANTER |
+| evidência da última execução | ASI | Search Quality | derivado/versionado | MANTER semântica |
+| quality diagnostics | ASI | Search Quality | derivado | preferir Site Health + relatório mínimo |
+| `quality_daily` | ASI | Analytics projection | derivado | DESCARTAR inicialmente |
+
+Storage final de Golden permanece T056/T057; ausência de suíte Golden nunca é PASS.
+
+## 12. Analytics / Search Intelligence
+
+| Representação histórica | Owner futuro | Natureza | Direção |
+|---|---|---|---|
+| ASI `search_events` | Analytics/Search Intelligence | observacional | preservar somente facts mínimos necessários |
+| ASI `search_interactions` | Analytics/Search Intelligence | observacional | condicional; HMAC/idempotência se existir |
+| outcomes/journey | Analytics/Search Intelligence | observacional | preservar semântica se analytics habilitado |
+| `kb2ops_search_analytics` option | Analytics/Search Intelligence | observacional legado | NÃO manter como store paralelo |
+| `_kb2ops_view_count` | Analytics/Search Intelligence | contador legado | não usar como fonte principal futura |
+| Search Intelligence reports | Analytics/Insights | derivado | perguntas permanecem; storage não |
+
+### Política preliminar
+
+- telemetria é non-fatal para Search;
+- modo mínimo não persiste identidade/session/IP/UA;
+- query text exige decisão explícita de minimização/retenção em T057/T095;
+- agregados só são materializados após benchmark;
+- facts observacionais não se tornam metadata canônica do post.
+
+## 13. Governança/Audit
+
+`audit_log` ASI demonstra necessidade potencial de trilha para mutações sensíveis (Apply de Search Knowledge, purge, operações). O futuro audit deve registrar **somente fatos necessários**, com retenção e acesso definidos. Não criar log genérico duplicando logs WordPress/servidor.
+
+Primitive/storage: T056/T057.
+
+## 14. Configuração e cache
+
+### Configuração
+
+- settings futuros pertencem a **Core Configuration**, organizados por domínio;
+- Options/Settings API é primitive inicial;
+- `asi4_settings` e `kb2ops_options` não sobrevivem como dois owners;
+- versões técnicas podem usar option pequena se upgrade exigir;
+- secrets antigos não são automaticamente importados como contrato futuro.
+
+### Cache
+
+- Object Cache/transients primeiro;
+- cache deve ser efêmero e reconstruível;
+- invalidação preferencialmente por version token/namespace;
+- cache não carrega identidade de tracking compartilhável entre usuários.
+
+## 15. Operações / Lifecycle
+
+| Estado | Origem histórica | Natureza | Futuro |
+|---|---|---|---|
+| index queue | ASI | operacional | somente se T057 provar durabilidade/workload |
+| migration checkpoints | ASI/KB2Ops | transitório | apenas durante upgrade/cutover real |
+| post-install orchestrator state | ASI | histórico/operacional | não copiar; mínimo necessário |
+| purge/migration evidence | KB2Ops | evidência operacional | limitado e explícito |
+| runtime version | KB2Ops | configuração/lifecycle | option pequena se necessária |
+
+Migration/adapter nunca vira owner do dado migrado.
+
+## 16. Compatibilidade e política de coexistência
+
+### 16.1 Regra geral
+
+O produto futuro pode precisar ler dados históricos antes do cutover completo. A compatibilidade deve obedecer:
+
+`origem antiga -> adapter read-only/dual-read limitado -> owner canônico -> gate de remoção`.
+
+### 16.2 Proibições
+
+- dual-write indefinido entre `_bdc_es_*` e `_kb2ops_*`;
+- bridge interna permanente duplicando mapa de chaves;
+- migration/reconciler permanente por medo do legado;
+- tornar uma tabela ASI fonte da verdade editorial;
+- apagar dados antigos automaticamente na ativação.
+
+### 16.3 Dados que não podem ser perdidos no cutover
+
+- `WP_Post`/Elementor e taxonomias editoriais;
+- oito valores históricos do GRE;
+- decisões humanas KB2Ops de review/include AI/notas/revisor/histórico quando válidas;
+- classificações KB2Ops utilizadas;
+- vocabulary/bindings/rules/Golden manuais do ASI se houver dados reais instalados;
+- telemetria histórica somente se política/requisito determinar retenção;
+- evidências necessárias de migração/purge/audit.
+
+A existência de uma estrutura não prova que há dados reais nela. Preflight de ambiente pertence ao plano de migração futuro.
+
+## 17. Matriz resumida de primitive — ainda não é T056/T057
+
+| Necessidade | Candidato mais simples | Estado |
+|---|---|---|
+| resumo narrativo local | postmeta | forte evidência; confirmar T056 |
+| revisão local | postmeta + user refs | forte evidência; histórico aberto |
+| classificação reutilizável | taxonomy ou postmeta conforme semântica/cardinalidade | **T056** |
+| settings | Options/Settings API | forte evidência |
+| cache | Object Cache/transient | forte evidência |
+| Search Knowledge | WP primitive ou store próprio mínimo | **T056/T057** |
+| índice lexical/items | projection própria provável | **T057** |
+| Analytics facts | store mínimo se perguntas/volume exigirem | **T057** |
+| queue | WP-Cron trigger ou queue durável | **T057** |
+| Golden | WP primitive ou store próprio mínimo | **T056/T057** |
+| vectors/chunks | nenhuma decisão | **T058/Specs futuras** |
+
+## 18. Decisões T050
+
+T050 consolida as seguintes decisões documentais:
+
+1. persistência futura é organizada por owner, não por plugin histórico;
+2. projections ficam formalmente separadas de canônicos;
+3. audiência possui um único owner e não terá duas fontes canônicas no estado final;
+4. bridges e dual-read são mecanismos de compatibilidade temporários;
+5. dual-write permanente é proibido;
+6. ASI `quality_daily`, stores históricos de migration e analytics option/view count KB2Ops não têm direito automático de nascer;
+7. não existe justificativa para tabela de Resumo Executivo;
+8. Search Index/Items permanecem capacidades necessárias, mas schema próprio só pode ser aprovado por T057;
+9. telemetry/query retention continua bloqueada até política explícita;
+10. nenhuma taxonomy/tabela/schema foi criada nesta tarefa.
+
+## 19. Itens explicitamente adiados
+
+- taxonomy versus postmeta campo a campo;
+- nomes/chaves finais;
+- cardinalidade e profiling;
+- histórico/revisions final;
+- schema Search Index/Items;
+- storage vocabulary/bindings/rules/Golden;
+- necessidade concreta de queue;
+- schema/retention de Analytics;
+- coexistência/migração detalhada;
+- chunks/vectors/embeddings.
+
+**Próximo uso deste catálogo:** T056 aplica WordPress-first campo/capacidade por campo/capacidade; T057 justifica somente a infraestrutura própria restante.

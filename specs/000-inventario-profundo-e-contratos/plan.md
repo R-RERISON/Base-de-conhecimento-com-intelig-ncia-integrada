@@ -34,73 +34,38 @@ Para cada repositório:
 
 ### Fase B — Persistência
 
-Extrair:
-
-- tabelas;
-- índices;
-- post meta;
-- options;
-- transients;
-- taxonomias;
-- cron state;
-- caches;
-- dados de browser/local state quando houver.
+Extrair tabelas, índices, post meta, options, transients, taxonomias, cron state e caches.
 
 ### Fase C — Integrações WordPress
 
-Extrair:
-
-- `add_action`;
-- `add_filter`;
-- `add_shortcode`;
-- `admin_post_*`;
-- `wp_ajax_*`;
-- `register_rest_route`;
-- `register_post_meta`;
-- `register_taxonomy`;
-- activation/deactivation/uninstall;
-- capabilities e roles.
+Extrair hooks, shortcodes, admin-post, AJAX, REST, metadata/taxonomy registration, lifecycle e capabilities.
 
 ### Fase D — Fluxos de produto
 
-Reconstruir jornadas:
-
-- gestor;
-- analista de conhecimento;
-- resolvedor;
-- administrador;
-- visitante/autenticado quando aplicável.
+Reconstruir jornadas de gestor, analista de conhecimento, resolvedor, administrador e público/autenticado.
 
 ### Fase E — Regressão
 
-Mapear:
-
-- testes automatizados;
-- Golden Queries;
-- smoke tests;
-- browser acceptance;
-- condições NO-GO;
-- gaps sem teste.
+Mapear testes, Golden Queries, smoke/browser acceptance, NO-GO e gaps sem cobertura.
 
 ### Fase F — Decisão
 
-Aplicar para cada item:
+Aplicar:
 
 `MANTER | REDESENHAR | SUBSTITUIR POR WORDPRESS | EVOLUIR COM IA/VETOR | DESCARTAR | AINDA NÃO SABEMOS`.
 
 ### Fase G — Cruzamento
 
-Depois dos inventários individuais:
-
-1. definir ownership lógico dos dados;
-2. identificar duplicação versus complementaridade;
-3. consolidar persistência e integrações por conceito futuro;
-4. fechar drifts/compatibilidade;
-5. aplicar WordPress-first;
-6. justificar infraestrutura própria mínima;
-7. congelar regressões/gates;
-8. priorizar IA/vetor;
-9. fechar paridade futura.
+1. ownership lógico dos dados — T052 ✅;
+2. duplicação versus complementaridade — T053 ✅;
+3. persistência por conceito/owner — T050 ✅;
+4. integrações por contrato futuro — T051 ✅;
+5. drifts/compatibilidade/blockers — T054 próximo;
+6. WordPress-first campo/capacidade — T056;
+7. infraestrutura própria mínima — T057;
+8. regressões/Golden/gates — T055;
+9. IA/vetor — T058;
+10. paridade futura final — T059.
 
 ## Artefatos de saída
 
@@ -118,10 +83,21 @@ Depois dos inventários individuais:
 
 ## Estado atual da Fase G
 
-- T052 ownership: concluída.
-- T053 sobreposição: concluída.
-- Próximo bloco: T050/T051 — consolidar persistência e integrações usando os dois artefatos anteriores.
+T050–T053 estão concluídas documentalmente. O produto futuro já possui:
+
+- owners lógicos definidos;
+- sobreposições/fusões/separações explícitas;
+- persistência classificada por canônico/projection/observacional/operacional/config/compat;
+- regra de dual-write proibido e adapters temporários;
+- contratos cross-module preliminares com write confirmado antes de evento;
+- política inicial de server-rendered/admin-post, AJAX somente por live UX e REST somente com consumidor real.
+
+### Próximo bloco
+
+**T054 — contratos quebrados/drifts/compatibilidade/blockers.**
+
+T054 deve impedir que “solução arquitetural futura” seja confundida com “compatibilidade já resolvida”. Para cada drift histórico será obrigatório decidir se há adapter/preflight, descarte deliberado ou blocker antes da SPEC-001.
 
 ## Gate de conclusão
 
-Nenhuma SPEC de runtime começa enquanto existir um item crítico classificado como “AINDA NÃO SABEMOS” sem decisão explícita de postergar e risco documentado.
+Nenhuma SPEC de runtime começa enquanto existir item crítico “AINDA NÃO SABEMOS” sem decisão explícita de postergar, risco documentado e gate correspondente.

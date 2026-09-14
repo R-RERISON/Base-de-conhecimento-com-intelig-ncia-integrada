@@ -50,16 +50,41 @@
 
 ## Cruzamento
 
-- [ ] Catálogo de persistência consolidado em decisão final. _(T050; próximo bloco)_
-- [ ] Catálogo de integrações consolidado em decisão final. _(T051; próximo bloco)_
-- [x] Mapa de ownership. _(`mapa-ownership-dados.md`)_
-- [x] Matriz de sobreposição. _(`matriz-sobreposicoes.md`)_
-- [ ] Drifts/contratos quebrados consolidados.
-- [ ] Catálogo de regressão/Golden futuro consolidado.
-- [ ] Matriz WordPress-first final.
-- [ ] Infraestrutura própria mínima justificada.
-- [ ] Candidatos IA/vetor priorizados.
-- [ ] Matriz de paridade futura final.
+- [x] Catálogo de persistência consolidado por owner/conceito. _(T050)_
+- [x] Catálogo de integrações consolidado por contrato futuro. _(T051)_
+- [x] Mapa de ownership. _(T052)_
+- [x] Matriz de sobreposição. _(T053)_
+- [ ] Drifts/contratos quebrados consolidados. _(T054 — próximo)_
+- [ ] Catálogo de regressão/Golden futuro consolidado. _(T055)_
+- [ ] Matriz WordPress-first final. _(T056)_
+- [ ] Infraestrutura própria mínima justificada. _(T057)_
+- [ ] Candidatos IA/vetor priorizados. _(T058)_
+- [ ] Matriz de paridade futura final. _(T059)_
+
+## Evidência T050 — Persistência
+
+- catálogo deixou de ser organizado por plugin histórico e passou a ser organizado por owner/conceito;
+- canônicos, projections, observacionais, operacionais, configuração e compatibilidade estão separados;
+- chaves `_bdc_es_*`, `_kb2ops_*` e stores `asi_*` são rastreabilidade histórica, não owners futuros;
+- audiência possui um único owner lógico;
+- `service`/`affected_service` e `technologies`/`systems_involved` permanecem distintos até profiling;
+- dual-write permanente foi proibido;
+- adapters/dual-read só podem ser temporários e possuir gate de remoção;
+- projections Search/AI não são fonte da verdade;
+- não foi criada taxonomy, tabela, schema ou migration.
+
+## Evidência T051 — Integrações
+
+- contratos cross-module foram definidos com produtor, consumidor, pré-condição, falha e idempotência preliminar;
+- evento de domínio só ocorre após persistência confirmada;
+- Summary/Classificação/Review invalidam projections sem transferir ownership;
+- Apply de Search Knowledge continua separado de aprovação do artigo;
+- Content Extraction é contrato interno único para Search/Review/IA;
+- server-rendered/admin-post ficou como baseline; AJAX somente para live UX comprovada; REST sem consumidor foi negado;
+- shortcodes/hooks históricos foram classificados como compatibilidade a provar, descartados ou substituídos conceitualmente;
+- Analytics foi definido como non-fatal para Search;
+- queue continua não aprovada até T057;
+- nenhuma rota/hook final de runtime foi implementada.
 
 ## Gate final
 
@@ -73,47 +98,6 @@
 - [ ] Relatório final SPEC-000.
 - [ ] SPEC-001 autorizada formalmente.
 
-## Evidência de fechamento do bloco ASI
-
-- `inventario-asi.md` decompõe runtime, schema, busca, item knowledge, curadoria, telemetria, fila, Golden, Word Cloud, legacy e gates.
-- contratos fortes e complexidade histórica foram separados.
-
-## Evidência de fechamento do bloco GRE
-
-- `inventario-resumo-executivo.md` fixa baseline e seis classes.
-- oito metas, Summary Store, Admin/Coverage, Renderer/assets e testes foram classificados.
-- D-001/D-002 foram confirmados como contratos quebrados.
-
-## Evidência de fechamento do bloco KB2Ops
-
-- `inventario-kb2ops.md` fixa `0.2.1 @ f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94` e decompõe runtime completo.
-- Content Extractor Elementor-aware foi documentado como contrato read-only, com gap de extração parcial/custom widgets formalizado.
-- todas as `_kb2ops_*`, view count, options, ausência de tables/cron/REST/AJAX e uso de categorias nativas foram mapeados.
-- Summary Bridge foi comparada ao GRE e classificada como compat read-only a desaparecer no bounded context unificado.
-- Knowledge Studio, Search, Analytics, Reports e AI READY foram classificados.
-- drift `AI READY` docs/runtime foi registrado.
-- Design System foi decomposto em princípios, tokens, componentes, responsive e assets.
-- Installer/Migration/Uninstall foram classificados, preservando apenas o princípio reversível.
-- release gate e build determinístico foram inventariados; ausência de suíte executável versionada foi registrada como dívida.
-
-## Evidência de fechamento T052 — Ownership
-
-- `mapa-ownership-dados.md` separa editorial, resumo, classificação, revisão, extraction, Search Knowledge, Search Indexing, Search Quality, Analytics, Configuração, Operações e AI Assist.
-- audiência GRE/KB2Ops passou a ter um único owner lógico: Classificação de Conhecimento.
-- serviço/serviço afetado e tecnologias/sistemas foram mantidos distintos até profiling, evitando merge por nome.
-- Search/projections/Analytics não recebem ownership sobre metadata editorial/classificatória.
-- migrations/adapters foram explicitamente proibidos de virar owner permanente.
-- storage físico permanece deliberadamente aberto para T056/T057.
-
-## Evidência de fechamento T053 — Sobreposição
-
-- `matriz-sobreposicoes.md` classifica duplicação real, complementaridade, compat/transição e referências de implementação.
-- Resumo, Search, Classificação, Analytics e Design System tiveram convergência funcional definida.
-- aprovação de artigo e Apply de Search Knowledge permanecem workflows separados.
-- qualidade de conteúdo e Search Quality permanecem métricas/domínios separados.
-- área única de Insights foi definida como navegação, sem autorizar agregação cara ou score global.
-- nenhuma tela/runtime novo foi criado.
-
 ## Estado
 
-Inventário individual e cruzamento inicial T052/T053 concluídos. Próximo gate: **T050/T051**, consolidando persistência e integrações com base nos owners e nas sobreposições agora resolvidas.
+T050–T053 concluídas documentalmente. Próximo passo autorizado: **T054 — mapa final de contratos quebrados/drifts/compatibilidade/blockers**. Nenhum runtime novo existe.

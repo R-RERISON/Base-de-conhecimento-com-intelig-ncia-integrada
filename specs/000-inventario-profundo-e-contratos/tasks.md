@@ -50,28 +50,27 @@
 
 ## Cruzamento
 
-- [ ] T050 — Criar catálogo unificado de persistência. _(evidência das três referências existe; consolidar agora usando ownership T052)_
-- [ ] T051 — Criar catálogo unificado de hooks/rotas/integrações. _(evidência existe; consolidar usando sobreposição T053)_
-- [x] T052 — Criar mapa de ownership atual de dados. _(`mapa-ownership-dados.md`; owners lógicos definidos sem fechar storage)_
-- [x] T053 — Criar matriz de sobreposição funcional. _(`matriz-sobreposicoes.md`; fusões e separações funcionais definidas)_
-- [ ] T054 — Criar mapa de contratos quebrados/drift. _(D-001/D-002 históricos quebrados; D-003/D-004/D-006/D-007 já têm direção; consolidar estado final)_
-- [ ] T055 — Criar catálogo de regressão e Golden Queries. _(contratos das três referências catalogados; consolidar gate futuro após decisões de primitive/infra)_
-- [ ] T056 — Identificar tudo que WordPress pode substituir. _(usar ownership para decidir taxonomy/meta/options/admin-post/Site Health/etc.)_
-- [ ] T057 — Identificar tudo que realmente exige infraestrutura própria. _(índice/telemetria/queue somente por evidência)_
-- [ ] T058 — Identificar candidatos a IA/vetor. _(ordenar por dependências/custo/risco depois do baseline)_
-- [ ] T059 — Criar matriz de paridade futura consolidada. _(matriz preliminar existe; fechar após T050–T058)_
+- [x] T050 — Criar catálogo unificado de persistência. _(`catalogo-persistencia.md` consolidado por owner/conceito; primitive física permanece T056/T057)_
+- [x] T051 — Criar catálogo unificado de hooks/rotas/integrações. _(`catalogo-integracoes.md` consolidado por contrato futuro, compatibilidade e falha/idempotência)_
+- [x] T052 — Criar mapa de ownership atual de dados. _(`mapa-ownership-dados.md`)_
+- [x] T053 — Criar matriz de sobreposição funcional. _(`matriz-sobreposicoes.md`)_
+- [ ] T054 — Criar mapa de contratos quebrados/drift. _(próximo bloco: consolidar D-001–D-008 + compatibilidade/preflight/blockers)_
+- [ ] T055 — Criar catálogo de regressão e Golden Queries. _(fechar após decisões de primitive/infra)_
+- [ ] T056 — Identificar tudo que WordPress pode substituir. _(taxonomy/meta/options/admin-post/Site Health/cache/cron campo a campo)_
+- [ ] T057 — Identificar tudo que realmente exige infraestrutura própria. _(índice/telemetria/queue/Search Knowledge/Golden somente por evidência)_
+- [ ] T058 — Identificar candidatos a IA/vetor. _(ordenar por dependências/custo/risco)_
+- [ ] T059 — Criar matriz de paridade futura consolidada.
 
 ## Ordem restante do cruzamento
 
-1. T050 + T051 — consolidar persistência e integrações usando ownership/sobreposição já resolvidos.
-2. T054 — consolidar drifts e contratos quebrados.
-3. T056 — WordPress-first campo/capacidade por campo/capacidade.
-4. T057 — justificar infraestrutura própria mínima.
-5. T055 — congelar regressões/Golden/gates em função das decisões anteriores.
-6. T058 — priorizar IA/vetor como extensão opcional.
-7. T059 — matriz de paridade final.
+1. T054 — mapa final de contratos quebrados, compatibilidade e blockers.
+2. T056 — WordPress-first por conceito/capacidade.
+3. T057 — infraestrutura própria mínima justificada.
+4. T055 — regressões/Golden/gates coerentes com as decisões anteriores.
+5. T058 — IA/vetor opcional, degradável e custo-controlado.
+6. T059 — matriz de paridade final.
 
-Não inverter a sequência para antecipar tabelas, vetores ou runtime.
+Não inverter a sequência para antecipar tabelas, taxonomias, vetores ou runtime.
 
 ## Gate
 
@@ -86,4 +85,4 @@ Não inverter a sequência para antecipar tabelas, vetores ou runtime.
 
 ## Estado do planejamento
 
-Os três inventários individuais e o primeiro cruzamento de **ownership + sobreposição** estão concluídos documentalmente. **Nenhum runtime novo foi criado.** A próxima alteração permitida é T050/T051; SPEC-001 continua bloqueada até T097.
+Inventários individuais, ownership, sobreposição e catálogos unificados de persistência/integrações estão concluídos documentalmente. **Nenhum runtime novo foi criado.** Próximo bloco: T054. SPEC-001 continua bloqueada até T097.

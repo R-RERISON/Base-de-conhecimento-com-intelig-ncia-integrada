@@ -1,199 +1,189 @@
 # Matriz de Paridade Futura — SPEC-000
 
-> Matriz incremental após T050–T057, incluindo T055. Define comportamentos que devem sobreviver, owners, primitives WordPress-first, infraestrutura própria mínima e gates de regressão. **T059 continua aberta** até incorporar T058 e fechar paridade final.
+> Matriz incremental após T050–T058. T059 permanece aberta e será o fechamento final desta matriz antes das revisões T090–T097.
 
 ## Legenda
 
-- **MANTER** — comportamento precisa sobreviver.
-- **REDESENHAR** — objetivo permanece, implementação não.
-- **SUBSTITUIR POR WORDPRESS** — primitive nativa vence.
+- **MANTER** — comportamento necessário.
+- **REDESENHAR** — comportamento necessário, implementação nova.
+- **SUBSTITUIR POR WORDPRESS** — primitive Core suficiente.
 - **INFRA PRÓPRIA MÍNIMA** — extensão própria justificada.
-- **POSTERGAR** — não comprou complexidade no baseline.
-- **EVOLUIR COM IA/VETOR** — opcional/degradável; T058 decide.
+- **APROVADO OPCIONAL** — capacidade de produto aprovada, não baseline obrigatório.
+- **POSTERGAR** — não comprou complexidade; reabrir com evidência.
+- **DESCARTAR** — não transportar ao baseline.
 - **AINDA NÃO SABEMOS** — depende de evidência/preflight/profiling.
 
-## 1. Search/ASI -> produto futuro
+## 1. Editorial, domínio e governança
 
-| Capacidade | Direção | Gate T055 |
-|---|---|---|
-| busca lexical local | MANTER/REDESENHAR | G-010, G-050, G-060, Golden, G-070, G-120 |
-| native WP search | MANTER como fallback | G-060/G-070 |
-| QueryContext/normalização | MANTER/REDESENHAR | G-060 |
-| ranking explicável | MANTER | G-060 + Golden |
-| projection lexical por post | INFRA PRÓPRIA MÍNIMA | G-050 |
-| item/trecho pesquisável | INFRA PRÓPRIA MÍNIMA no mesmo store lógico | G-050 + B-005 para deep-link público |
-| stores separados post/item | DESCARTAR no baseline | nova prova/benchmark se necessário |
-| parsers diretos concorrentes | DESCARTAR | G-010 |
-| vocabulary/bindings/rules | MANTER em primitives WP inicialmente | G-060/curadoria futura |
-| simulation + Apply humano | MANTER | capability/nonce/stale-state |
-| Golden Queries | MANTER em WP_Post interno + meta/revisions | Golden T055 |
-| Search Events/Interactions/Outcomes | POSTERGAR | G-080 + B-004 |
-| durable queue | POSTERGAR | G-090 + B-007 se reaberta |
-| `quality_daily` | DESCARTAR inicialmente | benchmark/requisito futuro |
-| Site Health/diagnóstico | SUBSTITUIR POR WORDPRESS + checks | G-130/DoD |
-| GAC no core | DESCARTAR | adapter só por requisito/preflight |
-| Word Cloud | POSTERGAR/REDESENHAR | produto/preflight |
-| live typing | CONDICIONAL via AJAX WP | G-070/G-110 |
-| REST | não criar sem consumidor | G-070 |
-| anchors/deep-link | REDESENHAR | B-005 + browser/E2E |
-| vetor/semantic | EVOLUIR COM IA/VETOR | T058 + G-140 |
-| síntese/IA | EVOLUIR COM IA/VETOR | T058 + G-140 |
+| Capacidade | Owner | Direção | Momento | Gate |
+|---|---|---|---|---|
+| conteúdo/título/publicação | WP/Elementor | MANTER WP | primeiro runtime | G-001 |
+| Content Extractor | Content Extraction | REDESENHAR/MANTER contrato | primeiro runtime quando Search/IA depender | G-010/B-001 |
+| Summary | Summary | MANTER Metadata API | primeiro runtime | G-020/B-006 |
+| classificação | Classificação | Metadata/Taxonomy conforme evidência | primeiro runtime por slice | G-030/B-002 |
+| review/include_ai/history | Revisão | MANTER WP | primeiro runtime | G-040 |
+| AI READY | Revisão | MANTER derivado | quando fluxo IA existir | G-040 |
+| Search Knowledge | Search Knowledge | WP_Post interno + meta/revisions inicialmente | posterior conforme Search | G-060 |
+| Golden Queries | Search Quality | WP_Post interno + meta/revisions | antes de release/mudança Search | Golden |
 
-## 2. GRE -> produto futuro
+## 2. Search
 
-| Capacidade | Direção | Gate T055 |
-|---|---|---|
-| oito valores históricos | MANTER semântica/compat | G-020/G-030/G-100 |
-| título via `post_title` | MANTER | G-001 |
-| Summary narrativo | MANTER em Metadata API | G-020 |
-| leitura side-effect free | MANTER | G-020 |
-| empty-delete | MANTER | G-020 |
-| allowlist/sanitização | MANTER | G-020/G-070 |
-| `edit_post` + nonce | MANTER WP | G-070 |
-| read-after-write | MANTER | G-020/B-006 |
-| update parcial | MANTER | G-020 |
-| falha multi-campo | REDESENHAR/endurecer | B-006 + G-020 |
-| Coverage | MANTER bounded | G-120 |
-| scan ilimitado | DESCARTAR | G-120 |
-| shortcode resumo | COMPAT condicional | G-100/B-003 |
-| side panel automático | DESCARTAR como baseline | produto futuro |
-| `Objective_Provider` legado | DESCARTAR do core | adapter só coexistência |
-| evento de mudança | REDESENHAR pós-write confirmado | G-040 |
-| tabela Summary | DESCARTAR | WordPress-first |
-| REST/AJAX/cron próprios | DESCARTAR sem consumidor/workload | G-070/G-090 |
-| build determinístico | MANTER | G-130 |
+| Capacidade | Direção | Momento | Gate/Fallback |
+|---|---|---|---|
+| native WP search | MANTER fallback | primeiro runtime possível | G-060/G-070 |
+| lexical/FULLTEXT | MANTER/REDESENHAR | Search slice | G-010/G-050/G-060/Golden/G-120 |
+| projection `post|item` unificada | INFRA PRÓPRIA MÍNIMA | Search slice após B-001 | G-050 |
+| QueryContext determinístico | MANTER/REDESENHAR | Search slice | G-060 |
+| ranking explicável | MANTER | Search slice | G-060 + Golden |
+| item identity | MANTER/REDESENHAR | Search/Item slice | G-050 |
+| deep-link público | REDESENHAR | posterior | B-005 + browser/E2E |
+| LLM em toda query | DESCARTAR baseline | não implementar | G-140A |
+| embeddings | POSTERGAR | P3 | G-140E; lexical fallback |
+| semantic/hybrid | POSTERGAR | P3 | G-140E; lexical fallback |
+| model rerank | POSTERGAR | P3 | G-140E; deterministic fail-open |
 
-## 3. KB2Ops -> produto futuro
+## 3. Analytics/Operations
 
-| Capacidade | Direção | Gate T055 |
-|---|---|---|
-| WP/Elementor fonte editorial | MANTER | G-001 |
-| Content Extractor único | MANTER/REDESENHAR | G-010/B-001 |
-| fallback/allowlist shortcode | MANTER princípio | G-010 |
-| review states/notes/reviewer | MANTER WP | G-040 |
-| history bounded | MANTER inicialmente | G-040 |
-| `include_ai` | MANTER | G-040 |
-| AI READY | MANTER como derivado | G-040 |
-| Summary Bridge | DESCARTAR do core | G-100 se coexistência |
-| Search meta LIKE | DESCARTAR | G-050/G-060 |
-| Search scope/detail recheck | MANTER | G-070 |
-| portal/shortcodes | COMPAT condicional | G-100/B-003 |
-| analytics option/view count | DESCARTAR/POSTERGAR | G-080/B-004 |
-| DS principles | MANTER/REDESENHAR | G-110 |
-| server rendering | MANTER baseline | G-110 |
-| SPA/framework externo | DESCARTAR | princípio de negação |
-| activation/uninstall reversíveis | MANTER | G-130 |
-| deterministic build | MANTER | G-130 |
+| Capacidade | Direção | Momento | Gate |
+|---|---|---|---|
+| Search Analytics detalhado | POSTERGAR | somente após B-004 | G-080/B-004 |
+| query text logging | não baseline | somente política explícita | B-004 |
+| durable queue | POSTERGAR | somente workload medido | G-090/B-007 |
+| WP-Cron | MANTER como trigger | quando necessário | G-090 |
+| Site Health | SUBSTITUIR POR WORDPRESS + checks | primeiro runtime | G-130 |
+| activation pesada | DESCARTAR | nunca baseline | G-130 |
 
-## 4. Classificação WordPress-first
+## 4. IA Assistiva — decisão T058
 
-| Conceito | Primitive preferida | Estado/Gate |
-|---|---|---|
-| audiência | Taxonomy API | G-030 + B-002 cutover |
-| tipo de conhecimento | Taxonomy API | G-030 + B-002 |
-| serviço | Taxonomy API | distinto de affected_service |
-| tecnologias | Taxonomy API | distinto de systems_involved |
-| equipe responsável | Metadata ou Taxonomy | AINDA NÃO SABEMOS; B-002/D-005 |
-| item de catálogo | Metadata ou Taxonomy | AINDA NÃO SABEMOS; B-002 |
-| serviço afetado | Metadata ou Taxonomy | AINDA NÃO SABEMOS; B-002 |
-| sistemas envolvidos | Metadata ou Taxonomy | AINDA NÃO SABEMOS; B-002 |
-| keywords | Metadata API | baseline |
-| versions | Metadata API | baseline |
+| Capacidade | Owner afetado | Direção | Prioridade | Autoridade |
+|---|---|---|---:|---|
+| pré-análise determinística | domínio | MANTER | P0 | determinística |
+| classificação assistida | Classificação | APROVADO OPCIONAL | P1 | sugestão; humano aplica |
+| Summary assistido | Summary | APROVADO OPCIONAL | P1 | sugestão; humano aplica |
+| RAG/síntese | AI Assist/Search | APROVADO OPCIONAL POSTERIOR | P2 | síntese sobre evidência |
+| chunking adicional | Search Indexing/AI | POSTERGAR condicional | P2/P3 | projection |
+| embeddings | Search Indexing/AI | POSTERGAR | P3 | projection |
+| semantic/hybrid retrieval | Search | POSTERGAR | P3 | ranker versionado |
+| model rerank | Search | POSTERGAR | P3 | ranker bounded |
+| agentes/tools | AI Assist | POSTERGAR/NEGAR baseline | P4 | read-only default; humano para mutação |
 
-Nenhum desses unknowns justifica tabela própria.
+## 5. IA Assistiva P1
 
-## 5. Search Retrieval Projection — paridade aprovada
+### Classificação
 
-Fluxo futuro:
+Fluxo futuro permitido:
 
-`WP/Elementor + Summary/Classificação -> Content Extractor -> projection lexical post|item -> ranker -> revalidação WordPress -> resultado`
+`conteúdo extraído + fatos + vocabulário -> gerar sugestão -> validar estrutura -> humano revisa -> Apply -> owner canônico persiste -> read-after-write`
 
-Contratos:
+Não permitido:
 
-- um store lógico inicial;
-- identidade estável;
-- texto derivado normalizado;
-- hash/version/generation/freshness;
-- FULLTEXT quando suportado;
-- fallback bounded;
-- rebuild idempotente;
-- estado stale/degraded observável;
-- zero autoridade editorial.
+- criação automática de termos;
+- persistência pelo adapter/modelo;
+- colapsar service/affected_service ou technologies/systems sem B-002;
+- usar confiança do modelo como aprovação.
 
-Gates: **G-001 + G-010 + G-050 + G-060 + Golden + G-070 + G-120 + G-130**.
+### Summary
 
-## 6. Golden Queries — paridade de qualidade
+Pode sugerir `objective`, `escalation`, `important`, com evidência/abstenção. `post_title` continua canônico. Apply humano usa G-020/B-006.
 
-Direção após T055:
+### AI READY
 
-- QA governada em primitives WP, não telemetria;
-- suite ativa não pode estar vazia para release inicial/alteração de Search;
-- expectation inclui target/rank/severity;
-- `blocking` failure = NO-GO;
-- warning exige decisão explícita;
-- evidence stale/not-run/not-configured não é PASS;
-- run evidence referencia conjunto, rankers, extractor/index e dataset/projection;
-- execução explícita/read-only;
-- independente de Analytics e identidade do usuário.
+`include_ai` continua parte da elegibilidade downstream. Não é permissão de autoria assistida. Eventual `AI Assist Allowed` é conceito separado e deve ser definido pela SPEC futura.
 
-Golden PASS é necessária para Search afetada, mas não suficiente: B-001, security e benchmark permanecem independentes.
+## 6. RAG P2
 
-## 7. Capacidades postergadas protegidas por gates negativos
+Direção:
 
-### Analytics detalhado
+`query -> retrieval lexical/híbrido se aprovado -> evidências -> síntese opcional -> fontes`
 
-- sem events/interactions/outcomes por default;
-- sem query text silenciosa;
-- Search não depende de Analytics;
-- reabrir somente após B-004.
+RAG não exige vetor. Uma primeira síntese futura pode usar lexical confiável.
 
-Gate: **G-080**.
+Quando gate de confiança estiver ativo, corpus produtivo de IA respeita AI READY e revalidação WP de scope/status/capability.
 
-### Durable queue
+Falha de provider -> retrieval sem síntese, não outage do core.
 
-- baseline sem queue;
-- WP-Cron somente trigger;
-- Options/Transients não são durable store;
-- activation não inicia rebuild massivo;
-- reabrir somente após benchmark + B-007.
+## 7. Vetor/Semantic P3
 
-Gate: **G-090**.
+Não aprovados para primeiro runtime.
 
-## 8. Compatibilidade
+Condições de reabertura:
 
-Todo compat temporário exige consumidor, owner, modo limitado, observabilidade, rollback, remoção e regressão de equivalência.
+- B-001 fechado;
+- lexical baseline medido;
+- Golden com lacunas semânticas representativas;
+- hipótese/critério de sucesso fixados antes do experimento;
+- chunking/fingerprint/modelo/dimensão explicitados;
+- custo/latência/storage/fallback medidos.
 
-Gate: **G-100 + B-003**.
+Hybrid é hipótese preferida em relação a vector-only. Lexical permanece fallback.
 
-Nenhum alias histórico está aprovado automaticamente.
+## 8. Provider
 
-## 9. Release evidence
+### Microsoft Foundry
 
-Estados não podem ser colapsados:
+**Provider preferencial candidato**, não domínio.
 
-- PASS;
-- FAIL;
-- NOT_VERIFIED;
-- NOT_CONFIGURED;
-- DEGRADED;
-- N/A justificado.
+- provider seam mínimo nasce com primeiro caso real;
+- WordPress HTTP API quando adequada;
+- model/deployment/prompt/config versionados;
+- errors/timeout/quota explícitos;
+- secrets não logados;
+- failover não silencioso.
 
-Gate de release futuro deve incluir build/commit, ambiente, testes, Golden run, benchmarks aplicáveis, gaps/waivers e rollback.
+### Foundry Agent File Search
 
-## 10. IA/vetor — aberto para T058
+**DESCARTAR como Search/RAG core.** Pode reaparecer somente como projection de agente específico, alimentada por corpus canônico extraído, com lineage/hash/freshness/custo e G-140H.
 
-Invariantes já fixados:
+### MariaDB Vector / Azure AI Search / outros
 
-- lexical continua funcional sem IA/vetor;
-- retrieval precede síntese;
-- IA sugere, humano decide;
-- provider não vira owner de domínio;
-- custo/NO_CHANGE/fallback/rastreabilidade precisam ser tratados em T058.
+Nenhum foi escolhido. A futura SPEC compara capabilities reais e custo/operabilidade antes de selecionar storage vetorial.
 
-## 11. Próximos fechamentos
+## 9. G-140 — gates IA/Vetor
 
-1. **T058** — IA/vetor priorizados.
-2. **T059** — paridade futura final incorporando gates de IA.
-3. T090–T097 — revisões e autorização.
+Canônico em `matriz-ia-vetor.md`:
+
+- G-140A independência/degradação;
+- G-140B provider/rastreabilidade/data egress;
+- G-140C human-in-the-loop;
+- G-140D custo/budget/NO_CHANGE;
+- G-140E embeddings/semantic/hybrid;
+- G-140F RAG/síntese;
+- G-140G agentes/tools;
+- G-140H provider-managed knowledge/File Search.
+
+## 10. Compatibilidade
+
+Nenhuma decisão T058 cria compatibilidade externa. Regras T054/T055 permanecem:
+
+- adapter somente com consumidor comprovado;
+- observabilidade e rollback;
+- gate de remoção;
+- dual-write permanente proibido;
+- shortcodes históricos ainda em B-003/preflight.
+
+## 11. First-runtime boundary após T058
+
+O primeiro runtime **não precisa de IA externa**.
+
+Capacidades que podem compor o primeiro conjunto de Specs após T097:
+
+- Core/Settings/Security/DS;
+- Summary/Review/Classificação por vertical slices;
+- Content Extractor;
+- Search lexical/projection quando B-001 e gates correspondentes forem atacados.
+
+IA P1 só entra em SPEC própria quando os owners/handlers que ela pretende auxiliar estiverem estáveis.
+
+## 12. Estado de T059
+
+Ainda precisa fechar, em uma visão única:
+
+- cada capacidade e owner;
+- first runtime/posterior/postergado;
+- storage/primitive;
+- gates/blockers;
+- dados de cutover;
+- fallback;
+- decisão final de paridade.
 
 **T059 permanece aberta. Nenhum runtime foi autorizado.**

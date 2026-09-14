@@ -2,149 +2,107 @@
 
 ## Objetivo
 
-Ler, decompor e cruzar os três repositórios de referência em contratos verificáveis antes de qualquer runtime novo.
+Ler, decompor e cruzar os três projetos de referência em contratos verificáveis antes de qualquer runtime novo.
 
-## Agentes convocados
+## Fases concluídas
 
-- Orquestrador Principal;
-- Arquiteto WordPress;
-- Arquiteto de Conhecimento;
-- Especialista em Busca e Retrieval;
-- Especialista em MariaDB e Dados;
-- Especialista em IA/Foundry;
-- Especialista em Segurança WordPress;
-- Especialista em UI/UX WordPress;
-- Especialista em Qualidade e Regressão;
-- Especialista em Performance/Observabilidade;
-- Crítico de Simplicidade.
+- [x] inventário/classificação KB2Ops, ASI e GRE;
+- [x] T050 persistência;
+- [x] T051 integrações;
+- [x] T052 ownership;
+- [x] T053 sobreposição;
+- [x] T054 drifts/compatibilidade/blockers;
+- [x] T056 WordPress-first;
+- [x] T057 infraestrutura própria mínima;
+- [x] T055 regressão/Golden;
+- [x] T058 IA/vetor;
+- [ ] T059 paridade futura final.
 
-## Fases A–F — concluídas
+## Arquitetura consolidada até T058
 
-Inventário e classificação completos de KB2Ops, ASI e GRE:
+### WordPress-first
 
-- topologia/runtime;
-- persistência;
-- integrações WordPress;
-- fluxos de produto;
-- testes/regressão/build;
-- classificação `MANTER | REDESENHAR | SUBSTITUIR POR WORDPRESS | EVOLUIR COM IA/VETOR | DESCARTAR | AINDA NÃO SABEMOS`.
+WordPress/Elementor continuam fonte editorial. Summary, Review, Classificação, Settings, segurança e health permanecem em primitives Core sempre que suficientes.
 
-## Fase G — cruzamento
+### Infra própria
 
-1. [x] T052 — ownership lógico;
-2. [x] T053 — sobreposição funcional;
-3. [x] T050 — persistência consolidada;
-4. [x] T051 — integrações consolidadas;
-5. [x] T054 — drifts/compatibilidade/blockers;
-6. [x] T056 — WordPress-first;
-7. [x] T057 — infraestrutura própria mínima;
-8. [x] T055 — regressões/Golden finais;
-9. [ ] T058 — IA/vetor priorizados;
-10. [ ] T059 — paridade futura final.
+A única família de persistência própria aprovada no baseline é a futura **Search Retrieval Projection** unificada para documentos `post|item`, reconstruível e não-canônica.
 
-## Artefatos centrais
+Analytics detalhado e durable queue continuam postergados.
 
-- `mapa-ownership-dados.md`;
-- `matriz-sobreposicoes.md`;
-- `catalogo-persistencia.md`;
-- `catalogo-integracoes.md`;
-- `mapa-contratos-quebrados.md`;
-- `matriz-wordpress-first.md`;
-- `infraestrutura-propria-minima.md`;
-- `catalogo-testes-regressao.md`;
-- `matriz-paridade-futura.md`;
-- `riscos-e-drifts.md`;
-- `research.md`.
+### Regressão
 
-## Decisões consolidadas T056/T057
+T055 definiu gates MUST/CONDICIONAL/POSTERGADO/N/A, Golden como evidência de Search e benchmarks reais como gate de runtime.
 
-### WordPress Core permanece dominante
+### IA/vetor — T058
 
-- Editorial: `WP_Post` + Elementor read-only.
-- Summary: Metadata API.
-- Review/Governança: Metadata + Users + Revisions quando aplicável.
-- Classificação: Metadata/Taxonomy conforme evidência.
-- Search Knowledge/Golden: `WP_Post` interno + Metadata/Revisions inicialmente.
-- Settings/Security/Health/Cache/Scheduling: primitives WordPress.
-- AJAX apenas por live UX; REST somente com consumidor formal.
+Artefato canônico: `matriz-ia-vetor.md`.
 
-### Infra própria mínima
+Prioridades:
 
-Apenas **Search Retrieval Projection** foi aprovada documentalmente, reduzida a um store lógico futuro de documentos `post|item`.
+- **P0:** determinístico/core, obrigatório antes de IA;
+- **P1:** IA assistiva sob demanda — Classificação ou Summary, um slice por vez;
+- **P2:** RAG/síntese opcional, retrieval-first e inicialmente lexical-capable;
+- **P3:** embeddings/semantic/hybrid/rerank somente após lacuna mensurável + Golden/benchmark;
+- **P4:** agentes/tools somente com jornada multi-etapa comprovada.
 
-Não aprovados no baseline:
+Decisões:
 
-- Analytics Facts detalhados;
-- durable queue;
-- audit/quality rollups/migration registry permanentes;
-- tabelas próprias para Summary, Classificação, Review, Search Knowledge ou Golden.
+- pré-análise determinística: MANTER;
+- assistente de Classificação: APROVADO OPCIONAL;
+- assistente de Summary: APROVADO OPCIONAL;
+- LLM em toda query: DESCARTAR baseline;
+- RAG/síntese: APROVADO OPCIONAL POSTERIOR;
+- chunking adicional: POSTERGADO/condicional;
+- embeddings: POSTERGADO COM GATE;
+- hybrid semantic retrieval: POSTERGADO COM GATE;
+- model reranking: POSTERGADO COM GATE;
+- Microsoft Foundry: provider preferencial candidato, desacoplado;
+- Foundry File Search: não é core/search canônico; somente projection eventual de agente específico;
+- agentes: POSTERGADOS/NEGADOS no baseline.
 
-## Resultado T055 — estratégia de regressão
+## G-140 após T058
 
-T055 tornou o catálogo de testes um contrato de release futuro.
+`matriz-ia-vetor.md` detalha:
 
-### Classes
+- G-140A independência/degradação;
+- G-140B provider/rastreabilidade/data egress;
+- G-140C human-in-the-loop;
+- G-140D custo/budget/NO_CHANGE;
+- G-140E embedding/semantic/hybrid;
+- G-140F RAG/síntese;
+- G-140G agentes/tools;
+- G-140H provider-managed knowledge/File Search.
 
-- `MUST`: obrigatório; falha/ausência de evidência = NO-GO.
-- `CONDICIONAL`: obrigatório quando a feature existe.
-- `POSTERGADO`: não deve nascer silenciosamente.
-- `N/A`: exige justificativa explícita.
+## Regra de custo
 
-### Gates principais
+Toda futura chamada de IA deve ser atribuível a operação, provider/model/deployment, prompt/config version, objeto/contexto, volume, tokens/unidades quando disponíveis, custo estimado/real, duração, estado e timestamp.
 
-- **G-001:** fronteira editorial WordPress/Elementor.
-- **G-010:** Content Extractor/B-001.
-- **G-020:** Summary/Metadata/B-006.
-- **G-030:** Classificação/B-002.
-- **G-040:** Review/governança/eventos.
-- **G-050:** Search Retrieval Projection.
-- **G-060:** QueryContext/ranking/explicabilidade.
-- **Golden:** dataset governado + execução explícita + evidência corrente.
-- **G-070:** scope/security/exposição.
-- **G-080:** ausência intencional de Analytics detalhado no baseline.
-- **G-090:** independência de durable queue no baseline.
-- **G-100:** compatibilidade/cutover/B-003.
-- **G-110:** UI/UX/a11y.
-- **G-120:** performance/benchmark real.
-- **G-130:** lifecycle/build/rollback.
-- **G-140:** IA/vetor reservado para T058.
+Batch sem preview, estimativa, budget, limite e stop condition é NO-GO. Se exigir worker durável, F-057-03/B-007 deve ser reaberto formalmente.
 
-### Golden Queries
+## Primeiro runtime
 
-Princípios finais de T055:
+T058 confirma que o primeiro runtime pode nascer com **zero IA externa**. Isso não é dívida.
 
-- configuração de QA, não telemetria;
-- storage WordPress-first inicialmente;
-- suíte vazia = `NOT_CONFIGURED`, nunca PASS;
-- suíte não executada ou stale = NO-GO para mudança/release de Search;
-- `blocking` fail = NO-GO;
-- warning exige decisão explícita;
-- evidência deve vincular conjunto ativo, rankers, extractor/index e dataset/projection;
-- dashboard lê status sem executar ranking;
-- não depende de identidade/session/journey;
-- cobertura por famílias de comportamento, sem número artificial mínimo.
+Quando IA for autorizada, o primeiro slice deverá escolher uma jornada estreita — Classificação assistida **ou** Summary assistido — e preservar Apply humano separado.
 
-### Performance
+## Próximo passo — T059
 
-Nenhum p95/QPS foi fabricado. A SPEC de implementação deverá definir thresholds antes do GO e executar benchmark reproduzível no ambiente/corpus representativo.
+T059 deve consolidar a matriz de paridade final e responder, por capacidade:
 
-## Próximo passo — T058
+1. owner lógico;
+2. origem/baseline;
+3. comportamento futuro;
+4. primitive/storage;
+5. `primeiro runtime | posterior | postergado`;
+6. gates e blockers;
+7. compatibilidade/cutover;
+8. fallback/degradação;
+9. dado que não pode ser perdido;
+10. decisão final da SPEC-000.
 
-Identificar e priorizar IA/vetor sem violar os contratos T055.
+T059 não resolve por código. Depois dela vêm T090–T097.
 
-T058 deve, no mínimo:
+## Gate final
 
-1. enumerar capacidades candidatas: classificação assistida, Summary assistido, embeddings, semantic retrieval, reranking, RAG/síntese, agentes/Foundry;
-2. aplicar princípio de negação a cada uma;
-3. separar valor de produto de dependência tecnológica;
-4. definir onde IA é apenas sugestão versus leitura;
-5. preservar lexical como fallback independente;
-6. tratar custo, quota, timeout e indisponibilidade;
-7. definir rastreabilidade de provider/model/prompt/version;
-8. evitar batch/embedding sem `NO_CHANGE`/hash;
-9. decidir quais capacidades ficam fora do primeiro runtime;
-10. produzir gates que complementem G-140.
-
-## Gate de conclusão da SPEC-000
-
-Nenhuma SPEC de runtime começa antes de T059 + T090–T097. T097 é a única autorização formal para SPEC-001.
+Nenhuma SPEC de runtime começa antes de T059 + revisões T090–T097. T097 é a única autorização formal para SPEC-001.

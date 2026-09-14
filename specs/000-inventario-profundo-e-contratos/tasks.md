@@ -6,17 +6,11 @@
 - [x] T001 — Criar Constituição, Manifesto e regras de agentes.
 - [x] T002 — Criar roadmap e SpecKit base.
 
-## KB2Ops
+## Inventários individuais
 
-- [x] T010–T019 — Inventário completo de bootstrap, domínio, persistência, rotas, frontend, extractor, lifecycle, testes/build, Design System e classificação.
-
-## ASI
-
-- [x] T020–T034 — Inventário completo de schema, retrieval/ranking, Search Knowledge, telemetria, queue/migrations, Golden/Quality, compatibilidade, testes, build/release e classificação.
-
-## Resumo Executivo
-
-- [x] T040–T047 — Inventário completo de bootstrap, Meta Contract, Summary Store, admin/frontend, build/testes, drift `Objective_Provider`/evento e classificação.
+- [x] T010–T019 — KB2Ops completo.
+- [x] T020–T034 — ASI completo.
+- [x] T040–T047 — Resumo Executivo completo.
 
 ## Cruzamento
 
@@ -24,43 +18,47 @@
 - [x] T051 — Catálogo unificado de hooks/rotas/integrações.
 - [x] T052 — Mapa de ownership.
 - [x] T053 — Matriz de sobreposição.
-- [x] T054 — Mapa de contratos quebrados/drifts/compatibilidade.
-- [x] T055 — Catálogo de regressão e Golden Queries. _(`catalogo-testes-regressao.md`; gates MUST/CONDICIONAL/POSTERGADO, Golden como evidência de release, blockers B-001–B-007 mapeados)_
-- [x] T056 — Matriz WordPress-first. _(`matriz-wordpress-first.md`)_
-- [x] T057 — Infraestrutura própria mínima. _(`infraestrutura-propria-minima.md`; somente Search Retrieval Projection unificada aprovada no baseline)_
-- [ ] T058 — Identificar/priorizar candidatos a IA/vetor.
-- [ ] T059 — Criar matriz de paridade futura consolidada.
+- [x] T054 — Drifts/compatibilidade/blockers.
+- [x] T055 — Catálogo de regressão e Golden Queries.
+- [x] T056 — Matriz WordPress-first.
+- [x] T057 — Infraestrutura própria mínima.
+- [x] T058 — IA/vetor priorizados. _(`matriz-ia-vetor.md`; IA assistiva P1 aprovada como opcional, RAG P2 opcional, embeddings/semantic/rerank P3 postergados, agentes P4 postergados, G-140A–H definidos)_
+- [ ] T059 — Matriz de paridade futura consolidada/final.
 
-## Resultado T055
+## Resultado T058
 
-- Golden Queries permanecem em `WP_Post` interno + Metadata/Revisions no baseline; nenhuma tabela Golden foi autorizada.
-- suíte Golden vazia = `NOT_CONFIGURED`, nunca PASS.
-- Golden não executada/stale = NO-GO quando Search é afetada.
-- falha `blocking` = NO-GO; warning exige decisão explícita.
-- evidência Golden deve estar vinculada ao conjunto ativo, ranker/item-ranker, extractor/index e dataset/projection do release candidate.
-- Content Extractor/B-001 ganhou gate de corpus representativo + custom widgets.
-- Search Projection ganhou gates de determinismo, identidade, rebuild, freshness, FULLTEXT/fallback e revalidação WordPress.
-- baseline Analytics postergado ganhou teste negativo: Search funciona sem Analytics e não persiste query text silenciosamente.
-- baseline queue postergada ganhou teste negativo: produto não depende de queue, WP-Cron não vira durable store e activation não dispara rebuild massivo.
-- performance exige benchmark real futuro; nenhum p95/QPS foi inventado em T055.
-- IA/vetor receberam somente invariantes constitucionais; gates específicos ficam para T058.
+- [x] P0 determinístico permanece obrigatório antes de IA.
+- [x] Assistente de Classificação e Assistente de Summary foram aprovados como capacidades opcionais P1, sob demanda e human-in-the-loop.
+- [x] `include_ai`/AI READY não foi reutilizado como permissão de autoria assistida.
+- [x] LLM em toda consulta de Search foi rejeitado no baseline.
+- [x] RAG/síntese foi aprovado apenas como evolução P2, retrieval-first e podendo nascer lexical-first.
+- [x] chunking adicional foi postergado e não pode criar parser paralelo.
+- [x] embeddings foram postergados até baseline lexical + Golden demonstrarem lacuna mensurável.
+- [x] semantic/hybrid retrieval foi postergado; se reaberto, lexical permanece fallback e o critério de ganho deve ser fixado antes do experimento.
+- [x] reranking por modelo foi postergado e, se existir, será top-K bounded/fail-open.
+- [x] Microsoft Foundry foi classificado como provider preferencial candidato, nunca dependência de domínio.
+- [x] Foundry Agent File Search foi rejeitado como Search/RAG canônico do plugin; só pode reaparecer como projection de agente específico.
+- [x] agentes/tools foram postergados/negados no baseline.
+- [x] AI Operation Receipt conceitual, budget, NO_CHANGE, data egress e prompt-injection foram tratados.
+- [x] G-140 foi detalhado em G-140A–H em `matriz-ia-vetor.md`.
+- [x] nenhum runtime, provider, embedding, vector store, schema ou chamada externa foi criado.
 
-## Ordem restante do cruzamento
+## Ordem restante
 
-1. **T058** — IA/vetor opcionais, degradáveis e custo-controlados.
-2. **T059** — paridade futura final incorporando T055/T058.
+1. **T059** — fechar a matriz de paridade futura final, incorporando T054–T058.
+2. T090 — revisão do Arquiteto WordPress.
+3. T091 — revisão do Crítico de Simplicidade.
+4. T092 — revisão de Segurança.
+5. T093 — revisão de QA/Regressão.
+6. T094 — revisão de Produto/Conhecimento.
+7. T095 — fechar unknowns/blockers aplicáveis.
+8. T096 — relatório final da SPEC-000.
+9. T097 — autorizar ou bloquear SPEC-001.
 
-## Gate final
+## Regra de continuidade
 
-- [ ] T090 — Revisão do Arquiteto WordPress.
-- [ ] T091 — Revisão do Crítico de Simplicidade.
-- [ ] T092 — Revisão de Segurança.
-- [ ] T093 — Revisão de Regressão.
-- [ ] T094 — Revisão de Produto/Conhecimento.
-- [ ] T095 — Fechar unknowns críticos/blockers aplicáveis.
-- [ ] T096 — Emitir relatório final da SPEC-000.
-- [ ] T097 — Autorizar ou bloquear SPEC-001.
+T059 ainda é documental. Não antecipar runtime, DDL, taxonomies finais, Foundry, embeddings, semantic search, agentes, Analytics detalhado ou durable queue.
 
 ## Estado
 
-T050–T057 concluídas documentalmente, incluindo **T055**. **Nenhum runtime novo foi criado.** Próximo bloco autorizado: **T058**. SPEC-001 continua bloqueada até T097.
+T050–T058 concluídas documentalmente. **Nenhum runtime novo foi criado.** Próximo bloco autorizado: **T059**. SPEC-001 continua bloqueada até T097.

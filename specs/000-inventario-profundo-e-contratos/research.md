@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Registrar fatos comprovados e decisões documentais do cruzamento das três baselines. Hipótese não vira fato sem evidência versionada; design futuro não apaga cutover/compatibilidade.
+Registrar fatos comprovados e decisões documentais do cruzamento das baselines. Hipótese não vira fato sem evidência versionada; provider/feature atual não vira contrato permanente.
 
 ## 1. Baselines fixadas
 
@@ -10,171 +10,182 @@ Registrar fatos comprovados e decisões documentais do cruzamento das três base
 - ASI `4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1`.
 - GRE `0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365`.
 
-## 2. Fatos estruturais
+## 2. Estado arquitetural T050–T057/T055
+
+- um conceito canônico = um owner;
+- WP/Elementor são fonte editorial;
+- projection nunca é fonte da verdade;
+- Content Extractor único alimenta downstream;
+- persistir -> confirmar -> emitir;
+- dual-write permanente proibido;
+- Search lexical independente de IA;
+- uma Search Retrieval Projection futura `post|item` é a única família própria aprovada no baseline;
+- Analytics detalhado e durable queue estão postergados;
+- Golden é QA governada e release evidence;
+- G-001–G-130 protegem editorial, extractor, domínio, Search, segurança, performance, compatibilidade e lifecycle.
+
+## 3. Evidência das baselines relevante para T058
 
 ### KB2Ops
 
-- Content Extractor Elementor-aware read-only;
-- review/AI READY;
-- Search provisória com WP/meta LIKE;
-- DS/server-rendered como referência;
-- lifecycle reversível;
-- gap crítico de custom widgets parcialmente extraídos;
-- corpus documentado na ordem de ~700 posts;
-- relatório de release não substitui suíte executável versionada.
+A pré-análise local (`facts/suggestions/checklist/scores`) prova que regras determinísticas podem entregar valor de curadoria sem provider externo. A IA futura deve complementar esse baseline, não substituí-lo.
+
+AI READY histórico permanece `publish + approved + Summary 8/8 + include_ai`.
 
 ### ASI
 
-- retrieval lexical/FULLTEXT + fallback;
-- ranking explicável por post/item;
-- item identity/reconciliation;
-- Golden Queries como release evidence;
-- Search Intelligence/telemetria quando habilitada;
-- durable queue quando workload assíncrono foi assumido;
-- performance bounds separados de benchmark;
-- 12 tabelas históricas que não são requisito automático futuro.
+O ASI prova:
+
+- lexical/FULLTEXT/ranking explicável antes de semantic;
+- Golden como gate para qualquer alteração de retrieval/ranking;
+- item identity/fail-closed;
+- IA/vetor apenas como evolução complementar;
+- simulação/humano-no-loop como contrato forte de curadoria.
 
 ### GRE
 
-- oito metas via Metadata API;
-- `post_title` canônico;
-- allowlist/sanitização/capability/nonce;
-- read side-effect free;
-- sem tabela/REST/AJAX/cron próprios;
-- lacuna de atomicidade lógica multi-campo e drift com provider/evento esperado pelo ASI.
+O Summary é pequeno, WordPress-first e determinístico. IA pode sugerir conteúdo, mas o owner/persistência continuam em Metadata API e handlers canônicos.
 
-## 3. T050–T054 — contratos consolidados
+## 4. Skills/agentes internos consultados
 
-- um conceito canônico = um owner;
-- projection nunca é fonte da verdade;
-- dual-write permanente proibido;
-- compat/dual-read temporários possuem gate de remoção;
-- persistir -> confirmar -> emitir;
-- consumer idempotente;
-- admin-post/server-rendered baseline;
-- AJAX somente por live UX;
-- REST negado sem consumidor;
-- B-001–B-007 são contextuais e versionados em `mapa-contratos-quebrados.md`.
+### Governança de custo
 
-## 4. T056 — WordPress-first
+`.github/skills/ai-cost-governance/SKILL.md` exige volume, provider/modelo, tokens/unidades, custo, budget, NO_CHANGE e interrupção ao atingir limite. Processamento em massa sem estimativa/limite é NO-GO.
 
-Artefato: `matriz-wordpress-first.md`.
+### Foundry Integration
 
-- WP/Elementor continuam fonte editorial.
-- Summary e Review permanecem em Metadata/Users/Revisions quando aplicável.
-- Classificação permanece em Metadata/Taxonomy; quatro campos continuam em profiling B-002.
-- Search Knowledge e Golden ficam em `WP_Post` interno + Metadata/Revisions inicialmente.
-- Settings/Security/Health/Cache/Scheduling usam Core.
-- native search é fallback, mas não entrega sozinho representação Elementor derivada + item retrieval + ranking composto.
+`.github/skills/foundry-integration/SKILL.md` exige caso de uso, provider contract, WordPress HTTP API por padrão, secrets seguros, timeout/retry/idempotência, versionamento de prompt/modelo/config, custo e fallback sem IA.
 
-## 5. T057 — infraestrutura própria mínima
+### Hybrid Retrieval
 
-Artefato: `infraestrutura-propria-minima.md`.
+`.github/skills/hybrid-retrieval/SKILL.md` exige medir lexical primeiro, comparar semantic isolado, escolher fusão somente por evidência, Golden, fallback lexical e medição de latência/custo.
 
-### Aprovada
+### MariaDB Vector
 
-**Search Retrieval Projection** reduzida a um store lógico futuro para documentos `post|item`, reconstruível, com identity/hash/version/freshness, FULLTEXT quando suportado e fallback lexical bounded.
+`.github/skills/mariadb-vector/SKILL.md` exige capability real do ambiente, modelo/dimensão/métrica explícitos, store reconstruível, hash/model version, benchmark e fallback. Plugin não depende de VECTOR para instalar/funcionar.
 
-### Postergadas
+## 5. Evidência pública Microsoft Foundry — snapshot 2026-09-14
 
-- Analytics Facts: B-004 aberto; nenhuma persistência detalhada/query text por default.
-- Durable Job State: sem benchmark/necessidade comprovada; nenhuma queue table autorizada.
+Documentação Microsoft analisada demonstra que o Agent Service/File Search opera com vector stores e pipeline gerenciado de ingestão/chunking/embedding. Esses detalhes e defaults são provider-specific e podem mudar.
 
-Resultado líquido: 12 stores ASI históricos não renascem; uma única família própria é aprovada documentalmente.
+Conclusão arquitetural: File Search pode ser útil para um agente específico, mas não deve virar Search/RAG canônico do plugin porque introduziria uma segunda pipeline de identidade, chunking, freshness e lifecycle paralela à projection WordPress-first.
 
-## 6. Evidência Golden analisada em T055
+Também foi confirmada a disponibilidade de cenários vector/hybrid no ecossistema Azure AI Search/Foundry. Isso prova capacidade tecnológica, não necessidade do projeto.
 
-ASI 4.6.8 comprova princípios úteis:
+**Regra:** preço, limite, modelo ou default atual do provider não é contrato arquitetural.
 
-- expectativa ativa contém query, target post, item opcional, max rank e severidade;
-- suite vazia retorna `not_configured`;
-- failure blocking produz fail/NO-GO;
-- warning failure é distinguível;
-- `set_hash` + versões de ranker tornam evidência stale detectável;
-- execução é explícita e status pode ser lido sem rerun;
-- export/runner Golden não precisa de identity/session/journey.
+## 6. T058 — decisões
 
-T055 preserva esses **princípios**, não a tabela/implementação ASI.
+Artefato canônico: `matriz-ia-vetor.md`.
 
-## 7. T055 — regressão e Golden
+### P0 — determinístico
 
-Artefato canônico: `catalogo-testes-regressao.md`.
+**MANTER:** extractor, fatos/regras locais, domain stores, lexical/ranking/Golden.
 
-### Classes de gate
+### P1 — IA assistiva
 
-- `MUST` — ausência/falha = NO-GO.
-- `CONDICIONAL` — obrigatório quando a capacidade é ativada.
-- `POSTERGADO` — não nasce silenciosamente.
-- `N/A` — justificativa explícita obrigatória.
+**APROVADO OPCIONAL:**
 
-### Gates definidos
+- Assistente de Classificação;
+- Assistente de Summary.
 
-- G-001 editorial/Elementor;
-- G-010 Content Extractor/B-001;
-- G-020 Summary/B-006;
-- G-030 Classificação/B-002;
-- G-040 Review/eventos;
-- G-050 Search Projection;
-- G-060 QueryContext/ranking;
-- Golden Queries;
-- G-070 scope/security;
-- G-080 Analytics baseline negativo;
-- G-090 queue baseline negativo;
-- G-100 compatibilidade/B-003;
-- G-110 UI/UX/a11y;
-- G-120 performance;
-- G-130 lifecycle/build/rollback;
-- G-140 reservado a T058.
+Somente sob ação explícita. Sugestão estruturada/evidenciada; Apply humano separado; provider nunca escreve owner diretamente.
 
-### Golden — decisão futura
+`include_ai` continua elegibilidade de corpus downstream e não deve ser reaproveitado como autorização de assistência editorial.
 
-Golden é configuração administrada de Search Quality, não log de usuário.
+### P2 — RAG/síntese
 
-Storage baseline permanece WordPress-first; nenhuma tabela Golden foi autorizada.
+**APROVADO OPCIONAL POSTERIOR:** retrieval-first, com fontes e abstenção. Pode nascer sobre lexical; vetor não é requisito.
 
-Registro conceitual inclui query curada, target post, item opcional, max rank, severity, estado, origem/notas e revisão. A execução de release deve guardar fingerprint do conjunto e versões/referências de retrieval suficientes para detectar evidência stale.
+Quando gate de confiança estiver ativo, corpus produtivo respeita AI READY. Falha de geração degrada para retrieval/evidências.
 
-Estados semânticos mínimos: `PASS`, `FAIL`, `NOT_CONFIGURED`, `NOT_RUN/NOT_VERIFIED`, `DEGRADED` quando aplicável.
+### P3 — embeddings/semantic/rerank
 
-- vazia = NOT_CONFIGURED, não PASS;
-- stale/não executada = NO-GO quando Search é afetada;
-- blocking fail = NO-GO;
-- warning não é convertido em PASS silencioso;
-- suite PASS não fecha B-001, performance ou security.
+**POSTERGADO COM GATE.** Reabrir apenas depois de:
 
-### Cobertura Golden
+- lexical operacional e medido;
+- B-001 fechado;
+- casos Golden semânticos/lacunas conhecidos;
+- hipótese e critério de sucesso pré-definidos;
+- custo/latência/fallback/storage avaliados.
 
-T055 escolheu cobertura por famílias de comportamento, não um número arbitrário: termo exato, sigla, acento/case, multi-token, linguagem natural, sinônimo/equivalência, sinais de Summary/Classificação, item/trecho, ambiguidade relevante e caso blocking de negócio quando aplicável.
+Hybrid é preferível a vector-only como hipótese inicial. Lexical permanece fallback.
 
-## 8. Blockers após T055
+### P4 — agentes
 
-| ID | Gate associado |
-|---|---|
-| B-001 | G-010 + corpus representativo antes de Search/RAG final |
-| B-002 | G-030 + profiling/migração classificatória |
-| B-003 | G-100 + preflight real de consumidores |
-| B-004 | mantém Analytics detalhado postergado; política antes de reabrir |
-| B-005 | item/deep-link público exige identity/anchor/browser gate |
-| B-006 | G-020 + falha tardia/read-after-write sem sucesso falso |
-| B-007 | queue/async somente se reaberta com stale/retry/recovery observáveis |
+**POSTERGADO/NEGADO NO BASELINE.** Não há jornada multi-step comprovada que justifique tool orchestration.
 
-## 9. Performance
+## 7. Chunking/embedding
 
-T055 não inventa NFRs ainda inexistentes. A futura SPEC deverá definir thresholds antes do GO e medir corpus/configuração reais: extraction/index/search, p50/p95, wall time, DB queries, memória, rebuild, FULLTEXT/fallback e casos pesados.
+Chunking não vira parser paralelo. Preferir documentos `post|item` estruturais; subchunks só por necessidade de contexto/embedding comprovada.
 
-O benchmark ASI de 100k/200k pertence ao desenho Analytics histórico e não é requisito automático do novo produto.
+Embedding futuro deve carregar lineage/fingerprint suficiente para invalidar quando mudarem origem, source hash, extractor, chunk contract, provider/model/deployment/dimensão/configuração.
 
-## 10. Próximo passo — T058
+Re-embed total sem diff/budget é NO-GO.
 
-Avaliar IA/vetor por capacidade, custo e degradação, preservando:
+T058 não aprova vector table, MariaDB VECTOR, Azure AI Search ou vector store de Foundry.
 
-- lexical independente;
-- retrieval antes de síntese;
-- IA assistiva;
-- humano como autoridade;
-- NO_CHANGE/hash para evitar retrabalho;
-- rastreabilidade e orçamento.
+## 8. Foundry
+
+Microsoft Foundry é **provider preferencial candidato**, não owner nem arquitetura do domínio.
+
+O primeiro provider seam só deve nascer junto com um caso real, mínimo e testável. Evitar factory/SDK abstraction antecipada.
+
+WordPress HTTP API é primeira opção quando adequada. Erros precisam ser tipados; retry bounded; secrets não logados; failover/provider switch não silencioso.
+
+Foundry Agent File Search fica fora do core canônico. Se surgir em agente específico, será projection derivada do corpus canônico com lineage/hash/freshness/custo.
+
+## 9. AI Operation Receipt
+
+Toda chamada externa futura deve produzir evidência suficiente para operação/custo:
+
+- tipo de operação;
+- provider/model/deployment;
+- prompt/config version;
+- objeto/contexto;
+- input/source fingerprint;
+- volume;
+- tokens/unidades;
+- custo estimado/real quando possível;
+- duração;
+- status/error class;
+- responsável quando aplicável;
+- timestamp.
+
+T058 não escolhe storage. Receipt não autoriza Search Analytics/query logging B-004.
+
+## 10. Segurança/privacidade
+
+- contexto enviado ao provider é minimizado/documentado;
+- secrets nunca entram em prompt/log/export;
+- query enviada para síntese não implica persistência local;
+- conteúdo recuperado é dado não confiável, nunca instrução/tool authorization;
+- agentes futuros são read-only por default;
+- mutação sempre volta ao handler canônico com confirmação humana.
+
+## 11. G-140 após T058
+
+Definidos em `matriz-ia-vetor.md`:
+
+- G-140A independência/degradação;
+- G-140B provider/rastreabilidade/data egress;
+- G-140C human-in-the-loop;
+- G-140D custo/budget/NO_CHANGE;
+- G-140E embedding/semantic/hybrid;
+- G-140F RAG/síntese;
+- G-140G agentes/tools;
+- G-140H provider-managed knowledge/File Search.
+
+## 12. Primeiro runtime
+
+Pode nascer com **zero IA externa**. Primeiro estabilizar P0.
+
+Quando IA for autorizada, começar por uma única jornada P1: Classificação assistida **ou** Summary assistido.
+
+## 13. Próximo passo — T059
+
+Consolidar a matriz de paridade futura final com prioridade temporal, owners, primitives, gates, blockers, fallback e cutover, preparando T090–T097.
 
 ## Estado
 
-T050–T057, incluindo **T055**, concluídas documentalmente. Próximo: **T058**. Nenhum runtime foi autorizado.
+T050–T058 concluídas documentalmente. Nenhum runtime/IA/vector foi autorizado ou criado. Próximo: **T059**.

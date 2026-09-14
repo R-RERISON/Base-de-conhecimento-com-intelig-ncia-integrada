@@ -87,6 +87,8 @@ Antes de alterar runtime:
 9. Implementar o menor vertical slice funcional.
 10. Executar regressão e validar visualmente.
 11. Atualizar documentação e estado da SPEC.
+12. Criar/atualizar `CONTINUIDADE.md` da SPEC com prompt autossuficiente para novo chat.
+13. Conferir o handoff contra `docs/DEFINITION-OF-DONE.md`.
 
 ## Regra anti-regressão
 
@@ -114,6 +116,30 @@ São proibidas por padrão durante instalação/ativação:
 - chamadas de IA em massa sem estimativa de custo.
 
 Qualquer limpeza definitiva deve ser explícita, autorizada, auditável e reversível quando possível.
+
+## Continuidade entre chats
+
+O contexto de conversa não é considerado armazenamento confiável do projeto.
+
+Toda implementação material deve terminar com um `CONTINUIDADE.md` atualizado na pasta da SPEC ativa, baseado em `.specify/templates/continuity-prompt-template.md`.
+
+O Prompt de Continuidade deve permitir que um novo chat retome o trabalho sem conhecimento prévio da conversa anterior e deve conter, no mínimo:
+
+- repositório, branch e commit;
+- SPEC e estado;
+- baseline comprovado;
+- implementações concluídas;
+- decisões e invariantes;
+- arquivos/dados/contratos afetados;
+- testes e gates com resultados;
+- gaps, riscos e blockers;
+- itens fora de escopo;
+- próximo passo exato;
+- critério de conclusão do próximo passo.
+
+O novo chat deve ser instruído a reler AGENTS, Manifesto, Constituição, SPEC, DoD e confirmar o estado do GitHub antes de modificar qualquer coisa.
+
+Frases vagas como “continue de onde paramos” não são handoff aceitável.
 
 ## Definition of Ready resumida
 
@@ -143,4 +169,5 @@ Uma SPEC só termina quando:
 - documentação está atualizada;
 - nenhum dado editorial foi indevidamente alterado;
 - regressões dos contratos relevantes passam;
-- custo/telemetria foi tratado quando houver IA ou processamento intensivo.
+- custo/telemetria foi tratado quando houver IA ou processamento intensivo;
+- `CONTINUIDADE.md` está atualizado e pronto para um novo chat.

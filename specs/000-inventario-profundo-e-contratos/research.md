@@ -178,21 +178,66 @@ Blocker é contextual: B-005, por exemplo, não impede um slice inicial sem deep
 - rollups sem benchmark;
 - SPA/REST.
 
-## 8. Próximo passo — T056
+## 8. T056 — WordPress-first
 
-Aplicar WordPress-first por conceito/capacidade, sem implementar:
+Artefato canônico: `matriz-wordpress-first.md`.
 
-- postmeta vs taxonomy;
-- revisions/histórico;
-- options/settings;
-- admin-post/AJAX;
-- Site Health;
-- transients/object cache;
-- WP-Cron;
-- users/capabilities;
-- native search versus projection própria.
+### Decisões consolidadas
 
-Somente o que WordPress não atender com evidência segue para T057 como candidato a infraestrutura própria.
+- `WP_Post`/Elementor continuam fonte editorial; nenhuma projection ganha write editorial.
+- Resumo narrativo (`objective`, `escalation`, `important`) permanece em Metadata API.
+- Revisão/Governança permanece em Metadata API + WP Users; histórico bounded também cabe em metadata enquanto não existir requisito de audit transversal/imutável.
+- Revisions foi avaliada antes de qualquer histórico próprio; meta revisionável é primitive disponível quando snapshot for requisito.
+- classificação não ganhou tabela própria;
+- audience, knowledge type, service e technologies têm **Taxonomy API** como primitive futura preferida porque reutilização/filtro/faceta estão comprovados nas baselines;
+- responsible team, catalog item, affected service e systems involved permanecem entre Metadata/Taxonomy até B-002, sem seguir para T057;
+- keywords e versions permanecem Metadata no baseline por ausência de faceta global comprovada;
+- Search Knowledge (`vocabulary`, `bindings`, `rules`) e Golden Queries ficam em `WP_Post` interno + Metadata/Revisions enquanto o conjunto governado permanecer de baixa/moderada cardinalidade;
+- Settings/Options, Users/Roles/Capabilities, Nonces, `admin-post`, Site Health, Transients/Object Cache e WP-Cron foram confirmados como primitives nativas;
+- AJAX é somente enhancement de live UX;
+- REST continua negado sem consumidor formal;
+- WP-Cron é trigger, não durable queue;
+- native search permanece fallback, mas é insuficiente para paridade Search Elementor-aware/Item Knowledge porque o Core busca essencialmente `post_title`, `post_excerpt` e `post_content` e não oferece o documento derivado/ranker composto necessário.
+
+### Lista reduzida para T057
+
+Somente três famílias seguem como **candidatas**, sem schema pré-aprovado:
+
+1. `F-057-01` — Search Retrieval Projection: índice lexical + itens/identidade pesquisável;
+2. `F-057-02` — Analytics Facts, condicional a B-004 e requisito real;
+3. `F-057-03` — Durable Job State, condicional a workload assíncrono que exija lease/retry/dead/recovery.
+
+Tudo o mais permanece em Core ou em `AINDA_NAO_SABEMOS` entre primitives WordPress.
+
+### Resultado do princípio de negação
+
+T056 rejeitou antecipadamente:
+
+- tabela para Resumo;
+- tabela para Classificação;
+- tabela para Review/history bounded;
+- tabela para Search Knowledge/Golden sem evidência de escala;
+- health dashboard técnico paralelo por default;
+- cache próprio durável;
+- scheduler próprio;
+- REST por modernidade;
+- queue apenas porque ASI possuía uma;
+- stores de analytics KB2Ops como segundo pipeline.
+
+## 9. Próximo passo — T057
+
+T057 deve começar pelas três famílias `F-057-*` e tentar reduzir/eliminar cada uma antes de desenhar qualquer storage.
+
+Critérios obrigatórios por candidato:
+
+- workload/volume real ou hipótese explicitamente bounded;
+- consultas e índices necessários;
+- latência/SLA;
+- concorrência/durabilidade;
+- reconstruibilidade;
+- comportamento de falha/stale;
+- alternativa Core rejeitada com evidência;
+- menor extensão capaz de atender.
 
 ## Decisões ainda proibidas
 
@@ -206,4 +251,4 @@ Somente o que WordPress não atender com evidência segue para T057 como candida
 
 ## Estado
 
-T050–T054 concluídas documentalmente. Próximo: **T056**.
+T050–T054 e **T056 concluídas documentalmente**. Próximo: **T057**.

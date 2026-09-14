@@ -22,9 +22,9 @@
 - [x] Mapa de ownership. _(T052)_
 - [x] Matriz de sobreposição. _(T053)_
 - [x] Drifts/contratos quebrados consolidados. _(T054 — `mapa-contratos-quebrados.md`)_
-- [ ] Catálogo de regressão/Golden futuro consolidado. _(T055)_
-- [ ] Matriz WordPress-first final. _(T056 — próximo)_
-- [ ] Infraestrutura própria mínima justificada. _(T057)_
+- [ ] Catálogo de regressão/Golden futuro consolidado. _(T055 — fechar após T057)_
+- [x] Matriz WordPress-first final. _(T056 — `matriz-wordpress-first.md`)_
+- [ ] Infraestrutura própria mínima justificada. _(T057 — próximo)_
 - [ ] Candidatos IA/vetor priorizados. _(T058)_
 - [ ] Matriz de paridade futura final. _(T059)_
 
@@ -64,6 +64,24 @@
 - [x] todo adapter temporário exige entrada, owner, modo, observabilidade, rollback, remoção e teste.
 - [x] nenhuma migration/runtime/taxonomy/tabela foi criada.
 
+## Evidência T056 — WordPress-first
+
+- [x] `WP_Post`/Elementor permanecem fonte editorial; nenhum downstream ganha write editorial.
+- [x] Summary narrativo permanece em Metadata API; nenhuma tabela é justificada.
+- [x] Review state/notas/revisor/include AI/histórico bounded permanecem em primitives WP.
+- [x] classificação foi avaliada campo a campo; taxonomy só foi preferida quando reutilização/filtro/faceta têm evidência.
+- [x] `responsible_team`, `catalog_item`, `affected_service` e `systems_involved` permanecem `AINDA_NAO_SABEMOS` entre Metadata e Taxonomy, sem ir para T057.
+- [x] Settings/Options, Users/Roles/Capabilities, Nonces e `admin-post` foram confirmados como primitives baseline.
+- [x] AJAX permanece enhancement de UX live; REST continua negado sem consumidor formal.
+- [x] Site Health substitui health dashboard paralelo como default.
+- [x] Revisions foram avaliadas antes de audit/histórico próprio.
+- [x] Transients/Object Cache ficaram restritos a cache reconstruível; não são durable state.
+- [x] WP-Cron foi aprovado como trigger, não confundido com fila durável.
+- [x] native search foi avaliada e mantida como fallback, mas provada insuficiente para a paridade lexical/Item Knowledge Elementor-aware.
+- [x] Search Knowledge/Golden permanecem inicialmente em `WP_Post` interno + Metadata/Revisions, sem tabela própria.
+- [x] T057 foi reduzida a três famílias condicionais: Search Retrieval Projection, Analytics Facts e Durable Job State.
+- [x] nenhuma tabela/schema/CPT/taxonomy/runtime foi registrada ou criada; T056 é somente documental.
+
 ## Gate final
 
 - [ ] Revisão Orquestrador.
@@ -78,4 +96,4 @@
 
 ## Estado
 
-T050–T054 concluídas documentalmente. Próximo passo autorizado: **T056 — matriz WordPress-first**. Runtime novo continua inexistente.
+T050–T054 e T056 concluídas documentalmente. Próximo passo autorizado: **T057 — infraestrutura própria mínima justificada**. Runtime novo continua inexistente.

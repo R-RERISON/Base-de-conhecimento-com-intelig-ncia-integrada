@@ -45,7 +45,7 @@ Estado:
 3. [x] T050 — persistência consolidada por conceito;
 4. [x] T051 — integrações consolidadas por contrato;
 5. [x] T054 — drifts, compatibilidade, preflight e blockers;
-6. [ ] T056 — WordPress-first;
+6. [x] T056 — WordPress-first por conceito/capacidade;
 7. [ ] T057 — infraestrutura própria mínima;
 8. [ ] T055 — regressões/Golden finais;
 9. [ ] T058 — IA/vetor priorizados;
@@ -61,28 +61,74 @@ Estado:
 - `catalogo-persistencia.md`;
 - `catalogo-integracoes.md`;
 - `mapa-contratos-quebrados.md`;
+- `matriz-wordpress-first.md`;
 - `catalogo-testes-regressao.md`;
 - `matriz-paridade-futura.md`;
 - `riscos-e-drifts.md`.
 
-## Regra específica após T054
+## Resultado de T056
 
-Nenhuma primitive física deve ser escolhida por medo de compatibilidade.
+T056 aplicou a ordem WordPress-first antes de admitir qualquer infraestrutura própria.
 
-T056 deve perguntar primeiro:
+### Resolvido com WordPress Core
 
-- WordPress Metadata resolve?
-- Taxonomy API resolve?
-- Options/Settings resolve?
-- Revisions resolvem?
-- admin-post resolve?
-- Site Health resolve?
-- WP-Cron resolve como trigger?
-- transient/object cache resolve?
+- Editorial: `WP_Post` + Elementor read-only.
+- Resumo narrativo: Metadata API.
+- Revisão/Governança: Metadata API + WP Users + Revisions quando aplicável.
+- Classificação: Metadata/Taxonomy conforme semântica e padrão de consulta; nenhum campo justificou tabela própria.
+- Search Knowledge/Golden: `WP_Post` interno + Metadata/Revisions como baseline enquanto volume permanecer governado/baixo.
+- Configuração: Settings/Options.
+- Segurança: Users/Roles/Capabilities + Nonces.
+- Mutação administrativa: `admin-post`.
+- Live UX: AJAX somente se necessário.
+- REST: nenhum endpoint sem consumidor formal.
+- Health: Site Health.
+- Cache: Transients/Object Cache, sempre reconstruível.
+- Scheduling: WP-Cron como trigger.
+- Coverage/read models simples: `WP_Query` bounded + cache quando medido.
 
-Somente o que falhar de forma comprovada segue para T057.
+### Classificações
 
-Compatibilidade não altera essa ordem: adapter/alias é temporário e não define arquitetura futura.
+Taxonomy foi preferida apenas onde a baseline demonstra reutilização/filtro/faceta:
+
+- audiência;
+- tipo de conhecimento;
+- serviço;
+- tecnologias.
+
+Permanecem entre Metadata/Taxonomy, sob B-002:
+
+- equipe responsável;
+- item de catálogo;
+- serviço afetado;
+- sistemas envolvidos.
+
+`keywords` e `versions` permanecem Metadata no baseline T056 por ausência de requisito comprovado de faceta global.
+
+### Candidatos que restaram para T057
+
+1. `F-057-01` — Search Retrieval Projection: documento lexical + itens/identidade pesquisável, sem schema pré-escolhido.
+2. `F-057-02` — Analytics Facts: **condicional** a B-004 e requisito real de eventos/interações/outcomes.
+3. `F-057-03` — Durable Job State: **condicional** a workload assíncrono que realmente exija lease/retry/dead/recovery.
+
+“Candidato” não significa “aprovado”. T057 deve tentar matar/reduzir cada família antes de desenhar storage.
+
+## Regra específica após T056
+
+T057 deve começar pelo workload e pela limitação, nunca pelo schema.
+
+Para cada `F-057-*`:
+
+1. qual comportamento não cabe no Core;
+2. qual volumetria/latência/SLA existe;
+3. qual consulta precisa ser eficiente;
+4. qual durabilidade/concorrência é necessária;
+5. o que é reconstruível;
+6. qual é a menor extensão possível;
+7. como a extensão degrada/recupera;
+8. se a capacidade pode simplesmente não nascer no primeiro slice.
+
+É proibido usar as 12 tabelas do ASI como checklist de implementação.
 
 ## Gate de conclusão
 

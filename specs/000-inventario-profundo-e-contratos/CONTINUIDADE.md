@@ -21,10 +21,10 @@ ANTES DE QUALQUER ALTERAÇÃO
 PROJETO
 - Repositório: R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
 - Branch: main
-- HEAD confirmado antes do bloco T054: c4f671f43fe41f2a5e8ee9db706223b52d5a27eb
-- O commit que contém esta versão representa o fechamento documental de T054; confirme o SHA atual antes da próxima escrita.
+- HEAD confirmado antes do bloco T056: fe40f8a56e2efb440f748963ef58c3b69cba4470
+- O commit que contém esta versão representa o fechamento documental de T056; confirme o SHA atual antes da próxima escrita.
 - SPEC ativa: SPEC-000 — Inventário Profundo e Contratos dos Projetos de Referência
-- Estado: inventários individuais + T050/T051/T052/T053/T054 concluídos documentalmente; nenhum runtime novo.
+- Estado: inventários individuais + T050/T051/T052/T053/T054/T056 concluídos documentalmente; nenhum runtime novo.
 
 BASELINES FIXADAS
 - ASI 4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1
@@ -41,6 +41,7 @@ TAREFAS CONCLUÍDAS
 - T052 ownership.
 - T053 sobreposição.
 - T054 contratos quebrados/drifts/compatibilidade/blockers.
+- T056 matriz WordPress-first.
 
 ARTEFATOS CENTRAIS
 - mapa-ownership-dados.md
@@ -48,6 +49,7 @@ ARTEFATOS CENTRAIS
 - catalogo-persistencia.md
 - catalogo-integracoes.md
 - mapa-contratos-quebrados.md
+- matriz-wordpress-first.md
 - riscos-e-drifts.md
 - matriz-paridade-futura.md
 - research.md
@@ -95,7 +97,7 @@ T050/T051 — CONTRATOS CONSOLIDADOS
 - admin-post/server-rendered baseline;
 - AJAX só por live UX;
 - REST negado sem consumidor;
-- queue ainda não autorizada;
+- queue não nasce por herança;
 - shortcodes históricos não têm alias aprovado sem preflight.
 
 T054 — DRIFTS E COMPATIBILIDADE
@@ -136,6 +138,77 @@ D-008 AI READY
 - baseline: publish + approved + 8/8 + include_ai;
 - futuro: regra única/testada; derivada, não fonte canônica.
 
+T056 — WORDPRESS-FIRST
+Arquivo canônico: matriz-wordpress-first.md.
+
+DECISÕES CORE
+- WP_Post/Elementor continuam fonte editorial.
+- Summary objective/escalation/important -> Metadata API.
+- Review state/notes/reviewer/include_ai/history bounded -> Metadata API + Users; Revisions avaliadas quando snapshot for requisito.
+- Settings -> Settings/Options API.
+- Authorization -> Users/Roles/Capabilities.
+- CSRF -> Nonces; nonce nunca substitui capability.
+- Admin mutations -> admin-post baseline.
+- AJAX -> somente live UX.
+- REST -> nenhum consumidor atual; não criar.
+- Health -> Site Health.
+- Cache -> Transients/Object Cache; sempre reconstruível.
+- Scheduling -> WP-Cron como trigger, nunca como durable job store.
+- Search Knowledge vocabulary/bindings/rules -> WP_Post interno + Metadata/Revisions inicialmente.
+- Golden Queries -> WP_Post interno + Metadata/Revisions inicialmente.
+
+CLASSIFICAÇÃO T056
+- audience -> Taxonomy API; cutover B-002.
+- knowledge_type -> Taxonomy API; cutover B-002.
+- service -> Taxonomy API; separado de affected_service.
+- technologies -> Taxonomy API; separado de systems_involved.
+- keywords -> Metadata API no baseline.
+- versions -> Metadata API no baseline.
+- responsible_team -> AINDA_NAO_SABEMOS entre Metadata/Taxonomy; B-002/D-005.
+- catalog_item -> AINDA_NAO_SABEMOS entre Metadata/Taxonomy; B-002.
+- affected_service -> AINDA_NAO_SABEMOS entre Metadata/Taxonomy; B-002.
+- systems_involved -> AINDA_NAO_SABEMOS entre Metadata/Taxonomy; B-002.
+
+IMPORTANTE
+- os quatro unknowns classificatórios NÃO seguem para T057; continuam dentro de primitives WordPress.
+- taxonomy não foi escolhida só por ser classificação; somente onde reutilização/filtro/faceta têm evidência.
+- nenhum CPT/taxonomy/meta foi registrado no runtime; a decisão é documental.
+
+SEARCH T056
+- WP_Query/native search permanece fallback.
+- native search é insuficiente para paridade completa porque opera sobre title/excerpt/content e não fornece por si só documento Elementor extraído + Summary/Classificação + Item Knowledge + ranker composto.
+- meta LIKE/_elementor_data KB2Ops continua rejeitado como arquitetura futura.
+
+ÚNICOS CANDIDATOS PARA T057
+F-057-01 — Search Retrieval Projection
+- lexical por post + itens/identidade pesquisável;
+- sem schema/tabela escolhidos;
+- T057 deve provar corpus, consultas, latência, rebuild e índices mínimos.
+
+F-057-02 — Analytics Facts, CONDICIONAL
+- events/interactions/outcomes somente se requisito sobreviver;
+- B-004 obrigatoriamente antes da aprovação;
+- pode morrer em T057 sem implementação.
+
+F-057-03 — Durable Job State, CONDICIONAL
+- somente se index/rebuild assíncrono exigir lease/retry/dead/recovery;
+- WP-Cron continua sendo trigger;
+- pode morrer se processamento bounded/manual atender.
+
+ITENS RETIRADOS DE T057
+- Summary;
+- Classification;
+- Review/history bounded;
+- Settings/Options;
+- Users/Capabilities/Nonces;
+- admin-post/AJAX/REST transportes;
+- Search Knowledge/Golden, enquanto governados/baixo volume;
+- Site Health;
+- caches;
+- Coverage/read models simples;
+- Revisions;
+- audit/evidência operacional de baixa frequência.
+
 COMPATIBILIDADE DE HOOKS/SHORTCODES
 - bdc_es_loaded: preflight.
 - kb2ops_loaded: preflight.
@@ -155,14 +228,14 @@ Shortcodes em preflight:
 
 Nenhum alias está aprovado.
 
-BLOCKERS T054
+BLOCKERS
 B-001 — Content Extractor representativo para Search/RAG.
 B-002 — profiling classificatório antes de migração/cutover.
 B-003 — preflight de consumidores antes de retirar plugins/aliases.
-B-004 — política de Analytics/query text antes de telemetria detalhada.
+B-004 — política de Analytics/query text antes de telemetria detalhada/F-057-02.
 B-005 — deep-link/anchors antes de paridade completa Item Knowledge.
 B-006 — semântica de falha multi-campo antes do write path composto definitivo.
-B-007 — stale/observabilidade antes de async indexing/queue em produção.
+B-007 — stale/observabilidade antes de async indexing/queue em produção/F-057-03.
 
 Blockers são contextuais. Não bloquear um slice que não usa a capacidade correspondente.
 
@@ -186,13 +259,12 @@ DADOS QUE NÃO PODEM SER PERDIDOS SEM DECISÃO
 Telemetria histórica não é automaticamente migrada; depende de política explícita.
 
 O QUE AINDA NÃO FOI DECIDIDO
-- taxonomy versus postmeta por classificação;
+- profiling/cutover dos campos classificatórios e termos finais;
 - nomes/chaves/cardinalidade finais;
-- revisions/history;
-- schema Search Index/Items;
-- storage Search Knowledge/Golden;
-- necessidade concreta de queue;
-- Analytics facts/schema/retention;
+- quais metas usam Revisions além do histórico explícito;
+- schema mínimo de F-057-01, se aprovado;
+- política/schema mínimo de F-057-02, se aprovado;
+- necessidade/schema mínimo de F-057-03, se aprovado;
 - deep-link/anchors;
 - preflight real dos consumidores;
 - chunks/vector/embeddings;
@@ -201,7 +273,7 @@ O QUE AINDA NÃO FOI DECIDIDO
 
 O QUE NÃO DEVE SER FEITO AGORA
 - não criar bootstrap/runtime;
-- não registrar taxonomy;
+- não registrar taxonomy/CPT/meta final;
 - não criar tabela/schema;
 - não implementar migration/adapters/aliases;
 - não integrar Foundry;
@@ -210,45 +282,32 @@ O QUE NÃO DEVE SER FEITO AGORA
 - não alterar ASI/GRE/KB2Ops;
 - não iniciar SPEC-001.
 
-PRÓXIMO PASSO EXATO — T056
-Construir a matriz WordPress-first por conceito/capacidade.
+PRÓXIMO PASSO EXATO — T057
+Identificar infraestrutura própria mínima justificada, restrita inicialmente a F-057-01..03.
 
-Para cada necessidade:
-1. listar requisito/comportamento;
-2. owner lógico;
-3. primitive WordPress candidata;
-4. por que atende ou não atende;
-5. constraints de cardinalidade/consulta/volume/segurança;
-6. compatibilidade/migração afetada;
-7. decisão: SUBSTITUIR_POR_WORDPRESS | MANTER WP | CANDIDATO_INFRA_PROPRIA_T057 | AINDA_NAO_SABEMOS;
-8. evidência necessária para resolver unknowns.
+PARA CADA FAMÍLIA
+1. reafirmar comportamento e owner;
+2. demonstrar limitação da primitive WordPress já avaliada em T056;
+3. estimar/registrar volume, cardinalidade, taxa de escrita e consultas;
+4. definir latência/SLA e concorrência/durabilidade;
+5. separar canônico de projection/operacional;
+6. verificar se uma única infraestrutura mínima cobre mais de um comportamento sem acoplamento indevido;
+7. comparar NÃO CONSTRUIR / síncrono bounded / WP Core / extensão própria;
+8. somente se próprio vencer, documentar requisitos de storage/índices — ainda sem runtime;
+9. preservar fallback/degradação/rollback;
+10. registrar testes/evidência que T055 precisará proteger.
 
-Avaliar obrigatoriamente:
-- WP_Post/Elementor;
-- Metadata API;
-- Taxonomy API;
-- Options/Settings API;
-- Users/Roles/Capabilities;
-- Nonces;
-- admin-post;
-- AJAX somente quando necessário;
-- Site Health;
-- Revisions;
-- Transients/Object Cache;
-- WP-Cron como trigger;
-- native search antes de projection própria.
-
-CRITÉRIO PARA FECHAR T056
-- cada dado/capacidade tem primitive WP avaliada;
-- taxonomia não é escolhida só porque campo é classificatório;
-- tabela própria não é escolhida em T056;
-- tudo que WordPress atender é retirado da lista T057;
-- somente limitações comprovadas seguem para infraestrutura própria;
-- compatibilidade T054 não distorce a arquitetura;
-- T057 começa com uma lista pequena e justificada.
+CRITÉRIO PARA FECHAR T057
+- cada F-057 foi aprovada, reduzida ou descartada por evidência;
+- nenhuma das 12 tabelas ASI renasceu por inércia;
+- nenhum schema existe sem workload/consulta explícitos;
+- Analytics não avança sem B-004;
+- queue não avança sem necessidade real + B-007;
+- Search projection permanece reconstruível e nunca owner editorial;
+- nenhum runtime foi criado.
 
 ORDEM RESTANTE
-T056 -> T057 -> T055 -> T058 -> T059 -> T090–T097.
+T057 -> T055 -> T058 -> T059 -> T090–T097.
 
 REGRA DE CONTINUIDADE
 Repositório/Constituição/Manifesto/SPEC prevalecem sobre memória de chat. Não transformar intenção em conclusão sem evidência versionada.
@@ -257,12 +316,12 @@ Repositório/Constituição/Manifesto/SPEC prevalecem sobre memória de chat. N�
 ## 2. Estado resumido
 
 - SPEC-000 ativa.
-- HEAD antes de T054: `c4f671f43fe41f2a5e8ee9db706223b52d5a27eb`.
-- T050–T054 concluídas documentalmente.
-- Próximo: T056.
+- HEAD antes de T056: `fe40f8a56e2efb440f748963ef58c3b69cba4470`.
+- T050–T054 + T056 concluídas documentalmente.
+- Próximo: T057.
 - Runtime novo: inexistente.
 - SPEC-001: bloqueada até T097.
 
 ## 3. Regra de atualização
 
-Atualizar este arquivo ao concluir T056. Não acumular estados contraditórios.
+Atualizar este arquivo ao concluir T057. Não acumular estados contraditórios.

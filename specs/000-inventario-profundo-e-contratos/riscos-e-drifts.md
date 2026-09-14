@@ -1,8 +1,10 @@
 # Riscos, Drifts e Dívidas — SPEC-000
 
-> Estado após T058. Fontes canônicas: `mapa-contratos-quebrados.md`, `matriz-wordpress-first.md`, `infraestrutura-propria-minima.md`, `catalogo-testes-regressao.md` e `matriz-ia-vetor.md`.
+> Estado após **T059**. Fontes canônicas: `mapa-contratos-quebrados.md`, `matriz-wordpress-first.md`, `infraestrutura-propria-minima.md`, `catalogo-testes-regressao.md`, `matriz-ia-vetor.md` e `matriz-paridade-futura.md`.
 
-## 1. Drifts D-001–D-008 preservados
+## 1. Drifts D-001–D-008
+
+Permanecem válidos e não foram apagados pela consolidação:
 
 - D-001 `Objective_Provider`: adapter somente por coexistência comprovada.
 - D-002 evento Objective: futuro pós-write confirmado; bridge apenas se necessário.
@@ -11,21 +13,21 @@
 - D-005 GAC: fora do core.
 - D-006 classificação duplicada: owner resolvido; B-002 antes do cutover.
 - D-007 UI/CSS fragmentados: DS único futuro.
-- D-008 AI READY: regra futura testada `publish + approved + 8/8 + include_ai`.
+- D-008 AI READY: contrato único testado `publish + approved + 8/8 + include_ai` enquanto vigente.
 
-## 2. Blockers B-001–B-007
+## 2. Blockers após T059
 
-- **B-001:** extractor representativo — blocker de Search/RAG/embeddings produtivos.
-- **B-002:** profiling classificatório — blocker de cutover classificatório.
-- **B-003:** preflight de consumidores — blocker de retirada de aliases/plugins.
-- **B-004:** Analytics/query text — mantém Analytics detalhado postergado.
-- **B-005:** anchors/deep-link — blocker de paridade pública completa de item.
-- **B-006:** falha multi-campo — blocker do write path composto definitivo.
-- **B-007:** stale/async queue — blocker se durable queue/async for reaberto.
+- **B-001:** extractor representativo — Search/RAG/embedding produtivos.
+- **B-002:** profiling classificatório — cutover/migração e quatro decisões Metadata vs Taxonomy.
+- **B-003:** preflight de consumidores — retirada de plugins/aliases/adapters.
+- **B-004:** política Analytics/query text — Analytics detalhado/query logging.
+- **B-005:** anchors/deep-link — exposição pública navegável de item.
+- **B-006:** falha multi-campo — write path composto definitivo.
+- **B-007:** stale/async queue — durable queue/async indexing.
 
-T058 não elimina esses blockers e adiciona gates de IA sem transformá-los em infraestrutura.
+**Regra T059:** blocker contextual não é blocker global. T095 precisa fechar/postergar por slice e registrar dependência explícita.
 
-## 3. Riscos ativos anteriores
+## 3. Riscos ativos preservados
 
 Continuam vigentes:
 
@@ -41,138 +43,89 @@ Continuam vigentes:
 - activation pesada;
 - scans/meta LIKE sem bound;
 - benchmark fictício;
-- UI fragmentada.
+- UI fragmentada;
+- LLM no caminho crítico;
+- confusão `include_ai`/assistência editorial;
+- IA persistindo owner diretamente;
+- provider lock-in;
+- batch sem budget/NO_CHANGE;
+- embedding/chunk drift;
+- semantic piorando Golden blocking;
+- File Search virando segunda fonte;
+- síntese sem evidência;
+- prompt injection;
+- secrets/payload em logs;
+- failover silencioso;
+- preços/defaults de provider rigidificados;
+- RAG acoplado a vetor sem necessidade;
+- agentes antes de jornada multi-step.
 
-Tratamento permanece G-001–G-130 + B-001–B-007.
+Tratamento permanece G-001–G-140 + B-001–B-007.
 
-## 4. Novos riscos T058 — IA/Vetor
+## 4. Riscos específicos de consolidação T059
 
-### X-023 — LLM no caminho crítico da Search
+### X-038 — “primeiro runtime” virar big-bang
 
-**Risco:** latência/custo/quota/provider outage derrubam a Search.  
-**Tratamento:** LLM em toda query foi descartado; lexical independente; G-140A.
+**Risco:** Core, domínio, Search, IA e cutover entrarem na mesma SPEC por estarem marcados como necessários ao produto final.  
+**Tratamento:** T059 define PRIMEIRO_RUNTIME como **onda de vertical slices**, não pacote único; sequência de risco está versionada.
 
-### X-024 — confundir `include_ai` com autorização de assistência editorial
+### X-039 — blocker contextual virar NO-GO global
 
-**Risco:** drafts/revisões ficam acoplados à elegibilidade de corpus downstream.  
-**Tratamento:** AI READY permanece distinto de eventual `AI Assist Allowed`; G-140C.
+**Risco:** projeto ficar paralisado tentando fechar B-001–B-007 antes de qualquer slice.  
+**Tratamento:** matriz relaciona cada blocker à capacidade que ele realmente bloqueia; T095/T097 avaliam dependência por slice.
 
-### X-025 — sugestão persistir diretamente
+### X-040 — derived data tratado como patrimônio de cutover
 
-**Risco:** IA vira owner factual/editorial.  
-**Tratamento:** Generate != Apply; Apply humano usa handlers canônicos; G-140C.
+**Risco:** migrar índices, caches, queue, rollups, telemetria ou embeddings por inércia, criando dívida no greenfield.  
+**Tratamento:** lista explícita de dados que devem sobreviver; projections reconstruíveis não são migração obrigatória.
 
-### X-026 — provider SDK contaminar domínio
+### X-041 — unknown de primitive virar permissão para tabela própria
 
-**Risco:** lock-in e lógica de negócio dependente de Foundry.  
-**Tratamento:** provider seam mínimo, WordPress HTTP API quando adequado, Foundry como adapter; G-140B.
+**Risco:** `responsible_team`, `catalog_item`, `affected_service` ou `systems_involved` ganharem store próprio porque Metadata vs Taxonomy ainda está aberto.  
+**Tratamento:** unknown está restrito a primitives WordPress sob B-002; não entra em T057 retroativamente.
 
-### X-027 — batch sem budget/NO_CHANGE
+### X-042 — compatibilidade definir arquitetura permanente
 
-**Risco:** custo imprevisível, processamento redundante, throttling.  
-**Tratamento:** preview/estimativa/budget/stop condition/hash; G-140D. Worker durável exige reabrir F-057-03/B-007.
+**Risco:** alias/shortcode/adapter histórico virar API oficial só porque existe consumidor antigo.  
+**Tratamento:** COMPAT_CUTOVER exige consumidor, observabilidade, rollback, equivalência e gate de remoção.
 
-### X-028 — embedding/chunk drift
-
-**Risco:** vetores incompatíveis coexistem após mudança de modelo/dimensão/extractor/chunking.  
-**Tratamento:** fingerprint/lineage/version; re-embed seletivo; G-140E.
-
-### X-029 — semantic/hybrid piorar casos críticos
-
-**Risco:** média melhora, Golden blocking piora.  
-**Tratamento:** baseline lexical congelado, Golden antes/depois, critério fixado antes do experimento, lexical fallback; G-140E.
-
-### X-030 — File Search/vector store virar segunda fonte de conhecimento
-
-**Risco:** duplicação de chunking/identity/freshness/cutover.  
-**Tratamento:** Foundry File Search descartado como core; projection somente para agente específico; G-140H.
-
-### X-031 — síntese sem evidência
-
-**Risco:** resposta plausível sem suporte no corpus.  
-**Tratamento:** retrieval -> evidências -> síntese -> fontes, abstenção e grounded evaluation; G-140F.
-
-### X-032 — prompt injection via conteúdo recuperado
-
-**Risco:** artigo malicioso manipula instrução/tool.  
-**Tratamento:** conteúdo é dado, não comando; tools allowlisted/server-validated; G-140F/G.
-
-### X-033 — logs de IA vazarem secrets/payload
-
-**Risco:** credenciais/dados sensíveis em diagnostics/receipts.  
-**Tratamento:** minimização, sem secrets/payload completo por default; G-140B.
-
-### X-034 — failover silencioso
-
-**Risco:** muda provider/região/custo/política sem decisão.  
-**Tratamento:** failover explícito e governado; G-140B.
-
-### X-035 — defaults/preços atuais virarem arquitetura rígida
-
-**Risco:** provider evolui e contrato do produto quebra.  
-**Tratamento:** não hard-code preço/default como regra de domínio; registrar snapshot/fonte para estimativa.
-
-### X-036 — RAG depender de vetor desnecessariamente
-
-**Risco:** atrasar valor de síntese e criar infraestrutura prematura.  
-**Tratamento:** RAG P2 pode usar lexical; embedding/semantic permanecem P3.
-
-### X-037 — agentes antes de caso multi-step
-
-**Risco:** tool security, estado e custo sem valor comprovado.  
-**Tratamento:** agentes P4 postergados/negados no baseline; G-140G.
-
-## 5. Infraestrutura e IA após T058
+## 5. Infraestrutura após T059
 
 ### Aprovada documentalmente
 
-- Search Retrieval Projection lexical/item futura;
-- IA assistiva P1 como capacidade opcional de produto, ainda sem runtime/provider/storage;
-- RAG/síntese P2 opcional posterior, retrieval-first.
+- uma Search Retrieval Projection futura `post|item`, reconstruível;
+- IA P1 como capacidade opcional posterior, sem storage/provider runtime aprovado;
+- RAG P2 opcional posterior, retrieval-first.
 
 ### Postergada/não autorizada
 
 - Analytics detalhado;
 - durable queue;
 - vector table/vector store;
-- MariaDB VECTOR;
-- Azure AI Search como dependência;
+- MariaDB VECTOR/Azure AI Search como dependência;
 - Foundry File Search como core;
 - embeddings;
 - semantic/hybrid retrieval;
 - reranking;
 - agentes/tools;
-- batch IA automático.
+- batch IA automático;
+- audit genérico/quality rollups;
+- REST/SPA sem consumidor.
 
-## 6. Custos e observabilidade
+## 6. Dados de cutover
 
-Toda chamada de IA futura precisa de AI Operation Receipt conceitual e budget quando aplicável. T058 não autoriza um novo stream/tabela de receipts; storage deve ser avaliado WordPress-first na SPEC concreta.
+Devem sobreviver até decisão/migração comprovada:
 
-Preço/provider limit é dado operacional versionado, não constante arquitetural.
+- WordPress/Elementor/taxonomias editoriais;
+- oito valores GRE;
+- Review/include_ai/notas/revisor/histórico KB2Ops válidos;
+- classificações KB2Ops efetivamente usadas;
+- Search Knowledge ASI manual real;
+- Golden Queries ASI úteis.
 
-## 7. Dados/privacidade
+Telemetria histórica não migra automaticamente. Índices/caches/queues/rollups/migrations registry/embeddings são derivados ou operacionais e não ganham preservação canônica por padrão.
 
-- context egress precisa ser explícito/minimizado;
-- query enviada ao provider não implica persistência local;
-- B-004 continua governando Search Analytics;
-- AI READY governa elegibilidade downstream quando ativo;
-- assistência editorial em draft requer política/capability separada;
-- secrets não entram em logs/prompt/export.
-
-## 8. G-140
-
-Subgates canônicos definidos em `matriz-ia-vetor.md`:
-
-- G-140A independência/degradação;
-- G-140B provider/rastreabilidade/data egress;
-- G-140C human-in-the-loop;
-- G-140D custo/budget/NO_CHANGE;
-- G-140E embedding/semantic/hybrid;
-- G-140F RAG/síntese;
-- G-140G agentes/tools;
-- G-140H provider-managed knowledge.
-
-## 9. Dívidas postergáveis
+## 7. Dívidas postergáveis
 
 - Word Cloud;
 - GAC sem requisito;
@@ -185,12 +138,12 @@ Subgates canônicos definidos em `matriz-ia-vetor.md`:
 - agentes;
 - rollups/materializações sem benchmark.
 
-Não bloqueiam slices que não dependem delas. Implementação silenciosa de item POSTERGADO continua NO-GO arquitetural.
+Implementação silenciosa de item POSTERGADO continua NO-GO arquitetural.
 
-## 10. Próximo passo — T059
+## 8. Próxima revisão — T090
 
-T059 deve transformar as decisões T054–T058 em uma matriz final única e preparar as revisões T090–T097, sem criar runtime.
+O Arquiteto WordPress deve atacar principalmente X-038/X-041 e procurar qualquer ponto da matriz final em que o Core ainda possa substituir infraestrutura própria ou abstração desnecessária.
 
 ## Status
 
-**T058 concluída documentalmente.** Próximo passo: **T059**. Nenhum runtime/provider/vector foi autorizado.
+**T059 concluída documentalmente.** Próximo passo: **T090 — Revisão do Arquiteto WordPress**. Nenhum runtime/provider/vector foi autorizado.

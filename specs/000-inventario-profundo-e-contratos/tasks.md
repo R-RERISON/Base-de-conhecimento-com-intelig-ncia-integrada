@@ -22,43 +22,44 @@
 - [x] T055 — Catálogo de regressão e Golden Queries.
 - [x] T056 — Matriz WordPress-first.
 - [x] T057 — Infraestrutura própria mínima.
-- [x] T058 — IA/vetor priorizados. _(`matriz-ia-vetor.md`; IA assistiva P1 aprovada como opcional, RAG P2 opcional, embeddings/semantic/rerank P3 postergados, agentes P4 postergados, G-140A–H definidos)_
-- [ ] T059 — Matriz de paridade futura consolidada/final.
+- [x] T058 — IA/vetor priorizados.
+- [x] T059 — Matriz de paridade futura FINAL. _(`matriz-paridade-futura.md`; owners, storage, momento, gates, blockers, dados de cutover, fallback e decisão final consolidados)_
 
-## Resultado T058
+## Resultado T059
 
-- [x] P0 determinístico permanece obrigatório antes de IA.
-- [x] Assistente de Classificação e Assistente de Summary foram aprovados como capacidades opcionais P1, sob demanda e human-in-the-loop.
-- [x] `include_ai`/AI READY não foi reutilizado como permissão de autoria assistida.
-- [x] LLM em toda consulta de Search foi rejeitado no baseline.
-- [x] RAG/síntese foi aprovado apenas como evolução P2, retrieval-first e podendo nascer lexical-first.
-- [x] chunking adicional foi postergado e não pode criar parser paralelo.
-- [x] embeddings foram postergados até baseline lexical + Golden demonstrarem lacuna mensurável.
-- [x] semantic/hybrid retrieval foi postergado; se reaberto, lexical permanece fallback e o critério de ganho deve ser fixado antes do experimento.
-- [x] reranking por modelo foi postergado e, se existir, será top-K bounded/fail-open.
-- [x] Microsoft Foundry foi classificado como provider preferencial candidato, nunca dependência de domínio.
-- [x] Foundry Agent File Search foi rejeitado como Search/RAG canônico do plugin; só pode reaparecer como projection de agente específico.
-- [x] agentes/tools foram postergados/negados no baseline.
-- [x] AI Operation Receipt conceitual, budget, NO_CHANGE, data egress e prompt-injection foram tratados.
-- [x] G-140 foi detalhado em G-140A–H em `matriz-ia-vetor.md`.
-- [x] nenhum runtime, provider, embedding, vector store, schema ou chamada externa foi criado.
+- [x] Todas as capacidades foram classificadas como `PRIMEIRO_RUNTIME | POSTERIOR | POSTERGADO | COMPAT_CUTOVER | DESCARTADO`.
+- [x] “Primeiro runtime” foi definido como primeira onda de vertical slices, não big-bang.
+- [x] WordPress/Elementor continuam autoridade editorial absoluta.
+- [x] Summary/Review/Core/Security/DS permanecem WordPress-first.
+- [x] Classificações já decididas permanecem em primitives WP; quatro conceitos continuam limitados a Metadata vs Taxonomy sob B-002.
+- [x] Search Retrieval Projection continua sendo a única família própria aprovada no baseline.
+- [x] Search lexical/projection ficou POSTERIOR e depende de B-001 + Golden + benchmark.
+- [x] Analytics detalhado e durable queue continuam POSTERGADOS.
+- [x] IA P1 permanece opcional/posterior; primeiro runtime pode ter zero IA externa.
+- [x] RAG P2 permanece posterior/retrieval-first; P3/P4 continuam postergados.
+- [x] dados históricos que não podem ser perdidos foram listados.
+- [x] índices/caches/queues/telemetria/derivados não foram promovidos a canônicos.
+- [x] blockers B-001–B-007 foram mapeados por capacidade e momento.
+- [x] T095/T097 podem tratar blockers contextuais por slice, sem bloquear capacidade não relacionada.
+- [x] nenhum runtime/schema/provider/vector foi criado.
 
-## Ordem restante
+## Gate final
 
-1. **T059** — fechar a matriz de paridade futura final, incorporando T054–T058.
-2. T090 — revisão do Arquiteto WordPress.
-3. T091 — revisão do Crítico de Simplicidade.
-4. T092 — revisão de Segurança.
-5. T093 — revisão de QA/Regressão.
-6. T094 — revisão de Produto/Conhecimento.
-7. T095 — fechar unknowns/blockers aplicáveis.
-8. T096 — relatório final da SPEC-000.
-9. T097 — autorizar ou bloquear SPEC-001.
+- [ ] T090 — Revisão do Arquiteto WordPress.
+- [ ] T091 — Revisão do Crítico de Simplicidade.
+- [ ] T092 — Revisão de Segurança.
+- [ ] T093 — Revisão de QA/Regressão.
+- [ ] T094 — Revisão de Produto/Conhecimento.
+- [ ] T095 — fechar unknowns/blockers aplicáveis por slice.
+- [ ] T096 — emitir relatório final da SPEC-000.
+- [ ] T097 — autorizar ou bloquear SPEC-001.
 
-## Regra de continuidade
+## Próximo passo exato
 
-T059 ainda é documental. Não antecipar runtime, DDL, taxonomies finais, Foundry, embeddings, semantic search, agentes, Analytics detalhado ou durable queue.
+**T090 — Revisão do Arquiteto WordPress.**
+
+T090 deve confrontar `matriz-paridade-futura.md` contra Constituição/Manifesto/T056 e procurar infraestrutura própria, endpoint, storage ou abstração que ainda possa ser eliminada em favor do Core.
 
 ## Estado
 
-T050–T058 concluídas documentalmente. **Nenhum runtime novo foi criado.** Próximo bloco autorizado: **T059**. SPEC-001 continua bloqueada até T097.
+T050–T059 concluídas documentalmente. **Nenhum runtime novo foi criado.** Próximo bloco autorizado: **T090**. SPEC-001 continua bloqueada até T097.

@@ -1,6 +1,6 @@
 # Prompt de Continuidade — SPEC-000 — Inventário Profundo e Contratos
 
-## 1. Prompt pronto para colar em novo chat
+## Prompt pronto para colar em novo chat
 
 ```text
 Você é o Orquestrador Principal do projeto "Base de Conhecimento com Inteligência Integrada".
@@ -21,32 +21,17 @@ ANTES DE QUALQUER ALTERAÇÃO
 PROJETO
 - Repositório: R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
 - Branch: main
-- HEAD confirmado antes do bloco T058: 6802d7bb75297dc8f3e403b57113c73170c78061
-- O commit que contém esta versão representa o fechamento documental de T058; confirme o SHA atual antes da próxima escrita.
+- HEAD confirmado antes do bloco T059: c79bf04ebc3587721464c39a58d9c328108a2482
+- O commit que contém esta versão representa o fechamento documental de T059; confirme o SHA atual antes da próxima escrita.
 - SPEC ativa: SPEC-000 — Inventário Profundo e Contratos dos Projetos de Referência
-- Estado: inventários + T050/T051/T052/T053/T054/T055/T056/T057/T058 concluídos documentalmente; nenhum runtime novo.
+- Estado: inventários + T050–T059 concluídos documentalmente; nenhum runtime novo.
 
 BASELINES FIXADAS
 - ASI 4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1
 - GRE 0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365
 - KB2Ops 0.2.1 hardened @ f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94
 
-TAREFAS CONCLUÍDAS
-- T000–T002 preparação/governança.
-- T010–T019 KB2Ops.
-- T020–T034 ASI.
-- T040–T047 GRE.
-- T050 persistência consolidada.
-- T051 integrações consolidadas.
-- T052 ownership.
-- T053 sobreposição.
-- T054 drifts/compatibilidade/blockers.
-- T056 WordPress-first.
-- T057 infraestrutura própria mínima.
-- T055 regressão e Golden Queries.
-- T058 IA/vetor priorizados.
-
-ARTEFATOS CENTRAIS
+ARTEFATOS CANÔNICOS
 - mapa-ownership-dados.md
 - matriz-sobreposicoes.md
 - catalogo-persistencia.md
@@ -56,8 +41,8 @@ ARTEFATOS CENTRAIS
 - infraestrutura-propria-minima.md
 - catalogo-testes-regressao.md
 - matriz-ia-vetor.md
+- matriz-paridade-futura.md  <-- visão executiva final T059
 - riscos-e-drifts.md
-- matriz-paridade-futura.md
 - research.md
 
 INVARIANTES
@@ -80,203 +65,96 @@ INVARIANTES
 - provider externo é adapter, nunca owner de domínio.
 - nenhum runtime antes de T097 autorizar SPEC-001.
 
-OWNERS LÓGICOS
-- Editorial WP/Elementor: título, conteúdo, _elementor_data, publicação.
-- Resumo: objective, escalation, important.
-- Classificação: responsible_team, catalog_item, audience, service, affected_service, technologies, systems_involved, knowledge_type, keywords, versions.
-- Revisão/Governança: review state, notes, reviewer/time, include_ai, history.
-- Content Extraction: texto/estrutura/hash derivados.
-- Search Knowledge: vocabulary/bindings/relevance rules.
-- Search Indexing: projection lexical/item/deep-link/vector.
-- Search Quality: Golden/evidências.
-- Analytics: somente se política futura autorizar.
-- Operations: rebuild/migration/purge; queue somente se workload provar necessidade.
-- AI Assist: sugestões/síntese não canônicas; nunca persiste owner sem humano.
+T059 — MATRIZ DE PARIDADE FUTURA FINAL
+Arquivo canônico: matriz-paridade-futura.md.
 
-T054 — BLOCKERS
-B-001 — extractor representativo antes de Search/RAG final.
-B-002 — profiling classificatório antes de cutover.
-B-003 — preflight de consumidores antes de remover plugins/aliases.
-B-004 — política de Analytics/query text antes de telemetria detalhada.
-B-005 — deep-link/anchors antes de paridade pública completa de item.
-B-006 — semântica de falha multi-campo antes do write path composto definitivo.
-B-007 — stale/observabilidade + necessidade real antes de async queue.
+CLASSES TEMPORAIS
+- PRIMEIRO_RUNTIME: primeira onda de vertical slices; NÃO big-bang.
+- POSTERIOR: capacidade aprovada depois das dependências/gates.
+- POSTERGADO: complexidade não comprada; reabrir com evidência.
+- COMPAT_CUTOVER: apenas se consumidor/coexistência real for comprovado.
+- DESCARTADO: não transportar ao baseline.
 
-T056 — WORDPRESS-FIRST
-- Editorial -> WP_Post/Elementor.
-- Summary -> Metadata API.
-- Review -> Metadata + Users + Revisions quando aplicável.
-- Settings -> Settings/Options.
-- Security -> Users/Roles/Capabilities + Nonces.
-- admin mutations -> admin-post.
-- AJAX só por live UX; REST sem consumidor não criar.
-- Health -> Site Health.
-- Cache -> Transients/Object Cache reconstruíveis.
-- WP-Cron -> trigger, nunca durable store.
-- Search Knowledge/Golden -> WP_Post interno + Metadata/Revisions inicialmente.
-- audience/knowledge_type/service/technologies -> Taxonomy preferida sob B-002.
-- responsible_team/catalog_item/affected_service/systems_involved -> ainda Metadata vs Taxonomy; não são infra própria.
+PRIMEIRO_RUNTIME — DIREÇÃO
+- Core/Settings/Security/Design System mínimo.
+- Summary em Metadata API.
+- Review/Governança em Metadata + WP Users.
+- Classificação por conceitos já resolvidos em primitives WP.
+- Content Extractor canônico.
+- Site Health/diagnóstico mínimo.
+- native WP search pode existir como fallback, não paridade final.
 
-T057 — INFRAESTRUTURA PRÓPRIA
-Arquivo canônico: infraestrutura-propria-minima.md.
+POSTERIOR
+- Search Knowledge e Golden.
+- Search Retrieval Projection única `post|item`.
+- QueryContext/ranking explicável.
+- item identity e, separadamente, deep-link sob B-005.
+- IA P1: uma jornada estreita Classificação OU Summary.
+- RAG P2 após retrieval confiável.
 
-F-057-01 Search Retrieval Projection: APROVADA E REDUZIDA.
-- um store lógico futuro inicial para documentos document_kind=post|item;
-- identity/document_key, post_id/item_key, texto derivado, hash/version/generation/freshness;
-- FULLTEXT quando suportado + fallback bounded;
-- Content Extractor único;
-- WordPress revalida status/scope/capability;
-- projection reconstruível e não-canônica;
-- B-001 + Golden + benchmark antes de produção.
-
-F-057-02 Analytics Facts: POSTERGADA.
-- zero events/interactions/outcomes no baseline;
-- zero query text persistida por default;
-- reabrir somente após B-004.
-
-F-057-03 Durable Job State: POSTERGADA.
-- zero queue table no baseline;
-- primeiro medir sync/bounded + rebuild manual/batched;
-- WP-Cron só trigger;
-- não usar Options/Transients como fila;
-- reabrir somente após benchmark + B-007.
-
-T055 — REGRESSÃO/GOLDEN
-Arquivo canônico: catalogo-testes-regressao.md.
-
-CLASSES
-- MUST: falha ou falta de evidência = NO-GO.
-- CONDICIONAL: obrigatório quando feature ativa a capacidade.
-- POSTERGADO: capacidade não nasce silenciosamente.
-- N/A: somente com justificativa explícita.
-
-GATES PREEXISTENTES
-- G-001 Editorial/Elementor.
-- G-010 Content Extractor/B-001.
-- G-020 Summary/B-006.
-- G-030 Classificação/B-002.
-- G-040 Review/eventos.
-- G-050 Search Retrieval Projection.
-- G-060 QueryContext/ranking.
-- Golden Queries.
-- G-070 Scope/security.
-- G-080 Analytics negativo.
-- G-090 Queue negativo.
-- G-100 Compatibilidade/B-003.
-- G-110 UI/UX/a11y.
-- G-120 Performance.
-- G-130 Lifecycle/build/rollback.
-
-GOLDEN
-- QA governada, não telemetria.
-- storage inicial WP_Post interno + meta/revisions.
-- vazia = NOT_CONFIGURED, nunca PASS.
-- não executada/stale = NO-GO quando Search é afetada.
-- blocking fail = NO-GO.
-- warning exige decisão explícita.
-- evidence liga conjunto, rankers, extractor/index e dataset/projection.
-- execução explícita; status read não rerun.
-- Golden não depende de identity/session/journey.
-- PASS não fecha B-001/performance/security.
-
-T058 — IA/VETOR
-Arquivo canônico: matriz-ia-vetor.md.
-
-PRIORIDADES
-P0 — determinístico/core obrigatório.
-P1 — IA assistiva sob demanda.
-P2 — RAG/síntese opcional sobre retrieval confiável.
-P3 — embeddings/semantic/hybrid/reranking somente após evidência de ganho.
-P4 — agentes/tools somente após caso multi-step comprovado.
-
-DECISÕES T058
-- pré-análise determinística -> MANTER P0.
-- Assistente de Classificação -> APROVADO OPCIONAL P1.
-- Assistente de Summary -> APROVADO OPCIONAL P1.
-- primeiro slice futuro escolhe uma das duas jornadas, não ambas automaticamente.
-- LLM em toda query -> DESCARTAR baseline.
-- RAG/síntese -> APROVADO OPCIONAL POSTERIOR P2; pode nascer lexical-first.
-- chunking adicional -> POSTERGADO condicional; não cria parser paralelo.
-- embeddings -> POSTERGADO COM GATE P3.
-- semantic/hybrid -> POSTERGADO COM GATE P3; lexical fallback obrigatório.
-- model rerank -> POSTERGADO COM GATE P3; top-K bounded/fail-open.
-- Microsoft Foundry -> provider preferencial candidato, não domínio.
-- Foundry Agent File Search -> DESCARTAR como Search/RAG core; somente projection eventual de agente específico.
-- agentes/tools -> POSTERGADOS/NEGADOS no baseline P4.
-- primeiro runtime pode ter ZERO IA externa.
-
-AI READY x ASSISTÊNCIA
-- AI READY permanece publish + approved + 8/8 + include_ai quando vigente.
-- include_ai NÃO autoriza assistência editorial.
-- eventual AI Assist Allowed é conceito separado que futura SPEC deve definir por capability/política.
-
-IA P1 — CONTRATO
-- ação explícita por usuário autorizado.
-- contexto do Content Extractor + dados/vocabulário canônicos.
-- saída estruturada, validada, com evidência/incerteza.
-- Generate != Apply.
-- IA não persiste owner.
-- Apply humano usa handler canônico + capability/nonce/read-after-write.
-- erro/timeout não muda estado canônico.
-
-RAG P2 — CONTRATO
-- query -> retrieval -> evidências -> síntese opcional -> fontes.
-- vetor não é requisito.
-- corpus produtivo respeita AI READY quando gate ativo.
-- scope/status/capability revalidado no WordPress.
-- abstenção quando evidência insuficiente.
-- falha provider pode degradar para retrieval sem síntese.
-- conteúdo recuperado é dado, não instrução/tool authority.
-
-EMBEDDING/SEMANTIC P3
-- somente após lexical operacional/medido + B-001 + Golden/lacuna semântica.
-- raw Elementor/JSON nunca é fonte de embedding.
-- fingerprint inclui origem/source hash/extractor/chunk contract/provider/model/deployment/dimensão/config.
-- mudança incompatível invalida embedding.
-- re-embed total sem diff/budget é NO-GO.
-- T058 não escolheu MariaDB VECTOR/Azure AI Search/Foundry vector store.
-- hybrid é hipótese preferida; critério de sucesso deve ser fixado antes do experimento.
-
-FOUNDRY
-- provider seam mínimo só nasce junto com caso real.
-- WordPress HTTP API é primeira opção quando adequada.
-- provider/model/deployment/prompt/config versionados.
-- timeout/retry/quota/auth/errors explícitos.
-- secrets nunca em logs/export.
-- failover/provider switch não silencioso.
-- preços/defaults atuais do provider não são contrato arquitetural.
-
-CUSTO/NO_CHANGE
-- toda chamada externa futura gera AI Operation Receipt conceitual: operação, provider/model/deployment, prompt/config version, objeto/contexto, input fingerprint, volume, tokens/unidades, custo estimado/real quando possível, duração, status/error, responsável quando aplicável, timestamp.
-- T058 não escolheu storage para receipts.
-- batch exige preview/estimativa/budget/limite/stop condition/confirmação.
-- activation/publicação/page load não dispara batch por default.
-- se batch exigir worker durável, reabrir F-057-03/B-007.
-
-G-140 APÓS T058
-Canônico em matriz-ia-vetor.md:
-- G-140A independência/degradação.
-- G-140B provider/rastreabilidade/data egress.
-- G-140C human-in-the-loop.
-- G-140D custo/budget/NO_CHANGE.
-- G-140E embedding/semantic/hybrid.
-- G-140F RAG/síntese.
-- G-140G agentes/tools.
-- G-140H provider-managed knowledge/File Search.
-
-O QUE CONTINUA POSTERGADO
-- Word Cloud.
-- GAC sem requisito.
-- side panel GRE.
-- quality_daily.
-- Analytics detalhado.
+POSTERGADO
+- Analytics detalhado/query logging.
 - durable queue.
-- embeddings/semantic/rerank.
+- vector store/embeddings.
+- semantic/hybrid/rerank.
 - agentes/tools.
-- SPA/REST sem consumidor.
-- rollups/materializações sem benchmark.
+- Foundry File Search como core.
+- Word Cloud.
+- rollups/audit genérico.
+- REST/SPA sem consumidor.
 
-SHORTCODES AINDA EM PREFLIGHT
+INFRA PRÓPRIA APROVADA
+Somente Search Retrieval Projection futura e reconstruível, um store lógico inicial `document_kind=post|item`. DDL/nome/índices físicos continuam abertos à SPEC concreta.
+
+DADOS QUE NÃO PODEM SER PERDIDOS
+1. WP_Post/Elementor/taxonomias editoriais.
+2. Oito valores GRE.
+3. Review/include_ai/notas/revisor/histórico KB2Ops válidos.
+4. Classificações KB2Ops efetivamente usadas.
+5. vocabulary/bindings/relevance rules ASI manuais reais, quando houver.
+6. Golden Queries/expectativas ASI reais/úteis.
+
+NÃO MIGRAR AUTOMATICAMENTE COMO CANÔNICO
+- índices/search_items antigos;
+- caches;
+- queue;
+- quality_daily/rollups;
+- telemetria histórica;
+- migrations registry;
+- embeddings/vectors;
+- outras projections reconstruíveis.
+
+BLOCKERS B-001–B-007 — LEITURA T059
+- B-001 bloqueia Search/RAG/embedding produtivos; não Core/Summary/Review.
+- B-002 bloqueia profiling/cutover classificatório; não todo o produto.
+- B-003 bloqueia retirada de plugins/aliases; não coexistência.
+- B-004 bloqueia Analytics/query logging; não Search lexical.
+- B-005 bloqueia deep-link público de item; não Search post-level/item não navegável.
+- B-006 bloqueia write composto definitivo; não leituras.
+- B-007 bloqueia durable queue/async; não sync/bounded/manual rebuild.
+
+T095 deve fechar ou postergar blocker POR SLICE. T097 pode autorizar SPEC-001 com blockers contextuais abertos se a SPEC autorizada não depender deles e declarar seus gates.
+
+FALLBACKS
+- domínio: falha preserva estado anterior; sem sucesso falso.
+- Search projection: degraded + native/bounded fallback + rebuild.
+- IA P1: provider falhou -> sem sugestão/sem write.
+- RAG: provider falhou -> retrieval/evidências sem síntese.
+- semantic futuro: lexical fallback.
+- sem queue: sync/bounded/manual batches; não improvisar store.
+- compat: plugins antigos/coexistência em homologação até cutover.
+
+IA/VETOR T058 CONTINUA VÁLIDA
+- P0 determinístico primeiro.
+- P1 assistivo opcional; Generate != Apply.
+- P2 RAG retrieval-first e pode ser lexical-first.
+- P3 embeddings/semantic/rerank postergados.
+- P4 agentes/tools postergados.
+- Foundry é provider preferencial candidato, não domínio.
+- File Search não é Search/RAG canônico.
+- custo/budget/NO_CHANGE/data egress/rastreabilidade continuam obrigatórios quando IA existir.
+
+SHORTCODES EM PREFLIGHT B-003
 - [asi_search_form]
 - [bdc_word_cloud]
 - [bdc_resumo_executivo]
@@ -284,8 +162,8 @@ SHORTCODES AINDA EM PREFLIGHT
 - [kb2ops_portal]
 Nenhum alias aprovado automaticamente.
 
-O QUE AINDA NÃO FOI DECIDIDO
-- profiling/cutover final de classificações.
+UNKNOWNS LEGÍTIMOS APÓS T059
+- responsible_team/catalog_item/affected_service/systems_involved: Metadata vs Taxonomy sob B-002.
 - meta revisions finais.
 - DDL/nome/índices da Search Projection.
 - NFRs reais Search/index/rebuild.
@@ -293,70 +171,63 @@ O QUE AINDA NÃO FOI DECIDIDO
 - necessidade futura de queue.
 - anchors/deep-link.
 - preflight real de consumidores.
-- primeiro caso concreto de IA P1: Classificação versus Summary.
+- primeiro caso IA P1.
 - provider/deployment/model/prompt reais.
-- strategy institucional de secrets/data egress.
-- necessidade real de embeddings/chunking/vector storage.
-- runtime/layout final.
+- secrets/data egress institucionais.
+- necessidade/tecnologia de embeddings/vector.
+- runtime/layout físico final.
 
 O QUE NÃO DEVE SER FEITO AGORA
 - não criar runtime/bootstrap.
 - não criar schema/tabela/migration.
 - não registrar taxonomies/CPT/meta finais.
-- não criar Golden dataset real ainda.
+- não criar Golden dataset real.
 - não criar Analytics/queue.
 - não implementar aliases/adapters.
 - não integrar Foundry.
-- não criar provider SDK/adapter runtime.
-- não criar prompts runtime.
 - não chamar LLM.
 - não criar chunks/embeddings/vector store.
-- não habilitar MariaDB VECTOR/Azure AI Search/File Search.
 - não criar agentes/tools.
 - não iniciar SPEC-001.
 
-PRÓXIMO PASSO EXATO — T059
-Consolidar a Matriz de Paridade Futura FINAL.
+PRÓXIMO PASSO EXATO — T090
+Executar a Revisão do Arquiteto WordPress sobre a matriz final T059.
 
-T059 DEVE
-1. ler T054/T056/T057/T055/T058 como conjunto.
-2. criar uma visão única por capacidade/conceito.
-3. registrar owner lógico.
-4. registrar primitive/storage aprovado ou estado postergado.
-5. classificar temporalmente: PRIMEIRO_RUNTIME | POSTERIOR | POSTERGADO | COMPAT_CUTOVER.
-6. mapear gates G-001–G-140 e blockers B-001–B-007 aplicáveis.
-7. mapear dados históricos que não podem ser perdidos.
-8. mapear fallback/degradação.
-9. mapear compatibilidade/remoção.
-10. eliminar contradições residuais dos artefatos incrementais.
-11. preparar entrada objetiva para revisões T090–T094 e fechamento T095.
-12. não criar runtime.
+T090 DEVE
+1. reler Constituição, Manifesto, T056, T057 e matriz-paridade-futura.md.
+2. revisar cada primitive/storage da matriz.
+3. procurar infraestrutura própria que Core ainda possa eliminar.
+4. revisar Metadata vs Taxonomy vs Options/Revisions.
+5. revisar admin-post/AJAX/REST e negar endpoint sem consumidor.
+6. revisar Site Health/Transients/Object Cache/WP-Cron.
+7. garantir que projection nunca virou owner.
+8. classificar findings como APROVADO | SIMPLIFICAR | BLOQUEAR | INVESTIGAR.
+9. registrar qualquer alteração documental necessária.
+10. não criar runtime.
 
-CRITÉRIO PARA FECHAR T059
-- toda capacidade relevante aparece uma única vez como decisão final de paridade.
-- owners não conflitam.
-- first runtime não inclui itens postergados por acidente.
-- todos os itens de IA refletem T058.
-- gates/blockers/fallback/cutover estão visíveis.
-- unknowns restantes estão explicitamente destinados a T095 ou SPEC futura.
-- nenhum runtime foi criado.
+CRITÉRIO PARA FECHAR T090
+- toda família da matriz final foi revisada sob WordPress-first;
+- nenhum uso desnecessário de infraestrutura própria ficou sem finding;
+- findings possuem severidade, evidência, decisão e impacto em T091–T097;
+- divergências são corrigidas documentalmente;
+- próximo passo T091 fica explícito.
 
 ORDEM RESTANTE
-T059 -> T090 -> T091 -> T092 -> T093 -> T094 -> T095 -> T096 -> T097.
+T090 -> T091 -> T092 -> T093 -> T094 -> T095 -> T096 -> T097.
 
 REGRA DE CONTINUIDADE
 Repositório/Constituição/Manifesto/SPEC prevalecem sobre memória de chat. Não transformar intenção em conclusão sem evidência versionada.
 ```
 
-## 2. Estado resumido
+## Estado resumido
 
 - SPEC-000 ativa.
-- HEAD antes de T058: `6802d7bb75297dc8f3e403b57113c73170c78061`.
-- T050–T058 concluídas documentalmente.
-- Próximo: T059.
-- Runtime/IA/vector: inexistentes.
+- HEAD antes de T059: `c79bf04ebc3587721464c39a58d9c328108a2482`.
+- T050–T059 concluídas documentalmente.
+- Próximo: T090.
+- Runtime novo: inexistente.
 - SPEC-001: bloqueada até T097.
 
-## 3. Regra de atualização
+## Regra de atualização
 
-Atualizar este arquivo ao concluir T059. Não acumular estados contraditórios.
+Atualizar este arquivo ao concluir T090. Não acumular estados contraditórios.

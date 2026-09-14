@@ -10,6 +10,7 @@ As skills descrevem procedimentos reutilizáveis. Todas exigem nível especialis
 | elementor-readonly | 10 anos | extrair conteúdo sem alterar Elementor |
 | design-system-wordpress | 12 anos | construir UI integrada e reproduzível |
 | spec-execution | 15 anos | executar vertical slice com gates |
+| continuity-handoff | 15 anos | preservar contexto e permitir retomada segura em novo chat |
 | regressao-paridade | 15 anos | proteger comportamento dos legados |
 | search-golden-queries | 15 anos | avaliar e proteger ranking |
 | hybrid-retrieval | 12 anos | lexical + semantic + rank fusion |

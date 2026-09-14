@@ -63,7 +63,7 @@ Ao concluir, qualquer desenvolvedor/agente deve conseguir responder com evidênc
 
 ## 5. Invariantes constitucionais afetados
 
-Principalmente Artigos I, II, III, IV, V, VI, XIV e XVI.
+Principalmente Artigos I, II, III, IV, V, VI, XIV, XVI e XVIII.
 
 ## 6. Avaliação WordPress-first
 
@@ -243,6 +243,7 @@ O inventário deve mapear testes existentes para comportamentos, identificando:
 - [ ] Matriz de paridade futura existe.
 - [ ] Lista de dados que não podem ser perdidos existe.
 - [ ] SPEC-001 pode ser escrita sem adivinhação estrutural.
+- [ ] `CONTINUIDADE.md` está atualizado e permite retomada por um novo chat sem memória anterior.
 
 ## 17. Critérios de NÃO aceite
 
@@ -253,7 +254,8 @@ Bloqueiam conclusão:
 - tabelas/options/meta desconhecidos;
 - não saber quais fluxos reais precisam sobreviver;
 - começar runtime novo para “ganhar tempo”;
-- assumir que documentação e código estão sincronizados sem verificar.
+- assumir que documentação e código estão sincronizados sem verificar;
+- encerrar etapa material sem atualizar o Prompt de Continuidade.
 
 ## 18. Rollback
 
@@ -267,4 +269,21 @@ Não há alteração de runtime nesta SPEC. Rollback é apenas documental via Gi
 - catálogo de integração;
 - catálogo de testes;
 - ADRs produzidas;
-- checklist final da SPEC.
+- checklist final da SPEC;
+- `CONTINUIDADE.md` da SPEC.
+
+## 20. Continuidade entre chats
+
+A SPEC-000 deve manter `CONTINUIDADE.md` atualizado após cada bloco material de inventário, especialmente ao finalizar a análise de cada projeto de referência.
+
+O handoff deve dizer explicitamente:
+
+- quais áreas já foram lidas profundamente;
+- quais arquivos ainda não foram analisados;
+- quais contratos/drifts já foram descobertos;
+- quais decisões continuam provisórias;
+- qual repositório/arquivo será lido em seguida;
+- quais artefatos da SPEC foram atualizados;
+- qual commit representa o estado comprovado.
+
+A mudança de chat não pode causar reinício do inventário nem perda de decisões já suportadas por evidência.

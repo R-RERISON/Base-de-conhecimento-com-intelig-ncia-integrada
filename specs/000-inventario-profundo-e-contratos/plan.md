@@ -1,35 +1,34 @@
 # Plano — SPEC-000 Inventário Profundo e Contratos
 
-## Estado
-T000–T059 + T090–T096 concluídos documentalmente. Resta apenas T097.
+## Estado final
+**SPEC-000 — CONCLUÍDA em T097.**
 
-## Fechamento T096
-Artefato: `relatorio-final-spec-000.md`.
+Todas as fases T000–T059 e revisões T090–T097 foram concluídas documentalmente sem criar runtime novo.
 
-A SPEC-000 confirmou:
-- WordPress/Elementor como fonte editorial;
-- owner único por conceito;
-- WordPress-first como baseline;
-- uma única família persistente própria futura aprovada: Search Retrieval Projection;
-- IA/vector/Analytics/queue/agentes postergados por evidência;
-- segurança e QA com gates objetivos;
-- blockers contextuais por slice;
-- zero blocker aberto para o candidato SPEC-001.
+## Decisão T097
+Artefato: `decisao-t097.md`.
 
-## Recomendação a T097
-**GO condicionado para autorizar a criação/execução da SPEC-001.**
+**GO formal para abrir e executar a SPEC-001**, restrita a:
 
-Isso significa autorizar uma nova SPEC com escopo:
-- Core mínimo + Summary narrativo;
-- usuário: Analista de Conhecimento;
+- Core mínimo;
+- Summary narrativo;
 - `objective`, `escalation`, `important`;
-- mesmas três meta keys GRE já existentes;
+- meta keys GRE existentes;
 - wp-admin server-rendered;
-- capability por objeto + POST/nonce + validação/escaping/read-after-write;
-- B-006 implementado/testado;
-- post types reais enumerados na baseline da SPEC antes de código.
+- segurança, B-006, QA e lifecycle definidos.
 
-Não significa autorizar release/cutover nem incluir Search, Classificação, Review, IA, Analytics, queue, tabelas, migrations, REST/AJAX/SPA ou aliases.
+O GO não é autorização de produção/cutover e não inclui capacidades adjacentes.
 
-## Próximo passo — T097
-Emitir decisão formal GO/NO-GO e encerrar a SPEC-000.
+## Próximo ciclo
+Criar `specs/001-core-summary-narrativo/`.
+
+Antes de código, a SPEC-001 deve concluir seu próprio Definition of Ready:
+- baseline/HEAD;
+- post types reais suportados;
+- contratos dos três campos;
+- Matriz de Mutação;
+- Matriz de Evidência;
+- critérios de aceite/não aceite;
+- rollback e coexistência.
+
+A SPEC-000 permanece como memória institucional e fonte de contratos para as futuras SPECs.

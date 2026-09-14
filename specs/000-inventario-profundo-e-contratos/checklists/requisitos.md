@@ -1,6 +1,6 @@
 # Checklist de Requisitos — SPEC-000
 
-## Revisões finais
+## Gate final
 - [x] T090 WordPress-first.
 - [x] T091 Simplicidade.
 - [x] T092 Segurança.
@@ -8,22 +8,19 @@
 - [x] T094 Produto/Conhecimento.
 - [x] T095 Blockers/unknowns.
 - [x] T096 Relatório final.
-- [ ] T097 GO/NO-GO SPEC-001.
+- [x] T097 decisão formal.
 
-## Evidência T096
-- [x] relatório final autossuficiente criado.
-- [x] baselines e inventários sintetizados.
-- [x] arquitetura final e owners sintetizados.
-- [x] capacidades postergadas explicitadas.
-- [x] segurança/QA/IA/cutover consolidados.
-- [x] dados a preservar consolidados.
-- [x] B-001–B-007 classificados para a SPEC-001 candidata.
-- [x] B-006 sintetizado com estratégia final.
-- [x] `BLOCKER_SPEC001 = 0` registrado.
-- [x] candidato SPEC-001 e Definition of Ready documental resumidos.
-- [x] recomendação T097: GO condicionado para abertura/execução da SPEC-001.
-- [x] distinção explícita entre autorização de SPEC e release/cutover.
-- [x] nenhum runtime/schema/provider/vector criado.
+## Resultado T097
+- [x] `BLOCKER_SPEC001 = 0` revalidado documentalmente.
+- [x] GO formal emitido em `decisao-t097.md`.
+- [x] SPEC-001 autorizada sob escopo estrito.
+- [x] condições pré-código explicitadas.
+- [x] capacidades fora de escopo explicitadas.
+- [x] produção/cutover não foram implicitamente autorizados.
+- [x] nenhum runtime criado pela SPEC-000.
+- [x] Prompt de Continuidade atualizado.
 
-## Gate restante
-**T097 — decisão formal.**
+## Estado
+**SPEC-000 concluída.**
+
+Próximo artefato: `specs/001-core-summary-narrativo/`, começando por baseline e Definition of Ready antes de implementação.

@@ -16,26 +16,22 @@
 - [x] T093 QA/Regressão.
 - [x] T094 Produto/Conhecimento.
 - [x] T095 blockers/unknowns por slice.
-- [x] T096 relatório final. _(`relatorio-final-spec-000.md`; recomendação GO condicionado para T097 autorizar SPEC-001)_
-- [ ] T097 GO/NO-GO SPEC-001.
+- [x] T096 relatório final.
+- [x] T097 GO/NO-GO SPEC-001. _(`decisao-t097.md`; GO formal para abrir/executar SPEC-001 sob escopo estrito)_
 
-## Resultado T096
-- [x] inventários e cruzamentos T000–T095 sintetizados.
-- [x] arquitetura final WordPress-first registrada.
-- [x] única família persistente própria futura permanece Search Retrieval Projection.
-- [x] capacidades postergadas consolidadas.
-- [x] segurança/QA/IA/cutover sintetizados.
-- [x] dados que não podem ser perdidos listados.
-- [x] mapa B-001–B-007 consolidado para SPEC-001.
-- [x] `BLOCKER_SPEC001 = 0` confirmado documentalmente.
-- [x] candidato SPEC-001 e sua Definition of Ready sintetizados.
-- [x] recomendação para T097: **GO condicionado para autorizar a criação e execução da SPEC-001**, não release/cutover.
-- [x] nenhum runtime/schema/provider/vector criado.
+## Resultado T097
+- [x] SPEC-001 formalmente autorizada.
+- [x] autorização limitada a Core mínimo + Summary narrativo.
+- [x] usuário primário: Analista de Conhecimento.
+- [x] storage: três meta keys GRE já existentes.
+- [x] condições pré-código da SPEC-001 explicitadas.
+- [x] gates G-001/G-020/G-070/G-110/G-130 + DoD mantidos.
+- [x] Search/Classificação/Review/IA/Analytics/queue/schema/migration/REST/SPA/aliases permanecem fora do escopo autorizado.
+- [x] GO para desenvolvimento/homologação foi separado de GO para cutover produtivo.
+- [x] nenhum runtime foi criado pela SPEC-000.
 
-## Próximo passo exato
-**T097 — decisão formal GO/NO-GO da SPEC-001.**
+## Estado final
+**SPEC-000 — CONCLUÍDA.**
 
-T097 deve autorizar ou bloquear a abertura da SPEC-001 com escopo estrito, deixando explícito o que a autorização não inclui.
-
-## Estado
-T050–T059 + T090–T096 concluídos documentalmente. SPEC-001 continua bloqueada até a decisão T097.
+## Próximo passo
+Criar `specs/001-core-summary-narrativo/` e executar primeiro o bloco documental de baseline real, post types suportados, contratos dos três metadados, Matriz de Mutação e Matriz de Evidência. Código somente após Definition of Ready da SPEC-001.

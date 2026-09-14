@@ -1,4 +1,4 @@
-# Prompt de Continuidade — SPEC-000 — Inventário Profundo e Contratos
+# Prompt de Continuidade — SPEC-000 encerrada / Transição para SPEC-001
 
 ## Prompt pronto para colar em novo chat
 
@@ -11,104 +11,77 @@ ANTES DE QUALQUER ALTERAÇÃO
 1. Leia AGENTS.md.
 2. Leia .specify/PROJECT_MANIFEST.md.
 3. Leia .specify/memory/constitution.md.
-4. Leia todos os artefatos de specs/000-inventario-profundo-e-contratos/.
-5. Leia docs/DEFINITION-OF-DONE.md.
-6. Leia este CONTINUIDADE.md inteiro.
-7. Confirme HEAD/branch no GitHub.
-8. Se baseline/estado divergir, investigue antes de escrever.
+4. Leia specs/000-inventario-profundo-e-contratos/relatorio-final-spec-000.md.
+5. Leia specs/000-inventario-profundo-e-contratos/decisao-t097.md.
+6. Leia specs/000-inventario-profundo-e-contratos/fechamento-blockers-t095.md.
+7. Leia docs/DEFINITION-OF-DONE.md.
+8. Leia este CONTINUIDADE.md inteiro.
+9. Confirme HEAD/branch no GitHub.
+10. Se o estado divergir, investigue antes de escrever.
 
 PROJETO
 - Repositório: R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
 - Branch: main
-- HEAD confirmado antes de T096: d5fdaf4c9416e22d065a3fa3b0142f52286cd77f
-- O commit que contém esta versão representa o fechamento documental de T096; confirme o SHA atual antes da próxima escrita.
-- SPEC ativa: SPEC-000.
-- Estado: T000–T059 + T090–T096 concluídos documentalmente; nenhum runtime novo.
+- O commit que contém esta versão encerra formalmente a SPEC-000 em T097; confirme o SHA atual.
+- SPEC-000: CONCLUÍDA.
+- Próxima SPEC autorizada: SPEC-001 — Core mínimo + Summary narrativo.
 
-ARTEFATOS CENTRAIS
-- relatorio-final-spec-000.md — síntese executiva T096.
-- matriz-paridade-futura.md.
-- revisao-wordpress-t090.md.
-- revisao-simplicidade-t091.md.
-- revisao-seguranca-t092.md.
-- revisao-qa-t093.md.
-- revisao-produto-t094.md.
-- fechamento-blockers-t095.md.
+DECISÃO T097
+GO formal para abrir e executar a SPEC-001, mas não GO de release/produção/cutover.
 
-CONCLUSÃO T096
-- arquitetura WordPress-first consolidada.
-- zero BLOCKER_SPEC001 aberto.
-- recomendação formal para T097: GO condicionado para autorizar a criação/execução da SPEC-001.
-- autorização proposta não significa release/cutover.
-
-CANDIDATO SPEC-001
-Core mínimo + Summary narrativo.
-Usuário: Analista de Conhecimento.
-Campos/storage:
-- objective -> `_bdc_es_objective`
-- escalation -> `_bdc_es_escalation`
-- important -> `_bdc_es_important`
-
-SUPERFÍCIE AUTORIZÁVEL
+ESCOPO AUTORIZADO SPEC-001
+- usuário primário: Analista de Conhecimento.
+- jornada: selecionar artigo -> ler -> editar -> salvar -> reler -> confirmar Summary.
+- objective -> `_bdc_es_objective`.
+- escalation -> `_bdc_es_escalation`.
+- important -> `_bdc_es_important`.
 - wp-admin server-rendered.
 - GET read-only.
 - POST + nonce.
-- current_user_can('edit_post', $post_id).
-- allowlist 3 campos.
-- validação/sanitização/escaping.
-- read-after-write.
-- estratégia B-006 com snapshot/compensação.
-- zero schema/migration/table.
-- zero REST/AJAX/SPA.
-- zero Search/Analytics/IA/queue.
+- `current_user_can('edit_post', $post_id)`/equivalente por objeto.
+- allowlist somente dos 3 campos.
+- validação, sanitização, escaping, read-after-write.
+- B-006: snapshot + diff + writes mínimos + read-after-write + compensação best-effort; restauração incompleta = PARTIAL_FAILURE_CRITICAL.
 
-POST TYPES
-Antes do código, SPEC-001 deve inventariar/enumerar os post types reais pertencentes à Base de Conhecimento. Se target não puder ser comprovado, implementação fica NOT_READY.
+FORA DO ESCOPO DA SPEC-001
+- Classificação.
+- Review/AI READY.
+- Content Extractor.
+- Search/Golden/Search Knowledge.
+- Analytics/query logging.
+- queue.
+- tabela/schema/migration.
+- REST/AJAX/SPA sem nova decisão formal.
+- Foundry/LLM/embeddings/vector/semantic/rerank/agentes.
+- aliases/shortcodes de compatibilidade.
+- remoção/desativação automática de GRE/KB2Ops/ASI.
+- cutover produtivo.
 
-COEXISTÊNCIA
-SPEC-001 não remove GRE/KB2Ops/ASI. Produção/cutover com writer legado exige B-003 e decisão single-writer/coexistência segura. Homologação/desenvolvimento não são bloqueados por isso.
+BLOCKERS
+- B-006 fechado conceitualmente para Summary, mas deve ser implementado/testado.
+- B-001/B-002/B-004/B-005/B-007 pertencem a outros slices.
+- B-003 volta antes de produção/cutover/removal/coexistência não controlada de writer legado.
 
-B-006
-Sucesso é estado relido == esperado. Mismatch -> FAIL + compensação best-effort; restauração incompleta -> PARTIAL_FAILURE_CRITICAL explícito.
+CONDIÇÕES ANTES DO PRIMEIRO CÓDIGO DA SPEC-001
+1. criar `specs/001-core-summary-narrativo/` e artefatos SpecKit.
+2. confirmar HEAD.
+3. levantar os post types reais que compõem a Base de Conhecimento no ambiente/baseline.
+4. definir explicitamente os post types suportados.
+5. criar Matriz de Mutação: ação -> ator -> capability -> método -> nonce -> validação -> persistência -> confirmação -> diagnóstico.
+6. criar Matriz de Evidência com G-001/G-020/G-070/G-110/G-130 aplicáveis + B-006.
+7. definir contratos de empty/delete, tamanhos e sanitização dos 3 campos.
+8. definir casos de fault injection B-006.
+9. descrever UI/UX mínima/browser acceptance.
+10. critérios de aceite/não aceite e rollback.
 
-B-001–B-007
-- B-001 Search/RAG.
-- B-002 Classificação/cutover.
-- B-003 cutover/aliases/removal.
-- B-004 Analytics/query logging.
-- B-005 item/deep-link.
-- B-006 fechado conceitualmente para Summary.
-- B-007 async/queue.
+Se os post types reais não puderem ser comprovados, implementação permanece NOT_READY.
 
-T097 — PRÓXIMO PASSO EXATO
-Emitir decisão formal GO/NO-GO.
-
-T097 DEVE
-1. confirmar T000–T096 completos e estado do GitHub.
-2. verificar que `BLOCKER_SPEC001 = 0` permanece verdadeiro.
-3. emitir artefato `decisao-t097.md` ou equivalente.
-4. se GO, autorizar somente abertura/criação/execução da SPEC-001 Summary sob o escopo acima.
-5. declarar explicitamente que GO não autoriza release, produção, cutover ou capacidades fora de escopo.
-6. encerrar SPEC-000 documentalmente.
-7. atualizar tasks/checklist/plan/CONTINUIDADE.
-8. não criar runtime na própria T097.
-
-CRITÉRIO DE GO
-- WordPress-first PASS.
-- simplicidade PASS.
-- segurança PASS.
-- QA PASS.
-- produto PASS.
-- zero blocker SPEC-001.
-- rollback simples.
-- escopo pequeno e homologável.
-
-SE GO
-Próximo trabalho após T097: criar a pasta/artefatos da SPEC-001, levantar baseline real dos post types e montar Matriz de Evidência antes de qualquer código.
+PRÓXIMO PASSO EXATO
+Criar a SPEC-001 documentalmente e executar o bloco inicial de baseline/Definition of Ready. Não escrever runtime até esse bloco ficar comprovado.
 
 REGRA
-Repositório/Constituição/Manifesto/SPEC prevalecem sobre memória de chat.
+SPEC-000, Constituição, Manifesto e repositório prevalecem sobre memória de chat.
 ```
 
-## Estado resumido
-T096 concluída documentalmente. Próximo: T097. Runtime inexistente. SPEC-001 ainda não autorizada até o gate formal.
+## Estado
+SPEC-000 encerrada. SPEC-001 autorizada, ainda não implementada. Próximo: criar a SPEC-001 e provar seu Definition of Ready antes de código.

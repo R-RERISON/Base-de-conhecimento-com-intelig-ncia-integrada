@@ -22,7 +22,9 @@ Hipóteses a validar:
 - quais metas devem virar taxonomia;
 - quais analytics leves possuem valor futuro;
 - quais componentes visuais devem virar contrato novo;
-- quais rotas/handlers merecem regressão.
+- quais rotas/handlers merecem regressão;
+- como o Content Extractor representa Elementor e fallback de `post_content`;
+- como a bridge GRE trata ownership/read-only dos `_bdc_es_*`.
 
 ## ASI 4.6.8 — bloco confirmado
 
@@ -70,32 +72,79 @@ Fatos confirmados por runtime:
 - EVOLUIR COM IA/VETOR somente como camada opcional/degradável após retrieval determinístico.
 - AINDA NÃO SABEMOS o storage final de vocabulary/bindings/rules/Golden, schema lexical, chunks/vetores e estratégia de anchors.
 
-### Drift confirmado no lado ASI
+## Gerenciador de Resumo Executivo 0.6.0 — bloco confirmado
 
-ASI exige `BDC\\ExecutiveSummary\\Objective_Provider::read_objective()` e possui teste específico desse contrato. A Queue também espera o evento `bdc_es_objective_updated`. A existência/ausência real desses contratos no Gerenciador de Resumo Executivo deve ser confirmada no bloco T040–T047.
+Baseline fixada e confirmada no `main` da referência: `R-RERISON/Gerenciador-de-Resumo-Executivo-da-Base-de-Conhecimento@1120a534d8eb2288460c2c675730deef0d67c365`.
 
-## Gerenciador de Resumo Executivo 0.6.0
+### Fatos confirmados por runtime
 
-Fatos iniciais observados:
+- exatamente seis classes PHP compõem o runtime principal;
+- bootstrap único em `plugins_loaded`, seguido por Meta Contract, Admin e Frontend;
+- oito post metas privadas registradas via `register_post_meta`;
+- `post_title` é título canônico; não existe `_bdc_es_title`;
+- todas as metas são string/single/default vazio, `show_in_rest=false` e `revisions_enabled=false`;
+- autorização de metadata usa `edit_post` por objeto;
+- `Summary_Store::read()` é side-effect free;
+- `Summary_Store::update()` faz allowlist, validação integral antes de mutação, sanitização, update parcial, empty-delete e read-after-write;
+- Admin usa `admin-post` autenticado, nonce por post e server-side rendering;
+- listagem de administração é bounded (até 50 candidatos/20 resultados editáveis);
+- Coverage Dashboard é read-only, mas varre todos os posts publicados com `posts_per_page=-1`;
+- Frontend possui `[bdc_resumo_executivo]` current-post-only e side panel automático;
+- shortcode ignora atributos e não permite leitura arbitrária por `post_id`;
+- frontend é CSS-only, sem JavaScript;
+- não existem tabelas próprias, `$wpdb`, REST próprio, AJAX, WP-Cron, transients ou options de domínio;
+- o único `get_option()` de runtime relevante lê `date_format` nativo do WordPress;
+- não existem activation/deactivation hooks nem migrations próprias;
+- não existe `uninstall.php`;
+- testes incluem unitários, duas integrações reais via WP-CLI e smoke de package;
+- gate local executa Composer validation/dependencies, lint, WPCS, PHPUnit, smoke, deterministic ZIP e SHA-256.
 
-- seis classes principais no runtime;
-- oito post metas canônicos;
-- Metadata API;
-- Summary Store;
-- Coverage Dashboard;
-- Admin Page;
-- Frontend Renderer;
-- sem tabela própria para domínio central.
+### Hipóteses GRE resolvidas
 
-Gap inicial agora formalizado como drift a confirmar:
+- **“O GRE precisa de tabela própria?”** Não há evidência. O domínio funciona integralmente em WordPress metadata.
+- **“Há REST/AJAX necessário?”** Não no baseline. Admin-post e server rendering atendem ao produto observado.
+- **“O provider esperado pelo ASI existe?”** Não. `BDC\ExecutiveSummary\Objective_Provider` e `read_objective()` não existem no GRE 0.6.0.
+- **“O evento esperado pelo ASI existe?”** Não. `bdc_es_objective_updated` não é emitido; o único `do_action` próprio do bootstrap é `bdc_es_loaded`.
+- **“O drift era apenas documental?”** Não. D-001/D-002 são incompatibilidades reais entre as baselines fixadas.
 
-- ASI espera `BDC\\ExecutiveSummary\\Objective_Provider`;
-- ASI espera `bdc_es_objective_updated`;
-- confirmar se o runtime 0.6.0 realmente expõe ambos ou se há incompatibilidade de versão/contrato.
+### Decisões preliminares GRE
+
+- MANTER WordPress Metadata API como baseline do Resumo Executivo.
+- MANTER os oito valores/contrato conhecido e `post_title` como título.
+- MANTER `edit_post`, nonce por objeto, allowlist, sanitização e read-after-write.
+- MANTER empty-delete e leitura sem side effect.
+- REDESENHAR a API de Objective como serviço interno do plugin unificado; não reproduzir bridge frágil entre plugins.
+- MANTER intenção de evento de mudança, mas REDESENHAR nome/payload e emitir somente após persistência confirmada.
+- REDESENHAR Coverage Dashboard para workload limitado quando medição justificar; não criar rollup/table antecipadamente.
+- REDESENHAR CSS/admin/frontend com o Design System único do KB2Ops.
+- AINDA NÃO SABEMOS quais campos classificatórios devem permanecer meta versus virar taxonomia.
+- AINDA NÃO SABEMOS se side panel automático sobreviverá como UX final.
+- AINDA NÃO SABEMOS política de revisions/histórico das metas.
+
+### Dívida técnica GRE identificada
+
+A validação do `Summary_Store` é toda feita antes da primeira mutação, mas writes multi-campo posteriores são sequenciais. Se um campo posterior falhar após um anterior já ter sido persistido, não há rollback compensatório comprovado. O plugin unificado deve especificar e testar essa semântica antes da implementação.
+
+## Drifts cruzados já confirmados
+
+### D-001 — Objective Provider
+
+- lado ASI: espera/testa `BDC\ExecutiveSummary\Objective_Provider::read_objective()`;
+- lado GRE: classe/método ausentes;
+- status: **CONFIRMADO QUEBRADO**.
+
+### D-002 — Objective changed event
+
+- lado ASI: Queue escuta `bdc_es_objective_updated`;
+- lado GRE: evento ausente;
+- status: **CONFIRMADO QUEBRADO**.
+
+Direção: no plugin unificado, store interno + evento pós-persistência + invalidação/reindexação derivada.
 
 ## Decisões ainda não tomadas
 
 - taxonomias definitivas do novo produto;
+- destino final campo a campo dos `_bdc_es_*` classificatórios;
 - schema lexical;
 - necessidade de tabela de chunks;
 - estratégia vetorial;
@@ -106,6 +155,21 @@ Gap inicial agora formalizado como drift a confirmar:
 - estratégia de coexistência/migração do índice `asi_*`;
 - storage final de vocabulary/bindings/rules/Golden Queries;
 - necessidade final de fila própria;
-- estratégia definitiva de anchors.
+- estratégia definitiva de anchors;
+- UX final do Resumo Executivo (side panel versus composição DS).
 
-Nenhuma dessas decisões deve ser fechada antes do inventário/cross-reference correspondente.
+Nenhuma dessas decisões deve ser fechada antes do inventário KB2Ops e do cross-reference T050–T059.
+
+## Próxima investigação
+
+O próximo bloco deve ser KB2Ops 0.2.1 (T010–T019), com prioridade para:
+
+1. Content Extractor Elementor-aware;
+2. ownership/read-only da bridge `_bdc_es_*`;
+3. metadados `_kb2ops_*` e candidatos a taxonomia;
+4. Knowledge Studio/Search;
+5. Design System/tokens/componentes;
+6. lifecycle hardened;
+7. testes/build/release.
+
+Esse bloco é necessário para fechar D-003, D-006/D-007 e permitir o cruzamento T050–T059.

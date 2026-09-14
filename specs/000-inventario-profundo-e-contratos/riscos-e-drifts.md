@@ -1,8 +1,8 @@
 # Riscos, Drifts e Dívidas — SPEC-000
 
-> Documento incremental. Estado após conclusão do bloco ASI.
+> Documento incremental. Estado após conclusão dos blocos ASI e Gerenciador de Resumo Executivo (GRE).
 
-## Riscos confirmados no ASI
+## 1. Riscos confirmados no ASI
 
 ### R-ASI-001 — Extração de conteúdo não é Elementor-aware
 
@@ -16,9 +16,11 @@
 
 **Evidência:** ASI exige `BDC\ExecutiveSummary\Objective_Provider::read_objective()` e possui teste específico para esse contrato. Ausência resulta em Objective vazio.
 
-**Estado:** metade ASI confirmada. Falta confirmar T046 contra o runtime fixado do Gerenciador de Resumo Executivo.
+**Estado após T046:** **CONFIRMADO**. O GRE 0.6.0 não contém a classe/método esperados.
 
-**Risco:** integração silenciosamente degradada: cards/índice deixam de receber Objective sem erro fatal.
+**Risco:** integração silenciosamente degradada: cards/índice podem deixar de receber Objective sem erro fatal.
+
+**Tratamento futuro:** eliminar dependência entre plugins no bounded context unificado; usar store interno canônico e contrato explícito/testado.
 
 ### R-ASI-003 — Telemetria minimal ainda armazena query text
 
@@ -80,29 +82,104 @@
 
 **Tratamento:** equivalências administráveis/versionadas; hardcode apenas para regras linguísticas estáveis.
 
-## Drifts/contratos quebrados em investigação
+---
 
-| ID | Contrato | Estado | Próxima evidência |
+## 2. Riscos confirmados no Gerenciador de Resumo Executivo
+
+### R-GRE-001 — Ausência de evento pós-persistência de Objective
+
+**Evidência:** `Summary_Store::update()` confirma writes, mas não emite action específica após alteração. O bootstrap GRE emite somente `bdc_es_loaded`.
+
+**Impacto:** projections consumidoras não possuem contrato nativo para invalidação/reindexação. O ASI tenta compensar esperando `bdc_es_objective_updated`, hook inexistente no GRE baseline.
+
+**Tratamento:** no plugin unificado, emitir evento de domínio **somente após persistência confirmada**, com payload mínimo e teste de integração para reindexação/invalidação.
+
+### R-GRE-002 — Persistência multi-campo pode produzir estado parcialmente aplicado em falha tardia
+
+**Evidência:** payload completo é validado antes do primeiro write, mas writes são executados sequencialmente. Não há transação nem rollback compensatório se um campo posterior falhar após outro já ter sido persistido.
+
+**Impacto:** baixo em fluxo normal, mas relevante para contrato de confiabilidade/consistência.
+
+**Tratamento:** definir semântica futura explicitamente. Preferência: compensação lógica ou estratégia que evite afirmar atomicidade que WordPress post meta não oferece nativamente. Não criar banco próprio apenas por isso.
+
+### R-GRE-003 — Coverage Dashboard possui scan não limitado
+
+**Evidência:** `get_posts` com `posts_per_page = -1` para todos os posts publicados e preload de meta cache para todos os IDs.
+
+**Impacto:** memória/latência crescem com o corpus.
+
+**Tratamento:** MANTER métricas, REDESENHAR consulta com workload limitado/paginado/agregação medida. Tabela de rollup só se benchmark provar necessidade.
+
+### R-GRE-004 — Histórico/revisions de metadata desabilitado no baseline
+
+**Evidência:** as oito metas são registradas com `revisions_enabled = false`.
+
+**Risco:** o estado atual não oferece histórico nativo dessas alterações; isso pode conflitar com requisitos futuros de auditoria/curadoria.
+
+**Tratamento:** não decidir nesta SPEC. Cruzar com requisitos de histórico/revisão e WordPress-first antes de adicionar infraestrutura.
+
+### R-GRE-005 — Side panel automático é decisão de produto embutida no runtime
+
+**Evidência:** `wp_footer` renderiza painel fixo em post singular quando shortcode inline não foi usado.
+
+**Risco:** transformar uma escolha visual antiga em invariante arquitetural do novo produto.
+
+**Tratamento:** MANTER capacidade de render read-only, mas decidir superfície no Design System/UX do plugin unificado após KB2Ops.
+
+### R-GRE-006 — Ausência de política formal de uninstall
+
+**Evidência:** não existe `uninstall.php` no baseline.
+
+**Valor:** não há deleção automática das metas.
+
+**Risco:** retenção fica implícita, sem procedimento documentado para remoção consciente.
+
+**Tratamento:** definir política explícita no plugin unificado: uninstall não destrutivo por default; purge separado e deliberado se necessário.
+
+---
+
+## 3. Drifts/contratos quebrados
+
+| ID | Contrato | Estado | Evidência/ação |
 |---|---|---|---|
-| D-001 | ASI → `BDC\ExecutiveSummary\Objective_Provider` | esperado e testado no ASI | confirmar existência/ausência no GRE 0.6.0 |
-| D-002 | ASI → `bdc_es_objective_updated` | Queue espera hook | confirmar emissão no GRE |
-| D-003 | ASI raw `post_content` versus produto Elementor-first | incompatibilidade conceitual confirmada | mapear KB2Ops Content Extractor |
+| D-001 | ASI → `BDC\ExecutiveSummary\Objective_Provider` | **CONFIRMADO QUEBRADO** | ASI espera/testa; GRE 0.6.0 não possui classe/método. Redesenhar como serviço interno no plugin unificado. |
+| D-002 | ASI → `bdc_es_objective_updated` | **CONFIRMADO QUEBRADO** | Queue ASI espera; GRE não emite. Criar evento pós-persistência interno futuro. |
+| D-003 | ASI raw `post_content` versus produto Elementor-first | incompatibilidade conceitual confirmada | mapear KB2Ops Content Extractor em T015 |
 | D-004 | ASI Word Cloud extractor versus extractor futuro único | duplicação confirmada | cruzar KB2Ops/arquitetura futura |
 | D-005 | roles/tabelas GAC | dependência ambiental | decidir se há requisito de produto após inventário cruzado |
+| D-006 | campos GRE classificatórios em post meta versus potencial taxonomia | **ABERTO** | só decidir após inventariar `_kb2ops_*`, taxonomias e filtros/queries do KB2Ops |
+| D-007 | CSS GRE/ASI versus Design System único | **ABERTO** | mapear tokens/componentes KB2Ops em T018 |
 
-## Dívidas que não devem virar decisão agora
+### Consequência de D-001/D-002
+
+O problema não deve ser “corrigido” nos plugins de referência durante a SPEC-000. Eles são evidência histórica. A solução pertence à arquitetura do plugin unificado:
+
+- store canônico único para Resumo Executivo;
+- leitura direta interna do Objective;
+- evento pós-write confirmado;
+- indexação derivada reagindo ao evento;
+- nenhum fallback que invente Objective a partir de `post_content`.
+
+---
+
+## 4. Dívidas que não devem virar decisão agora
 
 - schema definitivo do índice;
 - taxonomias novas;
+- conversão dos campos GRE classificatórios para taxonomias;
 - tabela de chunks;
 - MariaDB Vector;
 - embeddings;
 - Foundry/provider contract;
 - política definitiva de coexistência/migração ASI;
 - histórico de revisão;
-- retenção final de telemetria.
+- retenção final de telemetria;
+- estratégia final de shortcode/painel de Resumo Executivo;
+- estratégia definitiva de anchors.
 
-## Riscos reduzidos por contratos que devem ser preservados
+---
+
+## 5. Riscos reduzidos por contratos que devem ser preservados
 
 - Golden Queries reduzem regressão silenciosa de relevância.
 - Simulation proof + expected-state reduzem Apply sobre estado stale.
@@ -111,8 +188,12 @@
 - fail-empty do Objective evita inventar contexto editorial.
 - fail-closed de anchors evita links para destinos não comprovados.
 - Site Health/export redigido melhora diagnóstico sem expor dados desnecessários.
-- uninstall não destrutivo reduz risco de perda durante replacement/rollback.
+- GRE Meta Contract reduz drift de chaves e proíbe `_bdc_es_title`.
+- GRE capability `edit_post` reduz bypass de autorização por objeto.
+- GRE validação completa do payload antes do write reduz partial write por erro de entrada.
+- integração WordPress real do GRE reduz falso positivo de mocks.
+- build determinístico + SHA melhora rastreabilidade de release.
 
 ## Status
 
-Nenhum risco do bloco ASI bloqueia a continuação da SPEC-000. Eles **bloqueiam**, porém, decisões prematuras de runtime/schema. O próximo bloco deve confirmar o Gerenciador de Resumo Executivo, especialmente D-001/D-002, antes do cruzamento final.
+Nenhum risco do bloco GRE bloqueia a continuação da SPEC-000. D-001 e D-002 estão agora **fechados como incompatibilidades confirmadas**, não como incógnitas. O próximo bloco deve ser KB2Ops, pois T015/T018 são necessários para resolver D-003, D-006 e D-007 antes do cruzamento T050–T059.

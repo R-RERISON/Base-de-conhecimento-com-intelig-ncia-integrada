@@ -20,120 +20,152 @@ Antes de qualquer alteração:
 PROJETO
 - Repositório: R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
 - Branch: main
-- HEAD no início do bloco ASI: c5bd400604e56488c2016e50782e7779c5b5d351
+- HEAD no início do bloco GRE: 1e8f93e50be361fc22742b4196bdcc6f1b13c306
 - SPEC ativa: SPEC-000 — Inventário Profundo e Contratos dos Projetos de Referência
-- Estado: em execução; bloco ASI concluído documentalmente; runtime novo continua bloqueado.
+- Estado: em execução; blocos ASI e Gerenciador de Resumo Executivo concluídos documentalmente; runtime novo continua bloqueado.
 
-BASELINE ASI CONFIRMADA
-- Repositório: R-RERISON/Advanced-search-Intelligence
-- Versão: 4.6.8
-- SHA: c0ddff89caad529ce1bcdc645eb795e4a9b187a1
-- Tarefas T020–T034: concluídas.
+BASELINES CONFIRMADAS
+- ASI: R-RERISON/Advanced-search-Intelligence 4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1
+- GRE: R-RERISON/Gerenciador-de-Resumo-Executivo-da-Base-de-Conhecimento 0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365
+- KB2Ops: referência registrada 0.2.1 @ bcd8b97efe629194dc5dc1f9fbffa870f4aad43d — confirmar HEAD/baseline antes do próximo inventário.
+
+TAREFAS CONCLUÍDAS
+- T000–T002: preparação/governança.
+- T020–T034: Advanced Search Intelligence.
+- T040–T047: Gerenciador de Resumo Executivo.
 
 OBJETIVO DA CONTINUIDADE
-Continuar a SPEC-000 sem iniciar runtime. O ASI já foi decomposto em persistência, hooks, busca/ranking, Item Knowledge, curadoria/simulação, fila, migrações, telemetria, Golden Queries, quality, Word Cloud, admin/public, segurança, testes e release. O próximo foco exato é o Gerenciador de Resumo Executivo, porque existe um drift concreto que precisa ser provado antes do cruzamento: o ASI exige BDC\ExecutiveSummary\Objective_Provider::read_objective() e escuta bdc_es_objective_updated.
+Continuar a SPEC-000 sem criar runtime. O próximo bloco exato é KB2Ops T010–T019. O objetivo é provar como o KB2Ops trata Elementor, metadata, UI/Design System, Knowledge Studio/Search, lifecycle e bridge GRE; depois disso será possível iniciar o cruzamento T050–T059.
 
-ESTADO ATUAL COMPROVADO
-- O novo repositório é greenfield e não possui runtime do plugin.
-- Constituição 1.1.0 permanece vigente.
-- WordPress-first e princípio de negação são obrigatórios.
-- O plugin não faz manutenção editorial de posts.
-- Elementor continua editor/publicador canônico.
-- É proibido escrever em _elementor_data ou reescrever post_content silenciosamente.
+INVARIANTES VIGENTES
+- WordPress-first.
+- Aplicar princípio de negação antes de adicionar complexidade.
+- O plugin não faz manutenção editorial dos posts.
+- Elementor continua sendo editor/publicador canônico.
+- Não escrever em _elementor_data.
+- Não reescrever post_content silenciosamente.
 - IA sugere; humano decide; WordPress persiste.
 - Retrieval precede síntese.
-- Vetor/IA são opcionais e não podem derrubar o core lexical.
-- KB2Ops é referência de produto/UI/Design System e Content Extractor.
-- ASI é referência comprovada de search/index/ranking/Golden/telemetria/operação, não fonte automática de código/schema.
-- Gerenciador de Resumo Executivo continua referência de WordPress-first/metadata e é o próximo inventário.
-
-ARTEFATOS MATERIALIZADOS NO BLOCO ASI
-- specs/000-inventario-profundo-e-contratos/inventario-asi.md
-- specs/000-inventario-profundo-e-contratos/catalogo-persistencia.md — parcial ASI
-- specs/000-inventario-profundo-e-contratos/catalogo-integracoes.md — parcial ASI
-- specs/000-inventario-profundo-e-contratos/catalogo-testes-regressao.md — parcial ASI
-- specs/000-inventario-profundo-e-contratos/matriz-paridade-futura.md — preliminar ASI
-- specs/000-inventario-profundo-e-contratos/riscos-e-drifts.md — incremental
-- research.md atualizado
-- tasks.md atualizado com T020–T034 concluídas
-- checklist atualizado com bloco ASI concluído
+- IA/vetor são opcionais e não podem derrubar o core lexical.
+- Sem regressão silenciosa.
+- Nenhuma implementação sem SPEC ativa.
+- Nenhuma implementação material termina sem CONTINUIDADE.md atualizado.
 
 CONCLUSÕES ASI QUE NÃO DEVEM SER PERDIDAS
 1. Não copiar as 12 tabelas como arquitetura futura.
-2. Preservar comportamento de busca lexical degradável, QueryContext limitado, ranking explicável e Golden Queries.
+2. Preservar busca lexical degradável, QueryContext limitado, ranking explicável e Golden Queries.
 3. Preservar Item Knowledge/identidade/navegação fail-closed, mas reconstruir sobre Content Extractor único Elementor-aware.
 4. PostIndex, ItemKnowledge/Coordinator, StructuralAudit e Word Cloud não podem continuar com pipelines divergentes sobre post_content.
-5. Vocabulary, bindings e rules têm valor funcional; storage final ainda é AINDA NÃO SABEMOS.
-6. Durable Queue tem comportamento valioso; tabela/implementação nova só nasce se workload justificar.
-7. MigrationRunner/BaseReconciler/PostInstallOrchestrator contêm muitos princípios bons, mas grande parte da implementação existe por história/cutover ASI e deve ser descartada/redesenhada.
-8. Search Events/Interactions/Outcomes têm valor, mas privacidade/retenção precisam ser redesenhadas; modo minimal do ASI ainda persiste query text.
+5. Vocabulary, bindings e rules têm valor funcional; storage final permanece aberto.
+6. Durable Queue tem semântica valiosa; tabela/implementação só nasce se workload justificar.
+7. MigrationRunner/BaseReconciler/PostInstallOrchestrator carregam complexidade histórica e não têm direito automático de nascer.
+8. Search Events/Interactions/Outcomes têm valor, mas privacidade/retenção precisam ser redesenhadas; modo minimal ainda persiste query text.
 9. Tracking público com HMAC, nonce, rate limit, server authority e idempotência é contrato forte.
-10. Golden Queries são gate obrigatório de regressão e suíte vazia nunca equivale a PASS.
-11. Quality Diagnostics deve preferir WordPress Site Health + checks específicos mínimos.
-12. Word Cloud, se sobreviver, deve consumir índice/telemetria canônicos, não extrair conteúdo novamente.
-13. Acoplamento direto a roles/tabelas GAC não pertence ao core novo.
-14. Uninstall deve ser não destrutivo por default; exclusão exige política explícita.
-15. IA/vetor entram apenas como evolução opcional: expansão, hybrid retrieval, rerank, sugestões e síntese grounded.
+10. Golden Queries são gate obrigatório; suíte vazia nunca equivale a PASS.
+11. Quality Diagnostics deve preferir Site Health + checks mínimos.
+12. Word Cloud, se sobreviver, deve consumir índice/telemetria canônicos.
+13. Acoplamento GAC não pertence ao core.
+14. Uninstall deve ser não destrutivo por default com política explícita.
+15. IA/vetor entram apenas como evolução degradável após retrieval determinístico.
 
-DRIFTS / RISCOS ATIVOS
-- D-001: ASI exige BDC\ExecutiveSummary\Objective_Provider; confirmar no GRE.
-- D-002: ASI escuta bdc_es_objective_updated; confirmar se GRE emite.
-- D-003: ASI usa post_content diretamente em múltiplos pipelines; cruzar com KB2Ops Content Extractor.
-- Telemetria minimal do ASI não guarda identidade/IP/UA, mas guarda query text; política futura é pendente.
-- Rate limit anônimo usa hash de IP+User-Agent; revisar para proxy/NAT.
-- quality_daily não deve nascer sem benchmark.
-- storage final de vocabulary/bindings/rules/Golden permanece aberto.
+CONCLUSÕES GRE QUE NÃO DEVEM SER PERDIDAS
+1. GRE 0.6.0 é evidência forte de WordPress-first: oito post metas, sem tabela própria, REST, AJAX, cron, options/transients de domínio ou fila.
+2. O título é post_title; _bdc_es_title é explicitamente proibida.
+3. Meta Contract registra exatamente oito valores privados, string/single/default vazio, show_in_rest=false, revisions_enabled=false e auth edit_post.
+4. Summary_Store read é side-effect free; update usa allowlist, validação integral antes da mutação, sanitização, update parcial, empty-delete e read-after-write.
+5. Payload inválido não causa partial write, mas persistência multi-campo não possui rollback compensatório provado se uma falha tardia ocorrer.
+6. Admin usa admin-post autenticado, nonce por post e edit_post no store; não existe nopriv.
+7. Coverage Dashboard é read-only, mas faz scan posts_per_page=-1; preservar métricas e redesenhar workload após benchmark, sem tabela agregada antecipada.
+8. Frontend usa [bdc_resumo_executivo] current-post-only, ignora atributos, escapa tudo e não usa JS; side panel automático é decisão de UX, não invariante arquitetural.
+9. Build/release local é robusto: Composer/WPCS/PHPUnit, integração WordPress real, package smoke, ZIP determinístico e SHA-256.
+10. Não há uninstall.php; metadata não é apagada automaticamente, mas política formal de retenção ainda precisa existir.
+
+DRIFTS CONFIRMADOS
+- D-001 — ASI exige BDC\ExecutiveSummary\Objective_Provider::read_objective(); GRE 0.6.0 não possui a classe/método. CONTRATO QUEBRADO CONFIRMADO.
+- D-002 — ASI escuta bdc_es_objective_updated; GRE não emite o evento. CONTRATO QUEBRADO CONFIRMADO.
+- Direção futura: no plugin unificado usar store interno canônico para Objective + evento de domínio após persistência confirmada + invalidação/reindexação derivada. Não criar bridge entre plugins.
+
+DRIFTS/RISCOS A RESOLVER COM KB2OPS
+- D-003 — ASI lê post_content em vários pipelines versus produto Elementor-first.
+- D-004 — Word Cloud possui extractor lexical paralelo.
+- D-006 — campos GRE classificatórios atualmente em post meta versus possível taxonomia.
+- D-007 — CSS/UI ASI+GRE versus Design System único.
+
+ARTEFATOS DA SPEC-000 JÁ MATERIALIZADOS
+- inventario-asi.md
+- inventario-resumo-executivo.md
+- catalogo-persistencia.md — ASI+GRE parcial
+- catalogo-integracoes.md — ASI+GRE parcial
+- catalogo-testes-regressao.md — ASI+GRE parcial
+- matriz-paridade-futura.md — ASI+GRE preliminar
+- riscos-e-drifts.md — incremental
+- research.md atualizado
+- tasks.md e checklist atualizados
 
 O QUE NÃO DEVE SER FEITO AGORA
 - Não criar bootstrap/runtime do novo plugin.
-- Não criar tabelas, chunks, embeddings ou vetores.
+- Não criar tabelas novas.
+- Não criar chunks, embeddings ou vetores.
 - Não integrar Foundry.
-- Não copiar classes do ASI.
+- Não copiar classes dos legados.
+- Não alterar ASI, GRE ou KB2Ops durante o inventário.
 - Não iniciar SPEC-001.
-- Não alterar plugins de referência.
-- Não marcar T050–T059 como concluídas antes de cruzar as três referências.
+- Não fechar T050–T059 antes do KB2Ops.
+- Não converter campos GRE em taxonomias ainda.
 
-PRÓXIMO PASSO EXATO — GERENCIADOR DE RESUMO EXECUTIVO
-1. Fixar SHA/versionamento da referência usada pela SPEC.
-2. Ler bootstrap completo e árvore de runtime.
-3. Inventariar Meta Contract e todas as oito metas.
-4. Inventariar Summary Store e regras de leitura/escrita.
-5. Inventariar Admin Page/Coverage Dashboard/Renderer/shortcode/assets.
-6. Inventariar hooks, capabilities, nonces, options/transients e qualquer cron.
-7. Inventariar testes/build/release/uninstall.
-8. Procurar explicitamente BDC\ExecutiveSummary\Objective_Provider e read_objective().
-9. Procurar explicitamente emissão de bdc_es_objective_updated.
-10. Confirmar ou refutar D-001/D-002 com arquivo/linha/versão.
-11. Classificar componentes como MANTER, REDESENHAR, SUBSTITUIR POR WORDPRESS, EVOLUIR COM IA/VETOR, DESCARTAR ou AINDA NÃO SABEMOS.
-12. Atualizar inventário GRE, catálogos incrementais, riscos/drifts, tasks/checklist e este CONTINUIDADE.md.
+PRÓXIMO PASSO EXATO — KB2OPS T010–T019
+1. Confirmar main/HEAD, versão e SHA da referência KB2Ops antes da leitura.
+2. Ler bootstrap completo e lifecycle/activation/deactivation.
+3. Mapear árvore de runtime e classes de domínio.
+4. Inventariar todas as metas _kb2ops_*, options, transients, taxonomias, cron e qualquer persistência própria.
+5. Inventariar Admin routes/forms/actions, capabilities e nonces.
+6. Inventariar shortcodes, frontend e assets.
+7. Ler profundamente o Elementor Content Extractor: fontes, fallback, sanitização, headings, texto, links e tratamento de _elementor_data, garantindo que é read-only.
+8. Inventariar bridge dos oito _bdc_es_* e comparar com GRE Meta Contract/Summary Store.
+9. Inventariar Knowledge Studio e Knowledge Search, separando contratos de produto de implementação provisória.
+10. Mapear Design System: tokens, shell, componentes, estados, responsive/accessibility e dependências.
+11. Inventariar installer/migration/uninstall e qualquer mecanismo hardened/reversível.
+12. Inventariar testes, build, release e rollback.
+13. Classificar cada componente: MANTER, REDESENHAR, SUBSTITUIR POR WORDPRESS, EVOLUIR COM IA/VETOR, DESCARTAR ou AINDA NÃO SABEMOS.
+14. Atualizar inventario-kb2ops.md, catálogos, riscos/drifts, matriz, research, tasks/checklist e este CONTINUIDADE.md.
 
-CRITÉRIO DE CONCLUSÃO DO PRÓXIMO BLOCO
-T040–T047 só podem ser fechadas quando runtime relevante, persistência, hooks, UI, segurança e testes do GRE estiverem mapeados e o contrato Objective Provider/evento esperado pelo ASI estiver confirmado ou formalmente classificado como drift.
+CRITÉRIO DE CONCLUSÃO DO BLOCO KB2OPS
+T010–T019 só podem ser fechadas quando:
+- runtime relevante tiver sido lido arquivo a arquivo;
+- persistência/hooks/rotas/testes estiverem mapeados;
+- Content Extractor Elementor-aware estiver documentado como contrato técnico;
+- bridge GRE estiver comparada com a baseline GRE 0.6.0;
+- Design System estiver decomposto em tokens/componentes/comportamentos;
+- complexidades forem questionadas pelo princípio de negação;
+- existir classificação preliminar completa;
+- nenhum runtime novo tiver sido criado.
+
+APÓS KB2OPS
+Somente então iniciar T050–T059: ownership, sobreposição funcional, contratos quebrados, WordPress-first, infraestrutura realmente necessária, IA/vetor e matriz de paridade consolidada.
 
 REGRA DE CONTINUIDADE
-Se houver divergência entre este arquivo e o repositório, prevalecem Constituição e estado real do GitHub. Investigue antes de modificar. Não transforme conclusões parciais em decisões de arquitetura final.
+Não assuma contexto de chats anteriores além do repositório e deste handoff. Se houver divergência entre este prompt e o repositório, Constituição/repositório prevalecem. Investigue a divergência antes de modificar qualquer artefato.
 ```
 
 ## 2. Estado resumido para humanos
 
 - **SPEC:** SPEC-000 — Inventário Profundo e Contratos.
-- **Último bloco concluído:** Advanced Search Intelligence 4.6.8 — T020 a T034.
-- **Baseline ASI:** `c0ddff89caad529ce1bcdc645eb795e4a9b187a1`.
-- **Próximo bloco:** Gerenciador de Resumo Executivo — T040 a T047.
-- **Motivo da prioridade:** fechar o drift `Objective_Provider` / `bdc_es_objective_updated` antes do cruzamento arquitetural.
-- **Runtime novo:** continua bloqueado.
-- **SPEC-001:** não autorizada.
+- **HEAD antes do bloco GRE:** `1e8f93e50be361fc22742b4196bdcc6f1b13c306`.
+- **Blocos concluídos:** ASI T020–T034; GRE T040–T047.
+- **Próximo gate:** KB2Ops T010–T019.
+- **SPEC-001:** continua bloqueada.
+- **Runtime do novo plugin:** continua inexistente por decisão arquitetural.
 
-## 3. Evidências do bloco ASI
+## 3. Evidências novas do bloco GRE
 
-- runtime central lido, incluindo bootstrap, Schema, Search, Infrastructure, Analytics, Admin/Public e Word Cloud;
-- 12 stores catalogados sem decisão de copiá-los;
-- hooks/AJAX/shortcodes/capabilities e integrações catalogados;
-- contratos de segurança/privacy/rate-limit/cache catalogados;
-- suíte de release e regressão mapeada;
-- classificação e matriz de paridade materializadas;
-- riscos e drifts registrados.
+- GRE baseline `0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365` confirmada contra `main`.
+- Oito metas canônicas via Metadata API; sem tabela própria.
+- Summary Store/Admin/Frontend/Coverage classificados.
+- Testes unitários + integração WordPress real + package smoke inventariados.
+- Build determinístico e gate local registrados.
+- D-001 e D-002 confirmados como drifts reais entre ASI e GRE.
+- riscos de atomicidade multi-campo e scan ilimitado do dashboard registrados.
 
 ## 4. Regra de atualização
 
-Atualizar este arquivo após cada bloco material da SPEC-000. Substituir estado obsoleto; não acumular instruções contraditórias. O Prompt de Continuidade é parte do Definition of Done documental.
+Atualizar este arquivo após o bloco KB2Ops e novamente após o cruzamento T050–T059. Substituir informações obsoletas; não acumular estados contraditórios.

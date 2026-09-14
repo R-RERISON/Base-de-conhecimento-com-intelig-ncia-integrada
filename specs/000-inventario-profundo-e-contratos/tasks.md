@@ -39,27 +39,27 @@
 
 ## Resumo Executivo
 
-- [ ] T040 — Inventariar bootstrap/lifecycle.
-- [ ] T041 — Inventariar Meta Contract e Summary Store.
-- [ ] T042 — Inventariar Admin Page e Coverage Dashboard.
-- [ ] T043 — Inventariar Frontend Renderer/shortcode.
-- [ ] T044 — Inventariar CSS/assets.
-- [ ] T045 — Inventariar testes/build/release.
-- [ ] T046 — Confirmar existência/ausência de Objective Provider/evento esperado pelo ASI.
-- [ ] T047 — Classificar todos os itens.
+- [x] T040 — Inventariar bootstrap/lifecycle.
+- [x] T041 — Inventariar Meta Contract e Summary Store.
+- [x] T042 — Inventariar Admin Page e Coverage Dashboard.
+- [x] T043 — Inventariar Frontend Renderer/shortcode.
+- [x] T044 — Inventariar CSS/assets.
+- [x] T045 — Inventariar testes/build/release.
+- [x] T046 — Confirmar existência/ausência de Objective Provider/evento esperado pelo ASI. _(ambos ausentes no GRE 0.6.0; drift confirmado)_
+- [x] T047 — Classificar todos os itens.
 
 ## Cruzamento
 
-- [ ] T050 — Criar catálogo unificado de persistência. _(estrutura incremental criada com ASI; aguarda KB2Ops/GRE)_
-- [ ] T051 — Criar catálogo unificado de hooks/rotas/integrações. _(estrutura incremental criada com ASI; aguarda KB2Ops/GRE)_
+- [ ] T050 — Criar catálogo unificado de persistência. _(estrutura incremental ASI+GRE; aguarda KB2Ops)_
+- [ ] T051 — Criar catálogo unificado de hooks/rotas/integrações. _(estrutura incremental ASI+GRE; aguarda KB2Ops)_
 - [ ] T052 — Criar mapa de ownership atual de dados.
 - [ ] T053 — Criar matriz de sobreposição funcional.
-- [ ] T054 — Criar mapa de contratos quebrados/drift. _(registro incremental criado; drift Objective aguarda T046)_
-- [ ] T055 — Criar catálogo de regressão e Golden Queries. _(estrutura incremental criada com ASI; aguarda demais referências)_
-- [ ] T056 — Identificar tudo que WordPress pode substituir.
+- [ ] T054 — Criar mapa de contratos quebrados/drift. _(D-001/D-002 confirmados; aguarda KB2Ops para demais cruzamentos)_
+- [ ] T055 — Criar catálogo de regressão e Golden Queries. _(estrutura incremental ASI+GRE; aguarda KB2Ops)_
+- [ ] T056 — Identificar tudo que WordPress pode substituir. _(evidência GRE reforça Metadata API/admin-post/capabilities/nonces; fechar após KB2Ops)_
 - [ ] T057 — Identificar tudo que realmente exige infraestrutura própria.
 - [ ] T058 — Identificar candidatos a IA/vetor.
-- [ ] T059 — Criar matriz de paridade futura. _(estrutura incremental criada com ASI; aguarda cruzamento)_
+- [ ] T059 — Criar matriz de paridade futura. _(estrutura incremental ASI+GRE; aguarda KB2Ops e cruzamento)_
 
 ## Gate
 

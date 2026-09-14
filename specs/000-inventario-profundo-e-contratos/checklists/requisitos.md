@@ -38,27 +38,27 @@
 
 ## Inventário Resumo Executivo
 
-- [ ] Bootstrap/lifecycle.
-- [ ] Meta contract.
-- [ ] Store.
-- [ ] Admin/coverage.
-- [ ] Renderer/shortcode.
-- [ ] Assets.
-- [ ] Testes/build.
-- [ ] Provider/event drift confirmado.
-- [ ] Classificação completa.
+- [x] Bootstrap/lifecycle.
+- [x] Meta contract.
+- [x] Store.
+- [x] Admin/coverage.
+- [x] Renderer/shortcode.
+- [x] Assets.
+- [x] Testes/build.
+- [x] Provider/event drift confirmado.
+- [x] Classificação completa.
 
 ## Cruzamento
 
-- [ ] Catálogo de persistência. _(parcial ASI materializado)_
-- [ ] Catálogo de integrações. _(parcial ASI materializado)_
+- [ ] Catálogo de persistência. _(parcial ASI+GRE materializado; aguarda KB2Ops)_
+- [ ] Catálogo de integrações. _(parcial ASI+GRE materializado; aguarda KB2Ops)_
 - [ ] Mapa de ownership.
 - [ ] Matriz de sobreposição.
-- [ ] Drifts/contratos quebrados. _(parcial ASI materializado)_
-- [ ] Catálogo de regressão. _(parcial ASI materializado)_
-- [ ] Matriz WordPress-first. _(preliminar ASI materializada)_
-- [ ] Candidatos IA/vetor. _(preliminar ASI materializada)_
-- [ ] Matriz de paridade futura. _(parcial ASI materializada)_
+- [ ] Drifts/contratos quebrados. _(D-001/D-002 confirmados; demais aguardam KB2Ops)_
+- [ ] Catálogo de regressão. _(parcial ASI+GRE materializado; aguarda KB2Ops)_
+- [ ] Matriz WordPress-first. _(preliminar ASI+GRE materializada)_
+- [ ] Candidatos IA/vetor. _(preliminar materializada)_
+- [ ] Matriz de paridade futura. _(parcial ASI+GRE materializada; aguarda KB2Ops)_
 
 ## Gate final
 
@@ -77,4 +77,15 @@
 - `catalogo-integracoes.md` registra hooks, cron, capabilities, AJAX, shortcodes e integrações.
 - `catalogo-testes-regressao.md` registra a suíte/gates e contratos a portar.
 - `matriz-paridade-futura.md` registra a paridade mínima e os itens ainda desconhecidos.
-- `riscos-e-drifts.md` registra os riscos do ASI e o drift Objective/Resumo Executivo a confirmar.
+- `riscos-e-drifts.md` registra riscos e integrações a cruzar.
+
+## Evidência de fechamento do bloco Gerenciador de Resumo Executivo
+
+- `inventario-resumo-executivo.md` fixa baseline 0.6.0/SHA e decompõe as seis classes de runtime.
+- as oito metas canônicas, `post_title` e o Summary Store foram inventariados.
+- Admin Page, Coverage Dashboard, shortcode, side panel e CSS foram classificados.
+- ausência de tabela/REST/AJAX/cron/options/transients próprios foi comprovada no runtime.
+- suíte unitária, integração WordPress real, package smoke e build determinístico foram catalogados.
+- D-001 (`Objective_Provider`) e D-002 (`bdc_es_objective_updated`) foram confirmados como contratos quebrados entre ASI e GRE.
+- riscos de workload do dashboard e atomicidade multi-campo foram formalizados.
+- nenhum runtime do novo plugin foi criado.

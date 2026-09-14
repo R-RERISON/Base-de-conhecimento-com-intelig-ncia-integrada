@@ -1,0 +1,26 @@
+# Build / dependências
+/dist/
+/vendor/
+/node_modules/
+
+# Ambientes
+.env
+.env.*
+!.env.example
+
+# IDE / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Testes / cobertura
+.phpunit.result.cache
+coverage/
+
+# Temporários
+*.log
+*.tmp
+*.bak
+*.zip
+__pycache__/

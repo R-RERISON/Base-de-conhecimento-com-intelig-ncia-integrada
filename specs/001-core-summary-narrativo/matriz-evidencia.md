@@ -1,15 +1,15 @@
 # Matriz de Evidência — SPEC-001
 
-> Estado atual: **runtime S002 implementado; suíte unitária PASS 15/15; harness PHPUnit e runner onclick JSON preparados; gates WordPress/browser permanecem NOT_RUN até execução no ambiente real.**
+> Estado atual: **runtime S002 implementado; suíte unitária PASS 15/15; harness PHPUnit, runner onclick v2 e browser acceptance JSON preparados; gates WordPress/browser permanecem NOT_RUN até execução no ambiente real.**
 
 | Gate | Aplicabilidade | Evidência exigida | Estado atual | Gate de saída |
 |---|---|---|---|---|
 | T040 Unitário determinístico | MUST | contrato, validação, diff, no-op e máquina B-006 isolada | PASS — 15/15 em PHP 8.4.23 | pré-requisito de integração |
 | G-001 Editorial/Elementor | MUST | before/after de `_elementor_data`, `post_content`, `post_title`; GET sem write; browser smoke | NOT_RUN — PHPUnit/onclick preparados | Homologação |
-| G-020 Summary | MUST | read/save/omit/empty/delete/no-op/allowlist/limite/sanitização/read-after-write em WordPress real | NOT_RUN — PHPUnit/onclick preparados | Homologação |
+| G-020 Summary | MUST | read/save/omit/empty/delete/no-op/allowlist/limite/sanitização/read-after-write em WordPress real | NOT_RUN — PHPUnit/onclick v2 preparados | Homologação |
 | G-070 Segurança/scope | MUST | capability, nonce, GET, IDOR, tipo inválido, mass assignment, XSS, escaping | NOT_RUN — onclick cobre parte in-process; browser/handler ainda obrigatório | Homologação |
-| G-110 UI/UX | MUST | browser/manual: integração wp-admin, feedback, labels, foco, teclado, viewport, cor | NOT_RUN | Homologação |
-| G-130 Lifecycle/release | CONDICIONAL/MUST quando houver pacote | activation/deactivation/uninstall, package/checksum; remoção do runner onclick; upgrade N/A na primeira versão | NOT_RUN | Release candidate |
+| G-110 UI/UX | MUST | browser/manual: integração wp-admin, feedback, labels, foco, teclado, viewport, cor | NOT_RUN — coletor JSON manual preparado | Homologação |
+| G-130 Lifecycle/release | CONDICIONAL/MUST quando houver pacote | activation/deactivation/uninstall, package/checksum; remoção das ferramentas temporárias; upgrade N/A na primeira versão | NOT_RUN | Release candidate |
 | B-006 Write composto | MUST | fault injection determinístico + confirmação em integração WordPress | NOT_RUN — unit fault injection PASS; PHPUnit/onclick preparados | Homologação |
 | Golden Queries | N/A | Search fora de escopo | N/A — Search não existe na SPEC | — |
 | IA/custo | N/A | IA fora de escopo | N/A — sem chamada externa | — |
@@ -27,13 +27,28 @@ Resultado versionado em `evidencia-unitaria-s003.md`: 15 testes aprovados, 0 fal
 
 `tests/integration/` contém harness para execução reproduzível contra WordPress + MySQL/MariaDB reais.
 
-### Onclick temporário
+### Onclick temporário v2
 
-`includes/class-diagnostics-runner.php` é carregado somente com `BDC_KB_ENABLE_DIAGNOSTICS=true` e exige `manage_options` + nonce. O clique gera JSON sem persistir relatório e usa fixtures temporárias marcadas por `_bdc_kb_diagnostic_fixture=spec001-onclick-v1`.
+`includes/class-diagnostics-runner.php` é carregado somente com `BDC_KB_ENABLE_DIAGNOSTICS=true` e exige `manage_options` + nonce. O clique gera JSON sem persistir relatório e usa fixtures temporárias marcadas por `_bdc_kb_diagnostic_fixture=spec001-onclick-v2`.
+
+O runner v2:
+
+- remove resíduos antigos em lotes de 100 até esgotar o marker ou atingir guard rail;
+- conta resíduos com `WP_Query::found_posts`;
+- não pula a seção de cleanup quando a criação da fixture falha;
+- amplia G-020 com meta ausente sem side effect, oversized, non-string, NO_CHANGE, anti-XSS e Unicode/multiline/backslash.
 
 O JSON só termina `overall=PASS` quando todos os checks passam e `cleanup.residual_fixtures=0`.
 
 O onclick não promove G-110 e não substitui browser acceptance.
+
+### Browser acceptance temporário
+
+`includes/class-browser-acceptance.php` é carregado pela mesma flag e somente para `manage_options`.
+
+Ele coleta observação humana guiada de G-110 e gera `bdc-kb-browser-acceptance-*.json` sem persistir respostas no banco.
+
+Cada check usa `source=operator_assertion`; o relatório declara explicitamente `manual_browser_observation` e não se apresenta como automação E2E.
 
 ## Casos mínimos G-001
 
@@ -78,7 +93,8 @@ O onclick não promove G-110 e não substitui browser acceptance.
 - cor não exclusiva;
 - viewport administrativa estreita;
 - nenhum segundo shell/sidebar;
-- botão temporário de diagnóstico ausente quando a flag está desabilitada.
+- valores persistidos reaparecem após redirect/reload;
+- botão/painéis temporários ausentes quando a flag está desabilitada.
 
 ## Fault injection B-006
 
@@ -99,10 +115,12 @@ O runner onclick executa ao menos `FAIL_SAFE` por falha no segundo write e `PART
 Antes de package/release:
 
 - remover a flag do ambiente;
-- remover runner/require/hook temporários;
-- confirmar zero fixtures marcadas;
+- remover `class-diagnostics-runner.php`;
+- remover `class-browser-acceptance.php`;
+- remover require/hook temporários;
+- confirmar zero fixtures `spec001-onclick-v2`;
 - repetir lint/regressão após remoção.
 
 ## Regra de gate
 
-`FAIL`, `NOT_RUN`, `NOT_CONFIGURED` ou `STALE` em gate ativo bloqueiam Homologação/Concluída/Release conforme a coluna de saída. PASS unitário ou PASS onclick não promove automaticamente browser/lifecycle.
+`FAIL`, `NOT_RUN`, `NOT_CONFIGURED` ou `STALE` em gate ativo bloqueiam Homologação/Concluída/Release conforme a coluna de saída. PASS unitário, PASS onclick ou JSON manual isolado não promovem automaticamente todos os demais gates.

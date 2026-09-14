@@ -1,19 +1,14 @@
-# SPEC-002 — Resumo Executivo Integrado
+# PLACEHOLDER HISTÓRICO — antiga SPEC-002 Resumo Executivo Integrado
 
-**Status:** Planejada  
-**Pré-requisito:** SPEC-001 concluída.
+**Status:** SUPERSEDIDA COMO PLANO ANTERIOR / NÃO EXECUTAR COMO ESCRITA  
+**Autoridade da substituição:** T095/T096/T097 da SPEC-000.
 
-## Problema
-O Resumo Executivo precisa deixar de ser um plugin separado e tornar-se domínio nativo da plataforma sem perder os dados já existentes.
+O planejamento antigo previa portar oito campos e executar Summary apenas depois de um Core separado. T097 reduziu e antecipou o primeiro vertical slice para três campos narrativos:
 
-## Resultado esperado
-Reconstruir clean code do domínio dentro do Knowledge Studio, preservando inicialmente os oito `_bdc_es_*`, com edição, leitura, cobertura e renderer integrados.
+- `_bdc_es_objective`;
+- `_bdc_es_escalation`;
+- `_bdc_es_important`.
 
-## WordPress-first
-`register_post_meta`, Metadata API, capabilities e formulários nativos antes de qualquer tabela/API própria.
+A SPEC canônica atual é `specs/001-core-summary-narrativo/`.
 
-## Princípio de negação
-Não criar tabela, REST ou JavaScript obrigatório para resolver um domínio que o WordPress já atende com metadata.
-
-## Gate
-Abrir post no Studio → ler resumo existente → editar → salvar → reler → renderizar, sem tocar no conteúdo Elementor.
+Os cinco campos classificatórios restantes não migram por implicação e serão decididos em slices futuros. Este placeholder permanece apenas para rastreabilidade e não é autorização de runtime.

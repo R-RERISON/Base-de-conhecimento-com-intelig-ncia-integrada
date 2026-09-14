@@ -1,22 +1,12 @@
-# SPEC-001 — Core WordPress, Shell e Design System
+# PLACEHOLDER HISTÓRICO — antiga SPEC-001 Core WordPress, Shell e Design System
 
-**Status:** Planejada  
-**Pré-requisito:** SPEC-000 concluída.
+**Status:** SUPERSEDIDA / NÃO EXECUTAR  
+**Autoridade da substituição:** `specs/000-inventario-profundo-e-contratos/decisao-t097.md`.
 
-## Problema
-O novo produto precisa existir como plugin WordPress instalável e visualmente coerente antes de receber domínios complexos.
+Este diretório foi criado como planejamento anterior ao fechamento da SPEC-000. T097 redefiniu a primeira SPEC executável como:
 
-## Resultado esperado
-Bootstrap mínimo, lifecycle seguro, navegação única, Design System próprio inspirado no KB2Ops, página Visão Geral real, health básico e build local reproduzível.
+`specs/001-core-summary-narrativo/`
 
-## WordPress-first
-Usar wp-admin como shell; Settings/Capabilities/Site Health e APIs nativas antes de infraestrutura própria.
+A decisão posterior incorpora apenas o Core mínimo necessário ao vertical slice do Summary e rejeita antecipar shell/health/settings/infraestrutura sem necessidade concreta.
 
-## Princípio de negação
-Nenhuma SPA, framework CSS, REST ou tabela própria nesta SPEC sem necessidade comprovada.
-
-## Invariante editorial
-Nenhuma manutenção de posts. Elementor permanece intocado.
-
-## Gate
-`instalar → ativar → navegar → validar saúde → desativar` sem erro e sem alteração editorial.
+Este arquivo permanece somente para rastreabilidade histórica. Não é SPEC ativa, não autoriza runtime e não deve ser usado para contradizer T097, Constituição, Manifesto ou a nova SPEC-001.

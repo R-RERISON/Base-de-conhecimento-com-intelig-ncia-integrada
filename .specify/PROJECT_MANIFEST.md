@@ -5,26 +5,20 @@
 **Produto:** Base de Conhecimento com Inteligência Integrada  
 **Tipo:** Plugin WordPress único, modular internamente  
 **Idioma:** Português do Brasil  
-**Estado:** SPEC-000 concluída / SPEC-001 autorizada para Definition of Ready e implementação posterior aos seus gates  
+**Estado:** SPEC-000 concluída / SPEC-001 Core mínimo + Summary narrativo PRONTA após Definition of Ready documental; runtime ainda não iniciado  
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
 ## Missão
 
 Construir uma plataforma única para governar a Base de Conhecimento, integrando curadoria, resumo executivo, classificação, busca lexical, busca semântica, telemetria, qualidade, operações e inteligência artificial sem substituir o WordPress ou o Elementor como fonte editorial.
 
-## Estado de execução após T097
+## Estado de execução
 
-A SPEC-000 — Inventário Profundo e Contratos — foi concluída documentalmente.
+A SPEC-000 — Inventário Profundo e Contratos — foi concluída documentalmente por T097.
 
-A decisão canônica `specs/000-inventario-profundo-e-contratos/decisao-t097.md` autoriza a abertura da **SPEC-001 — Core mínimo + Summary narrativo**, sob escopo estrito.
+T097 autorizou a abertura da **SPEC-001 — Core mínimo + Summary narrativo**, sob escopo estrito. O bloco inicial de baseline/Definition of Ready da SPEC-001 foi concluído documentalmente e está PASS.
 
-A autorização significa:
-
-- criar e detalhar a SPEC-001;
-- provar seu próprio Definition of Ready;
-- somente depois implementar o vertical slice autorizado.
-
-A autorização **não** significa release, cutover produtivo ou permissão implícita para Search, Classificação, Review, IA, Analytics, queue, vetor ou outras capacidades fora do escopo da SPEC-001.
+Isso significa que o próximo bloco pode iniciar o runtime mínimo da SPEC-001. Não significa Homologação, release, produção ou cutover.
 
 ## Usuários principais
 
@@ -67,36 +61,13 @@ Saída assistiva e rastreável. IA não é fonte editorial nem autoridade de apr
 ## Hierarquia tecnológica
 
 ### Nível 0 — WordPress Core
-Preferir:
-
-- Posts;
-- Post Meta;
-- Taxonomies;
-- Options / Settings API;
-- Roles & Capabilities;
-- Nonces;
-- Hooks / Filters;
-- Shortcodes;
-- admin-post;
-- WP-Cron;
-- Transients / Object Cache;
-- WordPress HTTP API;
-- Site Health;
-- REST API apenas quando houver consumidor real.
+Preferir Posts, Post Meta, Taxonomies, Options/Settings, Roles & Capabilities, Nonces, Hooks/Filters, Shortcodes, admin-post, WP-Cron, Transients/Object Cache, WordPress HTTP API, Site Health e REST apenas quando houver consumidor real.
 
 ### Nível 1 — Estruturas próprias
-Aceitas somente quando há motivo técnico comprovado. A SPEC-000 aprovou documentalmente apenas uma família futura no baseline: **Search Retrieval Projection reconstruível**. Outras estruturas próprias continuam condicionadas a suas SPECs e gates.
+Aceitas somente quando há motivo técnico comprovado. A SPEC-000 aprovou documentalmente apenas uma família futura no baseline: **Search Retrieval Projection reconstruível**. Outras estruturas próprias continuam condicionadas às suas SPECs e gates.
 
 ### Nível 2 — Serviços externos
-Apenas para capacidades que o ambiente WordPress não deve executar sozinho:
-
-- embeddings;
-- LLM;
-- agentes;
-- Microsoft Foundry;
-- integrações corporativas.
-
-Nenhum serviço externo é necessário para a SPEC-001 autorizada.
+Apenas para capacidades que o ambiente WordPress não deve executar sozinho. Nenhum serviço externo é necessário para a SPEC-001.
 
 ## Princípio de negação
 
@@ -108,24 +79,15 @@ Uma decisão mais simples vence quando entrega o mesmo requisito com menor custo
 
 ## Referências históricas obrigatórias
 
-### KB2Ops
-Fonte de referência para produto, fluxo, Design System e experiência operacional.
+- **KB2Ops:** produto, fluxo, Design System e experiência operacional.
+- **ASI:** busca, índice, ranking, privacidade, Golden Queries, telemetria e operações.
+- **Gerenciador de Resumo Executivo:** WordPress-first, clean code, contrato de metadata e implementação sucinta.
 
-### ASI
-Fonte de referência para comportamento de busca, índice, ranking, privacidade, Golden Queries, telemetria e operações.
-
-### Gerenciador de Resumo Executivo
-Fonte de referência para WordPress-first, clean code, contrato de metadata e implementação sucinta.
-
-As referências preservam comportamento e aprendizado; não obrigam reprodução de código, schema, menus ou dívida histórica.
+Referências preservam comportamento e aprendizado; não obrigam reprodução de código, schema, menus ou dívida histórica.
 
 ## Estratégia de produto
 
-A plataforma deve entregar uma experiência integrada desde a Home até o detalhe de uma revisão administrativa.
-
-A UI não pode parecer um conjunto de plugins agregados.
-
-A integração será construída por vertical slices; produto único não significa big-bang.
+A plataforma deve entregar experiência integrada, mas por vertical slices. Produto único não significa big-bang.
 
 ## Estratégia de desenvolvimento
 
@@ -138,67 +100,63 @@ A integração será construída por vertical slices; produto único não signif
 - Sem refatoração simultânea de todos os domínios.
 - Sem dependência de GitHub Actions.
 - Build e verificação devem poder rodar localmente.
-- Toda implementação material termina com Prompt de Continuidade versionado na SPEC ativa.
+- Toda implementação material termina com Prompt de Continuidade versionado.
 
-## SPEC-001 autorizada — fronteira inicial
+## SPEC-001 canônica
 
-A primeira SPEC autorizada deve começar por **Core mínimo + Summary narrativo** para o Analista de Conhecimento.
+**Core mínimo + Summary narrativo** para o Analista de Conhecimento.
 
-Conceitos:
+Jornada:
 
-- `objective`;
-- `escalation`;
-- `important`.
+`selecionar artigo -> ler -> editar -> salvar -> reler -> confirmar Summary`.
 
-Storage inicial preservado:
+Post type suportado na baseline desta SPEC: **`post` somente**.
 
-- `_bdc_es_objective`;
-- `_bdc_es_escalation`;
-- `_bdc_es_important`.
+Dados:
 
-Antes de código, a SPEC-001 deve comprovar os post types reais suportados, Matriz de Mutação, Matriz de Evidência, contratos de campo, B-006, UI mínima, aceite/não aceite e rollback.
+- `objective` -> `_bdc_es_objective`;
+- `escalation` -> `_bdc_es_escalation`;
+- `important` -> `_bdc_es_important`.
 
-## Continuidade entre chats
+Superfície:
 
-O projeto não depende da memória implícita de uma conversa do ChatGPT.
+- wp-admin server-rendered;
+- GET read-only;
+- POST + nonce;
+- `current_user_can('edit_post', $post_id)` por objeto;
+- allowlist exata dos três campos;
+- Metadata API;
+- read-after-write;
+- B-006 por snapshot, diff, writes mínimos, compensação e reread.
 
-Cada SPEC em implementação deve possuir `CONTINUIDADE.md`, baseado no template canônico em `.specify/templates/continuity-prompt-template.md`.
+O DoR documental está PASS. Os testes executáveis ainda não existem porque o runtime não foi iniciado; permanecem NOT_RUN e bloquearão Homologação/release até serem executados com sucesso.
 
-O repositório, a Constituição, este Manifesto, a SPEC ativa e suas evidências prevalecem sobre memória do chat.
+## Fora da SPEC-001
+
+Classificação; Review/AI READY; Content Extractor; Search/Golden/Search Knowledge; Analytics/query logging; queue; tabela/schema/migration; REST/AJAX/SPA sem nova decisão; Foundry/LLM/embeddings/vector/semantic/rerank/agentes; aliases/shortcodes de compatibilidade; remoção/desativação de GRE/KB2Ops/ASI; cutover produtivo.
+
+## Coexistência e produção
+
+Desenvolvimento/homologação não removem plugins legados. B-003/preflight volta antes de produção, cutover ou coexistência não controlada de writers.
+
+**GO de desenvolvimento != GO de produção.**
 
 ## Diretriz de IA
 
-Fluxo de curadoria:
+`IA sugere -> humano revisa -> humano aprova -> WordPress persiste`.
 
-`IA sugere → humano revisa → humano aprova → WordPress persiste`.
-
-Fluxo de resposta:
-
-`query → retrieval confiável → evidências → síntese opcional → fontes`.
-
-A SPEC-001 autorizada não inclui IA.
+A SPEC-001 não inclui IA.
 
 ## Diretriz de custo
 
-Toda operação de IA futura deve poder ser atribuída a operação, modelo/provider, objeto, quantidade processada, tokens/unidades quando disponíveis, custo estimado/real, data/hora e responsável quando aplicável.
+Operações futuras de IA devem ser observáveis e orçadas. Não aplicável ao runtime da SPEC-001.
 
 ## Diretriz visual
 
-O Design System do KB2Ops é a referência visual inicial. O novo projeto deve reconstruí-lo como contrato próprio, incrementalmente, sem depender do plugin KB2Ops.
+O Design System do KB2Ops é referência inicial. A SPEC-001 implementará apenas os elementos necessários à tela real, sem segundo shell administrativo.
 
 ## Regra de liberação
 
-Uma versão não é liberada apenas porque compila. Deve possuir evidência suficiente de:
+Uma versão não é liberada apenas porque compila. Deve possuir evidência suficiente de integridade, segurança, regressão, compatibilidade visual, dados, rollback, Matriz de Evidência e Prompt de Continuidade.
 
-- integridade do pacote;
-- ativação segura;
-- rotas/handlers aplicáveis funcionais;
-- permissões e nonces;
-- regressão funcional;
-- compatibilidade visual;
-- integridade de dados;
-- rollback;
-- Matriz de Evidência da SPEC;
-- Prompt de Continuidade atualizado.
-
-A decisão T097 autoriza trabalho na SPEC-001; cada release futuro continua sujeito ao DoD e aos gates da própria SPEC.
+A SPEC-001 está **Pronta para implementação**, não para Homologação/release/cutover.

@@ -11,25 +11,20 @@
 - **Homologação** — runtime concluído, validando ambiente real.
 - **Concluída** — DoD e evidências fechadas.
 - **Bloqueada** — impedimento explícito.
+- **Supersedida** — planejamento histórico substituído por decisão posterior; não executar.
+
+## Estado canônico após T097 + DoR da SPEC-001
+
+- `000-inventario-profundo-e-contratos` — **Concluída**.
+- `001-core-summary-narrativo` — **Pronta**; DoR documental PASS; runtime ainda não iniciado.
+
+### Placeholders históricos
+
+- `001-core-shell-design-system` — **Supersedida por T097**.
+- `002-resumo-executivo-integrado` — **Supersedida como plano anterior**; o Summary mínimo autorizado foi incorporado à nova SPEC-001.
+
+Os demais diretórios de roadmap (`003`–`012`) continuam como planejamento histórico/provisório e não ganham autorização por sua existência. Numeração e escopo futuros devem ser revalidados quando cada novo slice for formalmente aberto.
 
 ## Regra
 
-Apenas uma SPEC deve ser o foco principal de implementação por domínio. Trabalho paralelo só é permitido quando não compartilha dados/contratos críticos e o Orquestrador aprova.
-
-## Ordem planejada
-
-- `000-inventario-profundo-e-contratos` — **Pronta**
-- `001-core-shell-design-system` — Planejada
-- `002-resumo-executivo-integrado` — Planejada
-- `003-knowledge-studio` — Planejada
-- `004-content-extractor-knowledge-document` — Planejada
-- `005-search-lexical-golden-queries` — Planejada
-- `006-telemetria-inteligencia-busca` — Planejada
-- `007-operacoes-jobs-indexacao-migracoes` — Planejada
-- `008-semantic-search-vetores` — Planejada
-- `009-plataforma-ia-foundry` — Planejada
-- `010-revisao-assistida-ia` — Planejada
-- `011-resolucao-assistida-evidencias` — Planejada
-- `012-paridade-cutover` — Planejada
-
-Leia `ROADMAP.md` para objetivos e gates.
+Apenas uma SPEC deve ser foco principal de implementação por domínio. Constituição, Manifesto e decisões formais mais recentes prevalecem sobre placeholders de roadmap.

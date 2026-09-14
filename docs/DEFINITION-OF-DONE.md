@@ -101,3 +101,23 @@ Quando aplicável:
 - [ ] Evidência de homologação registrada.
 - [ ] Gaps conhecidos estão documentados.
 - [ ] Nenhum blocker conhecido permanece oculto.
+
+## 13. Continuidade entre chats
+
+Esta seção é obrigatória para toda implementação material, mesmo quando não houver release.
+
+- [ ] A pasta da SPEC ativa contém `CONTINUIDADE.md` atualizado.
+- [ ] O arquivo foi baseado em `.specify/templates/continuity-prompt-template.md`.
+- [ ] Branch e commit de referência foram registrados.
+- [ ] Estado comprovado foi separado de intenção/planejamento.
+- [ ] Implementações concluídas foram registradas.
+- [ ] Decisões arquiteturais e invariantes foram registradas.
+- [ ] Arquivos, dados, hooks, rotas e contratos afetados foram registrados.
+- [ ] Testes/gates executados e seus resultados foram registrados.
+- [ ] Gaps, blockers, riscos e dívidas conhecidas foram registrados sem omissão.
+- [ ] Próximo passo está descrito de forma concreta, pequena e verificável.
+- [ ] Critério de conclusão do próximo passo está explícito.
+- [ ] O Prompt de Continuidade está pronto para ser colado em um novo chat.
+- [ ] O prompt instrui o novo chat a reler Constituição, Manifesto, SPEC, DoD e confirmar o GitHub antes de agir.
+
+**Gate:** se qualquer item desta seção aplicável estiver pendente, a implementação não está concluída.

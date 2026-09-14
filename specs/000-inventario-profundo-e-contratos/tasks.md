@@ -23,29 +23,11 @@
 - [x] T056 — Matriz WordPress-first.
 - [x] T057 — Infraestrutura própria mínima.
 - [x] T058 — IA/vetor priorizados.
-- [x] T059 — Matriz de paridade futura FINAL. _(`matriz-paridade-futura.md`; owners, storage, momento, gates, blockers, dados de cutover, fallback e decisão final consolidados)_
+- [x] T059 — Matriz de paridade futura FINAL.
 
-## Resultado T059
+## Revisões finais
 
-- [x] Todas as capacidades foram classificadas como `PRIMEIRO_RUNTIME | POSTERIOR | POSTERGADO | COMPAT_CUTOVER | DESCARTADO`.
-- [x] “Primeiro runtime” foi definido como primeira onda de vertical slices, não big-bang.
-- [x] WordPress/Elementor continuam autoridade editorial absoluta.
-- [x] Summary/Review/Core/Security/DS permanecem WordPress-first.
-- [x] Classificações já decididas permanecem em primitives WP; quatro conceitos continuam limitados a Metadata vs Taxonomy sob B-002.
-- [x] Search Retrieval Projection continua sendo a única família própria aprovada no baseline.
-- [x] Search lexical/projection ficou POSTERIOR e depende de B-001 + Golden + benchmark.
-- [x] Analytics detalhado e durable queue continuam POSTERGADOS.
-- [x] IA P1 permanece opcional/posterior; primeiro runtime pode ter zero IA externa.
-- [x] RAG P2 permanece posterior/retrieval-first; P3/P4 continuam postergados.
-- [x] dados históricos que não podem ser perdidos foram listados.
-- [x] índices/caches/queues/telemetria/derivados não foram promovidos a canônicos.
-- [x] blockers B-001–B-007 foram mapeados por capacidade e momento.
-- [x] T095/T097 podem tratar blockers contextuais por slice, sem bloquear capacidade não relacionada.
-- [x] nenhum runtime/schema/provider/vector foi criado.
-
-## Gate final
-
-- [ ] T090 — Revisão do Arquiteto WordPress.
+- [x] T090 — Revisão do Arquiteto WordPress. _(`revisao-wordpress-t090.md`; PASS, 0 bloqueantes, 2 simplificações, 3 investigações)_
 - [ ] T091 — Revisão do Crítico de Simplicidade.
 - [ ] T092 — Revisão de Segurança.
 - [ ] T093 — Revisão de QA/Regressão.
@@ -54,12 +36,28 @@
 - [ ] T096 — emitir relatório final da SPEC-000.
 - [ ] T097 — autorizar ou bloquear SPEC-001.
 
+## Resultado T090
+
+- [x] WordPress-first passou sem finding bloqueante.
+- [x] Search Retrieval Projection própria permaneceu justificada como única exceção persistente.
+- [x] Summary/Review continuam em Metadata API.
+- [x] classificações continuam em Taxonomy/Metadata conforme T056/B-002.
+- [x] Site Health permanece primitive de diagnóstico.
+- [x] WP-Cron permanece trigger, nunca durable queue.
+- [x] admin-post permanece baseline; AJAX só por live UX; REST sem consumidor continua negado.
+- [x] histórico de review recebeu regra de simplificação: não manter bounded history + meta revisions concorrentes sem requisito.
+- [x] Search Knowledge/Golden devem permanecer entidades internas WordPress-first, sem tabela/admin CRUD próprio.
+- [x] versão mínima do WordPress para `revisions_enabled` ficou para T095/SPEC aplicável.
+- [x] taxonomias não ganham archive/rewrite público automaticamente.
+- [x] provider endpoint configurável deverá ser revisto em T092 para SSRF/allowlist.
+- [x] nenhum runtime/schema/provider/vector foi criado.
+
 ## Próximo passo exato
 
-**T090 — Revisão do Arquiteto WordPress.**
+**T091 — Revisão do Crítico de Simplicidade.**
 
-T090 deve confrontar `matriz-paridade-futura.md` contra Constituição/Manifesto/T056 e procurar infraestrutura própria, endpoint, storage ou abstração que ainda possa ser eliminada em favor do Core.
+Aplicar o princípio de negação à arquitetura final e tentar remover qualquer camada/capacidade ainda não estritamente necessária. Findings: `MANTER | SIMPLIFICAR | POSTERGAR | DESCARTAR | BLOQUEAR`.
 
 ## Estado
 
-T050–T059 concluídas documentalmente. **Nenhum runtime novo foi criado.** Próximo bloco autorizado: **T090**. SPEC-001 continua bloqueada até T097.
+T050–T059 + T090 concluídos documentalmente. **Nenhum runtime novo foi criado.** Próximo bloco autorizado: **T091**. SPEC-001 continua bloqueada até T097.

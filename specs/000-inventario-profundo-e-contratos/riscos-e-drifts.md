@@ -1,10 +1,10 @@
 # Riscos, Drifts e Dívidas — SPEC-000
 
-> Estado após **T059**. Fontes canônicas: `mapa-contratos-quebrados.md`, `matriz-wordpress-first.md`, `infraestrutura-propria-minima.md`, `catalogo-testes-regressao.md`, `matriz-ia-vetor.md` e `matriz-paridade-futura.md`.
+> Estado após **T090**. Fontes canônicas: `mapa-contratos-quebrados.md`, `matriz-wordpress-first.md`, `infraestrutura-propria-minima.md`, `catalogo-testes-regressao.md`, `matriz-ia-vetor.md`, `matriz-paridade-futura.md` e `revisao-wordpress-t090.md`.
 
 ## 1. Drifts D-001–D-008
 
-Permanecem válidos e não foram apagados pela consolidação:
+Permanecem válidos e não foram apagados pelas revisões:
 
 - D-001 `Objective_Provider`: adapter somente por coexistência comprovada.
 - D-002 evento Objective: futuro pós-write confirmado; bridge apenas se necessário.
@@ -15,135 +15,105 @@ Permanecem válidos e não foram apagados pela consolidação:
 - D-007 UI/CSS fragmentados: DS único futuro.
 - D-008 AI READY: contrato único testado `publish + approved + 8/8 + include_ai` enquanto vigente.
 
-## 2. Blockers após T059
+## 2. Blockers B-001–B-007
 
-- **B-001:** extractor representativo — Search/RAG/embedding produtivos.
-- **B-002:** profiling classificatório — cutover/migração e quatro decisões Metadata vs Taxonomy.
-- **B-003:** preflight de consumidores — retirada de plugins/aliases/adapters.
-- **B-004:** política Analytics/query text — Analytics detalhado/query logging.
-- **B-005:** anchors/deep-link — exposição pública navegável de item.
-- **B-006:** falha multi-campo — write path composto definitivo.
-- **B-007:** stale/async queue — durable queue/async indexing.
+Continuam contextuais conforme T059:
 
-**Regra T059:** blocker contextual não é blocker global. T095 precisa fechar/postergar por slice e registrar dependência explícita.
+- B-001 Search/RAG/embedding produtivos.
+- B-002 profiling/cutover classificatório.
+- B-003 retirada de plugins/aliases/adapters.
+- B-004 Analytics detalhado/query logging.
+- B-005 deep-link público de item.
+- B-006 write path composto definitivo.
+- B-007 durable queue/async indexing.
+
+T090 não adicionou blocker global.
 
 ## 3. Riscos ativos preservados
 
-Continuam vigentes:
+Continuam vigentes os riscos de:
 
-- extração incompleta/custom widgets;
-- projection stale usada como autoridade;
+- extração parcial/custom widgets;
+- projection stale;
 - múltiplos stores por herança;
 - fallback lexical ilimitado;
 - Golden stale/vazia tratada como PASS;
 - adapters permanentes;
-- evento antes de consistência;
+- evento antes de persistência confirmada;
 - supercoleta de Analytics;
-- queue prematura/falsa em Options/Transients;
+- queue prematura/falsa;
 - activation pesada;
-- scans/meta LIKE sem bound;
+- scans/meta LIKE sem bounds;
 - benchmark fictício;
 - UI fragmentada;
 - LLM no caminho crítico;
-- confusão `include_ai`/assistência editorial;
-- IA persistindo owner diretamente;
+- IA persistindo owner;
 - provider lock-in;
 - batch sem budget/NO_CHANGE;
 - embedding/chunk drift;
 - semantic piorando Golden blocking;
-- File Search virando segunda fonte;
-- síntese sem evidência;
+- File Search como segunda fonte;
 - prompt injection;
 - secrets/payload em logs;
 - failover silencioso;
-- preços/defaults de provider rigidificados;
 - RAG acoplado a vetor sem necessidade;
-- agentes antes de jornada multi-step.
+- agentes antes de jornada multi-step;
+- “primeiro runtime” virar big-bang;
+- blocker contextual virar NO-GO global;
+- derived data virar patrimônio de cutover;
+- unknown de primitive virar tabela própria;
+- compatibilidade definir arquitetura permanente.
 
-Tratamento permanece G-001–G-140 + B-001–B-007.
+## 4. Novos riscos/guardrails T090
 
-## 4. Riscos específicos de consolidação T059
+### X-043 — histórico duplicado de Review
 
-### X-038 — “primeiro runtime” virar big-bang
+**Risco:** manter bounded history e meta revisions para a mesma finalidade, aumentando storage/complexidade e criando duas narrativas de auditoria.  
+**Tratamento:** escolher mecanismo mínimo por requisito; revisions somente quando recuperação de snapshot gerar valor real.
 
-**Risco:** Core, domínio, Search, IA e cutover entrarem na mesma SPEC por estarem marcados como necessários ao produto final.  
-**Tratamento:** T059 define PRIMEIRO_RUNTIME como **onda de vertical slices**, não pacote único; sequência de risco está versionada.
+### X-044 — entidade interna ganhar CRUD/storage próprio cedo demais
 
-### X-039 — blocker contextual virar NO-GO global
+**Risco:** Search Knowledge/Golden ganharem tabela/admin framework/REST apesar de `WP_Post` interno + metadata/revisions atenderem o workload de governança.  
+**Tratamento:** WordPress-first obrigatório; reabrir store próprio somente com evidência de volume/consulta.
 
-**Risco:** projeto ficar paralisado tentando fechar B-001–B-007 antes de qualquer slice.  
-**Tratamento:** matriz relaciona cada blocker à capacidade que ele realmente bloqueia; T095/T097 avaliam dependência por slice.
+### X-045 — taxonomia sistêmica virar superfície pública por acidente
 
-### X-040 — derived data tratado como patrimônio de cutover
+**Risco:** archive/rewrite público expor classificação interna sem jornada aprovada.  
+**Tratamento:** exposição pública fail-closed; habilitar somente por requisito de produto.
 
-**Risco:** migrar índices, caches, queue, rollups, telemetria ou embeddings por inércia, criando dívida no greenfield.  
-**Tratamento:** lista explícita de dados que devem sobreviver; projections reconstruíveis não são migração obrigatória.
+### X-046 — depender de meta revisions sem versão mínima compatível
 
-### X-041 — unknown de primitive virar permissão para tabela própria
+**Risco:** runtime usar `revisions_enabled` em ambiente abaixo do mínimo suportado.  
+**Tratamento:** T095/SPEC aplicável fixa versão mínima ou define fallback.
 
-**Risco:** `responsible_team`, `catalog_item`, `affected_service` ou `systems_involved` ganharem store próprio porque Metadata vs Taxonomy ainda está aberto.  
-**Tratamento:** unknown está restrito a primitives WordPress sob B-002; não entra em T057 retroativamente.
+### X-047 — endpoint de provider configurável permitir SSRF
 
-### X-042 — compatibilidade definir arquitetura permanente
+**Risco:** URL arbitrária administrável ser usada pela WordPress HTTP API para alcançar destinos indevidos.  
+**Tratamento:** T092/SPEC de IA deve revisar allowlist de host/esquema e uso de API segura quando aplicável.
 
-**Risco:** alias/shortcode/adapter histórico virar API oficial só porque existe consumidor antigo.  
-**Tratamento:** COMPAT_CUTOVER exige consumidor, observabilidade, rollback, equivalência e gate de remoção.
+## 5. Resultado T090
 
-## 5. Infraestrutura após T059
+- findings bloqueantes: **0**;
+- Search Retrieval Projection própria: **mantida**;
+- nenhuma tabela/endpoints adicionais autorizados;
+- nenhuma capacidade postergada reaberta;
+- nenhum runtime criado.
 
-### Aprovada documentalmente
+## 6. Próximo passo — T091
 
-- uma Search Retrieval Projection futura `post|item`, reconstruível;
-- IA P1 como capacidade opcional posterior, sem storage/provider runtime aprovado;
-- RAG P2 opcional posterior, retrieval-first.
+O Crítico de Simplicidade deve tentar remover capacidades mesmo quando tecnicamente válidas, perguntando se o produto perde resultado material sem elas.
 
-### Postergada/não autorizada
+Foco especial:
 
-- Analytics detalhado;
-- durable queue;
-- vector table/vector store;
-- MariaDB VECTOR/Azure AI Search como dependência;
-- Foundry File Search como core;
-- embeddings;
-- semantic/hybrid retrieval;
-- reranking;
-- agentes/tools;
-- batch IA automático;
-- audit genérico/quality rollups;
-- REST/SPA sem consumidor.
-
-## 6. Dados de cutover
-
-Devem sobreviver até decisão/migração comprovada:
-
-- WordPress/Elementor/taxonomias editoriais;
-- oito valores GRE;
-- Review/include_ai/notas/revisor/histórico KB2Ops válidos;
-- classificações KB2Ops efetivamente usadas;
-- Search Knowledge ASI manual real;
-- Golden Queries ASI úteis.
-
-Telemetria histórica não migra automaticamente. Índices/caches/queues/rollups/migrations registry/embeddings são derivados ou operacionais e não ganham preservação canônica por padrão.
-
-## 7. Dívidas postergáveis
-
-- Word Cloud;
-- GAC sem requisito;
-- side panel GRE;
-- `quality_daily`;
-- SPA/REST;
-- Analytics detalhado;
-- durable queue;
-- embeddings/semantic/rerank;
-- agentes;
-- rollups/materializações sem benchmark.
-
-Implementação silenciosa de item POSTERGADO continua NO-GO arquitetural.
-
-## 8. Próxima revisão — T090
-
-O Arquiteto WordPress deve atacar principalmente X-038/X-041 e procurar qualquer ponto da matriz final em que o Core ainda possa substituir infraestrutura própria ou abstração desnecessária.
+- DS/components antecipados;
+- history/revisions;
+- Search Knowledge inicial;
+- item layer/deep-links;
+- compatibilidade;
+- Site Health checks excessivos;
+- IA P1/P2;
+- qualquer abstração/provider seam prematuro.
 
 ## Status
 
-**T059 concluída documentalmente.** Próximo passo: **T090 — Revisão do Arquiteto WordPress**. Nenhum runtime/provider/vector foi autorizado.
+**T090 concluída documentalmente.** Próximo passo: **T091**. Nenhum runtime/provider/vector foi autorizado.

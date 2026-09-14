@@ -2,111 +2,81 @@
 
 ## Objetivo
 
-Ler, decompor e cruzar os três projetos de referência em contratos verificáveis antes de qualquer runtime novo.
+Ler, decompor, cruzar e revisar os três projetos de referência em contratos verificáveis antes de qualquer runtime novo.
 
-## Fase de inventário/cruzamento — concluída
+## Inventário/cruzamento — concluído
 
-- [x] inventário/classificação KB2Ops, ASI e GRE;
-- [x] T050 persistência;
-- [x] T051 integrações;
-- [x] T052 ownership;
-- [x] T053 sobreposição;
-- [x] T054 drifts/compatibilidade/blockers;
-- [x] T056 WordPress-first;
-- [x] T057 infraestrutura própria mínima;
-- [x] T055 regressão/Golden;
-- [x] T058 IA/vetor;
-- [x] T059 paridade futura final.
+- [x] inventários KB2Ops/ASI/GRE;
+- [x] T050–T059 consolidação arquitetural/documental.
 
-## Arquitetura consolidada após T059
+## Revisões finais
 
-### Fonte da verdade
+- [x] **T090 — Arquiteto WordPress**.
+- [ ] **T091 — Crítico de Simplicidade**.
+- [ ] **T092 — Segurança**.
+- [ ] **T093 — QA/Regressão**.
+- [ ] **T094 — Produto/Conhecimento**.
+- [ ] **T095 — unknowns/blockers por slice**.
+- [ ] **T096 — relatório final**.
+- [ ] **T097 — GO/NO-GO SPEC-001**.
 
-- Editorial: WordPress/Elementor.
-- Summary: Metadata API.
-- Classificação: Metadata/Taxonomy WordPress conforme conceito/profiling.
-- Review/Governança: Metadata + WP Users + Revisions quando aplicável.
-- Search Knowledge/Quality: registros internos WordPress-first inicialmente.
-- Search Indexing: única projection própria aprovada, reconstruível.
-- IA: assistiva, opcional e sem ownership canônico.
+## Arquitetura consolidada
 
-### Fronteira temporal
+`matriz-paridade-futura.md` é a visão executiva final T059. Ela preserva WordPress-first, vertical slices, owner único, Search lexical independente de IA, uma única Search Retrieval Projection própria e capacidades avançadas postergadas até evidência.
 
-**PRIMEIRO_RUNTIME** é uma onda de vertical slices, não um pacote monolítico.
+## Resultado T090 — WordPress-first
 
-Sequência de risco recomendada, se T097 autorizar:
+Artefato: `revisao-wordpress-t090.md`.
 
-1. Core/Settings/Security/Design System mínimo;
-2. Summary e write path seguro;
-3. Review/Governança;
-4. Classificação por conceitos já resolvidos;
-5. Content Extractor e B-001;
-6. Search Quality/Golden + Search Knowledge mínimos;
-7. Search lexical/projection/ranking;
-8. compatibilidade/cutover sob B-003;
-9. uma única jornada IA P1, depois de owner estável;
-10. RAG P2 após retrieval confiável;
-11. P3/P4 somente por reabertura formal.
+Status: **PASS com simplificações/investigações não bloqueantes**.
 
-### Infra própria
+A revisão confirmou:
 
-Apenas a **Search Retrieval Projection `post|item`** permanece aprovada no baseline. Nenhum DDL foi escolhido.
+- WordPress/Elementor como fonte editorial;
+- Metadata API para Summary/Review;
+- Taxonomy/Metadata para Classificação;
+- Options/Settings para configuração;
+- Site Health para diagnóstico;
+- admin-post como baseline de mutação administrativa;
+- AJAX somente quando live UX exigir;
+- REST negado sem consumidor;
+- WP-Cron como scheduler/trigger, não durable queue;
+- HTTP API como primeira opção para provider externo;
+- Search Retrieval Projection própria ainda justificada.
 
-Continuam fora do baseline:
+### Simplificações T090
 
-- Analytics detalhado;
-- durable queue;
-- vector store/embeddings;
-- semantic/hybrid/rerank;
-- agentes/tools;
-- rollups/materializações especulativas;
-- REST/SPA sem consumidor.
+1. Não manter histórico bounded e meta revisions concorrentes sem requisito real.
+2. Search Knowledge/Golden devem começar como entidades internas WordPress-first; não criar tabela/admin CRUD próprio.
 
-## Dados de cutover
+### Investigações T090
 
-Não podem ser perdidos sem decisão:
+1. Fixar versão mínima WordPress antes de depender de `revisions_enabled` (introduzido no Core 6.4).
+2. Taxonomias sistêmicas não devem ganhar archive/rewrite público por default.
+3. Endpoint de provider configurável deve passar revisão SSRF/host allowlist em T092/SPEC de IA.
 
-- WP_Post/Elementor/taxonomias editoriais;
-- oito valores GRE;
-- review/include_ai/notas/revisor/histórico KB2Ops válidos;
-- classificações KB2Ops realmente utilizadas;
-- vocabulary/bindings/relevance rules ASI manuais reais;
-- Golden Queries ASI úteis.
+Nenhum finding bloqueante foi encontrado.
 
-Índices, caches, filas, telemetria, migrations registry e outros derivados não são automaticamente migrados.
+## Dados/cutover
 
-## Blockers por slice
+Continuam vigentes as decisões T059 de preservação de editorial, oito valores GRE, Review/Classificação KB2Ops usados e Search Knowledge/Golden ASI reais. Projections/telemetria/queue/cache não são migração canônica automática.
 
-- B-001 -> Search/RAG/embedding.
-- B-002 -> profiling/cutover classificatório.
-- B-003 -> retirada de aliases/plugins/adapters.
-- B-004 -> Analytics/query logging.
-- B-005 -> deep-link/anchors públicos de item.
-- B-006 -> write path composto definitivo.
-- B-007 -> durable queue/async indexing.
+## Próximo passo — T091
 
-T095 deve decidir cada blocker no contexto da capacidade que pretende habilitar. Não converter blocker contextual em NO-GO global sem dependência real.
+O Crítico de Simplicidade deve assumir que toda capacidade é removível até provar necessidade e tentar reduzir:
 
-## IA/vetor
+- stores;
+- entidades;
+- telas;
+- endpoints;
+- compatibilidade;
+- schedulers;
+- Search avançada;
+- IA/vetor;
+- abstrações antecipadas.
 
-- P0 determinístico primeiro.
-- P1 Classificação ou Summary assistidos, uma jornada por vez.
-- P2 RAG opcional e lexical-first possível.
-- P3 embeddings/semantic/rerank postergados.
-- P4 agentes/tools postergados.
-- Microsoft Foundry é provider preferencial candidato, nunca domínio.
-
-## Próxima fase — revisões independentes
-
-1. **T090 — Arquiteto WordPress**: eliminar reconstrução do Core e validar primitives.
-2. **T091 — Crítico de Simplicidade**: tentar remover classes/stores/endpoints/capacidades.
-3. **T092 — Segurança**: capabilities, nonces, data egress, secrets, prompt injection, cutover.
-4. **T093 — QA/Regressão**: gates G-001–G-140, Golden, evidência e estados de NO-GO.
-5. **T094 — Produto/Conhecimento**: jornadas, valor, ordem dos slices e paridade percebida.
-6. **T095 — Unknowns/blockers**: fechar ou postergar formalmente por slice.
-7. **T096 — Relatório final**.
-8. **T097 — GO/NO-GO para SPEC-001**.
+Classificação de finding: `MANTER | SIMPLIFICAR | POSTERGAR | DESCARTAR | BLOQUEAR`.
 
 ## Gate
 
-Nenhuma SPEC de runtime começa antes de T097. T059 apenas tornou a arquitetura auditável; não autorizou implementação.
+Nenhuma SPEC de runtime começa antes de T097. T090 não autorizou código nem congelou detalhes físicos de implementação.

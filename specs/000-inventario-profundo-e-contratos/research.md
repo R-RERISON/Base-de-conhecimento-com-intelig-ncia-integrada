@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Registrar fatos comprovados e decisões documentais do cruzamento das baselines. Hipótese não vira fato sem evidência versionada; compatibilidade, provider e infraestrutura derivada não viram owner permanente.
+Registrar fatos comprovados e decisões documentais do cruzamento/revisões. Hipótese não vira fato sem evidência versionada; compatibilidade, provider e infraestrutura derivada não viram owner permanente.
 
 ## 1. Baselines fixadas
 
@@ -12,143 +12,73 @@ Registrar fatos comprovados e decisões documentais do cruzamento das baselines.
 
 ## 2. Estado final do cruzamento T050–T059
 
-Artefato executivo canônico: `matriz-paridade-futura.md`.
+Artefato executivo: `matriz-paridade-futura.md`.
 
-Fatos consolidados:
+- WordPress/Elementor são fonte editorial.
+- owner lógico único por conceito.
+- Content Extractor único para downstream.
+- Search Retrieval Projection `post|item` é a única família própria aprovada.
+- Analytics e durable queue postergados.
+- Golden é QA governada/release evidence.
+- IA/vetor opcionais/degradáveis.
+- nenhum runtime criado.
 
-- um conceito canônico = um owner lógico;
-- WordPress/Elementor são fonte editorial absoluta;
-- Content Extractor único alimenta downstream;
-- projection/index/cache/vector são derivados reconstruíveis;
-- persistir -> confirmar -> emitir;
-- dual-write permanente é proibido;
-- Search lexical independe de IA/vetor;
-- Search Retrieval Projection `post|item` é a única família própria aprovada no baseline;
-- Analytics detalhado e durable queue permanecem postergados;
-- Golden é QA governada e evidência de release;
-- IA é assistiva, opcional e degradável;
-- nenhum runtime novo foi criado na SPEC-000 até T059.
+## 3. T090 — revisão WordPress-first
 
-## 3. Fronteira temporal T059
+Artefato: `revisao-wordpress-t090.md`.
 
-A matriz final classifica capacidades como:
+Resultado: **PASS; 0 findings bloqueantes**.
 
-- `PRIMEIRO_RUNTIME` — primeira onda de vertical slices após eventual T097;
-- `POSTERIOR` — capacidade aprovada, mas dependente de contratos/gates anteriores;
-- `POSTERGADO` — complexidade não comprada;
-- `COMPAT_CUTOVER` — somente com consumidor/coexistência comprovados;
-- `DESCARTADO` — não transportar ao baseline.
+### Evidência oficial WordPress revalidada em 2026-09-14
 
-“Primeiro runtime” não significa big-bang. É uma sequência de slices pequenos, cada um com DoR/DoD próprios.
+- `register_meta()` suporta tipo, sanitização, autorização e `revisions_enabled` para post meta; o argumento de revisions existe desde WP 6.4.
+- Taxonomy API continua primitive nativa para classificação/agrupamento reutilizável.
+- WP-Cron é scheduler disparado por page load e não oferece semântica de fila durável.
+- Site Health aceita checks próprios diretos/assíncronos.
+- WordPress HTTP API (`wp_remote_post`) permanece primitive adequada para integração HTTP externa, retornando `WP_Error` em falha.
 
-## 4. Paridade por domínio
+Referências:
 
-### Editorial
+- https://developer.wordpress.org/reference/functions/register_meta/
+- https://developer.wordpress.org/plugins/taxonomies/
+- https://developer.wordpress.org/plugins/cron/
+- https://developer.wordpress.org/reference/hooks/site_status_tests/
+- https://developer.wordpress.org/reference/functions/wp_remote_post/
 
-`WP_Post`, Elementor e publicação permanecem canônicos. Qualquer downstream é read-only em relação ao conteúdo editorial.
+## 4. Decisões confirmadas por T090
 
-### Summary
+- Summary/Review não precisam tabela própria.
+- Taxonomy/Metadata continuam suficientes para Classificação.
+- Search Knowledge/Golden devem começar em entidades internas WordPress-first.
+- Site Health vence dashboard técnico duplicado.
+- admin-post continua baseline; AJAX somente com live UX; REST sem consumidor continua negado.
+- WP-Cron não substitui queue.
+- Search Retrieval Projection própria permanece justificada pela combinação Elementor-aware + item identity + FULLTEXT/ranking dedicado.
+- Foundry/HTTP provider deve permanecer adapter; SDK não é necessário por default.
 
-`objective`, `escalation` e `important` permanecem em Metadata API. Os cinco campos classificatórios históricos do GRE pertencem ao owner Classificação, ainda que a mesma UI possa editá-los por composição.
+## 5. Simplificações novas
 
-### Classificação
+1. Não usar simultaneamente bounded review history e meta revisions para a mesma finalidade sem requisito explícito.
+2. Não criar admin CRUD/tabela própria para Search Knowledge/Golden antes de esgotar `WP_Post` interno + metadata/revisions.
 
-Taxonomy é preferida para `audience`, `knowledge_type`, `service` e `technologies`, sob B-002 no cutover. `responsible_team`, `catalog_item`, `affected_service` e `systems_involved` continuam entre Metadata e Taxonomy; esse unknown não justifica tabela própria.
+## 6. Investigações encaminhadas
 
-### Review/Governança
+- versão mínima WordPress quando algum slice depender de meta revisions;
+- exposição/rewrite/archive de taxonomias sistêmicas deve começar fail-closed;
+- endpoint de provider configurável deve ser revisado em T092 para SSRF/host allowlist e uso de HTTP API segura.
 
-Estado, notas, reviewer/time, `include_ai` e histórico bounded permanecem WordPress-first. AI READY continua derivado de `publish + approved + 8/8 + include_ai` enquanto essa regra estiver vigente.
+Nenhuma delas bloqueia o baseline sem a capacidade correspondente.
 
-### Search
+## 7. Blockers continuam contextuais
 
-Search madura é posterior ao Content Extractor e exige:
+B-001–B-007 mantêm o mapeamento T059. T090 não converteu nenhum deles em blocker global.
 
-- projection lexical `post|item` reconstruível;
-- QueryContext/ranking determinísticos;
-- Golden Queries;
-- scope/security;
-- benchmark;
-- fallback/degradação.
+## 8. Próximo passo
 
-Native WP search é fallback, não paridade final.
+**T091 — Revisão do Crítico de Simplicidade.**
 
-### Analytics/Queue
-
-Ambos permanecem postergados. Não há query logging default nem fila improvisada em Options/Transients.
-
-## 5. IA/vetor
-
-T058 permanece integralmente válida após T059:
-
-- P0 determinístico obrigatório;
-- P1 Classificação ou Summary assistidos como capacidades opcionais;
-- P2 RAG/síntese posterior e retrieval-first;
-- P3 embeddings/semantic/hybrid/rerank postergados;
-- P4 agentes/tools postergados.
-
-Foundry é provider preferencial candidato, nunca domínio. File Search não é Search/RAG canônico.
-
-## 6. Dados que precisam sobreviver ao cutover
-
-Preservação obrigatória até decisão/migração comprovada:
-
-- conteúdo/editorial WordPress/Elementor;
-- oito valores GRE;
-- Review/include_ai/notas/revisor/histórico KB2Ops válidos;
-- classificações KB2Ops realmente usadas;
-- Search Knowledge ASI manual real;
-- Golden Queries ASI reais/úteis.
-
-Não são automaticamente canônicos/migráveis: índices, caches, queues, rollups, telemetria histórica, migration registry, embeddings/vectors e projections reconstruíveis.
-
-## 7. Blockers contextualizados
-
-| ID | Capacidade bloqueada |
-|---|---|
-| B-001 | Search/RAG/embedding produtivos |
-| B-002 | profiling/cutover classificatório |
-| B-003 | remoção de plugins/aliases/adapters |
-| B-004 | Analytics detalhado/query logging |
-| B-005 | deep-link/anchors públicos de item |
-| B-006 | write path composto definitivo |
-| B-007 | durable queue/async indexing |
-
-Conclusão T059: blocker contextual não bloqueia slice que não consome a capacidade correspondente. T095 deve fechar/postergar por slice, e T097 pode autorizar uma SPEC-001 que declare explicitamente quais blockers não toca.
-
-## 8. Fallbacks sistêmicos
-
-- domínio: manter estado canônico anterior em falha;
-- Search: `degraded` + native/bounded fallback + rebuild;
-- IA P1: sem provider = sem sugestão, sem write;
-- RAG: sem geração = retrieval/evidências;
-- semantic futuro: lexical fallback;
-- sem queue: sync/bounded/manual batches;
-- compatibilidade: coexistência/rollback até cutover validado.
-
-## 9. Unknowns que permanecem legítimos
-
-- quatro decisões Metadata vs Taxonomy dependentes de profiling;
-- DDL/nome/índices físicos da projection Search;
-- NFRs reais de extraction/index/Search;
-- Analytics/query policy;
-- necessidade futura de queue;
-- anchors/deep-link;
-- preflight real de consumidores;
-- meta revisions finais;
-- primeiro caso IA P1;
-- provider/model/prompt/deployment concretos;
-- política institucional de secrets/data egress;
-- necessidade/tecnologia real de vetores;
-- layout/runtime físico final.
-
-Esses unknowns possuem owner, momento e gate; não exigem adivinhação antes de T097.
-
-## 10. Próximo passo
-
-**T090 — Revisão do Arquiteto WordPress.**
-
-Objetivo: tentar eliminar qualquer infraestrutura, endpoint, storage ou abstração da matriz final que ainda possa ser substituída por WordPress Core, sem alterar o comportamento necessário.
+Objetivo: tentar remover qualquer capacidade/camada que ainda não seja indispensável e confirmar que a arquitetura T059 é a menor suficiente.
 
 ## Estado
 
-T050–T059 concluídas documentalmente. Nenhum runtime/schema/provider/vector foi criado. SPEC-001 continua bloqueada até T097.
+T050–T059 + T090 concluídos documentalmente. Nenhum runtime/schema/provider/vector foi criado. SPEC-001 continua bloqueada até T097.

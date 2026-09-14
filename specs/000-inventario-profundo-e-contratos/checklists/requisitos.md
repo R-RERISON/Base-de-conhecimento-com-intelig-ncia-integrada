@@ -7,7 +7,7 @@
 - [x] KB2Ops completo.
 - [x] ASI completo.
 - [x] Resumo Executivo completo.
-- [x] Nenhum runtime novo criado durante T000–T059.
+- [x] Nenhum runtime novo criado durante T000–T090.
 
 ## Cruzamento
 
@@ -20,69 +20,57 @@
 - [x] T056 — WordPress-first.
 - [x] T057 — infraestrutura própria mínima.
 - [x] T058 — IA/vetor.
-- [x] T059 — paridade futura final. _(`matriz-paridade-futura.md`)_
+- [x] T059 — paridade futura final.
 
-## Evidência T059 — matriz final
+## Revisões finais
 
-- [x] cada capacidade possui owner lógico ou unknown restrito/documentado.
-- [x] cada capacidade possui primitive/storage aprovado ou estado postergado.
-- [x] cada capacidade foi classificada temporalmente: `PRIMEIRO_RUNTIME | POSTERIOR | POSTERGADO | COMPAT_CUTOVER | DESCARTADO`.
-- [x] “PRIMEIRO_RUNTIME” não foi tratado como big-bang; vertical slices continuam obrigatórios.
-- [x] gates G-001–G-140 e blockers B-001–B-007 foram associados às capacidades corretas.
-- [x] blockers contextuais não foram convertidos em bloqueio global.
-- [x] dados históricos que não podem ser perdidos foram explicitados.
-- [x] projections reconstruíveis foram separadas de dados canônicos de cutover.
-- [x] fallback/degradação foi definido para Search, IA, RAG, semantic futuro, queue inexistente e compatibilidade.
-- [x] compatibilidade não escolhe arquitetura permanente.
-- [x] nenhum alias/shortcode histórico foi aprovado automaticamente.
-- [x] dual-write permanente continua proibido.
+- [x] T090 — Arquiteto WordPress. _(`revisao-wordpress-t090.md`)_
+- [ ] T091 — Crítico de Simplicidade.
+- [ ] T092 — Segurança.
+- [ ] T093 — QA/Regressão.
+- [ ] T094 — Produto/Conhecimento.
+- [ ] T095 — unknowns/blockers.
+- [ ] T096 — relatório final.
+- [ ] T097 — GO/NO-GO SPEC-001.
 
-## Evidência T059 — WordPress-first
+## Evidência T090 — WordPress-first
 
-- [x] WP/Elementor continuam fonte editorial absoluta.
-- [x] Summary permanece Metadata API.
-- [x] Review/Governança permanece Metadata + Users + Revisions quando aplicável.
-- [x] Settings/Security/Health usam Core.
-- [x] Taxonomy não foi escolhida apenas por aparência classificatória.
-- [x] quatro unknowns classificatórios permanecem limitados a Metadata vs Taxonomy; não justificam tabela própria.
-- [x] Search Knowledge/Golden permanecem WordPress-first inicialmente.
-- [x] Search Retrieval Projection continua a única família persistente própria aprovada.
-- [x] WP-Cron continua trigger, não durable store.
+- [x] `WP_Post`/Elementor permanecem fonte editorial.
+- [x] Metadata API continua suficiente para Summary/Review.
+- [x] Taxonomy/Metadata continuam suficientes para Classificação.
+- [x] quatro unknowns classificatórios não justificam tabela própria.
+- [x] Search Knowledge/Golden continuam WordPress-first inicialmente.
+- [x] Search Retrieval Projection própria foi reavaliada e permaneceu justificada.
+- [x] Site Health continua primitive de diagnóstico.
+- [x] WP-Cron continua scheduler/trigger, não durable queue.
+- [x] admin-post continua baseline de mutação administrativa.
+- [x] AJAX permanece condicional a live UX.
+- [x] REST permanece negado sem consumidor formal.
+- [x] WordPress HTTP API continua primeira opção para provider externo.
+- [x] nenhum SDK/provider virou dependência obrigatória.
 
-## Evidência T059 — Search/Quality
+## Simplificações T090
 
-- [x] Search lexical/projection é POSTERIOR a extractor representativo.
-- [x] native WP search é fallback, não engine de paridade final.
-- [x] Golden precisa existir/estar atual antes de release/mudança Search.
-- [x] B-001 + Golden + benchmark + security continuam independentes.
-- [x] deep-link público permanece separado sob B-005.
-- [x] índice/item identity são derivados e reconstruíveis.
+- [x] bounded review history + meta revisions concorrentes foram proibidos sem requisito explícito.
+- [x] Search Knowledge/Golden não ganham tabela/admin CRUD próprio antes de esgotar primitives WP.
 
-## Evidência T059 — IA/vetor
+## Investigações T090
 
-- [x] primeiro runtime pode ter zero IA externa.
-- [x] P1 continua opcional/posterior e human-in-the-loop.
-- [x] P2 continua retrieval-first e pode ser lexical-first.
-- [x] P3/P4 continuam postergados.
-- [x] Foundry continua provider candidato, não domínio.
-- [x] File Search continua fora do Search/RAG core.
-- [x] vector technology continua não escolhida.
+- [x] versão mínima WordPress para `revisions_enabled` registrada como item T095/SPEC aplicável.
+- [x] exposição pública/rewrite de taxonomias sistêmicas deve começar fail-closed.
+- [x] provider endpoint configurável foi encaminhado para T092/SPEC de IA por risco SSRF/allowlist.
 
-## Evidência T059 — cutover
+## Resultado T090
 
-- [x] WP/Elementor/taxonomias editoriais marcados para preservação.
-- [x] oito valores GRE marcados para preservação até migração comprovada.
-- [x] review/include_ai/notas/revisor/histórico KB2Ops válidos preservados.
-- [x] classificações KB2Ops realmente usadas preservadas.
-- [x] Search Knowledge ASI manual real preservado quando existir.
-- [x] Golden ASI útil preservado quando existir.
-- [x] telemetria histórica não migra automaticamente.
-- [x] índices/caches/queue/rollups/migrations registry/embeddings não foram promovidos a canônicos.
+- [x] findings bloqueantes = 0.
+- [x] nenhuma infraestrutura adicional autorizada.
+- [x] nenhuma capacidade postergada reaberta.
+- [x] nenhum runtime/schema/provider/vector criado.
 
 ## Gate final SPEC-000
 
 - [x] T059 concluída.
-- [ ] T090 Revisão WordPress.
+- [x] T090 concluída.
 - [ ] T091 Revisão Simplicidade.
 - [ ] T092 Revisão Segurança.
 - [ ] T093 Revisão QA/Regressão.
@@ -93,10 +81,10 @@
 
 ## Próximo passo
 
-**T090 — Revisão do Arquiteto WordPress.**
+**T091 — Revisão do Crítico de Simplicidade.**
 
-Critério: revisar toda a matriz final contra primitives do Core e retornar findings classificados em `APROVADO | SIMPLIFICAR | BLOQUEAR | INVESTIGAR`, sem criar runtime.
+Critério: tentar remover cada camada/capacidade não essencial e registrar findings `MANTER | SIMPLIFICAR | POSTERGAR | DESCARTAR | BLOQUEAR`, sem criar runtime.
 
 ## Estado
 
-T050–T059 concluídas documentalmente. Runtime/Foundry/vector continuam inexistentes. SPEC-001 permanece bloqueada até T097.
+T050–T059 + T090 concluídos documentalmente. Runtime/Foundry/vector continuam inexistentes. SPEC-001 permanece bloqueada até T097.

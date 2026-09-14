@@ -1,13 +1,15 @@
-# Prompt de Continuidade — SPEC-001 pronta para runtime mínimo
+# Prompt de Continuidade — SPEC-001 em implementação
 
 ## Referência versionada
 
 - Repositório: `R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada`
 - Branch: `main`
-- Commit material da SPEC/DoR: `16e6054e15edc5e25f04902b2cc3c9ef2811cdd6`
-- Este arquivo de handoff foi criado imediatamente após esse commit; confirme o HEAD atual antes de alterar qualquer arquivo.
+- Commit do runtime S002: `5e1b35763df091ebf505f8e8f8260c654fc21926`
+- Commit da evidência unitária T040: `e5acc691e4de5e91fcb59f48403836c650a54714`
+- Commit que atualizou o estado da SPEC: `da5dd1c00500304ccf892eb3efe323f062f426d6`
+- Este arquivo é gravado após esses commits; confirme o HEAD atual antes de qualquer alteração.
 - SPEC ativa: `SPEC-001 — Core mínimo + Summary narrativo`
-- Estado: **Pronta** — Definition of Ready documental PASS; runtime ainda não iniciado.
+- Estado: **Em implementação**.
 
 ## Prompt pronto para colar em novo chat
 
@@ -26,81 +28,122 @@ ANTES DE QUALQUER ALTERAÇÃO
 7. Leia specs/001-core-summary-narrativo/plan.md.
 8. Leia specs/001-core-summary-narrativo/tasks.md.
 9. Leia specs/001-core-summary-narrativo/baseline-definition-of-ready.md.
-10. Leia specs/001-core-summary-narrativo/matriz-mutacao.md.
-11. Leia specs/001-core-summary-narrativo/matriz-evidencia.md.
-12. Leia specs/001-core-summary-narrativo/data-model.md.
-13. Leia docs/DEFINITION-OF-DONE.md.
-14. Leia este CONTINUIDADE.md inteiro.
-15. Confirme branch/HEAD no GitHub e investigue qualquer divergência antes de escrever.
+10. Leia specs/001-core-summary-narrativo/runtime-s002.md.
+11. Leia specs/001-core-summary-narrativo/evidencia-unitaria-s003.md.
+12. Leia specs/001-core-summary-narrativo/matriz-mutacao.md.
+13. Leia specs/001-core-summary-narrativo/matriz-evidencia.md.
+14. Leia docs/DEFINITION-OF-DONE.md.
+15. Leia este CONTINUIDADE.md inteiro.
+16. Confirme branch/HEAD no GitHub e investigue qualquer divergência antes de escrever.
 
 ESTADO COMPROVADO
 - SPEC-000 está CONCLUÍDA.
 - T097 autorizou SPEC-001, não release/produção/cutover.
-- O bloco S001/Definition of Ready da SPEC-001 está PASS documental.
-- Commit material do DoR: 16e6054e15edc5e25f04902b2cc3c9ef2811cdd6.
-- Nenhum runtime do novo plugin foi criado até esse commit.
-- Post type suportado nesta SPEC: SOMENTE `post`.
-- Evidência: GRE 0.6.0 fixa POST_TYPE='post' e rejeita outro post_type; KB2Ops/ASI corroboram corpus baseado em posts.
-- `page` e CPTs estão fora até evidência e alteração formal.
-- Placeholders antigos `001-core-shell-design-system` e `002-resumo-executivo-integrado` foram marcados como SUPERSEDIDOS; não executar.
+- S001/Definition of Ready está PASS documental.
+- SPEC-001 está EM IMPLEMENTAÇÃO.
+- Post type suportado: somente `post`.
+- `page` e CPTs permanecem fora.
+- Placeholders antigos `001-core-shell-design-system` e `002-resumo-executivo-integrado` são SUPERSEDIDOS.
+- Runtime mínimo S002 implementado no commit 5e1b35763df091ebf505f8e8f8260c654fc21926.
+- Suíte unitária inicial versionada no commit e5acc691e4de5e91fcb59f48403836c650a54714.
+- Resultado unitário: 15 PASS / 0 FAIL.
+- PHP lint dos cinco arquivos PHP de runtime: PASS.
+- Integração WordPress real: NOT_RUN.
+- Browser acceptance: NOT_RUN.
+- Package/lifecycle release: NOT_RUN.
+- Portanto NÃO declarar Homologação, Release ou produção.
 
-ESCOPO DA SPEC-001
-Usuário primário: Analista de Conhecimento.
+RUNTIME ATUAL
+Caminho:
+plugin/base-conhecimento-inteligencia-integrada/
+
+Arquivos:
+- base-conhecimento-inteligencia-integrada.php
+- includes/class-plugin.php
+- includes/class-meta-contract.php
+- includes/class-summary-store.php
+- includes/class-admin-page.php
+- assets/css/admin.css
+
+Piso declarado:
+- WordPress >= 6.6
+- PHP >= 8.1
+
+ESCOPO FUNCIONAL
+Usuário: Analista de Conhecimento.
 Jornada: selecionar post -> ler -> editar -> salvar -> reler -> confirmar Summary.
 
-Campos autorizados:
+Campos:
 - objective -> `_bdc_es_objective`
 - escalation -> `_bdc_es_escalation`
 - important -> `_bdc_es_important`
 
-Contrato:
+CONTRATO IMPLEMENTADO
 - wp-admin server-rendered;
-- GET estritamente read-only;
-- POST + nonce;
+- GET read-only;
+- listagem paginada, 20 posts por página;
+- POST autenticado via admin-post;
+- nonce vinculado ao post;
 - `current_user_can('edit_post', $post_id)` no objeto;
 - allowlist exata dos três campos;
-- valores string;
-- `wp_unslash` na entrada HTTP;
-- máximo 32768 bytes UTF-8 por campo; excedente rejeita, nunca truncar;
-- sanitização `trim(sanitize_textarea_field())`;
-- vazio sanitizado = delete da meta;
+- `wp_unslash` no request;
+- strings somente;
+- limite 32768 bytes por campo antes de sanitizar;
+- `trim(sanitize_textarea_field())`;
+- vazio = delete;
 - omitido = preservar;
-- valor idêntico = NO_CHANGE, sem write;
-- escaping contextual;
+- idêntico = NO_CHANGE sem write;
 - Metadata API;
-- POST-Redirect-GET.
+- escaping contextual;
+- POST-Redirect-GET;
+- nenhum payload cru em mensagens de feedback.
 
-B-006 OBRIGATÓRIO
+B-006 IMPLEMENTADO
 Fluxo:
-authorize -> method/nonce -> allowlist -> validate all -> sanitize all -> snapshot -> diff -> writes mínimos -> read-after-write -> compare.
+authorize -> validate all -> sanitize all -> snapshot -> diff -> writes mínimos -> reread -> compare.
 
-Se mismatch:
-FAIL -> compensação best-effort -> reread.
+Mismatch:
+compensação best-effort -> reread.
 
-Estados:
-- esperado -> SUCCESS;
+Resultados:
+- estado esperado -> SUCCESS;
 - snapshot restaurado -> FAIL_SAFE;
-- restauração incompleta -> PARTIAL_FAILURE_CRITICAL com estado final relido e diagnóstico explícito.
+- restauração incompleta -> PARTIAL_FAILURE_CRITICAL.
 
-Fault injection obrigatório:
-1. falha no write #1;
-2. falha no write #2 após #1;
-3. falha no write #3 após #1/#2;
-4. falha em delete;
-5. falha durante compensação;
-6. NO_CHANGE não pode virar falha falsa;
-7. payload inválido deve produzir zero writes;
-8. mistura update+delete deve confirmar estado integral.
+PARTIAL_FAILURE_CRITICAL registra apenas post_id e nomes lógicos dos campos; não registra conteúdo narrativo.
 
-MATRIZ DE EVIDÊNCIA
-- G-001 Editorial/Elementor: MUST.
-- G-020 Summary: MUST.
-- G-070 Segurança/scope: MUST.
-- G-110 UI/UX: MUST.
-- G-130 Lifecycle/release: condicional/MUST quando houver pacote.
-- B-006: MUST.
+EVIDÊNCIA UNITÁRIA
+Arquivo:
+tests/unit/spec001-summary-store.php
 
-Os gates executáveis estão NOT_RUN porque ainda não existe runtime. Isso NÃO é PASS. Eles bloquearão Homologação/Concluída/Release até evidência corrente.
+Casos PASS:
+- Meta Contract exato;
+- read side-effect free;
+- update parcial;
+- unknown field zero writes;
+- oversized zero writes;
+- empty/delete;
+- NO_CHANGE zero writes;
+- falha write #1;
+- falha write #2 com compensação;
+- falha write #3 com compensação;
+- falha delete;
+- falha na compensação -> PARTIAL_FAILURE_CRITICAL;
+- update+delete;
+- page rejeitada;
+- capability obrigatória.
+
+IMPORTANTE:
+PASS unitário NÃO promove os gates WordPress/browser.
+
+MATRIZ DE EVIDÊNCIA ATUAL
+- T040 unitário determinístico: PASS 15/15.
+- G-001 Editorial/Elementor: NOT_RUN.
+- G-020 Summary em WordPress real: NOT_RUN.
+- G-070 Segurança/scope real: NOT_RUN.
+- G-110 UI/UX/browser: NOT_RUN.
+- G-130 Lifecycle/package: NOT_RUN.
+- B-006 gate final: NOT_RUN; unit fault injection PASS, integração real pendente.
 
 FORA DE ESCOPO
 - Classificação.
@@ -110,7 +153,7 @@ FORA DE ESCOPO
 - Analytics/query logging.
 - queue.
 - tabela/schema/migration.
-- REST/AJAX/SPA sem decisão formal.
+- REST/AJAX/SPA.
 - Foundry/LLM/embeddings/vector/semantic/rerank/agentes.
 - aliases/shortcodes de compatibilidade.
 - remoção/desativação automática de GRE/KB2Ops/ASI.
@@ -118,26 +161,25 @@ FORA DE ESCOPO
 - cinco campos classificatórios restantes do GRE.
 
 COEXISTÊNCIA
-B-003 não bloqueia desenvolvimento/homologação. Ele volta antes de produção, cutover, remoção de legado ou coexistência não controlada de writers.
+B-003 continua não bloqueando desenvolvimento/homologação, mas volta antes de produção, cutover, remoção de legado ou coexistência não controlada de writers.
 GO de desenvolvimento != GO de produção.
 
 PRÓXIMO PASSO EXATO
-Executar S002/T020–T027 de forma incremental:
-1. definir a árvore mínima do plugin e versões mínimas WordPress/PHP com base apenas nas APIs realmente usadas;
-2. implementar bootstrap/lifecycle mínimo;
-3. implementar contrato/leitura dos três metadados para `post`;
-4. implementar update com validação/allowlist/limites/sanitização/diff;
-5. implementar B-006;
-6. implementar UI wp-admin server-rendered + POST-Redirect-GET;
-7. implementar escaping e feedback.
+Continuar S003:
+1. T041 criar/executar integração WordPress real para G-001/G-020/G-070;
+2. T042 repetir/confirmar fault injection B-006 contra Metadata API real;
+3. T043 executar browser acceptance G-110;
+4. somente depois avaliar T044 package/lifecycle G-130;
+5. registrar T045 relatório de evidência/DoD;
+6. atualizar T046 CONTINUIDADE e decidir gate.
 
-CRITÉRIO PARA CONCLUIR O PRÓXIMO BLOCO
-- runtime mínimo existe sem capacidade fora do escopo;
-- PHP lint passa;
-- nenhum write editorial;
-- contratos de segurança estão implementados;
-- B-006 está implementado de forma testável;
-- não declarar Homologação antes dos testes G-001/G-020/G-070/G-110/B-006 serem executados.
+CRITÉRIO PARA AVANÇAR A HOMOLOGAÇÃO
+- G-001 PASS;
+- G-020 PASS;
+- G-070 PASS;
+- G-110 PASS;
+- B-006 PASS em WordPress real;
+- nenhum FAIL/NOT_RUN/NOT_CONFIGURED/STALE em gate MUST de Homologação.
 
 REGRA
 Constituição, Manifesto, T097, SPEC-001 e evidências versionadas prevalecem sobre memória de chat. Se o HEAD divergir, investigue antes de escrever.
@@ -145,4 +187,4 @@ Constituição, Manifesto, T097, SPEC-001 e evidências versionadas prevalecem s
 
 ## Estado ao encerrar este handoff
 
-A SPEC-001 está documentalmente pronta para o primeiro runtime mínimo. Nenhuma implementação de PHP/CSS/JS/plugin foi feita neste ciclo documental.
+S002 está implementado e sintaticamente validado. T040 está PASS 15/15. A SPEC permanece Em implementação porque os gates de integração WordPress, segurança real, browser e B-006 integrado ainda não foram executados. Nenhum GO de produção/cutover foi emitido.

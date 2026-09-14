@@ -22,9 +22,9 @@
 - [x] Mapa de ownership. _(T052)_
 - [x] Matriz de sobreposição. _(T053)_
 - [x] Drifts/contratos quebrados consolidados. _(T054 — `mapa-contratos-quebrados.md`)_
-- [ ] Catálogo de regressão/Golden futuro consolidado. _(T055 — fechar após T057)_
+- [ ] Catálogo de regressão/Golden futuro consolidado. _(T055 — próximo)_
 - [x] Matriz WordPress-first final. _(T056 — `matriz-wordpress-first.md`)_
-- [ ] Infraestrutura própria mínima justificada. _(T057 — próximo)_
+- [x] Infraestrutura própria mínima justificada. _(T057 — `infraestrutura-propria-minima.md`)_
 - [ ] Candidatos IA/vetor priorizados. _(T058)_
 - [ ] Matriz de paridade futura final. _(T059)_
 
@@ -36,7 +36,7 @@
 - dual-write permanente proibido;
 - adapters temporários exigem gate de remoção;
 - REST negado sem consumidor; AJAX só por live UX;
-- queue ainda não autorizada.
+- queue não nasce por herança.
 
 ## Evidência T052/T053
 
@@ -62,7 +62,6 @@
 - [x] dados históricos que não podem ser perdidos foram explicitados.
 - [x] blockers B-001–B-007 foram separados de dívidas postergáveis.
 - [x] todo adapter temporário exige entrada, owner, modo, observabilidade, rollback, remoção e teste.
-- [x] nenhuma migration/runtime/taxonomy/tabela foi criada.
 
 ## Evidência T056 — WordPress-first
 
@@ -77,10 +76,23 @@
 - [x] Revisions foram avaliadas antes de audit/histórico próprio.
 - [x] Transients/Object Cache ficaram restritos a cache reconstruível; não são durable state.
 - [x] WP-Cron foi aprovado como trigger, não confundido com fila durável.
-- [x] native search foi avaliada e mantida como fallback, mas provada insuficiente para a paridade lexical/Item Knowledge Elementor-aware.
+- [x] native search foi mantida como fallback e considerada insuficiente para a paridade lexical/Item Knowledge Elementor-aware.
 - [x] Search Knowledge/Golden permanecem inicialmente em `WP_Post` interno + Metadata/Revisions, sem tabela própria.
-- [x] T057 foi reduzida a três famílias condicionais: Search Retrieval Projection, Analytics Facts e Durable Job State.
-- [x] nenhuma tabela/schema/CPT/taxonomy/runtime foi registrada ou criada; T056 é somente documental.
+
+## Evidência T057 — infraestrutura própria mínima
+
+- [x] As 12 tabelas ASI foram tratadas como história, não checklist de arquitetura.
+- [x] `F-057-01` Search Retrieval Projection foi **aprovada e reduzida** a um único store lógico/tabela futura de documentos derivados de post/item.
+- [x] Search projection permanece reconstruível, sem ownership editorial e com revalidação de scope/status/permissão no WordPress.
+- [x] FULLTEXT dedicado é requisito candidato do store Search, com fallback lexical bounded e degradável.
+- [x] duas tabelas separadas `search_index` + `search_items` não foram aprovadas no baseline; um store unificado deve ser tentado primeiro.
+- [x] B-001 continua BLOCKER antes de implementar Search final; índice correto sobre extração incompleta é rejeitado.
+- [x] `F-057-02` Analytics Facts foi **não aprovada/postergada** enquanto B-004, finalidade, retenção e volume não forem resolvidos.
+- [x] nenhuma persistência de query text detalhada é baseline implícita.
+- [x] `F-057-03` Durable Job State foi **não aprovada/postergada** enquanto benchmark não provar necessidade de worker durável e B-007 não for aplicável/resolvido.
+- [x] não foi improvisada fila em Options/Transients.
+- [x] nenhum DDL, schema, migration, classe, endpoint ou runtime foi criado.
+- [x] T055 recebeu contratos objetivos para regressão de Search, ausência de Analytics silencioso e baseline sem queue.
 
 ## Gate final
 
@@ -96,4 +108,4 @@
 
 ## Estado
 
-T050–T054 e T056 concluídas documentalmente. Próximo passo autorizado: **T057 — infraestrutura própria mínima justificada**. Runtime novo continua inexistente.
+T050–T054, T056 e **T057** concluídas documentalmente. Próximo passo autorizado: **T055 — catálogo de regressão e Golden Queries consolidado**. Runtime novo continua inexistente.

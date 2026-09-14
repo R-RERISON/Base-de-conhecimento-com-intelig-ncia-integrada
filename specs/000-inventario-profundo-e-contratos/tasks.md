@@ -55,20 +55,19 @@
 - [x] T052 — Mapa de ownership.
 - [x] T053 — Matriz de sobreposição.
 - [x] T054 — Mapa de contratos quebrados/drifts/compatibilidade. _(`mapa-contratos-quebrados.md`; D-001–D-008 classificados, adapters/aliases com gates, blockers separados de dívidas)_
-- [ ] T055 — Catálogo de regressão e Golden Queries. _(fechar após T057)_
-- [x] T056 — Identificar tudo que WordPress pode substituir. _(`matriz-wordpress-first.md`; Core cobre domínio/governança/config/segurança/cache/health; T057 reduzida a três famílias condicionais)_
-- [ ] T057 — Identificar tudo que realmente exige infraestrutura própria. _(próximo bloco: F-057-01 Search Retrieval Projection; F-057-02 Analytics Facts condicional; F-057-03 Durable Job State condicional)_
+- [ ] T055 — Catálogo de regressão e Golden Queries. _(próximo bloco: consolidar gates conforme T056/T057)_
+- [x] T056 — Identificar tudo que WordPress pode substituir. _(`matriz-wordpress-first.md`; Core cobre domínio/governança/config/segurança/cache/health)_
+- [x] T057 — Identificar tudo que realmente exige infraestrutura própria. _(`infraestrutura-propria-minima.md`; uma única Search Retrieval Projection aprovada; Analytics Facts e Durable Job State postergados)_
 - [ ] T058 — Identificar candidatos a IA/vetor.
 - [ ] T059 — Criar matriz de paridade futura consolidada.
 
 ## Ordem restante do cruzamento
 
-1. T057 — infraestrutura própria mínima justificada.
-2. T055 — regressões/Golden/gates alinhados às decisões de arquitetura.
-3. T058 — IA/vetor opcional, degradável e custo-controlado.
-4. T059 — matriz de paridade final.
+1. T055 — regressões/Golden/gates alinhados às decisões T056/T057.
+2. T058 — IA/vetor opcional, degradável e custo-controlado.
+3. T059 — matriz de paridade final.
 
-Não inverter a sequência para antecipar tabelas, vetores ou runtime. T057 recebe **candidatos**, não tabelas pré-aprovadas.
+Não antecipar runtime, vetores, Analytics detalhado ou fila. T057 aprovou somente a **projection lexical/item reconstruível** como infraestrutura própria de baseline e ainda sem DDL.
 
 ## Gate
 
@@ -83,4 +82,4 @@ Não inverter a sequência para antecipar tabelas, vetores ou runtime. T057 rece
 
 ## Estado
 
-T050–T054 e T056 concluídas documentalmente. **Nenhum runtime novo foi criado.** Próximo bloco autorizado: T057. SPEC-001 continua bloqueada até T097.
+T050–T054, T056 e **T057** concluídas documentalmente. **Nenhum runtime novo foi criado.** Próximo bloco autorizado: **T055**. SPEC-001 continua bloqueada até T097.

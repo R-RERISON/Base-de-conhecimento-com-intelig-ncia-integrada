@@ -1,43 +1,46 @@
 # Matriz de Paridade Futura — SPEC-000
 
-> Matriz incremental após T050–T054 e T056. Define comportamentos que devem sobreviver, owners, primitives WordPress-first e políticas de compatibilidade já resolvidos. **Não define schema final nem encerra T059.** T057/T055/T058 ainda precisam ser concluídas.
+> Matriz incremental após T050–T054, T056 e T057. Define comportamentos que devem sobreviver, owners, primitives WordPress-first, infraestrutura própria mínima e políticas de compatibilidade já resolvidos. **Não encerra T059.** T055/T058 ainda precisam ser concluídas.
 
 ## Legenda
 
 - **MANTER** — comportamento precisa sobreviver.
 - **REDESENHAR** — objetivo permanece, implementação não.
 - **SUBSTITUIR POR WORDPRESS** — preferir primitive nativa.
+- **INFRA PRÓPRIA MÍNIMA** — Core foi insuficiente para workload comprovado; extensão própria limitada foi justificada.
 - **EVOLUIR COM IA/VETOR** — opcional/degradável/governado.
 - **DESCARTAR** — não levar ao greenfield.
+- **POSTERGAR** — não comprou complexidade no baseline; reabrir somente por requisito/evidência.
 - **AINDA NÃO SABEMOS** — depende de evidência/cutover ainda não fechado.
 
 ## 1. ASI -> produto futuro
 
-| Capacidade | Paridade | Direção | Gate |
+| Capacidade | Paridade | Direção após T057 | Gate |
 |---|---|---|---|
 | busca lexical local | SIM | MANTER/REDESENHAR | Golden + performance |
 | native search WP como fallback | SIM | MANTER | disponibilidade lexical mínima |
 | QueryContext limitado | SIM | MANTER/REDESENHAR | unit + Golden |
 | ranking explicável | SIM | MANTER | sinais observáveis |
-| índice lexical por post | PROVÁVEL/NECESSÁRIO | **CANDIDATO T057** | extractor canônico + T057 |
-| índice de trechos | SIM | **CANDIDATO T057** | identity/deep-link + T057 |
+| índice lexical por post | SIM | **INFRA PRÓPRIA MÍNIMA** dentro de projection unificada | B-001 + Golden + benchmark |
+| índice de trechos/items | SIM | **INFRA PRÓPRIA MÍNIMA** no mesmo store lógico do post | identity; B-005 apenas para deep-link público |
+| duas tabelas `search_index` + `search_items` | NÃO como requisito | DESCARTAR no baseline; tentar store unificado | benchmark futuro se unificado falhar |
 | parser direto `post_content` | NÃO | DESCARTAR | Content Extraction único |
 | vocabulary/bindings/rules | SIM | MANTER em primitives WP inicialmente | owner Search Knowledge; volume/preflight |
 | simulation + Apply humano | SIM | MANTER | capability/nonce/stale-state |
-| durable queue | CONDICIONAL | **CANDIDATO T057** somente se workload exigir | T057 + B-007 |
+| durable queue | CONDICIONAL | **POSTERGAR** | benchmark real + B-007 |
 | migrations/reconciler 4.x | NÃO | DESCARTAR | compat temporária separada |
-| Search Events | CONDICIONAL/SIM mínimo | **CANDIDATO T057** se Analytics habilitado | B-004 + T057 |
-| Interactions/Outcomes | CONDICIONAL | **CANDIDATO T057** mesma família de facts | B-004 + T057 |
+| Search Events | CONDICIONAL | **POSTERGAR** | B-004 + finalidade/retention/volume |
+| Interactions/Outcomes | CONDICIONAL | **POSTERGAR** | B-004 + requisito real |
 | `quality_daily` | NÃO inicialmente | DESCARTAR | benchmark |
-| Golden Queries | SIM | MANTER em `WP_Post` interno + metadata/revisions | NO-GO blockers |
+| Golden Queries | SIM | MANTER em `WP_Post` interno + metadata/revisions | suíte ativa; NO-GO blockers |
 | Quality Diagnostics | SIM | SUBSTITUIR POR WORDPRESS + checks | Site Health |
 | GAC no core | NÃO | DESCARTAR | adapter somente com requisito |
-| Word Cloud | OPCIONAL | REDESENHAR | product/preflight |
+| Word Cloud | OPCIONAL | REDESENHAR/POSTERGAR | product/preflight |
 | live typing/debounce/cancel | SIM se UX exigir | MANTER via AJAX WP | E2E |
 | AJAX ASI literal | NÃO | REDESENHAR | consumidor real |
 | anchor injection literal | NÃO | REDESENHAR | B-005 |
-| vetor/semantic | OPCIONAL | EVOLUIR COM IA/VETOR | lexical não cai |
-| síntese/IA | OPCIONAL | EVOLUIR COM IA/VETOR | retrieval precede |
+| vetor/semantic | OPCIONAL | EVOLUIR COM IA/VETOR | T058; lexical não cai |
+| síntese/IA | OPCIONAL | EVOLUIR COM IA/VETOR | T058; retrieval precede |
 
 ## 2. GRE -> produto futuro
 
@@ -45,21 +48,21 @@
 |---|---|---|---|
 | oito valores históricos | SIM | MANTER semântica/compat | migration/preflight |
 | título via `post_title` | SIM | MANTER | sem título duplicado |
-| Summary narrativo em Metadata API | SIM | **MANTER WP** | WP integration |
+| Summary narrativo em Metadata API | SIM | MANTER WP | WP integration |
 | leitura side-effect free | SIM | MANTER | unit/integration |
 | vazio -> delete meta | SIM | MANTER | integration |
 | allowlist/sanitização | SIM | MANTER | fail-closed |
 | `edit_post` + nonce | SIM | MANTER WP | security |
 | read-after-write | SIM | MANTER | B-006 |
 | update parcial | SIM | MANTER | omitted intact |
-| atomicidade multi-campo | A DEFINIR | REDESENHAR/ENDURECER sem usar tabela como atalho | B-006 |
+| atomicidade multi-campo | A DEFINIR | REDESENHAR/ENDURECER sem tabela como atalho | B-006 |
 | Coverage | SIM | MANTER pergunta via `WP_Query` bounded | workload bounded |
 | scan ilimitado | NÃO | DESCARTAR/REDESENHAR | benchmark |
 | shortcode resumo | COMPAT | DEPENDE DE PREFLIGHT | B-003 |
 | side panel automático | NÃO canônico | DESCARTAR como baseline | produto futuro |
 | `Objective_Provider` | NÃO | DESCARTAR do core | adapter apenas coexistência |
 | evento de mudança | SIM como intenção | REDESENHAR em Plugin API pós-write | persistência confirmada |
-| tabela própria de Summary | NÃO | DESCARTAR | T056 fechou em Metadata API |
+| tabela própria de Summary | NÃO | DESCARTAR | Metadata API suficiente |
 | REST/AJAX/cron próprios do Summary | NÃO | DESCARTAR | sem consumidor/workload |
 | deterministic build/WP tests | SIM | MANTER | release |
 
@@ -80,15 +83,15 @@
 | parsers independentes | NÃO | DESCARTAR | extractor único |
 | review states | SIM | MANTER em Metadata API | Revisão/Governança |
 | review notes/reviewer/time | SIM | MANTER em Metadata/Users | WP integration |
-| history bounded | SIM | MANTER inicialmente em Metadata API | schema/sanitização; reabrir só por requisito de audit transversal |
+| history bounded | SIM | MANTER inicialmente em Metadata API | reabrir só por requisito transversal |
 | `include_ai` | SIM | MANTER | decisão humana |
 | AI READY | SIM | MANTER/REDESENHAR como derivado | regra única testada |
 | Summary Bridge | NÃO | DESCARTAR do core | adapter só se cutover exigir |
-| Search meta LIKE/token ranker | NÃO | DESCARTAR como motor | F-057-01 |
+| Search meta LIKE/token ranker | NÃO | DESCARTAR como motor | projection lexical unificada |
 | Search scope/detail recheck | SIM | MANTER via primitives WP | bypass tests |
 | portal/shortcodes | COMPAT | DEPENDE DE PREFLIGHT | B-003 |
-| analytics option/view count | NÃO literal | DESCARTAR/REDESENHAR | F-057-02 condicional |
-| Reports/perguntas | SIM | MANTER perguntas via queries bounded | bounds/privacy |
+| analytics option/view count | NÃO literal | DESCARTAR/POSTERGAR | B-004 |
+| Reports/perguntas | SIM | MANTER perguntas quando política permitir | bounds/privacy |
 | DS principles | SIM | MANTER/REDESENHAR | DS próprio |
 | server rendering | SIM baseline | MANTER | JS enhancement |
 | SPA/framework externo | NÃO | DESCARTAR | negação |
@@ -98,7 +101,7 @@
 
 ## 4. Classificação — primitive T056
 
-| Conceito | Primitive preferida após T056 | Estado |
+| Conceito | Primitive preferida | Estado |
 |---|---|---|
 | audiência | Taxonomy API | MANTER WP; cutover B-002 |
 | tipo de conhecimento | Taxonomy API | MANTER WP; cutover B-002 |
@@ -111,9 +114,53 @@
 | keywords | Metadata API | MANTER WP no baseline |
 | versões | Metadata API | MANTER WP no baseline |
 
-Os quatro unknowns acima **não entram em T057**: a dúvida ainda está entre primitives do próprio WordPress.
+Os quatro unknowns acima não justificam infraestrutura própria.
 
-## 5. Compatibilidade — estado T054 preservado
+## 5. Infraestrutura própria — decisão T057
+
+### Aprovada
+
+**Search Retrieval Projection unificada**:
+
+`WP/Elementor + Summary/Classificação canônicos -> Content Extractor -> [store lexical derivado post|item] -> ranker -> revalidação WP -> resultado`
+
+Requisitos:
+
+- um único store lógico inicial para `post|item`;
+- identidade estável;
+- texto derivado normalizado;
+- hash/version/generation/freshness;
+- FULLTEXT quando suportado;
+- fallback lexical bounded;
+- rebuild idempotente;
+- estado degraded/stale;
+- nenhuma autoridade editorial no índice.
+
+### Não aprovada no baseline
+
+**Analytics Facts**:
+
+- sem tabela events/interactions/outcomes;
+- sem query text silencioso;
+- reabrir somente após B-004 + requisito/volume/retention.
+
+**Durable Job State**:
+
+- sem queue table;
+- primeiro testar processamento síncrono/bounded + rebuild manual/batched;
+- WP-Cron pode disparar trabalho, mas não vira durable state;
+- reabrir somente após benchmark + B-007.
+
+### Infra histórica deliberadamente não reproduzida
+
+- tables de vocabulary/bindings/rules;
+- Golden table;
+- audit table genérica;
+- `quality_daily`;
+- migration registry permanente;
+- múltiplos stores de Search quando um store unificado atender.
+
+## 6. Compatibilidade — estado T054 preservado
 
 ### Corrigidos pela arquitetura futura
 
@@ -134,76 +181,32 @@ Os quatro unknowns acima **não entram em T057**: a dúvida ainda está entre pr
 
 Todo compat precisa de consumidor, observabilidade e gate de remoção. Dual-write permanente é proibido.
 
-### Dependem de preflight/profiling
+## 7. Blockers contextuais
 
-- GAC;
-- shortcodes e Word Cloud;
-- service vs affected_service;
-- technologies vs systems_involved;
-- valores/cardinalidade de classificações;
-- anchors/deep-links.
-
-## 6. Blockers contextuais T054
-
-- **B-001:** extractor completo para Search/RAG.
+- **B-001:** extractor completo antes de implementar Search final.
 - **B-002:** profiling para migração classificatória.
 - **B-003:** preflight para retirada de plugins/aliases.
-- **B-004:** política de telemetria antes de Analytics detalhado.
-- **B-005:** anchors antes de paridade Item Knowledge.
+- **B-004:** mantém Analytics detalhado postergado.
+- **B-005:** anchors antes de paridade completa de deep-link; não impede item lexical sem link público.
 - **B-006:** falha multi-campo antes de write path composto definitivo.
-- **B-007:** stale/diagnóstico antes de async indexing/queue.
+- **B-007:** queue/async permanece postergada até stale/diagnóstico + necessidade real.
 
-Eles não bloqueiam automaticamente todo e qualquer primeiro slice; aplicabilidade deve ser declarada na SPEC correspondente.
-
-## 7. Matriz WordPress-first final de T056
-
-| Necessidade | Primitive decidida/avaliada | Resultado |
-|---|---|---|
-| conteúdo/título | `WP_Post` + Elementor | MANTER WP |
-| atributos narrativos locais | registered post meta | MANTER WP |
-| review/governança | Metadata + Users + Revisions quando aplicável | MANTER WP |
-| classificação reutilizável comprovada | Taxonomy API | MANTER WP |
-| classificação sem faceta comprovada | Metadata API primeiro | MANTER WP / profiling |
-| settings | Settings/Options API | SUBSTITUIR_POR_WORDPRESS |
-| revisor/identidade | Users/Capabilities | MANTER WP |
-| mutação admin | `admin-post` + nonce + capability | MANTER WP |
-| live interaction | AJAX WP | somente se necessidade real |
-| REST | WP REST | nenhum consumidor atual; não criar |
-| scheduling | WP-Cron | trigger; MANTER WP |
-| cache | Transients/Object Cache | MANTER WP; efêmero |
-| health | Site Health | SUBSTITUIR_POR_WORDPRESS |
-| histórico bounded | registered metadata; Revisions avaliadas | MANTER WP |
-| Search Knowledge | `WP_Post` interno + metadata/revisions | MANTER WP inicialmente |
-| Golden | `WP_Post` interno + metadata/revisions | MANTER WP inicialmente |
-| native search | `WP_Query` | MANTER fallback; insuficiente para paridade |
-| Search lexical/items | Core insuficiente para contrato completo | F-057-01 |
-| Analytics facts | Core inadequado se stream detalhado existir | F-057-02 condicional |
-| durable queue state | WP-Cron não fornece durabilidade de worker | F-057-03 condicional |
-
-## 8. Candidatos exclusivos para T057
-
-1. **F-057-01 — Search Retrieval Projection**: lexical post + item/identity pesquisável.
-2. **F-057-02 — Analytics Facts**: somente após B-004 e prova de requisito/volume.
-3. **F-057-03 — Durable Job State**: somente se index/rebuild assíncrono exigir lease/retry/dead/recovery.
-
-Nenhum schema/tabela foi escolhido. T057 pode matar qualquer um desses candidatos.
-
-## 9. Contratos cross-module
+## 8. Contratos cross-module
 
 `WP/Elementor -> Content Extraction -> lexical/items -> optional semantic -> Search/IA`
 
 `validar -> persistir -> confirmar -> evento -> invalidar/rebuild projection`
 
 - scope/permissão precedem exposição;
+- Search projection falha sem alterar canônico;
 - Analytics não derruba Search;
 - approval de artigo não aplica Search Knowledge;
 - qualidade de conteúdo não é Search Quality.
 
-## 10. Próximos fechamentos
+## 9. Próximos fechamentos
 
-1. **T057** — infraestrutura própria mínima justificada.
-2. **T055** — regressão/Golden final.
-3. **T058** — IA/vetor priorizados.
-4. **T059** — paridade final.
+1. **T055** — regressão/Golden final alinhado a T056/T057.
+2. **T058** — IA/vetor priorizados.
+3. **T059** — paridade final.
 
 **T059 permanece aberta. Nenhum runtime foi autorizado.**

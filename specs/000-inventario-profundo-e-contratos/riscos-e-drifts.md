@@ -1,6 +1,6 @@
 # Riscos, Drifts e Dívidas — SPEC-000
 
-> Estado após T056. O mapa canônico de compatibilidade/drifts permanece em `mapa-contratos-quebrados.md`. A matriz canônica de primitives WordPress-first está em `matriz-wordpress-first.md`.
+> Estado após T057. O mapa canônico de compatibilidade/drifts permanece em `mapa-contratos-quebrados.md`. As decisões de primitives e infraestrutura estão em `matriz-wordpress-first.md` e `infraestrutura-propria-minima.md`.
 
 ## 1. Drifts D-001–D-008 — estado preservado
 
@@ -11,56 +11,63 @@
 | D-003 | `post_content` versus Elementor | direção corrigida por extractor único; qualidade do extractor permanece BLOCKER |
 | D-004 | múltiplos parsers | parsers duplicados descartados; Word Cloud/anchors dependem de produto/preflight |
 | D-005 | GAC acoplado | depende de requisito/preflight; fora do core |
-| D-006 | classificação GRE/KB2Ops | ownership resolvido; T056 avaliou primitives; profiling/migração continuam blockers de cutover |
+| D-006 | classificação GRE/KB2Ops | ownership resolvido; primitives avaliadas; profiling/migração continuam blockers de cutover |
 | D-007 | UI/CSS fragmentados | DS único futuro; CSS/menus antigos descartados como contrato permanente |
 | D-008 | AI READY docs/runtime | contrato futuro = baseline runtime testada; sem adapter complexo |
 
-## 2. Blockers reais
+## 2. Blockers reais após T057
 
 ### B-001 — Content Extractor representativo
 
-**BLOCKER para:** Search/Indexing/RAG final.  
-**Risco:** índice semanticamente incorreto mesmo com ranker correto.  
+**BLOCKER para:** implementar Search Retrieval Projection final e qualquer RAG/indexação produtiva.  
+**Risco:** índice tecnicamente rápido, mas semanticamente incompleto.  
 **Gate:** corpus Elementor real + custom widgets + diagnóstico de omissão + regressão de conteúdo relevante.
 
 ### B-002 — Profiling classificatório
 
-**BLOCKER para:** migração/cutover de audiência, serviço, serviço afetado, tecnologias, sistemas, equipe/item catálogo conforme aplicável.  
-**Após T056:** não bloqueia a conclusão WordPress-first; os unknowns continuam entre Metadata/Taxonomy, sem tabela própria.  
-**Gate:** cardinalidade, vocabulário, equivalências, colisões, uso em filtros/templates e estratégia de migração validados.
+**BLOCKER para:** migração/cutover classificatório.  
+**Após T056/T057:** continua entre Metadata/Taxonomy; não justifica tabela própria.  
+**Gate:** cardinalidade, vocabulário, equivalências, colisões, uso em filtros/templates e estratégia de migração.
 
 ### B-003 — Preflight de consumidores externos/shortcodes
 
 **BLOCKER para:** remover plugins/aliases antigos com segurança.  
-**Gate:** inventário de uso real em posts/pages/templates/widgets e condição objetiva de remoção.
+**Gate:** inventário de uso real e condição objetiva de remoção.
 
 ### B-004 — Política de Analytics/query text
 
-**BLOCKER para:** habilitar telemetria detalhada em produção e para aprovar F-057-02.  
-**Gate:** minimização, retenção, acesso, finalidade e sensibilidade explícitos.
+**BLOCKER para:** habilitar Analytics detalhado.  
+**Após T057:** F-057-02 foi postergada; não há tabela de events/interactions/outcomes autorizada.  
+**Gate:** finalidade, minimização, retenção, acesso, sensibilidade e necessidade de correlação.
 
 ### B-005 — Deep-link/anchors
 
 **BLOCKER para:** paridade completa de Item Knowledge/deep-link.  
-**Não bloqueia:** Search lexical de post nem primeiros slices de Summary/Classificação se não usarem anchors.
+**Após T057:** não impede armazenar/indexar documento `item`; impede tratá-lo como link público comprovado sem estratégia de destino.
 
 ### B-006 — Falha multi-campo
 
 **BLOCKER para:** write path composto definitivo de Summary/Classificação.  
-**Após T056:** não é justificativa para tabela própria.  
+**Após T056/T057:** não é justificativa para banco/tabela própria.  
 **Gate:** semântica de falha tardia + read-after-write + testes de parcialidade/compensação conforme contrato.
 
 ### B-007 — Projection stale observável
 
-**BLOCKER para:** indexação assíncrona/queue em produção e aprovação de F-057-03.  
-**Condicional:** não aplicável até existir projection assíncrona.
+**BLOCKER para:** reabrir Durable Job State/async indexing em produção.  
+**Após T057:** fila foi postergada. Freshness básica da projection Search ainda deve ser observável mesmo no modo síncrono/manual.
 
 ## 3. Riscos ativos por domínio
 
-### Content Extraction
+### Content Extraction / Search
 
 - **R-KB-001:** saída parcialmente não vazia pode omitir custom widget e evitar fallback.
 - **X-003:** Search/RAG pode indexar conteúdo incompleto silenciosamente.
+- **X-013:** projection pode ficar stale sem observabilidade.
+- **X-014:** projection stale pode virar bypass de publicação/permissão se Search confiar no índice como autoridade.
+- **X-015:** separar post/item em múltiplas tabelas por herança pode recriar complexidade ASI desnecessária.
+- **X-016:** fallback lexical pode degenerar em scans/LIKE ilimitados se não houver bounds.
+
+**Tratamento T057:** um único store lógico de documentos derivados; WordPress revalida exposição; FULLTEXT + fallback bounded; hashes/version/freshness; B-001 antes do Search final.
 
 ### Compatibilidade/Migração
 
@@ -82,7 +89,14 @@
 
 - **R-ASI-003 / R-KB-005 / X-004:** query text e telemetria podem ser supercoletados ou subdimensionados.
 - **R-ASI-004:** bucket IP+UA não deve ser portado literalmente.
-- **T056:** Options/postmeta foram rejeitados como store definitivo de stream detalhado; isso **não aprova** F-057-02 sem B-004/volumetria.
+- **T057:** Analytics detalhado foi deliberadamente postergado; ausência de política é motivo para **não persistir**, não para escolher schema provisório.
+
+### Queue/Operações
+
+- **X-017:** criar durable queue antes de medir extractor/index transforma solução de falha hipotética em dívida permanente.
+- **X-018:** usar Options/Transients como fila improvisada cria semântica falsa de durabilidade.
+
+**Tratamento T057:** zero queue table no baseline; primeiro medir indexação síncrona/bounded e rebuild manual/batched. Se fila voltar, preservar lease/retry/dead/recovery e resolver B-007.
 
 ### Governança
 
@@ -93,34 +107,31 @@
 ### Performance
 
 - **R-GRE-003 / R-KB-004 / X-008:** scans integrais/meta LIKE/dashboards sem bound não podem virar baseline.
-- **T056:** `WP_Query` permanece para read models bounded/fallback, não como justificativa para reproduzir Search KB2Ops provisória.
+- **T057:** ~700 posts é evidência do corpus atual, não NFR futuro. Não foram inventadas metas de latência.
+- **R-057-01:** FULLTEXT e índices finais precisam ser validados no MariaDB/MySQL real e contra queries reais.
+- **R-057-02:** número de itens por post e custo do rebuild ainda não estão medidos.
 
 ### UI
 
 - **X-006/X-009:** DS único não significa copiar CSS antigo nem permitir UI acessar stores lateralmente.
 
-## 4. Resultado de T056 sobre complexidade
+## 4. Resultado de T057 sobre complexidade
 
-### Infraestrutura própria rejeitada nesta fase
+### Infraestrutura própria aprovada documentalmente
 
-- tabela para Resumo;
-- tabela para Classificação;
-- tabela para Review/history bounded;
-- tabela para Search Knowledge/Golden sem prova de volume;
-- health dashboard técnico paralelo;
-- scheduler próprio;
-- cache durável próprio;
-- REST sem consumidor;
-- queue por herança ASI;
-- rollups/materializações sem benchmark.
+- **uma Search Retrieval Projection unificada**, futura, reconstruível e não-canônica, cobrindo documentos de post e item.
 
-### Candidatos permitidos a T057
+### Infraestrutura própria não aprovada/postergada
 
-- **F-057-01 — Search Retrieval Projection**;
-- **F-057-02 — Analytics Facts**, condicional;
-- **F-057-03 — Durable Job State**, condicional.
+- Analytics facts/events/interactions/outcomes;
+- Durable Job State/queue;
+- audit table genérica;
+- quality rollup;
+- migration registry permanente;
+- tabelas separadas de post/item sem benchmark;
+- tabelas Search Knowledge/Golden.
 
-A palavra “candidato” significa que T057 ainda pode concluir **NÃO CONSTRUIR**.
+A palavra “aprovada” em T057 não autoriza DDL. Autoriza somente o desenho em SPEC futura após gates.
 
 ## 5. Unknowns WordPress-first que não viraram infraestrutura
 
@@ -136,7 +147,7 @@ A palavra “candidato” significa que T057 ainda pode concluir **NÃO CONSTRUI
 
 ## 6. Dívidas explicitamente postergáveis
 
-Não bloqueiam SPEC-001 por si só:
+Não bloqueiam SPEC-001 por si só quando o slice não depende delas:
 
 - Word Cloud;
 - GAC sem requisito comprovado;
@@ -144,25 +155,26 @@ Não bloqueiam SPEC-001 por si só:
 - `quality_daily`;
 - SPA/REST;
 - vetor/embeddings/Foundry;
-- queue durável quando o slice não exigir;
+- Analytics detalhado;
+- queue durável;
 - materializações/rollups sem benchmark.
 
-## 7. O que T057 deve provar
+## 7. O que T055 deve proteger
 
-Para cada F-057:
-
-- por que a primitive WP avaliada falha no comportamento alvo;
-- volume e cardinalidade;
-- padrão de leitura/escrita;
-- índices/consultas;
-- latência/SLA;
-- concorrência/durabilidade;
-- reconstruibilidade;
-- failure/recovery;
-- custo operacional;
-- menor extensão possível.
-
-Não começar T057 desenhando tabela.
+- Content Extractor único/read-only;
+- B-001 com fixtures reais/custom widgets;
+- projection post/item unificada e determinística;
+- item identity/hash/generation;
+- rebuild idempotente;
+- remoção/despublicação não vaza resultado stale;
+- FULLTEXT e fallback bounded;
+- ranking explicável + Golden;
+- scope/detail recheck no WordPress;
+- estado stale/degraded observável;
+- Search funciona sem Analytics;
+- baseline não grava query text silenciosamente;
+- baseline não depende de queue;
+- activation não executa rebuild massivo.
 
 ## 8. Regras que não podem regredir
 
@@ -180,4 +192,4 @@ Não começar T057 desenhando tabela.
 
 ## Status
 
-**T056 concluída documentalmente.** Próximo passo: T057 — infraestrutura própria mínima justificada, limitada inicialmente às três famílias F-057.
+**T057 concluída documentalmente.** Próximo passo: **T055 — catálogo consolidado de regressão e Golden Queries**.

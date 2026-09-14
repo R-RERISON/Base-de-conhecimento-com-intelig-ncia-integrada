@@ -25,5 +25,9 @@ final class Plugin {
 		if ( class_exists( Diagnostics_Runner::class ) ) {
 			Diagnostics_Runner::register();
 		}
+
+		if ( class_exists( Browser_Acceptance::class ) ) {
+			Browser_Acceptance::register();
+		}
 	}
 }

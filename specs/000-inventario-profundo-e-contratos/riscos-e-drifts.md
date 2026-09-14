@@ -1,242 +1,137 @@
 # Riscos, Drifts e Dívidas — SPEC-000
 
-> Estado após inventário das três referências e conclusão de T050–T053. Este documento mantém riscos ativos e registra quais foram reduzidos por ownership, sobreposição e contratos unificados. T054 fará a classificação final dos drifts/compatibilidade/blockers.
+> Estado após T054. O mapa canônico de compatibilidade/drifts está em `mapa-contratos-quebrados.md`. Este arquivo mantém os riscos ativos e sua severidade para os próximos gates.
 
-## 1. Riscos ASI que permanecem relevantes
+## 1. Drifts D-001–D-008 — estado final T054
 
-### R-ASI-001 — Extração não Elementor-aware
+| ID | Tema | Estado T054 |
+|---|---|---|
+| D-001 | `Objective_Provider` inexistente | arquitetura futura corrige; adapter temporário apenas se ASI legado coexistir |
+| D-002 | `bdc_es_objective_updated` nunca emitido | arquitetura futura corrige; bridge temporário apenas se ASI legado precisar de invalidação |
+| D-003 | `post_content` versus Elementor | direção corrigida por extractor único; qualidade do extractor permanece BLOCKER |
+| D-004 | múltiplos parsers | parsers duplicados descartados; Word Cloud/anchors dependem de produto/preflight |
+| D-005 | GAC acoplado | depende de requisito/preflight; fora do core |
+| D-006 | classificação GRE/KB2Ops | ownership resolvido; profiling/migração são blockers de cutover |
+| D-007 | UI/CSS fragmentados | DS único futuro; CSS/menus antigos descartados como contrato permanente |
+| D-008 | AI READY docs/runtime | contrato futuro = baseline runtime testada; sem adapter complexo |
 
-**Estado:** direção arquitetural resolvida; risco de implementação ainda ativo.  
-**Tratamento:** Content Extraction único; downstream não reparseia `post_content`/`_elementor_data`.
+## 2. Blockers reais
 
-### R-ASI-002 — `Objective_Provider` quebrado
+### B-001 — Content Extractor representativo
 
-**Estado:** drift histórico confirmado.  
-**Tratamento:** Summary Store interno; T054 classifica compatibilidade necessária ou descarte do adapter.
+**BLOCKER para:** Search/Indexing/RAG final.  
+**Risco:** índice semanticamente incorreto mesmo com ranker correto.  
+**Gate:** corpus Elementor real + custom widgets + diagnóstico de omissão + regressão de conteúdo relevante.
 
-### R-ASI-003 — Query text em telemetria minimal
+### B-002 — Profiling classificatório
 
-**Estado:** aberto.  
-**Tratamento:** T057/T095 define minimização, retenção, acesso e necessidade real.
+**BLOCKER para:** migração/cutover de audiência, serviço, serviço afetado, tecnologias e sistemas.  
+**Gate:** cardinalidade, vocabulário, equivalências, colisões, uso em filtros/templates e estratégia de migração validados.
 
-### R-ASI-004 — Rate limit IP + User-Agent
+### B-003 — Preflight de consumidores externos/shortcodes
 
-**Estado:** aberto para topologia real.  
-**Tratamento:** bucket/redesign sem IP cru persistido.
+**BLOCKER para:** remover plugins/aliases antigos com segurança.  
+**Gate:** inventário de uso real em posts/pages/templates/widgets e condição objetiva de remoção.
 
-### R-ASI-005 — Complexidade histórica contaminar greenfield
+### B-004 — Política de Analytics/query text
 
-**Estado:** reduzido por T050/T051: stores/hook antigos agora são origem, não design futuro.  
-**Risco remanescente:** T057 ainda pode superdimensionar índice/queue/analytics se não aplicar negação.
+**BLOCKER para:** habilitar telemetria detalhada em produção.  
+**Gate:** minimização, retenção, acesso, finalidade e sensibilidade explícitos.
 
-### R-ASI-006 — Word Cloud com pipeline duplicado
+### B-005 — Deep-link/anchors
 
-**Estado:** direção resolvida.  
-**Tratamento:** se sobreviver por produto/preflight, consumir projections/Analytics canônicos.
+**BLOCKER para:** paridade completa de Item Knowledge/deep-link.  
+**Não bloqueia:** primeiros slices de Summary/Classificação se não usarem anchors.
 
-### R-ASI-007 — GAC no core
+### B-006 — Falha multi-campo
 
-**Estado:** fora do core; compatibilidade/requisito ainda a provar.  
-**Tratamento:** adapter opcional/degradável.
+**BLOCKER para:** write path composto definitivo de Summary/Classificação.  
+**Gate:** semântica de falha tardia + read-after-write + testes de parcialidade.
 
-### R-ASI-008 — testes por string
+### B-007 — Projection stale observável
 
-**Estado:** aberto para T055.  
-**Tratamento:** portar intenção para unit/integration/E2E; source guards só complementares.
+**BLOCKER para:** indexação assíncrona/queue em produção.  
+**Condicional:** não aplicável até existir projection assíncrona.
 
-### R-ASI-009 — `quality_daily`
+## 3. Riscos ativos por domínio
 
-**Estado:** rejeitado inicialmente por T050.  
-**Tratamento:** só reintroduzir com benchmark.
+### Content Extraction
 
-### R-ASI-010 — hardcodes de vocabulário
+- **R-KB-001:** saída parcialmente não vazia pode omitir custom widget e evitar fallback.
+- **X-003:** Search/RAG pode indexar conteúdo incompleto silenciosamente.
 
-**Estado:** Search Knowledge terá owner próprio.  
-**Tratamento:** conhecimento administrável/versionado; hardcode só para regra linguística estável.
+### Compatibilidade/Migração
 
-## 2. Riscos GRE
+- **X-001:** dual-read/adapter virar permanente.
+- **X-005:** migration virar arquitetura.
+- **X-010:** shortcodes/aliases portados sem consumidor.
 
-### R-GRE-001 — ausência de evento de Objective
+**Tratamento T054:** cada compatibilidade exige entrada, owner, modo, observabilidade, rollback, remoção e teste.
 
-**Estado:** contrato futuro definido em T051; runtime histórico permanece quebrado.  
-**Tratamento:** write confirmado -> evento mínimo -> invalidation idempotente.
+### Eventos/Projections
 
-### R-GRE-002 — falha tardia multi-campo
+- **X-002:** evento antes de consistência.
+- **X-011:** tempestade de invalidations/eventos.
+- **X-013:** projection stale sem observabilidade.
 
-**Estado:** aberto.  
-**Tratamento:** especificar semântica na SPEC de runtime; não criar tabela apenas para simular transação.
+**Contrato:** persistir -> confirmar -> emitir; consumers idempotentes; coalescing somente se medição exigir.
 
-### R-GRE-003 — Coverage sem bound
+### Analytics/Privacidade
 
-**Estado:** aberto.  
-**Tratamento:** queries bounded/cache/benchmark; rollup só com evidência.
+- **R-ASI-003 / R-KB-005 / X-004:** query text e telemetria podem ser supercoletados ou subdimensionados.
+- **R-ASI-004:** bucket IP+UA não deve ser portado literalmente.
 
-### R-GRE-004 — revisions metadata off
+### Governança
 
-**Estado:** aberto T056/T095.
+- **X-007:** approval do artigo != Apply de Search Knowledge.
+- **R-KB-002:** `kb2ops_post_approved` histórico emitia antes de comprovar todos os writes; comportamento rejeitado.
+- **R-GRE-002:** multi-campo pode aplicar parcialmente em falha tardia.
 
-### R-GRE-005 — side panel automático
+### Performance
 
-**Estado:** classificado em T051 como UX histórica não canônica; preflight/produto decide eventual compatibilidade.
+- **R-GRE-003 / R-KB-004 / X-008:** scans integrais/meta LIKE/dashboards sem bound não podem virar baseline.
 
-### R-GRE-006 — uninstall implícito
+### UI
 
-**Estado:** política futura consolidada: não destrutivo por default, purge explícito.
+- **X-006/X-009:** DS único não significa copiar CSS antigo nem permitir UI acessar stores lateralmente.
 
-## 3. Riscos KB2Ops
+## 4. Dívidas explicitamente postergáveis
 
-### R-KB-001 — extração Elementor parcialmente incompleta
+Não bloqueiam SPEC-001 por si só:
 
-**Impacto:** alto; continua blocker técnico para Search/RAG de produção.  
-**Tratamento:** fixtures reais, cobertura de widgets e diagnóstico de completude antes de considerar extractor final.
-
-### R-KB-002 — `kb2ops_post_approved` antes de comprovar writes
-
-**Estado:** comportamento rejeitado em T051.  
-**Tratamento:** validar -> persistir -> confirmar -> emitir.
-
-### R-KB-003 — Meta Contract incompleto
-
-**Estado:** T050 tornou todo dado persistido sujeito a contrato explícito; primitive final ainda T056.
-
-### R-KB-004 — Search provisória/scan/meta LIKE
-
-**Estado:** implementação futura descartada; contrato de UX/scope preservado.
-
-### R-KB-005 — analytics option com query text
-
-**Estado:** store paralelo rejeitado em T050; facts/retention T057.
-
-### R-KB-006 — view count aproximado
-
-**Estado:** não será fonte principal de uso futura.
-
-### R-KB-007 — Summary Bridge duplica chaves
-
-**Estado:** arquitetura permanente rejeitada; adapter somente se cutover provar necessidade.
-
-### R-KB-008 — release audit sem suíte versionada
-
-**Estado:** aberto T055; contratos úteis precisam de testes executáveis novos.
-
-### R-KB-009 — AI READY docs/runtime
-
-**Estado:** drift confirmado; runtime baseline = publish + approved + Resumo 8/8 + include_ai.
-
-### R-KB-010 — cleanup hardened histórico
-
-**Estado:** listas históricas descartadas; princípio reversível preservado.
-
-### R-KB-011 — classificações duplicadas
-
-**Estado:** ownership resolvido; dual-write permanente proibido.  
-**Risco remanescente:** primitive/cardinalidade/migração incorretas em T056.
-
-## 4. Drifts D-001–D-008 — estado antes de T054
-
-| ID | Drift | Estado após T050/T051 | Pendência T054 |
-|---|---|---|---|
-| D-001 | ASI `Objective_Provider` inexistente no GRE | solução futura = Summary Store interno | definir se adapter histórico é necessário no cutover |
-| D-002 | ASI escuta evento inexistente | contrato pós-write futuro definido | classificar compat/remoção |
-| D-003 | ASI lê `post_content` vs Elementor-first | direção resolvida por extractor único | manter como regressão/blocker de implementação |
-| D-004 | múltiplos parsers | direção resolvida | decidir destino Word Cloud/anchors históricos |
-| D-005 | GAC acoplado | fora do core | preflight/requisito externo |
-| D-006 | GRE/KB2Ops classifications duplicadas | owner único + dual-write proibido | profiling/compat/migração |
-| D-007 | UI/CSS fragmentados | DS único | compat visual/shortcodes ainda a provar |
-| D-008 | AI READY docs != runtime | baseline runtime fixada | atualizar contrato futuro/teste; sem compat técnica complexa |
-
-## 5. Riscos cross-module
-
-### X-001 — dual-read/dual-write virar estado permanente
-
-**T050:** dual-write permanente foi proibido.  
-**Risco remanescente:** adapter temporário sem métrica/gate de remoção.
-
-### X-002 — evento antes de consistência
-
-**T051:** contrato definido como write confirmado antes de evento.  
-**Risco remanescente:** implementação futura precisa de testes de falha tardia/idempotência.
-
-### X-003 — índice correto sobre extração incompleta
-
-Continua crítico. Extraction Quality precede Search Quality.
-
-### X-004 — Analytics super ou subdimensionado
-
-Continua aberto para T057. Não copiar ASI inteiro nem KB2Ops leve demais.
-
-### X-005 — migração virar arquitetura permanente
-
-T050/T051 classificam migration/adapters como transitórios. T054 deve exigir gate de remoção.
-
-### X-006 — Design System virar cópia de CSS
-
-Owner visual já resolvido. Runtime futuro deve reconstruir tokens/components, não colar dialetos antigos.
-
-### X-007 — approval de conteúdo confundido com Search Apply
-
-T051 formalizou eventos/workflows separados. Regressão futura deve impedir efeito lateral.
-
-### X-008 — dashboard único virar workload ilimitado
-
-Continua aberto; cada métrica precisa de owner, budget e query bounded.
-
-### X-009 — DS gerar acoplamento lateral
-
-Continua ativo: UI recebe view model/contrato; não lê stores de outros domains diretamente.
-
-### X-010 — shortcodes/aliases históricos portados sem consumidor
-
-T051 classifica todos como **compat a provar**. T054 deve transformar isso em política de preflight/blocker.
-
-### X-011 — tempestade de invalidação/eventos
-
-Novo risco explicitado por T051: múltiplos writes no mesmo post podem produzir reindexações redundantes.
-
-**Tratamento:** evento mínimo/versionado, coalescing/debounce operacional quando necessário e consumidores idempotentes. Não resolver antecipadamente com queue sem T057.
-
-### X-012 — hook interno virar API pública acidental
-
-Nomear action WordPress pode induzir consumidores externos não documentados.
-
-**Tratamento:** distinguir contrato interno, compat e API pública; só prometer estabilidade quando houver consumidor/requisito explícito.
-
-### X-013 — projection stale sem observabilidade
-
-Falha non-fatal é correta, mas pode ocultar índice desatualizado.
-
-**Tratamento:** estado saudável/degradado/stale visível via Site Health/diagnóstico mínimo; sem editar dado canônico para “corrigir”.
-
-## 6. Decisões de risco consolidadas por T050/T051
-
-- um conceito = um owner;
+- Word Cloud;
+- GAC sem requisito comprovado;
+- side panel GRE;
+- `quality_daily`;
+- SPA/REST;
+- vetor/embeddings/Foundry;
+- queue durável quando o slice não exigir;
+- materializações/rollups sem benchmark.
+
+## 5. Itens que T056 deve decidir
+
+- Metadata API versus Taxonomy API para cada classificação;
+- revisions/histórico com primitives WP antes de tabela própria;
+- Options/Settings para configurações;
+- admin-post versus AJAX por superfície;
+- Site Health para diagnóstico;
+- transient/object cache somente onde houver benefício;
+- WP-Cron como trigger antes de queue própria.
+
+## 6. Regras que não podem regredir
+
+- um conceito canônico = um owner;
 - dual-write permanente proibido;
-- adapter = temporário + gate de remoção;
+- adapter temporário possui gate de remoção;
 - projection não é canônico;
-- evento pós-write confirmado;
+- persistência confirmada precede evento;
 - consumers idempotentes;
-- Analytics non-fatal/privacy-first;
-- REST negado sem consumidor;
-- AJAX só por UX live;
-- queue não aprovada antes de T057;
-- migration/reconciler não são core permanente;
-- shortcodes históricos exigem preflight.
-
-## 7. Blockers que permanecem para autorizar SPEC-001
-
-Ainda não são necessariamente blockers finais, mas precisam de decisão explícita até T095:
-
-1. primitive/cardinalidade de classificações reutilizáveis;
-2. profiling/migração de audiência e campos relacionados;
-3. storage mínimo de Search Knowledge/Golden;
-4. schema mínimo de Search Index/Items;
-5. necessidade ou não de queue durável no primeiro slice;
-6. política de Analytics/query text/retention;
-7. estratégia de histórico/revisions;
-8. preflight de shortcodes/consumidores externos;
-9. qualidade/completude do Content Extractor para widgets reais;
-10. política de deep-link/anchors.
+- Analytics non-fatal;
+- Content Extraction único;
+- IA não decide/persiste sem humano;
+- lexical funciona sem IA/vetor;
+- nenhum runtime antes do gate T097.
 
 ## Status
 
-T050/T051 podem ser fechadas. Próximo passo: **T054** classificar formalmente drifts, compatibilidade temporária, descartes, dependências de preflight/profiling e blockers. Nenhum risco justifica iniciar runtime antes disso.
+**T054 concluída documentalmente.** Próximo passo: T056 — matriz WordPress-first. `mapa-contratos-quebrados.md` é a referência canônica para compatibilidade, drifts e blockers.

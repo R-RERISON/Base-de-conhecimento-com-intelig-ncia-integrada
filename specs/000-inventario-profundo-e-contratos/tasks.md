@@ -45,30 +45,29 @@
 - [x] T043 — Inventariar Frontend Renderer/shortcode.
 - [x] T044 — Inventariar CSS/assets.
 - [x] T045 — Inventariar testes/build/release.
-- [x] T046 — Confirmar existência/ausência de Objective Provider/evento esperado pelo ASI. _(ambos ausentes no GRE 0.6.0; drift confirmado)_
+- [x] T046 — Confirmar Objective Provider/evento esperado pelo ASI. _(ambos ausentes; drift confirmado)_
 - [x] T047 — Classificar todos os itens.
 
 ## Cruzamento
 
-- [x] T050 — Criar catálogo unificado de persistência. _(`catalogo-persistencia.md` consolidado por owner/conceito; primitive física permanece T056/T057)_
-- [x] T051 — Criar catálogo unificado de hooks/rotas/integrações. _(`catalogo-integracoes.md` consolidado por contrato futuro, compatibilidade e falha/idempotência)_
-- [x] T052 — Criar mapa de ownership atual de dados. _(`mapa-ownership-dados.md`)_
-- [x] T053 — Criar matriz de sobreposição funcional. _(`matriz-sobreposicoes.md`)_
-- [ ] T054 — Criar mapa de contratos quebrados/drift. _(próximo bloco: consolidar D-001–D-008 + compatibilidade/preflight/blockers)_
-- [ ] T055 — Criar catálogo de regressão e Golden Queries. _(fechar após decisões de primitive/infra)_
-- [ ] T056 — Identificar tudo que WordPress pode substituir. _(taxonomy/meta/options/admin-post/Site Health/cache/cron campo a campo)_
-- [ ] T057 — Identificar tudo que realmente exige infraestrutura própria. _(índice/telemetria/queue/Search Knowledge/Golden somente por evidência)_
-- [ ] T058 — Identificar candidatos a IA/vetor. _(ordenar por dependências/custo/risco)_
+- [x] T050 — Catálogo unificado de persistência.
+- [x] T051 — Catálogo unificado de hooks/rotas/integrações.
+- [x] T052 — Mapa de ownership.
+- [x] T053 — Matriz de sobreposição.
+- [x] T054 — Mapa de contratos quebrados/drifts/compatibilidade. _(`mapa-contratos-quebrados.md`; D-001–D-008 classificados, adapters/aliases com gates, blockers separados de dívidas)_
+- [ ] T055 — Catálogo de regressão e Golden Queries. _(fechar após T056/T057)_
+- [ ] T056 — Identificar tudo que WordPress pode substituir. _(próximo bloco: primitive por conceito/capacidade)_
+- [ ] T057 — Identificar tudo que realmente exige infraestrutura própria.
+- [ ] T058 — Identificar candidatos a IA/vetor.
 - [ ] T059 — Criar matriz de paridade futura consolidada.
 
 ## Ordem restante do cruzamento
 
-1. T054 — mapa final de contratos quebrados, compatibilidade e blockers.
-2. T056 — WordPress-first por conceito/capacidade.
-3. T057 — infraestrutura própria mínima justificada.
-4. T055 — regressões/Golden/gates coerentes com as decisões anteriores.
-5. T058 — IA/vetor opcional, degradável e custo-controlado.
-6. T059 — matriz de paridade final.
+1. T056 — WordPress-first por conceito/capacidade.
+2. T057 — infraestrutura própria mínima justificada.
+3. T055 — regressões/Golden/gates alinhados às decisões de arquitetura.
+4. T058 — IA/vetor opcional, degradável e custo-controlado.
+5. T059 — matriz de paridade final.
 
 Não inverter a sequência para antecipar tabelas, taxonomias, vetores ou runtime.
 
@@ -79,10 +78,10 @@ Não inverter a sequência para antecipar tabelas, taxonomias, vetores ou runtim
 - [ ] T092 — Revisão de Segurança.
 - [ ] T093 — Revisão de Regressão.
 - [ ] T094 — Revisão de Produto/Conhecimento.
-- [ ] T095 — Fechar itens “AINDA NÃO SABEMOS” críticos.
+- [ ] T095 — Fechar itens “AINDA NÃO SABEMOS” críticos e blockers aplicáveis.
 - [ ] T096 — Emitir relatório final da SPEC-000.
 - [ ] T097 — Autorizar ou bloquear SPEC-001.
 
-## Estado do planejamento
+## Estado
 
-Inventários individuais, ownership, sobreposição e catálogos unificados de persistência/integrações estão concluídos documentalmente. **Nenhum runtime novo foi criado.** Próximo bloco: T054. SPEC-001 continua bloqueada até T097.
+T050–T054 concluídas documentalmente. **Nenhum runtime novo foi criado.** Próximo bloco autorizado: T056. SPEC-001 continua bloqueada até T097.

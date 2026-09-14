@@ -18,56 +18,40 @@ Ler, decompor e cruzar os três repositórios de referência em contratos verifi
 - Especialista em Performance/Observabilidade;
 - Crítico de Simplicidade.
 
-## Estratégia
+## Estratégia executada
 
-### Fase A — Topologia
+### Fases A–E — inventário
 
-Para cada repositório:
+Concluídas para KB2Ops, ASI e GRE:
 
-1. árvore completa;
-2. bootstrap;
-3. namespaces/classes/funções;
-4. assets/templates;
-5. testes;
-6. tools/build;
-7. docs relevantes.
+- topologia/runtime;
+- persistência;
+- integrações WordPress;
+- fluxos de produto;
+- testes/regressão/build.
 
-### Fase B — Persistência
+### Fase F — classificação
 
-Extrair tabelas, índices, post meta, options, transients, taxonomias, cron state e caches.
-
-### Fase C — Integrações WordPress
-
-Extrair hooks, shortcodes, admin-post, AJAX, REST, metadata/taxonomy registration, lifecycle e capabilities.
-
-### Fase D — Fluxos de produto
-
-Reconstruir jornadas de gestor, analista de conhecimento, resolvedor, administrador e público/autenticado.
-
-### Fase E — Regressão
-
-Mapear testes, Golden Queries, smoke/browser acceptance, NO-GO e gaps sem cobertura.
-
-### Fase F — Decisão
-
-Aplicar:
+Cada item foi classificado como:
 
 `MANTER | REDESENHAR | SUBSTITUIR POR WORDPRESS | EVOLUIR COM IA/VETOR | DESCARTAR | AINDA NÃO SABEMOS`.
 
-### Fase G — Cruzamento
+### Fase G — cruzamento
 
-1. ownership lógico dos dados — T052 ✅;
-2. duplicação versus complementaridade — T053 ✅;
-3. persistência por conceito/owner — T050 ✅;
-4. integrações por contrato futuro — T051 ✅;
-5. drifts/compatibilidade/blockers — T054 próximo;
-6. WordPress-first campo/capacidade — T056;
-7. infraestrutura própria mínima — T057;
-8. regressões/Golden/gates — T055;
-9. IA/vetor — T058;
-10. paridade futura final — T059.
+Estado:
 
-## Artefatos de saída
+1. [x] T052 — ownership lógico;
+2. [x] T053 — sobreposição funcional;
+3. [x] T050 — persistência consolidada por conceito;
+4. [x] T051 — integrações consolidadas por contrato;
+5. [x] T054 — drifts, compatibilidade, preflight e blockers;
+6. [ ] T056 — WordPress-first;
+7. [ ] T057 — infraestrutura própria mínima;
+8. [ ] T055 — regressões/Golden finais;
+9. [ ] T058 — IA/vetor priorizados;
+10. [ ] T059 — paridade futura final.
+
+## Artefatos centrais produzidos
 
 - `inventario-kb2ops.md`;
 - `inventario-asi.md`;
@@ -76,28 +60,30 @@ Aplicar:
 - `matriz-sobreposicoes.md`;
 - `catalogo-persistencia.md`;
 - `catalogo-integracoes.md`;
+- `mapa-contratos-quebrados.md`;
 - `catalogo-testes-regressao.md`;
 - `matriz-paridade-futura.md`;
-- `riscos-e-drifts.md`;
-- ADRs necessárias.
+- `riscos-e-drifts.md`.
 
-## Estado atual da Fase G
+## Regra específica após T054
 
-T050–T053 estão concluídas documentalmente. O produto futuro já possui:
+Nenhuma primitive física deve ser escolhida por medo de compatibilidade.
 
-- owners lógicos definidos;
-- sobreposições/fusões/separações explícitas;
-- persistência classificada por canônico/projection/observacional/operacional/config/compat;
-- regra de dual-write proibido e adapters temporários;
-- contratos cross-module preliminares com write confirmado antes de evento;
-- política inicial de server-rendered/admin-post, AJAX somente por live UX e REST somente com consumidor real.
+T056 deve perguntar primeiro:
 
-### Próximo bloco
+- WordPress Metadata resolve?
+- Taxonomy API resolve?
+- Options/Settings resolve?
+- Revisions resolvem?
+- admin-post resolve?
+- Site Health resolve?
+- WP-Cron resolve como trigger?
+- transient/object cache resolve?
 
-**T054 — contratos quebrados/drifts/compatibilidade/blockers.**
+Somente o que falhar de forma comprovada segue para T057.
 
-T054 deve impedir que “solução arquitetural futura” seja confundida com “compatibilidade já resolvida”. Para cada drift histórico será obrigatório decidir se há adapter/preflight, descarte deliberado ou blocker antes da SPEC-001.
+Compatibilidade não altera essa ordem: adapter/alias é temporário e não define arquitetura futura.
 
 ## Gate de conclusão
 
-Nenhuma SPEC de runtime começa enquanto existir item crítico “AINDA NÃO SABEMOS” sem decisão explícita de postergar, risco documentado e gate correspondente.
+Nenhuma SPEC de runtime começa enquanto existir item crítico sem decisão explícita de resolver/postergar, risco documentado e gate aplicável. T097 é a única autorização formal para SPEC-001.

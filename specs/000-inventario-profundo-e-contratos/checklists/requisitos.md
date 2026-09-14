@@ -9,44 +9,11 @@
 - [x] Agentes/skills preparados.
 - [x] Nenhum runtime novo criado.
 
-## Inventário KB2Ops
+## Inventários individuais
 
-- [x] Bootstrap/lifecycle.
-- [x] Persistência.
-- [x] Hooks/rotas/actions.
-- [x] UI/Design System.
-- [x] Elementor extractor.
-- [x] Search atual.
-- [x] Migração/installer/uninstall.
-- [x] Testes/build/release.
-- [x] Classificação completa.
-
-## Inventário ASI
-
-- [x] Bootstrap/lifecycle.
-- [x] Schema completo.
-- [x] Search/ranking.
-- [x] Item knowledge/anchors.
-- [x] Vocabulary/bindings/rules.
-- [x] Telemetry/outcomes/privacy.
-- [x] Queue/migrations/operations.
-- [x] Golden Queries/quality.
-- [x] Word Cloud.
-- [x] Legacy/compat.
-- [x] Testes/build/release.
-- [x] Classificação completa.
-
-## Inventário Resumo Executivo
-
-- [x] Bootstrap/lifecycle.
-- [x] Meta contract.
-- [x] Store.
-- [x] Admin/coverage.
-- [x] Renderer/shortcode.
-- [x] Assets.
-- [x] Testes/build.
-- [x] Provider/event drift confirmado.
-- [x] Classificação completa.
+- [x] KB2Ops completo.
+- [x] ASI completo.
+- [x] Resumo Executivo completo.
 
 ## Cruzamento
 
@@ -54,37 +21,48 @@
 - [x] Catálogo de integrações consolidado por contrato futuro. _(T051)_
 - [x] Mapa de ownership. _(T052)_
 - [x] Matriz de sobreposição. _(T053)_
-- [ ] Drifts/contratos quebrados consolidados. _(T054 — próximo)_
+- [x] Drifts/contratos quebrados consolidados. _(T054 — `mapa-contratos-quebrados.md`)_
 - [ ] Catálogo de regressão/Golden futuro consolidado. _(T055)_
-- [ ] Matriz WordPress-first final. _(T056)_
+- [ ] Matriz WordPress-first final. _(T056 — próximo)_
 - [ ] Infraestrutura própria mínima justificada. _(T057)_
 - [ ] Candidatos IA/vetor priorizados. _(T058)_
 - [ ] Matriz de paridade futura final. _(T059)_
 
-## Evidência T050 — Persistência
+## Evidência T050/T051
 
-- catálogo deixou de ser organizado por plugin histórico e passou a ser organizado por owner/conceito;
-- canônicos, projections, observacionais, operacionais, configuração e compatibilidade estão separados;
-- chaves `_bdc_es_*`, `_kb2ops_*` e stores `asi_*` são rastreabilidade histórica, não owners futuros;
-- audiência possui um único owner lógico;
-- `service`/`affected_service` e `technologies`/`systems_involved` permanecem distintos até profiling;
-- dual-write permanente foi proibido;
-- adapters/dual-read só podem ser temporários e possuir gate de remoção;
-- projections Search/AI não são fonte da verdade;
-- não foi criada taxonomy, tabela, schema ou migration.
+- persistência organizada por owner, não por plugin histórico;
+- integração organizada por contrato semântico;
+- evento pós-write confirmado;
+- dual-write permanente proibido;
+- adapters temporários exigem gate de remoção;
+- REST negado sem consumidor; AJAX só por live UX;
+- queue ainda não autorizada.
 
-## Evidência T051 — Integrações
+## Evidência T052/T053
 
-- contratos cross-module foram definidos com produtor, consumidor, pré-condição, falha e idempotência preliminar;
-- evento de domínio só ocorre após persistência confirmada;
-- Summary/Classificação/Review invalidam projections sem transferir ownership;
-- Apply de Search Knowledge continua separado de aprovação do artigo;
-- Content Extraction é contrato interno único para Search/Review/IA;
-- server-rendered/admin-post ficou como baseline; AJAX somente para live UX comprovada; REST sem consumidor foi negado;
-- shortcodes/hooks históricos foram classificados como compatibilidade a provar, descartados ou substituídos conceitualmente;
-- Analytics foi definido como non-fatal para Search;
-- queue continua não aprovada até T057;
-- nenhuma rota/hook final de runtime foi implementada.
+- owners lógicos definidos;
+- audiência unificada semanticamente;
+- service/affected_service e technologies/systems mantidos separados até profiling;
+- Summary, Search, Classificação, Analytics e Design System convergem funcionalmente;
+- approval de artigo continua distinto de Apply de Search Knowledge;
+- qualidade de conteúdo continua distinta de Search Quality.
+
+## Evidência T054 — Drifts/Compatibilidade
+
+- [x] D-001–D-008 possuem classificação explícita.
+- [x] Design futuro foi separado de necessidade de coexistência/cutover.
+- [x] `Objective_Provider` e evento legado só admitem bridge/adapter se ASI legado realmente coexistir.
+- [x] extractor único é direção definitiva, mas qualidade/completude permanece blocker técnico para Search/RAG final.
+- [x] GAC ficou fora do core e depende de requisito/preflight.
+- [x] classificação duplicada exige profiling antes de migração física.
+- [x] CSS/menus antigos não são contrato permanente.
+- [x] AI READY baseline foi fixada em `publish + approved + 8/8 + include_ai`.
+- [x] hooks/actions antigos receberam política de compatibilidade/preflight.
+- [x] shortcodes antigos receberam status `DEPENDE DE PREFLIGHT`, sem alias automático.
+- [x] dados históricos que não podem ser perdidos foram explicitados.
+- [x] blockers B-001–B-007 foram separados de dívidas postergáveis.
+- [x] todo adapter temporário exige entrada, owner, modo, observabilidade, rollback, remoção e teste.
+- [x] nenhuma migration/runtime/taxonomy/tabela foi criada.
 
 ## Gate final
 
@@ -100,4 +78,4 @@
 
 ## Estado
 
-T050–T053 concluídas documentalmente. Próximo passo autorizado: **T054 — mapa final de contratos quebrados/drifts/compatibilidade/blockers**. Nenhum runtime novo existe.
+T050–T054 concluídas documentalmente. Próximo passo autorizado: **T056 — matriz WordPress-first**. Runtime novo continua inexistente.

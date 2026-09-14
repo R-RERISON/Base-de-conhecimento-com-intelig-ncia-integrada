@@ -1,6 +1,6 @@
 # Modelo de Dados do Inventário — SPEC-000
 
-Esta SPEC não cria tabelas no WordPress. Este arquivo define a estrutura conceitual de cada registro de inventário e dos artefatos de cruzamento.
+Esta SPEC não cria tabelas no WordPress. Este arquivo define a estrutura conceitual dos registros de inventário e cruzamento.
 
 ## Entidade: ArtefatoInventariado
 
@@ -9,7 +9,7 @@ Campos:
 - `projeto_origem` — KB2Ops | ASI | Resumo Executivo;
 - `baseline_sha`;
 - `caminho`;
-- `simbolo` — classe/função/método quando aplicável;
+- `simbolo`;
 - `categoria`;
 - `responsabilidade`;
 - `entradas`;
@@ -72,37 +72,29 @@ Campos:
 
 ## Entidade: OwnershipDado
 
-Criada no cruzamento T052 para separar **propriedade semântica** de **storage físico**.
+Criada em T052 para separar propriedade semântica de storage físico.
 
-Campos:
-
-- `conceito` — significado do dado, independente de meta key/tabela;
-- `fontes_historicas` — chaves/stores que hoje representam o conceito;
-- `owner_atual` — plugin/domínio que hoje escreve ou define o dado;
+- `conceito`;
+- `fontes_historicas`;
+- `owner_atual`;
 - `writers_atuais`;
 - `readers_atuais`;
-- `natureza` — editorial | domínio canônico | governança | projection | observacional | operacional | configuração | evidência;
+- `natureza` — editorial | domínio_canônico | governança | projection | observacional | operacional | configuração | evidência;
 - `owner_futuro_logico`;
 - `writers_futuros_autorizados`;
 - `readers_futuros`;
 - `reconstruivel`;
 - `compatibilidade_necessaria`;
 - `colisoes_semanticas`;
-- `storage_final` — propositalmente pode permanecer `AINDA_NAO_SABEMOS` nesta SPEC;
+- `storage_final` — pode permanecer `AINDA_NAO_SABEMOS`;
 - `evidencia`;
 - `status_decisao`.
 
-### Regra de ownership
-
-`um conceito canônico -> um owner lógico`.
-
-Projection, cache, índice, embedding, dashboard e adapter de migração nunca substituem o owner canônico.
+Regra: `um conceito canônico -> um owner lógico`.
 
 ## Entidade: SobreposicaoFuncional
 
-Criada no cruzamento T053 para impedir que a futura arquitetura seja uma soma dos três plugins.
-
-Campos:
+Criada em T053.
 
 - `capacidade`;
 - `implementacao_asi`;
@@ -118,23 +110,63 @@ Campos:
 - `gate_futuro`;
 - `evidencia`.
 
-### Regra de convergência
+## Entidade: ContratoCompatibilidade
 
-Duas superfícies parecidas não são fundidas automaticamente. Antes, deve-se provar se representam:
+Criada em T054 para impedir compatibilidade permanente/acidental.
 
-- a mesma responsabilidade;
-- responsabilidades complementares;
-- uma bridge temporária;
-- uma dívida histórica.
+Campos:
 
-Exemplo: `review_state=approved` e Apply de Search Knowledge são **complementares e separados**, não um único workflow.
+- `id` — D-xxx, alias/hook/store ou identificador documental;
+- `contrato_historico`;
+- `produtor_historico`;
+- `consumidor_historico`;
+- `evidencia`;
+- `classificacao_arquitetural` — corrigido_futuro | descartado | depende_preflight_profiling | blocker;
+- `compat_temporario` — sim | não | condicional;
+- `condicao_entrada` — consumidor/dado que justifica adapter;
+- `owner_canonico_futuro`;
+- `modo_compatibilidade` — read_only | dual_read | traducao_evento | alias_render | adapter_externo | nenhum;
+- `dual_write_permitido` — sempre `não` para estado permanente;
+- `observabilidade_uso`;
+- `rollback`;
+- `gate_remocao`;
+- `regressao_futura`;
+- `risco_se_ignorado`;
+- `blocker_id` quando aplicável.
+
+### Regra de compatibilidade
+
+Nenhum adapter, alias ou bridge é aprovado sem:
+
+1. entrada/consumidor comprovado;
+2. owner canônico;
+3. modo limitado de compatibilidade;
+4. observabilidade;
+5. rollback;
+6. gate de remoção;
+7. teste de equivalência.
+
+Compatibilidade nunca ganha ownership do dado.
+
+## Entidade: Blocker
+
+Criada em T054 para separar risco impeditivo de dívida postergável.
+
+- `id` — B-xxx;
+- `capacidade_bloqueada`;
+- `severidade`;
+- `evidencia`;
+- `risco`;
+- `gate_resolucao`;
+- `quando_aplicavel`;
+- `pode_postergar_para_slice_futuro`;
+- `responsavel_logico`;
+- `teste_evidencia_requerida`.
 
 ## Classificação de decisão
-
-Enum conceitual:
 
 `MANTER | REDESENHAR | SUBSTITUIR_POR_WORDPRESS | EVOLUIR_COM_IA_VETOR | DESCARTAR | AINDA_NAO_SABEMOS`.
 
 ## Regra final
 
-Este modelo é documental na SPEC-000. Não autoriza banco, JSON runtime, classes, taxonomy, schema persistente, endpoints ou serviços externos no novo plugin.
+Este modelo é documental. Não autoriza banco, JSON runtime, classes, taxonomy, schema, endpoints, aliases, migrations ou serviços externos no novo plugin.

@@ -4,11 +4,13 @@
 
 - Repositório: `R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada`
 - Branch: `main`
-- Commit do runtime S002: `5e1b35763df091ebf505f8e8f8260c654fc21926`
-- Commit da evidência unitária T040: `e5acc691e4de5e91fcb59f48403836c650a54714`
-- Commit que atualizou o estado da SPEC: `da5dd1c00500304ccf892eb3efe323f062f426d6`
+- Runtime S002: `5e1b35763df091ebf505f8e8f8260c654fc21926`
+- Evidência unitária T040: `e5acc691e4de5e91fcb59f48403836c650a54714`
+- Estado/handoff anterior: `b2f0d26cd21a915e9b4570adbbd45f5ce4685108`
+- Harness de integração T041/T042 versionado na sequência de commits iniciada em `936769bf5d65ae5c8d0351e26c36d5ee29665557` e concluída documentalmente antes deste handoff.
+- Manifesto alinhado ao runtime/evidência atual em `65a214bfe8bfc06f22d6d7619928d2cea4a2e5b9`.
 - Este arquivo é gravado após esses commits; confirme o HEAD atual antes de qualquer alteração.
-- SPEC ativa: `SPEC-001 — Core mínimo + Summary narrativo`
+- SPEC ativa: `SPEC-001 — Core mínimo + Summary narrativo`.
 - Estado: **Em implementação**.
 
 ## Prompt pronto para colar em novo chat
@@ -30,11 +32,13 @@ ANTES DE QUALQUER ALTERAÇÃO
 9. Leia specs/001-core-summary-narrativo/baseline-definition-of-ready.md.
 10. Leia specs/001-core-summary-narrativo/runtime-s002.md.
 11. Leia specs/001-core-summary-narrativo/evidencia-unitaria-s003.md.
-12. Leia specs/001-core-summary-narrativo/matriz-mutacao.md.
-13. Leia specs/001-core-summary-narrativo/matriz-evidencia.md.
-14. Leia docs/DEFINITION-OF-DONE.md.
-15. Leia este CONTINUIDADE.md inteiro.
-16. Confirme branch/HEAD no GitHub e investigue qualquer divergência antes de escrever.
+12. Leia specs/001-core-summary-narrativo/preparacao-integracao-s003.md.
+13. Leia specs/001-core-summary-narrativo/matriz-mutacao.md.
+14. Leia specs/001-core-summary-narrativo/matriz-evidencia.md.
+15. Leia tests/integration/README.md e a suíte tests/integration/test-spec001-summary-integration.php.
+16. Leia docs/DEFINITION-OF-DONE.md.
+17. Leia este CONTINUIDADE.md inteiro.
+18. Confirme branch/HEAD no GitHub e investigue qualquer divergência antes de escrever.
 
 ESTADO COMPROVADO
 - SPEC-000 está CONCLUÍDA.
@@ -43,12 +47,13 @@ ESTADO COMPROVADO
 - SPEC-001 está EM IMPLEMENTAÇÃO.
 - Post type suportado: somente `post`.
 - `page` e CPTs permanecem fora.
-- Placeholders antigos `001-core-shell-design-system` e `002-resumo-executivo-integrado` são SUPERSEDIDOS.
-- Runtime mínimo S002 implementado no commit 5e1b35763df091ebf505f8e8f8260c654fc21926.
-- Suíte unitária inicial versionada no commit e5acc691e4de5e91fcb59f48403836c650a54714.
-- Resultado unitário: 15 PASS / 0 FAIL.
-- PHP lint dos cinco arquivos PHP de runtime: PASS.
+- Runtime mínimo S002 está implementado.
+- T040 unitário: PASS 15/15.
+- PHP lint do runtime: PASS.
+- Harness T041/T042: VERSIONADO.
+- PHP lint do bootstrap/teste de integração: PASS.
 - Integração WordPress real: NOT_RUN.
+- B-006 contra Metadata API real: NOT_RUN.
 - Browser acceptance: NOT_RUN.
 - Package/lifecycle release: NOT_RUN.
 - Portanto NÃO declarar Homologação, Release ou produção.
@@ -116,34 +121,40 @@ EVIDÊNCIA UNITÁRIA
 Arquivo:
 tests/unit/spec001-summary-store.php
 
-Casos PASS:
-- Meta Contract exato;
-- read side-effect free;
-- update parcial;
-- unknown field zero writes;
-- oversized zero writes;
-- empty/delete;
-- NO_CHANGE zero writes;
-- falha write #1;
-- falha write #2 com compensação;
-- falha write #3 com compensação;
-- falha delete;
-- falha na compensação -> PARTIAL_FAILURE_CRITICAL;
-- update+delete;
-- page rejeitada;
-- capability obrigatória.
+Resultado: 15 PASS / 0 FAIL.
+
+PASS unitário NÃO promove gates WordPress/browser.
+
+HARNESS DE INTEGRAÇÃO T041/T042
+Arquivos:
+- tests/integration/bootstrap.php
+- tests/integration/phpunit.xml.dist
+- tests/integration/test-spec001-summary-integration.php
+- tests/integration/README.md
+
+Cobertura preparada:
+- G-001 proteção de post_title/post_content/_elementor_data;
+- G-020 Metadata API/read/update/delete/allowlist/limite/sanitização/NO_CHANGE/read-after-write;
+- G-070 capability por objeto, nonce, IDOR, page rejeitada e GET sem mutação;
+- B-006 com filtros reais `update_post_metadata` e `delete_post_metadata`.
+
+Comando esperado quando houver WordPress Core Test Suite + banco:
+`WP_TESTS_DIR=/tmp/wordpress-tests-lib phpunit -c tests/integration/phpunit.xml.dist`
 
 IMPORTANTE:
-PASS unitário NÃO promove os gates WordPress/browser.
+- O harness foi lintado, mas NÃO foi executado contra WordPress real nesta sessão.
+- A sessão possui PHP 8.4.23, porém não possui MySQL/MariaDB + WordPress Core Test Suite operacional.
+- Tentativa de disponibilizar banco via gerenciador de pacotes não concluiu dentro da janela operacional.
+- Não usar mocks para promover T041/T042.
 
 MATRIZ DE EVIDÊNCIA ATUAL
 - T040 unitário determinístico: PASS 15/15.
-- G-001 Editorial/Elementor: NOT_RUN.
-- G-020 Summary em WordPress real: NOT_RUN.
-- G-070 Segurança/scope real: NOT_RUN.
+- G-001 Editorial/Elementor: NOT_RUN — harness pronto.
+- G-020 Summary em WordPress real: NOT_RUN — harness pronto.
+- G-070 Segurança/scope real: NOT_RUN — harness pronto.
 - G-110 UI/UX/browser: NOT_RUN.
 - G-130 Lifecycle/package: NOT_RUN.
-- B-006 gate final: NOT_RUN; unit fault injection PASS, integração real pendente.
+- B-006 gate final: NOT_RUN — unit fault injection PASS; harness WordPress pronto.
 
 FORA DE ESCOPO
 - Classificação.
@@ -165,13 +176,25 @@ B-003 continua não bloqueando desenvolvimento/homologação, mas volta antes de
 GO de desenvolvimento != GO de produção.
 
 PRÓXIMO PASSO EXATO
-Continuar S003:
-1. T041 criar/executar integração WordPress real para G-001/G-020/G-070;
-2. T042 repetir/confirmar fault injection B-006 contra Metadata API real;
-3. T043 executar browser acceptance G-110;
-4. somente depois avaliar T044 package/lifecycle G-130;
-5. registrar T045 relatório de evidência/DoD;
-6. atualizar T046 CONTINUIDADE e decidir gate.
+Continuar S003 sem inventar PASS:
+1. provisionar/usar ambiente WordPress Core Test Suite real com MySQL/MariaDB efêmero;
+2. executar T041 via `tests/integration/phpunit.xml.dist`;
+3. analisar qualquer FAIL e corrigir runtime + regressão antes de promover G-001/G-020/G-070;
+4. executar T042/fault injection B-006 no mesmo ambiente;
+5. versionar saída, versões de WordPress/PHP/DB/PHPUnit e resultado por gate;
+6. somente com T041/T042 PASS, avançar T043 browser acceptance;
+7. depois avaliar T044 package/lifecycle;
+8. T045 relatório DoD/evidência;
+9. T046 atualizar CONTINUIDADE e decidir gate.
+
+CRITÉRIO PARA AVANÇAR A T043
+- T041 executado em WordPress real;
+- G-001 PASS;
+- G-020 PASS;
+- G-070 PASS;
+- T042/B-006 integração PASS;
+- nenhum FAIL oculto;
+- evidência versionada com ambiente e comando.
 
 CRITÉRIO PARA AVANÇAR A HOMOLOGAÇÃO
 - G-001 PASS;
@@ -182,9 +205,9 @@ CRITÉRIO PARA AVANÇAR A HOMOLOGAÇÃO
 - nenhum FAIL/NOT_RUN/NOT_CONFIGURED/STALE em gate MUST de Homologação.
 
 REGRA
-Constituição, Manifesto, T097, SPEC-001 e evidências versionadas prevalecem sobre memória de chat. Se o HEAD divergir, investigue antes de escrever.
+Constituição, Manifesto, T097, SPEC-001, runtime e evidências versionadas prevalecem sobre memória de chat. Se o HEAD divergir, investigue antes de escrever.
 ```
 
 ## Estado ao encerrar este handoff
 
-S002 está implementado e sintaticamente validado. T040 está PASS 15/15. A SPEC permanece Em implementação porque os gates de integração WordPress, segurança real, browser e B-006 integrado ainda não foram executados. Nenhum GO de produção/cutover foi emitido.
+S002 está implementado e sintaticamente validado. T040 está PASS 15/15. O harness T041/T042 está versionado e lintado, mas a execução WordPress real permanece NOT_RUN por ausência de ambiente MySQL/MariaDB + WordPress Core Test Suite nesta sessão. A SPEC permanece Em implementação; nenhum GO de Homologação, Release, produção ou cutover foi emitido.

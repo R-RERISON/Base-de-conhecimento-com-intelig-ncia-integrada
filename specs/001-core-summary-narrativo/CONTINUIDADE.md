@@ -4,7 +4,6 @@
 
 - Repositório: `R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada`
 - Branch: `main`
-- Baseline anterior a este bloco: `fbf71a46eb88a489de6b6cc5c8e2fa974fc1b8c6`
 - SPEC ativa: `SPEC-001 — Core mínimo + Summary narrativo`
 - Estado: **Em implementação / Evidência S003**.
 - Confirme o HEAD atual antes de qualquer nova alteração.
@@ -24,16 +23,18 @@ ANTES DE QUALQUER ALTERAÇÃO
 5. Leia specs/001-core-summary-narrativo/spec.md.
 6. Leia specs/001-core-summary-narrativo/plan.md.
 7. Leia specs/001-core-summary-narrativo/tasks.md.
-8. Leia specs/001-core-summary-narrativo/baseline-definition-of-ready.md.
-9. Leia specs/001-core-summary-narrativo/runtime-s002.md.
-10. Leia specs/001-core-summary-narrativo/evidencia-unitaria-s003.md.
-11. Leia specs/001-core-summary-narrativo/preparacao-integracao-s003.md.
-12. Leia specs/001-core-summary-narrativo/onclick-diagnostics-s003.md.
-13. Leia specs/001-core-summary-narrativo/matriz-mutacao.md.
-14. Leia specs/001-core-summary-narrativo/matriz-evidencia.md.
-15. Leia docs/DEFINITION-OF-DONE.md.
-16. Leia este CONTINUIDADE.md inteiro.
-17. Confirme branch/HEAD no GitHub e investigue qualquer divergência antes de escrever.
+8. Leia specs/001-core-summary-narrativo/runtime-s002.md.
+9. Leia specs/001-core-summary-narrativo/evidencia-unitaria-s003.md.
+10. Leia specs/001-core-summary-narrativo/preparacao-integracao-s003.md.
+11. Leia specs/001-core-summary-narrativo/onclick-diagnostics-s003.md.
+12. Leia specs/001-core-summary-narrativo/diagnostics-hardening-v2.md.
+13. Leia specs/001-core-summary-narrativo/browser-acceptance-t043.md.
+14. Leia specs/001-core-summary-narrativo/browser-acceptance-json-schema.md.
+15. Leia specs/001-core-summary-narrativo/matriz-mutacao.md.
+16. Leia specs/001-core-summary-narrativo/matriz-evidencia.md.
+17. Leia docs/DEFINITION-OF-DONE.md.
+18. Leia este CONTINUIDADE.md inteiro.
+19. Confirme branch/HEAD no GitHub e investigue qualquer divergência antes de escrever.
 
 ESTADO COMPROVADO
 - SPEC-000 está CONCLUÍDA.
@@ -44,18 +45,15 @@ ESTADO COMPROVADO
 - Runtime mínimo S002 implementado.
 - Suíte unitária: 15 PASS / 0 FAIL.
 - PHP lint do runtime: PASS.
-- Harness PHPUnit WordPress real em tests/integration/: PREPARADO, execução real NOT_RUN.
-- Runner onclick temporário com JSON: IMPLEMENTADO, execução no ambiente alvo NOT_RUN.
+- Harness PHPUnit WordPress real em tests/integration/: PREPARADO; execução real NOT_RUN.
+- Runner onclick técnico v2: IMPLEMENTADO; execução no ambiente alvo NOT_RUN.
+- Browser acceptance guiado com JSON: IMPLEMENTADO; execução manual NOT_RUN.
 - Integração WordPress real: NOT_RUN.
-- Browser acceptance: NOT_RUN.
 - Package/lifecycle release: NOT_RUN.
 - NÃO declarar Homologação, Release ou produção.
 
-RUNTIME ATUAL
-Caminho:
+RUNTIME DE PRODUTO
 plugin/base-conhecimento-inteligencia-integrada/
-
-Arquivos de produto:
 - base-conhecimento-inteligencia-integrada.php
 - includes/class-plugin.php
 - includes/class-meta-contract.php
@@ -63,17 +61,14 @@ Arquivos de produto:
 - includes/class-admin-page.php
 - assets/css/admin.css
 
-Arquivo TEMPORÁRIO de homologação:
+ARQUIVOS TEMPORÁRIOS DE HOMOLOGAÇÃO
 - includes/class-diagnostics-runner.php
+- includes/class-browser-acceptance.php
 
-O runner só é carregado com:
+Eles só são carregados quando:
 define( 'BDC_KB_ENABLE_DIAGNOSTICS', true );
 
-Sem a flag, nenhum hook/botão de diagnóstico é registrado.
-
-Piso declarado:
-- WordPress >= 6.6
-- PHP >= 8.1
+Sem essa flag, nenhum hook, botão ou painel de teste é registrado.
 
 ESCOPO FUNCIONAL
 Usuário: Analista de Conhecimento.
@@ -92,7 +87,6 @@ CONTRATO IMPLEMENTADO
 - nonce vinculado ao post;
 - current_user_can('edit_post', $post_id) no objeto;
 - allowlist exata dos três campos;
-- wp_unslash no request;
 - strings somente;
 - limite 32768 bytes por campo antes de sanitizar;
 - trim(sanitize_textarea_field());
@@ -101,121 +95,77 @@ CONTRATO IMPLEMENTADO
 - idêntico = NO_CHANGE sem write;
 - Metadata API;
 - escaping contextual;
-- POST-Redirect-GET;
-- nenhum payload cru em mensagens de feedback.
+- POST-Redirect-GET.
 
 B-006 IMPLEMENTADO
 Fluxo:
 authorize -> validate all -> sanitize all -> snapshot -> diff -> writes mínimos -> reread -> compare.
-
-Mismatch:
-compensação best-effort -> reread.
 
 Resultados:
 - estado esperado -> SUCCESS;
 - snapshot restaurado -> FAIL_SAFE;
 - restauração incompleta -> PARTIAL_FAILURE_CRITICAL.
 
-PARTIAL_FAILURE_CRITICAL registra somente post_id e nomes lógicos dos campos; não registra conteúdo narrativo.
+ONCLICK TÉCNICO V2
+- schema JSON 1.1.0;
+- marker `_bdc_kb_diagnostic_fixture=spec001-onclick-v2`;
+- exige `manage_options` + nonce;
+- cria apenas fixtures efêmeras marcadas;
+- cleanup em lotes de 100 até esgotar marker ou atingir guard rail;
+- residual count com `WP_Query::found_posts`;
+- resultado global PASS exige zero FAIL e zero resíduos;
+- cobre G-001, G-020, parte de G-070 e B-006;
+- não persiste relatório.
 
-METODOLOGIA ONCLICK TEMPORÁRIA
-Objetivo: executar diagnóstico assistido dentro do WordPress real e gerar JSON de análise, sem deixar sujeira.
+BROWSER ACCEPTANCE TEMPORÁRIO
+- exige a mesma flag + `manage_options` + nonce;
+- coleta oito checks G-110 observados manualmente;
+- gera `bdc-kb-browser-acceptance-*.json`;
+- usa `source=operator_assertion` e `manual_browser_observation`;
+- não grava respostas no WordPress;
+- não é automação E2E.
 
-Ativação temporária:
-define( 'BDC_KB_ENABLE_DIAGNOSTICS', true );
-
-Na tela Base de Conhecimento aparece para manage_options:
-"Executar diagnóstico e gerar JSON".
-
-O clique:
-1. remove fixtures antigas marcadas pelo próprio runner;
-2. cria post/page temporários com marker `_bdc_kb_diagnostic_fixture=spec001-onclick-v1`;
-3. executa checks G-001/G-020/G-070 e fault injection B-006;
-4. remove filtros temporários em finally;
-5. hard-delete das fixtures em finally;
-6. verifica resíduos;
-7. devolve `bdc-kb-diagnostics-*.json` sem gravar relatório no WP.
-
-O JSON contém schema/versionamento, ambiente, hashes SHA-256 do runtime, checks, summary e cleanup.
-`summary.overall=PASS` exige zero FAIL e `cleanup.residual_fixtures=0`.
-
-IMPORTANTE:
-- onclick NÃO substitui browser acceptance G-110;
-- nonce in-process não substitui validação HTTP completa do handler;
-- após gerar o JSON, desabilitar/remover a flag;
-- antes de T044/G-130/package, remover integralmente runner, require e hook temporários;
-- package final NÃO pode conter onclick de teste.
-
-EVIDÊNCIA UNITÁRIA
-Arquivo:
-tests/unit/spec001-summary-store.php
-
-Resultado: 15/15 PASS.
-
-INTEGRAÇÃO WORDPRESS PREPARADA
-Arquivos:
-- tests/integration/bootstrap.php
-- tests/integration/phpunit.xml.dist
-- tests/integration/test-spec001-summary-integration.php
-- tests/integration/README.md
-
-Execução prevista:
-WP_TESTS_DIR=/tmp/wordpress-tests-lib phpunit -c tests/integration/phpunit.xml.dist
-
-MATRIZ DE EVIDÊNCIA ATUAL
+MATRIZ ATUAL
 - T040 unitário: PASS 15/15.
-- T041 integração WordPress: NOT_RUN; PHPUnit e onclick READY.
+- T041 integração WordPress: NOT_RUN; PHPUnit + onclick v2 preparados.
 - G-001: NOT_RUN.
 - G-020: NOT_RUN.
-- G-070: NOT_RUN; onclick cobre parte in-process quando executado.
-- T042/B-006 integração: NOT_RUN; unit PASS; PHPUnit/onclick READY.
-- G-110: NOT_RUN.
+- G-070: NOT_RUN.
+- T042/B-006 integração: NOT_RUN; unit PASS; harness/onclick preparados.
+- G-110: NOT_RUN; coletor JSON preparado.
 - G-130: NOT_RUN.
 
-FORA DE ESCOPO
-- Classificação.
-- Review/AI READY.
-- Content Extractor.
-- Search/Golden/Search Knowledge.
-- Analytics/query logging.
-- queue.
-- tabela/schema/migration.
-- REST/AJAX/SPA.
-- Foundry/LLM/embeddings/vector/semantic/rerank/agentes.
-- aliases/shortcodes de compatibilidade.
-- remoção/desativação automática de GRE/KB2Ops/ASI.
-- cutover produtivo.
-- cinco campos classificatórios restantes do GRE.
-
-COEXISTÊNCIA
-B-003 não bloqueia desenvolvimento/homologação, mas volta antes de produção, cutover, remoção de legado ou coexistência não controlada de writers.
-GO de desenvolvimento != GO de produção.
-
-PRÓXIMO PASSO EXATO
-1. Instalar/atualizar plugin em ambiente de homologação WordPress real.
+PRÓXIMO PASSO EXATO NO AMBIENTE ALVO
+1. Atualizar o plugin em homologação.
 2. Ativar temporariamente `BDC_KB_ENABLE_DIAGNOSTICS=true`.
-3. Abrir Base de Conhecimento e executar o onclick.
-4. Preservar o JSON gerado como evidência.
-5. Confirmar `cleanup.residual_fixtures=0`.
-6. Desativar/remover imediatamente a flag.
-7. Analisar qualquer FAIL antes de nova mudança.
-8. Executar o harness PHPUnit real quando WordPress Test Suite + DB estiverem disponíveis.
-9. Só depois seguir para T043 browser acceptance.
+3. Abrir Base de Conhecimento.
+4. Executar **Executar diagnóstico e gerar JSON**.
+5. Confirmar no JSON `summary.overall=PASS` e `cleanup.residual_fixtures=0`.
+6. Executar manualmente a jornada real do Summary no browser.
+7. Preencher o painel G-110 e gerar `bdc-kb-browser-acceptance-*.json`.
+8. Desativar/remover imediatamente a flag.
+9. Enviar os dois JSONs para revisão/versionamento.
+10. Corrigir qualquer FAIL antes de promover gates.
 
 CRITÉRIO PARA AVANÇAR
-- JSON onclick sem FAIL e zero resíduos é evidência auxiliar de T041/T042;
-- G-001/G-020/G-070/B-006 só mudam para PASS quando a evidência exigida estiver completa;
-- G-110 continua NOT_RUN até browser acceptance;
-- nenhum gate MUST ativo pode ser promovido por suposição.
+- nenhum JSON técnico com FAIL;
+- zero resíduos de fixtures;
+- G-110 sem FAIL na evidência manual revisada;
+- gates só mudam para PASS após evidência real do ambiente alvo;
+- não promover Homologação por suposição.
 
 REGRA DE LIMPEZA ANTES DO RELEASE
 T044/G-130 deve remover:
 - BDC_KB_ENABLE_DIAGNOSTICS do ambiente;
 - class-diagnostics-runner.php;
-- require condicional no bootstrap;
-- registro condicional no Plugin;
-- qualquer fixture marcada remanescente.
-Depois repetir lint/regressão.
+- class-browser-acceptance.php;
+- requires condicionais;
+- registros/hook temporários;
+- qualquer fixture `spec001-onclick-v2`.
+Depois repetir lint/regressão e comprovar ausência das ferramentas no package.
+
+FORA DE ESCOPO
+Classificação; Review/AI READY; Extractor; Search; Analytics; queue; tabela/schema/migration; REST/AJAX/SPA; Foundry/LLM/vector; aliases legados; cutover produtivo.
 
 REGRA
 Constituição, Manifesto, T097, SPEC-001, código e evidências versionadas prevalecem sobre memória de chat. Se o HEAD divergir, investigue antes de escrever.
@@ -223,4 +173,4 @@ Constituição, Manifesto, T097, SPEC-001, código e evidências versionadas pre
 
 ## Estado ao encerrar este handoff
 
-S002 permanece implementado. T040 permanece PASS 15/15. A metodologia onclick temporária e o harness PHPUnit estão preparados para executar T041/T042 em WordPress real. Nenhum gate WordPress/browser foi promovido sem execução. O runner é transitório e possui gate explícito de remoção antes de package/release.
+S002 permanece implementado. T040 permanece PASS 15/15. O harness PHPUnit, o onclick técnico v2 e o coletor temporário de browser acceptance estão preparados. Nenhum gate WordPress/browser foi promovido sem execução real. As duas ferramentas temporárias possuem gate explícito de remoção antes de T044/G-130/package.

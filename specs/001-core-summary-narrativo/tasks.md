@@ -31,25 +31,24 @@
 ## S003 — Evidência
 
 - [x] T040 Testes unitários aplicáveis — PASS 15/15; `evidencia-unitaria-s003.md`.
-- [ ] T041 Integração WordPress G-001/G-020/G-070. **Harness versionado em `tests/integration/`; lint PASS; execução real permanece NOT_RUN por ausência de WordPress Test Suite + MySQL/MariaDB nesta sessão.**
-- [ ] T042 Fault injection B-006 — unitário PASS; harness com filtros reais `update_post_metadata`/`delete_post_metadata` pronto; execução WordPress real permanece NOT_RUN.
+- [ ] T041 Integração WordPress G-001/G-020/G-070 — harness PHPUnit preparado; execução real ainda NOT_RUN.
+- [x] T041A Implementar runner onclick temporário opt-in com JSON e cleanup automático; execução no ambiente alvo ainda pendente.
+- [ ] T041B Executar onclick no WordPress real, anexar JSON versionado e confirmar `cleanup.residual_fixtures=0`.
+- [ ] T042 Fault injection B-006 — unitário PASS; harness PHPUnit e onclick preparados; confirmação WordPress real pendente.
 - [ ] T043 Browser acceptance G-110.
-- [ ] T044 Lifecycle/package G-130 quando aplicável.
+- [ ] T044 Lifecycle/package G-130 quando aplicável — inclui remover integralmente o runner onclick temporário e comprovar zero fixtures antes do package.
 - [ ] T045 Relatório de evidência e DoD.
 - [ ] T046 Atualizar CONTINUIDADE e decidir próximo gate.
 
-### Preparação T041/T042
+## Regra de limpeza do onclick
 
-Artefato: `preparacao-integracao-s003.md`.
+O onclick é ferramenta transitória de homologação, não funcionalidade do produto. O package/release não pode conter:
 
-Arquivos executáveis preparados:
-
-- `tests/integration/bootstrap.php`;
-- `tests/integration/phpunit.xml.dist`;
-- `tests/integration/test-spec001-summary-integration.php`;
-- `tests/integration/README.md`.
-
-**Regra:** harness existente ou lintado não é PASS de integração. T041/T042 só fecham após execução contra WordPress Core Test Suite real e banco efêmero com resultado versionado.
+- `BDC_KB_ENABLE_DIAGNOSTICS` ativo;
+- botão/notice de diagnóstico;
+- `class-diagnostics-runner.php`;
+- hook `bdc_kb_run_diagnostics`;
+- posts/metas marcados por `_bdc_kb_diagnostic_fixture=spec001-onclick-v1`.
 
 ## Regra
 

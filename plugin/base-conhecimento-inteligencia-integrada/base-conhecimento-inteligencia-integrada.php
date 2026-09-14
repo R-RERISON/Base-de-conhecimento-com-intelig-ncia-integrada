@@ -21,6 +21,11 @@ define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
 require_once BDC_KB_DIR . 'includes/class-meta-contract.php';
 require_once BDC_KB_DIR . 'includes/class-summary-store.php';
 require_once BDC_KB_DIR . 'includes/class-admin-page.php';
+
+if ( defined( 'BDC_KB_ENABLE_DIAGNOSTICS' ) && true === BDC_KB_ENABLE_DIAGNOSTICS ) {
+	require_once BDC_KB_DIR . 'includes/class-diagnostics-runner.php';
+}
+
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
 
 \BDC\KnowledgeBase\Plugin::register();

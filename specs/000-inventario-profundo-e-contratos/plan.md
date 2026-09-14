@@ -1,66 +1,65 @@
 # Plano — SPEC-000 Inventário Profundo e Contratos
 
-## Objetivo
-
-Ler, decompor, cruzar e revisar os projetos de referência até que a primeira SPEC de runtime possa ser escrita sem adivinhação estrutural, complexidade antecipada ou lacuna de segurança conhecida.
-
 ## Estado
+- T000–T059 concluídos documentalmente.
+- T090 WordPress-first: PASS.
+- T091 Simplicidade: PASS.
+- T092 Segurança: PASS arquitetural.
+- T093 QA/Regressão: PASS documental.
+- Próximos: T094 -> T095 -> T096 -> T097.
 
-- [x] inventários KB2Ops/ASI/GRE;
-- [x] T050–T059 consolidação arquitetural;
-- [x] T090 revisão WordPress-first;
-- [x] T091 revisão de simplicidade;
-- [x] T092 revisão de segurança;
-- [ ] T093 QA/regressão;
-- [ ] T094 produto/conhecimento;
-- [ ] T095 unknowns/blockers por slice;
-- [ ] T096 relatório final;
-- [ ] T097 GO/NO-GO SPEC-001.
+## Arquitetura preservada
+- WordPress/Elementor como fonte editorial.
+- primeiro runtime por vertical slice mínimo.
+- candidato atual para SPEC-001: Core mínimo + Summary narrativo, ainda sujeito a T094/T095/T097.
+- Content Extractor somente com consumidor real.
+- Search própria posterior e incremental, post-level antes de item-level quando suficiente.
+- Search Retrieval Projection continua única família persistente própria aprovada.
+- Analytics, durable queue, semantic/vector/rerank/agentes permanecem postergados.
 
-## Arquitetura consolidada
+## Resultado T093
+Artefato: `revisao-qa-t093.md`.
 
-`matriz-paridade-futura.md` permanece a visão arquitetural T059. T090–T092 são overlays obrigatórios para execução.
+### Evidência por slice
+Cada SPEC futura deve possuir Matriz de Evidência antes do código, com:
+- contrato/gate;
+- classe;
+- cenário;
+- tipo de teste;
+- evidência esperada;
+- estado;
+- artefato/execução.
 
-T090 confirmou WordPress-first; T091 reduziu a execução a vertical slices mínimos; T092 tornou segurança fail-closed e contextual por superfície.
+Estados válidos: PASS, FAIL, NOT_RUN, NOT_CONFIGURED, STALE, N/A, POSTERGADO, WAIVED.
 
-## Candidato de primeiro slice
+PASS vazio é proibido. N/A exige justificativa. Evidência stale não vale como atual.
 
-Continua provisoriamente:
+### Primeiro Summary slice
+Gates mínimos:
+- G-001 editorial;
+- G-020 Summary;
+- G-070 segurança/scope;
+- G-110 UI/UX;
+- G-130 lifecycle/release quando aplicável;
+- B-006 no write composto.
 
-`Core mínimo + Summary narrativo (objective/escalation/important)`
+Cenários negativos obrigatórios quando aplicáveis:
+- capability;
+- nonce/CSRF;
+- mutação por GET;
+- IDOR;
+- mass assignment;
+- XSS/escaping;
+- falha parcial/read-after-write.
 
-Fluxo:
+### Search
+Quando nascer: G-010/G-050/G-060/Golden/G-070/G-120/G-130 + B-001. Golden vazia/not-run/stale nunca PASS.
 
-`abrir tela -> validar objeto/capability -> ler meta -> editar -> POST + nonce -> allowlist/validar/sanitizar -> persistir -> read-after-write -> escapar saída -> feedback`
-
-Esse slice não precisa de tabela, REST, AJAX, Search, extractor, taxonomy, Analytics, queue, Foundry ou IA.
-
-## Regras de segurança T092
-
-- capability é verificada no handler e no objeto;
-- nonce protege CSRF, não autorização;
-- mutação via GET é NO-GO;
-- IDs e estados enviados pelo cliente são não confiáveis;
-- mass assignment é NO-GO;
-- escaping é contextual e tardio;
-- projection/cache/vector nunca autorizam acesso;
-- HTTP externo variável exige política SSRF/allowlist e API segura;
-- secrets nunca entram em logs/exports/repositório/prompt;
-- Analytics/identidade/query logging continuam negados sem B-004;
-- activation/uninstall não fazem limpeza destrutiva por default.
-
-## Próximo passo — T093
-
-QA/Regressão deve:
-
-1. revisar `catalogo-testes-regressao.md` contra T090–T092;
-2. definir evidência mínima do candidato Summary;
-3. mapear testes unitários, integração WordPress, browser/manual, package e rollback;
-4. converter os NO-GO de segurança em testes negativos;
-5. preservar Golden como gate somente quando Search existir;
-6. impedir PASS vazio, `NOT_TESTED` disfarçado ou evidência stale;
-7. não criar runtime.
+### Features postergadas
+Não criar harness de IA/vector/queue/Analytics antes da capacidade. Manter gates documentais e ativá-los junto do slice real.
 
 ## Gate
+Nenhum runtime/teste executável é autorizado antes de T097.
 
-Nenhuma SPEC de runtime começa antes de T097. T092 não autorizou código; apenas tornou explícitas condições de segurança para cada futura capacidade.
+## Próximo passo — T094
+Revisar valor de produto/gestão de conhecimento e confirmar ou alterar a recomendação de primeiro slice.

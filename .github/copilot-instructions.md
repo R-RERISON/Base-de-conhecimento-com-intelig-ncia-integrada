@@ -59,3 +59,18 @@ Semantic search é opcional e deve degradar para lexical. Nunca vetorize `_eleme
 ## Desenvolvimento
 
 Trabalhe por vertical slices pequenos, reversíveis, testáveis e homologáveis. Evite criar infraestrutura futura sem uma SPEC que a justifique.
+
+## Continuidade entre chats
+
+O contexto de conversa é temporário; o repositório é permanente.
+
+Ao concluir qualquer implementação material:
+
+1. crie ou atualize `CONTINUIDADE.md` dentro da pasta da SPEC ativa;
+2. use `.specify/templates/continuity-prompt-template.md`;
+3. registre branch, commit, estado comprovado, decisões, invariantes, arquivos/dados/contratos, testes, gaps e riscos;
+4. defina próximo passo exato e critério objetivo de conclusão;
+5. produza um prompt autossuficiente pronto para colar em um novo chat;
+6. instrua o novo chat a reler AGENTS, Manifesto, Constituição, SPEC, DoD e confirmar o estado do GitHub antes de alterar qualquer coisa.
+
+Uma implementação não deve ser declarada concluída, em homologação ou pronta para transferência sem esse handoff atualizado. Nunca dependa da frase “continue de onde paramos” como mecanismo de continuidade.

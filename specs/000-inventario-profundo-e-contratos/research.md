@@ -1,39 +1,52 @@
 # Pesquisa Consolidada — SPEC-000
 
-## Estado consolidado
-T050–T059 fecharam a arquitetura. T090–T093 validaram WordPress-first, simplicidade, segurança e QA. T094 validou valor e ordem de produto.
+## Estado após T095
+A arquitetura e as revisões T090–T094 foram confrontadas contra o candidato concreto de SPEC-001.
 
-## T094 — Produto/Conhecimento
-Artefato: `revisao-produto-t094.md`.
+## Resultado T095
+Artefato: `fechamento-blockers-t095.md`.
 
-### Primeiro slice
-`Core mínimo + Summary narrativo` permanece o candidato de SPEC-001.
+### Blockers B-001–B-007
+- B-001: Search/RAG, não SPEC-001.
+- B-002: Classificação/cutover, não SPEC-001.
+- B-003: cutover/aliases/removal; não bloqueia dev/homologação do Summary sem retirada de legado.
+- B-004: Analytics, não SPEC-001.
+- B-005: item/deep-link, não SPEC-001.
+- B-006: único aplicável; fechado conceitualmente.
+- B-007: async/queue, não SPEC-001.
 
-Usuário primário: Analista de Conhecimento.
+### Storage Summary
+T095 decide reutilizar como canônicas iniciais as chaves GRE já comprovadas:
+- `_bdc_es_objective`;
+- `_bdc_es_escalation`;
+- `_bdc_es_important`.
 
-Valor: registrar e manter `objective`, `escalation`, `important` como conhecimento sistêmico estruturado, sem reescrever o artigo.
+Razão: mesma semântica, preservação de dados e ausência de ganho em renomear/migrar três metas.
 
-### Limites
-- não incluir os cinco campos classificatórios históricos no owner Summary;
-- não prometer benefício de Search ao Resolvedor ainda;
-- não implementar AI READY antes dos pré-requisitos históricos completos;
-- não criar cockpit/dashboard/portal completo no primeiro slice.
+### B-006
+Fluxo definido:
+1. autorização/método/nonce;
+2. validar todos inputs;
+3. snapshot anterior;
+4. diff/NO_CHANGE;
+5. writes mínimos;
+6. read-after-write;
+7. sucesso somente se estado == esperado;
+8. mismatch -> falha + compensação best-effort;
+9. releitura pós-compensação;
+10. partial failure crítico explícito se restauração incompleta.
 
-### Ordem de produto recomendada
-1. Summary narrativo.
-2. Classificação mínima, começando por `knowledge_type` salvo nova evidência.
-3. Review mínimo.
-4. Search post-level com Content Extractor e Golden mínimo.
-5. capacidades adicionais por evidência.
+### Superfície SPEC-001
+- `edit_post` por objeto;
+- wp-admin server-rendered;
+- POST + nonce;
+- sem REST/AJAX/SPA;
+- sem settings/event bus/history/audit/migration/schema;
+- activation mínima;
+- deactivate/uninstall não destroem postmeta.
 
-### Search
-Search é reconhecida como capacidade estratégica de maior valor direto ao Resolvedor, mas não deve furar os gates B-001/Golden/security/benchmark. Post-level precede item/deep-link quando suficiente.
+### Unknown de post type
+A futura SPEC deve enumerar os post types reais da Base de Conhecimento na baseline antes do código. Request não escolhe post type arbitrário. Isso é gate de Ready da implementação, não blocker de criação da SPEC.
 
-### Analytics
-Não é necessário para provar valor do primeiro slice. Homologação humana + integridade do estado + segurança são evidência suficiente. B-004 continua fechado para Analytics detalhado.
-
-### IA
-IA P1 só entra após jornada manual estável e esforço real observado. RAG/vector/agentes continuam postergados.
-
-## Próximo passo
-T095 deve separar definitivamente blockers da SPEC-001 candidata dos blockers de slices futuros.
+## Resultado
+`BLOCKER_SPEC001 = 0` documentalmente. T096 pode emitir relatório final e T097 decidir autorização formal.

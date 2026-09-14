@@ -1,46 +1,42 @@
 # Riscos, Drifts e Dívidas — SPEC-000
 
-> Estado após T094.
+> Estado após T095.
 
 ## Riscos anteriores
-D-001–D-008 e B-001–B-007 permanecem contextuais. T090–T093 adicionaram guardrails de plataforma, simplicidade, segurança e evidência.
+D-001–D-008 permanecem como memória institucional. B-001–B-007 foram classificados por slice em `fechamento-blockers-t095.md`.
 
-## Novos riscos T094
+## Novos riscos/decisões T095
 
-### X-073 — primeiro slice sem usuário primário
-**Risco:** entregar infraestrutura travestida de produto.  
-**Tratamento:** SPEC-001 candidata possui usuário explícito: Analista de Conhecimento.
+### X-081 — renomear meta sem benefício
+**Risco:** criar migration/dual-read apenas para “limpar” prefixo legado.  
+**Tratamento:** reutilizar `_bdc_es_objective`, `_bdc_es_escalation`, `_bdc_es_important` como storage inicial canônico da SPEC-001.
 
-### X-074 — prometer valor ao Resolvedor antes de Search
-**Risco:** percepção de produto incompleto ou requisito inflado no Summary.  
-**Tratamento:** Summary é jornada de curadoria; Search é entrega posterior específica ao Resolvedor.
+### X-082 — dois writers concorrentes em produção
+**Risco:** GRE legado e novo plugin escreverem os mesmos meta keys com contratos diferentes.  
+**Tratamento:** SPEC-001 não remove legado; cutover produtivo exige B-003/preflight e decisão single-writer/coexistência comprovada.
 
-### X-075 — owner Summary absorver classificação por herança GRE
-**Risco:** reintroduzir duplicidade D-006/B-002.  
-**Tratamento:** SPEC-001 limita-se a objective/escalation/important.
+### X-083 — `update_post_meta()` false interpretado como falha
+**Risco:** NO_CHANGE ser confundido com erro ou erro real ser mascarado.  
+**Tratamento:** sucesso é estado relido == esperado; booleano isolado não define sucesso.
 
-### X-076 — AI READY adaptado ao runtime incompleto
-**Risco:** alterar regra de confiança de 8/8 para 3/3 apenas por conveniência.  
-**Tratamento:** AI READY postergado até owners/pré-requisitos completos; regra histórica não é reduzida silenciosamente.
+### X-084 — compensação falhar
+**Risco:** write multi-campo ficar parcialmente aplicado.  
+**Tratamento:** snapshot + compensação best-effort + releitura; estado `PARTIAL_FAILURE_CRITICAL` explícito se restauração incompleta.
 
-### X-077 — dashboard antes da pergunta
-**Risco:** Cockpit/analytics sem decisão de gestão ou dados maduros.  
-**Tratamento:** dashboard só nasce com pergunta/usuário/dado comprovados.
+### X-085 — post type genérico
+**Risco:** tela/handler operar em objeto fora da Base de Conhecimento.  
+**Tratamento:** baseline da SPEC-001 enumera post types reais antes do código; request não escolhe tipo arbitrário.
 
-### X-078 — Search atrasada indefinidamente
-**Risco:** plataforma concentra valor administrativo e demora a entregar descoberta ao Resolvedor.  
-**Tratamento:** após Summary + classificação mínima + Review mínimo, Search post-level é prioridade estratégica; T095/T097 podem antecipar se houver evidência forte sem violar gates.
+### X-086 — settings/event/history por antecipação
+**Risco:** primeiro slice ganhar infraestrutura sem requisito.  
+**Tratamento:** nenhum settings page, event bus, history/audit ou runtime version option na SPEC-001 salvo novo requisito que passe princípio de negação.
 
-### X-079 — paridade histórica confundida com jornada
-**Risco:** clonar oito campos na mesma tela, menus, shortcodes e layouts por familiaridade.  
-**Tratamento:** preservar comportamento/dado necessário; UI e composição seguem jornada futura.
+## Blockers para SPEC-001
+- B-006: fechado conceitualmente.
+- B-001/B-002/B-004/B-005/B-007: não aplicáveis.
+- B-003: posterior ao cutover/removal.
 
-### X-080 — IA antes de esforço comprovado
-**Risco:** custo/complexidade para automatizar fluxo ainda instável.  
-**Tratamento:** jornada manual primeiro; IA P1 apenas se reduzir esforço observado.
-
-## Estado do candidato SPEC-001
-Produto considera `Core mínimo + Summary narrativo` válido e pequeno. Nenhum novo blocker global foi encontrado.
+**BLOCKER_SPEC001 aberto: zero.**
 
 ## Próximo passo
-T095 deve decidir objetivamente quais blockers/unknowns afetam essa SPEC candidata e quais pertencem a Search/Classificação/Review/Analytics/IA futuros.
+T096 — relatório final consolidado.

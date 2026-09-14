@@ -14,36 +14,32 @@
 - [x] T091 Crítico de Simplicidade.
 - [x] T092 Segurança.
 - [x] T093 QA/Regressão.
-- [x] T094 Produto/Conhecimento. _(`revisao-produto-t094.md`; PASS, SPEC-001 candidata mantida e ordem futura recomendada)_
-- [ ] T095 unknowns/blockers por slice.
+- [x] T094 Produto/Conhecimento.
+- [x] T095 unknowns/blockers por slice. _(`fechamento-blockers-t095.md`; zero BLOCKER_SPEC001 aberto, B-006 fechado conceitualmente)_
 - [ ] T096 relatório final.
 - [ ] T097 GO/NO-GO SPEC-001.
 
-## Resultado T094
-- [x] SPEC-001 candidata mantida: Core mínimo + Summary narrativo.
-- [x] usuário primário explícito: Analista de Conhecimento.
-- [x] primeiro slice limitado a `objective`, `escalation`, `important`.
-- [x] cinco campos classificatórios GRE ficaram fora do owner Summary.
-- [x] Classification futura recomendada começar por `knowledge_type` como eixo mínimo.
-- [x] Review recomendado depois de Summary + classificação mínima; AI READY postergado até pré-requisitos completos.
-- [x] Search reconhecida como primeira grande capacidade direta ao Resolvedor, porém posterior aos gates de extractor/Golden/security.
-- [x] Search post-level permanece antes de item/deep-link.
-- [x] Search Knowledge/Analytics/dashboards/IA continuam por evidência, não por legado.
-- [x] sucesso de SPEC-001 pode ser homologado sem Analytics detalhado.
-- [x] paridade necessária foi separada de layout/menus/shortcodes/estruturas históricas.
-- [x] zero blocker global novo; nenhum runtime criado.
-
-## Ordem recomendada após eventual T097
-1. SPEC-001 Core mínimo + Summary narrativo.
-2. SPEC-002 Classificação mínima (`knowledge_type`).
-3. SPEC-003 Review mínimo.
-4. SPEC-004 Content Extractor + Search post-level + Golden mínimo.
-5. demais capacidades por evidência.
+## Resultado T095
+- [x] B-001 -> não aplicável à SPEC-001; Search/RAG.
+- [x] B-002 -> não aplicável; Classificação/cutover.
+- [x] B-003 -> não bloqueia dev/homolog; permanece para cutover/aliases/removal.
+- [x] B-004 -> não aplicável; Analytics.
+- [x] B-005 -> não aplicável; item/deep-link.
+- [x] B-006 -> fechado conceitualmente com snapshot + write mínimo + read-after-write + compensação best-effort.
+- [x] B-007 -> não aplicável; async/queue.
+- [x] três meta keys GRE narrativas foram escolhidas como storage inicial canônico da SPEC-001 para evitar migration/dual-write.
+- [x] capability baseline definida: `edit_post` no objeto alvo.
+- [x] superfície técnica: server-rendered + POST/nonce; sem REST/AJAX/SPA.
+- [x] sem settings, event bus, history/audit, migration, runtime version option no primeiro slice.
+- [x] post types reais devem ser enumerados na baseline da SPEC-001 antes do código.
+- [x] rollback simplificado: deactivate preserva postmeta; zero schema/migration/purge.
+- [x] Definition of Ready documental da SPEC-001 candidata concluída.
+- [x] BLOCKER_SPEC001 aberto = zero.
 
 ## Próximo passo exato
-**T095 — fechar unknowns/blockers por slice.**
+**T096 — Relatório Final da SPEC-000.**
 
-Classificar cada blocker/finding como `FECHAR_AGORA | NÃO_APLICÁVEL_A_SPEC001 | POSTERGAR_PARA_SLICE_CORRETO | BLOCKER_SPEC001`.
+Sintetizar estado, decisões, evidências e recomendação formal para T097 sem reabrir arquitetura.
 
 ## Estado
-T050–T059 + T090–T094 concluídos documentalmente. SPEC-001 continua bloqueada até T097.
+T050–T059 + T090–T095 concluídos documentalmente. SPEC-001 continua aguardando autorização T097.

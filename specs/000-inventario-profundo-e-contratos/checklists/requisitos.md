@@ -6,26 +6,29 @@
 - [x] T092 Segurança.
 - [x] T093 QA/Regressão.
 - [x] T094 Produto/Conhecimento.
-- [ ] T095 blockers/unknowns por slice.
+- [x] T095 blockers/unknowns por slice.
 - [ ] T096 relatório final.
 - [ ] T097 GO/NO-GO SPEC-001.
 
-## Evidência T094
-- [x] usuário primário do primeiro slice identificado: Analista de Conhecimento.
-- [x] SPEC-001 candidata mantida: Core mínimo + Summary narrativo.
-- [x] Summary limitado a objective/escalation/important.
-- [x] classificação histórica não foi absorvida pelo owner Summary.
-- [x] primeira classificação futura recomendada: knowledge_type, sujeita a T095/SPEC.
-- [x] Review foi mantido posterior a Summary + classificação mínima.
-- [x] AI READY foi postergado até pré-requisitos completos; regra não foi reduzida para 3/3.
-- [x] Search post-level foi reconhecida como prioridade estratégica posterior para Resolvedor.
-- [x] Content Extractor nasce com Search/consumidor, não isoladamente.
-- [x] item/deep-link continuam posteriores.
-- [x] Search Knowledge/dashboards/Analytics/IA continuam por evidência.
-- [x] sucesso do primeiro slice pode ser homologado sem Analytics detalhado.
-- [x] paridade de produto foi separada de layout/menus/shortcodes históricos.
-- [x] zero blocker global novo.
-- [x] nenhum runtime criado.
+## Evidência T095
+- [x] B-001 classificado fora da SPEC-001.
+- [x] B-002 classificado fora da SPEC-001.
+- [x] B-003 não bloqueia dev/homolog; permanece para cutover/removal.
+- [x] B-004 classificado fora da SPEC-001.
+- [x] B-005 classificado fora da SPEC-001.
+- [x] B-006 fechado conceitualmente para Summary.
+- [x] B-007 classificado fora da SPEC-001.
+- [x] storage inicial Summary definido nos três meta keys GRE existentes.
+- [x] capability baseline definida por objeto (`edit_post`).
+- [x] superfície técnica mínima: wp-admin server-rendered + POST/nonce.
+- [x] sem REST/AJAX/SPA/settings/event bus/history/audit/migration/schema no primeiro slice.
+- [x] post types reais devem ser enumerados na baseline da SPEC-001 antes do código.
+- [x] rollback por deactivation sem destruição de postmeta.
+- [x] `BLOCKER_SPEC001` aberto = zero.
+
+## Gate final restante
+- [ ] T096 relatório final consolidado.
+- [ ] T097 decisão formal.
 
 ## Próximo passo
-**T095 — fechamento formal de unknowns e blockers da SPEC-001 candidata.**
+**T096 — Relatório Final da SPEC-000.**

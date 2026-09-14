@@ -1,41 +1,42 @@
 # Plano — SPEC-000 Inventário Profundo e Contratos
 
 ## Estado
-T000–T059 concluídos. Revisões T090–T094 concluídas. Restam T095–T097.
+T000–T059 + T090–T095 concluídos documentalmente. Restam T096 e T097.
 
-## Decisão de produto T094
-Artefato: `revisao-produto-t094.md`.
+## Candidato SPEC-001 após T095
+**Core mínimo + Summary narrativo** para Analista de Conhecimento.
 
-Candidato atual para SPEC-001 permanece:
+Campos canônicos iniciais:
+- `_bdc_es_objective`;
+- `_bdc_es_escalation`;
+- `_bdc_es_important`.
 
-**Core mínimo + Summary narrativo (`objective`, `escalation`, `important`)**.
+A decisão reutiliza dados GRE comprovados e evita migration/dual-write.
 
-Usuário primário: Analista de Conhecimento.
+## B-006 fechado conceitualmente
+Estratégia:
+`authorize -> validate all -> snapshot -> write only changes -> read-after-write -> compare -> success OU compensate -> reread -> safe failure/critical partial state`.
 
-Resultado: estruturar três informações operacionais do artigo sem tocar no conteúdo editorial.
+Sucesso é definido pelo estado relido, não pelo booleano isolado de `update_post_meta()`.
 
-## Sequência recomendada
-1. Summary narrativo.
-2. Classificação mínima — primeiro eixo recomendado: `knowledge_type`.
-3. Review mínimo; AI READY apenas quando seus pré-requisitos existirem.
-4. Content Extractor + Search post-level + Golden mínimo para o Resolvedor.
-5. item/deep-link, Search Knowledge, Analytics, IA e demais capacidades por evidência.
+## Blockers da SPEC-001
+Abertos: **zero**.
 
-## Regras de produto
-- não prometer valor de Search/Resolvedor no primeiro Summary slice;
-- não colocar os oito campos GRE no owner Summary;
-- não alterar a regra AI READY para caber no runtime incompleto;
-- não criar dashboard antes de pergunta de gestão real;
-- paridade preserva resultado/dado, não menus/layout/shortcodes históricos automaticamente;
-- Search permanece prioridade estratégica de consumo, mas exige B-001/Golden/security/benchmark.
+B-001/B-002/B-004/B-005/B-007 pertencem a outros slices. B-003 permanece para cutover/removal, não para desenvolvimento/homologação do novo Summary.
 
-## Sucesso SPEC-001 sem Analytics
-Homologação pode provar valor por conclusão de tarefa, integridade/read-after-write, segurança e feedback humano. B-004 não precisa ser reaberto.
+## Definition of Ready documental
+- usuário/problema/owner definidos;
+- storage definido;
+- auth `edit_post` por objeto;
+- POST + nonce + allowlist/sanitização/escaping;
+- consistência B-006 definida;
+- Matriz QA T093 definida;
+- zero write editorial;
+- sem schema/migration/Search/Analytics/IA;
+- rollback por deactivation preservando meta;
+- post types reais serão enumerados na baseline da SPEC-001 antes de código.
 
-## Próximo passo — T095
-Avaliar somente blockers e unknowns que afetam a SPEC-001 candidata. Blockers de Search/Analytics/queue/IA não podem virar NO-GO global.
-
-Classificação T095:
-`FECHAR_AGORA | NÃO_APLICÁVEL_A_SPEC001 | POSTERGAR_PARA_SLICE_CORRETO | BLOCKER_SPEC001`.
+## Próximo passo — T096
+Emitir relatório final consolidando a SPEC-000 e recomendação objetiva para o gate T097.
 
 Nenhum runtime antes de T097.

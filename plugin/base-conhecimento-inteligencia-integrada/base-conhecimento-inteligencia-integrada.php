@@ -21,10 +21,11 @@ define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
 /**
  * Build temporário de homologação da SPEC-001.
  *
- * IMPORTANTE: este marcador e as ferramentas de diagnóstico devem ser removidos
+ * IMPORTANTE: estes marcadores e as ferramentas de diagnóstico devem ser removidos
  * integralmente em T044/G-130 antes do package/release final.
  */
 define( 'BDC_KB_HOMOLOGATION_BUILD', true );
+define( 'BDC_KB_ENABLE_DIAGNOSTICS', true );
 
 require_once BDC_KB_DIR . 'includes/class-meta-contract.php';
 require_once BDC_KB_DIR . 'includes/class-summary-store.php';

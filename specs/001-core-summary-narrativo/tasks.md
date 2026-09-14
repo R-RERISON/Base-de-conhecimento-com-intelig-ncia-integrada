@@ -31,12 +31,25 @@
 ## S003 — Evidência
 
 - [x] T040 Testes unitários aplicáveis — PASS 15/15; `evidencia-unitaria-s003.md`.
-- [ ] T041 Integração WordPress G-001/G-020/G-070.
-- [ ] T042 Fault injection B-006 — unitário PASS; confirmação em WordPress real pendente.
+- [ ] T041 Integração WordPress G-001/G-020/G-070. **Harness versionado em `tests/integration/`; lint PASS; execução real permanece NOT_RUN por ausência de WordPress Test Suite + MySQL/MariaDB nesta sessão.**
+- [ ] T042 Fault injection B-006 — unitário PASS; harness com filtros reais `update_post_metadata`/`delete_post_metadata` pronto; execução WordPress real permanece NOT_RUN.
 - [ ] T043 Browser acceptance G-110.
 - [ ] T044 Lifecycle/package G-130 quando aplicável.
 - [ ] T045 Relatório de evidência e DoD.
 - [ ] T046 Atualizar CONTINUIDADE e decidir próximo gate.
+
+### Preparação T041/T042
+
+Artefato: `preparacao-integracao-s003.md`.
+
+Arquivos executáveis preparados:
+
+- `tests/integration/bootstrap.php`;
+- `tests/integration/phpunit.xml.dist`;
+- `tests/integration/test-spec001-summary-integration.php`;
+- `tests/integration/README.md`.
+
+**Regra:** harness existente ou lintado não é PASS de integração. T041/T042 só fecham após execução contra WordPress Core Test Suite real e banco efêmero com resultado versionado.
 
 ## Regra
 

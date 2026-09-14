@@ -26,9 +26,9 @@
 - [x] T026 Implementar superfície wp-admin server-rendered + PRG.
 - [x] T027 Implementar escaping/feedback/estados de erro.
 
-**Gate S002:** runtime implementado e PHP lint PASS.
+**Gate S002:** PASS.
 
-## S003 — Evidência
+## S003 — Evidência e fechamento
 
 - [x] T040 Testes unitários aplicáveis — PASS 15/15.
 - [x] T040A Instalação inicial/smoke em WordPress real — PASS.
@@ -42,20 +42,30 @@
 - [x] T043A Browser acceptance com fixture temporária/cleanup.
 - [x] T043B G-110 real — `dev.5` PASS; 2/2 humanos, 0 auto_fail, viewport mínimo 671x660, 0 resíduos.
 - [x] T043C Automatização de shell/lista/labels/feedback/PRG/persistência/browser/viewport.
-- [x] T044A Preparar package limpo `0.1.0-rc.1`: retirar integralmente instrumentos temporários, lint 5/5, scan de markers PASS e checksum gerado.
-- [ ] T044B Executar lifecycle G-130 no WordPress real com `0.1.0-rc.1`: substituir/ativar, confirmar ausência de diagnóstico, smoke funcional, desativar/reativar e confirmar preservação dos dados.
-- [ ] T045 Relatório final de evidência e DoD.
-- [ ] T046 Atualizar CONTINUIDADE e decidir encerramento da SPEC-001/próxima SPEC.
+- [x] T044A Preparar package limpo `0.1.0-rc.1`: retirar integralmente instrumentos temporários, lint e scan de markers PASS, checksum gerado.
+- [x] T044B Lifecycle G-130 em WordPress real — operador confirmou substituição/ativação do RC, ausência de instrumentos de diagnóstico, smoke funcional, leitura de dados existentes, desativação/reativação e preservação dos dados.
+- [x] T045 Consolidar relatório final de evidência e Definition of Done.
+- [x] T046 Encerrar SPEC-001 e autorizar apenas o planejamento/DoR da próxima SPEC canônica.
 
-## Estado dos gates
+**Gate S003:** PASS.
 
-- G-001: PASS.
-- G-020: PASS.
-- G-070: PASS.
-- G-110: PASS.
-- B-006: PASS.
-- G-130: **PREPARADO / PENDENTE execução real do RC**.
+## Estado final dos gates
 
-## Regra
+- G-001: **PASS**.
+- G-020: **PASS**.
+- G-070: **PASS**.
+- G-110: **PASS**.
+- B-006: **PASS**.
+- G-130: **PASS**.
 
-Não antecipar Classificação, Review, Search, Analytics, IA, queue, schema, REST/AJAX/SPA ou cutover. O release candidate não é release produtivo até G-130 e DoD finais passarem.
+## Baseline congelada
+
+- Package homologado: `0.1.0-rc.1`.
+- SHA-256: `c395e65f872f56f3930f0a3f14ec192c03bb6a52a5623360fa15bf7e0c15e7fb`.
+- Runtime de produto: seis arquivos, sem instrumentos temporários de homologação.
+
+## Estado da SPEC
+
+**SPEC-001 — CONCLUÍDA para desenvolvimento/homologação.**
+
+Isto não constitui autorização de produção/cutover. B-003/preflight, single-writer e coexistência com GRE/KB2Ops/ASI retornam antes de qualquer mudança produtiva.

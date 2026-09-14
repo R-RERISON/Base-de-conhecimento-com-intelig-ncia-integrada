@@ -1,19 +1,14 @@
-# SPEC-003 — Knowledge Studio: Revisão e Classificação
+# PLACEHOLDER HISTÓRICO — antiga SPEC-003 Knowledge Studio
 
-**Status:** Planejada  
-**Pré-requisito:** SPEC-002 concluída.
+**Status:** SUPERSEDIDA/SPLIT — NÃO EXECUTAR COMO PLANO ÚNICO  
+**Motivo:** o roadmap foi rebaseado após a conclusão real da SPEC-001.
 
-## Problema
-A plataforma precisa governar conhecimento ao redor do post sem assumir sua autoria editorial.
+O plano antigo agrupava revisão, classificação, qualidade, estados de conhecimento e AI READY em uma única SPEC e dependia de uma antiga SPEC-002 já supersedida.
 
-## Resultado esperado
-Revisão, classificação, qualidade, estados de conhecimento e AI READY integrados ao shell visual.
+A partir do novo baseline:
 
-## WordPress-first
-Avaliar Taxonomy API para conceitos reutilizáveis e Post Meta para estados/atributos específicos.
+- `SPEC-002 — Classificação de Conhecimento` é a próxima SPEC canônica;
+- Review/Governança será uma SPEC posterior independente;
+- AI READY continuará derivado de decisões canônicas e não será implementado por implicação.
 
-## Princípio de negação
-Não transportar automaticamente todas as metas atuais do KB2Ops; cada campo deve provar necessidade e tipo de armazenamento.
-
-## Gate
-Selecionar post → revisar → classificar → aprovar → refletir estado, sem editar/publicar conteúdo Elementor.
+Este arquivo permanece apenas para rastreabilidade histórica.

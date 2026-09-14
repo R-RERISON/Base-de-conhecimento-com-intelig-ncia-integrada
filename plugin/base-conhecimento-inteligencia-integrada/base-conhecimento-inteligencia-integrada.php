@@ -24,6 +24,7 @@ require_once BDC_KB_DIR . 'includes/class-admin-page.php';
 
 if ( defined( 'BDC_KB_ENABLE_DIAGNOSTICS' ) && true === BDC_KB_ENABLE_DIAGNOSTICS ) {
 	require_once BDC_KB_DIR . 'includes/class-diagnostics-runner.php';
+	require_once BDC_KB_DIR . 'includes/class-browser-acceptance.php';
 }
 
 require_once BDC_KB_DIR . 'includes/class-plugin.php';

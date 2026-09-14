@@ -1,16 +1,16 @@
 # Matriz de Evidência — SPEC-001
 
-> Estado atual: **runtime S002 implementado; suíte unitária inicial PASS 15/15; gates de integração WordPress/browser permanecem NOT_RUN e não são tratados como PASS.**
+> Estado atual: **runtime S002 implementado; suíte unitária inicial PASS 15/15; harness de integração T041/T042 versionado e lintado; gates WordPress/browser permanecem NOT_RUN e não são tratados como PASS.**
 
 | Gate | Aplicabilidade | Evidência exigida | Estado atual | Gate de saída |
 |---|---|---|---|---|
 | T040 Unitário determinístico | MUST | contrato, validação, diff, no-op e máquina B-006 isolada | PASS — 15/15 em PHP 8.4.23 | pré-requisito de integração |
-| G-001 Editorial/Elementor | MUST | before/after de `_elementor_data`, `post_content`, `post_title`; GET sem write; browser smoke | NOT_RUN | Homologação |
-| G-020 Summary | MUST | read/save/omit/empty/delete/no-op/allowlist/limite/sanitização/read-after-write em WordPress real | NOT_RUN | Homologação |
-| G-070 Segurança/scope | MUST | capability, nonce, GET, IDOR, tipo inválido, mass assignment, XSS, escaping | NOT_RUN | Homologação |
+| G-001 Editorial/Elementor | MUST | before/after de `_elementor_data`, `post_content`, `post_title`; GET sem write; browser smoke | NOT_RUN — harness pronto | Homologação |
+| G-020 Summary | MUST | read/save/omit/empty/delete/no-op/allowlist/limite/sanitização/read-after-write em WordPress real | NOT_RUN — harness pronto | Homologação |
+| G-070 Segurança/scope | MUST | capability, nonce, GET, IDOR, tipo inválido, mass assignment, XSS, escaping | NOT_RUN — harness pronto | Homologação |
 | G-110 UI/UX | MUST | browser/manual: integração wp-admin, feedback, labels, foco, teclado, viewport, cor | NOT_RUN | Homologação |
 | G-130 Lifecycle/release | CONDICIONAL/MUST quando houver pacote | activation/deactivation/uninstall, package/checksum; upgrade N/A na primeira versão | NOT_RUN | Release candidate |
-| B-006 Write composto | MUST | fault injection determinístico + confirmação em integração WordPress | NOT_RUN — unit fault injection PASS, integração pendente | Homologação |
+| B-006 Write composto | MUST | fault injection determinístico + confirmação em integração WordPress | NOT_RUN — unit fault injection PASS; harness WordPress pronto | Homologação |
 | Golden Queries | N/A | Search fora de escopo | N/A — Search não existe na SPEC | — |
 | IA/custo | N/A | IA fora de escopo | N/A — sem chamada externa | — |
 | Analytics/privacy logging | N/A | query logging fora de escopo | N/A — nenhuma telemetria de query/identidade | — |
@@ -22,6 +22,23 @@ Arquivo: `tests/unit/spec001-summary-store.php`.
 Resultado versionado em `evidencia-unitaria-s003.md`: 15 testes aprovados, 0 falhas.
 
 A suíte cobre allowlist, limite, empty/delete, NO_CHANGE, update parcial, post type, capability e falhas injetadas em write/compensação. Ela não substitui as primitives reais do WordPress.
+
+## Preparação de integração T041/T042
+
+Arquivos versionados:
+
+- `tests/integration/bootstrap.php`;
+- `tests/integration/phpunit.xml.dist`;
+- `tests/integration/test-spec001-summary-integration.php`;
+- `tests/integration/README.md`.
+
+Artefato de estado: `preparacao-integracao-s003.md`.
+
+PHP lint do bootstrap e da suíte: **PASS** em PHP 8.4.23.
+
+A suíte usa o WordPress Core Test Suite e as primitives reais de Posts, Metadata, Users/Capabilities e Nonces. O fault injection B-006 usa os filtros reais `update_post_metadata` e `delete_post_metadata`.
+
+**Execução:** `NOT_RUN`. Esta sessão não possui WordPress Core Test Suite + MySQL/MariaDB operacional. A ausência de ambiente não é convertida em PASS.
 
 ## Casos mínimos G-001
 
@@ -79,8 +96,13 @@ Já aprovados unitariamente:
 - mistura delete/update;
 - no-op sem write.
 
-Pendente: repetir/confirmar os cenários aplicáveis com WordPress Metadata API real antes do gate de Homologação.
+Preparados no harness WordPress real:
+
+- falha no segundo write -> compensação completa -> `FAIL_SAFE`;
+- falha no segundo write + falha na primeira compensação -> `PARTIAL_FAILURE_CRITICAL`.
+
+Pendente: executar/confirmar em WordPress Core Test Suite com banco real antes do gate de Homologação.
 
 ## Regra de gate
 
-`FAIL`, `NOT_RUN`, `NOT_CONFIGURED` ou `STALE` em gate ativo bloqueiam Homologação/Concluída/Release conforme a coluna de saída. PASS unitário não promove automaticamente um gate de integração.
+`FAIL`, `NOT_RUN`, `NOT_CONFIGURED` ou `STALE` em gate ativo bloqueiam Homologação/Concluída/Release conforme a coluna de saída. PASS unitário ou lint de harness não promovem automaticamente um gate de integração.

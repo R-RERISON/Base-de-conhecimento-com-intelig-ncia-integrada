@@ -21,10 +21,10 @@ ANTES DE QUALQUER ALTERAÇÃO
 PROJETO
 - Repositório: R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
 - Branch: main
-- HEAD confirmado antes do bloco T091: 875be15d50425b71903568e3cac153dd6a67f798
-- O commit que contém esta versão representa o fechamento documental de T091; confirme o SHA atual antes da próxima escrita.
-- SPEC ativa: SPEC-000 — Inventário Profundo e Contratos dos Projetos de Referência
-- Estado: T000–T059 + T090 + T091 concluídos documentalmente; nenhum runtime novo.
+- HEAD confirmado antes do bloco T092: 0e9feabc8607f6bb599e8c6cb0621599e1896416
+- O commit que contém esta versão representa o fechamento documental de T092; confirme o SHA atual antes da próxima escrita.
+- SPEC ativa: SPEC-000 — Inventário Profundo e Contratos dos Projetos de Referência.
+- Estado: T000–T059 + T090 + T091 + T092 concluídos documentalmente; nenhum runtime novo.
 
 BASELINES FIXADAS
 - ASI 4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1
@@ -34,12 +34,13 @@ BASELINES FIXADAS
 ARTEFATOS CENTRAIS
 - matriz-paridade-futura.md — arquitetura final T059.
 - revisao-wordpress-t090.md — WordPress-first.
-- revisao-simplicidade-t091.md — princípio de negação/simplificação.
-- catalogo-testes-regressao.md
-- matriz-ia-vetor.md
-- infraestrutura-propria-minima.md
-- riscos-e-drifts.md
-- research.md
+- revisao-simplicidade-t091.md — princípio de negação.
+- revisao-seguranca-t092.md — threat model e condições NO-GO.
+- catalogo-testes-regressao.md — gates e Golden.
+- matriz-ia-vetor.md.
+- infraestrutura-propria-minima.md.
+- riscos-e-drifts.md.
+- research.md.
 
 INVARIANTES
 - WordPress-first + princípio de negação.
@@ -68,52 +69,84 @@ Status: PASS, zero bloqueantes.
 - Summary/Review -> Metadata.
 - Classificação -> Taxonomy/Metadata.
 - Search Knowledge/Golden -> WordPress-first.
-- Site Health -> health checks.
+- Site Health para health checks reais.
 - admin-post baseline; REST sem consumidor negado.
 - WP-Cron é trigger, não queue.
 - Search Retrieval Projection própria continua justificada.
 - não duplicar bounded history + meta revisions.
 - taxonomias internas não ganham archive/rewrite público automaticamente.
-- provider endpoint configurável precisa revisão SSRF/allowlist.
 
 T091 — SIMPLICIDADE
-Arquivo: revisao-simplicidade-t091.md.
 Status: PASS, zero bloqueantes.
-
-REGRA PRINCIPAL
-- primeira SPEC futura não constrói plataforma completa;
-- infraestrutura só nasce quando o próprio vertical slice consome.
-
-RECOMENDAÇÃO PROVISÓRIA DE SPEC-001
-- Core mínimo + Summary narrativo (objective/escalation/important), sujeito a T094/T095/T097.
-- não incluir Review/Classificação/Search/IA no mesmo slice sem necessidade comprovada.
-
-SIMPLIFICAÇÕES
-- Content Extractor só junto do primeiro consumidor Search/IA/qualidade.
-- DS incremental por telas reais.
-- Settings somente quando consumidos.
+- primeira SPEC futura não constrói plataforma completa.
+- infraestrutura só nasce quando o vertical slice consome.
+- candidato provisório SPEC-001: Core mínimo + Summary narrativo (`objective`, `escalation`, `important`), sujeito a T094/T095/T097.
+- Content Extractor só junto do primeiro consumidor.
+- DS incremental.
+- Settings somente se consumidos.
 - Review em slice próprio.
 - Classificação por eixos/slices.
-- Site Health somente para capacidades existentes.
 - Search post-level antes de item/deep-link quando suficiente.
-- Search Knowledge somente quando ranker/Golden comprovar necessidade.
-- Golden obrigatório para Search, mas UI CRUD completa não é requisito inicial.
-- IA P1 somente após owner estável; adapter mínimo do primeiro provider.
+- Search Knowledge somente quando Golden/ranker comprovar necessidade.
+- IA P1 após owner estável; sem abstraction multi-provider antecipada.
+- descartados no baseline: event bus, repository genérico, service container/DI, cache service, Operations Center, migration orchestrator, adapter framework, provider factory antecipada.
 
-DESCARTADO COMO ABSTRAÇÃO ANTECIPADA
-- event bus próprio.
-- repository layer genérico.
-- service container/DI genérico.
-- cache service genérico.
-- Operations Center genérico.
-- migration orchestrator genérico.
-- adapter framework de compatibilidade.
-- provider factory multi-vendor sem segundo caso.
+T092 — SEGURANÇA
+Arquivo: revisao-seguranca-t092.md.
+Status: PASS de arquitetura com endurecimentos obrigatórios e zero blockers globais.
+
+REGRAS CENTRAIS
+- capability deve ser verificada no handler e no objeto.
+- nonce não substitui autenticação/autorização e não é exactly-once.
+- mutações usam POST; GET de leitura é side-effect free.
+- `post_id`, scope e estado vindos do cliente são não confiáveis e revalidados server-side.
+- mass assignment é NO-GO; usar allowlist e validação/sanitização por campo.
+- output usa escaping contextual e tardio.
+- projection/index/cache/vector nunca autoriza visibilidade; Search revalida WordPress canônico.
+- taxonomias internas começam fail-closed para exposição pública.
+- aliases/shortcodes continuam sob B-003.
+- provider endpoint arbitrário é NO-GO; URL variável exige HTTPS, host allowlist/validação, redirects controlados e HTTP API segura.
+- secrets não entram em repo/log/export/prompt.
+- data egress/IA exigem finalidade/campos/provider/capability explícitos.
+- prompt injection não concede tool/capability; agentes futuros read-only por default.
+- query text/IP/UA/identity não são coletados por default; B-004 continua.
+- activation/uninstall não destroem dados; purge é ação separada, autorizada e deliberada.
+- replay/duplicate submit usa expected-state/hash/idempotência de domínio quando necessário.
+
+NO-GO T092
+- mutação via GET.
+- nonce sem capability.
+- capability apenas no menu.
+- objeto controlado pelo cliente sem autorização por objeto.
+- mass assignment.
+- output não escapado.
+- SQL dinâmico inseguro.
+- projection usada como authority de acesso.
+- endpoint HTTP arbitrário/SSRF.
+- secrets em logs/exports/repo/prompt.
+- telemetria detalhada sem B-004.
+- purge automático em activation/uninstall default.
+- IA/tool persistindo owner canônico sem humano/handler autorizado.
+
+CANDIDATO DE PRIMEIRO SLICE — THREAT MODEL
+- abrir Summary: GET, post_id validado, capability `edit_post` no objeto, leitura sem side effect, escaping.
+- salvar Summary: POST + nonce + `edit_post` no objeto; allowlist objective/escalation/important; validação/sanitização/limits; Metadata API; B-006; read-after-write; feedback baseado no estado relido.
+- não precisa tabela/REST/AJAX/Search/provider/telemetria.
+
+BLOCKERS CONTEXTUAIS
+- B-001 Search/RAG/embedding.
+- B-002 profiling/cutover classificatório.
+- B-003 retirada plugins/aliases.
+- B-004 Analytics/query logging.
+- B-005 deep-link item.
+- B-006 write composto.
+- B-007 durable queue/async.
 
 CONTINUA POSTERGADO
 - Analytics/query logging.
 - durable queue.
 - item/deep-link até necessidade comprovada.
+- Search Knowledge até necessidade observada.
 - RAG.
 - embeddings/vector store.
 - semantic/hybrid/rerank.
@@ -121,16 +154,6 @@ CONTINUA POSTERGADO
 - Foundry File Search como core.
 - Word Cloud.
 - REST/SPA sem consumidor.
-
-GARANTIAS QUE NÃO PODEM SER REMOVIDAS POR SIMPLICIDADE
-- capability + nonce + sanitização + escaping.
-- read-after-write.
-- rollback/coexistência quando aplicável.
-- B-006 em write composto.
-- B-001 quando extractor for crítico.
-- Golden/benchmark/security quando Search nascer.
-- DS/a11y para telas reais.
-- preservação de dados canônicos.
 
 O QUE NÃO DEVE SER FEITO AGORA
 - não criar runtime/bootstrap.
@@ -144,32 +167,32 @@ O QUE NÃO DEVE SER FEITO AGORA
 - não criar agentes/tools.
 - não iniciar SPEC-001.
 
-PRÓXIMO PASSO EXATO — T092
-Executar Revisão de Segurança.
+PRÓXIMO PASSO EXATO — T093
+Executar Revisão de QA/Regressão.
 
-T092 DEVE
-1. construir threat model das superfícies previstas.
-2. revisar capability model por owner e objeto.
-3. revisar nonce, método HTTP e CSRF.
-4. revisar sanitização, validação e escaping.
-5. revisar IDOR/scope de posts e Search detail.
-6. revisar taxonomias internas e exposição pública.
-7. revisar shortcodes/aliases/compatibilidade legada.
-8. revisar provider endpoint/SSRF/host allowlist/secrets/data egress.
-9. revisar prompt injection e tool abuse futuros sem criar agentes.
-10. revisar migration/purge/ações destrutivas.
-11. classificar findings como PASS | ENDURECER | POSTERGAR | BLOQUEAR.
+T093 DEVE
+1. reler catalogo-testes-regressao.md e revisões T090–T092.
+2. transformar contratos em matriz de evidência executável por slice.
+3. definir pacote mínimo de testes do candidato Core+Summary.
+4. mapear testes unitários, integração WordPress, browser/manual, lifecycle/package e rollback.
+5. converter NO-GO T092 em testes negativos obrigatórios.
+6. definir estados PASS | FAIL | NOT_TESTED | NOT_APPLICABLE com regras claras.
+7. impedir suíte vazia/ausente/stale de virar PASS.
+8. preservar Golden como gate apenas quando Search for afetada.
+9. manter benchmark somente para caminhos críticos aplicáveis; não inventar números.
+10. definir evidência de código/pacote testado igual ao publicado.
+11. classificar findings como PASS | COBRIR | POSTERGAR | BLOQUEAR.
 12. não criar runtime.
 
-CRITÉRIO PARA FECHAR T092
-- threat model cobre todas as superfícies relevantes.
-- cada mutação tem modelo de autorização/CSRF.
-- dados/saída/egress têm regras explícitas.
-- findings bloqueantes têm tratamento ou são encaminhados objetivamente a T095/T097.
-- nenhuma segurança depende de capacidade ainda inexistente.
+CRITÉRIO PARA FECHAR T093
+- candidato de primeiro slice possui plano de teste completo e pequeno.
+- controles T092 possuem testes negativos correspondentes quando aplicáveis.
+- cada gate futuro tem evidência mínima ou estado N/A/POSTERGADO explícito.
+- nenhum NOT_TESTED é interpretado como PASS.
+- findings bloqueantes têm tratamento ou encaminhamento objetivo a T095/T097.
 
 ORDEM RESTANTE
-T092 -> T093 -> T094 -> T095 -> T096 -> T097.
+T093 -> T094 -> T095 -> T096 -> T097.
 
 REGRA DE CONTINUIDADE
 Repositório/Constituição/Manifesto/SPEC prevalecem sobre memória de chat.
@@ -178,12 +201,12 @@ Repositório/Constituição/Manifesto/SPEC prevalecem sobre memória de chat.
 ## Estado resumido
 
 - SPEC-000 ativa.
-- HEAD antes de T091: `875be15d50425b71903568e3cac153dd6a67f798`.
-- T050–T059 + T090 + T091 concluídos documentalmente.
-- Próximo: T092.
+- HEAD antes de T092: `0e9feabc8607f6bb599e8c6cb0621599e1896416`.
+- T050–T059 + T090–T092 concluídos documentalmente.
+- Próximo: T093.
 - Runtime novo: inexistente.
 - SPEC-001: bloqueada até T097.
 
 ## Regra de atualização
 
-Atualizar este arquivo ao concluir T092. Não acumular estados contraditórios.
+Atualizar este arquivo ao concluir T093. Não acumular estados contraditórios.

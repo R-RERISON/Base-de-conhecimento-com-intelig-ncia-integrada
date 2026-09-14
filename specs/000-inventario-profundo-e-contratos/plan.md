@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Ler, decompor, cruzar e revisar os projetos de referência até que a primeira SPEC de runtime possa ser escrita sem adivinhação estrutural nem complexidade antecipada.
+Ler, decompor, cruzar e revisar os projetos de referência até que a primeira SPEC de runtime possa ser escrita sem adivinhação estrutural, complexidade antecipada ou lacuna de segurança conhecida.
 
 ## Estado
 
@@ -10,7 +10,7 @@ Ler, decompor, cruzar e revisar os projetos de referência até que a primeira S
 - [x] T050–T059 consolidação arquitetural;
 - [x] T090 revisão WordPress-first;
 - [x] T091 revisão de simplicidade;
-- [ ] T092 segurança;
+- [x] T092 revisão de segurança;
 - [ ] T093 QA/regressão;
 - [ ] T094 produto/conhecimento;
 - [ ] T095 unknowns/blockers por slice;
@@ -19,60 +19,48 @@ Ler, decompor, cruzar e revisar os projetos de referência até que a primeira S
 
 ## Arquitetura consolidada
 
-`matriz-paridade-futura.md` permanece a visão arquitetural T059. As revisões T090/T091 são overlays obrigatórios de execução.
+`matriz-paridade-futura.md` permanece a visão arquitetural T059. T090–T092 são overlays obrigatórios para execução.
 
-T090 confirmou WordPress-first e manteve apenas uma exceção persistente própria: Search Retrieval Projection reconstruível.
+T090 confirmou WordPress-first; T091 reduziu a execução a vertical slices mínimos; T092 tornou segurança fail-closed e contextual por superfície.
 
-T091 reduziu a estratégia de implementação:
+## Candidato de primeiro slice
 
-- primeira SPEC não é plataforma completa;
-- Core nasce apenas na medida necessária ao primeiro fluxo;
-- Summary narrativo é o candidato mais simples ao primeiro vertical slice;
-- Review/Classificação entram em slices separados;
-- Content Extractor nasce junto do primeiro consumidor real;
-- Search customizada é posterior;
-- post-level Search precede item/deep-link quando suficiente;
-- Search Knowledge só nasce ao corrigir necessidade observada;
-- Golden permanece gate de Search, sem obrigar CRUD visual sofisticado inicialmente;
-- IA/provider/RAG/vector/agentes permanecem ausentes até casos reais.
+Continua provisoriamente:
 
-## Complexidades descartadas no baseline por T091
+`Core mínimo + Summary narrativo (objective/escalation/important)`
 
-- event bus próprio;
-- repository layer genérico sobre APIs WordPress;
-- service container/DI genérico;
-- cache service genérico;
-- Operations Center genérico;
-- migration orchestrator genérico;
-- provider factory multi-vendor sem segundo caso;
-- adapter framework de compatibilidade;
-- SPA/REST sem consumidor.
+Fluxo:
 
-## Regra de vertical slice
+`abrir tela -> validar objeto/capability -> ler meta -> editar -> POST + nonce -> allowlist/validar/sanitizar -> persistir -> read-after-write -> escapar saída -> feedback`
 
-Cada futura SPEC deve começar pela menor jornada completa e homologável. Infraestrutura compartilhada só entra quando o próprio slice a consome.
+Esse slice não precisa de tabela, REST, AJAX, Search, extractor, taxonomy, Analytics, queue, Foundry ou IA.
 
-Exemplo candidato para SPEC-001, sujeito a T094/T095/T097:
+## Regras de segurança T092
 
-`abrir tela Summary -> ler objective/escalation/important -> editar -> validar capability/nonce -> persistir -> read-after-write -> feedback -> rollback conhecido`.
+- capability é verificada no handler e no objeto;
+- nonce protege CSRF, não autorização;
+- mutação via GET é NO-GO;
+- IDs e estados enviados pelo cliente são não confiáveis;
+- mass assignment é NO-GO;
+- escaping é contextual e tardio;
+- projection/cache/vector nunca autorizam acesso;
+- HTTP externo variável exige política SSRF/allowlist e API segura;
+- secrets nunca entram em logs/exports/repositório/prompt;
+- Analytics/identidade/query logging continuam negados sem B-004;
+- activation/uninstall não fazem limpeza destrutiva por default.
 
-## Próximo passo — T092
+## Próximo passo — T093
 
-Executar revisão de Segurança sobre T059 + T090 + T091.
+QA/Regressão deve:
 
-Foco:
-
-1. capability model;
-2. nonce/CSRF/método HTTP;
-3. sanitização/escaping;
-4. IDOR/scope;
-5. taxonomias internas;
-6. shortcodes/aliases;
-7. SSRF/provider endpoint/secrets;
-8. data egress e prompt injection futuro;
-9. Search scope/detail fail-closed;
-10. ações destrutivas/migração/purge.
+1. revisar `catalogo-testes-regressao.md` contra T090–T092;
+2. definir evidência mínima do candidato Summary;
+3. mapear testes unitários, integração WordPress, browser/manual, package e rollback;
+4. converter os NO-GO de segurança em testes negativos;
+5. preservar Golden como gate somente quando Search existir;
+6. impedir PASS vazio, `NOT_TESTED` disfarçado ou evidência stale;
+7. não criar runtime.
 
 ## Gate
 
-Nenhuma SPEC de runtime começa antes de T097. Nenhuma simplificação T091 remove garantias de segurança, integridade, regressão ou rollback.
+Nenhuma SPEC de runtime começa antes de T097. T092 não autorizou código; apenas tornou explícitas condições de segurança para cada futura capacidade.

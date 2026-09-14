@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Ler e decompor os três repositórios de referência em contratos verificáveis antes de qualquer runtime novo.
+Ler, decompor e cruzar os três repositórios de referência em contratos verificáveis antes de qualquer runtime novo.
 
 ## Agentes convocados
 
@@ -88,18 +88,39 @@ Aplicar para cada item:
 
 `MANTER | REDESENHAR | SUBSTITUIR POR WORDPRESS | EVOLUIR COM IA/VETOR | DESCARTAR | AINDA NÃO SABEMOS`.
 
+### Fase G — Cruzamento
+
+Depois dos inventários individuais:
+
+1. definir ownership lógico dos dados;
+2. identificar duplicação versus complementaridade;
+3. consolidar persistência e integrações por conceito futuro;
+4. fechar drifts/compatibilidade;
+5. aplicar WordPress-first;
+6. justificar infraestrutura própria mínima;
+7. congelar regressões/gates;
+8. priorizar IA/vetor;
+9. fechar paridade futura.
+
 ## Artefatos de saída
 
 - `inventario-kb2ops.md`;
 - `inventario-asi.md`;
 - `inventario-resumo-executivo.md`;
+- `mapa-ownership-dados.md`;
+- `matriz-sobreposicoes.md`;
 - `catalogo-persistencia.md`;
 - `catalogo-integracoes.md`;
 - `catalogo-testes-regressao.md`;
-- `matriz-sobreposicoes.md`;
 - `matriz-paridade-futura.md`;
 - `riscos-e-drifts.md`;
 - ADRs necessárias.
+
+## Estado atual da Fase G
+
+- T052 ownership: concluída.
+- T053 sobreposição: concluída.
+- Próximo bloco: T050/T051 — consolidar persistência e integrações usando os dois artefatos anteriores.
 
 ## Gate de conclusão
 

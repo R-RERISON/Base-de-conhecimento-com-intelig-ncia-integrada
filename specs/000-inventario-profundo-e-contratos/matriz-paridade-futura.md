@@ -1,6 +1,6 @@
 # Matriz de Paridade Futura — SPEC-000
 
-> Matriz incremental após inventário das três referências. Define comportamentos que devem sobreviver, não schema final nem desenho de classes. O cruzamento T050–T059 ainda precisa consolidar ownership, sobreposição e primitives.
+> Matriz incremental após inventário das três referências e T052/T053. Define comportamentos que devem sobreviver e owners funcionais já resolvidos. **Não define schema final nem encerra T059.** T050/T051/T054/T056/T057/T055/T058 ainda precisam ser concluídas.
 
 ## Legenda
 
@@ -9,7 +9,7 @@
 - **SUBSTITUIR POR WORDPRESS** — preferir primitive nativa.
 - **EVOLUIR COM IA/VETOR** — opcional/degradável/governado.
 - **DESCARTAR** — não levar ao greenfield.
-- **AINDA NÃO SABEMOS** — depende do cruzamento/medição.
+- **AINDA NÃO SABEMOS** — depende de primitive/medição/cutover ainda não fechado.
 
 ## 1. ASI -> produto futuro
 
@@ -21,14 +21,14 @@
 | ranking explicável | SIM | MANTER | sinais/scores observáveis |
 | índice por post | PROVÁVEL | REDESENHAR | extractor canônico |
 | índice de trechos | SIM | REDESENHAR | identity/deep link |
-| parser direto `post_content` | NÃO | DESCARTAR | extractor único |
-| vocabulary | SIM | MANTER | storage T056/T057 |
-| bindings | SIM | MANTER | storage T056/T057 |
+| parser direto `post_content` | NÃO | DESCARTAR | Content Extraction único |
+| vocabulary | SIM | MANTER | owner Search Knowledge; storage T056/T057 |
+| bindings | SIM | MANTER | owner Search Knowledge; storage T056/T057 |
 | relevance rules | SIM | MANTER | simulation + audit |
 | diagnóstico read-only | SIM | MANTER | sem side effect |
 | suggestions evidence-backed | SIM | MANTER | confidence/effect/risk |
 | simulation com ranker real | SIM | MANTER | stale-state guard |
-| Apply humano | SIM | MANTER | capability + nonce |
+| Apply humano | SIM | MANTER | capability + nonce; separado de review approval |
 | durable queue | CONDICIONAL | REDESENHAR | workload/durabilidade |
 | migrations 4.x/WPUI | NÃO | DESCARTAR | greenfield |
 | post-install state machine completa | NÃO | REDESENHAR | mínimo necessário |
@@ -36,7 +36,7 @@
 | Interactions | CONDICIONAL | MANTER/REDESENHAR | HMAC/idempotência |
 | Outcomes | SIM se analytics | MANTER | journey semantic |
 | `quality_daily` | NÃO inicialmente | DESCARTAR | benchmark |
-| Golden Queries | SIM | MANTER | NO-GO blockers |
+| Golden Queries | SIM | MANTER | owner Search Quality; NO-GO blockers |
 | Quality Diagnostics | SIM | SUBSTITUIR POR WORDPRESS + checks | Site Health |
 | Search Intelligence | PROVÁVEL | REDESENHAR | perguntas reais + bounds |
 | GAC no core | NÃO | DESCARTAR | adapter opcional |
@@ -70,13 +70,19 @@
 | coverage metrics | SIM | MANTER | workload bounded |
 | scan ilimitado | NÃO | REDESENHAR | benchmark |
 | shortcode current-post-only | COMPAT | MANTER/REDESENHAR | consumer preflight |
-| side panel automático | AINDA NÃO SABEMOS | REDESENHAR/decidir | T053 |
+| side panel automático | AINDA NÃO SABEMOS | REDESENHAR/decidir | product SPEC futura |
 | `Objective_Provider` bridge | NÃO | DESCARTAR | serviço interno |
 | evento de mudança | SIM | MANTER intenção/REDESENHAR | confirmed-write event |
 | tabela REST AJAX cron próprios | NÃO no baseline | DESCARTAR | só com requisito novo |
 | metadata revisions off | AINDA NÃO SABEMOS | decidir T056/T095 | histórico |
 | WP real integration tests | SIM | MANTER | release gate |
 | deterministic ZIP/SHA | SIM | MANTER | release |
+
+### Ownership dos oito campos após T052
+
+- `objective`, `escalation`, `important` -> **Resumo Executivo**;
+- `responsible_team`, `catalog_item`, `affected_service`, `systems_involved`, `target_audience` -> **Classificação de Conhecimento**;
+- a UI de Resumo pode compor todos os oito sem criar uma segunda fonte da verdade.
 
 ## 3. KB2Ops -> produto futuro
 
@@ -88,24 +94,24 @@
 | rendered fallback | SIM controlado | MANTER/REDESENHAR | custom-widget coverage |
 | allowlist `table/tablepress` | SIM princípio | MANTER | shortcode safety |
 | multiple independent parsers | NÃO | DESCARTAR | one extractor contract |
-| review states | SIM | MANTER | state tests |
-| knowledge type | SIM | MANTER | storage T052/T056 |
-| technologies/service/audience | SIM valores | REDESENHAR storage | ownership/taxonomy |
-| keywords/versions | PROVÁVEL | MANTER valor/REDESENHAR | consumers |
+| review states | SIM | MANTER | owner Revisão/Governança |
+| knowledge type | SIM | MANTER | owner Classificação; primitive T056 |
+| technologies/service/audience | SIM valores | REDESENHAR storage | owner Classificação já resolvido |
+| keywords/versions | PROVÁVEL | MANTER valor/REDESENHAR | owner Classificação |
 | review notes/reviewer/time | SIM | MANTER via WP | Meta API |
 | history bounded | SIM intenção | REDESENHAR | explicit contract/history |
-| `include_ai` humano | SIM | MANTER | AI READY tests |
+| `include_ai` humano | SIM | MANTER | owner Revisão/Governança |
 | AI READY | SIM | MANTER/REDESENHAR | single canonical rule |
 | pre-analysis local | SIM | MANTER | deterministic/no provider |
-| Summary_Bridge | NÃO no unificado | DESCARTAR | single Summary Store |
+| Summary_Bridge | NÃO no unificado | DESCARTAR | single owners internos |
 | Search `WP_Query/meta LIKE` | NÃO | REDESENHAR | ASI-inspired engine |
 | token-coverage ranker | NÃO final | DESCARTAR | Golden |
 | Search scope/visibility | SIM | MANTER | bypass tests |
 | public portal/shortcode | PROVÁVEL | MANTER/REDESENHAR | product/compat |
-| query analytics option | NÃO literal | REDESENHAR | privacy/retention |
-| view count postmeta | NÃO literal | REDESENHAR | analytics model |
+| query analytics option | NÃO literal | REDESENHAR | owner Analytics; privacy/retention |
+| view count postmeta | NÃO literal | REDESENHAR | owner Analytics |
 | reports/questions de produto | SIM | MANTER comportamento | bounds/privacy |
-| Design System principles | SIM | MANTER/REDESENHAR | a11y/responsive |
+| Design System principles | SIM | MANTER/REDESENHAR | owner UI/DS único |
 | CSS values/namespace exatos | NÃO | REDESENHAR | DS unificado |
 | server rendering | SIM baseline | MANTER | JS only when needed |
 | SPA/framework externo | NÃO | DESCARTAR | negation principle |
@@ -115,14 +121,50 @@
 | deterministic build | SIM | MANTER | package tests |
 | release report sem executable suite | NÃO suficiente | REDESENHAR | tests versionados |
 
-## 4. Matriz WordPress-first consolidada preliminar
+## 4. Ownership funcional consolidado — T052
+
+| Família de dados | Owner futuro |
+|---|---|
+| post/título/conteúdo/Elementor | WordPress/Elementor |
+| objetivo/escalonamento/importante | Resumo Executivo |
+| team/catalog/audience/services/systems/technologies/type/keywords/versions | Classificação de Conhecimento |
+| review state/notas/revisor/data/include AI/histórico | Revisão e Governança |
+| texto/estrutura extraídos | Content Extraction — projection read-only |
+| vocabulary/bindings/rules | Search Knowledge |
+| índices lexical/item/vector | Search Indexing — projections |
+| Golden Queries | Search Quality |
+| events/interactions/outcomes | Analytics / Search Intelligence |
+| settings | Core Configuration |
+| queue/migração | Operations — transitório/operacional |
+| sugestões IA | AI Assist — não canônico |
+
+**Importante:** ownership não decide storage. Audience é um conceito único; service/affected_service e technologies/systems continuam distintos até profiling.
+
+## 5. Sobreposição funcional consolidada — T053
+
+Convergências definidas:
+
+- um Summary Store/Resumo;
+- uma experiência de Search;
+- um domínio de Classificação;
+- um Analytics/Search Intelligence;
+- um Design System/shell;
+- uma navegação de Insights/Reports/Settings.
+
+Responsabilidades mantidas separadas:
+
+- artigo aprovado != Search Knowledge Apply;
+- qualidade de conteúdo != qualidade de Search;
+- classificação editorial existente != futura classificação sistêmica sem migração explícita.
+
+## 6. Matriz WordPress-first preliminar
 
 | Necessidade | Primitive a testar primeiro | Infra própria só se... |
 |---|---|---|
 | conteúdo editorial | `WP_Post` + Elementor | nunca duplicar edição |
 | título | `post_title` | razão extraordinária |
 | atributos locais | `register_post_meta` | relação/query/volume não atender |
-| classificação compartilhada | taxonomy/terms | semântica não for classificatória ou escala exigir outra coisa |
+| classificação compartilhada | taxonomy/terms | T056 provar que semântica/cardinalidade/uso justificam |
 | settings | Settings/Options API | estado não for configuração |
 | usuário/revisor | users/capabilities | nunca reinventar identidade |
 | autorização | `edit_post`, `edit_posts`, custom caps apenas quando necessário | responsabilidade realmente distinta |
@@ -134,12 +176,12 @@
 | cache | Object Cache/transient | benefício mensurável |
 | health | Site Health | UI especializada for indispensável |
 | search simples | WP native | relevância/performance insuficientes |
-| search avançada | projection própria | já comprovado pelo ASI, mas schema mínimo |
+| search avançada | projection própria | já comprovado pelo ASI, mas schema mínimo T057 |
 | audit/histórico | revisions/meta/event facts | requisitos de consulta/retenção exigirem tabela |
 | analytics | facts mínimos | volume/journey/outcome exigirem relational store |
 | coverage/reports | queries/cache bounded | materialização só após benchmark |
 
-## 5. Contratos cross-module obrigatórios
+## 7. Contratos cross-module obrigatórios
 
 ### Content pipeline
 
@@ -161,7 +203,7 @@
 
 ### AI READY
 
-Regra precisa ser única. Baseline runtime KB2Ops: publish + approved + Summary 8/8 + include_ai. Evolução só por SPEC e regressão.
+Baseline histórica: publish + approved + Summary 8/8 + include_ai. Evolução só por SPEC/regressão.
 
 ### Search quality
 
@@ -169,7 +211,7 @@ Regra precisa ser única. Baseline runtime KB2Ops: publish + approved + Summary 
 - Golden blockers;
 - explainability;
 - retrieval candidates antes de rerank/synthesis;
-- scope/permissions aplicados antes de exposição.
+- scope/permissions antes de exposição.
 
 ### UX
 
@@ -178,9 +220,9 @@ Regra precisa ser única. Baseline runtime KB2Ops: publish + approved + Summary 
 - progressive disclosure;
 - Search não finge chat se é busca;
 - IA é melhoria opcional;
-- JS é progressive enhancement, não fundação do shell.
+- JS é progressive enhancement.
 
-## 6. Candidatos a IA/vetor — ainda opcionais
+## 8. Candidatos a IA/vetor — ainda opcionais
 
 1. expansão semântica após normalização lexical;
 2. hybrid lexical+vector candidate retrieval;
@@ -193,14 +235,14 @@ Regra precisa ser única. Baseline runtime KB2Ops: publish + approved + Summary 
 
 Nenhum entra antes de baseline lexical/metadata/extractor/Golden estar estável.
 
-## 7. Itens ainda AINDA NÃO SABEMOS antes de T050–T059
+## 9. Itens ainda AINDA NÃO SABEMOS antes do fechamento T059
 
-- owner final de audiência/serviço/tecnologia;
-- taxonomy vs postmeta campo a campo;
+- taxonomy versus postmeta campo a campo;
+- nomes/chaves/cardinalidade finais de classificação;
 - storage final vocabulary/bindings/rules/Golden;
 - schema post/item index;
 - necessidade concreta de queue;
-- analytics facts/retention;
+- analytics facts/schema/retention;
 - migration/coexistência;
 - side panel/shortcodes finais;
 - anchors/deep links finais;
@@ -208,4 +250,6 @@ Nenhum entra antes de baseline lexical/metadata/extractor/Golden estar estável.
 - MariaDB Vector/chunks/embeddings;
 - provider Foundry/IA.
 
-O inventário de referências está completo; a próxima alteração desta matriz deve vir do **cruzamento consolidado**, não de novas suposições.
+**Não está mais em aberto:** owner lógico de audiência/serviço/tecnologia/classificação e owner visual do Design System. Esses pontos foram resolvidos em T052/T053; apenas a forma física/runtime continua pendente.
+
+O próximo refinamento desta matriz virá depois de T050/T051/T054/T056/T057/T055/T058; somente então T059 poderá ser marcada concluída.

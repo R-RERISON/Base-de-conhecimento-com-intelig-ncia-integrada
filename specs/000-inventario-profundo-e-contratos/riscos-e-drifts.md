@@ -1,6 +1,6 @@
 # Riscos, Drifts e Dívidas — SPEC-000
 
-> Estado após inventário completo das três referências: ASI 4.6.8, Gerenciador de Resumo Executivo 0.6.0 e KB2Ops 0.2.1. Este documento registra risco/contrato; decisão arquitetural final pertence ao cruzamento T050–T059.
+> Estado após inventário completo das três referências e conclusão do cruzamento inicial T052/T053. Este documento registra risco/contrato; decisões de primitive/storage pertencem a T050/T056/T057.
 
 ## 1. Riscos confirmados no ASI
 
@@ -8,7 +8,7 @@
 
 ASI usa direta/indiretamente `post_content` em PostIndex, Item Knowledge, Structural Audit e Word Cloud.
 
-**Tratamento:** REDESENHAR todos os consumidores sobre um Content Extractor canônico. KB2Ops confirmou uma direção técnica viável.
+**Tratamento:** REDESENHAR todos os consumidores sobre um Content Extractor canônico. T053 confirmou essa convergência como direção funcional obrigatória.
 
 ### R-ASI-002 — Drift do Objective Provider
 
@@ -184,9 +184,9 @@ Installer/Migration conhecem crons, capabilities, options e tabelas do runtime a
 
 Audiência/serviço/tecnologias existem em KB2Ops e parcialmente no GRE, e são usadas para filtro/relatório.
 
-**Impacto:** drift semântico, LIKE queries e dificuldade de governança.
+**Estado após T052:** ownership lógico resolvido para **Classificação de Conhecimento**. O risco remanescente é storage/cardinalidade/migração inadequados.
 
-**Tratamento:** resolver ownership e primitive WP em T052/T056 antes de migrar dados.
+**Tratamento:** T056 decide primitive; não migrar por nome de campo.
 
 ---
 
@@ -196,29 +196,34 @@ Audiência/serviço/tecnologias existem em KB2Ops e parcialmente no GRE, e são 
 |---|---|---|---|
 | D-001 | ASI -> `Objective_Provider` | **QUEBRADO CONFIRMADO** | store interno único |
 | D-002 | ASI -> `bdc_es_objective_updated` | **QUEBRADO CONFIRMADO** | evento pós-write confirmado |
-| D-003 | ASI raw `post_content` vs Elementor | **DIREÇÃO CONFIRMADA** | Content Extractor único KB2Ops-derived |
-| D-004 | Word Cloud/Item/Search parsers separados | **DUPLICAÇÃO CONFIRMADA** | um extractor/projection pipeline |
+| D-003 | ASI raw `post_content` vs Elementor | **DIREÇÃO FUNCIONAL RESOLVIDA** | Content Extractor único |
+| D-004 | Word Cloud/Item/Search parsers separados | **DUPLICAÇÃO RESOLVIDA EM DIREÇÃO** | downstream não reparseia fonte |
 | D-005 | GAC no core ASI | **DEPENDÊNCIA AMBIENTAL** | adapter opcional |
-| D-006 | GRE fields vs KB2Ops classifications | **SOBREPOSIÇÃO CONFIRMADA; OWNERSHIP ABERTO** | T052/T056 |
-| D-007 | CSS/UI ASI+GRE+KB2Ops | **FRAGMENTAÇÃO CONFIRMADA** | DS único derivado KB2Ops; T053 fecha superfícies |
-| D-008 | KB2Ops AI READY docs vs runtime | **DRIFT INTERNO CONFIRMADO** | contrato único/testado |
+| D-006 | GRE fields vs KB2Ops classifications | **OWNERSHIP RESOLVIDO; STORAGE ABERTO** | Classificação de Conhecimento; T056 define primitive |
+| D-007 | CSS/UI ASI+GRE+KB2Ops | **OWNERSHIP VISUAL RESOLVIDO** | DS único KB2Ops-derived; runtime ainda não existe |
+| D-008 | KB2Ops AI READY docs vs runtime | **DRIFT INTERNO CONFIRMADO** | contrato runtime único/testado |
 
-### D-006 em detalhe
+### D-006 em detalhe após T052
 
-- GRE `target_audience` ↔ KB2Ops `_kb2ops_target_audience`;
-- GRE `affected_service` ↔ KB2Ops `_kb2ops_service`;
-- GRE `systems_involved` ↔ KB2Ops `_kb2ops_technologies` parcialmente;
-- `knowledge_type`, keywords e versions são adicionais KB2Ops.
+- GRE `target_audience` e KB2Ops `_kb2ops_target_audience` representam um único conceito de **audiência**;
+- GRE `affected_service` e KB2Ops `_kb2ops_service` ficam no mesmo domínio, mas **não são declarados equivalentes**;
+- GRE `systems_involved` e KB2Ops `_kb2ops_technologies` ficam no mesmo domínio, mas **não são declarados equivalentes**;
+- `responsible_team`, `catalog_item`, `knowledge_type`, keywords e versions passam a ter owner lógico Classificação de Conhecimento;
+- o Resumo Executivo pode compor/editar classificações na UI, sem ser uma segunda fonte da verdade.
 
-Não é seguro migrar/mesclar apenas por similaridade de nomes. T052 deve definir significado, owner, cardinalidade e consumidores antes de escolher postmeta/taxonomia.
+A decisão de taxonomy/postmeta e mapeamento de valores continua aberta.
 
 ---
 
-## 5. Riscos cross-module prioritários para T050–T059
+## 5. Riscos cross-module prioritários
 
 ### X-001 — Duas fontes de verdade classificatórias
 
-Se GRE e Knowledge mantiverem campos semanticamente equivalentes separados, Search/IA/reporting podem discordar.
+**Estado:** risco estrutural reduzido por T052; ownership lógico único foi definido.
+
+**Risco remanescente:** uma migração mal desenhada pode continuar dual-write/dual-read indefinidamente.
+
+**Tratamento:** compatibilidade com prazo/gate de remoção; um único writer canônico no estado final.
 
 ### X-002 — Evento antes de consistência
 
@@ -240,14 +245,44 @@ ASI e KB2Ops carregam histórias de cutover. O greenfield não deve nascer com b
 
 ### X-006 — Design System virar coleção de cópias
 
-Copiar CSS KB2Ops e manter CSS ASI/GRE produziria três dialetos. Tokens/componentes devem ser fonte única.
+**Estado:** T053 definiu DS único como owner visual.
+
+**Risco remanescente:** copiar CSS/markup antigo em módulos específicos pode recriar dialetos.
+
+### X-007 — Confundir aprovação de conteúdo com curadoria de Search
+
+`review_state=approved` e Apply de vocabulary/binding/rule têm semânticas, riscos e capabilities diferentes.
+
+**Impacto:** alteração de ranking poderia ocorrer como efeito colateral de uma aprovação editorial.
+
+**Tratamento:** workflows/state machines/capabilities separados, embora apresentados no mesmo shell.
+
+### X-008 — Dashboard único virar mega agregador caro
+
+Consolidar Coverage, Reports e Search Intelligence em uma navegação única pode incentivar cada card a executar scans integrais.
+
+**Tratamento:** cada métrica possui owner e budget; queries bounded; agregação/materialização apenas por benchmark.
+
+### X-009 — Design System único gerar acoplamento lateral
+
+Componentes compartilhados podem tentar acessar stores de domínio diretamente.
+
+**Tratamento:** DS é apresentação; módulos expõem dados/view models mínimos. Compartilhar componente não transfere ownership.
+
+### X-010 — Compatibilidade virar duplicação permanente
+
+Aliases de shortcode, bridges de meta e dual-read podem ser úteis no cutover.
+
+**Impacto:** um único plugin poderia reproduzir internamente três arquiteturas antigas.
+
+**Tratamento:** cada adapter precisa de consumidor comprovado, condição de entrada, owner canônico, telemetria/preflight e gate de remoção.
 
 ---
 
 ## 6. Dívidas que continuam proibidas de virar decisão isolada
 
-- schema final do índice;
-- taxonomias definitivas;
+- schema definitivo do índice;
+- taxonomy versus postmeta campo a campo;
 - tabela de chunks;
 - MariaDB Vector/embeddings;
 - Foundry/provider contract;
@@ -256,7 +291,7 @@ Copiar CSS KB2Ops e manter CSS ASI/GRE produziria três dialetos. Tokens/compone
 - coexistência/migração detalhada;
 - fila própria;
 - anchors finais;
-- UI final por feature.
+- UI runtime final por feature.
 
 ---
 
@@ -275,8 +310,11 @@ Copiar CSS KB2Ops e manter CSS ASI/GRE produziria três dialetos. Tokens/compone
 - review/AI opt-in humano;
 - Design System sem IA/SPA obrigatória;
 - activation/uninstall não destrutivos;
-- build determinístico + SHA.
+- build determinístico + SHA;
+- **um conceito canônico = um owner lógico**;
+- **persistência confirmada precede evento**;
+- **Search/Analytics/projections nunca assumem ownership editorial/classificatório**.
 
 ## Status
 
-T010–T019 podem ser fechadas. Nenhum risco novo exige iniciar runtime; eles tornam o **cruzamento T050–T059 obrigatório antes da SPEC-001**.
+T052 e T053 podem ser fechadas. Os riscos remanescentes não autorizam runtime; eles orientam a próxima etapa: **T050/T051 consolidar persistência e integrações**, seguida por T054/T056/T057.

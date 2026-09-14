@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Registrar fatos observados e sua evolução durante a leitura exaustiva. Hipóteses deixam de ser hipóteses somente quando confirmadas contra runtime na baseline fixada.
+Registrar fatos observados e sua evolução durante a leitura exaustiva e do cruzamento. Hipóteses deixam de ser hipóteses somente quando confirmadas contra runtime ou quando a decisão documental decorre explicitamente de evidência das três baselines.
 
 ## 1. KB2Ops 0.2.1 — bloco confirmado
 
@@ -43,7 +43,7 @@ Baseline fixada e confirmada no `main` da referência: `R-RERISON/KB2Ops-Operati
 - **“O Design System merece sobreviver?”** Sim como principal referência de shell/tokens/componentes/guardrails, não como CSS copiado literalmente.
 - **“O lifecycle hardened deve ser copiado?”** O princípio reversível deve sobreviver; listas de legado não.
 - **“Há evidência de necessidade de tabela no KB2Ops atual?”** Não. O baseline funciona sem tabelas novas.
-- **“Há candidatos claros a taxonomia?”** Sim: tipo, tecnologia, serviço e audiência são usados como classificação/filtro/agrupamento. A decisão final continua T052/T056.
+- **“Há candidatos claros a taxonomia?”** Sim: tipo, tecnologia, serviço e audiência são usados como classificação/filtro/agrupamento. A primitive final segue para T056.
 
 ### Decisões preliminares KB2Ops
 
@@ -121,7 +121,7 @@ Decisões:
 - REDESENHAR store/evento internos do bounded context unificado;
 - workload e histórico permanecem temas de cruzamento.
 
-## 4. Drifts/overlaps agora comprovados pelas três referências
+## 4. Drifts/overlaps comprovados pelas três referências
 
 ### D-001 — Objective Provider
 
@@ -133,11 +133,11 @@ ASI espera evento que GRE não emite. **QUEBRADO**.
 
 ### D-003 — conteúdo ASI versus Elementor
 
-ASI usa `post_content` em vários pipelines; KB2Ops oferece extractor Elementor-aware read-only. **DIREÇÃO DE RESOLUÇÃO CONFIRMADA:** extractor único.
+ASI usa `post_content` em vários pipelines; KB2Ops oferece extractor Elementor-aware read-only. **DIREÇÃO FUNCIONAL RESOLVIDA EM T053:** extractor único.
 
 ### D-004 — múltiplos extractors
 
-Word Cloud/Item Knowledge/auditoria ASI e Search KB2Ops não podem evoluir com parsers independentes. **DIREÇÃO:** todos consomem representação canônica derivada.
+Word Cloud/Item Knowledge/auditoria ASI e Search KB2Ops não podem evoluir com parsers independentes. **DIREÇÃO FUNCIONAL RESOLVIDA EM T053:** downstream consome uma representação canônica derivada.
 
 ### D-005 — GAC
 
@@ -150,46 +150,103 @@ Dependência ambiental ASI; não aparece como requisito do KB2Ops/GRE. **DIREÇ�
 - sistemas/tecnologias parcialmente sobrepostos;
 - KB2Ops adiciona knowledge type/keywords/versions.
 
-**ESTADO:** evidência suficiente para T052/T056, mas ownership final ainda aberto.
+**OWNERSHIP RESOLVIDO EM T052:** Classificação de Conhecimento é owner lógico dos conceitos reutilizáveis. Audiência é um único conceito; serviço/serviço afetado e tecnologias/sistemas permanecem atributos distintos até profiling. Storage final segue aberto para T056.
 
 ### D-007 — UI fragmentada
 
-ASI e GRE têm estilos próprios; KB2Ops possui Design System consistente. **DIREÇÃO:** DS único derivado do KB2Ops, detalhes finais em T053/T059.
+ASI e GRE têm estilos próprios; KB2Ops possui Design System consistente. **OWNERSHIP VISUAL RESOLVIDO EM T053:** um Design System próprio do novo plugin, derivado dos princípios KB2Ops. Layout final ainda pertence às Specs de runtime.
 
 ### D-008 — AI READY documentação/runtime
 
-Documentação KB2Ops omite `include_ai`; runtime exige. **DRIFT INTERNO CONFIRMADO**.
+Documentação KB2Ops omite `include_ai`; runtime exige. **DRIFT INTERNO CONFIRMADO**. Runtime fixado é baseline histórica para regressão.
 
-## 5. Perguntas que o cruzamento T050–T059 deve responder
+## 5. T052 — Ownership de dados: conclusões
 
-1. Qual módulo é owner de audiência, serviço, tecnologia/sistemas e tipo de conhecimento?
-2. Quais classificações devem virar taxonomias nativas e quais permanecem postmeta?
-3. Quais tabelas ASI realmente têm direito de nascer no greenfield?
-4. Qual schema mínimo de post/item index atende Golden/performance?
-5. Há necessidade comprovada de fila durável ou WP-Cron/simple invalidation basta no baseline?
-6. Qual conjunto mínimo de analytics justifica persistência relacional?
-7. Como preservar `_bdc_es_*`, `_kb2ops_*` e eventualmente `asi_*` sem duplicar ownership?
-8. Quais shortcodes/superfícies exigem compatibilidade no cutover?
-9. Como formalizar histórico/revisions sem tabela antecipada?
-10. Quais features de Search/Studio/Resumo viram telas únicas no Design System?
-11. Quais componentes exigem infraestrutura própria versus WordPress primitives?
-12. Quais pontos são candidatos reais a IA/vetor e em que ordem?
+O mapa canônico está em `mapa-ownership-dados.md`.
 
-## 6. Decisões ainda proibidas antes do cruzamento
+Decisões de domínio:
 
-- schema final do índice;
-- taxonomias definitivas;
-- tabela de chunks;
-- MariaDB Vector;
-- embeddings;
+1. `WP_Post`/Elementor continuam owner editorial absoluto.
+2. Objetivo/escalonamento/importante pertencem ao Resumo Executivo.
+3. Equipe, item de catálogo, audiência, serviços, sistemas, tecnologias, tipo, keywords e versões pertencem ao domínio de Classificação de Conhecimento.
+4. Review state/notas/revisor/data/include AI/histórico pertencem a Revisão e Governança.
+5. Content Extractor possui somente projections read-only.
+6. Vocabulary/bindings/rules pertencem a Search Knowledge, não à classificação do post.
+7. Post/item/vector indexes são projections de Search Indexing.
+8. Golden Queries pertencem a Search Quality.
+9. Events/interactions/outcomes pertencem a Analytics/Search Intelligence.
+10. Migration/compat não pode virar owner permanente.
+11. GAC permanece owner externo de seus próprios dados e só pode entrar via adapter opcional.
+12. IA possui sugestões, nunca o dado editorial/classificatório aprovado.
+
+### O que T052 não decidiu
+
+- taxonomy versus postmeta;
+- nomes/chaves finais;
+- cardinalidade;
+- histórico/revisions;
+- schemas/tabelas;
+- retenção;
+- plano de migração.
+
+## 6. T053 — Sobreposição funcional: conclusões
+
+A matriz canônica está em `matriz-sobreposicoes.md`.
+
+### Fusões funcionais aprovadas
+
+- um único Resumo Executivo/Store;
+- uma única experiência de Search;
+- um único domínio de Classificação;
+- um único Analytics/Search Intelligence;
+- um único Design System/shell;
+- uma única navegação de produto para Reports/Insights/Settings.
+
+### Combinação de referências
+
+- **Search motor/qualidade:** contratos ASI;
+- **Content Extraction/UX/Design System:** contratos KB2Ops;
+- **Summary Store/WordPress-first:** contratos GRE;
+- **release futuro:** WP integration GRE + regressão/Golden ASI + package determinístico KB2Ops/GRE.
+
+### Responsabilidades explicitamente não fundidas
+
+- aprovação do artigo != Apply de Search Knowledge;
+- qualidade de conteúdo != qualidade de Search;
+- serviço != serviço afetado sem prova;
+- tecnologias != sistemas envolvidos sem prova;
+- categorias/tags editoriais != taxonomias sistêmicas futuras.
+
+## 7. Riscos novos do cruzamento
+
+- **X-007:** unificar aprovação editorial e curadoria de Search reduziria auditabilidade.
+- **X-008:** um dashboard unificado pode virar workload ilimitado se cada card fizer scan integral.
+- **X-009:** compartilhar Design System não autoriza acoplamento lateral entre domains.
+- **X-010:** bridges/aliases temporários podem recriar arquitetura multi-plugin se não tiverem gate de remoção.
+
+## 8. Perguntas que seguem abertas para T050–T059
+
+1. Qual primitive WordPress para cada classificação: taxonomy ou postmeta?
+2. Quais dados antigos precisam coexistir/dual-read no cutover?
+3. Quais tabelas ASI realmente precisam nascer?
+4. Qual schema mínimo de post/item index?
+5. Queue própria é necessária no primeiro slice ou WP-Cron/invalidation simples basta?
+6. Qual fato mínimo de Analytics justifica tabela relacional?
+7. Como versionar/history metadata sem infraestrutura antecipada?
+8. Quais shortcodes têm consumidores reais?
+9. Qual estratégia final de deep-link/anchor?
+10. Quais capacidades opcionais de IA/vetor entram e em qual ordem?
+
+## 9. Decisões ainda proibidas neste ponto
+
+- criar runtime;
+- criar taxonomias definitivas antes de T056;
+- criar tabela de índice/telemetria/queue antes de T057;
+- chunks/MariaDB Vector/embeddings;
 - Foundry/provider contract;
-- retention final de telemetria;
-- histórico final;
-- coexistência/migração detalhada;
-- fila própria;
-- anchors finais;
-- UI final de cada módulo.
+- migração de dados;
+- UI runtime final.
 
 ## Próximo passo
 
-Os três blocos de referência estão agora inventariados. O próximo bloco autorizado dentro da SPEC-000 é **T050–T059 — cruzamento consolidado**, começando por ownership e sobreposição, e só depois decidindo WordPress-first versus infraestrutura própria.
+Com T052/T053 concluídas, a próxima etapa permitida é **T050 + T051**: consolidar os catálogos de persistência e integrações usando o ownership e a sobreposição agora definidos. Depois: T054 -> T056 -> T057 -> T055 -> T058 -> T059.

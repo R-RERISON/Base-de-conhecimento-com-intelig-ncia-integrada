@@ -50,10 +50,10 @@
 
 ## Cruzamento
 
-- [ ] Catálogo de persistência consolidado em decisão final. _(evidência das três referências materializada)_
-- [ ] Catálogo de integrações consolidado em decisão final. _(evidência das três referências materializada)_
-- [ ] Mapa de ownership.
-- [ ] Matriz de sobreposição.
+- [ ] Catálogo de persistência consolidado em decisão final. _(T050; próximo bloco)_
+- [ ] Catálogo de integrações consolidado em decisão final. _(T051; próximo bloco)_
+- [x] Mapa de ownership. _(`mapa-ownership-dados.md`)_
+- [x] Matriz de sobreposição. _(`matriz-sobreposicoes.md`)_
 - [ ] Drifts/contratos quebrados consolidados.
 - [ ] Catálogo de regressão/Golden futuro consolidado.
 - [ ] Matriz WordPress-first final.
@@ -95,8 +95,25 @@
 - Design System foi decomposto em princípios, tokens, componentes, responsive e assets.
 - Installer/Migration/Uninstall foram classificados, preservando apenas o princípio reversível.
 - release gate e build determinístico foram inventariados; ausência de suíte executável versionada foi registrada como dívida.
-- nenhum runtime do novo plugin foi criado.
+
+## Evidência de fechamento T052 — Ownership
+
+- `mapa-ownership-dados.md` separa editorial, resumo, classificação, revisão, extraction, Search Knowledge, Search Indexing, Search Quality, Analytics, Configuração, Operações e AI Assist.
+- audiência GRE/KB2Ops passou a ter um único owner lógico: Classificação de Conhecimento.
+- serviço/serviço afetado e tecnologias/sistemas foram mantidos distintos até profiling, evitando merge por nome.
+- Search/projections/Analytics não recebem ownership sobre metadata editorial/classificatória.
+- migrations/adapters foram explicitamente proibidos de virar owner permanente.
+- storage físico permanece deliberadamente aberto para T056/T057.
+
+## Evidência de fechamento T053 — Sobreposição
+
+- `matriz-sobreposicoes.md` classifica duplicação real, complementaridade, compat/transição e referências de implementação.
+- Resumo, Search, Classificação, Analytics e Design System tiveram convergência funcional definida.
+- aprovação de artigo e Apply de Search Knowledge permanecem workflows separados.
+- qualidade de conteúdo e Search Quality permanecem métricas/domínios separados.
+- área única de Insights foi definida como navegação, sem autorizar agregação cara ou score global.
+- nenhuma tela/runtime novo foi criado.
 
 ## Estado
 
-A fase de **inventário por referência está concluída**. O próximo gate é T050–T059, com prioridade para ownership e sobreposição antes de qualquer escolha de schema ou implementação.
+Inventário individual e cruzamento inicial T052/T053 concluídos. Próximo gate: **T050/T051**, consolidando persistência e integrações com base nos owners e nas sobreposições agora resolvidas.

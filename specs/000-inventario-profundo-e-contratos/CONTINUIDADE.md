@@ -1,6 +1,6 @@
 # Prompt de Continuidade — SPEC-000 — Inventário Profundo e Contratos
 
-## 1. Prompt pronto para colar em um novo chat
+## 1. Prompt pronto para colar em novo chat
 
 ```text
 Você é o Orquestrador Principal do projeto "Base de Conhecimento com Inteligência Integrada".
@@ -15,157 +15,200 @@ Antes de qualquer alteração:
 4. Leia todos os artefatos de specs/000-inventario-profundo-e-contratos/.
 5. Leia docs/DEFINITION-OF-DONE.md.
 6. Leia este CONTINUIDADE.md inteiro.
-7. Confirme o HEAD atual no GitHub antes de implementar ou documentar novas conclusões.
+7. Confirme o HEAD atual no GitHub.
+8. Se qualquer baseline divergir, pare a decisão correspondente e investigue antes de escrever.
 
 PROJETO
 - Repositório: R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
 - Branch: main
-- HEAD no início do bloco GRE: 1e8f93e50be361fc22742b4196bdcc6f1b13c306
+- HEAD de partida do bloco KB2Ops: 0f42f856a8ff83ba915f7a98f91cb8a053f33f6a
 - SPEC ativa: SPEC-000 — Inventário Profundo e Contratos dos Projetos de Referência
-- Estado: em execução; blocos ASI e Gerenciador de Resumo Executivo concluídos documentalmente; runtime novo continua bloqueado.
+- Estado: inventário individual das três referências concluído documentalmente; runtime novo continua bloqueado.
 
 BASELINES CONFIRMADAS
 - ASI: R-RERISON/Advanced-search-Intelligence 4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1
 - GRE: R-RERISON/Gerenciador-de-Resumo-Executivo-da-Base-de-Conhecimento 0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365
-- KB2Ops: referência registrada 0.2.1 @ bcd8b97efe629194dc5dc1f9fbffa870f4aad43d — confirmar HEAD/baseline antes do próximo inventário.
+- KB2Ops: R-RERISON/KB2Ops-Operational-Knowledge-Engine 0.2.1 hardened @ f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94
 
 TAREFAS CONCLUÍDAS
 - T000–T002: preparação/governança.
+- T010–T019: KB2Ops.
 - T020–T034: Advanced Search Intelligence.
 - T040–T047: Gerenciador de Resumo Executivo.
 
-OBJETIVO DA CONTINUIDADE
-Continuar a SPEC-000 sem criar runtime. O próximo bloco exato é KB2Ops T010–T019. O objetivo é provar como o KB2Ops trata Elementor, metadata, UI/Design System, Knowledge Studio/Search, lifecycle e bridge GRE; depois disso será possível iniciar o cruzamento T050–T059.
+PRÓXIMO BLOCO EXATO
+T050–T059 — cruzamento consolidado das três referências.
+
+ORDEM OBRIGATÓRIA DO CRUZAMENTO
+1. T052 ownership de dados — antes de escolher taxonomia/schema.
+2. T053 sobreposição funcional — antes de escolher telas/módulos.
+3. T050/T051 consolidar persistência/hooks com ownership resolvido.
+4. T054 consolidar drifts/contratos quebrados.
+5. T056 WordPress-first — provar o que primitives nativas atendem.
+6. T057 infraestrutura própria — somente o que WordPress não atende com qualidade/performance/durabilidade.
+7. T055 regressão/Golden — definir gates para as decisões tomadas.
+8. T058 IA/vetor — priorizar apenas extensões opcionais após baseline.
+9. T059 matriz de paridade final.
+
+Não inverter essa ordem para começar por banco, vetor ou classes.
 
 INVARIANTES VIGENTES
 - WordPress-first.
-- Aplicar princípio de negação antes de adicionar complexidade.
-- O plugin não faz manutenção editorial dos posts.
-- Elementor continua sendo editor/publicador canônico.
-- Não escrever em _elementor_data.
-- Não reescrever post_content silenciosamente.
+- Princípio de negação antes de adicionar complexidade.
+- WordPress/Elementor são fonte editorial.
+- O plugin não faz manutenção editorial do post.
+- Nunca escrever `_elementor_data` por pipeline derivado.
+- Nunca reescrever `post_content` silenciosamente.
+- Um Content Extractor canônico alimenta todos os consumidores.
+- Qualidade da extração precede qualidade de Search/RAG.
+- Persistência confirmada precede qualquer evento de domínio.
 - IA sugere; humano decide; WordPress persiste.
 - Retrieval precede síntese.
-- IA/vetor são opcionais e não podem derrubar o core lexical.
-- Sem regressão silenciosa.
-- Nenhuma implementação sem SPEC ativa.
-- Nenhuma implementação material termina sem CONTINUIDADE.md atualizado.
+- IA/vetor são opcionais/degradáveis.
+- Lexical continua funcional sem IA.
+- Sem regressão silenciosa; Golden blockers obrigatórios para Search.
+- Nenhuma implementação sem SPEC correspondente.
+- Nenhum runtime antes de T097 autorizar SPEC-001.
 
 CONCLUSÕES ASI QUE NÃO DEVEM SER PERDIDAS
 1. Não copiar as 12 tabelas como arquitetura futura.
-2. Preservar busca lexical degradável, QueryContext limitado, ranking explicável e Golden Queries.
-3. Preservar Item Knowledge/identidade/navegação fail-closed, mas reconstruir sobre Content Extractor único Elementor-aware.
-4. PostIndex, ItemKnowledge/Coordinator, StructuralAudit e Word Cloud não podem continuar com pipelines divergentes sobre post_content.
-5. Vocabulary, bindings e rules têm valor funcional; storage final permanece aberto.
-6. Durable Queue tem semântica valiosa; tabela/implementação só nasce se workload justificar.
-7. MigrationRunner/BaseReconciler/PostInstallOrchestrator carregam complexidade histórica e não têm direito automático de nascer.
-8. Search Events/Interactions/Outcomes têm valor, mas privacidade/retenção precisam ser redesenhadas; modo minimal ainda persiste query text.
-9. Tracking público com HMAC, nonce, rate limit, server authority e idempotência é contrato forte.
-10. Golden Queries são gate obrigatório; suíte vazia nunca equivale a PASS.
-11. Quality Diagnostics deve preferir Site Health + checks mínimos.
-12. Word Cloud, se sobreviver, deve consumir índice/telemetria canônicos.
-13. Acoplamento GAC não pertence ao core.
-14. Uninstall deve ser não destrutivo por default com política explícita.
-15. IA/vetor entram apenas como evolução degradável após retrieval determinístico.
+2. Preservar lexical degradável, QueryContext limitado, explicabilidade e Golden Queries.
+3. Preservar Item Knowledge/identity/deep-link, reconstruindo sobre extractor único.
+4. PostIndex, Item Knowledge, Structural Audit e Word Cloud não podem ter parsers independentes.
+5. Vocabulary/bindings/rules têm valor; storage final continua aberto.
+6. Queue só nasce se durabilidade/workload justificarem.
+7. Migrations/Reconciler/Orchestrator ASI carregam história e não pertencem automaticamente ao greenfield.
+8. Events/Interactions/Outcomes têm valor, mas privacy/query retention precisam ser redesenhadas.
+9. Tracking público: nonce + rate limit + HMAC + server authority + idempotência.
+10. Golden suite vazia não é PASS.
+11. Site Health é primitive preferida para diagnostics.
+12. GAC fica fora do core.
 
-CONCLUSÕES GRE QUE NÃO DEVEM SER PERDIDAS
-1. GRE 0.6.0 é evidência forte de WordPress-first: oito post metas, sem tabela própria, REST, AJAX, cron, options/transients de domínio ou fila.
-2. O título é post_title; _bdc_es_title é explicitamente proibida.
-3. Meta Contract registra exatamente oito valores privados, string/single/default vazio, show_in_rest=false, revisions_enabled=false e auth edit_post.
-4. Summary_Store read é side-effect free; update usa allowlist, validação integral antes da mutação, sanitização, update parcial, empty-delete e read-after-write.
-5. Payload inválido não causa partial write, mas persistência multi-campo não possui rollback compensatório provado se uma falha tardia ocorrer.
-6. Admin usa admin-post autenticado, nonce por post e edit_post no store; não existe nopriv.
-7. Coverage Dashboard é read-only, mas faz scan posts_per_page=-1; preservar métricas e redesenhar workload após benchmark, sem tabela agregada antecipada.
-8. Frontend usa [bdc_resumo_executivo] current-post-only, ignora atributos, escapa tudo e não usa JS; side panel automático é decisão de UX, não invariante arquitetural.
-9. Build/release local é robusto: Composer/WPCS/PHPUnit, integração WordPress real, package smoke, ZIP determinístico e SHA-256.
-10. Não há uninstall.php; metadata não é apagada automaticamente, mas política formal de retenção ainda precisa existir.
+CONCLUSÕES GRE
+1. Oito `_bdc_es_*` são contrato de compatibilidade conhecido.
+2. `post_title` é título canônico; `_bdc_es_title` proibida.
+3. Metadata API + `edit_post` + nonce + allowlist + sanitização são baseline.
+4. Reads são side-effect free; vazio remove meta.
+5. Multi-campo não tem atomicidade compensatória comprovada.
+6. Coverage Dashboard atual é read-only mas sem workload bound.
+7. Não há evidência para tabela/REST/AJAX/cron próprios de Resumo.
+8. `Objective_Provider` e `bdc_es_objective_updated` esperados pelo ASI não existem.
+9. Futuro: Summary Store interno único + evento após write confirmado.
 
-DRIFTS CONFIRMADOS
-- D-001 — ASI exige BDC\ExecutiveSummary\Objective_Provider::read_objective(); GRE 0.6.0 não possui a classe/método. CONTRATO QUEBRADO CONFIRMADO.
-- D-002 — ASI escuta bdc_es_objective_updated; GRE não emite o evento. CONTRATO QUEBRADO CONFIRMADO.
-- Direção futura: no plugin unificado usar store interno canônico para Objective + evento de domínio após persistência confirmada + invalidação/reindexação derivada. Não criar bridge entre plugins.
+CONCLUSÕES KB2OPS
+1. Baseline correta: 0.2.1 @ f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94.
+2. Content Extractor é principal contrato técnico: `_elementor_data` read-only -> parser determinístico -> render fallback -> `post_content` fallback.
+3. O extractor executa somente `table/tablepress`, nunca shortcodes arbitrários.
+4. Gap crítico: extração parcialmente não vazia pode omitir custom widget sem acionar render fallback. Criar regressão antes de Search/RAG final.
+5. Knowledge Studio/review states/checklist/suggestions são fortes contratos de produto.
+6. AI READY runtime = publish + approved + Resumo 8/8 + include_ai. Docs antigos omitem include_ai.
+7. `save_review()` emite approval sem checar todos os retornos de persistência; futuro deve confirmar estado antes do evento.
+8. `_kb2ops_review_history` e `_kb2ops_view_count` estão fora do registro explícito das metas principais.
+9. Summary_Bridge é read-only e duplica as oito keys; deve desaparecer no bounded context unificado.
+10. Search atual é provisória: WP_Query/meta LIKE/_elementor_data + score simples. Não portar como engine.
+11. Preservar Search scope/detail visibility/UX; combinar depois com engine ASI-inspired.
+12. Analytics option/view count são leves, mas insuficientes em privacy/concurrency/outcomes.
+13. Design System KB2Ops é principal referência visual: wp-admin shell, server-rendered, CSS namespaced, tokens, progressive disclosure, JS mínimo, sem SPA/IA obrigatória.
+14. Activation/migration/uninstall são reversíveis/não destrutivos por default; preservar princípio, não hardcodes legacy.
+15. Build determinístico é valioso; release audit existe, mas não há suíte `tests/` reproduzível versionada no baseline.
 
-DRIFTS/RISCOS A RESOLVER COM KB2OPS
-- D-003 — ASI lê post_content em vários pipelines versus produto Elementor-first.
-- D-004 — Word Cloud possui extractor lexical paralelo.
-- D-006 — campos GRE classificatórios atualmente em post meta versus possível taxonomia.
-- D-007 — CSS/UI ASI+GRE versus Design System único.
+DRIFTS ESTADO ATUAL
+- D-001 ASI -> Objective_Provider: QUEBRADO CONFIRMADO.
+- D-002 ASI -> bdc_es_objective_updated: QUEBRADO CONFIRMADO.
+- D-003 ASI post_content vs Elementor: direção de resolução confirmada por Content Extractor único.
+- D-004 múltiplos extractors: duplicação confirmada; convergir em um serviço.
+- D-005 GAC: dependência ambiental, fora do core.
+- D-006 GRE vs KB2Ops classifications: sobreposição confirmada, ownership ainda aberto.
+- D-007 UI fragmentada: direção DS único KB2Ops-derived confirmada; superfícies finais abertas.
+- D-008 AI READY docs vs runtime KB2Ops: drift interno confirmado.
 
-ARTEFATOS DA SPEC-000 JÁ MATERIALIZADOS
+D-006 — NÃO RESOLVER POR NOME
+- GRE target_audience vs KB2Ops target_audience;
+- GRE affected_service vs KB2Ops service;
+- GRE systems_involved vs KB2Ops technologies.
+Antes de unir: definir significado, cardinalidade, owner, quem escreve, quem lê, filtros/relatórios e compatibilidade.
+
+ARTEFATOS JÁ MATERIALIZADOS
 - inventario-asi.md
 - inventario-resumo-executivo.md
-- catalogo-persistencia.md — ASI+GRE parcial
-- catalogo-integracoes.md — ASI+GRE parcial
-- catalogo-testes-regressao.md — ASI+GRE parcial
-- matriz-paridade-futura.md — ASI+GRE preliminar
-- riscos-e-drifts.md — incremental
-- research.md atualizado
-- tasks.md e checklist atualizados
+- inventario-kb2ops.md
+- catalogo-persistencia.md
+- catalogo-integracoes.md
+- catalogo-testes-regressao.md
+- matriz-paridade-futura.md
+- riscos-e-drifts.md
+- research.md
+- tasks.md
+- checklists/requisitos.md
 
-O QUE NÃO DEVE SER FEITO AGORA
-- Não criar bootstrap/runtime do novo plugin.
-- Não criar tabelas novas.
-- Não criar chunks, embeddings ou vetores.
-- Não integrar Foundry.
-- Não copiar classes dos legados.
-- Não alterar ASI, GRE ou KB2Ops durante o inventário.
-- Não iniciar SPEC-001.
-- Não fechar T050–T059 antes do KB2Ops.
-- Não converter campos GRE em taxonomias ainda.
+O QUE NÃO FAZER NO PRÓXIMO BLOCO
+- não criar PHP/JS/CSS/runtime;
+- não criar tabelas;
+- não criar taxonomias ainda, antes do ownership;
+- não criar queue;
+- não criar REST/AJAX novo;
+- não criar chunks/vectors/embeddings;
+- não integrar Foundry;
+- não alterar as referências;
+- não iniciar SPEC-001;
+- não tratar migration legacy como core futuro;
+- não confundir similaridade de campos com identidade semântica.
 
-PRÓXIMO PASSO EXATO — KB2OPS T010–T019
-1. Confirmar main/HEAD, versão e SHA da referência KB2Ops antes da leitura.
-2. Ler bootstrap completo e lifecycle/activation/deactivation.
-3. Mapear árvore de runtime e classes de domínio.
-4. Inventariar todas as metas _kb2ops_*, options, transients, taxonomias, cron e qualquer persistência própria.
-5. Inventariar Admin routes/forms/actions, capabilities e nonces.
-6. Inventariar shortcodes, frontend e assets.
-7. Ler profundamente o Elementor Content Extractor: fontes, fallback, sanitização, headings, texto, links e tratamento de _elementor_data, garantindo que é read-only.
-8. Inventariar bridge dos oito _bdc_es_* e comparar com GRE Meta Contract/Summary Store.
-9. Inventariar Knowledge Studio e Knowledge Search, separando contratos de produto de implementação provisória.
-10. Mapear Design System: tokens, shell, componentes, estados, responsive/accessibility e dependências.
-11. Inventariar installer/migration/uninstall e qualquer mecanismo hardened/reversível.
-12. Inventariar testes, build, release e rollback.
-13. Classificar cada componente: MANTER, REDESENHAR, SUBSTITUIR POR WORDPRESS, EVOLUIR COM IA/VETOR, DESCARTAR ou AINDA NÃO SABEMOS.
-14. Atualizar inventario-kb2ops.md, catálogos, riscos/drifts, matriz, research, tasks/checklist e este CONTINUIDADE.md.
+PRÓXIMO PASSO T050–T059 — DELIVERABLES
+1. `mapa-ownership-dados.md`: cada dado, owner atual, writer, readers, cardinalidade, canônico/derivado, futuro proposto.
+2. `matriz-sobreposicao-funcional.md`: Studio/Search/Resumo/Analytics/Reports/UI/Lifecycle com manter/fundir/descartar.
+3. consolidar `catalogo-persistencia.md` após ownership.
+4. consolidar `catalogo-integracoes.md` após superfícies.
+5. consolidar `riscos-e-drifts.md` com resolução/proposta por drift.
+6. `matriz-wordpress-first.md`: primitive nativa testada antes de infra própria.
+7. `infraestrutura-propria-justificada.md`: cada tabela/queue/cache projection precisa de requisito + alternativa WP rejeitada + gate de medição.
+8. consolidar `catalogo-testes-regressao.md` e Golden gate futuro.
+9. `priorizacao-ia-vetor.md`: dependências, fallback, custo, segurança, benefício e ordem.
+10. fechar `matriz-paridade-futura.md`.
+11. atualizar research/tasks/checklist/CONTINUIDADE.
 
-CRITÉRIO DE CONCLUSÃO DO BLOCO KB2OPS
-T010–T019 só podem ser fechadas quando:
-- runtime relevante tiver sido lido arquivo a arquivo;
-- persistência/hooks/rotas/testes estiverem mapeados;
-- Content Extractor Elementor-aware estiver documentado como contrato técnico;
-- bridge GRE estiver comparada com a baseline GRE 0.6.0;
-- Design System estiver decomposto em tokens/componentes/comportamentos;
-- complexidades forem questionadas pelo princípio de negação;
-- existir classificação preliminar completa;
-- nenhum runtime novo tiver sido criado.
+CRITÉRIO DE CONCLUSÃO T050–T059
+- todo dado tem owner único ou razão explícita para compartilhamento;
+- toda duplicidade funcional tem destino;
+- cada tabela futura tem justificativa negativa contra WordPress primitives;
+- cada evento tem writer e consumidores documentados;
+- extractor/content ownership está fechado;
+- Search baseline e Golden gate estão definidos conceitualmente;
+- privacy/retention mínimas estão descritas;
+- IA/vetor continuam opcionais e ordenados depois do baseline;
+- desconhecidos críticos estão listados para T095;
+- nenhum runtime foi criado.
 
-APÓS KB2OPS
-Somente então iniciar T050–T059: ownership, sobreposição funcional, contratos quebrados, WordPress-first, infraestrutura realmente necessária, IA/vetor e matriz de paridade consolidada.
+APÓS T050–T059
+Executar T090–T097. Somente T097 pode autorizar SPEC-001.
 
 REGRA DE CONTINUIDADE
-Não assuma contexto de chats anteriores além do repositório e deste handoff. Se houver divergência entre este prompt e o repositório, Constituição/repositório prevalecem. Investigue a divergência antes de modificar qualquer artefato.
+Se houver divergência entre este arquivo e o repositório/Constituição, repositório e Constituição prevalecem. Investigue antes de alterar.
 ```
 
 ## 2. Estado resumido para humanos
 
-- **SPEC:** SPEC-000 — Inventário Profundo e Contratos.
-- **HEAD antes do bloco GRE:** `1e8f93e50be361fc22742b4196bdcc6f1b13c306`.
-- **Blocos concluídos:** ASI T020–T034; GRE T040–T047.
-- **Próximo gate:** KB2Ops T010–T019.
-- **SPEC-001:** continua bloqueada.
-- **Runtime do novo plugin:** continua inexistente por decisão arquitetural.
+- **SPEC:** SPEC-000.
+- **HEAD de partida do bloco KB2Ops:** `0f42f856a8ff83ba915f7a98f91cb8a053f33f6a`.
+- **Baselines:** ASI `c0ddff8…`; GRE `1120a534…`; KB2Ops `f2d2aa6…`.
+- **Inventários concluídos:** KB2Ops T010–T019; ASI T020–T034; GRE T040–T047.
+- **Próximo bloco:** T050–T059 — cruzamento consolidado.
+- **SPEC-001:** bloqueada.
+- **Runtime novo:** inexistente por decisão arquitetural.
 
-## 3. Evidências novas do bloco GRE
+## 3. Evidências novas do bloco KB2Ops
 
-- GRE baseline `0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365` confirmada contra `main`.
-- Oito metas canônicas via Metadata API; sem tabela própria.
-- Summary Store/Admin/Frontend/Coverage classificados.
-- Testes unitários + integração WordPress real + package smoke inventariados.
-- Build determinístico e gate local registrados.
-- D-001 e D-002 confirmados como drifts reais entre ASI e GRE.
-- riscos de atomicidade multi-campo e scan ilimitado do dashboard registrados.
+- baseline/HEAD 0.2.1 hardened confirmados;
+- runtime completo e persistência mapeados;
+- Content Extractor decomposto e gap de custom widgets registrado;
+- Summary Bridge comparada ao GRE;
+- Search atual classificada como provisória;
+- Design System confirmado como referência de produto/UX;
+- activation/migration/uninstall reversíveis classificados;
+- build determinístico registrado;
+- lacuna de testes executáveis versionados formalizada;
+- D-003/D-004/D-007 ganharam direção; D-008 foi adicionado.
 
 ## 4. Regra de atualização
 
-Atualizar este arquivo após o bloco KB2Ops e novamente após o cruzamento T050–T059. Substituir informações obsoletas; não acumular estados contraditórios.
+Atualizar este arquivo após T050–T059 e novamente no gate T090–T097. Substituir estados obsoletos; não acumular handoffs contraditórios.

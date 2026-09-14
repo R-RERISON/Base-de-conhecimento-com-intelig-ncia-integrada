@@ -8,16 +8,16 @@
 
 ## KB2Ops
 
-- [ ] T010 — Inventariar bootstrap/lifecycle.
-- [ ] T011 — Inventariar classes de domínio.
-- [ ] T012 — Inventariar metadata/options/transients/cron.
-- [ ] T013 — Inventariar admin routes/forms/actions.
-- [ ] T014 — Inventariar shortcodes/frontend/assets.
-- [ ] T015 — Inventariar Elementor Content Extractor.
-- [ ] T016 — Inventariar migration/installer/uninstall.
-- [ ] T017 — Inventariar testes/build/release.
-- [ ] T018 — Mapear Design System e componentes.
-- [ ] T019 — Classificar todos os itens.
+- [x] T010 — Inventariar bootstrap/lifecycle.
+- [x] T011 — Inventariar classes de domínio.
+- [x] T012 — Inventariar metadata/options/transients/cron.
+- [x] T013 — Inventariar admin routes/forms/actions.
+- [x] T014 — Inventariar shortcodes/frontend/assets.
+- [x] T015 — Inventariar Elementor Content Extractor.
+- [x] T016 — Inventariar migration/installer/uninstall.
+- [x] T017 — Inventariar testes/build/release.
+- [x] T018 — Mapear Design System e componentes.
+- [x] T019 — Classificar todos os itens.
 
 ## ASI
 
@@ -50,16 +50,16 @@
 
 ## Cruzamento
 
-- [ ] T050 — Criar catálogo unificado de persistência. _(estrutura incremental ASI+GRE; aguarda KB2Ops)_
-- [ ] T051 — Criar catálogo unificado de hooks/rotas/integrações. _(estrutura incremental ASI+GRE; aguarda KB2Ops)_
-- [ ] T052 — Criar mapa de ownership atual de dados.
-- [ ] T053 — Criar matriz de sobreposição funcional.
-- [ ] T054 — Criar mapa de contratos quebrados/drift. _(D-001/D-002 confirmados; aguarda KB2Ops para demais cruzamentos)_
-- [ ] T055 — Criar catálogo de regressão e Golden Queries. _(estrutura incremental ASI+GRE; aguarda KB2Ops)_
-- [ ] T056 — Identificar tudo que WordPress pode substituir. _(evidência GRE reforça Metadata API/admin-post/capabilities/nonces; fechar após KB2Ops)_
-- [ ] T057 — Identificar tudo que realmente exige infraestrutura própria.
-- [ ] T058 — Identificar candidatos a IA/vetor.
-- [ ] T059 — Criar matriz de paridade futura. _(estrutura incremental ASI+GRE; aguarda KB2Ops e cruzamento)_
+- [ ] T050 — Criar catálogo unificado de persistência. _(inventário ASI+GRE+KB2Ops materializado; consolidar decisões/ownership)_
+- [ ] T051 — Criar catálogo unificado de hooks/rotas/integrações. _(inventário ASI+GRE+KB2Ops materializado; consolidar superfície futura)_
+- [ ] T052 — Criar mapa de ownership atual de dados. _(prioridade: GRE ↔ KB2Ops classificação)_
+- [ ] T053 — Criar matriz de sobreposição funcional. _(Search/Studio/Resumo/Analytics/UI)_
+- [ ] T054 — Criar mapa de contratos quebrados/drift. _(D-001/D-002/D-008 quebrados; D-003/D-004/D-007 com direção confirmada; fechar consolidado)_
+- [ ] T055 — Criar catálogo de regressão e Golden Queries. _(contratos das três referências catalogados; consolidar gate futuro)_
+- [ ] T056 — Identificar tudo que WordPress pode substituir. _(Metadata/Taxonomy/Options/Admin-post/Site Health/Cron/cache)_
+- [ ] T057 — Identificar tudo que realmente exige infraestrutura própria. _(índice/telemetria/queue somente por evidência)_
+- [ ] T058 — Identificar candidatos a IA/vetor. _(lista preliminar existe; ordenar por dependências/custo/risco)_
+- [ ] T059 — Criar matriz de paridade futura consolidada. _(matriz preliminar das três referências existe)_
 
 ## Gate
 
@@ -71,3 +71,7 @@
 - [ ] T095 — Fechar itens “AINDA NÃO SABEMOS” críticos.
 - [ ] T096 — Emitir relatório final da SPEC-000.
 - [ ] T097 — Autorizar ou bloquear SPEC-001.
+
+## Estado do planejamento
+
+Os três blocos de referência estão concluídos documentalmente. **Nenhum runtime novo foi criado.** O próximo trabalho permitido é exclusivamente o cruzamento T050–T059; SPEC-001 continua bloqueada até os gates T090–T097.

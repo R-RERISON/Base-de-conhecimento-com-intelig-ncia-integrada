@@ -11,15 +11,15 @@
 
 ## Inventário KB2Ops
 
-- [ ] Bootstrap/lifecycle.
-- [ ] Persistência.
-- [ ] Hooks/rotas/actions.
-- [ ] UI/Design System.
-- [ ] Elementor extractor.
-- [ ] Search atual.
-- [ ] Migração/installer.
-- [ ] Testes/build.
-- [ ] Classificação completa.
+- [x] Bootstrap/lifecycle.
+- [x] Persistência.
+- [x] Hooks/rotas/actions.
+- [x] UI/Design System.
+- [x] Elementor extractor.
+- [x] Search atual.
+- [x] Migração/installer/uninstall.
+- [x] Testes/build/release.
+- [x] Classificação completa.
 
 ## Inventário ASI
 
@@ -50,15 +50,16 @@
 
 ## Cruzamento
 
-- [ ] Catálogo de persistência. _(parcial ASI+GRE materializado; aguarda KB2Ops)_
-- [ ] Catálogo de integrações. _(parcial ASI+GRE materializado; aguarda KB2Ops)_
+- [ ] Catálogo de persistência consolidado em decisão final. _(evidência das três referências materializada)_
+- [ ] Catálogo de integrações consolidado em decisão final. _(evidência das três referências materializada)_
 - [ ] Mapa de ownership.
 - [ ] Matriz de sobreposição.
-- [ ] Drifts/contratos quebrados. _(D-001/D-002 confirmados; demais aguardam KB2Ops)_
-- [ ] Catálogo de regressão. _(parcial ASI+GRE materializado; aguarda KB2Ops)_
-- [ ] Matriz WordPress-first. _(preliminar ASI+GRE materializada)_
-- [ ] Candidatos IA/vetor. _(preliminar materializada)_
-- [ ] Matriz de paridade futura. _(parcial ASI+GRE materializada; aguarda KB2Ops)_
+- [ ] Drifts/contratos quebrados consolidados.
+- [ ] Catálogo de regressão/Golden futuro consolidado.
+- [ ] Matriz WordPress-first final.
+- [ ] Infraestrutura própria mínima justificada.
+- [ ] Candidatos IA/vetor priorizados.
+- [ ] Matriz de paridade futura final.
 
 ## Gate final
 
@@ -67,25 +68,35 @@
 - [ ] Revisão Simplicidade.
 - [ ] Revisão Segurança.
 - [ ] Revisão QA/Regressão.
+- [ ] Revisão Produto/Conhecimento.
 - [ ] Nenhum desconhecido crítico sem decisão.
+- [ ] Relatório final SPEC-000.
 - [ ] SPEC-001 autorizada formalmente.
 
 ## Evidência de fechamento do bloco ASI
 
-- `inventario-asi.md` contém a decomposição de runtime, comportamento e classificação.
-- `catalogo-persistencia.md` registra stores/options/transients e ownership preliminar.
-- `catalogo-integracoes.md` registra hooks, cron, capabilities, AJAX, shortcodes e integrações.
-- `catalogo-testes-regressao.md` registra a suíte/gates e contratos a portar.
-- `matriz-paridade-futura.md` registra a paridade mínima e os itens ainda desconhecidos.
-- `riscos-e-drifts.md` registra riscos e integrações a cruzar.
+- `inventario-asi.md` decompõe runtime, schema, busca, item knowledge, curadoria, telemetria, fila, Golden, Word Cloud, legacy e gates.
+- contratos fortes e complexidade histórica foram separados.
 
-## Evidência de fechamento do bloco Gerenciador de Resumo Executivo
+## Evidência de fechamento do bloco GRE
 
-- `inventario-resumo-executivo.md` fixa baseline 0.6.0/SHA e decompõe as seis classes de runtime.
-- as oito metas canônicas, `post_title` e o Summary Store foram inventariados.
-- Admin Page, Coverage Dashboard, shortcode, side panel e CSS foram classificados.
-- ausência de tabela/REST/AJAX/cron/options/transients próprios foi comprovada no runtime.
-- suíte unitária, integração WordPress real, package smoke e build determinístico foram catalogados.
-- D-001 (`Objective_Provider`) e D-002 (`bdc_es_objective_updated`) foram confirmados como contratos quebrados entre ASI e GRE.
-- riscos de workload do dashboard e atomicidade multi-campo foram formalizados.
+- `inventario-resumo-executivo.md` fixa baseline e seis classes.
+- oito metas, Summary Store, Admin/Coverage, Renderer/assets e testes foram classificados.
+- D-001/D-002 foram confirmados como contratos quebrados.
+
+## Evidência de fechamento do bloco KB2Ops
+
+- `inventario-kb2ops.md` fixa `0.2.1 @ f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94` e decompõe runtime completo.
+- Content Extractor Elementor-aware foi documentado como contrato read-only, com gap de extração parcial/custom widgets formalizado.
+- todas as `_kb2ops_*`, view count, options, ausência de tables/cron/REST/AJAX e uso de categorias nativas foram mapeados.
+- Summary Bridge foi comparada ao GRE e classificada como compat read-only a desaparecer no bounded context unificado.
+- Knowledge Studio, Search, Analytics, Reports e AI READY foram classificados.
+- drift `AI READY` docs/runtime foi registrado.
+- Design System foi decomposto em princípios, tokens, componentes, responsive e assets.
+- Installer/Migration/Uninstall foram classificados, preservando apenas o princípio reversível.
+- release gate e build determinístico foram inventariados; ausência de suíte executável versionada foi registrada como dívida.
 - nenhum runtime do novo plugin foi criado.
+
+## Estado
+
+A fase de **inventário por referência está concluída**. O próximo gate é T050–T059, com prioridade para ownership e sobreposição antes de qualquer escolha de schema ou implementação.

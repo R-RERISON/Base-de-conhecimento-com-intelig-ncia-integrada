@@ -1,161 +1,211 @@
 # Matriz de Paridade Futura — SPEC-000
 
-> Matriz incremental. Nesta versão, registra paridade derivada de ASI + Gerenciador de Resumo Executivo. Não define implementação nem schema final. KB2Ops e cruzamento T050–T059 ainda são obrigatórios.
+> Matriz incremental após inventário das três referências. Define comportamentos que devem sobreviver, não schema final nem desenho de classes. O cruzamento T050–T059 ainda precisa consolidar ownership, sobreposição e primitives.
 
 ## Legenda
 
 - **MANTER** — comportamento precisa sobreviver.
 - **REDESENHAR** — objetivo permanece, implementação não.
 - **SUBSTITUIR POR WORDPRESS** — preferir primitive nativa.
-- **EVOLUIR COM IA/VETOR** — evolução opcional, degradável e governada.
+- **EVOLUIR COM IA/VETOR** — opcional/degradável/governado.
 - **DESCARTAR** — não levar ao greenfield.
-- **AINDA NÃO SABEMOS** — falta evidência/cross-reference.
+- **AINDA NÃO SABEMOS** — depende do cruzamento/medição.
 
-## 1. ASI → produto futuro
+## 1. ASI -> produto futuro
 
-| Capacidade | Paridade exigida | Direção | Gate futuro |
+| Capacidade | Paridade | Direção | Gate futuro |
 |---|---|---|---|
-| busca lexical local | SIM | MANTER/REDESENHAR | Golden Queries + performance |
-| fallback quando FULLTEXT indisponível | SIM | MANTER | busca continua funcional |
-| QueryContext/plano limitado | SIM | MANTER/REDESENHAR | unit + Golden |
-| ranking explicável | SIM | MANTER | evidência de sinais/scores |
-| índice por post | PROVÁVEL | REDESENHAR | Content Extractor canônico |
-| índice de trechos | SIM | REDESENHAR | identidade/anchor/navegação |
-| extractor ASI sobre `post_content` | NÃO | DESCARTAR | substituir pelo extractor canônico Elementor-aware |
-| vocabulary administrável | SIM | MANTER | storage após WordPress-first |
-| bindings explícitos | SIM | MANTER | storage após WordPress-first |
-| promote/demote rules | SIM | MANTER | simulation + audit |
-| diagnóstico read-only | SIM | MANTER | sem mutação colateral |
-| sugestões determinísticas/evidence-backed | SIM | MANTER | confidence/effect/risk |
-| simulação com ranker real | SIM | MANTER | Apply proof + stale-state guard |
-| Apply humano | SIM | MANTER | capability + nonce + evidência |
-| durable queue | CONDICIONAL | REDESENHAR | justificar workload/durabilidade |
+| busca lexical local | SIM | MANTER/REDESENHAR | Golden + performance |
+| fallback sem FULLTEXT | SIM | MANTER | disponibilidade lexical |
+| QueryContext limitado | SIM | MANTER/REDESENHAR | unit + Golden |
+| ranking explicável | SIM | MANTER | sinais/scores observáveis |
+| índice por post | PROVÁVEL | REDESENHAR | extractor canônico |
+| índice de trechos | SIM | REDESENHAR | identity/deep link |
+| parser direto `post_content` | NÃO | DESCARTAR | extractor único |
+| vocabulary | SIM | MANTER | storage T056/T057 |
+| bindings | SIM | MANTER | storage T056/T057 |
+| relevance rules | SIM | MANTER | simulation + audit |
+| diagnóstico read-only | SIM | MANTER | sem side effect |
+| suggestions evidence-backed | SIM | MANTER | confidence/effect/risk |
+| simulation com ranker real | SIM | MANTER | stale-state guard |
+| Apply humano | SIM | MANTER | capability + nonce |
+| durable queue | CONDICIONAL | REDESENHAR | workload/durabilidade |
 | migrations 4.x/WPUI | NÃO | DESCARTAR | greenfield |
-| post-install state machine completo | NÃO | REDESENHAR | mínimo necessário ao runtime novo |
-| Search Events | SIM, com minimização | REDESENHAR | privacy/retention |
-| Search Interactions | SIM, se analytics habilitado | MANTER/REDESENHAR | HMAC/idempotência |
-| Outcomes por journey | SIM | MANTER | semântica de consulta madura |
-| `quality_daily` | NÃO inicialmente | DESCARTAR | reintroduzir só por benchmark |
-| Golden Queries | SIM | MANTER | release NO-GO para blockers |
-| Quality Diagnostics | SIM | SUBSTITUIR POR WORDPRESS + checks próprios | Site Health/export seguro |
-| Search Intelligence gerencial | PROVÁVEL | REDESENHAR | capability/privacy/workload bounds |
-| integração GAC direta | NÃO | DESCARTAR | adapter opcional se necessário |
-| Word Cloud | OPCIONAL | REDESENHAR | consumir índice/telemetria canônicos |
-| `[asi_search_form]` exato | NÃO | REDESENHAR | UX pública equivalente no DS novo |
-| AJAX exato | AINDA NÃO SABEMOS | AINDA NÃO SABEMOS | escolher primitive WP pelo consumidor |
-| public debounce/cancel | SIM | MANTER | E2E |
-| progressive disclosure | SIM | MANTER | E2E/acessibilidade |
-| anchor injection exata | AINDA NÃO SABEMOS | REDESENHAR | cruzar KB2Ops/Elementor |
-| Objective canonical-only | SIM | MANTER | store interno GRE confirmado; drift legado não pode sobreviver |
-| legacy/compat | NÃO | DESCARTAR | só estratégia de migração separada se necessária |
-| uninstall não destrutivo | SIM | MANTER | política de retenção explícita |
-| release local reproduzível | SIM | MANTER/REDESENHAR | lint + testes + package |
-| vetor/semantic retrieval | OPCIONAL | EVOLUIR COM IA/VETOR | nunca derrubar lexical |
-| IA para curadoria | OPCIONAL | EVOLUIR COM IA/VETOR | IA sugere, humano decide |
-| IA para síntese | OPCIONAL | EVOLUIR COM IA/VETOR | retrieval precede síntese |
+| post-install state machine completa | NÃO | REDESENHAR | mínimo necessário |
+| Search Events | SIM, mínimo | REDESENHAR | privacy/retention |
+| Interactions | CONDICIONAL | MANTER/REDESENHAR | HMAC/idempotência |
+| Outcomes | SIM se analytics | MANTER | journey semantic |
+| `quality_daily` | NÃO inicialmente | DESCARTAR | benchmark |
+| Golden Queries | SIM | MANTER | NO-GO blockers |
+| Quality Diagnostics | SIM | SUBSTITUIR POR WORDPRESS + checks | Site Health |
+| Search Intelligence | PROVÁVEL | REDESENHAR | perguntas reais + bounds |
+| GAC no core | NÃO | DESCARTAR | adapter opcional |
+| Word Cloud | OPCIONAL | REDESENHAR | projections canônicas |
+| live typing/debounce/abort | SIM para live UX | MANTER | E2E |
+| AJAX ASI exato | NÃO | REDESENHAR se necessário | consumidor/UX |
+| anchor injection atual | NÃO literal | REDESENHAR | deep-link contract |
+| legacy/compat permanente | NÃO | DESCARTAR | migração separada |
+| vetor/semantic retrieval | OPCIONAL | EVOLUIR COM IA/VETOR | lexical nunca cai |
+| IA de curadoria | OPCIONAL | EVOLUIR COM IA/VETOR | humano decide |
+| síntese | OPCIONAL | EVOLUIR COM IA/VETOR | retrieval precede |
 
-## 2. Gerenciador de Resumo Executivo → produto futuro
+## 2. Gerenciador de Resumo Executivo -> produto futuro
 
-| Capacidade/contrato | Paridade exigida | Direção | Gate futuro |
+| Capacidade/contrato | Paridade | Direção | Gate |
 |---|---|---|---|
-| exatamente oito valores GRE conhecidos | SIM | MANTER semântica/compatibilidade | migração/compat + testes WP |
-| título via `post_title` | SIM | MANTER | nenhuma `_bdc_es_title` |
-| `_bdc_es_title` | NÃO | DESCARTAR/proibir | architecture guard |
-| Metadata API | SIM | SUBSTITUIR POR WORDPRESS/MANTER | integração WordPress real |
-| `show_in_rest=false` por default | SIM enquanto não houver API | MANTER | security regression |
-| leitura side-effect free | SIM | MANTER | read nunca escreve |
-| meta ausente => `''` em projection | SIM | MANTER | unit/integration |
-| vazio canônico => delete meta | SIM | MANTER | integration |
-| allowlist de payload | SIM | MANTER | fail-closed |
-| sanitização centralizada | SIM | MANTER | unit/integration |
-| capability `edit_post` por objeto | SIM | MANTER | security integration |
-| nonce por post/ação | SIM | MANTER | CSRF test |
-| read-after-write | SIM | MANTER | persistence failure tests |
-| update parcial | SIM | MANTER | omitted fields intact |
-| atomicidade multi-campo | PROVÁVEL | REDESENHAR/ENDURECER | teste de falha tardia |
-| Admin server-rendered | SIM como baseline | MANTER/REDESENHAR UI | KB2Ops DS |
-| Coverage Dashboard | SIM | MANTER comportamento / REDESENHAR workload | bounded performance |
-| scan `posts_per_page=-1` | NÃO | REDESENHAR | benchmark/bounds |
-| `[bdc_resumo_executivo]` | SIM como compatibilidade inicial | MANTER/REDESENHAR | preflight de consumidores |
-| shortcode selecionar post arbitrário | NÃO | DESCARTAR/proibir | security regression |
-| side panel automático | AINDA NÃO SABEMOS | AINDA NÃO SABEMOS | decisão UX após KB2Ops |
-| frontend sem JS | PREFERÍVEL | MANTER simplicidade | adicionar JS só se comportamento exigir |
-| CSS GRE atual | NÃO como DS final | REDESENHAR | tokens/componentes KB2Ops |
-| `Objective_Provider` externo | NÃO | DESCARTAR como bridge; substituir por serviço interno | integration contract |
-| evento de Objective alterado | SIM | MANTER intenção / REDESENHAR nome/payload | post-write -> reindex test |
-| `bdc_es_loaded` | AINDA NÃO SABEMOS | compatibilidade apenas | consumidor real |
-| tabela própria de resumo | NÃO | DESCARTAR | WP meta atende |
-| REST próprio de resumo | NÃO no baseline | DESCARTAR | só com consumidor/benefício |
-| AJAX próprio de resumo | NÃO no baseline | DESCARTAR | admin-post atende |
-| cron próprio de resumo | NÃO | DESCARTAR | sem workload periódico |
-| options/transients GRE | NÃO | DESCARTAR enquanto não necessários | princípio de negação |
-| metadata revisions off | AINDA NÃO SABEMOS | AINDA NÃO SABEMOS | requisitos de histórico |
-| integration tests WP real | SIM | MANTER | gate obrigatório |
-| deterministic ZIP + SHA | SIM | MANTER | reproducible release |
+| oito `_bdc_es_*` | SIM | MANTER compat/semântica | WP integration/migration |
+| título via `post_title` | SIM | MANTER | sem `_bdc_es_title` |
+| Metadata API | SIM | SUBSTITUIR POR WORDPRESS/MANTER | WP real |
+| `show_in_rest=false` default | SIM até API justificada | MANTER | security |
+| leitura sem side effect | SIM | MANTER | read nunca escreve |
+| meta ausente -> vazio projection | SIM | MANTER | unit/integration |
+| vazio -> delete meta | SIM | MANTER | integration |
+| allowlist/sanitização | SIM | MANTER | fail-closed |
+| `edit_post` por objeto | SIM | MANTER | security |
+| nonce por post/ação | SIM | MANTER | CSRF |
+| read-after-write | SIM | MANTER | failure tests |
+| update parcial | SIM | MANTER | omitted intact |
+| atomicidade multi-campo | A DEFINIR | REDESENHAR/ENDURECER | late-failure test |
+| admin server-rendered | SIM baseline | MANTER/REDESENHAR | DS único |
+| coverage metrics | SIM | MANTER | workload bounded |
+| scan ilimitado | NÃO | REDESENHAR | benchmark |
+| shortcode current-post-only | COMPAT | MANTER/REDESENHAR | consumer preflight |
+| side panel automático | AINDA NÃO SABEMOS | REDESENHAR/decidir | T053 |
+| `Objective_Provider` bridge | NÃO | DESCARTAR | serviço interno |
+| evento de mudança | SIM | MANTER intenção/REDESENHAR | confirmed-write event |
+| tabela REST AJAX cron próprios | NÃO no baseline | DESCARTAR | só com requisito novo |
+| metadata revisions off | AINDA NÃO SABEMOS | decidir T056/T095 | histórico |
+| WP real integration tests | SIM | MANTER | release gate |
+| deterministic ZIP/SHA | SIM | MANTER | release |
 
-## 3. Matriz WordPress-first preliminar
+## 3. KB2Ops -> produto futuro
 
-| Necessidade | Primitive WordPress a avaliar primeiro | Infra própria só se... |
+| Capacidade/contrato | Paridade | Direção | Gate |
+|---|---|---|---|
+| posts/Elementor fonte editorial | SIM | MANTER | zero write editorial derivado |
+| Content Extractor único | SIM | MANTER/REDESENHAR | Elementor corpus tests |
+| parse JSON antes de render pesado | SIM | MANTER | extraction performance |
+| rendered fallback | SIM controlado | MANTER/REDESENHAR | custom-widget coverage |
+| allowlist `table/tablepress` | SIM princípio | MANTER | shortcode safety |
+| multiple independent parsers | NÃO | DESCARTAR | one extractor contract |
+| review states | SIM | MANTER | state tests |
+| knowledge type | SIM | MANTER | storage T052/T056 |
+| technologies/service/audience | SIM valores | REDESENHAR storage | ownership/taxonomy |
+| keywords/versions | PROVÁVEL | MANTER valor/REDESENHAR | consumers |
+| review notes/reviewer/time | SIM | MANTER via WP | Meta API |
+| history bounded | SIM intenção | REDESENHAR | explicit contract/history |
+| `include_ai` humano | SIM | MANTER | AI READY tests |
+| AI READY | SIM | MANTER/REDESENHAR | single canonical rule |
+| pre-analysis local | SIM | MANTER | deterministic/no provider |
+| Summary_Bridge | NÃO no unificado | DESCARTAR | single Summary Store |
+| Search `WP_Query/meta LIKE` | NÃO | REDESENHAR | ASI-inspired engine |
+| token-coverage ranker | NÃO final | DESCARTAR | Golden |
+| Search scope/visibility | SIM | MANTER | bypass tests |
+| public portal/shortcode | PROVÁVEL | MANTER/REDESENHAR | product/compat |
+| query analytics option | NÃO literal | REDESENHAR | privacy/retention |
+| view count postmeta | NÃO literal | REDESENHAR | analytics model |
+| reports/questions de produto | SIM | MANTER comportamento | bounds/privacy |
+| Design System principles | SIM | MANTER/REDESENHAR | a11y/responsive |
+| CSS values/namespace exatos | NÃO | REDESENHAR | DS unificado |
+| server rendering | SIM baseline | MANTER | JS only when needed |
+| SPA/framework externo | NÃO | DESCARTAR | negation principle |
+| activation reversible | SIM | MANTER princípio | install/upgrade tests |
+| legacy cleanup lists | NÃO | DESCARTAR | historical only |
+| uninstall non-destructive | SIM | MANTER | retention |
+| deterministic build | SIM | MANTER | package tests |
+| release report sem executable suite | NÃO suficiente | REDESENHAR | tests versionados |
+
+## 4. Matriz WordPress-first consolidada preliminar
+
+| Necessidade | Primitive a testar primeiro | Infra própria só se... |
 |---|---|---|
-| configuração | Options/Settings API | estado exceder perfil de configuração |
-| metadata editorial por post | `register_post_meta` + Metadata API | relacionamento/consulta/volume não atender |
-| classificação editorial reutilizável | taxonomias | necessidade for realmente classificatória e compartilhada |
-| título | `post_title` | nunca duplicar em meta sem razão extraordinária |
-| evento de mudança | actions/filters | integração externa exigir outro mecanismo |
-| formulário admin | admin-post + nonces + capabilities | UX/realtime tiver requisito comprovado |
-| saúde | Site Health | check precisar UI operacional especializada |
-| scheduling | WP-Cron | durabilidade/job state exigir queue |
-| cache | Object Cache/transients | backend especializado tiver benefício mensurável |
-| autorização | roles/capabilities | nunca substituir sem necessidade |
-| CSRF | nonces | sempre usar primitive WP na superfície WP |
-| conteúdo | Posts + Elementor canônico | índice derivado é permitido, edição paralela não |
-| busca derivada | WP_Query/native primeiro + projection própria se necessária | relevância/performance exigir |
-| resumo executivo | post meta/taxonomia conforme semântica | tabela própria só com evidência contrária ao baseline GRE |
-| dashboard de cobertura | query/cache nativos e workload limitado | materialização só após benchmark |
+| conteúdo editorial | `WP_Post` + Elementor | nunca duplicar edição |
+| título | `post_title` | razão extraordinária |
+| atributos locais | `register_post_meta` | relação/query/volume não atender |
+| classificação compartilhada | taxonomy/terms | semântica não for classificatória ou escala exigir outra coisa |
+| settings | Settings/Options API | estado não for configuração |
+| usuário/revisor | users/capabilities | nunca reinventar identidade |
+| autorização | `edit_post`, `edit_posts`, custom caps apenas quando necessário | responsabilidade realmente distinta |
+| CSRF | nonce | sempre em WP mutante |
+| mutation server-rendered | admin-post | realtime/UX exigir outro canal |
+| public live interaction | AJAX WP | somente se live UX exigir |
+| REST | nenhuma por default | consumidor/API formal justificar |
+| scheduling | WP-Cron | durabilidade/state/retry exigir queue |
+| cache | Object Cache/transient | benefício mensurável |
+| health | Site Health | UI especializada for indispensável |
+| search simples | WP native | relevância/performance insuficientes |
+| search avançada | projection própria | já comprovado pelo ASI, mas schema mínimo |
+| audit/histórico | revisions/meta/event facts | requisitos de consulta/retenção exigirem tabela |
+| analytics | facts mínimos | volume/journey/outcome exigirem relational store |
+| coverage/reports | queries/cache bounded | materialização só após benchmark |
 
-## 4. Contratos cross-module já exigidos
+## 5. Contratos cross-module obrigatórios
 
-### Objective/Resumo Executivo → Search
+### Content pipeline
 
-O drift ASI↔GRE provou que o futuro contrato deve ser interno e explícito:
+`WP_Post/Elementor -> Content Extractor -> projections lexical/items -> optional vector -> Search/IA`
 
-1. store canônico persiste metadata;
-2. write é confirmado;
-3. action de domínio é emitida;
-4. index/projections recebem invalidação;
-5. reindexação usa o Content Extractor canônico;
-6. falha da projection não reescreve conteúdo editorial;
-7. ausência de Objective continua vazia — sem síntese silenciosa do corpo.
+- extractor é read-only;
+- qualidade de extração precede indexação;
+- nenhum downstream reparseia `_elementor_data`/`post_content` por conta própria;
+- custom widget omission precisa de diagnóstico/teste.
 
-### Elementor/content ownership
+### Summary/curadoria -> projections
 
-Nenhum componente de resumo, busca ou IA pode escrever `_elementor_data`. A representação para busca/RAG será derivada pelo extractor único a confirmar no KB2Ops.
+1. validar autorização/input;
+2. persistir estado canônico;
+3. confirmar estado final;
+4. emitir evento de domínio mínimo;
+5. marcar/enfileirar projections stale;
+6. rebuild derivado sem write editorial.
 
-## 5. Candidatos de evolução com IA/vetor
+### AI READY
 
-1. expansão semântica de consulta após normalização lexical;
-2. candidate retrieval híbrido lexical+vetorial;
-3. rerank semântico sobre shortlist limitada;
-4. detecção assistida de lacunas/duplicidade;
-5. sugestão de vocabulary/bindings/rules;
-6. sugestão assistida de preenchimento do Resumo Executivo, **sem persistência automática**;
-7. síntese/answering somente depois de retrieval com fonte.
+Regra precisa ser única. Baseline runtime KB2Ops: publish + approved + Summary 8/8 + include_ai. Evolução só por SPEC e regressão.
 
-Todos são **opcionais**. Queda de provider vetorial/IA não pode tornar a busca lexical indisponível. IA nunca deve editar Elementor ou persistir metadata editorial sem decisão humana explícita.
+### Search quality
 
-## 6. Itens que permanecem AINDA NÃO SABEMOS
+- lexical disponível sem IA/vetor;
+- Golden blockers;
+- explainability;
+- retrieval candidates antes de rerank/synthesis;
+- scope/permissions aplicados antes de exposição.
 
-- quais campos GRE classificatórios permanecem post meta versus viram taxonomia;
-- storage final de vocabulary/bindings/rules/Golden Queries;
-- necessidade concreta de tabela de queue;
-- schema de post/item index;
-- estratégia definitiva de anchors;
-- AJAX versus REST para busca pública;
-- coexistência/migração dos dados ASI instalados;
-- necessidade de Search Intelligence por pessoa/equipe no produto final;
-- política de query text e retenção;
-- política de revisions/histórico das oito metas;
-- side panel automático versus outra composição UI;
-- MariaDB Vector/chunks/embedding store.
+### UX
 
-Esses itens não devem ser fechados até o bloco KB2Ops e o cruzamento T050–T059.
+- wp-admin shell;
+- DS único;
+- progressive disclosure;
+- Search não finge chat se é busca;
+- IA é melhoria opcional;
+- JS é progressive enhancement, não fundação do shell.
+
+## 6. Candidatos a IA/vetor — ainda opcionais
+
+1. expansão semântica após normalização lexical;
+2. hybrid lexical+vector candidate retrieval;
+3. rerank semântico bounded;
+4. detecção de gaps/duplicidade;
+5. sugestões de classification/vocabulary/bindings;
+6. sugestões de Resumo Executivo sem auto-save;
+7. assisted review sobre payload canônico;
+8. answer/synthesis com fontes depois de retrieval.
+
+Nenhum entra antes de baseline lexical/metadata/extractor/Golden estar estável.
+
+## 7. Itens ainda AINDA NÃO SABEMOS antes de T050–T059
+
+- owner final de audiência/serviço/tecnologia;
+- taxonomy vs postmeta campo a campo;
+- storage final vocabulary/bindings/rules/Golden;
+- schema post/item index;
+- necessidade concreta de queue;
+- analytics facts/retention;
+- migration/coexistência;
+- side panel/shortcodes finais;
+- anchors/deep links finais;
+- revisions/histórico;
+- MariaDB Vector/chunks/embeddings;
+- provider Foundry/IA.
+
+O inventário de referências está completo; a próxima alteração desta matriz deve vir do **cruzamento consolidado**, não de novas suposições.

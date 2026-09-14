@@ -1,251 +1,297 @@
 # Catálogo de Testes e Regressão — SPEC-000
 
-> Documento incremental. Blocos ASI e Gerenciador de Resumo Executivo concluídos; KB2Ops ainda será incorporado antes do gate final.
+> Inventário consolidado das três referências. Este documento registra contratos de regressão a portar; ainda não existe runtime do novo plugin.
 
 ## 1. Advanced Search Intelligence 4.6.8
 
-Baseline: `R-RERISON/Advanced-search-Intelligence@c0ddff89caad529ce1bcdc645eb795e4a9b187a1`
+Baseline: `R-RERISON/Advanced-search-Intelligence@c0ddff89caad529ce1bcdc645eb795e4a9b187a1`.
 
-### Gate de release observado
+### Gate observado
 
-`tools/validate-release.sh` executa lint PHP, syntax check JavaScript, suíte de regressão PHP/Node/Python, validação de package layout/contract e, quando existe, integridade SHA-256 de `release-manifest.json`.
+`tools/validate-release.sh` executa lint PHP, syntax check JavaScript, regressão PHP/Node/Python, package validation e integridade SHA-256 quando manifest existe.
 
-Não há `.github` no baseline fixado; o gate versionado é local e reproduzível.
+### Contratos fortes a preservar
 
-### Inventário da suíte
+- QueryContext/normalização/retrieval limitado;
+- ranking de posts/itens e explicabilidade;
+- identidade/navegação fail-closed de trechos;
+- vocabulary/bindings/rules;
+- curadoria assistida + simulação + stale-state guard;
+- Search Events/Interactions/Outcomes;
+- HMAC, idempotência, rate-limit e journey;
+- privacy modes;
+- Queue lifecycle se fila sobreviver;
+- Golden Queries como release blocker;
+- Quality Diagnostics/Site Health;
+- package/install/upgrade/rollback;
+- performance bounds.
 
-| Teste/gate | Comportamento protegido | Portar? |
-|---|---|---|
-| `test-source-contracts.php` | clean runtime, ownership de hooks, ausência de legado, contratos públicos/admin | SIM, mas substituir parte dos string-tests por comportamento |
-| `test-query-context.php` | normalização/plano de retrieval | SIM |
-| `test-relevance-coverage.php` | cobertura/ranking | SIM + Golden |
-| `test-table-metadata-cache.php` | cache de metadata/schema | somente se mecanismo sobreviver |
-| `test-item-identity.php` | identidade estável de trecho | SIM |
-| `test-item-extractor.php` | extração conservadora | SIM, contra Content Extractor novo |
-| `test-item-relevance.php` | ranking de trechos | SIM |
-| `test-anchor-navigation-467.php` | anchor exactness/fail-closed | SIM se anchors sobreviverem |
-| `test-public-item-navigation-contract-467.php` | navegação pública de trechos | SIM |
-| `test-search-response-quality.php` | estados/metadados de qualidade | SIM |
-| `test-post-context.php` | Objective canônico; sem resumo inventado | SIM |
-| `test-executive-summary-objective.php` | contrato `Objective_Provider` | SIM, adaptar ao store interno final |
-| `test-base-reconciler.php` | reconciliação/cutover histórico | NÃO como implementação; preservar princípios se houver migração |
-| `test-external-preflight-resume.php` | preflight retomável de consumidores | SIM se houver migração/coexistência |
-| `test-search-intelligence-report.php` | analytics gerencial/privacy | SIM para comportamentos escolhidos |
-| `test-telemetry-outcomes-46.php` | privacidade, journey, outcomes, HMAC, idempotência | SIM, alta prioridade |
-| `test-public-search-journey-46.js` | live typing/journey/revision | SIM |
-| `test-acceptance-guidance-467.php` | critérios de aceite manual | REDESENHAR |
-| `test-search-outcomes-sql-46.php` | semântica SQL de outcomes | SIM se schema relacional sobreviver |
-| `test-assisted-knowledge-46.php` | sugestões assistidas | SIM |
-| `test-search-knowledge-workflow-026.php` | workflow de curadoria | SIM |
-| `test-knowledge-curation-46.php` | capability/state/mutations | SIM |
-| `test-golden-queries-46.php` | release gate de ranking | SIM, obrigatório |
-| `test-quality-diagnostics-46.php` | health/redaction | SIM, adaptar Site Health |
-| `test-migrations-46.php` | migrations ASI históricas | NÃO; criar testes do upgrade próprio no futuro |
-| `test-partial-upgrade-46.php` | disponibilidade durante upgrade aditivo | SIM como princípio se houver schema próprio |
-| `test-performance-bounds-46.php` | limites estruturais de workload | SIM + benchmark real |
-| `test-admin-security-46.php` | capability/nonce/HMAC/trust boundaries | SIM, obrigatório |
-| `test-post-install-orchestrator-461.php` | state machine de preparação/validação | REDESENHAR; não portar integralmente |
-| `test-queue-lifecycle-466.php` | retry budget/recovery/audit | SIM se fila própria existir |
-| `test-post-install-admin-461.php` | UI operacional pós-instalação | REDESENHAR |
-| `test-activation-bootstrap-463.php` | activation/bootstrap seguro | SIM |
-| `test-wordpress-package-layout.py` | ZIP/layout instalável | SIM |
-| `test-package-contract.php` | composição do pacote | SIM |
+### Regra central
 
-### Contratos de regressão ASI herdados conceitualmente
-
-#### Busca e ranking
-
-- mudanças de normalização, parser, pesos, FULLTEXT/fallback, vocabulary, bindings, rules, vetor ou rerank não podem regressar Golden Queries silenciosamente;
-- suíte Golden vazia não é PASS;
-- evidência Golden fica stale se versão do ranker de posts **ou** itens mudar;
-- warning não é blocker; expectativa `blocking` falha release.
-
-#### Conteúdo e Objective
-
-- uma única representação canônica de conteúdo alimenta retrieval/trechos/IA;
-- ausência do Objective canônico permanece ausência, sem síntese silenciosa a partir de corpo editorial;
-- nenhuma lógica derivada pode escrever `_elementor_data` ou reescrever `post_content`.
-
-#### Segurança
-
-- toda mutação administrativa: capability + CSRF nonce;
-- tracking público: nonce + rate limit + target HMAC;
-- cliente não define fatos autoritativos que o servidor já conhece;
-- replay exato de interação é idempotente;
-- journey inválida/oversized falha fechada;
-- cache de resposta nunca carrega tracking token/event identity compartilhado.
-
-#### Privacidade
-
-- modo mínimo não deve persistir identidade/session/IP/UA;
-- journey é HMAC, nunca valor cru;
-- export de qualidade é redigido;
-- a política de **query text** deve ser redesenhada, pois ASI minimal ainda persiste o termo pesquisado.
-
-#### Operação
-
-- activation não executa trabalho destrutivo/pesado indiscriminado;
-- indexação assíncrona é idempotente e observável;
-- job concluído, quando reaberto por novo evento, ganha novo orçamento de retry;
-- estados impossíveis são recuperados sem reabrir dead/error indevidamente;
-- telemetria falha sem derrubar a busca;
-- workloads gerenciais têm hard limits e truncamento é informado.
+Golden suite vazia nunca é PASS. Mudança de ranker/dataset precisa invalidar evidência stale.
 
 ---
 
 ## 2. Gerenciador de Resumo Executivo 0.6.0
 
-Baseline: `R-RERISON/Gerenciador-de-Resumo-Executivo-da-Base-de-Conhecimento@1120a534d8eb2288460c2c675730deef0d67c365`
+Baseline: `R-RERISON/Gerenciador-de-Resumo-Executivo-da-Base-de-Conhecimento@1120a534d8eb2288460c2c675730deef0d67c365`.
 
-### Gate local/release
+### Gate observado
 
-`tools/verify_local.py` é o gate canônico observado e executa:
+`tools/verify_local.py` cobre Composer validation/dependencies, PHP lint, WPCS, PHPUnit, package smoke, deterministic build e SHA-256.
 
-1. `composer validate --strict`;
-2. instalação de dependências (ou valida `vendor/` se skip explícito);
-3. lint PHP;
-4. WordPress Coding Standards;
-5. PHPUnit;
-6. smoke tests de package;
-7. build determinístico;
-8. descoberta de exatamente um ZIP;
-9. SHA-256 do pacote;
-10. relatório `dist/local-verification.json` com PASS/FAIL e evidências.
+### Suíte relevante
 
-O build `tools/build_plugin.py` usa arquivos ordenados, timestamp ZIP fixo e valida a raiz/shape do pacote. O smoke test gera o pacote duas vezes e exige SHA idêntico.
+- `MetaContractTest.php`: oito metas exatas, sem `_bdc_es_title`, args/sanitizer/auth;
+- `SummaryStoreTest.php`: read/write, allowlist, capability, partial update, empty-delete, read-after-write;
+- Admin tests: menu, nonce, payload, server-rendered editor;
+- `CoverageDashboardTest.php`: 0/8–8/8, published-only, read-only;
+- `FrontendRendererTest.php`: current-post-only, escaping, sem duplicação/JS;
+- bootstrap/architecture guardrails;
+- duas integrações WP-CLI em WordPress real;
+- package smoke e reproducible ZIP.
 
-Não há workflow de GitHub Actions no baseline fixado; o gate é deliberadamente local.
+### Lacunas formalizadas
 
-### Unitários GRE
-
-| Teste | Contrato protegido | Portar? |
-|---|---|---|
-| `MetaContractTest.php` | oito metas exatas, sem título meta, registration args, sanitizer/auth | SIM, obrigatório |
-| `SummaryStoreTest.php` | read/write, allowlist, capability, partial update, empty-delete, read-after-write | SIM, obrigatório |
-| `AdminMenuTest.php` | menu/capability/estrutura admin | SIM, adaptar UI unificada |
-| `AdminPageTest.php` | nonce, payload, server-side editor, segurança | SIM |
-| `CoverageDashboardTest.php` | 0/8–8/8, published-only, prioridades, read-only | SIM + performance bound novo |
-| `FrontendRendererTest.php` | shortcode current-post-only, escaping, no duplicate panel, no JS | SIM para contratos escolhidos |
-| `PluginBootstrapTest.php` | single boot hook, Meta registration, `bdc_es_loaded` | SIM, adaptar bootstrap unificado |
-| `ArchitectureGuardrailTest.php` | sem `_elementor_data`, sem tabela, sem REST aberto, oito metas exatas | SIM como guardrail secundário |
-
-### Integração em WordPress real
-
-#### `tests/Integration/spec001-wp-cli.php`
-
-Protege:
-
-- registro real das oito metas;
-- `show_in_rest = false` e revisions off no baseline;
-- leitura sem write;
-- `post_title` como título;
-- unicode/multiline/backslash;
-- sanitização;
-- partial update;
-- no-op;
-- empty => delete;
-- post type;
-- capability real de editor/subscriber.
-
-#### `tests/Integration/spec002-wp-cli.php`
-
-Protege:
-
-- `admin_menu` e `admin_post` autenticado;
-- ausência de handler nopriv;
-- nonce vinculado ao post;
-- edição por editor;
-- progresso;
-- rejeição de payload inválido/title injection;
-- capability real.
-
-**Direção:** testes de integração WordPress real devem ser referência prioritária no plugin unificado para metadata, capabilities, nonces e hooks.
-
-### Package smoke
-
-`tests/smoke/test_package.py` protege:
-
-- versão consistente entre header/constant/readme;
-- layout instalável;
-- presença dos runtime files esperados;
-- ausência de development-only dirs;
-- ausência de JS que não existe no runtime;
-- reprodutibilidade byte-a-byte;
-- falha em version mismatch.
-
-### Lacunas de teste GRE detectadas
-
-#### REG-GRE-001 — atomicidade de persistência multi-campo
-
-A suíte prova que **erros de validação** não produzem partial write, pois todos os campos são validados antes da mutação. Ela também prova falha de persistência em update/delete individual.
-
-Não foi encontrada evidência de teste que force:
-
-1. campo A persistir com sucesso;
-2. campo B falhar na persistência/verificação;
-3. verificar se A é revertido ou permanece.
-
-Se o contrato futuro exigir atomicidade lógica de um submit multi-campo, este teste será obrigatório e a implementação deverá compensar writes anteriores.
-
-#### REG-GRE-002 — evento pós-persistência/invalidação
-
-O GRE não emite evento de mudança de Objective. Assim, não há teste de integração garantindo que alteração de Objective invalida/reindexa projections consumidoras.
-
-No plugin unificado, deve existir regressão explícita: `Summary Store update confirmado -> evento de domínio -> projection marcada stale/enfileirada`, sem qualquer write editorial adicional.
-
-#### REG-GRE-003 — bounded workload do Coverage Dashboard
-
-Os testes cobrem correção funcional, mas não limitam o número total de posts lidos. O runtime usa `posts_per_page = -1`.
-
-O futuro teste deve impor uma estratégia de workload limitado/paginado ou benchmark explícito, sem materializar tabela agregada antes de necessidade comprovada.
+- atomicidade lógica multi-campo em falha tardia;
+- evento pós-persistência/invalidação;
+- workload limitado do Coverage Dashboard.
 
 ---
 
-## 3. Contratos combinados ASI + GRE já comprovados
+## 3. KB2Ops 0.2.1
 
-### Metadata/Objective
+Baseline: `R-RERISON/KB2Ops-Operational-Knowledge-Engine@f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94`.
 
-- título continua `post_title`;
-- oito valores GRE são dados editoriais canônicos conhecidos;
-- ausência do Objective não pode ser preenchida silenciosamente com corpo do artigo;
-- read não pode criar metadata;
-- change de Objective precisa invalidar projections derivadas;
-- a integração ASI antiga por `Objective_Provider` está quebrada e deve virar contrato interno testado.
+### Evidência de release existente
 
-### Segurança
+`docs/audit/RELEASE-GATE-0.2.1.md` registra como aprovados:
 
-- `edit_post` por objeto é gate de metadata;
-- nonce deve estar ligado ao objeto/ação;
-- payload é allowlisted e sanitizado antes de write;
-- frontend público não aceita `post_id` arbitrário só porque um shortcode existe;
-- REST não deve ser aberto sem consumidor/requisito explícito.
+- PHP lint;
+- `node --check`;
+- CSS namespaced/balanceado;
+- smoke 23/23;
+- migration/upgrade/purge 24/24;
+- static/security 79/79;
+- UI contract 11/11;
+- ações mutáveis;
+- 19/19 blobs auditados;
+- gate estático final 16/16;
+- ZIP final de 19 arquivos;
+- lint do ZIP extraído.
 
-### WordPress-first
+### Limitação crítica de rastreabilidade
 
-- ausência de tabela/REST/AJAX/cron no GRE é um guardrail positivo, não uma limitação a ser “modernizada” automaticamente;
-- infraestrutura própria só nasce quando comportamento, volume ou durabilidade exigirem.
+Na árvore `main` fixada não existe diretório `tests/` nem scripts de gate versionados capazes de reproduzir esses totais. O relatório comprova que uma auditoria ocorreu, mas não oferece a mesma reprodutibilidade de regressão observada no ASI/GRE.
 
-### Release
+**Regra futura:** nenhum contrato KB2Ops crítico será considerado portado apenas porque existe relatório de auditoria. Ele precisa de teste executável versionado no novo repositório.
 
-- lint + coding standards + unit tests + integração WordPress + package smoke + build determinístico são contratos fortes;
-- CI hospedado pode ser evolução, não pré-requisito para qualidade local reproduzível.
+### Build versionado
+
+`tools/build_plugin.py` é reproduzível e deve inspirar o futuro gate:
+
+- allowlist de 19 runtime files;
+- versão validada;
+- PHP lint quando disponível;
+- raiz única instalável;
+- main file renomeado no pacote;
+- timestamp fixo/ordenação determinística;
+- development artifacts proibidos;
+- contagem exata de arquivos;
+- SHA-256.
+
+### Contratos KB2Ops que precisam virar testes executáveis
+
+#### KB-T01 — Bootstrap/lifecycle
+
+- activation não apaga dados históricos;
+- `maybe_upgrade` é idempotente;
+- options default só nascem quando ausentes;
+- multisite não perde contexto de blog;
+- nenhum legado é fisicamente apagado em activation.
+
+#### KB-T02 — Metadata/curadoria
+
+- Meta Contract registra todos os campos persistidos ou documenta explicitamente exceções;
+- `edit_post` governa mudança por objeto;
+- payload é allowlisted/sanitizado;
+- transição de review state é determinística;
+- history permanece bounded;
+- evento de aprovação só ocorre depois de estado persistido/confirmado.
+
+#### KB-T03 — AI READY
+
+Provar regra canônica única:
+
+- publish;
+- approved;
+- Resumo 8/8;
+- include_ai = true.
+
+Também deve existir teste que falhe se documentação/código divergirem no contrato publicado.
+
+#### KB-T04 — Summary Bridge/compat
+
+Enquanto coexistência existir:
+
+- oito chaves exatas;
+- read-only;
+- ausência vira vazio;
+- completion correto;
+- nenhuma escrita GRE por KB2Ops.
+
+No plugin unificado, substituir por testes do Summary Store interno.
+
+#### KB-T05 — Content Extractor básico
+
+Fixtures para:
+
+- post_content sem Elementor;
+- Elementor JSON válido;
+- JSON inválido;
+- HTML entities/whitespace/boundaries;
+- headings/list/table/image counts;
+- cache por request;
+- zero writes em `_elementor_data`/`post_content`.
+
+#### KB-T06 — Content Extractor custom widgets
+
+Cenário crítico:
+
+1. documento contém widget conhecido + widget customizado relevante;
+2. parser allowlist retorna conteúdo não vazio porém incompleto;
+3. sistema precisa detectar cobertura insuficiente ou ter política explícita de fallback.
+
+Não aceitar perda silenciosa de conteúdo.
+
+#### KB-T07 — Shortcode safety
+
+- somente `table/tablepress` allowlisted;
+- shortcode inexistente/falhando vira placeholder;
+- exceção é non-fatal;
+- nenhum shortcode arbitrário é executado pelo extractor.
+
+#### KB-T08 — Search scope/security
+
+- `published`, `approved`, `ai_ready`;
+- detail route não contorna scope;
+- `require_login` respeitado;
+- query limitada a 200 chars;
+- filtros/contexto preservados na navegação;
+- output escaped.
+
+#### KB-T09 — Search provisória/performance
+
+Enquanto a implementação atual existir em migração/coexistência, medir/limitar:
+
+- scans `numberposts=-1`;
+- `meta_query LIKE` em `_elementor_data`;
+- tecnologia/options derivadas;
+- corpus de centenas/milhares de posts.
+
+No runtime novo, substituído por Golden Queries + benchmarks da engine lexical.
+
+#### KB-T10 — Analytics/privacy
+
+- logging pode ser desligado;
+- query normalizada/limitada;
+- política de retenção/minimização explícita;
+- analytics falhando não derruba Search;
+- concorrência não perde fatos silenciosamente se store definitivo for relacional.
+
+#### KB-T11 — Admin mutations
+
+Settings/review/migration/purge:
+
+- POST only;
+- nonce;
+- capability correta;
+- purge exige confirmação;
+- handlers nopriv ausentes.
+
+#### KB-T12 — Design System/a11y
+
+E2E/DOM regressions para:
+
+- CSS namespacing;
+- foco visível;
+- estado com texto/ícone, não só cor;
+- responsive breakpoints;
+- progressive disclosure;
+- navegação por teclado;
+- sem dependência de IA/JS para shell básico.
+
+#### KB-T13 — Uninstall/retention
+
+- default não destrutivo;
+- purge somente com opt-in explícito;
+- purge não toca posts/Elementor/GRE quando não autorizado.
+
+#### KB-T14 — Package reproducibility
+
+- allowlist de runtime;
+- single root;
+- version consistency;
+- deterministic ZIP hash;
+- development-only artifacts ausentes.
 
 ---
 
-## 4. Estratégia para o novo plugin
+## 4. Contratos combinados obrigatórios do novo produto
 
-Prioridade de teste futura:
+### Conteúdo
 
-1. **unitários puros** para normalização, scoring, identity, Summary Store e state transitions;
-2. **integração WordPress real** para hooks, metadata/taxonomies, indexação, capabilities, nonces e Elementor extractor;
-3. **Golden Queries** contra base controlada;
-4. **E2E admin/público** para busca, curadoria, resumo e acessibilidade;
-5. **performance** com corpus realista, inclusive dashboard/extractor;
-6. **package/install/upgrade/rollback** determinísticos;
-7. **contratos cross-module** para evento de metadata -> invalidação de índice.
+- um único Content Extractor alimenta Search, Item Knowledge, IA, auditoria e features derivadas;
+- nunca escrever `_elementor_data` ou reescrever `post_content` por pipeline derivado;
+- custom widgets não podem desaparecer silenciosamente sem evidência/diagnóstico.
 
-Testes por inspeção textual podem existir como guard simples de invariantes arquiteturais, mas não substituem behavior/integration tests.
+### Summary/curadoria
+
+- `post_title` permanece canônico;
+- oito valores GRE preservados na coexistência;
+- Objective ausente permanece ausente;
+- mutation confirmada antes de evento;
+- `edit_post` + nonce por objeto;
+- IA nunca persiste metadata editorial sem decisão humana.
+
+### Busca
+
+- lexical funciona sem IA/vetor;
+- Golden Queries bloqueiam regressão;
+- ranking explicável;
+- filtros/scope não podem ser bypassados;
+- live UX, se existir, deve usar nonce/rate-limit/tracking integrity do padrão ASI.
+
+### Telemetria
+
+- erro ≠ zero results;
+- analytics non-fatal;
+- query text passa por política explícita de minimização/retention;
+- tracking, se adotado, usa server authority/HMAC/idempotência.
+
+### Operação
+
+- activation leve/reversível;
+- purge explícito;
+- workload administrativo bounded ou benchmarkado;
+- package determinístico;
+- rollback/coexistência testados quando necessários.
+
+---
+
+## 5. Estratégia de teste futura
+
+1. unitários puros — normalização, scoring, metadata contracts, extractor helpers e state transitions;
+2. integração WordPress real — Meta/Taxonomy APIs, capabilities, nonces, hooks, Elementor fixtures;
+3. Golden Queries — busca de posts e trechos;
+4. E2E admin/público — Studio, Search, resumo, filtros, a11y;
+5. performance — extractor, indexação, Search e dashboards com corpus realista;
+6. privacy/security — analytics, endpoints, replay, HMAC, retention;
+7. package/install/upgrade/rollback — deterministic build e coexistência;
+8. cross-module — Summary/curadoria confirmados -> events -> projections stale/reindex.
+
+Testes por inspeção textual são guardrails secundários; não substituem comportamento executável.
 
 ## Status
 
-O inventário de testes do GRE é suficiente para fechar T045. O novo repositório ainda não possui runtime, portanto esta SPEC inventaria e classifica os testes; não há suite de runtime nova a executar.
+T017 do KB2Ops pode ser fechado: build/release foram inventariados e a ausência de suíte executável versionada foi registrada como dívida. O próximo trabalho de testes ocorrerá somente após arquitetura/spec de runtime correspondente.

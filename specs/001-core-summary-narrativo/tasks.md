@@ -31,6 +31,7 @@
 ## S003 — Evidência
 
 - [x] T040 Testes unitários aplicáveis — PASS 15/15; `evidencia-unitaria-s003.md`.
+- [x] T040A Instalação inicial/smoke em WordPress real — plugin ativo, menu/tela/listagem reais e leitura de metadados legados comprovadas; `evidencia-instalacao-inicial-s003.md`.
 - [ ] T041 Integração WordPress G-001/G-020/G-070 — harness PHPUnit preparado; execução real ainda NOT_RUN.
 - [x] T041A Implementar runner onclick temporário opt-in com JSON e cleanup automático.
 - [x] T041C Endurecer runner onclick v2: cleanup em lotes, residual count completo e cobertura negativa G-020 ampliada.

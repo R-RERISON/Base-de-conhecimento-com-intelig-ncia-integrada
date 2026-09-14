@@ -1,46 +1,43 @@
 # Riscos, Drifts e Dívidas — SPEC-000
 
-> Estado após **T090**. Fontes canônicas: `mapa-contratos-quebrados.md`, `matriz-wordpress-first.md`, `infraestrutura-propria-minima.md`, `catalogo-testes-regressao.md`, `matriz-ia-vetor.md`, `matriz-paridade-futura.md` e `revisao-wordpress-t090.md`.
+> Estado após **T091**. Fontes centrais: `matriz-paridade-futura.md`, `revisao-wordpress-t090.md` e `revisao-simplicidade-t091.md`.
 
 ## 1. Drifts D-001–D-008
 
-Permanecem válidos e não foram apagados pelas revisões:
+Permanecem válidos:
 
-- D-001 `Objective_Provider`: adapter somente por coexistência comprovada.
-- D-002 evento Objective: futuro pós-write confirmado; bridge apenas se necessário.
-- D-003 `post_content` vs Elementor: extractor único; B-001.
+- D-001 `Objective_Provider`: adapter só por coexistência comprovada.
+- D-002 evento Objective: somente pós-write confirmado.
+- D-003 `post_content` vs Elementor: extractor único quando necessário; B-001.
 - D-004 múltiplos parsers: descartados.
 - D-005 GAC: fora do core.
-- D-006 classificação duplicada: owner resolvido; B-002 antes do cutover.
-- D-007 UI/CSS fragmentados: DS único futuro.
-- D-008 AI READY: contrato único testado `publish + approved + 8/8 + include_ai` enquanto vigente.
+- D-006 classificação duplicada: owner resolvido; B-002 no cutover.
+- D-007 UI/CSS fragmentados: DS único, porém incremental.
+- D-008 AI READY: regra única enquanto vigente.
 
 ## 2. Blockers B-001–B-007
 
-Continuam contextuais conforme T059:
+Continuam contextuais:
 
 - B-001 Search/RAG/embedding produtivos.
 - B-002 profiling/cutover classificatório.
 - B-003 retirada de plugins/aliases/adapters.
-- B-004 Analytics detalhado/query logging.
+- B-004 Analytics/query logging.
 - B-005 deep-link público de item.
 - B-006 write path composto definitivo.
 - B-007 durable queue/async indexing.
 
-T090 não adicionou blocker global.
+T091 reforça que nenhum blocker deve antecipar infraestrutura de uma capacidade que ainda não existe.
 
 ## 3. Riscos ativos preservados
 
-Continuam vigentes os riscos de:
-
 - extração parcial/custom widgets;
 - projection stale;
-- múltiplos stores por herança;
 - fallback lexical ilimitado;
 - Golden stale/vazia tratada como PASS;
-- adapters permanentes;
-- evento antes de persistência confirmada;
-- supercoleta de Analytics;
+- adapter permanente;
+- evento antes da persistência;
+- supercoleta Analytics;
 - queue prematura/falsa;
 - activation pesada;
 - scans/meta LIKE sem bounds;
@@ -50,70 +47,85 @@ Continuam vigentes os riscos de:
 - IA persistindo owner;
 - provider lock-in;
 - batch sem budget/NO_CHANGE;
-- embedding/chunk drift;
+- embedding drift;
 - semantic piorando Golden blocking;
-- File Search como segunda fonte;
 - prompt injection;
-- secrets/payload em logs;
-- failover silencioso;
-- RAG acoplado a vetor sem necessidade;
-- agentes antes de jornada multi-step;
-- “primeiro runtime” virar big-bang;
-- blocker contextual virar NO-GO global;
-- derived data virar patrimônio de cutover;
-- unknown de primitive virar tabela própria;
-- compatibilidade definir arquitetura permanente.
+- secrets em logs;
+- SSRF/provider endpoint;
+- “primeiro runtime” virar big-bang.
 
-## 4. Novos riscos/guardrails T090
+## 4. Guardrails T090 preservados
 
-### X-043 — histórico duplicado de Review
+- não duplicar bounded history + meta revisions sem necessidade;
+- Search Knowledge/Golden WordPress-first;
+- taxonomias internas fail-closed para exposição pública;
+- versão mínima WordPress deve ser compatível com features usadas;
+- provider endpoint configurável passa por revisão SSRF/allowlist.
 
-**Risco:** manter bounded history e meta revisions para a mesma finalidade, aumentando storage/complexidade e criando duas narrativas de auditoria.  
-**Tratamento:** escolher mecanismo mínimo por requisito; revisions somente quando recuperação de snapshot gerar valor real.
+## 5. Novos riscos T091
 
-### X-044 — entidade interna ganhar CRUD/storage próprio cedo demais
+### X-048 — fundação antes de produto
 
-**Risco:** Search Knowledge/Golden ganharem tabela/admin framework/REST apesar de `WP_Post` interno + metadata/revisions atenderem o workload de governança.  
-**Tratamento:** WordPress-first obrigatório; reabrir store próprio somente com evidência de volume/consulta.
+**Risco:** construir Core genérico, DS completo, settings, extractor, Search e operações antes de um fluxo ponta a ponta.  
+**Tratamento:** primeira SPEC = um vertical slice mínimo; infraestrutura só quando consumida.
 
-### X-045 — taxonomia sistêmica virar superfície pública por acidente
+### X-049 — Content Extractor sem consumidor
 
-**Risco:** archive/rewrite público expor classificação interna sem jornada aprovada.  
-**Tratamento:** exposição pública fail-closed; habilitar somente por requisito de produto.
+**Risco:** gastar esforço e fixar contrato antes da Search/IA que realmente o validará.  
+**Tratamento:** extractor nasce com primeiro consumidor; B-001 é gate contextual.
 
-### X-046 — depender de meta revisions sem versão mínima compatível
+### X-050 — DS virar projeto paralelo
 
-**Risco:** runtime usar `revisions_enabled` em ambiente abaixo do mínimo suportado.  
-**Tratamento:** T095/SPEC aplicável fixa versão mínima ou define fallback.
+**Risco:** biblioteca extensa sem telas reais.  
+**Tratamento:** tokens/componentes apenas conforme uso, mantendo qualidade visual/a11y.
 
-### X-047 — endpoint de provider configurável permitir SSRF
+### X-051 — taxonomias/classificação big-bang
 
-**Risco:** URL arbitrária administrável ser usada pela WordPress HTTP API para alcançar destinos indevidos.  
-**Tratamento:** T092/SPEC de IA deve revisar allowlist de host/esquema e uso de API segura quando aplicável.
+**Risco:** registrar todos os eixos, migrar tudo e aumentar superfície sem prioridade de produto.  
+**Tratamento:** um eixo/slice; B-002 no cutover.
 
-## 5. Resultado T090
+### X-052 — abstração arquitetural sem segundo caso
 
-- findings bloqueantes: **0**;
-- Search Retrieval Projection própria: **mantida**;
-- nenhuma tabela/endpoints adicionais autorizados;
-- nenhuma capacidade postergada reaberta;
-- nenhum runtime criado.
+**Risco:** event bus, repositories, DI container, cache service e factories aumentarem acoplamento sem problema real.  
+**Tratamento:** descartados no baseline; reentrada somente com ADR e caso concreto.
 
-## 6. Próximo passo — T091
+### X-053 — Search Knowledge antecipado
 
-O Crítico de Simplicidade deve tentar remover capacidades mesmo quando tecnicamente válidas, perguntando se o produto perde resultado material sem elas.
+**Risco:** vocabulary/bindings/rules virarem subsistema antes de existir falha real do ranker básico.  
+**Tratamento:** postergar até Golden/uso comprovar necessidade.
 
-Foco especial:
+### X-054 — item/deep-link antecipado
 
-- DS/components antecipados;
-- history/revisions;
-- Search Knowledge inicial;
-- item layer/deep-links;
-- compatibilidade;
-- Site Health checks excessivos;
-- IA P1/P2;
-- qualquer abstração/provider seam prematuro.
+**Risco:** cardinalidade, identidade e B-005 elevarem complexidade antes de provar valor além do post-level Search.  
+**Tratamento:** post-level primeiro; item/deep-link posterior.
+
+### X-055 — Golden UI excessiva
+
+**Risco:** construir produto de administração de Golden antes de precisar da suíte como gate.  
+**Tratamento:** contrato/evidência primeiro; CRUD visual só se curadoria real exigir.
+
+### X-056 — Operations Center sem operação
+
+**Risco:** painel/migration framework/job UI antes de queue/migração real.  
+**Tratamento:** descartado; ferramentas operacionais nascem por caso.
+
+### X-057 — provider seam genérico antecipado
+
+**Risco:** abstração multi-provider antes do primeiro caso de IA.  
+**Tratamento:** primeiro caso usa adapter mínimo; interface/factory só com segundo problema real.
+
+## 6. Resultado T091
+
+- finding bloqueante: **0**;
+- nova infraestrutura autorizada: **0**;
+- capacidades avançadas reabertas: **0**;
+- abstrações genéricas removidas do baseline: event bus, repositories, container, cache service, migration/operations frameworks e provider factory antecipada;
+- runtime criado: **não**.
+
+## 7. Próximo passo — T092
+
+Revisar segurança da arquitetura mínima, com foco em capability, CSRF, IDOR, sanitização/escaping, superfícies públicas, compatibilidade, SSRF/secrets/data egress, prompt injection, Search scope e ações destrutivas.
 
 ## Status
 
-**T090 concluída documentalmente.** Próximo passo: **T091**. Nenhum runtime/provider/vector foi autorizado.
+**T091 concluída documentalmente.** Próximo passo: **T092**. SPEC-001 permanece bloqueada até T097.

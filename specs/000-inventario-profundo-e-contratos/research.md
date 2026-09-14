@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Registrar fatos comprovados e decisões documentais do cruzamento/revisões. Hipótese não vira fato sem evidência versionada; compatibilidade, provider e infraestrutura derivada não viram owner permanente.
+Registrar fatos comprovados e decisões documentais do cruzamento e revisões. Hipótese não vira fato sem evidência versionada; simplicidade não remove garantias comprovadas.
 
 ## 1. Baselines fixadas
 
@@ -10,75 +10,94 @@ Registrar fatos comprovados e decisões documentais do cruzamento/revisões. Hip
 - ASI `4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1`.
 - GRE `0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365`.
 
-## 2. Estado final do cruzamento T050–T059
+## 2. Arquitetura T059
 
-Artefato executivo: `matriz-paridade-futura.md`.
+- WordPress/Elementor = fonte editorial.
+- um owner lógico por conceito.
+- uma Search Retrieval Projection própria e reconstruível é a única família persistente própria aprovada.
+- Analytics, durable queue, vetor/semantic/rerank/agentes permanecem postergados.
+- IA é assistiva e retrieval-first.
 
-- WordPress/Elementor são fonte editorial.
-- owner lógico único por conceito.
-- Content Extractor único para downstream.
-- Search Retrieval Projection `post|item` é a única família própria aprovada.
-- Analytics e durable queue postergados.
-- Golden é QA governada/release evidence.
-- IA/vetor opcionais/degradáveis.
-- nenhum runtime criado.
+## 3. T090 — WordPress-first
 
-## 3. T090 — revisão WordPress-first
+Resultado: PASS, zero bloqueantes.
 
-Artefato: `revisao-wordpress-t090.md`.
+Confirmou Metadata/Taxonomy/Options/Site Health/admin-post/WP-Cron trigger/HTTP API como primitives preferenciais e manteve Search Retrieval Projection como exceção justificada.
 
-Resultado: **PASS; 0 findings bloqueantes**.
+## 4. T091 — Crítico de Simplicidade
 
-### Evidência oficial WordPress revalidada em 2026-09-14
+Artefato: `revisao-simplicidade-t091.md`.
 
-- `register_meta()` suporta tipo, sanitização, autorização e `revisions_enabled` para post meta; o argumento de revisions existe desde WP 6.4.
-- Taxonomy API continua primitive nativa para classificação/agrupamento reutilizável.
-- WP-Cron é scheduler disparado por page load e não oferece semântica de fila durável.
-- Site Health aceita checks próprios diretos/assíncronos.
-- WordPress HTTP API (`wp_remote_post`) permanece primitive adequada para integração HTTP externa, retornando `WP_Error` em falha.
+Resultado: **PASS, zero bloqueantes após simplificações/postergações**.
 
-Referências:
+### Achado principal
 
-- https://developer.wordpress.org/reference/functions/register_meta/
-- https://developer.wordpress.org/plugins/taxonomies/
-- https://developer.wordpress.org/plugins/cron/
-- https://developer.wordpress.org/reference/hooks/site_status_tests/
-- https://developer.wordpress.org/reference/functions/wp_remote_post/
+A arquitetura aprovada não deve ser construída como fundação antecipada. O primeiro runtime deve ser um único fluxo homologável, com infraestrutura somente quando consumida.
 
-## 4. Decisões confirmadas por T090
+### Recomendação provisória de primeira SPEC
 
-- Summary/Review não precisam tabela própria.
-- Taxonomy/Metadata continuam suficientes para Classificação.
-- Search Knowledge/Golden devem começar em entidades internas WordPress-first.
-- Site Health vence dashboard técnico duplicado.
-- admin-post continua baseline; AJAX somente com live UX; REST sem consumidor continua negado.
-- WP-Cron não substitui queue.
-- Search Retrieval Projection própria permanece justificada pela combinação Elementor-aware + item identity + FULLTEXT/ranking dedicado.
-- Foundry/HTTP provider deve permanecer adapter; SDK não é necessário por default.
+**Core mínimo + Summary narrativo** (`objective`, `escalation`, `important`).
 
-## 5. Simplificações novas
+Razões:
 
-1. Não usar simultaneamente bounded review history e meta revisions para a mesma finalidade sem requisito explícito.
-2. Não criar admin CRUD/tabela própria para Search Knowledge/Golden antes de esgotar `WP_Post` interno + metadata/revisions.
+- menor bounded context comprovado;
+- WordPress Metadata API atende;
+- não depende de Search/IA/queue/Analytics;
+- evita B-001/B-002/B-003/B-004/B-005/B-007 no primeiro slice;
+- permite provar capability/nonce/sanitização/read-after-write/lifecycle/UI sem big-bang.
 
-## 6. Investigações encaminhadas
+T094/T095/T097 ainda devem validar essa recomendação.
 
-- versão mínima WordPress quando algum slice depender de meta revisions;
-- exposição/rewrite/archive de taxonomias sistêmicas deve começar fail-closed;
-- endpoint de provider configurável deve ser revisado em T092 para SSRF/host allowlist e uso de HTTP API segura.
+## 5. Simplificações T091
 
-Nenhuma delas bloqueia o baseline sem a capacidade correspondente.
+- Content Extractor somente junto do primeiro consumidor real.
+- DS incremental por tela; sem biblioteca completa antecipada.
+- Settings somente se consumidos.
+- Review em slice separado.
+- Classificação por eixo/slice; não todas as taxonomias juntas.
+- histórico sem duplicação.
+- Site Health somente para capacidades existentes.
+- Search post-level antes de item/deep-link quando suficiente.
+- Search Knowledge após ranker lexical mínimo, salvo Golden demonstrar necessidade.
+- Golden obrigatório para Search, mas UI CRUD completa é opcional/posterior.
+- IA P1 apenas após owner estável; sem multi-provider abstraction antecipada.
 
-## 7. Blockers continuam contextuais
+## 6. Complexidades descartadas no baseline
 
-B-001–B-007 mantêm o mapeamento T059. T090 não converteu nenhum deles em blocker global.
+- event bus próprio;
+- repository layer genérico;
+- DI/service container genérico;
+- cache service genérico;
+- migration framework genérico;
+- Operations Center genérico;
+- compatibility adapter framework;
+- provider factory multi-vendor sem segundo caso.
+
+Esses itens só podem reaparecer com problema concreto e ADR.
+
+## 7. Capacidades mantidas/postergadas
+
+Mantidas quando houver consumidor:
+
+- Search Retrieval Projection;
+- Golden Queries;
+- capability/nonce/security;
+- rollback/coexistência;
+- Content Extractor para Search/RAG.
+
+Postergadas:
+
+- item/deep-link até necessidade;
+- Search Knowledge até problema observado;
+- Analytics/queue;
+- IA/RAG/vector/semantic/rerank/agentes.
 
 ## 8. Próximo passo
 
-**T091 — Revisão do Crítico de Simplicidade.**
+**T092 — Revisão de Segurança.**
 
-Objetivo: tentar remover qualquer capacidade/camada que ainda não seja indispensável e confirmar que a arquitetura T059 é a menor suficiente.
+A revisão deve transformar superfícies futuras em threat model/gates, especialmente capabilities, CSRF/IDOR, output escaping, shortcodes/compatibilidade, SSRF/provider/secrets/data egress, Search scope e ações destrutivas.
 
 ## Estado
 
-T050–T059 + T090 concluídos documentalmente. Nenhum runtime/schema/provider/vector foi criado. SPEC-001 continua bloqueada até T097.
+T050–T059 + T090 + T091 concluídos documentalmente. Nenhum runtime/schema/provider/vector foi criado. SPEC-001 segue bloqueada até T097.

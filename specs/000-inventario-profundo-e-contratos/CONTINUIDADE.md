@@ -21,10 +21,10 @@ ANTES DE QUALQUER ALTERAÇÃO
 PROJETO
 - Repositório: R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
 - Branch: main
-- HEAD confirmado antes do bloco T090: bc5594c48bdabd22f3575477509fb83f53ad2176
-- O commit que contém esta versão representa o fechamento documental de T090; confirme o SHA atual antes da próxima escrita.
+- HEAD confirmado antes do bloco T091: 875be15d50425b71903568e3cac153dd6a67f798
+- O commit que contém esta versão representa o fechamento documental de T091; confirme o SHA atual antes da próxima escrita.
 - SPEC ativa: SPEC-000 — Inventário Profundo e Contratos dos Projetos de Referência
-- Estado: T000–T059 + T090 concluídos documentalmente; nenhum runtime novo.
+- Estado: T000–T059 + T090 + T091 concluídos documentalmente; nenhum runtime novo.
 
 BASELINES FIXADAS
 - ASI 4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1
@@ -32,16 +32,12 @@ BASELINES FIXADAS
 - KB2Ops 0.2.1 hardened @ f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94
 
 ARTEFATOS CENTRAIS
-- matriz-paridade-futura.md — visão executiva final T059.
-- revisao-wordpress-t090.md — revisão WordPress-first T090.
-- mapa-ownership-dados.md
-- catalogo-persistencia.md
-- catalogo-integracoes.md
-- mapa-contratos-quebrados.md
-- matriz-wordpress-first.md
-- infraestrutura-propria-minima.md
+- matriz-paridade-futura.md — arquitetura final T059.
+- revisao-wordpress-t090.md — WordPress-first.
+- revisao-simplicidade-t091.md — princípio de negação/simplificação.
 - catalogo-testes-regressao.md
 - matriz-ia-vetor.md
+- infraestrutura-propria-minima.md
 - riscos-e-drifts.md
 - research.md
 
@@ -52,68 +48,73 @@ INVARIANTES
 - nunca reescrever post_content silenciosamente.
 - um conceito canônico = um owner lógico.
 - projection/index/cache/vector nunca é fonte da verdade.
-- Content Extractor canônico alimenta downstream.
+- Content Extractor único quando houver consumidor.
 - persistência confirmada precede evento.
 - dual-write permanente proibido.
 - adapter/dual-read temporário possui gate de remoção.
 - IA sugere; humano decide; owner persiste.
 - retrieval precede síntese.
-- IA/vetor opcionais/degradáveis.
 - lexical funciona sem IA/vetor.
 - provider externo é adapter, nunca owner.
 - nenhum runtime antes de T097.
 
 T059 — PARIDADE FINAL
-Classes: PRIMEIRO_RUNTIME | POSTERIOR | POSTERGADO | COMPAT_CUTOVER | DESCARTADO.
-“Primeiro runtime” = primeira onda de vertical slices, não big-bang.
+- única família persistente própria aprovada: Search Retrieval Projection reconstruível.
+- Analytics, durable queue, vector/semantic/rerank/agentes postergados.
+- blockers B-001–B-007 são contextuais.
 
-Infra própria aprovada: somente Search Retrieval Projection reconstruível `post|item`.
-Analytics/queue/vector/semantic/rerank/agentes continuam postergados.
+T090 — WORDPRESS-FIRST
+Status: PASS, zero bloqueantes.
+- Summary/Review -> Metadata.
+- Classificação -> Taxonomy/Metadata.
+- Search Knowledge/Golden -> WordPress-first.
+- Site Health -> health checks.
+- admin-post baseline; REST sem consumidor negado.
+- WP-Cron é trigger, não queue.
+- Search Retrieval Projection própria continua justificada.
+- não duplicar bounded history + meta revisions.
+- taxonomias internas não ganham archive/rewrite público automaticamente.
+- provider endpoint configurável precisa revisão SSRF/allowlist.
 
-Dados que não podem ser perdidos:
-- WP/Elementor/taxonomias editoriais;
-- oito valores GRE;
-- review/include_ai/notas/revisor/histórico KB2Ops válidos;
-- classificações KB2Ops realmente usadas;
-- Search Knowledge ASI manual real;
-- Golden ASI útil.
+T091 — SIMPLICIDADE
+Arquivo: revisao-simplicidade-t091.md.
+Status: PASS, zero bloqueantes.
 
-Blockers por capacidade:
-- B-001 Search/RAG/embedding.
-- B-002 profiling/cutover classificatório.
-- B-003 retirada plugins/aliases.
-- B-004 Analytics/query logging.
-- B-005 deep-link item.
-- B-006 write composto.
-- B-007 durable queue/async.
-Blocker contextual não vira NO-GO global.
+REGRA PRINCIPAL
+- primeira SPEC futura não constrói plataforma completa;
+- infraestrutura só nasce quando o próprio vertical slice consome.
 
-T090 — REVISÃO WORDPRESS
-Arquivo: revisao-wordpress-t090.md.
-Status: PASS, zero finding bloqueante.
+RECOMENDAÇÃO PROVISÓRIA DE SPEC-001
+- Core mínimo + Summary narrativo (objective/escalation/important), sujeito a T094/T095/T097.
+- não incluir Review/Classificação/Search/IA no mesmo slice sem necessidade comprovada.
 
-CONFIRMADO
-- Metadata para Summary/Review.
-- Taxonomy/Metadata para Classificação.
-- Search Knowledge/Golden WordPress-first.
-- Site Health para health checks.
-- admin-post baseline; AJAX somente live UX; REST sem consumidor negado.
-- WP-Cron trigger, não queue.
-- WordPress HTTP API para provider externo quando aplicável.
-- Search Retrieval Projection própria permanece justificada.
+SIMPLIFICAÇÕES
+- Content Extractor só junto do primeiro consumidor Search/IA/qualidade.
+- DS incremental por telas reais.
+- Settings somente quando consumidos.
+- Review em slice próprio.
+- Classificação por eixos/slices.
+- Site Health somente para capacidades existentes.
+- Search post-level antes de item/deep-link quando suficiente.
+- Search Knowledge somente quando ranker/Golden comprovar necessidade.
+- Golden obrigatório para Search, mas UI CRUD completa não é requisito inicial.
+- IA P1 somente após owner estável; adapter mínimo do primeiro provider.
 
-SIMPLIFICAR
-1. Não manter bounded review history + meta revisions concorrentes sem requisito real.
-2. Não criar tabela/admin CRUD próprio para Search Knowledge/Golden antes de esgotar WP_Post interno + metadata/revisions.
+DESCARTADO COMO ABSTRAÇÃO ANTECIPADA
+- event bus próprio.
+- repository layer genérico.
+- service container/DI genérico.
+- cache service genérico.
+- Operations Center genérico.
+- migration orchestrator genérico.
+- adapter framework de compatibilidade.
+- provider factory multi-vendor sem segundo caso.
 
-INVESTIGAR
-1. versão mínima WordPress se depender de `revisions_enabled` (Core 6.4+).
-2. taxonomias sistêmicas começam sem archive/rewrite público salvo jornada real.
-3. provider endpoint configurável vai para T092/SPEC IA por SSRF/host allowlist.
-
-O QUE CONTINUA POSTERGADO
-- Analytics detalhado/query logging.
+CONTINUA POSTERGADO
+- Analytics/query logging.
 - durable queue.
+- item/deep-link até necessidade comprovada.
+- RAG.
 - embeddings/vector store.
 - semantic/hybrid/rerank.
 - agentes/tools.
@@ -121,43 +122,54 @@ O QUE CONTINUA POSTERGADO
 - Word Cloud.
 - REST/SPA sem consumidor.
 
+GARANTIAS QUE NÃO PODEM SER REMOVIDAS POR SIMPLICIDADE
+- capability + nonce + sanitização + escaping.
+- read-after-write.
+- rollback/coexistência quando aplicável.
+- B-006 em write composto.
+- B-001 quando extractor for crítico.
+- Golden/benchmark/security quando Search nascer.
+- DS/a11y para telas reais.
+- preservação de dados canônicos.
+
 O QUE NÃO DEVE SER FEITO AGORA
 - não criar runtime/bootstrap.
 - não criar schema/tabela/migration.
 - não registrar taxonomies/CPT/meta finais.
-- não criar Golden dataset real.
+- não criar Search index/Golden runtime.
 - não implementar aliases/adapters.
 - não integrar Foundry/chamar LLM.
+- não criar provider abstraction runtime.
 - não criar chunks/embeddings/vector store.
 - não criar agentes/tools.
 - não iniciar SPEC-001.
 
-PRÓXIMO PASSO EXATO — T091
-Executar a Revisão do Crítico de Simplicidade.
+PRÓXIMO PASSO EXATO — T092
+Executar Revisão de Segurança.
 
-T091 DEVE
-1. reler Constituição, AGENTS, matriz-paridade-futura.md e revisao-wordpress-t090.md.
-2. assumir que cada capacidade/camada é removível até provar valor.
-3. tentar eliminar classes, stores, endpoints, telas, schedulers e abstrações futuras.
-4. revisar se Summary/Review/Classificação podem nascer em slices ainda menores.
-5. revisar se Search Knowledge mínimo pode ser adiado sem prejudicar Search lexical inicial.
-6. revisar item layer/deep-link separadamente de post-level Search.
-7. revisar Site Health checks para não criar painel técnico excessivo.
-8. revisar compatibilidade/aliases e exigir consumidor real.
-9. revisar IA P1/P2 e manter provider seam inexistente até caso real.
-10. classificar findings como MANTER | SIMPLIFICAR | POSTERGAR | DESCARTAR | BLOQUEAR.
-11. corrigir documentação se necessário.
+T092 DEVE
+1. construir threat model das superfícies previstas.
+2. revisar capability model por owner e objeto.
+3. revisar nonce, método HTTP e CSRF.
+4. revisar sanitização, validação e escaping.
+5. revisar IDOR/scope de posts e Search detail.
+6. revisar taxonomias internas e exposição pública.
+7. revisar shortcodes/aliases/compatibilidade legada.
+8. revisar provider endpoint/SSRF/host allowlist/secrets/data egress.
+9. revisar prompt injection e tool abuse futuros sem criar agentes.
+10. revisar migration/purge/ações destrutivas.
+11. classificar findings como PASS | ENDURECER | POSTERGAR | BLOQUEAR.
 12. não criar runtime.
 
-CRITÉRIO PARA FECHAR T091
-- cada família relevante passou pelo princípio de negação;
-- toda complexidade restante tem benefício explícito;
-- capacidades removíveis foram simplificadas/postergadas/descartadas;
-- nenhum finding bloqueante ficou sem tratamento;
-- T092 fica com entrada objetiva.
+CRITÉRIO PARA FECHAR T092
+- threat model cobre todas as superfícies relevantes.
+- cada mutação tem modelo de autorização/CSRF.
+- dados/saída/egress têm regras explícitas.
+- findings bloqueantes têm tratamento ou são encaminhados objetivamente a T095/T097.
+- nenhuma segurança depende de capacidade ainda inexistente.
 
 ORDEM RESTANTE
-T091 -> T092 -> T093 -> T094 -> T095 -> T096 -> T097.
+T092 -> T093 -> T094 -> T095 -> T096 -> T097.
 
 REGRA DE CONTINUIDADE
 Repositório/Constituição/Manifesto/SPEC prevalecem sobre memória de chat.
@@ -166,12 +178,12 @@ Repositório/Constituição/Manifesto/SPEC prevalecem sobre memória de chat.
 ## Estado resumido
 
 - SPEC-000 ativa.
-- HEAD antes de T090: `bc5594c48bdabd22f3575477509fb83f53ad2176`.
-- T050–T059 + T090 concluídos documentalmente.
-- Próximo: T091.
+- HEAD antes de T091: `875be15d50425b71903568e3cac153dd6a67f798`.
+- T050–T059 + T090 + T091 concluídos documentalmente.
+- Próximo: T092.
 - Runtime novo: inexistente.
 - SPEC-001: bloqueada até T097.
 
 ## Regra de atualização
 
-Atualizar este arquivo ao concluir T091. Não acumular estados contraditórios.
+Atualizar este arquivo ao concluir T092. Não acumular estados contraditórios.

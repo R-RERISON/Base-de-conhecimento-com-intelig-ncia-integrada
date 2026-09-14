@@ -1,6 +1,6 @@
 # Constituição — Base de Conhecimento com Inteligência Integrada
 
-**Versão:** 1.0.0  
+**Versão:** 1.1.0  
 **Ratificação:** 2026-09-14  
 **Idioma oficial:** Português do Brasil  
 **Mantra constitucional:** **“Quem não sabe onde está, não sabe para onde quer ir”.**
@@ -342,7 +342,8 @@ Cada SPEC deve conter no mínimo:
 - aceite;
 - regressão;
 - rollback;
-- fora de escopo.
+- fora de escopo;
+- Prompt de Continuidade atualizado ao final de cada implementação material.
 
 ---
 
@@ -356,3 +357,66 @@ Mudanças nesta Constituição devem:
 4. mapear risco de regressão;
 5. receber nova versão semântica;
 6. atualizar data de ratificação.
+
+---
+
+## Artigo XVIII — Continuidade entre chats e preservação de contexto
+
+### XVIII.1 — Problema reconhecido
+O ChatGPT e outros agentes conversacionais possuem contexto finito. O projeto não pode depender da continuidade implícita de uma conversa para preservar decisões, estado, testes, riscos ou próximos passos.
+
+### XVIII.2 — Prompt de Continuidade obrigatório
+Toda implementação material, ao ser concluída, deve produzir ou atualizar um **Prompt de Continuidade** autossuficiente, pronto para ser utilizado em um novo chat.
+
+Uma SPEC não pode ser marcada como `Concluída`, `Homologação` ou entregue como implementação final sem esse artefato atualizado.
+
+### XVIII.3 — Local canônico
+Cada SPEC que entrar em implementação deve possuir um arquivo `CONTINUIDADE.md` em sua própria pasta, baseado em `.specify/templates/continuity-prompt-template.md`.
+
+### XVIII.4 — Conteúdo mínimo obrigatório
+O Prompt de Continuidade deve registrar, no mínimo:
+
+- repositório, branch e commit de referência;
+- SPEC ativa e estado;
+- objetivo exato da continuidade;
+- baseline comprovado;
+- implementações concluídas;
+- decisões arquiteturais vigentes;
+- invariantes que não podem ser violados;
+- arquivos e áreas modificados;
+- dados, hooks, rotas, eventos e contratos envolvidos;
+- testes e gates executados com resultados;
+- gaps, blockers, riscos e dívidas conhecidas;
+- itens explicitamente fora de escopo;
+- próximo passo exato;
+- critério objetivo para concluir o próximo passo.
+
+### XVIII.5 — Repositório prevalece sobre memória de chat
+O Prompt de Continuidade é um mecanismo de handoff, não uma nova fonte da verdade. Constituição, Manifesto, SPEC, código e evidências versionadas no repositório prevalecem sobre memória do chat ou texto desatualizado do prompt.
+
+Se houver divergência entre o prompt e o repositório, a continuidade deve parar para investigar a divergência antes de qualquer alteração.
+
+### XVIII.6 — O novo chat deve revalidar o estado
+O Prompt de Continuidade deve instruir explicitamente o novo chat a:
+
+1. ler `AGENTS.md`;
+2. ler `.specify/PROJECT_MANIFEST.md`;
+3. ler esta Constituição;
+4. ler a SPEC ativa e seus artefatos;
+5. ler `docs/DEFINITION-OF-DONE.md`;
+6. confirmar branch/commit/estado atual no GitHub;
+7. somente então continuar a implementação.
+
+### XVIII.7 — Estado comprovado, não intenção
+O handoff deve distinguir claramente:
+
+- o que foi implementado e testado;
+- o que foi apenas decidido;
+- o que está planejado;
+- o que falhou;
+- o que permanece desconhecido.
+
+É proibido registrar como concluído algo que não possua evidência.
+
+### XVIII.8 — Saída obrigatória do Orquestrador
+Ao encerrar uma implementação material em chat, o Orquestrador deve informar que o `CONTINUIDADE.md` foi atualizado e disponibilizar o Prompt de Continuidade ou indicar seu caminho canônico no repositório.

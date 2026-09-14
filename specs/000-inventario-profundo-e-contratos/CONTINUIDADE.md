@@ -15,151 +15,125 @@ Antes de qualquer alteração:
 4. Leia todos os artefatos de specs/000-inventario-profundo-e-contratos/.
 5. Leia docs/DEFINITION-OF-DONE.md.
 6. Leia este CONTINUIDADE.md inteiro.
-7. Confirme o estado atual no GitHub antes de implementar ou documentar novas conclusões.
+7. Confirme o HEAD atual no GitHub antes de implementar ou documentar novas conclusões.
 
 PROJETO
 - Repositório: R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
 - Branch: main
-- Commit de referência do estado de governança: 7df13b4bf0e50f32e21ab0e471aea0cdbff182c9
+- HEAD no início do bloco ASI: c5bd400604e56488c2016e50782e7779c5b5d351
 - SPEC ativa: SPEC-000 — Inventário Profundo e Contratos dos Projetos de Referência
-- Estado: Pronta / início de execução do inventário profundo
+- Estado: em execução; bloco ASI concluído documentalmente; runtime novo continua bloqueado.
+
+BASELINE ASI CONFIRMADA
+- Repositório: R-RERISON/Advanced-search-Intelligence
+- Versão: 4.6.8
+- SHA: c0ddff89caad529ce1bcdc645eb795e4a9b187a1
+- Tarefas T020–T034: concluídas.
 
 OBJETIVO DA CONTINUIDADE
-Executar a SPEC-000 profundamente antes de qualquer runtime novo. Ler e decompor KB2Ops, Advanced Search Intelligence e Gerenciador de Resumo Executivo, classificando comportamentos, persistência, hooks, rotas, segurança, UI, testes e complexidade. O próximo foco deve começar pelo ASI, por ser o componente mais complexo e crítico de busca.
+Continuar a SPEC-000 sem iniciar runtime. O ASI já foi decomposto em persistência, hooks, busca/ranking, Item Knowledge, curadoria/simulação, fila, migrações, telemetria, Golden Queries, quality, Word Cloud, admin/public, segurança, testes e release. O próximo foco exato é o Gerenciador de Resumo Executivo, porque existe um drift concreto que precisa ser provado antes do cruzamento: o ASI exige BDC\ExecutiveSummary\Objective_Provider::read_objective() e escuta bdc_es_objective_updated.
 
 ESTADO ATUAL COMPROVADO
-- O novo repositório nasceu greenfield e não possui runtime do plugin.
-- Constituição 1.1.0 ratificada em 2026-09-14.
-- WordPress-first é obrigatório.
-- Princípio de negação é obrigatório.
+- O novo repositório é greenfield e não possui runtime do plugin.
+- Constituição 1.1.0 permanece vigente.
+- WordPress-first e princípio de negação são obrigatórios.
 - O plugin não faz manutenção editorial de posts.
-- Elementor continua sendo editor/publicador canônico.
-- É proibido escrever em _elementor_data.
-- KB2Ops é referência de produto/UI/Design System.
-- ASI é referência de search/index/ranking/Golden Queries/telemetria/operações.
-- Gerenciador de Resumo Executivo é referência de clean code/WordPress-first/metadata.
-- Roadmap SPEC-000 até SPEC-012 está materializado.
-- 14 agentes especialistas e 19 skills especializadas estão versionados.
-- Nenhum runtime novo foi criado.
-
-IMPLEMENTAÇÕES CONCLUÍDAS NESTA ETAPA
-- README e visão do produto.
-- AGENTS.md e regras de orquestração.
-- Manifesto do Projeto.
-- Constituição 1.1.0.
-- Contrato editorial Elementor.
-- Definition of Done.
-- SpecKit completo com templates de SPEC, plano, tarefas, checklist, ADR e continuidade.
-- Roadmap e pastas SPEC-000 a SPEC-012.
-- SPEC-000 com spec.md, plan.md, tasks.md, research.md, data-model.md e checklist.
-- Catálogo de agentes especialistas.
-- Catálogo de skills especializadas.
-- Skill continuity-handoff.
-- Cláusula constitucional obrigando Prompt de Continuidade ao fim de toda implementação material.
-
-DECISÕES ARQUITETURAIS VIGENTES
-- O produto final será um único plugin WordPress, modular internamente.
-- O projeto é greenfield: comportamentos dos legados são referência; código não tem direito automático de ser copiado.
-- WordPress Core deve ser avaliado antes de infraestrutura própria.
-- Toda complexidade adicional deve ser justificada.
-- UI deve derivar do contrato visual do KB2Ops, reconstruído de forma própria.
-- IA é assistiva: IA sugere, humano decide, WordPress persiste.
-- Retrieval precede síntese.
-- Vetores/semantic search são opcionais e não podem derrubar o core.
-- Desenvolvimento acontece por vertical slices e não por big-bang.
-
-INVARIANTES QUE NÃO PODEM SER VIOLADOS
-- WordPress-first.
-- Aplicar princípio de negação antes de adicionar complexidade.
-- O plugin não faz manutenção editorial dos posts.
-- Elementor continua sendo o editor/publicador canônico.
-- Não escrever em _elementor_data.
-- Não reescrever post_content silenciosamente.
+- Elementor continua editor/publicador canônico.
+- É proibido escrever em _elementor_data ou reescrever post_content silenciosamente.
 - IA sugere; humano decide; WordPress persiste.
-- Sem regressão silenciosa.
-- Todo o projeto humano/documental em pt-BR.
-- Nenhuma implementação sem SPEC ativa.
-- Nenhuma implementação material termina sem CONTINUIDADE.md atualizado.
+- Retrieval precede síntese.
+- Vetor/IA são opcionais e não podem derrubar o core lexical.
+- KB2Ops é referência de produto/UI/Design System e Content Extractor.
+- ASI é referência comprovada de search/index/ranking/Golden/telemetria/operação, não fonte automática de código/schema.
+- Gerenciador de Resumo Executivo continua referência de WordPress-first/metadata e é o próximo inventário.
 
-ARQUIVOS/ÁREAS PRINCIPAIS JÁ MATERIALIZADOS
-- AGENTS.md — regras dos agentes.
-- .specify/PROJECT_MANIFEST.md — identidade e missão.
-- .specify/memory/constitution.md — Constituição 1.1.0.
-- .specify/templates/* — templates SpecKit e Prompt de Continuidade.
-- .github/agents/* — agentes especialistas.
-- .github/skills/* — skills especializadas.
-- docs/DEFINITION-OF-DONE.md — gate de conclusão.
-- docs/CONTRATO-EDITORIAL-ELEMENTOR.md — fronteira editorial.
-- docs/REFERENCIAS-E-INVENTARIO.md — referências iniciais.
-- specs/000-inventario-profundo-e-contratos/* — SPEC ativa.
-- specs/001-* até specs/012-* — roadmap planejado.
+ARTEFATOS MATERIALIZADOS NO BLOCO ASI
+- specs/000-inventario-profundo-e-contratos/inventario-asi.md
+- specs/000-inventario-profundo-e-contratos/catalogo-persistencia.md — parcial ASI
+- specs/000-inventario-profundo-e-contratos/catalogo-integracoes.md — parcial ASI
+- specs/000-inventario-profundo-e-contratos/catalogo-testes-regressao.md — parcial ASI
+- specs/000-inventario-profundo-e-contratos/matriz-paridade-futura.md — preliminar ASI
+- specs/000-inventario-profundo-e-contratos/riscos-e-drifts.md — incremental
+- research.md atualizado
+- tasks.md atualizado com T020–T034 concluídas
+- checklist atualizado com bloco ASI concluído
 
-DADOS E CONTRATOS PERSISTENTES ENVOLVIDOS
-Ainda não há dados próprios do novo plugin. A SPEC-000 deve inventariar os contratos persistentes existentes nos três plugins de referência: post meta, taxonomias, options, transients, cron hooks, tabelas, shortcodes, AJAX, REST, capabilities, hooks/events e artefatos de migração.
+CONCLUSÕES ASI QUE NÃO DEVEM SER PERDIDAS
+1. Não copiar as 12 tabelas como arquitetura futura.
+2. Preservar comportamento de busca lexical degradável, QueryContext limitado, ranking explicável e Golden Queries.
+3. Preservar Item Knowledge/identidade/navegação fail-closed, mas reconstruir sobre Content Extractor único Elementor-aware.
+4. PostIndex, ItemKnowledge/Coordinator, StructuralAudit e Word Cloud não podem continuar com pipelines divergentes sobre post_content.
+5. Vocabulary, bindings e rules têm valor funcional; storage final ainda é AINDA NÃO SABEMOS.
+6. Durable Queue tem comportamento valioso; tabela/implementação nova só nasce se workload justificar.
+7. MigrationRunner/BaseReconciler/PostInstallOrchestrator contêm muitos princípios bons, mas grande parte da implementação existe por história/cutover ASI e deve ser descartada/redesenhada.
+8. Search Events/Interactions/Outcomes têm valor, mas privacidade/retenção precisam ser redesenhadas; modo minimal do ASI ainda persiste query text.
+9. Tracking público com HMAC, nonce, rate limit, server authority e idempotência é contrato forte.
+10. Golden Queries são gate obrigatório de regressão e suíte vazia nunca equivale a PASS.
+11. Quality Diagnostics deve preferir WordPress Site Health + checks específicos mínimos.
+12. Word Cloud, se sobreviver, deve consumir índice/telemetria canônicos, não extrair conteúdo novamente.
+13. Acoplamento direto a roles/tabelas GAC não pertence ao core novo.
+14. Uninstall deve ser não destrutivo por default; exclusão exige política explícita.
+15. IA/vetor entram apenas como evolução opcional: expansão, hybrid retrieval, rerank, sugestões e síntese grounded.
 
-TESTES E GATES EXECUTADOS
-- Estrutura do repositório relida no GitHub após bootstrap de governança.
-- Confirmado que nenhum runtime foi criado por acidente.
-- Constituição, Manifesto, DoD, agentes, skills e SPEC-000 estão versionados.
-- Nenhum teste de runtime é aplicável ainda porque a SPEC-000 é documental/inventário.
-
-GAPS / RISCOS / DÍVIDAS CONHECIDAS
-- O inventário profundo dos três plugins ainda não foi concluído.
-- ASI possui alta complexidade e deve ser lido arquivo a arquivo, não apenas via README.
-- Já foi observado drift potencial: ASI espera BDC\\ExecutiveSummary\\Objective_Provider, enquanto o runtime observado do Gerenciador de Resumo Executivo não expõe esse provider no bootstrap atual. Isso deve ser confirmado e registrado formalmente na SPEC-000.
-- Ainda não existe matriz completa de persistência, hooks, rotas, testes e paridade.
-- Nenhuma decisão sobre schema novo, taxonomias novas, MariaDB Vector ou Foundry deve ser tratada como definitiva antes do inventário.
+DRIFTS / RISCOS ATIVOS
+- D-001: ASI exige BDC\ExecutiveSummary\Objective_Provider; confirmar no GRE.
+- D-002: ASI escuta bdc_es_objective_updated; confirmar se GRE emite.
+- D-003: ASI usa post_content diretamente em múltiplos pipelines; cruzar com KB2Ops Content Extractor.
+- Telemetria minimal do ASI não guarda identidade/IP/UA, mas guarda query text; política futura é pendente.
+- Rate limit anônimo usa hash de IP+User-Agent; revisar para proxy/NAT.
+- quality_daily não deve nascer sem benchmark.
+- storage final de vocabulary/bindings/rules/Golden permanece aberto.
 
 O QUE NÃO DEVE SER FEITO AGORA
-- Não criar bootstrap do novo plugin.
-- Não criar tabelas novas.
-- Não copiar classes dos legados.
-- Não implementar Design System runtime.
+- Não criar bootstrap/runtime do novo plugin.
+- Não criar tabelas, chunks, embeddings ou vetores.
 - Não integrar Foundry.
-- Não criar embeddings/vetores.
+- Não copiar classes do ASI.
 - Não iniciar SPEC-001.
-- Não alterar os três plugins de referência durante o inventário.
+- Não alterar plugins de referência.
+- Não marcar T050–T059 como concluídas antes de cruzar as três referências.
 
-PRÓXIMO PASSO EXATO
-Começar a execução real da SPEC-000 pelo Advanced Search Intelligence:
-1. Fixar SHA/versionamento atual usado como referência.
-2. Ler o bootstrap completo.
-3. Mapear árvore de runtime.
-4. Inventariar Schema.php e todas as tabelas/índices.
-5. Inventariar Settings/options/transients/cron/capabilities.
-6. Mapear Search Index, Item Knowledge, QueryContext, Relevance, Vocabulary, Bindings e Rules.
-7. Mapear Queue, Migration Runner e PostInstallOrchestrator.
-8. Mapear Search Events, Interactions, Outcomes, Quality e Golden Queries.
-9. Mapear Admin, rotas, AJAX, shortcodes e frontend.
-10. Mapear testes para cada comportamento.
-11. Classificar cada componente como MANTER, REDESENHAR, SUBSTITUIR POR WORDPRESS, EVOLUIR COM IA/VETOR, DESCARTAR ou AINDA NÃO SABEMOS.
-12. Atualizar os artefatos da SPEC-000 e este CONTINUIDADE.md ao final do bloco ASI.
+PRÓXIMO PASSO EXATO — GERENCIADOR DE RESUMO EXECUTIVO
+1. Fixar SHA/versionamento da referência usada pela SPEC.
+2. Ler bootstrap completo e árvore de runtime.
+3. Inventariar Meta Contract e todas as oito metas.
+4. Inventariar Summary Store e regras de leitura/escrita.
+5. Inventariar Admin Page/Coverage Dashboard/Renderer/shortcode/assets.
+6. Inventariar hooks, capabilities, nonces, options/transients e qualquer cron.
+7. Inventariar testes/build/release/uninstall.
+8. Procurar explicitamente BDC\ExecutiveSummary\Objective_Provider e read_objective().
+9. Procurar explicitamente emissão de bdc_es_objective_updated.
+10. Confirmar ou refutar D-001/D-002 com arquivo/linha/versão.
+11. Classificar componentes como MANTER, REDESENHAR, SUBSTITUIR POR WORDPRESS, EVOLUIR COM IA/VETOR, DESCARTAR ou AINDA NÃO SABEMOS.
+12. Atualizar inventário GRE, catálogos incrementais, riscos/drifts, tasks/checklist e este CONTINUIDADE.md.
 
-CRITÉRIO PARA CONSIDERAR O PRÓXIMO PASSO CONCLUÍDO
-O bloco ASI só termina quando os arquivos de runtime relevantes tiverem sido lidos, sua persistência/hooks/rotas/testes estiverem mapeados, comportamentos críticos e razões de existência estiverem documentados, complexidades questionadas pelo princípio de negação e existir uma matriz preliminar de decisão/paridade específica do ASI.
+CRITÉRIO DE CONCLUSÃO DO PRÓXIMO BLOCO
+T040–T047 só podem ser fechadas quando runtime relevante, persistência, hooks, UI, segurança e testes do GRE estiverem mapeados e o contrato Objective Provider/evento esperado pelo ASI estiver confirmado ou formalmente classificado como drift.
 
 REGRA DE CONTINUIDADE
-Não assuma contexto de chats anteriores além do que estiver no repositório e neste prompt. Não recomece o projeto, não recrie decisões já comprovadas e não avance para a próxima SPEC sem fechar os gates da SPEC atual. Se houver divergência entre este prompt e o repositório, o repositório e a Constituição prevalecem; investigue a divergência antes de modificar qualquer coisa.
+Se houver divergência entre este arquivo e o repositório, prevalecem Constituição e estado real do GitHub. Investigue antes de modificar. Não transforme conclusões parciais em decisões de arquitetura final.
 ```
 
 ## 2. Estado resumido para humanos
 
-- **Commit de referência do estado:** `7df13b4bf0e50f32e21ab0e471aea0cdbff182c9`
-- **SPEC:** SPEC-000 — Inventário Profundo e Contratos
-- **Último gate concluído:** fundação de governança + cláusula de continuidade
-- **Próximo gate:** inventário profundo do ASI
-- **Blockers conhecidos:** nenhum blocker para iniciar o inventário; runtime novo permanece deliberadamente bloqueado
+- **SPEC:** SPEC-000 — Inventário Profundo e Contratos.
+- **Último bloco concluído:** Advanced Search Intelligence 4.6.8 — T020 a T034.
+- **Baseline ASI:** `c0ddff89caad529ce1bcdc645eb795e4a9b187a1`.
+- **Próximo bloco:** Gerenciador de Resumo Executivo — T040 a T047.
+- **Motivo da prioridade:** fechar o drift `Objective_Provider` / `bdc_es_objective_updated` antes do cruzamento arquitetural.
+- **Runtime novo:** continua bloqueado.
+- **SPEC-001:** não autorizada.
 
-## 3. Evidências disponíveis
+## 3. Evidências do bloco ASI
 
-- Constituição 1.1.0 versionada.
-- Manifesto atualizado com política de continuidade.
-- DoD com gate específico de continuidade.
-- Template canônico de Prompt de Continuidade.
-- Skill `continuity-handoff`.
-- AGENTS e Copilot Instructions atualizados.
-- SPEC-000 atualizada para exigir handoff.
+- runtime central lido, incluindo bootstrap, Schema, Search, Infrastructure, Analytics, Admin/Public e Word Cloud;
+- 12 stores catalogados sem decisão de copiá-los;
+- hooks/AJAX/shortcodes/capabilities e integrações catalogados;
+- contratos de segurança/privacy/rate-limit/cache catalogados;
+- suíte de release e regressão mapeada;
+- classificação e matriz de paridade materializadas;
+- riscos e drifts registrados.
 
 ## 4. Regra de atualização
 
-Atualizar este arquivo após cada bloco material da SPEC-000, especialmente após finalizar o inventário de ASI, KB2Ops e Gerenciador de Resumo Executivo. Substituir informações obsoletas; não acumular estado contraditório.
+Atualizar este arquivo após cada bloco material da SPEC-000. Substituir estado obsoleto; não acumular instruções contraditórias. O Prompt de Continuidade é parte do Definition of Done documental.

@@ -21,21 +21,21 @@
 
 ## ASI
 
-- [ ] T020 — Inventariar bootstrap/lifecycle.
-- [ ] T021 — Inventariar schema/tabelas/índices.
-- [ ] T022 — Inventariar QueryContext/vocabulário/relevância.
-- [ ] T023 — Inventariar PostIndex/ItemKnowledge/ItemRanker.
-- [ ] T024 — Inventariar bindings/rules/curation/simulation.
-- [ ] T025 — Inventariar Search Events/Interactions/Outcomes.
-- [ ] T026 — Inventariar privacy/rate-limit/cache.
-- [ ] T027 — Inventariar Queue/Migrations/Reconciler/Orchestrator.
-- [ ] T028 — Inventariar Golden Queries/Quality/Diagnostics.
-- [ ] T029 — Inventariar Word Cloud.
-- [ ] T030 — Inventariar admin/public routes/AJAX/shortcodes/assets.
-- [ ] T031 — Inventariar legacy/compat e decidir relevância real.
-- [ ] T032 — Inventariar todos os testes e gates.
-- [ ] T033 — Inventariar build/release/rollback.
-- [ ] T034 — Classificar todos os itens.
+- [x] T020 — Inventariar bootstrap/lifecycle.
+- [x] T021 — Inventariar schema/tabelas/índices.
+- [x] T022 — Inventariar QueryContext/vocabulário/relevância.
+- [x] T023 — Inventariar PostIndex/ItemKnowledge/ItemRanker.
+- [x] T024 — Inventariar bindings/rules/curation/simulation.
+- [x] T025 — Inventariar Search Events/Interactions/Outcomes.
+- [x] T026 — Inventariar privacy/rate-limit/cache.
+- [x] T027 — Inventariar Queue/Migrations/Reconciler/Orchestrator.
+- [x] T028 — Inventariar Golden Queries/Quality/Diagnostics.
+- [x] T029 — Inventariar Word Cloud.
+- [x] T030 — Inventariar admin/public routes/AJAX/shortcodes/assets.
+- [x] T031 — Inventariar legacy/compat e decidir relevância real.
+- [x] T032 — Inventariar todos os testes e gates.
+- [x] T033 — Inventariar build/release/rollback.
+- [x] T034 — Classificar todos os itens.
 
 ## Resumo Executivo
 
@@ -50,16 +50,16 @@
 
 ## Cruzamento
 
-- [ ] T050 — Criar catálogo unificado de persistência.
-- [ ] T051 — Criar catálogo unificado de hooks/rotas/integrações.
+- [ ] T050 — Criar catálogo unificado de persistência. _(estrutura incremental criada com ASI; aguarda KB2Ops/GRE)_
+- [ ] T051 — Criar catálogo unificado de hooks/rotas/integrações. _(estrutura incremental criada com ASI; aguarda KB2Ops/GRE)_
 - [ ] T052 — Criar mapa de ownership atual de dados.
 - [ ] T053 — Criar matriz de sobreposição funcional.
-- [ ] T054 — Criar mapa de contratos quebrados/drift.
-- [ ] T055 — Criar catálogo de regressão e Golden Queries.
+- [ ] T054 — Criar mapa de contratos quebrados/drift. _(registro incremental criado; drift Objective aguarda T046)_
+- [ ] T055 — Criar catálogo de regressão e Golden Queries. _(estrutura incremental criada com ASI; aguarda demais referências)_
 - [ ] T056 — Identificar tudo que WordPress pode substituir.
 - [ ] T057 — Identificar tudo que realmente exige infraestrutura própria.
 - [ ] T058 — Identificar candidatos a IA/vetor.
-- [ ] T059 — Criar matriz de paridade futura.
+- [ ] T059 — Criar matriz de paridade futura. _(estrutura incremental criada com ASI; aguarda cruzamento)_
 
 ## Gate
 

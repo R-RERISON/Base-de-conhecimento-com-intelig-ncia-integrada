@@ -23,18 +23,18 @@
 
 ## Inventário ASI
 
-- [ ] Bootstrap/lifecycle.
-- [ ] Schema completo.
-- [ ] Search/ranking.
-- [ ] Item knowledge/anchors.
-- [ ] Vocabulary/bindings/rules.
-- [ ] Telemetry/outcomes/privacy.
-- [ ] Queue/migrations/operations.
-- [ ] Golden Queries/quality.
-- [ ] Word Cloud.
-- [ ] Legacy/compat.
-- [ ] Testes/build/release.
-- [ ] Classificação completa.
+- [x] Bootstrap/lifecycle.
+- [x] Schema completo.
+- [x] Search/ranking.
+- [x] Item knowledge/anchors.
+- [x] Vocabulary/bindings/rules.
+- [x] Telemetry/outcomes/privacy.
+- [x] Queue/migrations/operations.
+- [x] Golden Queries/quality.
+- [x] Word Cloud.
+- [x] Legacy/compat.
+- [x] Testes/build/release.
+- [x] Classificação completa.
 
 ## Inventário Resumo Executivo
 
@@ -50,15 +50,15 @@
 
 ## Cruzamento
 
-- [ ] Catálogo de persistência.
-- [ ] Catálogo de integrações.
+- [ ] Catálogo de persistência. _(parcial ASI materializado)_
+- [ ] Catálogo de integrações. _(parcial ASI materializado)_
 - [ ] Mapa de ownership.
 - [ ] Matriz de sobreposição.
-- [ ] Drifts/contratos quebrados.
-- [ ] Catálogo de regressão.
-- [ ] Matriz WordPress-first.
-- [ ] Candidatos IA/vetor.
-- [ ] Matriz de paridade futura.
+- [ ] Drifts/contratos quebrados. _(parcial ASI materializado)_
+- [ ] Catálogo de regressão. _(parcial ASI materializado)_
+- [ ] Matriz WordPress-first. _(preliminar ASI materializada)_
+- [ ] Candidatos IA/vetor. _(preliminar ASI materializada)_
+- [ ] Matriz de paridade futura. _(parcial ASI materializada)_
 
 ## Gate final
 
@@ -69,3 +69,12 @@
 - [ ] Revisão QA/Regressão.
 - [ ] Nenhum desconhecido crítico sem decisão.
 - [ ] SPEC-001 autorizada formalmente.
+
+## Evidência de fechamento do bloco ASI
+
+- `inventario-asi.md` contém a decomposição de runtime, comportamento e classificação.
+- `catalogo-persistencia.md` registra stores/options/transients e ownership preliminar.
+- `catalogo-integracoes.md` registra hooks, cron, capabilities, AJAX, shortcodes e integrações.
+- `catalogo-testes-regressao.md` registra a suíte/gates e contratos a portar.
+- `matriz-paridade-futura.md` registra a paridade mínima e os itens ainda desconhecidos.
+- `riscos-e-drifts.md` registra os riscos do ASI e o drift Objective/Resumo Executivo a confirmar.

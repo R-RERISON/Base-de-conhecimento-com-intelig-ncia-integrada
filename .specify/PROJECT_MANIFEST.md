@@ -5,7 +5,7 @@
 **Produto:** Base de Conhecimento com Inteligência Integrada  
 **Tipo:** Plugin WordPress único, modular internamente  
 **Idioma:** Português do Brasil  
-**Estado:** SPEC-000 concluída / SPEC-001 Core mínimo + Summary narrativo PRONTA após Definition of Ready documental; runtime ainda não iniciado  
+**Estado:** SPEC-000 concluída / SPEC-001 Core mínimo + Summary narrativo **EM IMPLEMENTAÇÃO**; runtime S002 implementado, unitário T040 PASS, integração/browser ainda não homologados  
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
 ## Missão
@@ -16,9 +16,20 @@ Construir uma plataforma única para governar a Base de Conhecimento, integrando
 
 A SPEC-000 — Inventário Profundo e Contratos — foi concluída documentalmente por T097.
 
-T097 autorizou a abertura da **SPEC-001 — Core mínimo + Summary narrativo**, sob escopo estrito. O bloco inicial de baseline/Definition of Ready da SPEC-001 foi concluído documentalmente e está PASS.
+T097 autorizou a **SPEC-001 — Core mínimo + Summary narrativo** sob escopo estrito. O Definition of Ready documental da SPEC-001 está PASS.
 
-Isso significa que o próximo bloco pode iniciar o runtime mínimo da SPEC-001. Não significa Homologação, release, produção ou cutover.
+Estado comprovado da SPEC-001:
+
+- S002/runtime mínimo: **IMPLEMENTADO**;
+- PHP lint do runtime: **PASS**;
+- T040/unitário determinístico: **PASS 15/15**;
+- harness WordPress T041/T042: **VERSIONADO E LINTADO**;
+- G-001/G-020/G-070 em WordPress real: **NOT_RUN**;
+- B-006 em Metadata API real: **NOT_RUN**;
+- G-110/browser acceptance: **NOT_RUN**;
+- G-130/lifecycle/package: **NOT_RUN**.
+
+Logo a SPEC está **Em implementação**. Não está em Homologação, Release, produção ou cutover.
 
 ## Usuários principais
 
@@ -110,7 +121,7 @@ Jornada:
 
 `selecionar artigo -> ler -> editar -> salvar -> reler -> confirmar Summary`.
 
-Post type suportado na baseline desta SPEC: **`post` somente**.
+Post type suportado: **`post` somente**.
 
 Dados:
 
@@ -118,18 +129,31 @@ Dados:
 - `escalation` -> `_bdc_es_escalation`;
 - `important` -> `_bdc_es_important`.
 
-Superfície:
+Runtime implementado:
 
 - wp-admin server-rendered;
+- listagem paginada;
 - GET read-only;
-- POST + nonce;
+- POST via `admin-post` + nonce;
 - `current_user_can('edit_post', $post_id)` por objeto;
 - allowlist exata dos três campos;
+- limite de 32768 bytes por campo antes da sanitização;
+- `trim(sanitize_textarea_field())`;
 - Metadata API;
+- empty = delete;
+- omitido = preservar;
+- NO_CHANGE = zero write;
 - read-after-write;
-- B-006 por snapshot, diff, writes mínimos, compensação e reread.
+- B-006 por snapshot, diff, writes mínimos, compensação e reread;
+- POST-Redirect-GET;
+- UI mínima no shell nativo do wp-admin.
 
-O DoR documental está PASS. Os testes executáveis ainda não existem porque o runtime não foi iniciado; permanecem NOT_RUN e bloquearão Homologação/release até serem executados com sucesso.
+Evidência atual:
+
+- unitário: PASS 15/15;
+- integração WordPress: NOT_RUN;
+- browser: NOT_RUN;
+- lifecycle/package: NOT_RUN.
 
 ## Fora da SPEC-001
 
@@ -153,10 +177,10 @@ Operações futuras de IA devem ser observáveis e orçadas. Não aplicável ao 
 
 ## Diretriz visual
 
-O Design System do KB2Ops é referência inicial. A SPEC-001 implementará apenas os elementos necessários à tela real, sem segundo shell administrativo.
+O Design System do KB2Ops é referência inicial. A SPEC-001 implementa apenas os elementos necessários à tela real, sem segundo shell administrativo.
 
 ## Regra de liberação
 
-Uma versão não é liberada apenas porque compila. Deve possuir evidência suficiente de integridade, segurança, regressão, compatibilidade visual, dados, rollback, Matriz de Evidência e Prompt de Continuidade.
+Uma versão não é liberada apenas porque compila ou passa testes unitários. Deve possuir evidência suficiente de integridade, segurança, regressão, compatibilidade visual, dados, rollback, Matriz de Evidência e Prompt de Continuidade.
 
-A SPEC-001 está **Pronta para implementação**, não para Homologação/release/cutover.
+A SPEC-001 permanece **Em implementação** enquanto qualquer gate MUST de Homologação estiver `NOT_RUN`, `FAIL`, `NOT_CONFIGURED` ou `STALE`.

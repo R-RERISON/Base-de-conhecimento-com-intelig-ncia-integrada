@@ -20,10 +20,10 @@ ANTES DE QUALQUER ALTERAÇÃO
 PROJETO
 - Repositório: R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
 - Branch: main
-- HEAD confirmado antes de T093: d82d7ab2832c2657c45e1c0653c3ab608a15c0c8
-- O commit que contém esta versão representa o fechamento documental de T093; confirme o SHA atual antes da próxima escrita.
+- HEAD confirmado antes de T094: b9de85ef04ddd4320f191fb2dd5a394bf3662802
+- O commit que contém esta versão representa o fechamento documental de T094; confirme o SHA atual antes da próxima escrita.
 - SPEC ativa: SPEC-000.
-- Estado: T000–T059 + T090–T093 concluídos documentalmente; nenhum runtime novo.
+- Estado: T000–T059 + T090–T094 concluídos documentalmente; nenhum runtime novo.
 
 BASELINES
 - ASI 4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1
@@ -36,7 +36,8 @@ ARTEFATOS CENTRAIS
 - revisao-simplicidade-t091.md
 - revisao-seguranca-t092.md
 - revisao-qa-t093.md
-- catalogo-testes-regressao.md
+- revisao-produto-t094.md
+- mapa-contratos-quebrados.md
 - riscos-e-drifts.md
 - research.md
 
@@ -47,89 +48,94 @@ INVARIANTES
 - projection/index/cache/vector não são fonte da verdade.
 - persistência confirmada antes de evento.
 - dual-write permanente proibido.
-- IA sugere; humano decide/persiste pelo owner.
+- IA sugere; humano decide; owner persiste.
 - lexical funciona sem IA/vetor.
 - nenhum runtime antes de T097.
 
-T091
-- candidato de primeiro slice: Core mínimo + Summary narrativo.
-- extractor/Search/Review/Classificação/IA separados por slices.
-- sem frameworks genéricos antecipados.
-
-T092
-- capability no handler/objeto; nonce não substitui autorização.
-- POST para mutação; GET side-effect free.
-- IDOR/mass assignment/XSS/SSRF/secrets tratados como NO-GO aplicáveis.
-- projection nunca autoriza Search.
-- Analytics continua sob B-004.
-
-T093 — QA/REGRESSÃO
-Arquivo: revisao-qa-t093.md.
+T094 — PRODUTO/CONHECIMENTO
+Arquivo: revisao-produto-t094.md.
 Status: PASS, zero blockers globais.
 
-ESTADOS DE EVIDÊNCIA
-PASS | FAIL | NOT_RUN | NOT_CONFIGURED | STALE | N/A | POSTERGADO | WAIVED.
-- gate ativo em NOT_RUN/NOT_CONFIGURED/STALE = NO-GO.
-- N/A exige justificativa.
-- POSTERGADO implementado silenciosamente = NO-GO.
+CANDIDATO SPEC-001
+Core mínimo + Summary narrativo.
+Usuário primário: Analista de Conhecimento.
+Campos: objective, escalation, important.
+Resultado: selecionar artigo -> ler -> editar 3 campos -> salvar -> reler -> confirmar estado, sem alterar editorial.
 
-MATRIZ DE EVIDÊNCIA POR SPEC
-Cada SPEC deve listar: contrato/gate, classe, cenário, tipo de teste, evidência esperada, estado e artefato/execução.
+LIMITES SPEC-001
+- não incluir cinco campos classificatórios históricos GRE.
+- não incluir Review completo.
+- não incluir AI READY.
+- não incluir Content Extractor/Search/Golden/Analytics/IA.
+- não criar cockpit/portal completo.
 
-CANDIDATO SPEC-001 — EVIDÊNCIA MÍNIMA
-- G-001 zero write editorial.
-- G-020 CRUD Summary + allowlist + omitted/empty + read-after-write + B-006.
-- G-070 capability/nonce/GET/IDOR/mass assignment/XSS.
-- G-110 browser/a11y/feedback.
-- G-130 lifecycle/package quando aplicável.
+ORDEM RECOMENDADA
+1. SPEC-001 Summary narrativo.
+2. SPEC-002 Classificação mínima, primeiro eixo sugerido knowledge_type.
+3. SPEC-003 Review mínimo; AI READY fica fora até pré-requisitos completos.
+4. SPEC-004 Content Extractor + Search post-level + Golden mínimo.
+5. demais capacidades por evidência.
+Números finais só após T097.
 
-GOLDEN
-- obrigatória antes do primeiro release Search.
-- vazia = NOT_CONFIGURED.
-- não executada = NOT_RUN.
-- stale = NO-GO.
-- blocking fail = NO-GO.
-- não se aplica ao Summary isolado.
+SEARCH
+- primeira grande capacidade direta ao Resolvedor.
+- prioridade estratégica posterior.
+- exige B-001 + Golden + segurança/scope + benchmark.
+- post-level antes de item/deep-link quando suficiente.
 
-SEARCH FUTURA
-G-010/G-050/G-060/Golden/G-070/G-120/G-130 + B-001.
-Benchmark com corpus real; projection stale/scope; FULLTEXT/fallback bounded.
+AI READY
+- não reduzir regra histórica 8/8 para 3/3.
+- postergar até owners/pré-requisitos existirem.
 
-FEATURES POSTERGADAS
-Não criar harness executável antecipado para Analytics/queue/IA/vector/agentes. Ativar gates/testes junto da capacidade real.
+ANALYTICS
+- não necessário para homologar SPEC-001.
+- valor pode ser comprovado por conclusão da tarefa, integridade, segurança e feedback humano.
+- B-004 continua intacto.
 
-DEFECT TAXONOMY
-- P0/P1 = NO-GO.
-- P2 = decisão explícita/waiver quando seguro.
-- P3 = backlog explícito.
+PARIDADE
+Preservar dados/comportamento necessários, não layout, menus, shortcodes, side panels ou estruturas internas antigas automaticamente.
 
-PRÓXIMO PASSO EXATO — T094
-Executar Revisão de Produto/Conhecimento.
+T093 — QA
+Cada futura SPEC possui Matriz de Evidência. PASS vazio proibido. Estados: PASS/FAIL/NOT_RUN/NOT_CONFIGURED/STALE/N/A/POSTERGADO/WAIVED.
 
-T094 DEVE
-1. validar usuários/jornadas reais.
-2. confirmar se Summary isolado entrega valor suficiente para SPEC-001.
-3. decidir ordem relativa Summary vs Classificação vs Review vs Search.
-4. separar paridade de produto necessária de herança histórica.
-5. definir resultado observável do primeiro slice sem depender de Analytics detalhado.
-6. validar campos mínimos e UX da jornada.
-7. priorizar resolvedor/analista de conhecimento/gestor/admin sem big-bang.
-8. classificar findings como MANTER | REORDENAR | SIMPLIFICAR | POSTERGAR | BLOQUEAR.
+T092 — SEGURANÇA
+Capability no handler/objeto, POST+nonce, IDOR/mass assignment/XSS, escaping, Search projection não autoriza, SSRF/secrets/data egress quando aplicável.
+
+BLOCKERS B-001–B-007 CONTINUAM CONTEXTUAIS
+- B-001 Search/RAG/embedding.
+- B-002 profiling/cutover Classificação.
+- B-003 compatibilidade/aliases.
+- B-004 Analytics/query logging.
+- B-005 item/deep-link.
+- B-006 write composto Summary/flows equivalentes.
+- B-007 async/queue.
+
+PRÓXIMO PASSO EXATO — T095
+Fechar unknowns/blockers por slice, focando SPEC-001 candidata.
+
+T095 DEVE
+1. revisar B-001–B-007 contra o escopo exato de SPEC-001.
+2. revisar findings T090–T094 ainda abertos.
+3. classificar cada item: FECHAR_AGORA | NÃO_APLICÁVEL_A_SPEC001 | POSTERGAR_PARA_SLICE_CORRETO | BLOCKER_SPEC001.
+4. fechar B-006 conceitualmente o suficiente para que a futura SPEC saiba qual estratégia testar, ou marcá-lo BLOCKER_SPEC001.
+5. verificar versão mínima WordPress apenas se SPEC-001 depender de recurso version-specific.
+6. confirmar que não há necessidade de migration/cutover/alias na SPEC-001 inicial; se houver, tratar B-003.
+7. separar unknowns de Search/Classificação/Review/IA para suas futuras SPECs.
+8. produzir uma lista objetiva do que T097 precisará decidir.
 9. não criar runtime.
 
-CRITÉRIO PARA FECHAR T094
-- primeiro slice recomendado por valor e não só simplicidade técnica;
-- usuários/resultado/jornada explícitos;
-- nenhuma feature entra apenas por legado;
-- ordem de próximas SPECs recebe racional;
-- T095 recebe candidato objetivo para avaliar blockers.
+CRITÉRIO PARA FECHAR T095
+- nenhum blocker aplicável à SPEC-001 fica ambíguo;
+- blockers de outros slices são explicitamente postergados, não ignorados;
+- candidate SPEC-001 possui Definition of Ready documental suficiente para T097 avaliar;
+- zero intenção é registrada como conclusão sem evidência.
 
 ORDEM RESTANTE
-T094 -> T095 -> T096 -> T097.
+T095 -> T096 -> T097.
 
 REGRA
 Repositório/Constituição/Manifesto/SPEC prevalecem sobre memória de chat.
 ```
 
 ## Estado resumido
-T050–T059 + T090–T093 concluídos documentalmente. Próximo: T094. Runtime inexistente. SPEC-001 bloqueada até T097.
+T050–T059 + T090–T094 concluídos documentalmente. Próximo: T095. Runtime inexistente. SPEC-001 bloqueada até T097.

@@ -5,33 +5,27 @@
 - [x] T091 Simplicidade.
 - [x] T092 Segurança.
 - [x] T093 QA/Regressão.
-- [ ] T094 Produto/Conhecimento.
-- [ ] T095 Unknowns/blockers por slice.
-- [ ] T096 Relatório final.
+- [x] T094 Produto/Conhecimento.
+- [ ] T095 blockers/unknowns por slice.
+- [ ] T096 relatório final.
 - [ ] T097 GO/NO-GO SPEC-001.
 
-## Evidência T093
-- [x] estados PASS/FAIL/NOT_RUN/NOT_CONFIGURED/STALE/N/A/POSTERGADO/WAIVED definidos.
-- [x] gate ativo sem execução/evidência corrente = NO-GO.
-- [x] N/A exige justificativa versionada.
-- [x] Matriz de Evidência obrigatória por SPEC definida.
-- [x] candidato Summary recebeu gates G-001/G-020/G-070/G-110/G-130 + B-006.
-- [x] testes negativos de capability/nonce/GET/IDOR/mass assignment/XSS definidos.
-- [x] browser/manual acceptance exigido quando unit/integration não prova interação.
-- [x] benchmark só em caminho crítico medido.
-- [x] Golden permanece obrigatória antes de release Search e não se aplica ao Summary isolado.
-- [x] feature postergada não exige harness executável antecipado.
-- [x] defect taxonomy P0–P3 definida.
-- [x] package/source mismatch classificado como NO-GO futuro.
-- [x] release evidence bundle conceitual definido.
+## Evidência T094
+- [x] usuário primário do primeiro slice identificado: Analista de Conhecimento.
+- [x] SPEC-001 candidata mantida: Core mínimo + Summary narrativo.
+- [x] Summary limitado a objective/escalation/important.
+- [x] classificação histórica não foi absorvida pelo owner Summary.
+- [x] primeira classificação futura recomendada: knowledge_type, sujeita a T095/SPEC.
+- [x] Review foi mantido posterior a Summary + classificação mínima.
+- [x] AI READY foi postergado até pré-requisitos completos; regra não foi reduzida para 3/3.
+- [x] Search post-level foi reconhecida como prioridade estratégica posterior para Resolvedor.
+- [x] Content Extractor nasce com Search/consumidor, não isoladamente.
+- [x] item/deep-link continuam posteriores.
+- [x] Search Knowledge/dashboards/Analytics/IA continuam por evidência.
+- [x] sucesso do primeiro slice pode ser homologado sem Analytics detalhado.
+- [x] paridade de produto foi separada de layout/menus/shortcodes históricos.
 - [x] zero blocker global novo.
-- [x] nenhum runtime/teste executável criado.
-
-## Gate final restante
-- [ ] T094 validação de valor/ordem de produto.
-- [ ] T095 fechamento formal dos blockers/unknowns aplicáveis à SPEC-001 candidata.
-- [ ] T096 relatório final.
-- [ ] T097 autorização formal.
+- [x] nenhum runtime criado.
 
 ## Próximo passo
-**T094 — Revisão de Produto/Conhecimento.**
+**T095 — fechamento formal de unknowns e blockers da SPEC-001 candidata.**

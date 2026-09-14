@@ -1,65 +1,41 @@
 # Plano — SPEC-000 Inventário Profundo e Contratos
 
 ## Estado
-- T000–T059 concluídos documentalmente.
-- T090 WordPress-first: PASS.
-- T091 Simplicidade: PASS.
-- T092 Segurança: PASS arquitetural.
-- T093 QA/Regressão: PASS documental.
-- Próximos: T094 -> T095 -> T096 -> T097.
+T000–T059 concluídos. Revisões T090–T094 concluídas. Restam T095–T097.
 
-## Arquitetura preservada
-- WordPress/Elementor como fonte editorial.
-- primeiro runtime por vertical slice mínimo.
-- candidato atual para SPEC-001: Core mínimo + Summary narrativo, ainda sujeito a T094/T095/T097.
-- Content Extractor somente com consumidor real.
-- Search própria posterior e incremental, post-level antes de item-level quando suficiente.
-- Search Retrieval Projection continua única família persistente própria aprovada.
-- Analytics, durable queue, semantic/vector/rerank/agentes permanecem postergados.
+## Decisão de produto T094
+Artefato: `revisao-produto-t094.md`.
 
-## Resultado T093
-Artefato: `revisao-qa-t093.md`.
+Candidato atual para SPEC-001 permanece:
 
-### Evidência por slice
-Cada SPEC futura deve possuir Matriz de Evidência antes do código, com:
-- contrato/gate;
-- classe;
-- cenário;
-- tipo de teste;
-- evidência esperada;
-- estado;
-- artefato/execução.
+**Core mínimo + Summary narrativo (`objective`, `escalation`, `important`)**.
 
-Estados válidos: PASS, FAIL, NOT_RUN, NOT_CONFIGURED, STALE, N/A, POSTERGADO, WAIVED.
+Usuário primário: Analista de Conhecimento.
 
-PASS vazio é proibido. N/A exige justificativa. Evidência stale não vale como atual.
+Resultado: estruturar três informações operacionais do artigo sem tocar no conteúdo editorial.
 
-### Primeiro Summary slice
-Gates mínimos:
-- G-001 editorial;
-- G-020 Summary;
-- G-070 segurança/scope;
-- G-110 UI/UX;
-- G-130 lifecycle/release quando aplicável;
-- B-006 no write composto.
+## Sequência recomendada
+1. Summary narrativo.
+2. Classificação mínima — primeiro eixo recomendado: `knowledge_type`.
+3. Review mínimo; AI READY apenas quando seus pré-requisitos existirem.
+4. Content Extractor + Search post-level + Golden mínimo para o Resolvedor.
+5. item/deep-link, Search Knowledge, Analytics, IA e demais capacidades por evidência.
 
-Cenários negativos obrigatórios quando aplicáveis:
-- capability;
-- nonce/CSRF;
-- mutação por GET;
-- IDOR;
-- mass assignment;
-- XSS/escaping;
-- falha parcial/read-after-write.
+## Regras de produto
+- não prometer valor de Search/Resolvedor no primeiro Summary slice;
+- não colocar os oito campos GRE no owner Summary;
+- não alterar a regra AI READY para caber no runtime incompleto;
+- não criar dashboard antes de pergunta de gestão real;
+- paridade preserva resultado/dado, não menus/layout/shortcodes históricos automaticamente;
+- Search permanece prioridade estratégica de consumo, mas exige B-001/Golden/security/benchmark.
 
-### Search
-Quando nascer: G-010/G-050/G-060/Golden/G-070/G-120/G-130 + B-001. Golden vazia/not-run/stale nunca PASS.
+## Sucesso SPEC-001 sem Analytics
+Homologação pode provar valor por conclusão de tarefa, integridade/read-after-write, segurança e feedback humano. B-004 não precisa ser reaberto.
 
-### Features postergadas
-Não criar harness de IA/vector/queue/Analytics antes da capacidade. Manter gates documentais e ativá-los junto do slice real.
+## Próximo passo — T095
+Avaliar somente blockers e unknowns que afetam a SPEC-001 candidata. Blockers de Search/Analytics/queue/IA não podem virar NO-GO global.
 
-## Gate
-Nenhum runtime/teste executável é autorizado antes de T097.
+Classificação T095:
+`FECHAR_AGORA | NÃO_APLICÁVEL_A_SPEC001 | POSTERGAR_PARA_SLICE_CORRETO | BLOCKER_SPEC001`.
 
-## Próximo passo — T094
-Revisar valor de produto/gestão de conhecimento e confirmar ou alterar a recomendação de primeiro slice.
+Nenhum runtime antes de T097.

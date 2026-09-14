@@ -1,50 +1,39 @@
 # Pesquisa Consolidada — SPEC-000
 
-## Estado
-T050–T059 consolidaram arquitetura; T090 validou WordPress-first; T091 reduziu complexidade; T092 endureceu segurança; T093 fechou a estratégia de evidência por slice.
+## Estado consolidado
+T050–T059 fecharam a arquitetura. T090–T093 validaram WordPress-first, simplicidade, segurança e QA. T094 validou valor e ordem de produto.
 
-## T093 — QA/Regressão
-Artefato: `revisao-qa-t093.md`.
+## T094 — Produto/Conhecimento
+Artefato: `revisao-produto-t094.md`.
 
-Princípios confirmados pelo agente QA:
-- teste protege comportamento, não implementação histórica;
-- mudança de ranking exige Golden;
-- UI crítica exige browser/manual quando necessário;
-- PASS vazio não é PASS;
-- não testado permanece não testado;
-- release não afirma certeza sem evidência;
-- bug reproduzido ganha regressão quando viável.
+### Primeiro slice
+`Core mínimo + Summary narrativo` permanece o candidato de SPEC-001.
 
-## Estados de evidência
-PASS, FAIL, NOT_RUN, NOT_CONFIGURED, STALE, N/A, POSTERGADO, WAIVED.
+Usuário primário: Analista de Conhecimento.
 
-Regras:
-- gate ativo NOT_RUN/NOT_CONFIGURED/STALE = NO-GO;
-- N/A sem justificativa = NO-GO documental;
-- feature POSTERGADA implementada sem reabertura = NO-GO arquitetural;
-- waiver permanece visível e não vira PASS.
+Valor: registrar e manter `objective`, `escalation`, `important` como conhecimento sistêmico estruturado, sem reescrever o artigo.
 
-## Candidato SPEC-001
-`Core mínimo + Summary narrativo` continua pequeno e testável.
+### Limites
+- não incluir os cinco campos classificatórios históricos no owner Summary;
+- não prometer benefício de Search ao Resolvedor ainda;
+- não implementar AI READY antes dos pré-requisitos históricos completos;
+- não criar cockpit/dashboard/portal completo no primeiro slice.
 
-Matriz mínima:
-- G-001: zero write editorial;
-- G-020: CRUD/partial/empty/read-after-write/B-006;
-- G-070: capability, nonce, IDOR, mass assignment, XSS;
-- G-110: browser/a11y básica/feedback;
-- G-130: activation/deactivation/uninstall/package quando aplicável.
+### Ordem de produto recomendada
+1. Summary narrativo.
+2. Classificação mínima, começando por `knowledge_type` salvo nova evidência.
+3. Review mínimo.
+4. Search post-level com Content Extractor e Golden mínimo.
+5. capacidades adicionais por evidência.
 
-## Search
-Primeiro release Search exige G-010/G-050/G-060/Golden/G-070/G-120/G-130 e B-001. Golden não se aplica ao Summary isolado.
+### Search
+Search é reconhecida como capacidade estratégica de maior valor direto ao Resolvedor, mas não deve furar os gates B-001/Golden/security/benchmark. Post-level precede item/deep-link quando suficiente.
 
-## Capacidade postergada
-Analytics, queue, item/deep-link, IA/vector/agentes não exigem suites executáveis antes de existirem; seus gates permanecem documentados e tornam-se MUST/CONDICIONAL quando ativados.
+### Analytics
+Não é necessário para provar valor do primeiro slice. Homologação humana + integridade do estado + segurança são evidência suficiente. B-004 continua fechado para Analytics detalhado.
 
-## Defect taxonomy
-- P0: perda/corrupção, bypass de autorização, write editorial indevido, secret leak grave -> NO-GO.
-- P1: fluxo principal, Golden blocking, XSS/IDOR relevante, rollback crítico ausente -> NO-GO.
-- P2: secundário com workaround seguro -> decisão explícita.
-- P3: cosmético/documental -> backlog explícito.
+### IA
+IA P1 só entra após jornada manual estável e esforço real observado. RAG/vector/agentes continuam postergados.
 
 ## Próximo passo
-T094 deve validar a ordem de produto e se Summary isolado entrega valor suficiente para ser realmente a SPEC-001 recomendada.
+T095 deve separar definitivamente blockers da SPEC-001 candidata dos blockers de slices futuros.

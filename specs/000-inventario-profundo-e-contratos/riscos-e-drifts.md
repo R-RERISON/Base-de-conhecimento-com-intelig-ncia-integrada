@@ -1,59 +1,46 @@
 # Riscos, Drifts e Dívidas — SPEC-000
 
-> Estado após T093.
+> Estado após T094.
 
 ## Riscos anteriores
-D-001–D-008 e B-001–B-007 permanecem contextuais. T090–T092 adicionaram guardrails de WordPress-first, simplicidade e segurança. T093 adiciona riscos de evidência/regressão.
+D-001–D-008 e B-001–B-007 permanecem contextuais. T090–T093 adicionaram guardrails de plataforma, simplicidade, segurança e evidência.
 
-## Novos riscos T093
+## Novos riscos T094
 
-### X-064 — PASS vazio
-**Risco:** ausência de casos executados ser apresentada como sucesso.  
-**Tratamento:** estados explícitos; NOT_RUN/NOT_CONFIGURED nunca equivalem a PASS.
+### X-073 — primeiro slice sem usuário primário
+**Risco:** entregar infraestrutura travestida de produto.  
+**Tratamento:** SPEC-001 candidata possui usuário explícito: Analista de Conhecimento.
 
-### X-065 — N/A usado para esconder gap
-**Risco:** gate aplicável ser omitido por conveniência.  
-**Tratamento:** N/A exige justificativa versionada.
+### X-074 — prometer valor ao Resolvedor antes de Search
+**Risco:** percepção de produto incompleto ou requisito inflado no Summary.  
+**Tratamento:** Summary é jornada de curadoria; Search é entrega posterior específica ao Resolvedor.
 
-### X-066 — evidência stale
-**Risco:** teste antigo permanecer “verde” após mudança de commit/build/dataset/ranker/extractor.  
-**Tratamento:** evidência deve referenciar estado material testado; mudança relevante invalida.
+### X-075 — owner Summary absorver classificação por herança GRE
+**Risco:** reintroduzir duplicidade D-006/B-002.  
+**Tratamento:** SPEC-001 limita-se a objective/escalation/important.
 
-### X-067 — happy path sem cenários negativos
-**Risco:** fluxo funciona para admin feliz, mas capability/nonce/IDOR/mass assignment/XSS falham.  
-**Tratamento:** cenários negativos obrigatórios quando a superfície existir.
+### X-076 — AI READY adaptado ao runtime incompleto
+**Risco:** alterar regra de confiança de 8/8 para 3/3 apenas por conveniência.  
+**Tratamento:** AI READY postergado até owners/pré-requisitos completos; regra histórica não é reduzida silenciosamente.
 
-### X-068 — UI considerada validada por unit test
-**Risco:** foco, escaping, feedback, bypass e renderização real não são comprovados.  
-**Tratamento:** browser/manual acceptance nos fluxos críticos.
+### X-077 — dashboard antes da pergunta
+**Risco:** Cockpit/analytics sem decisão de gestão ou dados maduros.  
+**Tratamento:** dashboard só nasce com pergunta/usuário/dado comprovados.
 
-### X-069 — benchmark fictício
-**Risco:** meta de performance sem corpus/configuração real.  
-**Tratamento:** benchmark só em caminho crítico, com corpus e ambiente registrados.
+### X-078 — Search atrasada indefinidamente
+**Risco:** plataforma concentra valor administrativo e demora a entregar descoberta ao Resolvedor.  
+**Tratamento:** após Summary + classificação mínima + Review mínimo, Search post-level é prioridade estratégica; T095/T097 podem antecipar se houver evidência forte sem violar gates.
 
-### X-070 — pacote diferente do código testado
-**Risco:** working tree passa, artefato distribuído diverge.  
-**Tratamento:** release futuro testa o ZIP/build distribuído e registra checksum.
+### X-079 — paridade histórica confundida com jornada
+**Risco:** clonar oito campos na mesma tela, menus, shortcodes e layouts por familiaridade.  
+**Tratamento:** preservar comportamento/dado necessário; UI e composição seguem jornada futura.
 
-### X-071 — harness prematuro para feature postergada
-**Risco:** construir infraestrutura de teste cara para IA/vector/queue inexistentes.  
-**Tratamento:** gates documentais agora; suite executável junto da capacidade real.
+### X-080 — IA antes de esforço comprovado
+**Risco:** custo/complexidade para automatizar fluxo ainda instável.  
+**Tratamento:** jornada manual primeiro; IA P1 apenas se reduzir esforço observado.
 
-### X-072 — cobertura percentual substituir contratos
-**Risco:** alta cobertura de linhas com gaps comportamentais críticos.  
-**Tratamento:** cobertura por risco/contrato; nenhum percentual global inventado.
-
-## NO-GO QA futuro
-- gate MUST/CONDICIONAL ativo em FAIL/NOT_RUN/NOT_CONFIGURED/STALE;
-- Golden blocking falhando;
-- browser acceptance obrigatório pendente;
-- migration/cutover sem rollback quando aplicável;
-- pacote testado diferente do publicado;
-- P0/P1 aberto sem decisão formal permitida;
-- contrato crítico sem evidência.
-
-## Estado do primeiro slice sugerido
-Summary continua testável sem Search/IA. B-006 permanece gate próprio do write composto.
+## Estado do candidato SPEC-001
+Produto considera `Core mínimo + Summary narrativo` válido e pequeno. Nenhum novo blocker global foi encontrado.
 
 ## Próximo passo
-T094 — Produto/Conhecimento.
+T095 deve decidir objetivamente quais blockers/unknowns afetam essa SPEC candidata e quais pertencem a Search/Classificação/Review/Analytics/IA futuros.

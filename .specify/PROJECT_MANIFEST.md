@@ -126,6 +126,23 @@ A UI não pode parecer um conjunto de plugins agregados.
 - Sem refatoração simultânea de todos os domínios.
 - Sem dependência de GitHub Actions.
 - Build e verificação devem poder rodar localmente.
+- Toda implementação material termina com Prompt de Continuidade versionado na SPEC ativa.
+
+## Continuidade entre chats
+
+O projeto não depende da memória implícita de uma conversa do ChatGPT.
+
+Cada SPEC em implementação deve possuir `CONTINUIDADE.md`, baseado no template canônico em `.specify/templates/continuity-prompt-template.md`.
+
+Esse artefato deve ser suficiente para que um novo chat:
+
+1. descubra o estado atual comprovado;
+2. saiba quais decisões já estão vigentes;
+3. conheça testes, gaps, riscos e blockers;
+4. saiba exatamente qual é o próximo passo;
+5. reler o repositório antes de alterar qualquer coisa.
+
+O repositório e a Constituição prevalecem sobre o texto do handoff caso exista divergência.
 
 ## Diretriz de IA
 
@@ -167,4 +184,5 @@ Uma versão não é liberada apenas porque compila. Deve possuir evidência sufi
 - regressão funcional;
 - compatibilidade visual;
 - integridade de dados;
-- rollback.
+- rollback;
+- Prompt de Continuidade atualizado.

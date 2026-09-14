@@ -1,53 +1,43 @@
-# T043 — Browser Acceptance guiado e temporário
+# T043 — Browser Acceptance temporário com fixture
 
-> Estado: **PREPARADO — execução manual ainda NOT_RUN**.
+> Estado: **PASS — execução real no `0.1.0-dev.5`.**
 
 ## Objetivo
 
-Registrar G-110 com evidência humana estruturada, sem criar storage permanente, options, transients, tabelas ou logs de teste no WordPress.
+Comprovar G-110 no WordPress real sem usar conteúdo real e sem deixar storage de teste.
 
 ## Ativação
 
-O painel só existe enquanto:
+O ambiente de homologação não depende de `wp-config.php`. O build de homologação carregou internamente as ferramentas temporárias para `manage_options`.
 
-```php
-define( 'BDC_KB_ENABLE_DIAGNOSTICS', true );
-```
+## Fluxo dev.5 executado
 
-Ele exige `manage_options`, POST e nonce próprio.
+1. abrir **Base de Conhecimento**;
+2. clicar **Preparar cenário temporário G-110**;
+3. criar `post` draft marcado por `_bdc_kb_browser_fixture=spec001-browser-v1`;
+4. preencher automaticamente os três campos de teste;
+5. clicar **Salvar Summary** e aguardar o redirect;
+6. reler os valores persistidos;
+7. validar Tab/Shift+Tab;
+8. reduzir a janela a `<=782px`;
+9. registrar explicitamente PASS/FAIL para teclado/foco e usabilidade estreita;
+10. gerar JSON e hard-delete da fixture.
 
-## Fluxo
+## Resultado real dev.5
 
-1. executar primeiro o diagnóstico onclick automatizado e obter o JSON técnico;
-2. validar manualmente a tela real no wp-admin;
-3. testar listagem, editor, save, redirect, reload, teclado e viewport estreito;
-4. preencher navegador/versão e viewport usados;
-5. marcar somente os checks efetivamente observados;
-6. clicar **Gerar JSON do browser acceptance**;
-7. enviar o JSON junto com o JSON técnico para revisão;
-8. remover/desativar a flag de diagnóstico após a coleta.
+- `manual_pass=2`;
+- `manual_fail=0`;
+- `auto_fail=0`;
+- `overall=PASS`;
+- viewport mínimo observado `671x660`;
+- fixture deletada;
+- `residual_fixtures=0`;
+- nenhum conteúdo real modificado.
 
-## Checks G-110
+Checks automáticos comprovaram shell do wp-admin, ausência de sidebar secundária própria, listagem/seleção, contexto read-only, labels, feedback textual, persistência/releitura, preservação editorial, PRG e viewport estreito.
 
-- shell do wp-admin sem segunda sidebar;
-- listagem legível/paginada;
-- título/contexto read-only e labels associados;
-- POST-Redirect-GET sem reenvio ao refresh;
-- feedback textual de sucesso/erro;
-- navegação por teclado e foco utilizáveis;
-- viewport administrativo estreito sem perda funcional;
-- valores persistidos reaparecem após redirect/reload.
-
-## Natureza da evidência
-
-O JSON usa `source=operator_assertion` e é explicitamente **manual_browser_observation**. Ele não se apresenta como automação E2E.
-
-Nenhuma resposta é persistida no WordPress. O resultado é devolvido apenas como arquivo JSON.
-
-## Regra de promoção
-
-G-110 permanece `NOT_RUN` até recebermos o JSON real do ambiente alvo e revisarmos o contexto de execução. Um JSON com qualquer check `FAIL` não promove o gate.
+Evidência raw: `evidencias/bdc-kb-browser-acceptance-20260914-193151.json`.
 
 ## Remoção
 
-`class-browser-acceptance.php` é temporário e deve ser removido junto com `class-diagnostics-runner.php` antes de T044/G-130/package.
+A classe temporária, hooks e markers foram removidos do package `0.1.0-rc.1` em T044A. O gate G-110 permanece PASS; o lifecycle do RC é tratado separadamente em G-130.

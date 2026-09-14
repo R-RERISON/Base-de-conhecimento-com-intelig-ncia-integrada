@@ -1,0 +1,155 @@
+{
+    "schema_version": "1.1.0",
+    "mode": "temporary_onclick",
+    "generated_at": "2026-09-14T18:20:34+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.1.0-dev.2",
+        "multisite": false
+    },
+    "runtime_fingerprint": {
+        "bootstrap": "41ef52d48fab8ad584c611e4f697e75079197a344cd005febc642792ff1180b4",
+        "meta_contract": "5a30e81420a336945cac6569abb1ce85570ddd1f6e0ef1bd1e82bae5880212f7",
+        "summary_store": "5d2853a0c76b1d7609a7b5d2fb23702df1a406536f2a792c9569d201c267ed1b",
+        "admin_page": "e9a62f8d09e429c096325b8c5b8026eebddec83f8fe302bb6333d1556bf65ba1"
+    },
+    "safety": {
+        "flag_required": "BDC_KB_ENABLE_DIAGNOSTICS=true",
+        "requires_capability": "manage_options",
+        "persistent_report": false,
+        "fixture_marker": "spec001-onclick-v2",
+        "stale_removed_before_run": 0
+    },
+    "checks": [
+        {
+            "id": "DIAG-001",
+            "gate": "HARNESS",
+            "status": "PASS",
+            "message": "Fixture temporária criada.",
+            "details": []
+        },
+        {
+            "id": "G001-01",
+            "gate": "G-001",
+            "status": "PASS",
+            "message": "Summary não altera post_title, post_content ou _elementor_data.",
+            "details": []
+        },
+        {
+            "id": "G020-01",
+            "gate": "G-020",
+            "status": "PASS",
+            "message": "Leitura de meta ausente projeta vazio sem criar metadata.",
+            "details": []
+        },
+        {
+            "id": "G020-02",
+            "gate": "G-020",
+            "status": "PASS",
+            "message": "Update parcial preserva campos omitidos.",
+            "details": []
+        },
+        {
+            "id": "G020-03",
+            "gate": "G-020",
+            "status": "PASS",
+            "message": "Vazio sanitizado remove a meta.",
+            "details": []
+        },
+        {
+            "id": "G020-04",
+            "gate": "G-020",
+            "status": "PASS",
+            "message": "Campo desconhecido rejeita o payload antes de write observável.",
+            "details": []
+        },
+        {
+            "id": "G020-05",
+            "gate": "G-020",
+            "status": "PASS",
+            "message": "Campo acima do limite é rejeitado sem truncamento silencioso.",
+            "details": []
+        },
+        {
+            "id": "G020-06",
+            "gate": "G-020",
+            "status": "PASS",
+            "message": "Valor não-string é rejeitado.",
+            "details": []
+        },
+        {
+            "id": "G020-07",
+            "gate": "G-020",
+            "status": "PASS",
+            "message": "NO_CHANGE não chama update_post_meta.",
+            "details": []
+        },
+        {
+            "id": "G020-08",
+            "gate": "G-020",
+            "status": "PASS",
+            "message": "HTML/script é sanitizado antes da persistência.",
+            "details": []
+        },
+        {
+            "id": "G020-09",
+            "gate": "G-020",
+            "status": "PASS",
+            "message": "Unicode, multiline e backslash seguem a sanitização canônica.",
+            "details": []
+        },
+        {
+            "id": "G070-01",
+            "gate": "G-070",
+            "status": "PASS",
+            "message": "Capability por objeto bloqueia tentativa sem edit_post.",
+            "details": []
+        },
+        {
+            "id": "G070-02",
+            "gate": "G-070",
+            "status": "PASS",
+            "message": "Post type page é rejeitado pelo domínio.",
+            "details": []
+        },
+        {
+            "id": "G070-03",
+            "gate": "G-070",
+            "status": "PASS",
+            "message": "Primitive de nonce vinculada ao post valida nonce correto e rejeita inválido.",
+            "details": {
+                "scope": "primitive; handler HTTP completo permanece para G-110"
+            }
+        },
+        {
+            "id": "B006-01",
+            "gate": "B-006",
+            "status": "PASS",
+            "message": "Falha no segundo write restaura integralmente o snapshot e retorna FAIL_SAFE.",
+            "details": []
+        },
+        {
+            "id": "B006-02",
+            "gate": "B-006",
+            "status": "PASS",
+            "message": "Falha durante a compensação é detectada como PARTIAL_FAILURE_CRITICAL.",
+            "details": []
+        }
+    ],
+    "cleanup": {
+        "deleted_fixture_ids_count": 2,
+        "residual_fixtures": 0
+    },
+    "summary": {
+        "pass": 16,
+        "fail": 0,
+        "overall": "PASS",
+        "duration_ms": 249
+    },
+    "limitations": [
+        "Este diagnóstico não substitui o browser acceptance G-110.",
+        "O teste de nonce cobre a primitive vinculada ao post; o fluxo HTTP completo do handler deve ser confirmado no browser acceptance.",
+        "Antes de package/release, remova BDC_KB_ENABLE_DIAGNOSTICS e o runner temporário do runtime."
+    ]
+}

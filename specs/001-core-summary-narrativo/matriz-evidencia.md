@@ -1,126 +1,46 @@
 # Matriz de Evidência — SPEC-001
 
-> Estado atual: **runtime S002 implementado; suíte unitária PASS 15/15; harness PHPUnit, runner onclick v2 e browser acceptance JSON preparados; gates WordPress/browser permanecem NOT_RUN até execução no ambiente real.**
+> Estado atual: **G-001, G-020, G-070, G-110 e B-006 PASS no ambiente WordPress real. Package limpo `0.1.0-rc.1` preparado; G-130 aguarda lifecycle real do RC.**
 
 | Gate | Aplicabilidade | Evidência exigida | Estado atual | Gate de saída |
 |---|---|---|---|---|
-| T040 Unitário determinístico | MUST | contrato, validação, diff, no-op e máquina B-006 isolada | PASS — 15/15 em PHP 8.4.23 | pré-requisito de integração |
-| G-001 Editorial/Elementor | MUST | before/after de `_elementor_data`, `post_content`, `post_title`; GET sem write; browser smoke | NOT_RUN — PHPUnit/onclick preparados | Homologação |
-| G-020 Summary | MUST | read/save/omit/empty/delete/no-op/allowlist/limite/sanitização/read-after-write em WordPress real | NOT_RUN — PHPUnit/onclick v2 preparados | Homologação |
-| G-070 Segurança/scope | MUST | capability, nonce, GET, IDOR, tipo inválido, mass assignment, XSS, escaping | NOT_RUN — onclick cobre parte in-process; browser/handler ainda obrigatório | Homologação |
-| G-110 UI/UX | MUST | browser/manual: integração wp-admin, feedback, labels, foco, teclado, viewport, cor | NOT_RUN — coletor JSON manual preparado | Homologação |
-| G-130 Lifecycle/release | CONDICIONAL/MUST quando houver pacote | activation/deactivation/uninstall, package/checksum; remoção das ferramentas temporárias; upgrade N/A na primeira versão | NOT_RUN | Release candidate |
-| B-006 Write composto | MUST | fault injection determinístico + confirmação em integração WordPress | NOT_RUN — unit fault injection PASS; PHPUnit/onclick preparados | Homologação |
-| Golden Queries | N/A | Search fora de escopo | N/A — Search não existe na SPEC | — |
-| IA/custo | N/A | IA fora de escopo | N/A — sem chamada externa | — |
-| Analytics/privacy logging | N/A | query logging fora de escopo | N/A — nenhuma telemetria de query/identidade | — |
+| T040 Unitário determinístico | MUST | contrato, validação, diff, no-op e máquina B-006 isolada | PASS — 15/15 | pré-requisito de integração |
+| G-001 Editorial/Elementor | MUST | before/after `_elementor_data`, `post_content`, `post_title`; HTTP/browser | **PASS** — onclick, G-110 e G070-HTTP preservaram editorial | Homologação |
+| G-020 Summary | MUST | read/save/omit/empty/delete/no-op/allowlist/limite/sanitização/read-after-write | **PASS** — onclick real + persistência/releitura G110-A01 | Homologação |
+| G-070 Segurança/scope | MUST | capability, nonce, GET, IDOR, tipo inválido, mass assignment, XSS, handler HTTP | **PASS** — runner in-process + `dev.6` HTTP 11/11 | Homologação |
+| G-110 UI/UX | MUST | wp-admin, feedback, labels, foco, teclado, viewport estreito, persistência/PRG | **PASS** — `dev.5`, 2/2 humanos + todos automáticos, viewport 671x660 | Homologação |
+| G-130 Lifecycle/release | MUST quando houver pacote | package/checksum, retirada de testes, activation/deactivation/upgrade e preservação | **PREPARADO/PENDENTE** — RC1 limpo criado; execução WordPress real ainda necessária | Release candidate |
+| B-006 Write composto | MUST | fault injection determinístico + Metadata API real | **PASS** — `FAIL_SAFE` e `PARTIAL_FAILURE_CRITICAL` reais | Homologação |
+| Golden Queries | N/A | Search fora de escopo | N/A | — |
+| IA/custo | N/A | IA fora de escopo | N/A | — |
+| Analytics/privacy logging | N/A | fora de escopo | N/A | — |
 
-## Evidência unitária executada
+## Evidências raw
 
-Arquivo: `tests/unit/spec001-summary-store.php`.
+- `evidencias/bdc-kb-diagnostics-20260914-182034.json` — onclick técnico: 16 PASS / 0 FAIL / 0 resíduos;
+- `evidencias/bdc-kb-browser-acceptance-20260914-184551.json` — tentativa intermediária; automáticos PASS, manual não concluído;
+- `evidencias/bdc-kb-browser-acceptance-20260914-193151.json` — G-110 PASS completo;
+- `evidencias/bdc-kb-http-security-20260914-194454.json` — G-070 HTTP PASS 11/11.
 
-Resultado versionado em `evidencia-unitaria-s003.md`: 15 testes aprovados, 0 falhas.
+## G-070 HTTP `dev.6`
 
-## Evidência WordPress preparada
+Confirmado em WordPress 6.9.4 / PHP 8.5.10:
 
-### PHPUnit/Core Test Suite
+- GET -> 405;
+- nonce ausente/inválido -> bloqueio;
+- payload ausente -> bloqueio;
+- mass assignment -> bloqueio;
+- `page` e ID inexistente -> bloqueio seguro;
+- XSS via handler -> sanitizado;
+- requests rejeitados -> zero alteração dos campos canônicos;
+- editorial preservado;
+- duas fixtures hard-deleted;
+- zero resíduos.
 
-`tests/integration/` contém harness para execução reproduzível contra WordPress + MySQL/MariaDB reais.
+## T044/G-130 RC1
 
-### Onclick temporário v2
+Package `0.1.0-rc.1` preparado com somente seis arquivos de produto. Nenhuma classe, flag, hook ou marker de homologação está presente. PHP lint 5/5 e scan de strings temporárias PASS.
 
-`includes/class-diagnostics-runner.php` é carregado somente com `BDC_KB_ENABLE_DIAGNOSTICS=true` e exige `manage_options` + nonce. O clique gera JSON sem persistir relatório e usa fixtures temporárias marcadas por `_bdc_kb_diagnostic_fixture=spec001-onclick-v2`.
+SHA-256: `c395e65f872f56f3930f0a3f14ec192c03bb6a52a5623360fa15bf7e0c15e7fb`.
 
-O runner v2:
-
-- remove resíduos antigos em lotes de 100 até esgotar o marker ou atingir guard rail;
-- conta resíduos com `WP_Query::found_posts`;
-- não pula a seção de cleanup quando a criação da fixture falha;
-- amplia G-020 com meta ausente sem side effect, oversized, non-string, NO_CHANGE, anti-XSS e Unicode/multiline/backslash.
-
-O JSON só termina `overall=PASS` quando todos os checks passam e `cleanup.residual_fixtures=0`.
-
-O onclick não promove G-110 e não substitui browser acceptance.
-
-### Browser acceptance temporário
-
-`includes/class-browser-acceptance.php` é carregado pela mesma flag e somente para `manage_options`.
-
-Ele coleta observação humana guiada de G-110 e gera `bdc-kb-browser-acceptance-*.json` sem persistir respostas no banco.
-
-Cada check usa `source=operator_assertion`; o relatório declara explicitamente `manual_browser_observation` e não se apresenta como automação E2E.
-
-## Casos mínimos G-001
-
-1. salvar Summary não altera `_elementor_data`;
-2. não altera `post_content`;
-3. não altera `post_title`;
-4. GET da tela não altera meta/editorial.
-
-## Casos mínimos G-020
-
-1. meta ausente -> vazio sem write;
-2. leitura dos três campos;
-3. update de um campo preserva omitidos;
-4. vazio sanitizado remove meta;
-5. campo estranho rejeita tudo;
-6. valor não-string rejeita tudo;
-7. valor >32768 bytes rejeita tudo;
-8. HTML/script é sanitizado;
-9. multiline/backslash/unicode preservados conforme WordPress;
-10. submit idêntico é NO_CHANGE;
-11. estado relido define sucesso.
-
-## Casos mínimos G-070
-
-1. autorizado+nonce válido -> sucesso;
-2. sem capability -> bloqueio;
-3. capacidade de menu sem `edit_post` do alvo -> bloqueio;
-4. nonce ausente/inválido -> bloqueio;
-5. GET tentando salvar -> zero efeito;
-6. IDOR trocando `post_id` -> bloqueio;
-7. ID inexistente -> erro seguro;
-8. `page`/CPT -> unsupported;
-9. meta extra -> zero write;
-10. XSS armazenado/refletido -> não executa.
-
-## Casos mínimos G-110
-
-- fluxo real completo;
-- sucesso/erro visíveis;
-- labels associados;
-- navegação por teclado/foco;
-- cor não exclusiva;
-- viewport administrativa estreita;
-- nenhum segundo shell/sidebar;
-- valores persistidos reaparecem após redirect/reload;
-- botão/painéis temporários ausentes quando a flag está desabilitada.
-
-## Fault injection B-006
-
-Aprovados unitariamente e preparados para WordPress real:
-
-- falha write #1;
-- falha write #2 após #1;
-- falha write #3 após #1/#2;
-- falha delete;
-- falha de compensação;
-- mistura delete/update;
-- no-op sem write.
-
-O runner onclick executa ao menos `FAIL_SAFE` por falha no segundo write e `PARTIAL_FAILURE_CRITICAL` por falha também na compensação.
-
-## Gate de limpeza T044/G-130
-
-Antes de package/release:
-
-- remover a flag do ambiente;
-- remover `class-diagnostics-runner.php`;
-- remover `class-browser-acceptance.php`;
-- remover require/hook temporários;
-- confirmar zero fixtures `spec001-onclick-v2`;
-- repetir lint/regressão após remoção.
-
-## Regra de gate
-
-`FAIL`, `NOT_RUN`, `NOT_CONFIGURED` ou `STALE` em gate ativo bloqueiam Homologação/Concluída/Release conforme a coluna de saída. PASS unitário, PASS onclick ou JSON manual isolado não promovem automaticamente todos os demais gates.
+Ainda é obrigatório executar o lifecycle real no WordPress antes de declarar G-130 PASS.

@@ -1,0 +1,123 @@
+{
+    "schema_version": "2.2.0",
+    "mode": "temporary_browser_acceptance_with_fixture",
+    "generated_at": "2026-09-14T19:31:51+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.1.0-dev.5",
+        "browser_label": "Microsoft Edge 153.0.0.0 / Windows NT 10.0",
+        "viewport": "671x660",
+        "min_viewport_observed": "671x660",
+        "device_pixel_ratio": 1,
+        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0"
+    },
+    "fixture": {
+        "post_id": 46698,
+        "marker": "spec001-browser-v1",
+        "state_sha256": "b9410590111651b20e93ec4d6be16b094cb9025151822cc2e8e11eb39059f91c",
+        "deleted": true
+    },
+    "checks": [
+        {
+            "id": "G110-06",
+            "gate": "G-110",
+            "status": "PASS",
+            "message": "Navegação por teclado e ordem de foco são utilizáveis.",
+            "source": "operator_assertion_required"
+        },
+        {
+            "id": "G110-07",
+            "gate": "G-110",
+            "status": "PASS",
+            "message": "Após reduzir a janela para 782px ou menos, a tela permanece utilizável sem perda funcional.",
+            "source": "operator_assertion_required"
+        },
+        {
+            "id": "G110-A01",
+            "gate": "G-110/G-020",
+            "status": "PASS",
+            "message": "Os três valores esperados persistiram e foram relidos após o fluxo normal de save.",
+            "source": "fixture_assertion"
+        },
+        {
+            "id": "G110-A02",
+            "gate": "G-001",
+            "status": "PASS",
+            "message": "O save via UI não alterou título, post_content ou _elementor_data da fixture.",
+            "source": "fixture_assertion"
+        },
+        {
+            "id": "G110-A03",
+            "gate": "G-110/G-070",
+            "status": "PASS",
+            "message": "O fluxo normal retornou por POST-Redirect-GET com status saved.",
+            "source": "request_assertion"
+        },
+        {
+            "id": "G110-A04",
+            "gate": "G-110",
+            "status": "PASS",
+            "message": "Viewport do navegador foi coletado automaticamente.",
+            "source": "browser_runtime_assertion"
+        },
+        {
+            "id": "G110-A05",
+            "gate": "G-110",
+            "status": "PASS",
+            "message": "DOM confirma shell do wp-admin e ausência de sidebar secundária do plugin.",
+            "source": "browser_dom_assertion"
+        },
+        {
+            "id": "G110-A06",
+            "gate": "G-110",
+            "status": "PASS",
+            "message": "DOM da etapa inicial confirma listagem utilizável, ação de seleção e paginação quando necessária.",
+            "source": "browser_dom_assertion"
+        },
+        {
+            "id": "G110-A07",
+            "gate": "G-110",
+            "status": "PASS",
+            "message": "DOM confirma contexto read-only e labels associados aos três textareas.",
+            "source": "browser_dom_assertion"
+        },
+        {
+            "id": "G110-A08",
+            "gate": "G-110",
+            "status": "PASS",
+            "message": "Feedback de sucesso do save está presente como texto no wp-admin.",
+            "source": "browser_dom_assertion"
+        },
+        {
+            "id": "G110-A09",
+            "gate": "G-110",
+            "status": "PASS",
+            "message": "O navegador observou largura administrativa de 782px ou menos durante o teste.",
+            "source": "browser_runtime_assertion"
+        }
+    ],
+    "summary": {
+        "manual_pass": 2,
+        "manual_fail": 0,
+        "auto_fail": 0,
+        "overall": "PASS"
+    },
+    "cleanup": {
+        "fixture_deleted": true,
+        "residual_fixtures": 0
+    },
+    "notes": "PASS",
+    "safety": {
+        "real_content_modified": false,
+        "persistent_report": false,
+        "requires_capability": "manage_options",
+        "source": "automated_dom_runtime_plus_two_required_operator_assertions"
+    },
+    "limitations": [
+        "Somente navegação por teclado/foco e usabilidade real em viewport estreito permanecem como observação humana guiada.",
+        "Shell, lista, labels/contexto, feedback textual, PRG, persistência e dimensões do viewport são coletados automaticamente.",
+        "O browser é inferido do User-Agent e o viewport é capturado automaticamente por JavaScript no navegador.",
+        "O JSON não autoriza release; T044/G-130 ainda deve remover todas as ferramentas temporárias."
+    ]
+}

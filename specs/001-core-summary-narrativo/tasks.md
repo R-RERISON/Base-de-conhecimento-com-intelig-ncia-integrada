@@ -26,35 +26,36 @@
 - [x] T026 Implementar superfície wp-admin server-rendered + PRG.
 - [x] T027 Implementar escaping/feedback/estados de erro.
 
-**Gate S002:** runtime implementado e PHP lint PASS. Integração WordPress/browser/fault injection ainda não executados; SPEC permanece Em implementação.
+**Gate S002:** runtime implementado e PHP lint PASS.
 
 ## S003 — Evidência
 
-- [x] T040 Testes unitários aplicáveis — PASS 15/15; `evidencia-unitaria-s003.md`.
-- [x] T040A Instalação inicial/smoke em WordPress real — plugin ativo, menu/tela/listagem reais e leitura de metadados legados comprovadas; `evidencia-instalacao-inicial-s003.md`.
-- [ ] T041 Integração WordPress G-001/G-020/G-070 — harness PHPUnit preparado; execução real ainda NOT_RUN.
-- [x] T041A Implementar runner onclick temporário opt-in com JSON e cleanup automático.
-- [x] T041C Endurecer runner onclick v2: cleanup em lotes, residual count completo e cobertura negativa G-020 ampliada.
-- [ ] T041B Executar onclick v2 no WordPress real, anexar JSON versionado e confirmar `cleanup.residual_fixtures=0`.
-- [ ] T042 Fault injection B-006 — unitário PASS; harness PHPUnit e onclick v2 preparados; confirmação WordPress real pendente.
-- [x] T043A Preparar browser acceptance guiado com JSON temporário e zero persistência.
-- [ ] T043B Executar browser acceptance G-110 no ambiente alvo e revisar JSON real.
-- [ ] T044 Lifecycle/package G-130 quando aplicável — remover integralmente ferramentas temporárias e comprovar zero fixtures antes do package.
-- [ ] T045 Relatório de evidência e DoD.
-- [ ] T046 Atualizar CONTINUIDADE e decidir próximo gate.
+- [x] T040 Testes unitários aplicáveis — PASS 15/15.
+- [x] T040A Instalação inicial/smoke em WordPress real — PASS.
+- [x] T041 Integração WordPress G-001/G-020/G-070 — PASS no ambiente alvo.
+- [x] T041A Runner onclick temporário com JSON e cleanup.
+- [x] T041B Onclick real — PASS 16/16, 0 resíduos.
+- [x] T041C Hardening do runner onclick v2.
+- [x] T041D Runner HTTP automático para negativos do handler.
+- [x] T041E Runner HTTP `dev.6` — PASS 11/11, `overall=PASS`, 0 resíduos.
+- [x] T042 Fault injection B-006 em WordPress real — `FAIL_SAFE` e `PARTIAL_FAILURE_CRITICAL` PASS.
+- [x] T043A Browser acceptance com fixture temporária/cleanup.
+- [x] T043B G-110 real — `dev.5` PASS; 2/2 humanos, 0 auto_fail, viewport mínimo 671x660, 0 resíduos.
+- [x] T043C Automatização de shell/lista/labels/feedback/PRG/persistência/browser/viewport.
+- [x] T044A Preparar package limpo `0.1.0-rc.1`: retirar integralmente instrumentos temporários, lint 5/5, scan de markers PASS e checksum gerado.
+- [ ] T044B Executar lifecycle G-130 no WordPress real com `0.1.0-rc.1`: substituir/ativar, confirmar ausência de diagnóstico, smoke funcional, desativar/reativar e confirmar preservação dos dados.
+- [ ] T045 Relatório final de evidência e DoD.
+- [ ] T046 Atualizar CONTINUIDADE e decidir encerramento da SPEC-001/próxima SPEC.
 
-## Regra de limpeza das ferramentas temporárias
+## Estado dos gates
 
-As ferramentas onclick/browser são transitórias de homologação, não funcionalidades do produto. O package/release não pode conter:
-
-- `BDC_KB_ENABLE_DIAGNOSTICS` ativo;
-- botão/notice de diagnóstico;
-- painel/browser acceptance temporário;
-- `class-diagnostics-runner.php`;
-- `class-browser-acceptance.php`;
-- hooks `bdc_kb_run_diagnostics` ou `bdc_kb_browser_acceptance`;
-- posts/metas marcados por `_bdc_kb_diagnostic_fixture=spec001-onclick-v2`.
+- G-001: PASS.
+- G-020: PASS.
+- G-070: PASS.
+- G-110: PASS.
+- B-006: PASS.
+- G-130: **PREPARADO / PENDENTE execução real do RC**.
 
 ## Regra
 
-Não antecipar Classificação, Review, Search, Analytics, IA, queue, schema, REST/AJAX/SPA ou cutover.
+Não antecipar Classificação, Review, Search, Analytics, IA, queue, schema, REST/AJAX/SPA ou cutover. O release candidate não é release produtivo até G-130 e DoD finais passarem.

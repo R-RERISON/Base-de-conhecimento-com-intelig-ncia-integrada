@@ -1,0 +1,115 @@
+{
+    "schema_version": "1.0.0",
+    "mode": "temporary_http_security_diagnostics",
+    "generated_at": "2026-09-14T19:44:54+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.1.0-dev.6",
+        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0"
+    },
+    "fixtures": {
+        "post_id": 46700,
+        "page_id": 46701,
+        "marker": "spec001-http-v1"
+    },
+    "checks": [
+        {
+            "id": "G070-H01",
+            "gate": "G-070",
+            "status": "PASS",
+            "observed": "HTTP 405",
+            "source": "browser_http_assertion"
+        },
+        {
+            "id": "G070-H02",
+            "gate": "G-070",
+            "status": "PASS",
+            "observed": "invalid_nonce",
+            "source": "browser_http_assertion"
+        },
+        {
+            "id": "G070-H03",
+            "gate": "G-070",
+            "status": "PASS",
+            "observed": "invalid_nonce",
+            "source": "browser_http_assertion"
+        },
+        {
+            "id": "G070-H04",
+            "gate": "G-070",
+            "status": "PASS",
+            "observed": "invalid_payload",
+            "source": "browser_http_assertion"
+        },
+        {
+            "id": "G070-H05",
+            "gate": "G-070",
+            "status": "PASS",
+            "observed": "validation_error",
+            "source": "browser_http_assertion"
+        },
+        {
+            "id": "G070-H06",
+            "gate": "G-070",
+            "status": "PASS",
+            "observed": "invalid_post",
+            "source": "browser_http_assertion"
+        },
+        {
+            "id": "G070-H07",
+            "gate": "G-070",
+            "status": "PASS",
+            "observed": "invalid_post",
+            "source": "browser_http_assertion"
+        },
+        {
+            "id": "G070-H08",
+            "gate": "G-070",
+            "status": "PASS",
+            "observed": "saved",
+            "source": "browser_http_assertion"
+        },
+        {
+            "id": "G070-S01",
+            "gate": "G-070",
+            "status": "PASS",
+            "message": "Requisições rejeitadas não alteraram objective/escalation da fixture.",
+            "source": "fixture_assertion"
+        },
+        {
+            "id": "G070-S02",
+            "gate": "G-070",
+            "status": "PASS",
+            "message": "Payload XSS enviado pelo handler foi sanitizado antes da persistência.",
+            "source": "fixture_assertion"
+        },
+        {
+            "id": "G001-HTTP",
+            "gate": "G-001",
+            "status": "PASS",
+            "message": "Negativos/POST HTTP não alteraram título, post_content ou _elementor_data.",
+            "source": "fixture_assertion"
+        }
+    ],
+    "summary": {
+        "pass": 11,
+        "fail": 0,
+        "overall": "PASS"
+    },
+    "cleanup": {
+        "post_fixture_deleted": true,
+        "page_fixture_deleted": true,
+        "residual_fixtures": 0
+    },
+    "safety": {
+        "real_content_modified": false,
+        "persistent_report": false,
+        "requires_capability": "manage_options",
+        "source": "browser_http_plus_server_fixture_assertions"
+    },
+    "limitations": [
+        "O teste de falta de capability/IDOR permanece coberto pelo runner técnico in-process com map_meta_cap, pois a sessão HTTP atual é administrativa.",
+        "Antes de package/release, esta classe temporária deve ser removida em T044/G-130."
+    ]
+}

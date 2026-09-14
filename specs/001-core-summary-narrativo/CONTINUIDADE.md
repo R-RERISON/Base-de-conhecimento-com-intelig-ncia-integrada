@@ -1,119 +1,80 @@
-# Prompt de Continuidade — SPEC-001 em implementação
+# Prompt de Continuidade — SPEC-001 em fechamento de homologação
 
-## Referência versionada
+## Referência
 
 - Repositório: `R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada`
 - Branch: `main`
-- SPEC ativa: `SPEC-001 — Core mínimo + Summary narrativo`
-- Estado: **Em implementação / Evidência S003**.
-- Confirme o HEAD atual antes de qualquer nova alteração.
+- SPEC: `SPEC-001 — Core mínimo + Summary narrativo`
+- Estado: **Homologação funcional PASS; lifecycle/package G-130 pendente no RC limpo**.
+- Confirme sempre o HEAD antes de alterar.
 
 ## Estado comprovado
 
-- SPEC-000 está CONCLUÍDA.
-- T097 autorizou SPEC-001, não release/produção/cutover.
-- S001/Definition of Ready está PASS documental.
-- Runtime mínimo S002 implementado.
-- Suíte unitária: 15 PASS / 0 FAIL.
-- PHP lint do runtime: PASS.
-- Instalação inicial do plugin em WordPress real: PASS visual.
-- Menu **Base de Conhecimento**: PASS visual.
-- Listagem de posts reais: PASS visual.
-- Leitura real das metas GRE existentes em `post_id=36431`: PASS visual sem migração.
-- Harness PHPUnit WordPress real: PREPARADO; execução ainda NOT_RUN.
-- Runner onclick técnico v2: IMPLEMENTADO; execução no ambiente alvo NOT_RUN.
-- Browser acceptance guiado: IMPLEMENTADO; execução manual NOT_RUN.
-- G-130/package final: NOT_RUN.
+- SPEC-000 concluída; T097 autorizou somente SPEC-001.
+- S001 DoR: PASS.
+- S002 runtime mínimo: implementado.
+- Unitário: 15/15 PASS.
+- Instalação inicial e leitura de metas GRE existentes: PASS.
+- Onclick técnico real: 16/16 PASS, 0 resíduos.
+- G-001: PASS.
+- G-020: PASS.
+- B-006: PASS real (`FAIL_SAFE` + `PARTIAL_FAILURE_CRITICAL`).
+- G-110: PASS no `0.1.0-dev.5`, viewport mínimo 671x660, 0 resíduos.
+- G-070 HTTP: PASS no `0.1.0-dev.6`, 11/11, 0 resíduos.
+- Nenhum conteúdo real foi modificado pelos runners de homologação.
 
-## Regra operacional do ambiente
+## Evidências principais
 
-O operador de homologação **não possui acesso ao `wp-config.php`**. Portanto nenhum gate/teste pode depender de configuração externa ao plugin.
+- `evidencias/bdc-kb-diagnostics-20260914-182034.json`
+- `evidencias/bdc-kb-browser-acceptance-20260914-193151.json`
+- `evidencias/bdc-kb-http-security-20260914-194454.json`
 
-### Build de homologação autossuficiente
+## RC limpo
 
-O package `0.1.0-dev.2` declara internamente:
+Foi preparado `base-conhecimento-inteligencia-integrada-0.1.0-rc.1.zip`.
 
-```php
-define( 'BDC_KB_HOMOLOGATION_BUILD', true );
-define( 'BDC_KB_ENABLE_DIAGNOSTICS', true );
-```
+SHA-256:
+`c395e65f872f56f3930f0a3f14ec192c03bb6a52a5623360fa15bf7e0c15e7fb`
 
-As ferramentas temporárias aparecem automaticamente para `manage_options` na tela Base de Conhecimento.
+O RC contém somente:
 
-Não solicitar edição de `wp-config.php`.
+- `base-conhecimento-inteligencia-integrada.php`;
+- `includes/class-plugin.php`;
+- `includes/class-meta-contract.php`;
+- `includes/class-summary-store.php`;
+- `includes/class-admin-page.php`;
+- `assets/css/admin.css`.
 
-## Runtime de produto
-
-- `base-conhecimento-inteligencia-integrada.php`
-- `includes/class-plugin.php`
-- `includes/class-meta-contract.php`
-- `includes/class-summary-store.php`
-- `includes/class-admin-page.php`
-- `assets/css/admin.css`
-
-## Ferramentas temporárias do build de homologação
-
-- `includes/class-diagnostics-runner.php`
-- `includes/class-browser-acceptance.php`
-
-Elas não são funcionalidades permanentes do produto.
-
-## Onclick técnico v2
-
-- schema JSON 1.1.0;
-- marker `_bdc_kb_diagnostic_fixture=spec001-onclick-v2`;
-- exige `manage_options` + POST + nonce;
-- cria somente fixtures efêmeras marcadas;
-- cleanup em lotes;
-- resultado global PASS exige zero FAIL e zero resíduos;
-- cobre G-001, G-020, parte de G-070 e B-006;
-- não persiste relatório.
-
-## Browser acceptance temporário
-
-- exige `manage_options` + POST + nonce;
-- coleta oito checks G-110 observados manualmente;
-- gera JSON baixável;
-- não persiste respostas no WordPress;
-- não é automação E2E.
-
-## Matriz atual
-
-- T040 unitário: PASS 15/15.
-- instalação inicial/activation smoke: PASS visual.
-- leitura real das metas existentes: PASS visual.
-- T041 integração WordPress: NOT_RUN.
-- G-001: NOT_RUN para write; leitura real preservada visualmente.
-- G-020: NOT_RUN para write.
-- G-070: NOT_RUN.
-- T042/B-006 integração: NOT_RUN; unit PASS.
-- G-110: NOT_RUN.
-- G-130: NOT_RUN.
-
-## Próximo passo exato
-
-1. instalar/substituir pelo package de homologação `0.1.0-dev.2`;
-2. confirmar versão `0.1.0-dev.2` e ausência de fatal error;
-3. abrir Base de Conhecimento;
-4. executar **Executar diagnóstico e gerar JSON**;
-5. enviar o JSON técnico para revisão;
-6. exigir `summary.overall=PASS` e `cleanup.residual_fixtures=0` antes de qualquer promoção;
-7. somente depois executar a jornada real controlada e gerar o JSON de browser acceptance;
-8. corrigir qualquer FAIL antes de avançar.
-
-## Regra de limpeza antes do release
-
-T044/G-130 deve remover integralmente:
+Foram removidos integralmente:
 
 - `BDC_KB_HOMOLOGATION_BUILD`;
 - `BDC_KB_ENABLE_DIAGNOSTICS`;
 - `class-diagnostics-runner.php`;
 - `class-browser-acceptance.php`;
-- requires e hooks temporários;
-- qualquer fixture `_bdc_kb_diagnostic_fixture=spec001-onclick-v2`.
+- `class-http-security-diagnostics.php`;
+- hooks/painéis/markers de teste.
 
-Depois repetir lint/regressão e comprovar que o package final não contém instrumentos de teste.
+Localmente: PHP lint 5/5 PASS e scan de instrumentação temporária PASS.
 
-## Regra
+## Política de lifecycle
 
-Não antecipar Classificação, Review, Search, Analytics, IA, queue, schema, REST/AJAX/SPA ou cutover. Constituição, Manifesto, T097, SPEC-001, código e evidências versionadas prevalecem sobre memória de chat.
+O plugin não cria schema próprio, option persistente, cron ou usuários. Os três post metas são canônicos e preexistentes/compartilhados; **uninstall não deve apagá-los**. Deactivation é não destrutiva.
+
+## Próximo passo exato — T044B/G-130
+
+No WordPress de homologação:
+
+1. substituir `0.1.0-dev.6` por `0.1.0-rc.1`;
+2. confirmar versão `0.1.0-rc.1` e ausência de fatal error;
+3. abrir **Base de Conhecimento** e confirmar que todos os painéis/botões de diagnóstico desapareceram;
+4. confirmar listagem normal e abrir um Summary existente apenas para leitura;
+5. desativar o plugin;
+6. ativar novamente;
+7. confirmar que o menu/listagem/leituras continuam funcionando e os dados existentes permanecem intactos;
+8. somente então promover G-130 para PASS.
+
+Após G-130 PASS: executar T045 DoD final e T046 encerramento/decisão da próxima SPEC.
+
+## Restrições
+
+Sem Classificação, Review, Search, Analytics, IA, queue, schema, REST/AJAX/SPA ou cutover nesta SPEC. GO de homologação não é GO de produção; B-003/preflight retorna antes de qualquer produção/cutover.

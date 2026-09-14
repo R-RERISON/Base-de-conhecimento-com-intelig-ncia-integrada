@@ -58,3 +58,16 @@
 - [ ] Runtime não contém testes/docs de engenharia.
 - [ ] Checksum registrado.
 - [ ] Ativação não é destrutiva.
+
+## Continuidade entre chats
+- [ ] `CONTINUIDADE.md` existe na pasta da SPEC ativa.
+- [ ] Branch e commit de referência registrados.
+- [ ] Estado comprovado separado de planejamento.
+- [ ] Decisões e invariantes vigentes registrados.
+- [ ] Arquivos, dados e contratos afetados listados.
+- [ ] Testes/gates e resultados registrados.
+- [ ] Gaps, riscos e blockers conhecidos explícitos.
+- [ ] Próximo passo exato definido.
+- [ ] Critério objetivo do próximo passo definido.
+- [ ] Prompt autossuficiente pronto para novo chat.
+- [ ] Novo chat é instruído a reler o repositório antes de agir.

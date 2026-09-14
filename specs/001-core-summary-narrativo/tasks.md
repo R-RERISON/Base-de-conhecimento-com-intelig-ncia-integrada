@@ -30,9 +30,9 @@
 
 ## S003 — Evidência
 
-- [ ] T040 Testes unitários aplicáveis.
+- [x] T040 Testes unitários aplicáveis — PASS 15/15; `evidencia-unitaria-s003.md`.
 - [ ] T041 Integração WordPress G-001/G-020/G-070.
-- [ ] T042 Fault injection B-006.
+- [ ] T042 Fault injection B-006 — unitário PASS; confirmação em WordPress real pendente.
 - [ ] T043 Browser acceptance G-110.
 - [ ] T044 Lifecycle/package G-130 quando aplicável.
 - [ ] T045 Relatório de evidência e DoD.

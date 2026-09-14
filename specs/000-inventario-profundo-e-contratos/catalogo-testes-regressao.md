@@ -1,297 +1,583 @@
-# Catálogo de Testes e Regressão — SPEC-000
+# Catálogo de Testes, Regressão e Golden Queries — SPEC-000 — T055
 
-> Inventário consolidado das três referências. Este documento registra contratos de regressão a portar; ainda não existe runtime do novo plugin.
+> Estado: **T055 concluída documentalmente**.  
+> Baseline de entrada: `main @ c68b10644f247e07866d26f08654137be0253eb7`.  
+> Baselines de referência: ASI `4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1`, GRE `0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365`, KB2Ops `0.2.1 @ f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94`.
+>
+> Este catálogo define **quais contratos futuros precisam de evidência executável**. Não cria testes de runtime, fixtures, CPTs, tabelas, endpoints, Golden dataset real nem implementação. A SPEC-001 continua bloqueada até T097.
 
-## 1. Advanced Search Intelligence 4.6.8
+## 1. Objetivo
 
-Baseline: `R-RERISON/Advanced-search-Intelligence@c0ddff89caad529ce1bcdc645eb795e4a9b187a1`.
+T055 transforma as decisões T050–T057 em uma política verificável de regressão.
 
-### Gate observado
+A pergunta deixa de ser “o legado possuía este teste?” e passa a ser:
 
-`tools/validate-release.sh` executa lint PHP, syntax check JavaScript, regressão PHP/Node/Python, package validation e integridade SHA-256 quando manifest existe.
+> **Qual comportamento futuro é obrigatório, qual risco ele controla e qual evidência mínima impede regressão silenciosa?**
 
-### Contratos fortes a preservar
+O catálogo histórico permanece útil como fonte de aprendizado, mas não é checklist de reprodução do ASI/GRE/KB2Ops.
 
-- QueryContext/normalização/retrieval limitado;
-- ranking de posts/itens e explicabilidade;
-- identidade/navegação fail-closed de trechos;
-- vocabulary/bindings/rules;
-- curadoria assistida + simulação + stale-state guard;
-- Search Events/Interactions/Outcomes;
-- HMAC, idempotência, rate-limit e journey;
-- privacy modes;
-- Queue lifecycle se fila sobreviver;
-- Golden Queries como release blocker;
-- Quality Diagnostics/Site Health;
-- package/install/upgrade/rollback;
-- performance bounds.
+## 2. Classes de gate
 
-### Regra central
+Cada contrato futuro recebe uma destas classes:
 
-Golden suite vazia nunca é PASS. Mudança de ranker/dataset precisa invalidar evidência stale.
+- **MUST** — obrigatório no baseline quando a capacidade correspondente existir; falha impede GO.
+- **CONDICIONAL** — só se torna obrigatório quando a feature/slice ativar a capacidade.
+- **POSTERGADO** — capacidade deliberadamente fora do baseline; ausência não é falha, mas implementação silenciosa é regressão.
+- **N/A** — explicitamente não aplicável à SPEC/release avaliada; deve haver justificativa, não omissão.
+
+### Regra de falha
+
+- gate MUST falhou -> **NO-GO**;
+- gate MUST sem evidência -> **NOT_VERIFIED / NO-GO**;
+- gate CONDICIONAL ativado sem evidência -> **NO-GO**;
+- gate POSTERGADO implementado sem reabertura formal -> **NO-GO arquitetural**;
+- warning conhecido -> exige registro explícito, owner e decisão; não pode desaparecer do relatório.
+
+## 3. Níveis de evidência
+
+Testes por inspeção textual são somente guardrails auxiliares. A evidência prioritária é comportamental.
+
+1. **Unitário puro** — normalização, funções determinísticas, regras de domínio, scoring e state transitions.
+2. **Integração WordPress real** — Metadata/Taxonomy APIs, capabilities, nonces, hooks, lifecycle, fixtures Elementor.
+3. **Contrato de persistência/projection** — read-after-write, idempotência, rebuild, freshness e falhas.
+4. **Golden Queries** — comportamento de retrieval/ranking em dataset governado.
+5. **Browser/E2E** — fluxos administrativos/públicos, acessibilidade básica e bypasses.
+6. **Benchmark** — caminhos críticos medidos com corpus representativo.
+7. **Release/package** — instalação, upgrade, rollback, pacote determinístico e evidência de homologação.
+
+## 4. Fontes históricas usadas sem copiá-las literalmente
+
+### ASI 4.6.8
+
+A baseline comprova valor em:
+
+- ranking de post/item;
+- identidade de item;
+- FULLTEXT + fallback;
+- Golden Queries;
+- stale-state/curadoria;
+- scope e navegação fail-closed;
+- queue durável quando assíncrona;
+- telemetria correlacionada quando Analytics existe;
+- performance bounds + benchmark separado;
+- build/release e diagnostics.
+
+A Golden Suite ASI também estabelece princípios que T055 preserva:
+
+- suíte vazia = `not_configured`, nunca PASS;
+- expectativa possui query, alvo, rank máximo e severidade;
+- falha blocking = NO-GO;
+- alteração do conjunto/ranker invalida evidência anterior;
+- execução de ranking é explícita; leitura de status não executa ranking;
+- Golden não depende de identidade/session/journey de Analytics.
+
+### GRE 0.6.0
+
+Preservar como regressão:
+
+- Metadata API/Meta Contract;
+- allowlist/sanitização;
+- capability por objeto;
+- partial update;
+- empty-delete;
+- read-after-write;
+- server-rendered baseline;
+- package reproduzível;
+- ausência de side effects em leitura.
+
+Gaps conhecidos que precisam virar testes futuros: B-006 e evento pós-write confirmado.
+
+### KB2Ops 0.2.1
+
+Preservar comportamento, não o relatório estático:
+
+- Content Extractor Elementor-aware;
+- Review/AI READY;
+- Search scopes e detail recheck;
+- Design System/a11y;
+- lifecycle reversível;
+- package determinístico.
+
+Como a baseline não contém suíte executável equivalente ao relatório de release, todo contrato KB2Ops crítico precisa reaparecer como teste versionado no novo projeto.
 
 ---
 
-## 2. Gerenciador de Resumo Executivo 0.6.0
+# 5. Gate G-001 — Editorial e fronteira WordPress/Elementor
 
-Baseline: `R-RERISON/Gerenciador-de-Resumo-Executivo-da-Base-de-Conhecimento@1120a534d8eb2288460c2c675730deef0d67c365`.
+**Classe:** MUST.
 
-### Gate observado
+Provar:
 
-`tools/verify_local.py` cobre Composer validation/dependencies, PHP lint, WPCS, PHPUnit, package smoke, deterministic build e SHA-256.
+- nenhuma rotina derivada escreve `_elementor_data`;
+- nenhuma rotina derivada reescreve `post_content` silenciosamente;
+- `post_title` continua canônico;
+- edição/publicação oficial continuam no WordPress/Elementor;
+- projection/cache/vector/IA podem ser removidos/reconstruídos sem restaurar conteúdo editorial;
+- leitura de conteúdo não produz mutações colaterais.
 
-### Suíte relevante
+**NO-GO:** qualquer write editorial não solicitado explicitamente pelo fluxo editorial oficial.
 
-- `MetaContractTest.php`: oito metas exatas, sem `_bdc_es_title`, args/sanitizer/auth;
-- `SummaryStoreTest.php`: read/write, allowlist, capability, partial update, empty-delete, read-after-write;
-- Admin tests: menu, nonce, payload, server-rendered editor;
-- `CoverageDashboardTest.php`: 0/8–8/8, published-only, read-only;
-- `FrontendRendererTest.php`: current-post-only, escaping, sem duplicação/JS;
-- bootstrap/architecture guardrails;
-- duas integrações WP-CLI em WordPress real;
-- package smoke e reproducible ZIP.
+# 6. Gate G-010 — Content Extractor / B-001
 
-### Lacunas formalizadas
+**Classe:** MUST antes de Search/RAG produtivos.
 
-- atomicidade lógica multi-campo em falha tardia;
-- evento pós-persistência/invalidação;
-- workload limitado do Coverage Dashboard.
+Fixtures mínimas:
+
+1. `post_content` sem Elementor;
+2. Elementor JSON válido com widgets textuais conhecidos;
+3. nested containers/sections;
+4. entities, whitespace, listas, headings e tabelas;
+5. JSON inválido/fallback seguro;
+6. widget conhecido + custom widget relevante para provar detecção de extração parcial;
+7. shortcode allowlist (`table`/`tablepress`) e shortcode ausente/falhando;
+8. conteúdo sem texto útil;
+9. estrutura com imagens/tabelas/headings sem duplicação indevida;
+10. caracteres acentuados/Unicode.
+
+Contratos:
+
+- output determinístico para a mesma fonte/version;
+- cache por request não altera resultado;
+- custom widget relevante não some silenciosamente;
+- falha é diagnosticável e non-fatal quando possível;
+- nenhum `do_shortcode()` irrestrito;
+- zero writes editoriais.
+
+**B-001 só pode fechar com corpus representativo real + fixtures versionadas.** Unit test de parser isolado não basta.
+
+# 7. Gate G-020 — Summary / Metadata
+
+**Classe:** MUST quando Summary entrar no slice.
+
+Provar:
+
+- `objective`, `escalation`, `important` pertencem ao Summary owner;
+- `post_title` não é duplicado em meta;
+- allowlist de campos;
+- sanitização por campo;
+- `edit_post` por objeto + nonce em mutação;
+- omitted field permanece intacto;
+- vazio remove meta quando o contrato assim definir;
+- read-after-write confirma estado final;
+- leitura é side-effect free;
+- compatibilidade dos oito valores históricos não cria owner paralelo.
+
+## B-006 — falha multi-campo
+
+Antes do write path composto definitivo, a SPEC de implementação deve escolher e testar explicitamente a semântica de falha tardia: falha total, parcial detectável ou compensação. T055 não escolhe a estratégia, mas **proíbe sucesso falso**.
+
+# 8. Gate G-030 — Classificação
+
+**Classe:** MUST quando cada conceito entrar no slice; migração/cutover condicionados a B-002.
+
+Provar por conceito:
+
+- owner único;
+- cardinalidade e vocabulário coerentes;
+- Metadata versus Taxonomy conforme decisão versionada;
+- `service != affected_service` sem profiling que prove equivalência;
+- `technologies != systems_involved` sem profiling que prove equivalência;
+- audiência unificada semanticamente;
+- filtros/facetas não alteram dados editoriais;
+- migração é idempotente e não perde valores históricos.
+
+**Não existe teste que autorize escolher Taxonomy apenas porque o campo “parece classificatório”.**
+
+# 9. Gate G-040 — Revisão, governança e eventos
+
+**Classe:** MUST quando Review entrar no slice.
+
+Provar:
+
+- estados de review permitidos e transições determinísticas;
+- reviewer/time derivam de WP Users/estado confirmado;
+- history permanece bounded enquanto esse for o contrato;
+- `include_ai` é decisão humana;
+- AI READY = `publish + approved + 8/8 + include_ai` enquanto essa baseline permanecer vigente;
+- approval de artigo != Apply de Search Knowledge;
+- evento só é emitido depois de persistência confirmada;
+- consumer de evento é idempotente;
+- falha do downstream não reverte silenciosamente o canônico já confirmado.
+
+# 10. Gate G-050 — Search Retrieval Projection
+
+**Classe:** MUST para a futura Search própria.
+
+T057 autorizou **um único store lógico de documentos derivados `post|item`** como baseline arquitetural.
+
+Provar:
+
+- um post e N itens coexistem no mesmo modelo lógico inicial;
+- `document_key`/item identity são estáveis;
+- mesma fonte + mesma versão gera projection determinística;
+- `source_hash`/`content_hash` permitem `NO_CHANGE` e reconciliação;
+- rebuild é idempotente;
+- remoção/despublicação invalida exposição;
+- projection stale nunca vira autoridade de publicação/permissão;
+- scope/status/capability são revalidados no WordPress antes da exposição final;
+- failure/rebuild da projection não altera canônico;
+- estado `healthy|stale|degraded|failed` ou semântica equivalente é distinguível;
+- nenhum parser alternativo bypassa o Content Extractor.
+
+## FULLTEXT + fallback
+
+Provar no ambiente MariaDB/MySQL suportado:
+
+- caminho FULLTEXT funcional quando disponível;
+- fallback lexical bounded quando indisponível/degradado;
+- fallback não executa LIKE ilimitado em `_elementor_data`;
+- ausência de FULLTEXT não exige IA/vetor;
+- resultado degradado é diagnosticável.
+
+**Separar post index e item index em stores físicos diferentes exige nova evidência/benchmark; não é baseline T055.**
+
+# 11. Gate G-060 — QueryContext, ranking e explicabilidade
+
+**Classe:** MUST quando Search entrar no slice.
+
+Provar:
+
+- normalização determinística;
+- accents/case e tokens tratados conforme contrato;
+- limites de tamanho/tokens;
+- ranking reproduzível com sinais observáveis;
+- nenhuma mudança de ranking ocorre silenciosamente sem versionamento/evidência;
+- Search lexical funciona sem IA/vetor;
+- cache não altera semanticamente a ordenação;
+- zero result é distinto de erro/degraded.
 
 ---
 
-## 3. KB2Ops 0.2.1
+# 12. Golden Queries — contrato canônico futuro
 
-Baseline: `R-RERISON/KB2Ops-Operational-Knowledge-Engine@f2d2aa659240b0c2ee86cebd3cc5bd0c00f9fc94`.
+## 12.1 Storage baseline
 
-### Evidência de release existente
+T056 decidiu **`WP_Post` interno + Metadata/Revisions** como primitive inicial de Search Quality/Golden.
 
-`docs/audit/RELEASE-GATE-0.2.1.md` registra como aprovados:
+T055 não autoriza tabela Golden.
 
-- PHP lint;
-- `node --check`;
-- CSS namespaced/balanceado;
-- smoke 23/23;
-- migration/upgrade/purge 24/24;
-- static/security 79/79;
-- UI contract 11/11;
-- ações mutáveis;
-- 19/19 blobs auditados;
-- gate estático final 16/16;
-- ZIP final de 19 arquivos;
-- lint do ZIP extraído.
+Golden Query é **configuração de QA governada**, não telemetria de usuário.
 
-### Limitação crítica de rastreabilidade
+## 12.2 Registro conceitual mínimo
 
-Na árvore `main` fixada não existe diretório `tests/` nem scripts de gate versionados capazes de reproduzir esses totais. O relatório comprova que uma auditoria ocorreu, mas não oferece a mesma reprodutibilidade de regressão observada no ASI/GRE.
+Nomes finais permanecem abertos, mas cada expectativa ativa precisa representar:
 
-**Regra futura:** nenhum contrato KB2Ops crítico será considerado portado apenas porque existe relatório de auditoria. Ele precisa de teste executável versionado no novo repositório.
+- query curada;
+- query normalizada/identidade estável;
+- `expected_post_id` canônico;
+- `expected_item_key` opcional;
+- `max_rank`;
+- severidade `blocking|warning`;
+- estado ativo/inativo;
+- origem governada (`manual`, import validado ou equivalente);
+- notas/racional;
+- autor/revisor + datas via WordPress;
+- revisão/versionamento quando aplicável.
 
-### Build versionado
+Query de Golden não deve ser importada automaticamente de logs reais. Qualquer origem em telemetria futura depende de B-004 + revisão/minimização.
 
-`tools/build_plugin.py` é reproduzível e deve inspirar o futuro gate:
+## 12.3 Famílias mínimas de cenário
 
-- allowlist de 19 runtime files;
-- versão validada;
-- PHP lint quando disponível;
-- raiz única instalável;
-- main file renomeado no pacote;
-- timestamp fixo/ordenação determinística;
-- development artifacts proibidos;
-- contagem exata de arquivos;
-- SHA-256.
+O dataset ativo da Search deve cobrir, quando existirem no corpus:
 
-### Contratos KB2Ops que precisam virar testes executáveis
+- termo exato/título;
+- sigla/acrônimo;
+- acento/case/normalização;
+- consulta multi-token;
+- consulta de linguagem natural;
+- sinônimo/equivalência governada;
+- sinal de Summary/Classificação quando usado pelo ranker;
+- item/trecho com identidade estável;
+- consultas ambíguas relevantes com expectativa de rank explícita;
+- pelo menos um caso crítico de negócio marcado `blocking`.
 
-#### KB-T01 — Bootstrap/lifecycle
+T055 não inventa quantidade mínima numérica. Cobertura é por **família de risco/comportamento**, não por inflar contagem.
 
-- activation não apaga dados históricos;
-- `maybe_upgrade` é idempotente;
-- options default só nascem quando ausentes;
-- multisite não perde contexto de blog;
-- nenhum legado é fisicamente apagado em activation.
+## 12.4 Execução
 
-#### KB-T02 — Metadata/curadoria
+Golden execution deve ser explícita e read-only em relação ao conteúdo/ranking.
 
-- Meta Contract registra todos os campos persistidos ou documenta explicitamente exceções;
-- `edit_post` governa mudança por objeto;
-- payload é allowlisted/sanitizado;
-- transição de review state é determinística;
-- history permanece bounded;
-- evento de aprovação só ocorre depois de estado persistido/confirmado.
+A evidência de uma execução deve registrar, no mínimo:
 
-#### KB-T03 — AI READY
+- status `pass|fail|not_configured|not_run` ou semântica equivalente;
+- hash/version do conjunto ativo;
+- versão do contrato/ranker de post;
+- versão do item ranker/identity quando aplicável;
+- versão do extractor/indexer quando afeta retrieval;
+- referência da projection/dataset usada na execução;
+- data/hora;
+- por expectativa: esperado, rank real, pass/fail e evidência suficiente para diagnóstico.
 
-Provar regra canônica única:
+A leitura de status em dashboard/Site Health não deve executar ranking implicitamente.
 
-- publish;
-- approved;
-- Resumo 8/8;
-- include_ai = true.
+## 12.5 Invalidação de evidência
 
-Também deve existir teste que falhe se documentação/código divergirem no contrato publicado.
+Resultado anterior deixa de ser evidência corrente quando muda qualquer elemento material, incluindo:
 
-#### KB-T04 — Summary Bridge/compat
+- conjunto Golden ativo;
+- expectativa/rank/severidade;
+- ranker/QueryContext;
+- item ranker/identity;
+- extractor/index contract;
+- dataset/projection usada para o release candidate.
 
-Enquanto coexistência existir:
+A implementação pode escolher a estratégia técnica de fingerprint/versionamento, mas não pode declarar evidência antiga como atual sem provar equivalência.
 
-- oito chaves exatas;
-- read-only;
-- ausência vira vazio;
-- completion correto;
-- nenhuma escrita GRE por KB2Ops.
+## 12.6 Regras GO/NO-GO
 
-No plugin unificado, substituir por testes do Summary Store interno.
+- zero Golden ativa -> `NOT_CONFIGURED` -> **NO-GO para release inicial/alteração de Search**;
+- Golden não executada na revisão corrente -> `NOT_RUN` -> **NO-GO**;
+- falha `blocking` -> **NO-GO**;
+- falha `warning` -> não vira PASS silencioso; exige decisão/waiver versionado ou correção antes do GO;
+- suíte PASS com evidência stale -> **NO-GO**;
+- suíte PASS não substitui benchmark, security ou B-001.
 
-#### KB-T05 — Content Extractor básico
+## 12.7 Segurança/privacidade
 
-Fixtures para:
+- Golden não armazena IP, session hash, identity hash ou journey;
+- export/evidência não depende de Analytics;
+- mutação exige capability própria ou `manage_options`, nonce e POST;
+- execução não concede capability de edição de conteúdo alvo.
 
-- post_content sem Elementor;
-- Elementor JSON válido;
-- JSON inválido;
-- HTML entities/whitespace/boundaries;
-- headings/list/table/image counts;
-- cache por request;
-- zero writes em `_elementor_data`/`post_content`.
+---
 
-#### KB-T06 — Content Extractor custom widgets
+# 13. Gate G-070 — Search scope, segurança e exposição
 
-Cenário crítico:
+**Classe:** MUST para Search.
 
-1. documento contém widget conhecido + widget customizado relevante;
-2. parser allowlist retorna conteúdo não vazio porém incompleto;
-3. sistema precisa detectar cobertura insuficiente ou ter política explícita de fallback.
+Provar:
 
-Não aceitar perda silenciosa de conteúdo.
-
-#### KB-T07 — Shortcode safety
-
-- somente `table/tablepress` allowlisted;
-- shortcode inexistente/falhando vira placeholder;
-- exceção é non-fatal;
-- nenhum shortcode arbitrário é executado pelo extractor.
-
-#### KB-T08 — Search scope/security
-
-- `published`, `approved`, `ai_ready`;
+- scopes `published`, `approved`, `ai_ready` ou sucessores têm semântica única;
 - detail route não contorna scope;
-- `require_login` respeitado;
-- query limitada a 200 chars;
-- filtros/contexto preservados na navegação;
-- output escaped.
+- `require_login`, se existir, não pode ser bypassado;
+- resultado da projection é revalidado contra post canônico;
+- output escaped;
+- mutações admin usam POST + nonce + capability;
+- AJAX live, se existir, possui nonce/rate-limit apropriado;
+- REST não nasce sem consumidor formal.
 
-#### KB-T09 — Search provisória/performance
+# 14. Gate G-080 — Analytics baseline negativo
 
-Enquanto a implementação atual existir em migração/coexistência, medir/limitar:
+**Classe:** MUST como **prova de ausência** no baseline T057.
 
-- scans `numberposts=-1`;
-- `meta_query LIKE` em `_elementor_data`;
-- tecnologia/options derivadas;
-- corpus de centenas/milhares de posts.
+Enquanto F-057-02 estiver POSTERGADA:
 
-No runtime novo, substituído por Golden Queries + benchmarks da engine lexical.
+- Search funciona sem Analytics;
+- falha/ausência de Analytics não derruba Search;
+- query text não é persistida silenciosamente;
+- não existem stores events/interactions/outcomes por acidente;
+- telemetria histórica não é migrada automaticamente.
 
-#### KB-T10 — Analytics/privacy
+Se Analytics detalhado for reaberto, este gate é substituído por uma suíte CONDICIONAL que exige primeiro B-004 e então cobre finalidade, minimização, retention, acesso, integridade, idempotência e performance.
 
-- logging pode ser desligado;
-- query normalizada/limitada;
-- política de retenção/minimização explícita;
-- analytics falhando não derruba Search;
-- concorrência não perde fatos silenciosamente se store definitivo for relacional.
+# 15. Gate G-090 — Queue baseline negativo
 
-#### KB-T11 — Admin mutations
+**Classe:** MUST como **prova de independência** enquanto F-057-03 estiver POSTERGADA.
 
-Settings/review/migration/purge:
+Provar:
 
-- POST only;
-- nonce;
-- capability correta;
-- purge exige confirmação;
-- handlers nopriv ausentes.
+- funcionamento do baseline não depende de durable queue;
+- indexação por post/rebuild bounded possuem caminho explícito sem queue;
+- WP-Cron, se usado, é trigger e não durable store;
+- Options/Transients não são fila improvisada;
+- activation não inicia rebuild massivo silencioso.
 
-#### KB-T12 — Design System/a11y
+Se fila futura for aprovada, tornam-se MUST: claim atômico, lease, retry/backoff, attempts budget, dead/recovery, worker bounded, idempotência, observabilidade e B-007.
 
-E2E/DOM regressions para:
+# 16. Gate G-100 — Compatibilidade e cutover
 
-- CSS namespacing;
+**Classe:** CONDICIONAL à coexistência/preflight.
+
+Para qualquer adapter/dual-read/alias:
+
+- consumidor real identificado;
+- owner canônico explícito;
+- modo limitado documentado;
+- observabilidade de uso;
+- rollback;
+- gate de remoção;
+- teste de equivalência;
+- dual-write permanente proibido.
+
+B-003 permanece obrigatório antes de remover aliases/plugins antigos.
+
+Shortcodes históricos em preflight:
+
+- `[asi_search_form]`;
+- `[bdc_word_cloud]`;
+- `[bdc_resumo_executivo]`;
+- `[kb2ops_search]`;
+- `[kb2ops_portal]`.
+
+Nenhum alias é aprovado por T055.
+
+# 17. Gate G-110 — UI/UX e acessibilidade
+
+**Classe:** MUST para superfícies implementadas.
+
+Provar via DOM/browser quando aplicável:
+
+- Design System único;
+- sem segunda sidebar dentro do wp-admin;
 - foco visível;
-- estado com texto/ícone, não só cor;
-- responsive breakpoints;
-- progressive disclosure;
-- navegação por teclado;
-- sem dependência de IA/JS para shell básico.
+- teclado nos fluxos principais;
+- estados não dependem só de cor;
+- responsividade nos breakpoints definidos pela SPEC;
+- erro/sucesso/bloqueio claros;
+- server rendering funciona sem JavaScript quando o fluxo baseline assim exigir;
+- progressive enhancement não altera autorização.
 
-#### KB-T13 — Uninstall/retention
+# 18. Gate G-120 — Performance e bounds
 
-- default não destrutivo;
-- purge somente com opt-in explícito;
-- purge não toca posts/Elementor/GRE quando não autorizado.
+**Classe:** MUST para caminhos críticos implementados.
 
-#### KB-T14 — Package reproducibility
+T055 não inventa SLA numérico que o ambiente ainda não mediu.
 
-- allowlist de runtime;
-- single root;
-- version consistency;
-- deterministic ZIP hash;
-- development-only artifacts ausentes.
+A SPEC de implementação deve definir thresholds antes do GO e registrar benchmark reproduzível com:
 
----
+- corpus representativo e tamanho registrado;
+- distribuição de itens por post;
+- fixtures Elementor leves e pesadas;
+- p50/p95 e pior caso relevante de Content Extraction/indexação/Search;
+- wall time;
+- quantidade de queries DB;
+- memória;
+- duração de rebuild bounded;
+- FULLTEXT e fallback;
+- concorrência aplicável;
+- configuração MariaDB/MySQL relevante.
 
-## 4. Contratos combinados obrigatórios do novo produto
+O histórico ASI de 100k buscas/200k interações é referência daquele Analytics, **não requisito automático** deste produto.
 
-### Conteúdo
+Guardrail estrutural nunca substitui benchmark de ambiente.
 
-- um único Content Extractor alimenta Search, Item Knowledge, IA, auditoria e features derivadas;
-- nunca escrever `_elementor_data` ou reescrever `post_content` por pipeline derivado;
-- custom widgets não podem desaparecer silenciosamente sem evidência/diagnóstico.
+# 19. Gate G-130 — Lifecycle, dados, build e rollback
 
-### Summary/curadoria
+**Classe:** MUST para release instalável.
 
-- `post_title` permanece canônico;
-- oito valores GRE preservados na coexistência;
-- Objective ausente permanece ausente;
-- mutation confirmada antes de evento;
-- `edit_post` + nonce por objeto;
-- IA nunca persiste metadata editorial sem decisão humana.
+Provar:
 
-### Busca
+- activation leve e não destrutiva;
+- nenhum DROP/purge/rebuild massivo implícito;
+- defaults só quando ausentes;
+- upgrade/migration idempotentes quando existirem;
+- uninstall não destrutivo por default;
+- purge exige opt-in explícito, capability, nonce e confirmação;
+- posts/Elementor nunca são apagados pelo purge do plugin;
+- pacote possui uma única raiz instalável;
+- runtime allowlist/artefatos de engenharia controlados;
+- versão consistente;
+- build reproduzível/checksum;
+- instalação/upgrade/rollback testados;
+- `CONTINUIDADE.md` e documentação atualizados.
+
+# 20. Gate G-140 — IA/vetor
+
+**Classe:** POSTERGADO para T058.
+
+T055 fixa apenas invariantes que já são constitucionais:
 
 - lexical funciona sem IA/vetor;
-- Golden Queries bloqueiam regressão;
-- ranking explicável;
-- filtros/scope não podem ser bypassados;
-- live UX, se existir, deve usar nonce/rate-limit/tracking integrity do padrão ASI.
+- retrieval precede síntese;
+- IA não é autoridade editorial;
+- saída de IA não persiste canônico sem decisão humana;
+- operação de IA em massa não acontece silenciosamente.
 
-### Telemetria
-
-- erro ≠ zero results;
-- analytics non-fatal;
-- query text passa por política explícita de minimização/retention;
-- tracking, se adotado, usa server authority/HMAC/idempotência.
-
-### Operação
-
-- activation leve/reversível;
-- purge explícito;
-- workload administrativo bounded ou benchmarkado;
-- package determinístico;
-- rollback/coexistência testados quando necessários.
+T058 deve detalhar gates específicos de provider, embedding, chunks, custo, NO_CHANGE, fallback e rastreabilidade.
 
 ---
 
-## 5. Estratégia de teste futura
+# 21. Mapa de blockers -> evidência
 
-1. unitários puros — normalização, scoring, metadata contracts, extractor helpers e state transitions;
-2. integração WordPress real — Meta/Taxonomy APIs, capabilities, nonces, hooks, Elementor fixtures;
-3. Golden Queries — busca de posts e trechos;
-4. E2E admin/público — Studio, Search, resumo, filtros, a11y;
-5. performance — extractor, indexação, Search e dashboards com corpus realista;
-6. privacy/security — analytics, endpoints, replay, HMAC, retention;
-7. package/install/upgrade/rollback — deterministic build e coexistência;
-8. cross-module — Summary/curadoria confirmados -> events -> projections stale/reindex.
+| Blocker | Evidência obrigatória antes do fechamento aplicável |
+|---|---|
+| **B-001** | corpus Elementor representativo + fixtures custom widget + detecção de omissão + regressão do extractor |
+| **B-002** | profiling/cardinalidade/vocabulário/colisões/filtros + teste de migração idempotente |
+| **B-003** | preflight real de consumidores + regressão de aliases/adapters aprovados |
+| **B-004** | política de finalidade/minimização/retention/acesso antes de qualquer Analytics detalhado |
+| **B-005** | identidade de destino/anchors + browser/deep-link fail-closed antes da paridade pública de item |
+| **B-006** | testes de falha tardia/read-after-write/resultado parcial ou compensação conforme semântica escolhida |
+| **B-007** | stale/lease/retry/dead/recovery/observabilidade se async queue for reaberta |
 
-Testes por inspeção textual são guardrails secundários; não substituem comportamento executável.
+Blocker contextual sem capacidade ativa pode permanecer postergado; ele não pode ser marcado PASS artificialmente.
 
-## Status
+# 22. Matriz mínima por tipo de mudança futura
 
-T017 do KB2Ops pode ser fechado: build/release foram inventariados e a ausência de suíte executável versionada foi registrada como dívida. O próximo trabalho de testes ocorrerá somente após arquitetura/spec de runtime correspondente.
+| Mudança | Gates mínimos |
+|---|---|
+| Summary/Review | G-001, G-020, G-040, G-070 admin, G-130 + B-006 se write composto |
+| Classificação | G-001, G-030, G-070, G-130 + B-002 no cutover |
+| Content Extractor | G-001, G-010, G-120 |
+| Search lexical/ranking | G-001, G-010, G-050, G-060, Golden, G-070, G-120, G-130 |
+| Item/deep-link público | Search gates + B-005 + browser/E2E |
+| Compat/cutover | gates do domínio + G-100 + B-003 |
+| Analytics detalhado futuro | G-080 deixa de ser negativo; B-004 + nova suíte específica obrigatória |
+| Queue futura | G-090 deixa de ser negativo; B-007 + lifecycle de queue obrigatório |
+| IA/vetor | definir em T058 + preservar Search lexical independente |
+
+# 23. Evidência de release futura
+
+Um release report deve distinguir no mínimo:
+
+- `PASS`;
+- `FAIL`;
+- `NOT_VERIFIED`;
+- `NOT_CONFIGURED`;
+- `N/A` com justificativa;
+- `DEGRADED` quando o produto ainda opera com capacidade reduzida aprovada.
+
+É proibido colapsar `not_configured`, `not_run`, `degraded` ou warning em PASS.
+
+A evidência deve registrar commit/build, ambiente relevante, testes executados, resultados, Golden run, benchmarks aplicáveis, gaps e waivers.
+
+# 24. Revisão pelos papéis da SPEC
+
+### Arquiteto WordPress
+
+**APROVA:** testes protegem WordPress-first e impedem tabela/API/job de reaparecer por conveniência.
+
+### Arquiteto de Conhecimento
+
+**APROVA:** Golden é expectativa governada; não é log de usuário. Conteúdo/Resumo/Classificação continuam owners separados de Search Quality.
+
+### Especialista de Search/Retrieval
+
+**APROVA:** Golden, projection, FULLTEXT/fallback, ranker e item identity possuem gates independentes e complementares.
+
+### Especialista de Segurança/Privacidade
+
+**APROVA:** scope recheck, capabilities/nonces, baseline sem query logging e telemetria condicionada a B-004.
+
+### Especialista de Performance
+
+**APROVA COM MEDIÇÃO FUTURA:** T055 define o que medir sem fabricar p95/QPS inexistentes.
+
+### Especialista de QA/Regressão
+
+**APROVA:** relatório histórico não conta como teste reproduzível; contratos críticos exigem evidência executável/versionada.
+
+### Crítico de Simplicidade
+
+**APROVA:** features postergadas possuem testes de ausência/independência, não infraestrutura prematura.
+
+# 25. Critério de fechamento T055
+
+- [x] contratos críticos T050–T057 possuem gate futuro mapeado;
+- [x] testes históricos foram separados de contratos futuros;
+- [x] Golden storage permanece WordPress-first e sem tabela própria;
+- [x] Golden vazia/não executada/stale nunca é PASS;
+- [x] failure blocking = NO-GO;
+- [x] warning exige decisão explícita;
+- [x] Golden é independente de Analytics/identidade de usuário;
+- [x] B-001–B-007 possuem evidência/gate contextual;
+- [x] Search projection, fallback, scope e freshness possuem regressões definidas;
+- [x] Analytics postergado possui gate negativo contra logging silencioso;
+- [x] Queue postergada possui gate negativo contra dependência/queue improvisada;
+- [x] performance exige benchmark real, sem números inventados;
+- [x] lifecycle/build/rollback continuam release gates;
+- [x] IA/vetor foram deixados explicitamente para T058;
+- [x] nenhum runtime/teste/schema/Golden dataset real foi criado.
+
+## 26. Próximo passo autorizado
+
+**T058 — identificar e priorizar candidatos a IA/vetor**, preservando os gates T055 e o princípio de que Search lexical continua funcional sem essas capacidades.

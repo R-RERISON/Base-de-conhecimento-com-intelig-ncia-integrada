@@ -2,12 +2,9 @@
 
 ## Preparação
 
-- [x] Repositórios registrados.
-- [x] Baselines SHA registrados.
-- [x] Constituição ratificada.
-- [x] Manifesto criado.
-- [x] Agentes/skills preparados.
-- [x] Nenhum runtime novo criado.
+- [x] Repositórios e SHAs baseline registrados.
+- [x] Constituição, Manifesto, agentes e skills preparados.
+- [x] Nenhum runtime novo criado durante a SPEC-000.
 
 ## Inventários individuais
 
@@ -17,95 +14,120 @@
 
 ## Cruzamento
 
-- [x] Catálogo de persistência consolidado por owner/conceito. _(T050)_
-- [x] Catálogo de integrações consolidado por contrato futuro. _(T051)_
-- [x] Mapa de ownership. _(T052)_
-- [x] Matriz de sobreposição. _(T053)_
-- [x] Drifts/contratos quebrados consolidados. _(T054 — `mapa-contratos-quebrados.md`)_
-- [ ] Catálogo de regressão/Golden futuro consolidado. _(T055 — próximo)_
-- [x] Matriz WordPress-first final. _(T056 — `matriz-wordpress-first.md`)_
-- [x] Infraestrutura própria mínima justificada. _(T057 — `infraestrutura-propria-minima.md`)_
-- [ ] Candidatos IA/vetor priorizados. _(T058)_
-- [ ] Matriz de paridade futura final. _(T059)_
+- [x] T050 — persistência consolidada por owner/conceito.
+- [x] T051 — integrações consolidadas por contrato futuro.
+- [x] T052 — mapa de ownership.
+- [x] T053 — matriz de sobreposição.
+- [x] T054 — drifts/contratos quebrados/blockers.
+- [x] T055 — catálogo de regressão e Golden Queries. _(`catalogo-testes-regressao.md`)_
+- [x] T056 — matriz WordPress-first. _(`matriz-wordpress-first.md`)_
+- [x] T057 — infraestrutura própria mínima. _(`infraestrutura-propria-minima.md`)_
+- [ ] T058 — candidatos IA/vetor.
+- [ ] T059 — paridade futura final.
 
-## Evidência T050/T051
+## Evidência T054
 
-- persistência organizada por owner, não por plugin histórico;
-- integração organizada por contrato semântico;
-- evento pós-write confirmado;
-- dual-write permanente proibido;
-- adapters temporários exigem gate de remoção;
-- REST negado sem consumidor; AJAX só por live UX;
-- queue não nasce por herança.
+- [x] D-001–D-008 classificados.
+- [x] Compatibilidade separada de arquitetura permanente.
+- [x] B-001–B-007 explicitados e contextuais.
+- [x] adapters/aliases temporários exigem consumidor, observabilidade, rollback e gate de remoção.
+- [x] nenhum alias histórico foi aprovado por inércia.
 
-## Evidência T052/T053
+## Evidência T056
 
-- owners lógicos definidos;
-- audiência unificada semanticamente;
-- service/affected_service e technologies/systems mantidos separados até profiling;
-- Summary, Search, Classificação, Analytics e Design System convergem funcionalmente;
-- approval de artigo continua distinto de Apply de Search Knowledge;
-- qualidade de conteúdo continua distinta de Search Quality.
+- [x] WP/Elementor continuam fonte editorial.
+- [x] Summary/Review/Classificação/Settings/Security/Health permanecem em primitives WP quando suficientes.
+- [x] Taxonomy foi escolhida somente onde reutilização/filtro/faceta possuem evidência.
+- [x] Search Knowledge/Golden permanecem em `WP_Post` interno + Metadata/Revisions inicialmente.
+- [x] WP-Cron é trigger, não durable queue.
+- [x] native search é fallback, não engine de paridade final.
 
-## Evidência T054 — Drifts/Compatibilidade
+## Evidência T057
 
-- [x] D-001–D-008 possuem classificação explícita.
-- [x] Design futuro foi separado de necessidade de coexistência/cutover.
-- [x] `Objective_Provider` e evento legado só admitem bridge/adapter se ASI legado realmente coexistir.
-- [x] extractor único é direção definitiva, mas qualidade/completude permanece blocker técnico para Search/RAG final.
-- [x] GAC ficou fora do core e depende de requisito/preflight.
-- [x] classificação duplicada exige profiling antes de migração física.
-- [x] CSS/menus antigos não são contrato permanente.
-- [x] AI READY baseline foi fixada em `publish + approved + 8/8 + include_ai`.
-- [x] hooks/actions antigos receberam política de compatibilidade/preflight.
-- [x] shortcodes antigos receberam status `DEPENDE DE PREFLIGHT`, sem alias automático.
-- [x] dados históricos que não podem ser perdidos foram explicitados.
-- [x] blockers B-001–B-007 foram separados de dívidas postergáveis.
-- [x] todo adapter temporário exige entrada, owner, modo, observabilidade, rollback, remoção e teste.
+- [x] 12 tabelas ASI não foram tratadas como checklist.
+- [x] Search Retrieval Projection foi reduzida a um store lógico futuro de documentos `post|item`.
+- [x] Analytics detalhado foi postergado por B-004.
+- [x] durable queue foi postergada até benchmark/B-007.
+- [x] nenhuma tabela/schema/migration/runtime foi criada.
 
-## Evidência T056 — WordPress-first
+## Evidência T055 — regressão e Golden
 
-- [x] `WP_Post`/Elementor permanecem fonte editorial; nenhum downstream ganha write editorial.
-- [x] Summary narrativo permanece em Metadata API; nenhuma tabela é justificada.
-- [x] Review state/notas/revisor/include AI/histórico bounded permanecem em primitives WP.
-- [x] classificação foi avaliada campo a campo; taxonomy só foi preferida quando reutilização/filtro/faceta têm evidência.
-- [x] `responsible_team`, `catalog_item`, `affected_service` e `systems_involved` permanecem `AINDA_NAO_SABEMOS` entre Metadata e Taxonomy, sem ir para T057.
-- [x] Settings/Options, Users/Roles/Capabilities, Nonces e `admin-post` foram confirmados como primitives baseline.
-- [x] AJAX permanece enhancement de UX live; REST continua negado sem consumidor formal.
-- [x] Site Health substitui health dashboard paralelo como default.
-- [x] Revisions foram avaliadas antes de audit/histórico próprio.
-- [x] Transients/Object Cache ficaram restritos a cache reconstruível; não são durable state.
-- [x] WP-Cron foi aprovado como trigger, não confundido com fila durável.
-- [x] native search foi mantida como fallback e considerada insuficiente para a paridade lexical/Item Knowledge Elementor-aware.
-- [x] Search Knowledge/Golden permanecem inicialmente em `WP_Post` interno + Metadata/Revisions, sem tabela própria.
+### Política de gates
 
-## Evidência T057 — infraestrutura própria mínima
+- [x] contratos classificados como `MUST | CONDICIONAL | POSTERGADO | N/A`.
+- [x] MUST sem evidência = `NOT_VERIFIED / NO-GO`.
+- [x] CONDICIONAL ativado sem evidência = NO-GO.
+- [x] POSTERGADO implementado silenciosamente = regressão arquitetural.
+- [x] status `not_configured`, `not_run`, `degraded` ou warning não são colapsados em PASS.
 
-- [x] As 12 tabelas ASI foram tratadas como história, não checklist de arquitetura.
-- [x] `F-057-01` Search Retrieval Projection foi **aprovada e reduzida** a um único store lógico/tabela futura de documentos derivados de post/item.
-- [x] Search projection permanece reconstruível, sem ownership editorial e com revalidação de scope/status/permissão no WordPress.
-- [x] FULLTEXT dedicado é requisito candidato do store Search, com fallback lexical bounded e degradável.
-- [x] duas tabelas separadas `search_index` + `search_items` não foram aprovadas no baseline; um store unificado deve ser tentado primeiro.
-- [x] B-001 continua BLOCKER antes de implementar Search final; índice correto sobre extração incompleta é rejeitado.
-- [x] `F-057-02` Analytics Facts foi **não aprovada/postergada** enquanto B-004, finalidade, retenção e volume não forem resolvidos.
-- [x] nenhuma persistência de query text detalhada é baseline implícita.
-- [x] `F-057-03` Durable Job State foi **não aprovada/postergada** enquanto benchmark não provar necessidade de worker durável e B-007 não for aplicável/resolvido.
-- [x] não foi improvisada fila em Options/Transients.
-- [x] nenhum DDL, schema, migration, classe, endpoint ou runtime foi criado.
-- [x] T055 recebeu contratos objetivos para regressão de Search, ausência de Analytics silencioso e baseline sem queue.
+### Editorial/Extractor
 
-## Gate final
+- [x] zero write em `_elementor_data`/`post_content` definido como gate MUST.
+- [x] B-001 exige corpus Elementor representativo + custom widgets + detecção de omissão.
+- [x] shortcode allowlist/fallback/error non-fatal incluídos.
+- [x] determinismo e side-effect free incluídos.
 
-- [ ] Revisão Orquestrador.
-- [ ] Revisão WordPress.
-- [ ] Revisão Simplicidade.
-- [ ] Revisão Segurança.
-- [ ] Revisão QA/Regressão.
-- [ ] Revisão Produto/Conhecimento.
-- [ ] Nenhum desconhecido crítico sem decisão.
-- [ ] Relatório final SPEC-000.
-- [ ] SPEC-001 autorizada formalmente.
+### Summary/Classificação/Review
+
+- [x] allowlist/sanitização/capability/nonce/read-after-write mapeados.
+- [x] B-006 exige semântica explícita de falha tardia; sucesso falso é proibido.
+- [x] B-002 possui gate de profiling + migração idempotente.
+- [x] AI READY preservado como regra única derivada.
+- [x] evento pós-persistência confirmada + consumer idempotente mapeados.
+
+### Search Projection/Ranking
+
+- [x] projection unificada `post|item` protegida por determinismo/identity/hash/rebuild/freshness.
+- [x] despublicação/permissão precisa ser revalidada no WordPress.
+- [x] FULLTEXT + fallback lexical bounded definidos como gates.
+- [x] zero-result != erro/degraded.
+- [x] Search lexical funciona sem IA/vetor.
+
+### Golden Queries
+
+- [x] storage baseline permanece WordPress-first; nenhuma Golden table foi aprovada.
+- [x] Golden é configuração de QA, não telemetria de usuário.
+- [x] suíte vazia = `NOT_CONFIGURED`, nunca PASS.
+- [x] suíte não executada/stale = NO-GO quando Search é afetada.
+- [x] failure `blocking` = NO-GO.
+- [x] warning exige decisão explícita/waiver versionado ou correção.
+- [x] evidência vinculada ao conjunto ativo, rankers, extractor/index e dataset/projection.
+- [x] leitura de status não executa ranking implicitamente.
+- [x] Golden não depende de identity/session/journey de Analytics.
+- [x] famílias mínimas de cenário foram definidas por comportamento, sem meta numérica artificial.
+
+### Analytics/Queue negativos
+
+- [x] baseline sem Analytics deve provar ausência de query logging silencioso.
+- [x] Search funciona sem Analytics.
+- [x] telemetria histórica não migra automaticamente.
+- [x] baseline não depende de durable queue.
+- [x] WP-Cron não é durable store.
+- [x] Options/Transients não podem virar fila improvisada.
+- [x] activation não inicia rebuild massivo silencioso.
+
+### Performance/Release
+
+- [x] benchmark real futuro é obrigatório para caminhos críticos.
+- [x] T055 não inventou p95/QPS inexistentes.
+- [x] guardrail estrutural não substitui benchmark.
+- [x] build/package/install/upgrade/rollback continuam gates.
+- [x] compatibilidade/preflight possui regressão própria quando ativada.
+- [x] IA/vetor ficaram para detalhamento em T058.
+
+## Gate final SPEC-000
+
+- [ ] T058 concluída.
+- [ ] T059 concluída.
+- [ ] T090 Revisão WordPress.
+- [ ] T091 Revisão Simplicidade.
+- [ ] T092 Revisão Segurança.
+- [ ] T093 Revisão QA/Regressão.
+- [ ] T094 Revisão Produto/Conhecimento.
+- [ ] T095 unknowns/blockers críticos resolvidos ou formalmente postergados por slice.
+- [ ] T096 relatório final.
+- [ ] T097 autorização formal de SPEC-001.
 
 ## Estado
 
-T050–T054, T056 e **T057** concluídas documentalmente. Próximo passo autorizado: **T055 — catálogo de regressão e Golden Queries consolidado**. Runtime novo continua inexistente.
+T050–T057, incluindo **T055**, concluídas documentalmente. Próximo passo autorizado: **T058 — IA/vetor**. Runtime novo continua inexistente.

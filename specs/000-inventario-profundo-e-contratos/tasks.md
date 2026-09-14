@@ -8,45 +8,15 @@
 
 ## KB2Ops
 
-- [x] T010 — Inventariar bootstrap/lifecycle.
-- [x] T011 — Inventariar classes de domínio.
-- [x] T012 — Inventariar metadata/options/transients/cron.
-- [x] T013 — Inventariar admin routes/forms/actions.
-- [x] T014 — Inventariar shortcodes/frontend/assets.
-- [x] T015 — Inventariar Elementor Content Extractor.
-- [x] T016 — Inventariar migration/installer/uninstall.
-- [x] T017 — Inventariar testes/build/release.
-- [x] T018 — Mapear Design System e componentes.
-- [x] T019 — Classificar todos os itens.
+- [x] T010–T019 — Inventário completo de bootstrap, domínio, persistência, rotas, frontend, extractor, lifecycle, testes/build, Design System e classificação.
 
 ## ASI
 
-- [x] T020 — Inventariar bootstrap/lifecycle.
-- [x] T021 — Inventariar schema/tabelas/índices.
-- [x] T022 — Inventariar QueryContext/vocabulário/relevância.
-- [x] T023 — Inventariar PostIndex/ItemKnowledge/ItemRanker.
-- [x] T024 — Inventariar bindings/rules/curation/simulation.
-- [x] T025 — Inventariar Search Events/Interactions/Outcomes.
-- [x] T026 — Inventariar privacy/rate-limit/cache.
-- [x] T027 — Inventariar Queue/Migrations/Reconciler/Orchestrator.
-- [x] T028 — Inventariar Golden Queries/Quality/Diagnostics.
-- [x] T029 — Inventariar Word Cloud.
-- [x] T030 — Inventariar admin/public routes/AJAX/shortcodes/assets.
-- [x] T031 — Inventariar legacy/compat e decidir relevância real.
-- [x] T032 — Inventariar todos os testes e gates.
-- [x] T033 — Inventariar build/release/rollback.
-- [x] T034 — Classificar todos os itens.
+- [x] T020–T034 — Inventário completo de schema, retrieval/ranking, Search Knowledge, telemetria, queue/migrations, Golden/Quality, compatibilidade, testes, build/release e classificação.
 
 ## Resumo Executivo
 
-- [x] T040 — Inventariar bootstrap/lifecycle.
-- [x] T041 — Inventariar Meta Contract e Summary Store.
-- [x] T042 — Inventariar Admin Page e Coverage Dashboard.
-- [x] T043 — Inventariar Frontend Renderer/shortcode.
-- [x] T044 — Inventariar CSS/assets.
-- [x] T045 — Inventariar testes/build/release.
-- [x] T046 — Confirmar Objective Provider/evento esperado pelo ASI. _(ambos ausentes; drift confirmado)_
-- [x] T047 — Classificar todos os itens.
+- [x] T040–T047 — Inventário completo de bootstrap, Meta Contract, Summary Store, admin/frontend, build/testes, drift `Objective_Provider`/evento e classificação.
 
 ## Cruzamento
 
@@ -54,32 +24,43 @@
 - [x] T051 — Catálogo unificado de hooks/rotas/integrações.
 - [x] T052 — Mapa de ownership.
 - [x] T053 — Matriz de sobreposição.
-- [x] T054 — Mapa de contratos quebrados/drifts/compatibilidade. _(`mapa-contratos-quebrados.md`; D-001–D-008 classificados, adapters/aliases com gates, blockers separados de dívidas)_
-- [ ] T055 — Catálogo de regressão e Golden Queries. _(próximo bloco: consolidar gates conforme T056/T057)_
-- [x] T056 — Identificar tudo que WordPress pode substituir. _(`matriz-wordpress-first.md`; Core cobre domínio/governança/config/segurança/cache/health)_
-- [x] T057 — Identificar tudo que realmente exige infraestrutura própria. _(`infraestrutura-propria-minima.md`; uma única Search Retrieval Projection aprovada; Analytics Facts e Durable Job State postergados)_
-- [ ] T058 — Identificar candidatos a IA/vetor.
+- [x] T054 — Mapa de contratos quebrados/drifts/compatibilidade.
+- [x] T055 — Catálogo de regressão e Golden Queries. _(`catalogo-testes-regressao.md`; gates MUST/CONDICIONAL/POSTERGADO, Golden como evidência de release, blockers B-001–B-007 mapeados)_
+- [x] T056 — Matriz WordPress-first. _(`matriz-wordpress-first.md`)_
+- [x] T057 — Infraestrutura própria mínima. _(`infraestrutura-propria-minima.md`; somente Search Retrieval Projection unificada aprovada no baseline)_
+- [ ] T058 — Identificar/priorizar candidatos a IA/vetor.
 - [ ] T059 — Criar matriz de paridade futura consolidada.
+
+## Resultado T055
+
+- Golden Queries permanecem em `WP_Post` interno + Metadata/Revisions no baseline; nenhuma tabela Golden foi autorizada.
+- suíte Golden vazia = `NOT_CONFIGURED`, nunca PASS.
+- Golden não executada/stale = NO-GO quando Search é afetada.
+- falha `blocking` = NO-GO; warning exige decisão explícita.
+- evidência Golden deve estar vinculada ao conjunto ativo, ranker/item-ranker, extractor/index e dataset/projection do release candidate.
+- Content Extractor/B-001 ganhou gate de corpus representativo + custom widgets.
+- Search Projection ganhou gates de determinismo, identidade, rebuild, freshness, FULLTEXT/fallback e revalidação WordPress.
+- baseline Analytics postergado ganhou teste negativo: Search funciona sem Analytics e não persiste query text silenciosamente.
+- baseline queue postergada ganhou teste negativo: produto não depende de queue, WP-Cron não vira durable store e activation não dispara rebuild massivo.
+- performance exige benchmark real futuro; nenhum p95/QPS foi inventado em T055.
+- IA/vetor receberam somente invariantes constitucionais; gates específicos ficam para T058.
 
 ## Ordem restante do cruzamento
 
-1. T055 — regressões/Golden/gates alinhados às decisões T056/T057.
-2. T058 — IA/vetor opcional, degradável e custo-controlado.
-3. T059 — matriz de paridade final.
+1. **T058** — IA/vetor opcionais, degradáveis e custo-controlados.
+2. **T059** — paridade futura final incorporando T055/T058.
 
-Não antecipar runtime, vetores, Analytics detalhado ou fila. T057 aprovou somente a **projection lexical/item reconstruível** como infraestrutura própria de baseline e ainda sem DDL.
-
-## Gate
+## Gate final
 
 - [ ] T090 — Revisão do Arquiteto WordPress.
 - [ ] T091 — Revisão do Crítico de Simplicidade.
 - [ ] T092 — Revisão de Segurança.
 - [ ] T093 — Revisão de Regressão.
 - [ ] T094 — Revisão de Produto/Conhecimento.
-- [ ] T095 — Fechar itens “AINDA NÃO SABEMOS” críticos e blockers aplicáveis.
+- [ ] T095 — Fechar unknowns críticos/blockers aplicáveis.
 - [ ] T096 — Emitir relatório final da SPEC-000.
 - [ ] T097 — Autorizar ou bloquear SPEC-001.
 
 ## Estado
 
-T050–T054, T056 e **T057** concluídas documentalmente. **Nenhum runtime novo foi criado.** Próximo bloco autorizado: **T055**. SPEC-001 continua bloqueada até T097.
+T050–T057 concluídas documentalmente, incluindo **T055**. **Nenhum runtime novo foi criado.** Próximo bloco autorizado: **T058**. SPEC-001 continua bloqueada até T097.

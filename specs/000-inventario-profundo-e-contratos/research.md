@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Registrar fatos comprovados e decisões documentais resultantes do cruzamento das três baselines. Hipótese não vira fato sem runtime/evidência; design futuro não apaga necessidade de cutover.
+Registrar fatos comprovados e decisões documentais do cruzamento das três baselines. Hipótese não vira fato sem evidência versionada; design futuro não apaga cutover/compatibilidade.
 
 ## 1. Baselines fixadas
 
@@ -10,249 +10,171 @@ Registrar fatos comprovados e decisões documentais resultantes do cruzamento da
 - ASI `4.6.8 @ c0ddff89caad529ce1bcdc645eb795e4a9b187a1`.
 - GRE `0.6.0 @ 1120a534d8eb2288460c2c675730deef0d67c365`.
 
-## 2. Fatos estruturais consolidados
+## 2. Fatos estruturais
 
 ### KB2Ops
 
 - Content Extractor Elementor-aware read-only;
-- workflow de revisão/AI READY;
-- Search provisória com `WP_Query/meta LIKE`;
-- DS/server-rendered como referência de UX;
-- activation/uninstall reversíveis;
-- gap de extractor parcial em custom widgets;
-- `save_review()` pode emitir approval sem comprovar todos os writes;
-- corpus documentado na ordem de **~700 posts**;
-- scans integrais/meta LIKE não são contrato de escala.
+- review/AI READY;
+- Search provisória com WP/meta LIKE;
+- DS/server-rendered como referência;
+- lifecycle reversível;
+- gap crítico de custom widgets parcialmente extraídos;
+- corpus documentado na ordem de ~700 posts;
+- relatório de release não substitui suíte executável versionada.
 
 ### ASI
 
-- lexical/FULLTEXT + fallback;
-- QueryContext/ranking explicáveis;
-- post/item projections, vocabulary/bindings/rules;
-- Golden Queries;
-- events/interactions/outcomes;
-- queue com lease/retry/dead/recovery;
-- migrations/legacy com complexidade histórica;
-- GAC ambiental;
-- vários parsers sobre `post_content`;
-- 12 tabelas próprias no schema 4.6.8, cuja existência histórica **não** prova necessidade no novo produto.
+- retrieval lexical/FULLTEXT + fallback;
+- ranking explicável por post/item;
+- item identity/reconciliation;
+- Golden Queries como release evidence;
+- Search Intelligence/telemetria quando habilitada;
+- durable queue quando workload assíncrono foi assumido;
+- performance bounds separados de benchmark;
+- 12 tabelas históricas que não são requisito automático futuro.
 
 ### GRE
 
 - oito metas via Metadata API;
 - `post_title` canônico;
-- read side-effect free, allowlist, sanitização, `edit_post`, nonce;
+- allowlist/sanitização/capability/nonce;
+- read side-effect free;
 - sem tabela/REST/AJAX/cron próprios;
-- Coverage sem bound;
-- ausência de `Objective_Provider` e `bdc_es_objective_updated` esperados pelo ASI.
+- lacuna de atomicidade lógica multi-campo e drift com provider/evento esperado pelo ASI.
 
-## 3. Cruzamento T050–T053
-
-### Ownership
-
-- Editorial WP/Elementor: conteúdo/publicação.
-- Resumo: objective/escalation/important.
-- Classificação: team/catalog/audience/services/systems/technologies/type/keywords/versions.
-- Revisão/Governança: review state/notes/reviewer/time/include_ai/history.
-- Search Knowledge: vocabulary/bindings/rules.
-- Search Indexing: projections.
-- Search Quality: Golden/evidência.
-- Analytics: events/interactions/outcomes.
-
-### Regras de persistência
+## 3. T050–T054 — contratos consolidados
 
 - um conceito canônico = um owner;
-- projection não é canônico;
+- projection nunca é fonte da verdade;
 - dual-write permanente proibido;
-- adapters/dual-read somente temporários;
-- chaves/stores antigos são origem/compatibilidade, não arquitetura futura.
-
-### Regras de integração
-
+- compat/dual-read temporários possuem gate de remoção;
 - persistir -> confirmar -> emitir;
-- consumers idempotentes;
-- Analytics non-fatal;
+- consumer idempotente;
 - admin-post/server-rendered baseline;
-- AJAX só por live UX;
-- REST sem consumidor negado;
-- queue não nasce por herança.
+- AJAX somente por live UX;
+- REST negado sem consumidor;
+- B-001–B-007 são contextuais e versionados em `mapa-contratos-quebrados.md`.
 
-## 4. T054 — drifts e compatibilidade
+## 4. T056 — WordPress-first
 
-Artefato canônico: `mapa-contratos-quebrados.md`.
+Artefato: `matriz-wordpress-first.md`.
 
-- D-001 Objective Provider: futuro Summary Store interno; adapter só por coexistência comprovada.
-- D-002 evento Objective: futuro evento pós-write confirmado; bridge legado somente se necessário.
-- D-003 `post_content` versus Elementor: extractor único; B-001 permanece blocker de Search/RAG final.
-- D-004 múltiplos parsers: descartados; downstream consome extractor/projections canônicos.
-- D-005 GAC: fora do core; adapter somente por requisito real.
-- D-006 classificação: owner único; profiling obrigatório antes de cutover.
-- D-007 UI fragmentada: Design System único futuro.
-- D-008 AI READY: baseline `publish + approved + 8/8 + include_ai`.
+- WP/Elementor continuam fonte editorial.
+- Summary e Review permanecem em Metadata/Users/Revisions quando aplicável.
+- Classificação permanece em Metadata/Taxonomy; quatro campos continuam em profiling B-002.
+- Search Knowledge e Golden ficam em `WP_Post` interno + Metadata/Revisions inicialmente.
+- Settings/Security/Health/Cache/Scheduling usam Core.
+- native search é fallback, mas não entrega sozinho representação Elementor derivada + item retrieval + ranking composto.
 
-Compatibilidade nunca escolhe arquitetura permanente.
+## 5. T057 — infraestrutura própria mínima
 
-## 5. Blockers B-001–B-007
+Artefato: `infraestrutura-propria-minima.md`.
 
-| ID | Capacidade afetada | Estado |
-|---|---|---|
-| B-001 | Search/RAG/Indexing | extractor precisa provar completude |
-| B-002 | migração de classificação | profiling de valores/cardinalidade/uso obrigatório |
-| B-003 | retirada de plugins/aliases | preflight de consumidores externos obrigatório |
-| B-004 | Analytics detalhado | privacy/query retention/finalidade ainda precisam decisão |
-| B-005 | Item Knowledge/deep-link | estratégia de anchors ainda aberta |
-| B-006 | writes compostos Summary/Classificação | semântica de falha tardia precisa ser definida/testada |
-| B-007 | async indexing/queue | stale/diagnóstico obrigatório se esse modo existir |
+### Aprovada
 
-Blockers são contextuais.
+**Search Retrieval Projection** reduzida a um store lógico futuro para documentos `post|item`, reconstruível, com identity/hash/version/freshness, FULLTEXT quando suportado e fallback lexical bounded.
 
-## 6. T056 — WordPress-first
+### Postergadas
 
-Artefato canônico: `matriz-wordpress-first.md`.
+- Analytics Facts: B-004 aberto; nenhuma persistência detalhada/query text por default.
+- Durable Job State: sem benchmark/necessidade comprovada; nenhuma queue table autorizada.
 
-### Decisões
+Resultado líquido: 12 stores ASI históricos não renascem; uma única família própria é aprovada documentalmente.
 
-- `WP_Post`/Elementor continuam fonte editorial.
-- Resumo narrativo permanece em Metadata API.
-- Revisão/Governança permanece em Metadata API + WP Users; Revisions é primitive disponível quando snapshot for requisito.
-- classificação não ganhou tabela própria;
-- audience, knowledge type, service e technologies têm Taxonomy API como primitive preferida;
-- responsible team, catalog item, affected service e systems involved permanecem entre Metadata/Taxonomy até B-002;
-- keywords e versions permanecem Metadata no baseline;
-- Search Knowledge (`vocabulary`, `bindings`, `rules`) e Golden Queries ficam em `WP_Post` interno + Metadata/Revisions enquanto o conjunto governado permanecer de baixa/moderada cardinalidade;
-- Settings/Options, Users/Roles/Capabilities, Nonces, `admin-post`, Site Health, Transients/Object Cache e WP-Cron foram confirmados como primitives nativas;
-- AJAX é somente enhancement de live UX;
-- REST continua negado sem consumidor formal;
-- WP-Cron é trigger, não durable queue;
-- native search permanece fallback, mas não entrega sozinho a paridade Search Elementor-aware/Item Knowledge/ranking composto.
+## 6. Evidência Golden analisada em T055
 
-### Candidatos enviados a T057
+ASI 4.6.8 comprova princípios úteis:
 
-1. F-057-01 — Search Retrieval Projection;
-2. F-057-02 — Analytics Facts, condicional;
-3. F-057-03 — Durable Job State, condicional.
+- expectativa ativa contém query, target post, item opcional, max rank e severidade;
+- suite vazia retorna `not_configured`;
+- failure blocking produz fail/NO-GO;
+- warning failure é distinguível;
+- `set_hash` + versões de ranker tornam evidência stale detectável;
+- execução é explícita e status pode ser lido sem rerun;
+- export/runner Golden não precisa de identity/session/journey.
 
-## 7. Evidência adicional analisada em T057
+T055 preserva esses **princípios**, não a tabela/implementação ASI.
 
-### Search/index ASI
+## 7. T055 — regressão e Golden
 
-O schema ASI separava `search_index` e `search_items`, ambos com FULLTEXT. `PostIndex` combinava título, Objective, headings, taxonomy, canonical terms e corpo em documento lexical e possuía fallback bounded. `ItemKnowledge` mantinha identidade estável, generation, hash, reconciliação e texto bounded por item.
+Artefato canônico: `catalogo-testes-regressao.md`.
 
-**Conclusão:** comportamento de documento lexical + item é comprovado, mas duas tabelas não são requisito. Ambos são a mesma família semântica: **documentos de retrieval derivados**.
+### Classes de gate
 
-### Queue ASI
+- `MUST` — ausência/falha = NO-GO.
+- `CONDICIONAL` — obrigatório quando a capacidade é ativada.
+- `POSTERGADO` — não nasce silenciosamente.
+- `N/A` — justificativa explícita obrigatória.
 
-A fila histórica implementava claim/lease, retry/backoff, attempts, dead state, recuperação de processing e worker bounded, com WP-Cron apenas como trigger.
+### Gates definidos
 
-**Conclusão:** ASI prova o contrato de uma fila durável caso ela seja necessária; não prova que o futuro extractor/index precisa dela. Não há benchmark do novo pipeline que compre essa complexidade.
+- G-001 editorial/Elementor;
+- G-010 Content Extractor/B-001;
+- G-020 Summary/B-006;
+- G-030 Classificação/B-002;
+- G-040 Review/eventos;
+- G-050 Search Projection;
+- G-060 QueryContext/ranking;
+- Golden Queries;
+- G-070 scope/security;
+- G-080 Analytics baseline negativo;
+- G-090 queue baseline negativo;
+- G-100 compatibilidade/B-003;
+- G-110 UI/UX/a11y;
+- G-120 performance;
+- G-130 lifecycle/build/rollback;
+- G-140 reservado a T058.
 
-### Analytics ASI
+### Golden — decisão futura
 
-ASI demonstrava valor gerencial em volume, zero-result, p95, termos frequentes/emergentes, gaps, interactions e outcomes. Também exigia limites operacionais e declarava que seus guardrails estruturais não substituíam benchmark; o runbook exigia benchmark sintético de 100k buscas/200k interações antes de produção para aquele desenho.
+Golden é configuração administrada de Search Quality, não log de usuário.
 
-**Conclusão:** existe valor de produto, mas B-004 e workload do novo produto continuam sem resposta. A escala histórica ASI não deve ser transformada em requisito artificial.
+Storage baseline permanece WordPress-first; nenhuma tabela Golden foi autorizada.
 
-### WordPress
+Registro conceitual inclui query curada, target post, item opcional, max rank, severity, estado, origem/notas e revisão. A execução de release deve guardar fingerprint do conjunto e versões/referências de retrieval suficientes para detectar evidência stale.
 
-A documentação oficial do WordPress recomenda Post Meta quando prática, mas admite tabelas próprias para dados do plugin quando a modelagem/volume justificarem. Essa regra é consistente com o projeto: tabela própria é exceção comprovada, não default.
+Estados semânticos mínimos: `PASS`, `FAIL`, `NOT_CONFIGURED`, `NOT_RUN/NOT_VERIFIED`, `DEGRADED` quando aplicável.
 
-## 8. T057 — infraestrutura própria mínima
+- vazia = NOT_CONFIGURED, não PASS;
+- stale/não executada = NO-GO quando Search é afetada;
+- blocking fail = NO-GO;
+- warning não é convertido em PASS silencioso;
+- suite PASS não fecha B-001, performance ou security.
 
-Artefato canônico: `infraestrutura-propria-minima.md`.
+### Cobertura Golden
 
-### F-057-01 — Search Retrieval Projection
+T055 escolheu cobertura por famílias de comportamento, não um número arbitrário: termo exato, sigla, acento/case, multi-token, linguagem natural, sinônimo/equivalência, sinais de Summary/Classificação, item/trecho, ambiguidade relevante e caso blocking de negócio quando aplicável.
 
-**APROVADA E REDUZIDA.**
+## 8. Blockers após T055
 
-Direção documental:
+| ID | Gate associado |
+|---|---|
+| B-001 | G-010 + corpus representativo antes de Search/RAG final |
+| B-002 | G-030 + profiling/migração classificatória |
+| B-003 | G-100 + preflight real de consumidores |
+| B-004 | mantém Analytics detalhado postergado; política antes de reabrir |
+| B-005 | item/deep-link público exige identity/anchor/browser gate |
+| B-006 | G-020 + falha tardia/read-after-write sem sucesso falso |
+| B-007 | queue/async somente se reaberta com stale/retry/recovery observáveis |
 
-- um único store lógico/tabela própria futura para documentos derivados `post|item`;
-- evitar `search_index` + `search_items` separados enquanto um store unificado atender;
-- identidade estável de documento/item;
-- texto derivado pelo Content Extractor;
-- hash/version/generation/freshness suficientes para rebuild/NO_CHANGE;
-- FULLTEXT quando suportado, com fallback lexical bounded;
-- WordPress continua autoridade de status/scope/capability;
-- resultados da projection não podem vazar post despublicado/sem permissão;
-- projection é reconstruível e nunca fonte da verdade.
+## 9. Performance
 
-Gates futuros: B-001, Golden, benchmark representativo, FULLTEXT/fallback no ambiente real, rebuild idempotente, stale/degraded observável.
+T055 não inventa NFRs ainda inexistentes. A futura SPEC deverá definir thresholds antes do GO e medir corpus/configuração reais: extraction/index/search, p50/p95, wall time, DB queries, memória, rebuild, FULLTEXT/fallback e casos pesados.
 
-### F-057-02 — Analytics Facts
+O benchmark ASI de 100k/200k pertence ao desenho Analytics histórico e não é requisito automático do novo produto.
 
-**NÃO APROVADA NO BASELINE / POSTERGADA.**
+## 10. Próximo passo — T058
 
-Razões:
+Avaliar IA/vetor por capacidade, custo e degradação, preservando:
 
-- B-004 aberto;
-- finalidade/query text/minimização/retenção/acesso não definidos;
-- taxa de eventos e perguntas do novo produto não versionadas;
-- interactions/outcomes ainda não provaram necessidade no primeiro slice.
-
-Consequências:
-
-- zero tabela de events/interactions/outcomes agora;
-- query text não é coleta implícita do baseline;
-- telemetria histórica não migra automaticamente;
-- Search funciona sem Analytics.
-
-### F-057-03 — Durable Job State
-
-**NÃO APROVADA NO BASELINE / POSTERGADA.**
-
-Razões:
-
-- sem benchmark do futuro extractor/index;
-- corpus atual conhecido (~700 posts) não prova sozinho necessidade de worker durável;
-- SLA de freshness e taxa de mudanças não estão versionados.
-
-Primeiro testar indexação por post síncrona/bounded, rebuild explícito em lotes e WP-Cron apenas como trigger opcional. Se lease/retry/dead se provar necessário, reabrir com B-007. Não improvisar queue em Options/Transients.
-
-### Resultado líquido
-
-Das 12 tabelas históricas ASI, apenas **uma família de persistência própria** está aprovada para desenho futuro: a Search Retrieval Projection unificada.
-
-Não foram aprovadas tabelas próprias para:
-
-- Summary;
-- Classification;
-- Review;
-- Search Knowledge;
-- Golden;
-- Analytics;
-- queue;
-- audit genérico;
-- quality rollup;
-- migrations permanentes.
-
-## 9. Próximo passo — T055
-
-T055 deve consolidar regressões e Golden com base em T056/T057.
-
-Contratos prioritários:
-
-- extractor único/read-only e B-001;
-- projection unificada post/item;
-- identidade/hash/generation/rebuild idempotente;
-- FULLTEXT + fallback bounded;
-- scope/status/capability recheck no WordPress;
-- estado stale/degraded explícito;
-- Golden como gate de ranking;
-- Search funciona sem Analytics;
-- baseline não registra query text silenciosamente;
-- baseline não depende de durable queue;
-- activation não dispara rebuild massivo.
-
-## Decisões ainda proibidas
-
-- runtime/bootstrap;
-- DDL/schema físico final;
-- migrations reais;
-- Foundry/vector;
-- aliases de compatibilidade;
-- nomes finais de hooks/rotas;
-- iniciar SPEC-001.
+- lexical independente;
+- retrieval antes de síntese;
+- IA assistiva;
+- humano como autoridade;
+- NO_CHANGE/hash para evitar retrabalho;
+- rastreabilidade e orçamento.
 
 ## Estado
 
-T050–T054, T056 e **T057 concluídas documentalmente**. Próximo: **T055**.
+T050–T057, incluindo **T055**, concluídas documentalmente. Próximo: **T058**. Nenhum runtime foi autorizado.

@@ -1,42 +1,35 @@
 # Plano — SPEC-000 Inventário Profundo e Contratos
 
 ## Estado
-T000–T059 + T090–T095 concluídos documentalmente. Restam T096 e T097.
+T000–T059 + T090–T096 concluídos documentalmente. Resta apenas T097.
 
-## Candidato SPEC-001 após T095
-**Core mínimo + Summary narrativo** para Analista de Conhecimento.
+## Fechamento T096
+Artefato: `relatorio-final-spec-000.md`.
 
-Campos canônicos iniciais:
-- `_bdc_es_objective`;
-- `_bdc_es_escalation`;
-- `_bdc_es_important`.
+A SPEC-000 confirmou:
+- WordPress/Elementor como fonte editorial;
+- owner único por conceito;
+- WordPress-first como baseline;
+- uma única família persistente própria futura aprovada: Search Retrieval Projection;
+- IA/vector/Analytics/queue/agentes postergados por evidência;
+- segurança e QA com gates objetivos;
+- blockers contextuais por slice;
+- zero blocker aberto para o candidato SPEC-001.
 
-A decisão reutiliza dados GRE comprovados e evita migration/dual-write.
+## Recomendação a T097
+**GO condicionado para autorizar a criação/execução da SPEC-001.**
 
-## B-006 fechado conceitualmente
-Estratégia:
-`authorize -> validate all -> snapshot -> write only changes -> read-after-write -> compare -> success OU compensate -> reread -> safe failure/critical partial state`.
+Isso significa autorizar uma nova SPEC com escopo:
+- Core mínimo + Summary narrativo;
+- usuário: Analista de Conhecimento;
+- `objective`, `escalation`, `important`;
+- mesmas três meta keys GRE já existentes;
+- wp-admin server-rendered;
+- capability por objeto + POST/nonce + validação/escaping/read-after-write;
+- B-006 implementado/testado;
+- post types reais enumerados na baseline da SPEC antes de código.
 
-Sucesso é definido pelo estado relido, não pelo booleano isolado de `update_post_meta()`.
+Não significa autorizar release/cutover nem incluir Search, Classificação, Review, IA, Analytics, queue, tabelas, migrations, REST/AJAX/SPA ou aliases.
 
-## Blockers da SPEC-001
-Abertos: **zero**.
-
-B-001/B-002/B-004/B-005/B-007 pertencem a outros slices. B-003 permanece para cutover/removal, não para desenvolvimento/homologação do novo Summary.
-
-## Definition of Ready documental
-- usuário/problema/owner definidos;
-- storage definido;
-- auth `edit_post` por objeto;
-- POST + nonce + allowlist/sanitização/escaping;
-- consistência B-006 definida;
-- Matriz QA T093 definida;
-- zero write editorial;
-- sem schema/migration/Search/Analytics/IA;
-- rollback por deactivation preservando meta;
-- post types reais serão enumerados na baseline da SPEC-001 antes de código.
-
-## Próximo passo — T096
-Emitir relatório final consolidando a SPEC-000 e recomendação objetiva para o gate T097.
-
-Nenhum runtime antes de T097.
+## Próximo passo — T097
+Emitir decisão formal GO/NO-GO e encerrar a SPEC-000.

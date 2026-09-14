@@ -1,42 +1,26 @@
 # Riscos, Drifts e Dívidas — SPEC-000
 
-> Estado após T095.
+> Estado após T096.
 
-## Riscos anteriores
-D-001–D-008 permanecem como memória institucional. B-001–B-007 foram classificados por slice em `fechamento-blockers-t095.md`.
+## Encerramento de risco da SPEC-000
+A arquitetura documental foi revisada por WordPress, simplicidade, segurança, QA e produto. Não há blocker aberto para criação da SPEC-001 candidata.
 
-## Novos riscos/decisões T095
+## Riscos residuais por slices futuros
+- B-001 / extração parcial e custom widgets -> Search/RAG.
+- B-002 / profiling e cutover classificatório -> Classificação.
+- B-003 / aliases, coexistência e single-writer -> cutover/removal.
+- B-004 / query logging, identidade, retenção -> Analytics.
+- B-005 / item identity, anchors, deep-link -> item-level Search.
+- B-007 / stale, concorrência e durable queue -> async Search.
+- SSRF/secrets/data egress/prompt injection -> IA/provider futuro.
+- semantic/vector drift -> P3 futuro.
+- benchmark/escala real -> Search e workloads intensivos.
 
-### X-081 — renomear meta sem benefício
-**Risco:** criar migration/dual-read apenas para “limpar” prefixo legado.  
-**Tratamento:** reutilizar `_bdc_es_objective`, `_bdc_es_escalation`, `_bdc_es_important` como storage inicial canônico da SPEC-001.
+## Risco aplicável à SPEC-001
+B-006 foi fechado conceitualmente, mas sua implementação/fault tests continuam obrigatórios na SPEC-001. A decisão arquitetural não substitui evidência executável.
 
-### X-082 — dois writers concorrentes em produção
-**Risco:** GRE legado e novo plugin escreverem os mesmos meta keys com contratos diferentes.  
-**Tratamento:** SPEC-001 não remove legado; cutover produtivo exige B-003/preflight e decisão single-writer/coexistência comprovada.
+## Riscos de cutover
+SPEC-001 reutilizará as três meta keys GRE. Em homologação isso reduz migration. Em produção, coexistência com writer legado exige B-003 e definição de single-writer/coexistência segura antes de retirada/uso concorrente não controlado.
 
-### X-083 — `update_post_meta()` false interpretado como falha
-**Risco:** NO_CHANGE ser confundido com erro ou erro real ser mascarado.  
-**Tratamento:** sucesso é estado relido == esperado; booleano isolado não define sucesso.
-
-### X-084 — compensação falhar
-**Risco:** write multi-campo ficar parcialmente aplicado.  
-**Tratamento:** snapshot + compensação best-effort + releitura; estado `PARTIAL_FAILURE_CRITICAL` explícito se restauração incompleta.
-
-### X-085 — post type genérico
-**Risco:** tela/handler operar em objeto fora da Base de Conhecimento.  
-**Tratamento:** baseline da SPEC-001 enumera post types reais antes do código; request não escolhe tipo arbitrário.
-
-### X-086 — settings/event/history por antecipação
-**Risco:** primeiro slice ganhar infraestrutura sem requisito.  
-**Tratamento:** nenhum settings page, event bus, history/audit ou runtime version option na SPEC-001 salvo novo requisito que passe princípio de negação.
-
-## Blockers para SPEC-001
-- B-006: fechado conceitualmente.
-- B-001/B-002/B-004/B-005/B-007: não aplicáveis.
-- B-003: posterior ao cutover/removal.
-
-**BLOCKER_SPEC001 aberto: zero.**
-
-## Próximo passo
-T096 — relatório final consolidado.
+## Recomendação T096
+GO condicionado em T097 para **abrir a SPEC-001**, mantendo todos os riscos não aplicáveis vinculados aos seus slices futuros.

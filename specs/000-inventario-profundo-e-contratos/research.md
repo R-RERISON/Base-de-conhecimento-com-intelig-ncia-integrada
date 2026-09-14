@@ -1,52 +1,28 @@
 # Pesquisa Consolidada — SPEC-000
 
-## Estado após T095
-A arquitetura e as revisões T090–T094 foram confrontadas contra o candidato concreto de SPEC-001.
+## Estado T096
+`relatorio-final-spec-000.md` consolida T000–T095 sem criar nova arquitetura.
 
-## Resultado T095
-Artefato: `fechamento-blockers-t095.md`.
+## Conclusão
+- WordPress/Elementor permanecem fonte da verdade editorial.
+- Summary/Classificação/Review/Core usam primitives WordPress quando suficientes.
+- Search Retrieval Projection é a única família persistente própria futura aprovada.
+- Search/IA/Analytics/queue avançam somente por gates e evidência.
+- T090–T094 aprovaram WordPress-first, simplicidade, segurança, QA e valor de produto.
+- T095 confirmou `BLOCKER_SPEC001 = 0`.
 
-### Blockers B-001–B-007
-- B-001: Search/RAG, não SPEC-001.
-- B-002: Classificação/cutover, não SPEC-001.
-- B-003: cutover/aliases/removal; não bloqueia dev/homologação do Summary sem retirada de legado.
-- B-004: Analytics, não SPEC-001.
-- B-005: item/deep-link, não SPEC-001.
-- B-006: único aplicável; fechado conceitualmente.
-- B-007: async/queue, não SPEC-001.
+## Candidato SPEC-001
+Core mínimo + Summary narrativo para Analista de Conhecimento.
 
-### Storage Summary
-T095 decide reutilizar como canônicas iniciais as chaves GRE já comprovadas:
+Storage:
 - `_bdc_es_objective`;
 - `_bdc_es_escalation`;
 - `_bdc_es_important`.
 
-Razão: mesma semântica, preservação de dados e ausência de ganho em renomear/migrar três metas.
+B-006 possui estratégia conceitual definida e deve virar teste/implementação na SPEC concreta.
 
-### B-006
-Fluxo definido:
-1. autorização/método/nonce;
-2. validar todos inputs;
-3. snapshot anterior;
-4. diff/NO_CHANGE;
-5. writes mínimos;
-6. read-after-write;
-7. sucesso somente se estado == esperado;
-8. mismatch -> falha + compensação best-effort;
-9. releitura pós-compensação;
-10. partial failure crítico explícito se restauração incompleta.
+## Recomendação final
+T096 recomenda **GO condicionado em T097** para abrir e executar a SPEC-001 sob escopo estrito. A autorização não é release, não é cutover e não autoriza capacidades fora do Summary.
 
-### Superfície SPEC-001
-- `edit_post` por objeto;
-- wp-admin server-rendered;
-- POST + nonce;
-- sem REST/AJAX/SPA;
-- sem settings/event bus/history/audit/migration/schema;
-- activation mínima;
-- deactivate/uninstall não destroem postmeta.
-
-### Unknown de post type
-A futura SPEC deve enumerar os post types reais da Base de Conhecimento na baseline antes do código. Request não escolhe post type arbitrário. Isso é gate de Ready da implementação, não blocker de criação da SPEC.
-
-## Resultado
-`BLOCKER_SPEC001 = 0` documentalmente. T096 pode emitir relatório final e T097 decidir autorização formal.
+## Próximo passo
+T097 — decisão formal e encerramento da SPEC-000.

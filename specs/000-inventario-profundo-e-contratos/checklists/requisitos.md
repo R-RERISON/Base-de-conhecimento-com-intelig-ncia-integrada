@@ -6,29 +6,24 @@
 - [x] T092 Segurança.
 - [x] T093 QA/Regressão.
 - [x] T094 Produto/Conhecimento.
-- [x] T095 blockers/unknowns por slice.
-- [ ] T096 relatório final.
+- [x] T095 Blockers/unknowns.
+- [x] T096 Relatório final.
 - [ ] T097 GO/NO-GO SPEC-001.
 
-## Evidência T095
-- [x] B-001 classificado fora da SPEC-001.
-- [x] B-002 classificado fora da SPEC-001.
-- [x] B-003 não bloqueia dev/homolog; permanece para cutover/removal.
-- [x] B-004 classificado fora da SPEC-001.
-- [x] B-005 classificado fora da SPEC-001.
-- [x] B-006 fechado conceitualmente para Summary.
-- [x] B-007 classificado fora da SPEC-001.
-- [x] storage inicial Summary definido nos três meta keys GRE existentes.
-- [x] capability baseline definida por objeto (`edit_post`).
-- [x] superfície técnica mínima: wp-admin server-rendered + POST/nonce.
-- [x] sem REST/AJAX/SPA/settings/event bus/history/audit/migration/schema no primeiro slice.
-- [x] post types reais devem ser enumerados na baseline da SPEC-001 antes do código.
-- [x] rollback por deactivation sem destruição de postmeta.
-- [x] `BLOCKER_SPEC001` aberto = zero.
+## Evidência T096
+- [x] relatório final autossuficiente criado.
+- [x] baselines e inventários sintetizados.
+- [x] arquitetura final e owners sintetizados.
+- [x] capacidades postergadas explicitadas.
+- [x] segurança/QA/IA/cutover consolidados.
+- [x] dados a preservar consolidados.
+- [x] B-001–B-007 classificados para a SPEC-001 candidata.
+- [x] B-006 sintetizado com estratégia final.
+- [x] `BLOCKER_SPEC001 = 0` registrado.
+- [x] candidato SPEC-001 e Definition of Ready documental resumidos.
+- [x] recomendação T097: GO condicionado para abertura/execução da SPEC-001.
+- [x] distinção explícita entre autorização de SPEC e release/cutover.
+- [x] nenhum runtime/schema/provider/vector criado.
 
-## Gate final restante
-- [ ] T096 relatório final consolidado.
-- [ ] T097 decisão formal.
-
-## Próximo passo
-**T096 — Relatório Final da SPEC-000.**
+## Gate restante
+**T097 — decisão formal.**

@@ -15,31 +15,27 @@
 - [x] T092 Segurança.
 - [x] T093 QA/Regressão.
 - [x] T094 Produto/Conhecimento.
-- [x] T095 unknowns/blockers por slice. _(`fechamento-blockers-t095.md`; zero BLOCKER_SPEC001 aberto, B-006 fechado conceitualmente)_
-- [ ] T096 relatório final.
+- [x] T095 blockers/unknowns por slice.
+- [x] T096 relatório final. _(`relatorio-final-spec-000.md`; recomendação GO condicionado para T097 autorizar SPEC-001)_
 - [ ] T097 GO/NO-GO SPEC-001.
 
-## Resultado T095
-- [x] B-001 -> não aplicável à SPEC-001; Search/RAG.
-- [x] B-002 -> não aplicável; Classificação/cutover.
-- [x] B-003 -> não bloqueia dev/homolog; permanece para cutover/aliases/removal.
-- [x] B-004 -> não aplicável; Analytics.
-- [x] B-005 -> não aplicável; item/deep-link.
-- [x] B-006 -> fechado conceitualmente com snapshot + write mínimo + read-after-write + compensação best-effort.
-- [x] B-007 -> não aplicável; async/queue.
-- [x] três meta keys GRE narrativas foram escolhidas como storage inicial canônico da SPEC-001 para evitar migration/dual-write.
-- [x] capability baseline definida: `edit_post` no objeto alvo.
-- [x] superfície técnica: server-rendered + POST/nonce; sem REST/AJAX/SPA.
-- [x] sem settings, event bus, history/audit, migration, runtime version option no primeiro slice.
-- [x] post types reais devem ser enumerados na baseline da SPEC-001 antes do código.
-- [x] rollback simplificado: deactivate preserva postmeta; zero schema/migration/purge.
-- [x] Definition of Ready documental da SPEC-001 candidata concluída.
-- [x] BLOCKER_SPEC001 aberto = zero.
+## Resultado T096
+- [x] inventários e cruzamentos T000–T095 sintetizados.
+- [x] arquitetura final WordPress-first registrada.
+- [x] única família persistente própria futura permanece Search Retrieval Projection.
+- [x] capacidades postergadas consolidadas.
+- [x] segurança/QA/IA/cutover sintetizados.
+- [x] dados que não podem ser perdidos listados.
+- [x] mapa B-001–B-007 consolidado para SPEC-001.
+- [x] `BLOCKER_SPEC001 = 0` confirmado documentalmente.
+- [x] candidato SPEC-001 e sua Definition of Ready sintetizados.
+- [x] recomendação para T097: **GO condicionado para autorizar a criação e execução da SPEC-001**, não release/cutover.
+- [x] nenhum runtime/schema/provider/vector criado.
 
 ## Próximo passo exato
-**T096 — Relatório Final da SPEC-000.**
+**T097 — decisão formal GO/NO-GO da SPEC-001.**
 
-Sintetizar estado, decisões, evidências e recomendação formal para T097 sem reabrir arquitetura.
+T097 deve autorizar ou bloquear a abertura da SPEC-001 com escopo estrito, deixando explícito o que a autorização não inclui.
 
 ## Estado
-T050–T059 + T090–T095 concluídos documentalmente. SPEC-001 continua aguardando autorização T097.
+T050–T059 + T090–T096 concluídos documentalmente. SPEC-001 continua bloqueada até a decisão T097.

@@ -110,3 +110,17 @@ Como voltar ao estado anterior sem perda indevida.
 ## 21. Evidências de conclusão
 
 Commits, relatórios, screenshots, checksums, resultados de testes e homologação.
+
+## 22. Continuidade entre chats
+
+Toda implementação material desta SPEC deve criar ou atualizar `CONTINUIDADE.md` na própria pasta da SPEC usando `.specify/templates/continuity-prompt-template.md`.
+
+O handoff deve registrar estado comprovado, branch/commit, decisões, invariantes, arquivos/dados/contratos afetados, testes, gaps, riscos, próximo passo exato e critério de conclusão.
+
+- [ ] `CONTINUIDADE.md` atualizado.
+- [ ] Prompt pronto para colar em novo chat.
+- [ ] Novo chat instruído a reler repositório/Constituição/Manifesto/SPEC/DoD antes de agir.
+- [ ] Estado comprovado distinguido de intenção ou planejamento.
+- [ ] Nenhum blocker conhecido omitido.
+
+**Regra:** a SPEC não pode ser marcada como `Homologação` ou `Concluída` sem o Prompt de Continuidade atualizado.

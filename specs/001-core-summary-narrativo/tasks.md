@@ -32,23 +32,27 @@
 
 - [x] T040 Testes unitários aplicáveis — PASS 15/15; `evidencia-unitaria-s003.md`.
 - [ ] T041 Integração WordPress G-001/G-020/G-070 — harness PHPUnit preparado; execução real ainda NOT_RUN.
-- [x] T041A Implementar runner onclick temporário opt-in com JSON e cleanup automático; execução no ambiente alvo ainda pendente.
-- [ ] T041B Executar onclick no WordPress real, anexar JSON versionado e confirmar `cleanup.residual_fixtures=0`.
-- [ ] T042 Fault injection B-006 — unitário PASS; harness PHPUnit e onclick preparados; confirmação WordPress real pendente.
-- [ ] T043 Browser acceptance G-110.
-- [ ] T044 Lifecycle/package G-130 quando aplicável — inclui remover integralmente o runner onclick temporário e comprovar zero fixtures antes do package.
+- [x] T041A Implementar runner onclick temporário opt-in com JSON e cleanup automático.
+- [x] T041C Endurecer runner onclick v2: cleanup em lotes, residual count completo e cobertura negativa G-020 ampliada.
+- [ ] T041B Executar onclick v2 no WordPress real, anexar JSON versionado e confirmar `cleanup.residual_fixtures=0`.
+- [ ] T042 Fault injection B-006 — unitário PASS; harness PHPUnit e onclick v2 preparados; confirmação WordPress real pendente.
+- [x] T043A Preparar browser acceptance guiado com JSON temporário e zero persistência.
+- [ ] T043B Executar browser acceptance G-110 no ambiente alvo e revisar JSON real.
+- [ ] T044 Lifecycle/package G-130 quando aplicável — remover integralmente ferramentas temporárias e comprovar zero fixtures antes do package.
 - [ ] T045 Relatório de evidência e DoD.
 - [ ] T046 Atualizar CONTINUIDADE e decidir próximo gate.
 
-## Regra de limpeza do onclick
+## Regra de limpeza das ferramentas temporárias
 
-O onclick é ferramenta transitória de homologação, não funcionalidade do produto. O package/release não pode conter:
+As ferramentas onclick/browser são transitórias de homologação, não funcionalidades do produto. O package/release não pode conter:
 
 - `BDC_KB_ENABLE_DIAGNOSTICS` ativo;
 - botão/notice de diagnóstico;
+- painel/browser acceptance temporário;
 - `class-diagnostics-runner.php`;
-- hook `bdc_kb_run_diagnostics`;
-- posts/metas marcados por `_bdc_kb_diagnostic_fixture=spec001-onclick-v1`.
+- `class-browser-acceptance.php`;
+- hooks `bdc_kb_run_diagnostics` ou `bdc_kb_browser_acceptance`;
+- posts/metas marcados por `_bdc_kb_diagnostic_fixture=spec001-onclick-v2`.
 
 ## Regra
 

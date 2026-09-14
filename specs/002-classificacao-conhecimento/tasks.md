@@ -6,42 +6,54 @@
 - [x] T002 Confirmar baseline de abertura `main @ 8ec60e67c42afc6459ea6266c018c59730d86588`.
 - [x] T003 Inventariar os 10 conceitos/11 stores históricos candidatos.
 - [x] T004 Definir plano de profiling read-only e métricas mínimas.
-- [x] T005 Preparar profiler temporário autossuficiente, sem writes, para homologação.
-- [ ] T006 Executar profiler no WordPress real e anexar JSON bruto.
-- [ ] T007 Analisar cobertura por key/conceito.
-- [ ] T008 Analisar cardinalidade, frequência e representação scalar/array/serialized/JSON.
-- [ ] T009 Analisar delimitadores, whitespace, case e colisões de normalização.
-- [ ] T010 Analisar equivalência/overlap: audiência GRE↔KB2Ops.
-- [ ] T011 Analisar separação: service↔affected_service e technologies↔systems_involved.
-- [ ] T012 Confirmar writers/readers atuais e riscos de coexistência.
-- [ ] T013 Selecionar o primeiro vertical slice com no máximo quatro conceitos.
-- [ ] T014 Fechar C-001 e Definition of Ready para decisões físicas.
+- [x] T005 Preparar profiler temporário autossuficiente, sem writes.
+- [x] T006 Executar profiler no WordPress real — PASS, 622 posts / 36 meta rows / zero writes.
+- [x] T007 Analisar cobertura — GRE 0,96%–1,45%; KB2Ops candidatos zerados.
+- [x] T008 Analisar cardinalidade/representação — scalars, baixa cobertura, praticamente 1 valor distinto/post.
+- [x] T009 Analisar delimitadores/qualidade — vírgula/newline e formatos heterogêneos encontrados.
+- [x] T010 Analisar audiência GRE↔KB2Ops — sem overlap observável; sem auto-merge.
+- [x] T011 Analisar service↔affected e technologies↔systems — merge não autorizado.
+- [x] T012 Confirmar coexistência — novo owner físico será separado; legado read-only/advisory; sem dual-write.
+- [x] T013 Selecionar primeiro vertical slice: audiência, equipe responsável, tipo de conhecimento, item de catálogo.
+- [x] T014 Fechar C-001 — PASS e NO-GO para migração automática.
+
+**Gate S001: PASS.**
 
 ## S002 — Contratos físicos e segurança
 
-- [ ] T020 Decidir Taxonomy vs Post Meta por conceito do slice.
-- [ ] T021 Definir nomes/slugs/chaves canônicas sem colisão.
-- [ ] T022 Definir cardinalidade single/multi e semântica de vazio/remove.
-- [ ] T023 Definir normalização válida para write sem destruir informação.
-- [ ] T024 Definir compatibilidade de leitura com stores legados e gate de remoção.
-- [ ] T025 Proibir dual-write permanente e documentar qualquer bridge temporária.
-- [ ] T026 Criar Matriz de Mutação.
-- [ ] T027 Fechar Matriz de Evidência G-001/G-030/G-070/G-110/G-130.
-- [ ] T028 Definir UI mínima no shell atual sem novo shell administrativo.
-- [ ] T029 Definir rollback e fechar DoR de implementação.
+- [x] T020 Primitive: WordPress Taxonomy API para os quatro conceitos do slice.
+- [x] T021 Slugs canônicos: `bdc_kb_audience`, `bdc_kb_responsible_team`, `bdc_kb_knowledge_type`, `bdc_kb_catalog_item`.
+- [x] T022 Cardinalidade: audience/team/catalog multi; knowledge_type single; omit=preserva; `[]`=remove.
+- [x] T023 Normalização: IDs inteiros existentes; sem auto-map textual/seed legado.
+- [x] T024 Compatibilidade: stores legados apenas como referência read-only não canônica.
+- [x] T025 Dual-write permanente proibido; nenhuma bridge de write autorizada.
+- [x] T026 Matriz de Mutação fechada.
+- [x] T027 Matriz de Evidência fechada para C-001/C-010/G-001/G-030/G-070/G-110/G-130.
+- [x] T028 UI mínima: seção Classificação no editor atual, formulário/handler separado do Summary, termos existentes apenas.
+- [x] T029 Rollback/DoR: remover módulo de classificação restaura baseline; taxonomias não deletam termos/relacionamentos automaticamente; implementação autorizada.
+
+**Gate S002: PASS. C-010 PASS. S003 autorizado.**
 
 ## S003 — Runtime mínimo
 
-**BLOQUEADO até S001/S002 PASS.**
+- [ ] T030 Implementar contrato/taxonomias/Store/Admin do slice autorizado.
+- [ ] T031 Implementar referência legada read-only sem preseleção automática.
+- [ ] T032 Implementar write composto com snapshot/diff/read-after-write/compensação.
+- [ ] T033 Criar unitários determinísticos de Classification Store e regressão Summary.
+- [ ] T034 PHP lint + scan de escopo/markers.
 
-- [ ] T030 Implementar somente o slice autorizado.
-- [ ] T031 Regressão obrigatória da SPEC-001.
-- [ ] T032 Unitários e integração WordPress.
-- [ ] T033 Homologação onclick/browser.
-- [ ] T034 Package limpo/lifecycle.
+## S004 — Evidência WordPress
+
+- [ ] T040 Regressão obrigatória da SPEC-001 em WordPress real.
+- [ ] T041 Onclick técnico G-030/G-070 com fixtures/termos temporários e cleanup.
+- [ ] T042 Browser acceptance G-110.
+- [ ] T043 Confirmar zero write editorial e zero write nos stores legados.
+- [ ] T044 Retirar integralmente instrumentos temporários.
+- [ ] T045 Package limpo/lifecycle G-130.
+- [ ] T046 DoD/continuidade/decisão da próxima SPEC.
 
 ## Regra de avanço
 
-Nenhum código permanente de classificação entra no runtime antes de T029.
+O runtime permanente agora está autorizado **somente** para os quatro conceitos aprovados. Serviço, serviço afetado, tecnologias, sistemas, keywords e versões continuam bloqueados.
 
-O profiler S001 é ferramenta temporária read-only e não pode sobreviver no package final da SPEC-002.
+Nenhum valor histórico pode criar automaticamente termo canônico ou ser tratado como classificação vigente.

@@ -1,0 +1,55 @@
+.bdc-kb-admin {
+	max-width: 1180px;
+}
+
+.bdc-kb-context,
+.bdc-kb-form {
+	max-width: 900px;
+}
+
+.bdc-kb-context {
+	margin: 18px 0;
+}
+
+.bdc-kb-field {
+	margin: 0 0 22px;
+}
+
+.bdc-kb-field label {
+	display: block;
+	margin: 0 0 6px;
+}
+
+.bdc-kb-field textarea {
+	width: 100%;
+	min-height: 130px;
+	resize: vertical;
+}
+
+.bdc-kb-table {
+	margin-top: 16px;
+}
+
+.bdc-kb-pagination {
+	margin-top: 18px;
+}
+
+.bdc-kb-pagination .page-numbers {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0;
+}
+
+.bdc-kb-pagination li {
+	margin: 0;
+}
+
+@media (max-width: 782px) {
+	.bdc-kb-table th:nth-child(2),
+	.bdc-kb-table td:nth-child(2),
+	.bdc-kb-table th:nth-child(3),
+	.bdc-kb-table td:nth-child(3) {
+		display: none;
+	}
+}

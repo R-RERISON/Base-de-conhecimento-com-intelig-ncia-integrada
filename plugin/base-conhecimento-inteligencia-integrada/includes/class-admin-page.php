@@ -1,0 +1,293 @@
+<?php
+/**
+ * Superfície administrativa server-rendered da SPEC-001.
+ *
+ * @package BDC_Knowledge_Base
+ */
+
+namespace BDC\KnowledgeBase;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Lista posts editáveis e gerencia os três campos narrativos.
+ */
+final class Admin_Page {
+
+	public const PAGE_SLUG = 'bdc-knowledge-summary';
+	public const ACTION    = 'bdc_kb_save_summary';
+
+	private const NONCE_FIELD  = 'bdc_kb_nonce';
+	private const NONCE_PREFIX = 'bdc_kb_save_summary_';
+	private const PER_PAGE     = 20;
+
+	public static function register_menu(): void {
+		add_menu_page(
+			'Base de Conhecimento',
+			'Base de Conhecimento',
+			'edit_posts',
+			self::PAGE_SLUG,
+			array( self::class, 'render' ),
+			'dashicons-welcome-learn-more',
+			58
+		);
+	}
+
+	public static function enqueue_assets( string $hook_suffix ): void {
+		if ( 'toplevel_page_' . self::PAGE_SLUG !== $hook_suffix ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'bdc-kb-admin',
+			BDC_KB_URL . 'assets/css/admin.css',
+			array(),
+			BDC_KB_VERSION
+		);
+	}
+
+	public static function render(): void {
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_die( esc_html__( 'Você não tem permissão para acessar esta página.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
+		}
+
+		$post_id = self::get_request_post_id();
+
+		echo '<div class="wrap bdc-kb-admin">';
+		echo '<h1>' . esc_html__( 'Base de Conhecimento — Summary narrativo', 'bdc-knowledge-base' ) . '</h1>';
+		self::render_feedback();
+
+		if ( $post_id > 0 ) {
+			self::render_editor( $post_id );
+		} else {
+			self::render_list();
+		}
+
+		echo '</div>';
+	}
+
+	public static function handle_save(): void {
+		if ( 'POST' !== strtoupper( (string) ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) {
+			wp_die( esc_html__( 'Método HTTP não permitido.', 'bdc-knowledge-base' ), '', array( 'response' => 405 ) );
+		}
+
+		$post_id = isset( $_POST['post_id'] ) && is_scalar( $_POST['post_id'] )
+			? absint( wp_unslash( (string) $_POST['post_id'] ) )
+			: 0;
+
+		$post = $post_id > 0 ? get_post( $post_id ) : null;
+		if ( ! is_object( $post ) || Meta_Contract::POST_TYPE !== $post->post_type ) {
+			self::redirect( $post_id, 'invalid_post' );
+		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			self::redirect( $post_id, 'forbidden' );
+		}
+
+		$nonce = isset( $_POST[ self::NONCE_FIELD ] ) && is_scalar( $_POST[ self::NONCE_FIELD ] )
+			? wp_unslash( (string) $_POST[ self::NONCE_FIELD ] )
+			: '';
+
+		if ( ! wp_verify_nonce( $nonce, self::NONCE_PREFIX . $post_id ) ) {
+			self::redirect( $post_id, 'invalid_nonce' );
+		}
+
+		if ( ! isset( $_POST['summary'] ) || ! is_array( $_POST['summary'] ) ) {
+			self::redirect( $post_id, 'invalid_payload' );
+		}
+
+		$changes = wp_unslash( $_POST['summary'] );
+		$result  = Summary_Store::update( $post_id, $changes );
+
+		if ( ! is_wp_error( $result ) ) {
+			self::redirect( $post_id, 'saved' );
+		}
+
+		$data   = $result->get_error_data();
+		$status = is_array( $data ) ? (string) ( $data['status'] ?? '' ) : '';
+
+		if ( Summary_Store::STATUS_PARTIAL_FAILURE_CRITICAL === $status ) {
+			self::redirect( $post_id, 'critical' );
+		}
+
+		if ( Summary_Store::STATUS_FAIL_SAFE === $status ) {
+			self::redirect( $post_id, 'fail_safe' );
+		}
+
+		self::redirect( $post_id, 'validation_error' );
+	}
+
+	private static function render_editor( int $post_id ): void {
+		$post = get_post( $post_id );
+		if ( ! is_object( $post ) || Meta_Contract::POST_TYPE !== $post->post_type ) {
+			self::render_inline_error( 'O artigo informado não existe ou não pertence ao escopo da SPEC-001.' );
+			self::render_back_link();
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			self::render_inline_error( 'Você não tem permissão para editar este artigo.' );
+			self::render_back_link();
+			return;
+		}
+
+		$snapshot = Summary_Store::read( $post_id );
+		if ( is_wp_error( $snapshot ) ) {
+			self::render_inline_error( 'Não foi possível carregar o Summary deste artigo.' );
+			self::render_back_link();
+			return;
+		}
+
+		self::render_back_link();
+		echo '<div class="bdc-kb-context">';
+		echo '<h2>' . esc_html( (string) $snapshot['title'] ) . '</h2>';
+		echo '<p><strong>' . esc_html__( 'Post ID:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( (string) $post_id ) . '</p>';
+		echo '</div>';
+
+		echo '<form class="bdc-kb-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '">';
+		echo '<input type="hidden" name="post_id" value="' . esc_attr( (string) $post_id ) . '">';
+		wp_nonce_field( self::NONCE_PREFIX . $post_id, self::NONCE_FIELD );
+
+		foreach ( Meta_Contract::fields() as $field => $definition ) {
+			$field_id = 'bdc-kb-' . $field;
+			echo '<div class="bdc-kb-field">';
+			echo '<label for="' . esc_attr( $field_id ) . '"><strong>' . esc_html( $definition['label'] ) . '</strong></label>';
+			echo '<textarea class="large-text" rows="7" id="' . esc_attr( $field_id ) . '" name="summary[' . esc_attr( $field ) . ']" maxlength="32768">' . esc_textarea( (string) $snapshot[ $field ] ) . '</textarea>';
+			echo '<p class="description">' . esc_html__( 'Texto narrativo. Valor vazio remove a metadata correspondente.', 'bdc-knowledge-base' ) . '</p>';
+			echo '</div>';
+		}
+
+		submit_button( __( 'Salvar Summary', 'bdc-knowledge-base' ) );
+		echo '</form>';
+	}
+
+	private static function render_list(): void {
+		$paged = isset( $_GET['paged'] ) && is_scalar( $_GET['paged'] )
+			? max( 1, absint( wp_unslash( (string) $_GET['paged'] ) ) )
+			: 1;
+
+		$query = new \WP_Query(
+			array(
+				'post_type'           => Meta_Contract::POST_TYPE,
+				'post_status'         => array( 'publish', 'draft', 'pending', 'private', 'future' ),
+				'posts_per_page'      => self::PER_PAGE,
+				'paged'               => $paged,
+				'orderby'             => 'modified',
+				'order'               => 'DESC',
+				'ignore_sticky_posts' => true,
+				'perm'                => 'editable',
+			)
+		);
+
+		echo '<p>' . esc_html__( 'Selecione um artigo para ler ou editar somente os três campos narrativos autorizados.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<table class="widefat fixed striped bdc-kb-table">';
+		echo '<thead><tr><th>' . esc_html__( 'Artigo', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Status', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Ação', 'bdc-knowledge-base' ) . '</th></tr></thead><tbody>';
+
+		$rendered = 0;
+		foreach ( $query->posts as $post ) {
+			if ( ! current_user_can( 'edit_post', (int) $post->ID ) ) {
+				continue;
+			}
+
+			$status_object = get_post_status_object( (string) $post->post_status );
+			$status_label  = is_object( $status_object ) ? (string) $status_object->label : (string) $post->post_status;
+			$edit_url      = add_query_arg(
+				array(
+					'page'    => self::PAGE_SLUG,
+					'post_id' => (int) $post->ID,
+				),
+				admin_url( 'admin.php' )
+			);
+
+			echo '<tr>';
+			echo '<td><strong>' . esc_html( get_the_title( $post ) ) . '</strong><br><span class="description">#' . esc_html( (string) $post->ID ) . '</span></td>';
+			echo '<td>' . esc_html( $status_label ) . '</td>';
+			echo '<td>' . esc_html( get_the_modified_date( '', $post ) ) . '</td>';
+			echo '<td><a class="button" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Editar Summary', 'bdc-knowledge-base' ) . '</a></td>';
+			echo '</tr>';
+			++$rendered;
+		}
+
+		if ( 0 === $rendered ) {
+			echo '<tr><td colspan="4">' . esc_html__( 'Nenhum artigo editável foi encontrado nesta página.', 'bdc-knowledge-base' ) . '</td></tr>';
+		}
+
+		echo '</tbody></table>';
+
+		$pagination = paginate_links(
+			array(
+				'base'      => add_query_arg( 'paged', '%#%', admin_url( 'admin.php?page=' . self::PAGE_SLUG ) ),
+				'format'    => '',
+				'current'   => $paged,
+				'total'     => max( 1, (int) $query->max_num_pages ),
+				'type'      => 'list',
+				'prev_text' => __( 'Anterior', 'bdc-knowledge-base' ),
+				'next_text' => __( 'Próxima', 'bdc-knowledge-base' ),
+			)
+		);
+
+		if ( is_string( $pagination ) && '' !== $pagination ) {
+			echo '<nav class="bdc-kb-pagination" aria-label="' . esc_attr__( 'Paginação de artigos', 'bdc-knowledge-base' ) . '">' . wp_kses_post( $pagination ) . '</nav>';
+		}
+
+		wp_reset_postdata();
+	}
+
+	private static function render_feedback(): void {
+		$status = isset( $_GET['bdc_summary_status'] ) && is_scalar( $_GET['bdc_summary_status'] )
+			? sanitize_key( wp_unslash( (string) $_GET['bdc_summary_status'] ) )
+			: '';
+
+		$messages = array(
+			'saved'            => array( 'success', 'Summary salvo e confirmado por releitura.' ),
+			'fail_safe'        => array( 'error', 'A gravação falhou, mas o estado anterior foi restaurado com sucesso.' ),
+			'critical'         => array( 'error', 'Falha crítica: o estado anterior não foi restaurado integralmente. Releia o artigo e consulte o diagnóstico administrativo antes de nova alteração.' ),
+			'invalid_post'     => array( 'error', 'Artigo inválido ou fora do escopo da SPEC-001.' ),
+			'forbidden'        => array( 'error', 'Você não tem permissão para editar o artigo solicitado.' ),
+			'invalid_nonce'    => array( 'error', 'A validação de segurança expirou ou é inválida. Reabra o formulário e tente novamente.' ),
+			'invalid_payload'  => array( 'error', 'O formulário recebido é inválido.' ),
+			'validation_error' => array( 'error', 'O Summary não foi salvo porque o payload violou o contrato de validação.' ),
+		);
+
+		if ( ! isset( $messages[ $status ] ) ) {
+			return;
+		}
+
+		list( $type, $message ) = $messages[ $status ];
+		echo '<div class="notice notice-' . esc_attr( $type ) . ' is-dismissible"><p>' . esc_html( $message ) . '</p></div>';
+	}
+
+	private static function render_inline_error( string $message ): void {
+		echo '<div class="notice notice-error"><p>' . esc_html( $message ) . '</p></div>';
+	}
+
+	private static function render_back_link(): void {
+		$url = admin_url( 'admin.php?page=' . self::PAGE_SLUG );
+		echo '<p><a href="' . esc_url( $url ) . '">&larr; ' . esc_html__( 'Voltar para artigos', 'bdc-knowledge-base' ) . '</a></p>';
+	}
+
+	private static function get_request_post_id(): int {
+		if ( ! isset( $_GET['post_id'] ) || ! is_scalar( $_GET['post_id'] ) ) {
+			return 0;
+		}
+
+		return absint( wp_unslash( (string) $_GET['post_id'] ) );
+	}
+
+	private static function redirect( int $post_id, string $status ): never {
+		$args = array(
+			'page'               => self::PAGE_SLUG,
+			'bdc_summary_status' => sanitize_key( $status ),
+		);
+
+		if ( $post_id > 0 ) {
+			$args['post_id'] = $post_id;
+		}
+
+		wp_safe_redirect( add_query_arg( $args, admin_url( 'admin.php' ) ) );
+		exit;
+	}
+}

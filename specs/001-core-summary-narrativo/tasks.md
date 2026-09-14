@@ -13,18 +13,20 @@
 - [x] T009 Definir UI/UX/browser acceptance.
 - [x] T010 Definir aceite/não aceite/rollback e fechar DoR.
 
-**Gate S001:** PASS documental. Nenhum runtime criado.
+**Gate S001:** PASS documental.
 
-## S002 — Runtime mínimo (próximo bloco autorizado, ainda não executado)
+## S002 — Runtime mínimo
 
-- [ ] T020 Definir árvore mínima do plugin e requisitos mínimos WordPress/PHP com base nas APIs usadas.
-- [ ] T021 Implementar bootstrap/lifecycle mínimo sem trabalho pesado.
-- [ ] T022 Implementar contrato das três metas para `post`.
-- [ ] T023 Implementar leitura side-effect free.
-- [ ] T024 Implementar update com allowlist/limites/sanitização/diff.
-- [ ] T025 Implementar B-006 com read-after-write e compensação.
-- [ ] T026 Implementar superfície wp-admin server-rendered + PRG.
-- [ ] T027 Implementar escaping/feedback/estados de erro.
+- [x] T020 Definir árvore mínima do plugin e requisitos mínimos WordPress/PHP com base no baseline comprovado.
+- [x] T021 Implementar bootstrap/lifecycle mínimo sem trabalho pesado.
+- [x] T022 Implementar contrato das três metas para `post`.
+- [x] T023 Implementar leitura side-effect free.
+- [x] T024 Implementar update com allowlist/limites/sanitização/diff.
+- [x] T025 Implementar B-006 com read-after-write e compensação.
+- [x] T026 Implementar superfície wp-admin server-rendered + PRG.
+- [x] T027 Implementar escaping/feedback/estados de erro.
+
+**Gate S002:** runtime implementado e PHP lint PASS. Integração WordPress/browser/fault injection ainda não executados; SPEC permanece Em implementação.
 
 ## S003 — Evidência
 

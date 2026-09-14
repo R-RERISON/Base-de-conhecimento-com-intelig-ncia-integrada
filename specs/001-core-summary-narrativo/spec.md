@@ -1,6 +1,6 @@
 # SPEC-001 — Core mínimo + Summary narrativo
 
-**Status:** Pronta  
+**Status:** Em implementação  
 **Dono:** Orquestrador + Arquiteto WordPress + Produto/Conhecimento + Segurança/Regressão + Crítico de Simplicidade  
 **Data:** 2026-09-14  
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
@@ -20,7 +20,6 @@ Baseline de entrada: `main @ fced4a6015638b585d8817485fce8ef0fb8d7ccb` (`spec-00
 Estado comprovado:
 
 - SPEC-000 concluída por T097;
-- nenhum runtime do novo plugin existe;
 - GRE 0.6.0 é a referência WordPress-first do Summary;
 - GRE registra metadata para `post` e rejeita `post_type` diferente de `post`;
 - KB2Ops e ASI tratam o corpus de conhecimento como posts vinculados por post ID;
@@ -28,8 +27,11 @@ Estado comprovado:
   - `objective` -> `_bdc_es_objective`;
   - `escalation` -> `_bdc_es_escalation`;
   - `important` -> `_bdc_es_important`;
-- B-006 foi fechado conceitualmente, mas precisa de implementação e teste;
-- B-003 não bloqueia desenvolvimento/homologação, mas volta antes de produção/cutover/coexistência não controlada de writers.
+- B-006 foi fechado conceitualmente em T095 e implementado no runtime S002;
+- B-003 não bloqueia desenvolvimento/homologação, mas volta antes de produção/cutover/coexistência não controlada de writers;
+- runtime mínimo S002 foi implementado em `5e1b35763df091ebf505f8e8f8260c654fc21926`;
+- suíte unitária inicial S003 foi versionada em `e5acc691e4de5e91fcb59f48403836c650a54714` com 15/15 testes aprovados;
+- integração WordPress e browser acceptance ainda não foram executados.
 
 ### Post type suportado
 
@@ -244,11 +246,11 @@ Desenvolvimento/homologação pode coexistir com plugins legados desde que eles 
 
 ### Unitários
 
-Validação de allowlist/tipos/limites, sanitização, diff, classificação dos resultados B-006.
+Validação de allowlist/tipos/limites, sanitização, diff, classificação dos resultados B-006. Suíte inicial executada: **15/15 PASS** em `tests/unit/spec001-summary-store.php`.
 
 ### Integração WordPress
 
-Metadata API, capabilities, nonce/handler, empty-delete, partial update, no-op, read-after-write, post type e fault injection B-006.
+Metadata API, capabilities, nonce/handler, empty-delete, partial update, no-op, read-after-write, post type e fault injection B-006. **NOT_RUN**.
 
 ### Regressão
 
@@ -264,7 +266,7 @@ N/A nesta fase salvo regressão evidente; listagem deve ser paginada.
 
 ### Browser/manual
 
-Seleção -> leitura -> edição -> save -> redirect -> releitura; empty/delete; erro; permissão; foco/teclado; viewport estreito.
+Seleção -> leitura -> edição -> save -> redirect -> releitura; empty/delete; erro; permissão; foco/teclado; viewport estreito. **NOT_RUN**.
 
 ### Golden Queries
 
@@ -278,7 +280,7 @@ N/A — Search está fora de escopo.
 - [ ] os três campos persistem e são relidos corretamente;
 - [ ] vazio remove meta;
 - [ ] no-op não é falha;
-- [ ] B-006 passa em fault injection;
+- [ ] B-006 passa em fault injection WordPress;
 - [ ] capability/nonce/allowlist/escaping passam;
 - [ ] editorial permanece byte/logicamente inalterado nos campos protegidos;
 - [ ] UI/browser acceptance passa;
@@ -308,12 +310,14 @@ Desativar o novo plugin. As três metas permanecem em postmeta. Nenhuma limpeza 
 
 ## 21. Evidências de conclusão
 
-Serão registradas na Matriz de Evidência, resultados de testes, browser acceptance, build/package quando aplicável, commit e handoff.
+- `runtime-s002.md` — runtime mínimo e PHP lint;
+- `evidencia-unitaria-s003.md` — 15/15 testes unitários PASS;
+- `matriz-evidencia.md` — gates de integração/browser ainda NOT_RUN.
 
 ## 22. Continuidade entre chats
 
 `CONTINUIDADE.md` é obrigatório e deve refletir o último estado comprovado.
 
-### Definition of Ready
+### Estado atual
 
-O bloco documental inicial está **PASS** conforme `baseline-definition-of-ready.md`. Isso autoriza o início futuro do runtime mínimo da SPEC-001, mas este commit documental não implementa runtime, não homologa e não autoriza produção/cutover.
+A SPEC-001 está **Em implementação**. S001/DoR está PASS, S002/runtime mínimo está implementado, T040/unitário está PASS. Integração WordPress, B-006 em Metadata API real, browser acceptance e lifecycle/package ainda bloqueiam Homologação/Release. Não há GO de produção/cutover.

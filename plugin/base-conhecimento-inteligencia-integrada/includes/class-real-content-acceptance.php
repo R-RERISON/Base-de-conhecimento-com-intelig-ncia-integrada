@@ -201,14 +201,63 @@ final class Real_Content_Acceptance {
 		$used  = array();
 		$slots = array();
 
-		$slots['elementor_native_typical'] = self::pick_typical( $candidates, static fn ( array $c ): bool => 'native' === $c['compatibility'] && in_array( $c['source_kind'], array( 'elementor', 'mixed' ), true ), $used );
-		$slots['elementor_or_mixed_complex'] = self::pick_complex( $candidates, static fn ( array $c ): bool => 'mixed' === $c['source_kind'] || ( 'native' === $c['compatibility'] && 'elementor' === $c['source_kind'] ), $used );
-		$slots['legacy_typical'] = self::pick_typical( $candidates, static fn ( array $c ): bool => 'legacy_html' === $c['source_kind'], $used );
-		$slots['legacy_complex'] = self::pick_complex( $candidates, static fn ( array $c ): bool => 'legacy_html' === $c['source_kind'], $used );
-		$slots['gutenberg'] = self::pick_complex( $candidates, static fn ( array $c ): bool => 'gutenberg' === $c['source_kind'] || in_array( 'gutenberg', $c['strategies'], true ), $used );
-		$slots['shortcode_or_table'] = self::pick_complex( $candidates, static fn ( array $c ): bool => $c['structure']['shortcodes'] > 0 || $c['structure']['tables'] > 0 || $c['has_shortcode_warning'], $used );
-		$slots['review_required'] = self::pick_complex( $candidates, static fn ( array $c ): bool => 'review_required' === $c['compatibility'], $used );
-		$slots['empty_or_corrupt'] = self::pick_complex( $candidates, static fn ( array $c ): bool => 'empty' === $c['source_kind'] || $c['has_corrupt_warning'], $used );
+		$slots['elementor_native_typical'] = self::pick_typical(
+			$candidates,
+			static fn ( array $c ): bool => 'native' === $c['compatibility'] && in_array( $c['source_kind'], array( 'elementor', 'mixed' ), true ),
+			$used
+		);
+		$slots['elementor_or_mixed_complex'] = self::pick_complex(
+			$candidates,
+			static fn ( array $c ): bool => 'mixed' === $c['source_kind'] || ( 'native' === $c['compatibility'] && 'elementor' === $c['source_kind'] ),
+			$used
+		);
+		$slots['legacy_typical'] = self::pick_typical(
+			$candidates,
+			static fn ( array $c ): bool => 'legacy_html' === $c['source_kind'],
+			$used
+		);
+		$slots['legacy_complex'] = self::pick_complex(
+			$candidates,
+			static fn ( array $c ): bool => 'legacy_html' === $c['source_kind'],
+			$used
+		);
+		$slots['gutenberg'] = self::pick_complex(
+			$candidates,
+			static fn ( array $c ): bool => 'gutenberg' === $c['source_kind'] || in_array( 'gutenberg', $c['strategies'], true ),
+			$used
+		);
+		$slots['shortcode_or_table'] = self::pick_complex(
+			$candidates,
+			static fn ( array $c ): bool => $c['structure']['shortcodes'] > 0 || $c['structure']['tables'] > 0 || $c['has_shortcode_warning'],
+			$used
+		);
+		$slots['review_required'] = self::pick_complex(
+			$candidates,
+			static fn ( array $c ): bool => 'review_required' === $c['compatibility'],
+			$used
+		);
+		$slots['empty_or_corrupt'] = self::pick_complex(
+			$candidates,
+			static fn ( array $c ): bool => 'empty' === $c['source_kind'] || $c['has_corrupt_warning'],
+			$used
+		);
+
+
+		// Materializa conteúdo completo somente para os slots selecionados.
+		foreach ( $slots as &$entry ) {
+			if ( ! is_array( $entry ) || empty( $entry['available'] ) ) { continue; }
+			$post_id = (int) $entry['post_id'];
+			$document = Knowledge_Document::build( $post_id );
+			$source = Content_Source::inspect( $post_id );
+			if ( is_wp_error( $document ) || is_wp_error( $source ) ) {
+				++$errors;
+				$entry = array( 'available' => false, 'selection_error' => true );
+				continue;
+			}
+			$entry['document'] = $document;
+			$entry['source'] = $source;
+		}
+		unset( $entry );
 
 		return array( 'slots' => $slots, 'errors' => $errors, 'corpus_count' => count( $ids ) );
 	}
@@ -230,8 +279,6 @@ final class Real_Content_Acceptance {
 
 		return array(
 			'post_id' => $post_id,
-			'document' => $document,
-			'source' => $source,
 			'source_kind' => (string) ( $document['source_kind'] ?? 'empty' ),
 			'compatibility' => (string) ( $document['extraction']['elementor_compatibility']['status'] ?? 'review_required' ),
 			'strategies' => is_array( $document['extraction']['strategies'] ?? null ) ? array_values( array_map( 'strval', $document['extraction']['strategies'] ) ) : array(),
@@ -254,15 +301,20 @@ final class Real_Content_Acceptance {
 	/** @param array<int,array<string,mixed>> $candidates @param callable(array<string,mixed>):bool $filter @param array<int,bool> $used @return array<string,mixed> */
 	private static function pick_typical( array $candidates, callable $filter, array &$used ): array {
 		$pool = self::filtered_pool( $candidates, $filter, $used );
-		if ( empty( $pool ) ) { return array( 'available' => false ); }
+		if ( empty( $pool ) ) {
+			return array( 'available' => false );
+		}
 		$counts = array_map( static fn ( array $c ): int => (int) $c['sections_count'], $pool );
 		sort( $counts, SORT_NUMERIC );
 		$median = $counts[ (int) floor( ( count( $counts ) - 1 ) / 2 ) ];
-		usort( $pool, static function ( array $a, array $b ) use ( $median ): int {
-			$da = abs( (int) $a['sections_count'] - $median );
-			$db = abs( (int) $b['sections_count'] - $median );
-			return $da === $db ? ( (int) $a['post_id'] <=> (int) $b['post_id'] ) : ( $da <=> $db );
-		} );
+		usort(
+			$pool,
+			static function ( array $a, array $b ) use ( $median ): int {
+				$da = abs( (int) $a['sections_count'] - $median );
+				$db = abs( (int) $b['sections_count'] - $median );
+				return $da === $db ? ( (int) $a['post_id'] <=> (int) $b['post_id'] ) : ( $da <=> $db );
+			}
+		);
 		$selected = $pool[0];
 		$used[ (int) $selected['post_id'] ] = true;
 		$selected['available'] = true;
@@ -272,8 +324,15 @@ final class Real_Content_Acceptance {
 	/** @param array<int,array<string,mixed>> $candidates @param callable(array<string,mixed>):bool $filter @param array<int,bool> $used @return array<string,mixed> */
 	private static function pick_complex( array $candidates, callable $filter, array &$used ): array {
 		$pool = self::filtered_pool( $candidates, $filter, $used );
-		if ( empty( $pool ) ) { return array( 'available' => false ); }
-		usort( $pool, static fn ( array $a, array $b ): int => (int) $a['score'] === (int) $b['score'] ? ( (int) $a['post_id'] <=> (int) $b['post_id'] ) : ( (int) $b['score'] <=> (int) $a['score'] ) );
+		if ( empty( $pool ) ) {
+			return array( 'available' => false );
+		}
+		usort(
+			$pool,
+			static fn ( array $a, array $b ): int => (int) $a['score'] === (int) $b['score']
+				? ( (int) $a['post_id'] <=> (int) $b['post_id'] )
+				: ( (int) $b['score'] <=> (int) $a['score'] )
+		);
 		$selected = $pool[0];
 		$used[ (int) $selected['post_id'] ] = true;
 		$selected['available'] = true;
@@ -283,7 +342,12 @@ final class Real_Content_Acceptance {
 	/** @param array<int,array<string,mixed>> $candidates @param callable(array<string,mixed>):bool $filter @param array<int,bool> $used @return array<int,array<string,mixed>> */
 	private static function filtered_pool( array $candidates, callable $filter, array $used ): array {
 		$eligible = array_values( array_filter( $candidates, $filter ) );
-		$unused = array_values( array_filter( $eligible, static fn ( array $c ): bool => ! isset( $used[ (int) $c['post_id'] ] ) ) );
+		$unused = array_values(
+			array_filter(
+				$eligible,
+				static fn ( array $c ): bool => ! isset( $used[ (int) $c['post_id'] ] )
+			)
+		);
 		return ! empty( $unused ) ? $unused : $eligible;
 	}
 
@@ -291,17 +355,21 @@ final class Real_Content_Acceptance {
 	private static function render_source( array $source ): void {
 		$flags = is_array( $source['flags'] ?? null ) ? $source['flags'] : array();
 		echo '<p><strong>flags:</strong> <code>' . esc_html( self::display_json( $flags ) ) . '</code></p>';
+
 		$raw_elementor = $source['elementor_raw'] ?? '';
 		if ( ( $flags['has_elementor_meta'] ?? false ) ) {
 			echo '<details open><summary><strong>_elementor_data (somente leitura)</strong></summary>';
 			echo '<pre style="max-height:440px;overflow:auto;white-space:pre-wrap;border:1px solid #ddd;padding:10px;background:#fff">' . esc_html( self::pretty_source( $raw_elementor ) ) . '</pre></details>';
 		}
+
 		$content = isset( $source['post_content'] ) ? (string) $source['post_content'] : '';
 		if ( '' !== $content ) {
 			echo '<details open><summary><strong>post_content (somente leitura)</strong></summary>';
 			echo '<pre style="max-height:440px;overflow:auto;white-space:pre-wrap;border:1px solid #ddd;padding:10px;background:#fff">' . esc_html( $content ) . '</pre></details>';
 		}
-		if ( '' === $content && empty( $raw_elementor ) ) { echo '<p><em>' . esc_html__( 'Fonte editorial vazia.', 'bdc-knowledge-base' ) . '</em></p>'; }
+		if ( '' === $content && empty( $raw_elementor ) ) {
+			echo '<p><em>' . esc_html__( 'Fonte editorial vazia.', 'bdc-knowledge-base' ) . '</em></p>';
+		}
 	}
 
 	/** @param array<string,mixed> $document */
@@ -323,6 +391,7 @@ final class Real_Content_Acceptance {
 
 	/** @return array<string,mixed> */
 	private static function build_report(): array {
+		$expected_sample = self::select_sample();
 		$sample_status = isset( $_POST['sample_status'] ) && is_array( $_POST['sample_status'] ) ? wp_unslash( $_POST['sample_status'] ) : array();
 		$sample_ids = isset( $_POST['sample_id'] ) && is_array( $_POST['sample_id'] ) ? wp_unslash( $_POST['sample_id'] ) : array();
 		$expected_fingerprints = isset( $_POST['sample_fingerprint'] ) && is_array( $_POST['sample_fingerprint'] ) ? wp_unslash( $_POST['sample_fingerprint'] ) : array();
@@ -340,29 +409,53 @@ final class Real_Content_Acceptance {
 		$selected_ids = array_values( array_unique( $selected_ids ) );
 		$snapshot_before = self::snapshot( $selected_ids );
 		$fingerprint_before = self::aggregate_fingerprint( $snapshot_before );
+
 		$items = array();
-		$available_count = 0;
+		$expected_available_count = 0;
+		$reviewed_count = 0;
 		$passed_count = 0;
 		$stale_count = 0;
 		$repeatability_failures = 0;
+		$selection_mismatches = 0;
 
 		foreach ( self::SLOTS as $slot => $label ) {
 			unset( $label );
+			$expected_entry = $expected_sample['slots'][ $slot ] ?? array( 'available' => false );
+			$expected_available = is_array( $expected_entry ) && ! empty( $expected_entry['available'] );
 			$status = (string) ( $sample_status[ $slot ] ?? 'not_available' );
-			if ( 'selected' !== $status ) {
+
+			if ( ! $expected_available ) {
+				if ( 'selected' === $status ) { ++$selection_mismatches; }
 				$items[] = array( 'slot' => $slot, 'status' => 'not_available' );
 				continue;
 			}
-			++$available_count;
+
+			++$expected_available_count;
+			$expected_post_id = (int) ( $expected_entry['post_id'] ?? 0 );
 			$post_id = (int) ( $sample_ids[ $slot ] ?? 0 );
+			if ( 'selected' !== $status || $post_id <= 0 || $post_id !== $expected_post_id ) {
+				++$selection_mismatches;
+				$items[] = array(
+					'slot' => $slot,
+					'status' => 'selection_mismatch',
+					'expected_post_id' => $expected_post_id,
+					'submitted_post_id' => $post_id,
+				);
+				continue;
+			}
+			++$reviewed_count;
 			$expected = isset( $expected_fingerprints[ $slot ] ) && is_scalar( $expected_fingerprints[ $slot ] ) ? (string) $expected_fingerprints[ $slot ] : '';
 			$current = self::editorial_fingerprint( $post_id );
 			$stale = '' === $expected || ! hash_equals( $expected, $current );
 			if ( $stale ) { ++$stale_count; }
+
 			$doc_a = Knowledge_Document::build( $post_id );
 			$doc_b = Knowledge_Document::build( $post_id );
-			$repeatable = ! is_wp_error( $doc_a ) && ! is_wp_error( $doc_b ) && (string) ( $doc_a['source_hash'] ?? '' ) === (string) ( $doc_b['source_hash'] ?? '' ) && (string) ( $doc_a['document_hash'] ?? '' ) === (string) ( $doc_b['document_hash'] ?? '' );
+			$repeatable = ! is_wp_error( $doc_a ) && ! is_wp_error( $doc_b )
+				&& (string) ( $doc_a['source_hash'] ?? '' ) === (string) ( $doc_b['source_hash'] ?? '' )
+				&& (string) ( $doc_a['document_hash'] ?? '' ) === (string) ( $doc_b['document_hash'] ?? '' );
 			if ( ! $repeatable ) { ++$repeatability_failures; }
+
 			$verdict = array();
 			$all_true = true;
 			foreach ( self::VERDICT_FIELDS as $field => $field_label ) {
@@ -371,11 +464,14 @@ final class Real_Content_Acceptance {
 				$verdict[ $field ] = $value;
 				$all_true = $all_true && $value;
 			}
+
 			$reason = isset( $posted_reasons[ $slot ] ) && is_scalar( $posted_reasons[ $slot ] ) ? (string) $posted_reasons[ $slot ] : '';
 			if ( ! in_array( $reason, self::REASONS, true ) ) { $reason = ''; }
 			if ( ! $all_true && '' === $reason ) { $reason = 'other_review_required'; }
+
 			$pass = ! $stale && $repeatable && $all_true;
 			if ( $pass ) { ++$passed_count; }
+
 			$items[] = array(
 				'slot' => $slot,
 				'status' => 'reviewed',
@@ -397,7 +493,7 @@ final class Real_Content_Acceptance {
 		$snapshot_after = self::snapshot( $selected_ids );
 		$fingerprint_after = self::aggregate_fingerprint( $snapshot_after );
 		$changed = self::changed_snapshot_count( $snapshot_before, $snapshot_after );
-		$gate_pass = $available_count > 0 && $passed_count === $available_count && 0 === $stale_count && 0 === $repeatability_failures && 0 === $changed;
+		$gate_pass = $expected_available_count > 0 && 0 === $selection_mismatches && $reviewed_count === $expected_available_count && $passed_count === $expected_available_count && 0 === $stale_count && 0 === $repeatability_failures && 0 === $changed;
 
 		return array(
 			'schema_version' => '1.0.0',
@@ -422,15 +518,18 @@ final class Real_Content_Acceptance {
 				'changed_posts_during_report_generation' => $changed,
 			),
 			'acceptance' => array(
-				'available_slots' => $available_count,
+				'expected_available_slots' => $expected_available_count,
+				'reviewed_slots' => $reviewed_count,
 				'passed_slots' => $passed_count,
 				'stale_slots' => $stale_count,
 				'repeatability_failures' => $repeatability_failures,
+				'selection_mismatches' => $selection_mismatches,
 				'gate_pass' => $gate_pass,
 				'items' => $items,
 			),
 			'gate_expectations' => array(
 				'all_available_slots_pass' => true,
+				'selection_mismatches' => 0,
 				'stale_slots' => 0,
 				'repeatability_failures' => 0,
 				'editorial_fingerprint_equal' => true,
@@ -441,7 +540,18 @@ final class Real_Content_Acceptance {
 
 	/** @return array<int,int> */
 	private static function post_ids(): array {
-		$ids = get_posts( array( 'post_type' => 'post', 'post_status' => array( 'publish', 'draft', 'pending', 'private' ), 'posts_per_page' => -1, 'fields' => 'ids', 'orderby' => 'ID', 'order' => 'ASC', 'no_found_rows' => true, 'suppress_filters' => false ) );
+		$ids = get_posts(
+			array(
+				'post_type' => 'post',
+				'post_status' => array( 'publish', 'draft', 'pending', 'private' ),
+				'posts_per_page' => -1,
+				'fields' => 'ids',
+				'orderby' => 'ID',
+				'order' => 'ASC',
+				'no_found_rows' => true,
+				'suppress_filters' => false,
+			)
+		);
 		return is_array( $ids ) ? array_values( array_map( 'intval', $ids ) ) : array();
 	}
 
@@ -450,7 +560,20 @@ final class Real_Content_Acceptance {
 		if ( ! is_object( $post ) ) { return ''; }
 		$elementor = get_post_meta( $post_id, '_elementor_data', true );
 		$elementor_string = is_string( $elementor ) ? $elementor : self::display_json( $elementor );
-		return hash( 'sha256', implode( "\n", array( (string) $post_id, (string) ( $post->post_status ?? '' ), (string) ( $post->post_modified_gmt ?? '' ), hash( 'sha256', (string) ( $post->post_title ?? '' ) ), hash( 'sha256', (string) ( $post->post_content ?? '' ) ), hash( 'sha256', $elementor_string ) ) ) );
+		return hash(
+			'sha256',
+			implode(
+				"\n",
+				array(
+					(string) $post_id,
+					(string) ( $post->post_status ?? '' ),
+					(string) ( $post->post_modified_gmt ?? '' ),
+					hash( 'sha256', (string) ( $post->post_title ?? '' ) ),
+					hash( 'sha256', (string) ( $post->post_content ?? '' ) ),
+					hash( 'sha256', $elementor_string ),
+				)
+			)
+		);
 	}
 
 	/** @param array<int,int> $ids @return array<int,string> */
@@ -472,13 +595,17 @@ final class Real_Content_Acceptance {
 	private static function changed_snapshot_count( array $before, array $after ): int {
 		$keys = array_unique( array_merge( array_keys( $before ), array_keys( $after ) ) );
 		$changed = 0;
-		foreach ( $keys as $key ) { if ( ( $before[ $key ] ?? null ) !== ( $after[ $key ] ?? null ) ) { ++$changed; } }
+		foreach ( $keys as $key ) {
+			if ( ( $before[ $key ] ?? null ) !== ( $after[ $key ] ?? null ) ) { ++$changed; }
+		}
 		return $changed;
 	}
 
 	/** @param array<int,string> $warnings */
 	private static function has_warning_prefix( array $warnings, string $prefix ): bool {
-		foreach ( $warnings as $warning ) { if ( str_starts_with( $warning, $prefix ) ) { return true; } }
+		foreach ( $warnings as $warning ) {
+			if ( str_starts_with( $warning, $prefix ) ) { return true; }
+		}
 		return false;
 	}
 

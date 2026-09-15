@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com Summary narrativo, Classificação e Review & Governança governados.
- * Version: 0.3.0-dev.6
+ * Version: 0.3.0-dev.7
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.3.0-dev.6' );
+define( 'BDC_KB_VERSION', '0.3.0-dev.7' );
 define( 'BDC_KB_REVIEW_HTTP_DIAGNOSTICS_BUILD', true );
 define( 'BDC_KB_FILE', __FILE__ );
 define( 'BDC_KB_DIR', plugin_dir_path( __FILE__ ) );

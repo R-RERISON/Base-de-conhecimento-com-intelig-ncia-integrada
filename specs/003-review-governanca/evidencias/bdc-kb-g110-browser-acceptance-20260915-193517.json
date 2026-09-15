@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.2.0",
+  "mode": "temporary_g110_browser_acceptance_fixture_only",
+  "generated_at": "2026-09-15T19:35:17+00:00",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.3.0-dev.9",
+    "multisite": false
+  },
+  "safety": {
+    "fixture_only": true,
+    "modifies_real_content": false,
+    "uses_real_admin_post": true,
+    "cleanup_required": true
+  },
+  "browser_tests": [
+    {"id":"g110-b01","status":"PASS","description":"Workspace expõe exatamente as cinco tabs autorizadas.","details":"Visão geral | Summary | Classificação | Review & Governança | Histórico"},
+    {"id":"g110-b02","status":"PASS","description":"Context Header e Main Work Area estão presentes.","details":""},
+    {"id":"g110-b03","status":"PASS","description":"Features proibidas não aparecem no Workspace.","details":""},
+    {"id":"g110-b04","status":"PASS","description":"ArrowLeft/ArrowRight/Home/End movem foco entre tabs.","details":"right=true, end=true, home=true, left=true"},
+    {"id":"g110-b05","status":"PASS","description":"Tab focada possui indicação visual de foco.","details":"outline=solid, boxShadow=rgb(22, 119, 255) 0px 0px 0px 1px"},
+    {"id":"g110-b06","status":"PASS","description":"Tabs mantêm semântica nativa de link e ativação por Enter.","details":""},
+    {"id":"g110-b07","status":"PASS","description":"Summary renderiza formulário canônico com labels associados.","details":""},
+    {"id":"g110-b99","status":"FAIL","description":"Exceção durante Browser Acceptance.","details":"form.submit is not a function"}
+  ],
+  "server_assertions": [
+    {"id":"G110-S01","status":"PASS","description":"Editorial status da fixture permanece draft."},
+    {"id":"G110-S02","status":"PASS","description":"post_content da fixture permanece inalterado."},
+    {"id":"G110-S03","status":"PASS","description":"_elementor_data da fixture permanece inalterado."},
+    {"id":"G110-S04","status":"FAIL","description":"Summary foi persistido pelo formulário real e confere no store canônico."},
+    {"id":"G110-S05","status":"FAIL","description":"Classificação foi persistida pelo formulário real e confere no store canônico."},
+    {"id":"G110-S06","status":"FAIL","description":"Event log contém exatamente in_review, needs_changes e approved, sem evento extra de NO_CHANGE/validação."},
+    {"id":"G110-S07","status":"FAIL","description":"Estado final canônico de Review é approved."}
+  ],
+  "cleanup": {"cleanup_attempted":true,"residual_posts":0,"residual_terms":0,"residual_review_events":0},
+  "summary": {"browser_pass":7,"browser_fail":1,"server_pass":3,"server_fail":4,"overall":"FAIL"},
+  "limitations": [
+    "Reflow é medido no browser real em iframes same-origin com viewport fixa e escopo do plugin.",
+    "G-070 continua sendo a evidência principal de segurança negativa/IDOR/nonce do writer Review."
+  ]
+}

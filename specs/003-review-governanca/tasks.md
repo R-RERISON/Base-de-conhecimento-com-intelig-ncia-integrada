@@ -52,13 +52,15 @@ Contrato: `domain-contract.md`. Estado atual é derivado do último evento appen
 ## S003.5 — Design System Runtime Foundation
 
 - [x] T039A Formalizar `design-system-runtime-plan.md`.
-- [ ] T039B Traduzir tokens UX-001 para CSS Custom Properties do plugin.
-- [ ] T039C Aplicar Context Header/surfaces/hierarquia à Knowledge List e artigo.
-- [ ] T039D Refinar Summary/Classificação sem alterar writers.
-- [ ] T039E Validar foco e reflow <=782px.
-- [ ] T039F Smoke visual + regressão funcional.
+- [x] T039B Traduzir tokens UX-001 para CSS Custom Properties do plugin.
+- [x] T039C Aplicar surfaces/hierarquia à Knowledge List e contexto do artigo sem mudar navegação.
+- [x] T039D Refinar visual de Summary/Classificação sem alterar writers.
+- [ ] T039E Validar foco e reflow <=782px no ambiente real.
+- [ ] T039F Smoke visual + regressão funcional do `0.3.0-dev.3`.
 
-**Gate DS-010: EM EXECUÇÃO.**  
+Package visual: `0.3.0-dev.3` — PHP lint PASS 10/10; runner Review Diagnostics removido.
+
+**Gate DS-010: AGUARDANDO SMOKE VISUAL.**  
 Design System entra agora; nenhuma ação de Review é exposta antes de G-070.
 
 ## S004 — HTTP e segurança

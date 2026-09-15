@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança, Content Extractor e Knowledge Document determinísticos.
- * Version: 0.4.0-smoke.2
+ * Version: 0.4.0-acceptance.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,10 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-smoke.2' );
+define( 'BDC_KB_VERSION', '0.4.0-acceptance.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
-define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', true );
+define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
+define( 'BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD', true );
 define( 'BDC_KB_FILE', __FILE__ );
 define( 'BDC_KB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
@@ -50,6 +51,9 @@ if ( defined( 'BDC_KB_SPEC004_G220_SMOKE_BUILD' ) && BDC_KB_SPEC004_G220_SMOKE_B
 if ( defined( 'BDC_KB_SPEC004_G230_SMOKE_BUILD' ) && BDC_KB_SPEC004_G230_SMOKE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-knowledge-document-smoke.php';
 }
+if ( defined( 'BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD' ) && BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-real-content-acceptance.php';
+}
 
 \BDC\KnowledgeBase\Plugin::register();
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
@@ -60,4 +64,7 @@ if ( defined( 'BDC_KB_SPEC004_G220_SMOKE_BUILD' ) && BDC_KB_SPEC004_G220_SMOKE_B
 }
 if ( defined( 'BDC_KB_SPEC004_G230_SMOKE_BUILD' ) && BDC_KB_SPEC004_G230_SMOKE_BUILD ) {
 	\BDC\KnowledgeBase\Knowledge_Document_Smoke::register();
+}
+if ( defined( 'BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD' ) && BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD ) {
+	\BDC\KnowledgeBase\Real_Content_Acceptance::register();
 }

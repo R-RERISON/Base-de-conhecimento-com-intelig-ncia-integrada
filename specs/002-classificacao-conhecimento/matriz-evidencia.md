@@ -2,55 +2,67 @@
 
 | Gate | Evidência mínima | Estado |
 |---|---|---|
-| C-001 Profiling | JSON real, cobertura/cardinalidade/representação/overlaps | **PASS** — `0.2.0-profile.1`, 622 posts, 36 rows, read-only |
-| C-010 Primitive | decisão Taxonomy vs Meta por conceito do slice | **PASS** — Taxonomy API para 4 conceitos; sem migração automática |
-| G-001 Editorial | regressão SPEC-001 + zero write editorial | **NOT_RUN no runtime SPEC-002** |
-| G-030 Classification | contratos single/multi, empty/remove, diff, reread, compensação, legacy advisory | **DESENHADO / NOT_RUN** |
-| G-070 Segurança | capability/nonce/IDOR/mass assignment/XSS/scope | **DESENHADO / NOT_RUN** |
-| G-110 UI/UX | wp-admin, labels, foco, teclado, viewport, feedback | **DESENHADO / NOT_RUN** |
-| G-130 Lifecycle | package limpo, activation/deactivation e retirada de ferramentas temporárias | **NOT_RUN** |
-| Regressão SPEC-001 | Summary e seus gates essenciais continuam válidos | **NOT_RUN após código SPEC-002** |
+| C-001 Profiling | JSON real, cobertura/cardinalidade/representação/overlaps | **PASS** — 622 posts / 36 rows / read-only |
+| C-010 Primitive | decisão Taxonomy vs Meta por conceito | **PASS** — Taxonomy API para 4 conceitos; sem migração automática |
+| G-001 Editorial | zero write em título/post_content/_elementor_data | **PASS** — técnico + HTTP + browser |
+| G-030 Classification | single/multi, empty/remove, diff, reread, legacy advisory | **PASS** — `0.2.0-dev.3`, 20/20 |
+| B-006 Consistência | FAIL_SAFE + PARTIAL_FAILURE_CRITICAL | **PASS** — `0.2.0-dev.3` |
+| G-070 Segurança | method, nonce, post-bound nonce, allowlist, XSS, scope, capability, PRG | **PASS** — `0.2.0-dev.7`, 18/18 |
+| G-110 UI/UX | shell, labels, foco/teclado, narrow viewport, feedback | **PASS** — `0.2.0-dev.8`; min 492x660 |
+| Regressão SPEC-001 | Summary preservado nos writes de Classificação | **PASS** — técnico + HTTP + browser |
+| G-130 Lifecycle | package limpo + deactivate/reactivate + estado preservado | **PREPARADO / PENDENTE execução real do `0.2.0-rc.1`** |
 
-## Evidência C-001
+## Evidências finais S004
 
-Arquivo coletado: `bdc-kb-classification-profile-20260914-235424.json`.
+### Diagnóstico técnico — `0.2.0-dev.3`
 
-SHA-256: `f11356632ee2f5720c6399c38af01bb4d0f4342af7e6e57b049fe0e07dda556b`.
+- schema `1.0.1`;
+- 20 PASS / 0 FAIL;
+- G-030 PASS;
+- B-006 FAIL_SAFE PASS;
+- B-006 PARTIAL_FAILURE_CRITICAL PASS;
+- G-001 PASS;
+- regressão Summary PASS;
+- 8 termos + post fixture removidos;
+- resíduos: 0/0.
 
-Resumo:
+SHA-256 do JSON: `92861b28cff90fb1595f11d292f780e4b54d07c54e738dedcdf1d802221101f8`.
 
-- WordPress 6.9.4 / PHP 8.5.10;
-- 622 posts no escopo;
-- 36 linhas nos 11 stores perfilados;
-- nenhum write;
-- nenhum conteúdo editorial lido;
-- stores KB2Ops candidatos: 0 rows;
-- stores GRE observados: cobertura 0,96%–1,45%;
-- `service↔affected_service`: merge não autorizado;
-- `technologies↔systems_involved`: merge não autorizado;
-- audiência GRE↔KB2Ops: sem sobreposição observável.
+### Segurança HTTP — `0.2.0-dev.7`
 
-## Evidência C-010
+- schema `1.0.3`;
+- 18 PASS / 0 FAIL;
+- `GET` -> 405;
+- nonce ausente/inválido/post-bound;
+- payload e mass assignment;
+- XSS em term ID;
+- page/ID inexistente;
+- capability no handler real por negação assinada exclusiva de homologação;
+- POST válido -> 302 / `saved`;
+- estado editorial, legado e Summary preservados;
+- resíduos: 0 posts / 0 termos / 0 usuários.
 
-Primeiro slice:
+SHA-256 do JSON: `6f739f4b13dd3c941587fece4d170b2781987b992bd7ee96fab64465afa00fa2`.
 
-- `bdc_kb_audience` — multi;
-- `bdc_kb_responsible_team` — multi;
-- `bdc_kb_knowledge_type` — single;
-- `bdc_kb_catalog_item` — multi.
+Observação ambiental: roles reduzidas eram interceptadas por `/acesso-restrito/` antes de `admin-post.php`; por isso o ramo capability foi exercitado com instrumentação assinada, limitada à fixture e removida do RC.
 
-Todas via WordPress Taxonomy API, namespaced, `public=false`, `show_in_rest=false`, sem meta box/quick edit de assignment.
+### Browser acceptance — `0.2.0-dev.8`
 
-### Compatibilidade
+- Edge 153 / Windows;
+- viewport final e mínimo observado: 492x660;
+- 2 manual PASS / 0 manual FAIL;
+- 0 auto FAIL;
+- overall PASS;
+- shell wp-admin sem sidebar secundária;
+- quatro selects e cardinalidade correta;
+- feedback de sucesso;
+- PRG PASS;
+- Summary/legado/editorial preservados;
+- post + 7 termos removidos;
+- resíduos: 0/0.
 
-Legado é somente referência visual read-only. Não existe:
+SHA-256 do JSON: `308fd4bde646e4963457d7e3605f5871827d7d800c3d4f21378a13108f7822ea`.
 
-- seed automático;
-- auto-map textual;
-- fallback canônico;
-- dual-write;
-- migração destrutiva.
+## RC limpo
 
-## Regra
-
-Nenhum estado `NOT_RUN`, `FAIL`, `STALE` ou `NOT_CONFIGURED` pode ser promovido por inferência. C-001/C-010 liberam implementação; não promovem G-001/G-030/G-070/G-110/G-130.
+`0.2.0-rc.1` contém somente runtime permanente. Foram removidos runners técnico/HTTP/browser, flags de homologação e instrumentação force-deny. O único gate restante é G-130 em WordPress real.

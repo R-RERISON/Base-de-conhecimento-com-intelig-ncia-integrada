@@ -54,7 +54,7 @@
 - [x] T039C Aplicar surfaces/hierarquia à Knowledge List e contexto do artigo.
 - [x] T039D Refinar visual de Summary/Classificação sem alterar writers.
 - [x] T039E Smoke visual desktop real `0.3.0-dev.3` — PASS.
-- [ ] T039F Reflow/foco <=782px e ~492px — transferido para G-110 final.
+- [x] T039F Reflow/foco <=782px e ~492px — coberto pelo Browser Acceptance `0.3.0-dev.10`.
 
 **Gate DS-010: PASS — Runtime Foundation.**
 
@@ -92,27 +92,29 @@ Plano: `g110-workspace-browser-acceptance-plan.md`.
 - [x] T050C Implementar Histórico como projection read-only de `Review_Store::history()` — `0.3.0-dev.7`.
 - [x] T050C1 Smoke ambiental do Histórico no `0.3.0-dev.7` — PASS.
 - [x] T051 Não exibir score/AI Ready/progresso ou métricas não contratadas.
-- [ ] T052 Confirmar ambientalmente regressão Summary/Classificação, vocabulários e permanência no contexto no build final do G-110.
+- [ ] T052 Fechar regressão Summary/Classificação + permanência no contexto no build final do G-110. Summary PASS no dev.10; Classificação persiste no store, mas PRG perdeu `tab=classification`.
 - [x] T053A Implementar navegação de foco `ArrowLeft`/`ArrowRight`/`Home`/`End` entre tabs.
-- [x] T053B Browser real `dev.8/dev.9`: teclado, foco visível e semântica de link/Enter — PASS antes da interrupção do harness.
-- [ ] T054 Testar 1440px/1024px/782px/~492px e zero overflow horizontal no runner completo.
-- [ ] T055 Executar Browser Acceptance final com fixtures controladas e cleanup obrigatório.
-- [ ] T056 Validar `unreviewed -> in_review -> needs_changes -> approved` pela UI real.
-- [ ] T057 Validar `NO_CHANGE`, permission denied, note required e histórico consistente.
+- [x] T053B Browser real: teclado, foco visível e semântica de link/Enter — PASS.
+- [x] T054 1440px/1024px/782px/~492px e zero overflow horizontal — PASS no `0.3.0-dev.10`.
+- [x] T055A Executar Browser Acceptance `0.3.0-dev.10` com fixtures controladas e cleanup obrigatório — **21 browser PASS / 1 FAIL; 7/7 server PASS; cleanup zero**.
+- [x] T056 Validar `unreviewed -> in_review -> needs_changes -> approved` pela UI real — PASS no dev.10.
+- [x] T057 Validar `NO_CHANGE`, permission denied, note required e histórico consistente — PASS no dev.10.
 - [x] T058A `0.3.0-dev.8`: cleanup zero resíduos após exceção do harness.
 - [x] T058B Diagnosticar FAIL do dev.8: `form.submit is not a function`.
 - [x] T058C Implementar shim test-only no `0.3.0-dev.9`.
-- [x] T058D Rerun `0.3.0-dev.9`: **FAIL preservado**, mesma exceção; cleanup zero resíduos.
-- [x] T058E Diagnosticar que renomear `name="submit"` após load não restaurou de forma confiável o método da instância no browser real.
-- [x] T058F Remover shim ineficaz e corrigir o chamador para `HTMLFormElement.prototype.submit.call(form)` no `0.3.0-dev.10`.
-- [ ] T058G Rerun completo `0.3.0-dev.10`: exigir `browser_fail=0`, `server_fail=0`, `overall=PASS` e cleanup zero resíduos.
+- [x] T058D Rerun `0.3.0-dev.9`: FAIL preservado, mesma exceção; cleanup zero.
+- [x] T058E Remover shim ineficaz e corrigir o chamador para `HTMLFormElement.prototype.submit.call(form)` no `0.3.0-dev.10`.
+- [x] T058F Rerun `0.3.0-dev.10`: harness completo executou; único FAIL `G110-B10` por ausência de `tab=classification` no PRG.
+- [x] T058G Diagnosticar bug permanente localizado em `Classification_Admin::redirect()`.
+- [x] T058H Corrigir PRG de Classificação adicionando `tab=classification` — `0.3.0-dev.11`.
+- [ ] T058I Rerun completo `0.3.0-dev.11`: exigir `browser_fail=0`, `server_fail=0`, `overall=PASS` e cleanup zero resíduos.
 
 Evidências Browser Acceptance:
 
 - `evidencias/bdc-kb-g110-browser-acceptance-20260915-192838.json` — dev.8 FAIL preservado;
 - `evidencias/bdc-kb-g110-browser-acceptance-20260915-193517.json` — dev.9 FAIL preservado;
-- `evidencia-g110-dev8-submit-collision.md`;
-- `evidencia-g110-dev9-submit-collision-reproduzida.md`.
+- `evidencias/bdc-kb-g110-browser-acceptance-20260915-194552.json` — dev.10 **21/1 browser, 7/7 server, cleanup zero**;
+- `evidencia-g110-dev10-classification-prg.md`.
 
 Packages:
 
@@ -120,9 +122,10 @@ Packages:
 - `0.3.0-dev.7` — W-003 Histórico + teclado;
 - `0.3.0-dev.8` — Browser Acceptance, FAIL do harness;
 - `0.3.0-dev.9` — shim test-only, FAIL reproduzido;
-- `0.3.0-dev.10` — chamada direta ao método nativo do protótipo, rerun pendente.
+- `0.3.0-dev.10` — Browser Acceptance completo, único FAIL de PRG da Classificação;
+- `0.3.0-dev.11` — correção mínima de permanência na tab Classificação, rerun pendente.
 
-**Gate G-110: ACTIVE — NÃO APROVADO; aguardando rerun real completo do `0.3.0-dev.10`.**
+**Gate G-110: ACTIVE — NÃO APROVADO; aguardando rerun real completo do `0.3.0-dev.11`.**
 
 ## S006 — Lifecycle / fechamento
 
@@ -137,4 +140,4 @@ Packages:
 
 ## Regra
 
-G-110 continua aberto. Os `dev.8` e `dev.9` preservam FAIL real do harness, ambos com cleanup zero e sem evidência de regressão permanente. O `dev.10` altera somente a submissão do runner temporário para invocar diretamente o método nativo do `HTMLFormElement`. Nenhum novo domínio ou mudança de Store/Contract/Writer permanente é autorizado antes do PASS.
+G-110 continua aberto. O `dev.10` comprovou todo o fluxo funcional, segurança visual, responsividade e persistência canônica, mas revelou um único bug real de PRG: Classificação salvava e retornava sem `tab=classification`. O `dev.11` altera somente esse redirect e deve repetir o gate completo. Nenhum novo domínio é autorizado antes do PASS.

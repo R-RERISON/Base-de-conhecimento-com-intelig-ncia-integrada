@@ -72,13 +72,22 @@ O PASS valida tokens, surfaces e linguagem visual no runtime; NÃO aprova o layo
 - [x] T042 Allowlist exata de payload `target_state`/`note` implementada.
 - [x] T043 PRG implementado com statuses explícitos.
 - [x] T044 Runner HTTP temporário criado em `class-review-http-diagnostics.php`.
-- [ ] T045 Executar GET/nonce/mass-assignment/IDOR/payload inválido no ambiente real.
-- [ ] T046 Executar POST válido + reread + regressão SPEC-001/002.
-- [ ] T047 Confirmar cleanup zero resíduos.
+- [x] T045 Executar GET/nonce/mass-assignment/IDOR/payload inválido no ambiente real — PASS nos casos H02-H13 do `0.3.0-dev.4`.
+- [x] T045A Registrar evidência bruta do `0.3.0-dev.4` — `15 PASS / 7 FAIL`, cleanup zero resíduos.
+- [x] T045B Diagnosticar falha em bloco H14-H20 como incoerência de cache de Comments API entre loopback filho e processo pai do harness.
+- [x] T045C Implementar hardening test-only em `class-review-http-cache-coherence.php`, sem alterar writer/store permanentes.
+- [ ] T046 Reexecutar POST válido + reread + regressão SPEC-001/002 no `0.3.0-dev.5` e exigir H14-H20 PASS.
+- [x] T047 Confirmar cleanup zero resíduos no `0.3.0-dev.4`.
+- [ ] T048 Confirmar cleanup zero resíduos novamente no `0.3.0-dev.5`.
 
-Package: `0.3.0-dev.4`; documento `package-dev4-http.md`.
+Evidências:
 
-**Gate G-070: IMPLEMENTADO / AGUARDANDO EXECUÇÃO REAL.**
+- `evidencias/bdc-kb-review-http-security-20260915-155801.json`;
+- `evidencia-g070-dev4-cache-coherence.md`.
+
+Package de rerun: `0.3.0-dev.5`; documento `package-dev5-http-cache-coherence.md`.
+
+**Gate G-070: NÃO APROVADO — aguardando rerun real do `0.3.0-dev.5`.**
 
 ## S005 — UX / Browser Acceptance
 
@@ -104,4 +113,4 @@ Package: `0.3.0-dev.4`; documento `package-dev4-http.md`.
 
 ## Regra
 
-R-001, R-010, G-001, G-030 e DS-010 estão PASS. O writer HTTP permanente de Review e o runner G-070 estão implementados no `0.3.0-dev.4`; o próximo passo obrigatório é executar o JSON de segurança no ambiente real. O G-110 só abre após G-070 PASS e será responsável por convergir Summary, Classificação e Review para o Knowledge Workspace, evitando um terceiro bloco vertical.
+R-001, R-010, G-001, G-030 e DS-010 estão PASS. O `0.3.0-dev.4` comprovou a camada negativa de segurança e cleanup, mas não aprovou G-070 por sete falhas nas asserções pós-write. O `0.3.0-dev.5` corrige apenas a coerência de cache do harness e deve repetir o mesmo gate real. O G-110 só abre após `22 PASS / 0 FAIL / overall=PASS` e cleanup zero resíduos.

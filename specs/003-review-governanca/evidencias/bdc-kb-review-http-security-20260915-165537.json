@@ -1,0 +1,64 @@
+{
+    "schema_version": "1.0.0",
+    "mode": "temporary_review_http_security_fixture_only",
+    "generated_at": "2026-09-15T16:55:29+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.3.0-dev.5",
+        "multisite": false
+    },
+    "safety": {
+        "fixture_only": true,
+        "modifies_real_content": false,
+        "uses_real_admin_post": true,
+        "uses_signed_test_deny": true,
+        "cleanup_required": true
+    },
+    "tests": [
+        {"id":"R070-H01","status":"PASS","description":"Fixtures temporárias preparadas sem usar artigos reais."},
+        {"id":"R070-H02","status":"PASS","description":"GET no writer Review retorna HTTP 405."},
+        {"id":"R070-H03","status":"PASS","description":"POST sem nonce é rejeitado antes de qualquer evento."},
+        {"id":"R070-H04","status":"PASS","description":"Nonce inválido é rejeitado com zero write."},
+        {"id":"R070-H05","status":"PASS","description":"Nonce é vinculado ao post e não pode ser reutilizado em outro artigo."},
+        {"id":"R070-H06","status":"PASS","description":"Payload Review ausente é rejeitado."},
+        {"id":"R070-H07","status":"PASS","description":"Payload Review escalar é rejeitado."},
+        {"id":"R070-H08","status":"PASS","description":"Mass assignment/campo Review não autorizado é rejeitado."},
+        {"id":"R070-H09","status":"PASS","description":"Destino unreviewed explícito é rejeitado sem write."},
+        {"id":"R070-H10","status":"PASS","description":"Payload de estado malformado/XSS não é aceito como transição."},
+        {"id":"R070-H11","status":"PASS","description":"Post type page é rejeitado no handler real."},
+        {"id":"R070-H12","status":"PASS","description":"ID de post inexistente é rejeitado."},
+        {"id":"R070-H13","status":"PASS","description":"Negação assinada de edit_post na fixture atravessa admin-post e retorna forbidden sem write."},
+        {"id":"R070-H14","status":"PASS","description":"POST válido persiste in_review, confirma releitura e executa PRG."},
+        {"id":"R070-H15","status":"PASS","description":"Mesmo estado retorna no_change via PRG e não cria evento."},
+        {"id":"R070-H16","status":"PASS","description":"needs_changes sem justificativa falha antes da mutação."},
+        {"id":"R070-H17","status":"PASS","description":"Nota acima do limite é rejeitada via handler com zero write."},
+        {"id":"R070-H18","status":"PASS","description":"Decisão de reviewer exige edit_others_posts no handler/store real."},
+        {"id":"R070-H19","status":"PASS","description":"Transição válida para needs_changes é persistida via HTTP real."},
+        {"id":"R070-H20","status":"PASS","description":"Decisão approved válida persiste evento, ator e estado final via HTTP real."},
+        {"id":"R070-H21","status":"PASS","description":"Writer HTTP Review preserva editorial, Summary, Classificação e stores legados da fixture."},
+        {"id":"R070-H22","status":"PASS","description":"Cleanup remove posts, termos e eventos de Review sem resíduos."}
+    ],
+    "observations": {
+        "object_capability": {"http_code":302,"redirect_status":"forbidden","redirect_post_id_matches_fixture":true},
+        "valid_submit": {"http_code":302,"redirect_status":"saved","redirect_post_id_matches_fixture":true},
+        "reviewer_capability": {"http_code":302,"redirect_status":"forbidden","redirect_post_id_matches_fixture":true}
+    },
+    "cleanup": {
+        "setup_completed": true,
+        "residual_posts": 0,
+        "residual_terms": 0,
+        "residual_review_events": 0
+    },
+    "summary": {
+        "pass": 22,
+        "fail": 0,
+        "overall": "PASS",
+        "duration_ms": 8269
+    },
+    "limitations": [
+        "Runner temporário usa sslverify=false apenas no loopback local para evitar falso negativo de CA interna; não testa TLS.",
+        "FAIL_SAFE/PARTIAL_FAILURE_CRITICAL permanecem cobertos pelos unitários determinísticos da store.",
+        "UI/Browser Acceptance pertence ao Gate G-110 e não é validada aqui."
+    ]
+}

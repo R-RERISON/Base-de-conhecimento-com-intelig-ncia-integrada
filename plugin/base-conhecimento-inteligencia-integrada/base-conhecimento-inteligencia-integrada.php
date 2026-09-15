@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
- * Description: Base de Conhecimento com Summary narrativo, Classificação e Review & Governança governados.
- * Version: 0.4.0-profile.1
+ * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança e Content Extractor determinístico.
+ * Version: 0.4.0-dev.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-profile.1' );
-define( 'BDC_KB_SPEC004_PROFILE_BUILD', true );
+define( 'BDC_KB_VERSION', '0.4.0-dev.1' );
+define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_FILE', __FILE__ );
 define( 'BDC_KB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
@@ -27,6 +27,13 @@ require_once BDC_KB_DIR . 'includes/class-classification-admin.php';
 require_once BDC_KB_DIR . 'includes/class-review-contract.php';
 require_once BDC_KB_DIR . 'includes/class-review-store.php';
 require_once BDC_KB_DIR . 'includes/class-review-admin.php';
+require_once BDC_KB_DIR . 'includes/class-content-normalizer.php';
+require_once BDC_KB_DIR . 'includes/class-shortcode-inspector.php';
+require_once BDC_KB_DIR . 'includes/class-legacy-html-adapter.php';
+require_once BDC_KB_DIR . 'includes/class-content-source.php';
+require_once BDC_KB_DIR . 'includes/class-elementor-adapter.php';
+require_once BDC_KB_DIR . 'includes/class-gutenberg-adapter.php';
+require_once BDC_KB_DIR . 'includes/class-content-extractor.php';
 require_once BDC_KB_DIR . 'includes/class-admin-page.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
 

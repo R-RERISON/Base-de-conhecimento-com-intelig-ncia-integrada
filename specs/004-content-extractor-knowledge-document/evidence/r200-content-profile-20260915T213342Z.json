@@ -1,0 +1,145 @@
+{
+    "schema_version": "1.0.0",
+    "mode": "temporary_spec004_read_only_corpus_profile",
+    "generated_at": "2026-09-15T21:33:42+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-profile.1",
+        "multisite": false
+    },
+    "safety": {
+        "read_only_design": true,
+        "exports_editorial_content": false,
+        "exports_post_ids": false,
+        "exports_titles_or_urls": false,
+        "executes_shortcodes": false,
+        "renders_elementor": false,
+        "renders_dynamic_blocks": false,
+        "persists_progress_or_results": false,
+        "editorial_fingerprint_before": "edda9bdd683af6a3914f4460fe9c7c778c9d69ca265f7b81583c5406417a9744",
+        "editorial_fingerprint_after": "edda9bdd683af6a3914f4460fe9c7c778c9d69ca265f7b81583c5406417a9744",
+        "editorial_fingerprint_equal": true,
+        "changed_posts_during_run": 0,
+        "corpus_count_before": 622,
+        "corpus_count_after": 622
+    },
+    "corpus": {
+        "total_posts": 622,
+        "by_status": {
+            "publish": 606,
+            "draft": 11,
+            "pending": 3,
+            "private": 2
+        },
+        "source_kinds": {
+            "mixed_elementor_blocks": 6,
+            "elementor": 74,
+            "gutenberg": 3,
+            "legacy_html": 496,
+            "shortcode_plain": 10,
+            "plain_text": 31,
+            "empty": 2
+        },
+        "source_flags": {
+            "has_elementor": 80,
+            "has_gutenberg": 9,
+            "has_html": 579,
+            "has_shortcode": 61,
+            "has_plain_text": 620
+        }
+    },
+    "elementor": {
+        "present": 80,
+        "valid_json": 39,
+        "invalid_json": 41,
+        "unexpected_meta_type": 0,
+        "posts_without_known_semantic_fields": 0,
+        "widget_types": {
+            "text-editor": 39,
+            "shortcode": 1
+        },
+        "semantic_field_hits": {
+            "editor": 39,
+            "shortcode": 1
+        },
+        "unknown_semantic_like_keys": {
+            "content_width": 4
+        }
+    },
+    "gutenberg": {
+        "posts": 9,
+        "block_names": {
+            "core/freeform": 46,
+            "core/heading": 17,
+            "core/paragraph": 14,
+            "core/list": 8,
+            "core/table": 3
+        },
+        "structural_blocks": {
+            "headings": 17,
+            "lists": 8,
+            "tables": 3,
+            "images": 0,
+            "links": 154,
+            "code_blocks": 0
+        }
+    },
+    "shortcodes": {
+        "tags": {
+            "table": 75,
+            "n2": 8,
+            "wpt": 4,
+            "caption": 3,
+            "aaaammdd": 2,
+            "dbc_table": 2,
+            "faq_wd": 2,
+            "bdc_resumo_executivo": 2,
+            "seu": 1,
+            "tipo": 1,
+            "a3": 1,
+            "hkey_local_machinesystemcurrentcontrolsetserviceswindefend": 1,
+            "hkey_local_machinesystemcurrentcontrolsetserviceswscsvc": 1,
+            "hkey_local_machinesystemcurrentcontrolsetserviceswdnissvc": 1,
+            "hkey_local_machinesystemcurrentcontrolsetservicessense": 1,
+            "video": 1,
+            "hkey_current_usersoftwaremicrosoftoffice16": 1,
+            "banco": 1
+        },
+        "total": 108
+    },
+    "raw_post_content_structure": {
+        "headings": 1020,
+        "lists": 3700,
+        "tables": 513,
+        "images": 4595,
+        "links": 10208,
+        "code_blocks": 83,
+        "shortcodes": 84
+    },
+    "sizes_bytes": {
+        "post_content": {
+            "count": 622,
+            "total": 5101176,
+            "p50": 3929,
+            "p95": 28662,
+            "max": 156636
+        },
+        "elementor_data": {
+            "count": 622,
+            "total": 1610940,
+            "p50": 0,
+            "p95": 15419,
+            "max": 110029
+        }
+    },
+    "performance": {
+        "runtime_ms": 1253,
+        "peak_memory_bytes": 29360128
+    },
+    "limitations": [
+        "No shortcode, Elementor widget, dynamic block or theme rendering is executed.",
+        "Fallback candidates are heuristic: Elementor JSON present but no known semantic field was found.",
+        "A changed fingerprint can also indicate a concurrent editorial change during the profiling window."
+    ]
+}

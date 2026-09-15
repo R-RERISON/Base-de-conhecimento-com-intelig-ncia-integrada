@@ -89,12 +89,13 @@ Plano: `g110-workspace-browser-acceptance-plan.md`.
 - [x] T050A Preservar writers atuais de Summary e Classificação sem mudança de persistência.
 - [x] T050B Integrar Review como tab própria usando `Review_Admin`/`Review_Store`/`Review_Contract`.
 - [x] T050B1 Smoke ambiental inicial do `0.3.0-dev.6` — PASS por captura + confirmação do operador; evidência `evidencia-g110-dev6-smoke.md`.
-- [x] T050C Implementar Histórico como projection read-only de `Review_Store::history()` — `0.3.0-dev.7`, homologação ambiental pendente.
+- [x] T050C Implementar Histórico como projection read-only de `Review_Store::history()` — `0.3.0-dev.7`.
+- [x] T050C1 Smoke ambiental do Histórico no `0.3.0-dev.7` — PASS; eventos, ator, timestamp, estado final e nota confirmados em captura real. Evidência `evidencia-g110-dev7-history-smoke.md`.
 - [x] T051 Não exibir score/AI Ready/progresso ou métricas não contratadas.
 - [ ] T052 Confirmar ambientalmente regressão Summary/Classificação, vocabulários e permanência no contexto no build final do G-110.
 - [x] T053A Implementar navegação de foco `ArrowLeft`/`ArrowRight`/`Home`/`End` entre tabs — `0.3.0-dev.7`.
 - [ ] T053B Validar teclado, foco, labels e feedback no browser real.
-- [ ] T054 Testar 1440px/1024px/782px/~492px e zero overflow horizontal.
+- [ ] T054 Testar 1440px/1024px/782px/~492px e zero overflow horizontal. Desktop amplo possui PASS visual inicial por captura do dev.7; viewports restantes pendentes.
 - [ ] T055 Executar Browser Acceptance final com fixtures controladas e cleanup obrigatório.
 - [ ] T056 Validar `unreviewed -> in_review -> needs_changes -> approved` pela UI real.
 - [ ] T057 Validar `NO_CHANGE`, permission denied, note required e histórico consistente.
@@ -103,9 +104,9 @@ Plano: `g110-workspace-browser-acceptance-plan.md`.
 Packages:
 
 - `0.3.0-dev.6` — W-001/W-002, smoke ambiental inicial PASS;
-- `0.3.0-dev.7` — W-003 Histórico + teclado, documento `package-dev7-history-keyboard.md`.
+- `0.3.0-dev.7` — W-003 Histórico + teclado; Histórico com PASS ambiental inicial.
 
-**Gate G-110: ACTIVE — W-001/W-002 PASS ambiental inicial; W-003/teclado implementados no dev.7 e aguardando homologação final.**
+**Gate G-110: ACTIVE — W-001/W-002/W-003 PASS ambiental inicial; teclado, responsividade estreita, regressão final e Browser Acceptance ainda pendentes.**
 
 ## S006 — Lifecycle / fechamento
 
@@ -120,4 +121,4 @@ Packages:
 
 ## Regra
 
-G-110 está aberto, mas não está aprovado. O `0.3.0-dev.6` comprovou o shell real do Workspace. O `0.3.0-dev.7` adiciona somente Histórico read-only e navegação por teclado, sem modificar stores canônicos. O próximo gate depende de homologação em browser real, responsividade, transições e cleanup.
+G-110 está aberto, mas não está aprovado. O `0.3.0-dev.7` já comprovou no ambiente real o shell, Review e Histórico read-only. O próximo passo é exclusivamente Browser Acceptance final: teclado/foco, viewports estreitos, regressão Summary/Classificação, cenários negativos e cleanup. Nenhum novo domínio deve ser adicionado antes do fechamento do gate.

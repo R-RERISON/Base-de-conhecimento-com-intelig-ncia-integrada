@@ -1,8 +1,8 @@
 # SPEC-004 — Content Extractor e Knowledge Document
 
-**Status:** ATIVA — R-200 PASS / R-210 PASS / G-220 IMPLEMENTED-LOCAL-PASS  
+**Status:** ATIVA — R-200 PASS / R-210 PASS / G-220 IMPLEMENTED-LOCAL-PASS / ENV-SMOKE-PENDING  
 **Baseline de entrada:** `0.3.0-rc.1`  
-**Build de desenvolvimento:** `0.4.0-dev.1`  
+**Package ambiental ativo:** `0.4.0-smoke.1`  
 **Pré-requisito:** SPEC-003 concluída — PASS.  
 **Contrato ativo de extração:** `extraction-contract-v1.1.md` — `FROZEN v1.1.0`.
 
@@ -10,16 +10,14 @@
 
 Busca lexical, busca semântica, IA assistida, chunks e embeddings precisam consumir uma representação semântica confiável do conteúdo editorial. Usar diretamente HTML, `_elementor_data` ou blocos serializados como conhecimento introduz ruído, instabilidade, detalhes de layout e risco de execução de componentes terceiros.
 
-Ao mesmo tempo, o R-200 mostrou uma base fortemente histórica/legada, enquanto **Elementor é o editor operacional padrão atual da equipe**. Portanto a arquitetura precisa resolver dois problemas diferentes sem misturá-los:
+R-200 também mostrou uma base fortemente histórica/legada, enquanto **Elementor é o editor operacional padrão atual da equipe**. Portanto a arquitetura resolve dois problemas diferentes sem misturá-los:
 
 1. extrair conhecimento de qualquer fonte histórica com segurança;
 2. permitir futura convergência editorial controlada para Elementor.
 
-## 2. Princípio arquitetural
+## 2. Planos independentes
 
-Existem dois planos independentes.
-
-### 2.1 Knowledge plane — read-only
+### Knowledge plane — read-only
 
 - Content Extractor;
 - Knowledge Document;
@@ -28,19 +26,21 @@ Existem dois planos independentes.
 
 Este plano é editor-independent e nunca altera a fonte editorial.
 
-### 2.2 Editorial migration plane — explícito
+### Editorial migration plane — explícito
 
-- projection plan para Elementor;
-- migration administrativa;
+- Projection Plan;
+- Elementor Gateway;
+- dry-run;
 - canário/lotes;
 - journal/rollback;
+- stale-source guard;
 - validação no editor/frontend.
 
-Este plano não faz parte do efeito colateral de leitura, instalação, activation ou update.
+Este plano não é efeito colateral de leitura, instalação, activation ou update.
 
 ## 3. Resultado esperado
 
-### Content Extractor read-only
+### Content Extractor
 
 - identifica flags/fontes efetivas;
 - extrai Elementor, Gutenberg, HTML legado e plain text;
@@ -59,33 +59,27 @@ Este plano não faz parte do efeito colateral de leitura, instalação, activati
 - não depende de Elementor como formato interno;
 - não exige storage durável sem evidência.
 
-### Elementor normalization futura
+### Normalização Elementor futura
 
-- todos os posts elegíveis convergem para `native`, `projectable/migrated` ou exceção formal;
-- writer separado do extractor;
-- versão do Elementor explicitamente homologada;
-- dry-run, stale-source guard, canário e rollback obrigatórios.
+Todo post elegível deverá convergir para:
 
-### Production readiness
-
-- homologação é uma cópia da produção, mas diferenças futuras devem ser detectadas por preflight;
-- migrations de plugin/schema e migrations editoriais são categorias distintas;
-- migration editorial nunca roda automaticamente na ativação/update.
+- Elementor nativo válido; ou
+- projection/migration aprovada; ou
+- exceção formal `review_required`/`blocked` com motivo rastreável.
 
 ## 4. Invariantes constitucionais
 
-A execução de extração/projeção de conhecimento **NUNCA** pode, como efeito colateral:
+A extração/projeção de conhecimento **NUNCA** pode, como efeito colateral:
 
 - escrever em `post_content`;
 - escrever em `_elementor_data`;
-- alterar `post_status`;
-- alterar data editorial/publicação;
-- criar revisão editorial;
-- publicar ou atualizar post;
+- alterar `post_status` ou datas editoriais;
+- criar revisão;
+- publicar/atualizar post;
 - executar shortcodes/widgets arbitrários;
-- renderizar dynamic blocks como caminho padrão;
-- transformar Knowledge Document em segundo CMS;
-- depender de IA, Foundry, vetor ou serviço externo.
+- renderizar dynamic blocks por padrão;
+- depender de IA/Foundry/vetor/rede externa;
+- transformar Knowledge Document em segundo CMS.
 
 Além disso:
 
@@ -104,11 +98,11 @@ Além disso:
 7. fallback fail-soft entre representações permitidas;
 8. renderização completa somente com autorização futura baseada em evidência.
 
-`ext-dom` é otimização de parsing, não dependência rígida: há fallback estrutural determinístico quando `DOMDocument` não estiver disponível.
+`ext-dom` é otimização, não dependência rígida. Sem `DOMDocument`, o Legacy adapter usa fallback estrutural determinístico e emite warning.
 
 ## 6. Readiness Elementor
 
-A saída intermediária do extractor inclui:
+A saída intermediária inclui:
 
 ```text
 elementor_compatibility
@@ -123,11 +117,11 @@ Estados:
 - `review_required`;
 - `blocked`.
 
-Este diagnóstico não grava `_elementor_data` e não acopla o Knowledge Document ao editor.
+Este diagnóstico não grava Elementor e não acopla o Knowledge Document ao editor.
 
 Contrato: `elementor-normalization-contract-v1.md`.
 
-## 7. Knowledge Document — shape mínimo provisório
+## 7. Knowledge Document — shape provisório
 
 ```text
 schema_version
@@ -157,37 +151,30 @@ extraction
   warnings[]
 ```
 
-Restrições:
-
-- nenhum HTML/JSON bruto é obrigatório no documento canônico;
-- conteúdo derivado mantém ordem determinística;
-- campos puramente visuais não poluem a projeção;
-- IDs Elementor não são semântica do Knowledge Document;
-- Summary, Classificação e Review continuam com owners próprios.
-
 O schema final/canonicalização pertence ao G-230.
 
 ## 8. R-200 — descoberta ambiental
 
-Profiler executado sobre 622 posts, sem mutação editorial.
+Profiler read-only executado sobre 622 posts.
 
 Principais achados:
 
-- 79,74% classificados estatisticamente como `legacy_html`;
-- Elementor presente em 80 posts: 39 JSON válidos / 41 inválidos;
-- Gutenberg presente em 9 posts;
-- widgets confirmados: `text-editor` e `shortcode`;
-- blocos confirmados: `core/freeform`, `core/heading`, `core/paragraph`, `core/list`, `core/table`;
-- shortcodes textuais continham falsos positivos por colchetes técnicos;
-- `post_content` máximo observado: 156.636 B;
-- `_elementor_data` máximo: 110.029 B;
-- runtime do profiler: 1.253 ms; peak ~28 MiB.
+- 79,74% `legacy_html` na classificação estatística;
+- Elementor presente em 80: 39 JSON válidos / 41 inválidos;
+- Gutenberg presente em 9;
+- widgets Elementor confirmados: `text-editor` e `shortcode`;
+- blocos: `core/freeform`, `core/heading`, `core/paragraph`, `core/list`, `core/table`;
+- shortcode detection textual continha falsos positivos por colchetes técnicos;
+- `post_content` max 156.636 B;
+- `_elementor_data` max 110.029 B;
+- profiler 1.253 ms / peak ~28 MiB;
+- fingerprint before/after idêntico, 0 posts alterados, corpus 622 → 622.
 
-Esses dados descrevem o legado existente, mas não definem a direção editorial futura. A direção operacional permanece Elementor.
+Esses dados descrevem o legado; não redefinem o padrão editorial futuro, que permanece Elementor.
 
-## 9. G-220 — implementação
+## 9. G-220 — Content Extractor implementado
 
-Build `0.4.0-dev.1` contém serviços sem hooks/jobs automáticos:
+Componentes permanentes:
 
 - `Content_Normalizer`;
 - `Shortcode_Inspector`;
@@ -197,35 +184,58 @@ Build `0.4.0-dev.1` contém serviços sem hooks/jobs automáticos:
 - `Gutenberg_Adapter`;
 - `Content_Extractor`.
 
-Profiler temporário permanece no source por rastreabilidade, porém `BDC_KB_SPEC004_PROFILE_BUILD=false`; sua UI/runner não são registrados no build dev.
-
 Validação local:
 
-- PHP lint: PASS;
-- 14/14 unit tests SPEC-004: PASS;
-- zero-write verificado após cada caso de teste;
-- repetibilidade: PASS;
-- teste local executado também sem `DOMDocument`, validando o fallback de portabilidade.
+- PHP lint PASS;
+- 14/14 unit tests PASS;
+- zero-write após cada cenário;
+- repetibilidade PASS;
+- fallback sem `DOMDocument` PASS.
 
 Evidência: `g220-local-validation.md`.
 
-G-220 ainda exige smoke no WordPress de homologação antes do fechamento ambiental.
+## 10. Package ambiental `0.4.0-smoke.1`
 
-## 10. Produção e migrations
+Finalidade exclusiva: fechar G-220 no WordPress real de homologação.
+
+Flags:
+
+- `BDC_KB_SPEC004_PROFILE_BUILD=false`;
+- `BDC_KB_SPEC004_SMOKE_BUILD=true`.
+
+O package contém um runner temporário `Content_Extractor_Smoke`, restrito a `manage_options`, POST+nonce, sem persistência ou exportação de conteúdo editorial.
+
+Validação do ZIP:
+
+- PHP lint antes/depois de extrair: 20/20 PASS;
+- JS syntax PASS;
+- ZIP integrity PASS;
+- source parity dos 9 arquivos novos/alterados: 9/9 PASS;
+- 14/14 unit tests executados contra os arquivos extraídos do próprio ZIP.
+
+SHA-256:
+
+`3dad9f5f7c01e7970d314a0d0788756ad694cc9f3b9327a2834ead90b86e4c8f`
+
+Documento: `package-smoke1.md`.
+
+O runner e sua flag são temporários e não podem chegar ao RC/produção.
+
+## 11. Produção e migrations
 
 Contrato: `production-rollout-contract-v1.md`.
 
-Categorias separadas:
+Categorias distintas:
 
 1. runtime code upgrade;
 2. plugin-state/schema migration;
 3. editorial/content migration.
 
-A categoria 3 nunca é automática. Fluxo obrigatório futuro:
+A categoria 3 nunca é automática. Fluxo obrigatório:
 
 `preflight → dry-run → canário → batch → validação → rollback window`
 
-Versões independentes devem existir quando aplicável:
+Versões independentes quando aplicável:
 
 - plugin version;
 - schema version;
@@ -233,15 +243,15 @@ Versões independentes devem existir quando aplicável:
 - Elementor projection schema version;
 - migration plan version.
 
-## 11. Elementor writer futuro
+## 12. Elementor writer futuro
 
 Writer editorial não está autorizado no G-220.
 
-Quando implementado, ficará atrás de `Elementor_Gateway` version-gated, preferencialmente usando o lifecycle oficial do Document do Elementor. Escrita direta dispersa em metas internas do Elementor fica proibida por padrão.
+Quando implementado, ficará atrás de `Elementor_Gateway` version-gated, preferencialmente usando o lifecycle oficial do Document do Elementor. Escrita direta dispersa em metas internas fica proibida por padrão.
 
 Antes de writer:
 
-- G-220 estável;
+- G-220 ambiental fechado;
 - G-230 concluído;
 - G-240 aprovado;
 - production preflight;
@@ -250,48 +260,55 @@ Antes de writer:
 - canário;
 - matriz de compatibilidade Elementor.
 
-## 12. Gates
+## 13. Gates
 
-### R-200 — Current State
+### R-200
 
 **PASS.**
 
-### R-210 — Extraction Contract
+### R-210
 
-**PASS.** `v1.0.0` + amendment compatível `v1.1.0`.
+**PASS.** `v1.0.0` + amendment `v1.1.0`.
 
-### G-220 — Extractor determinístico
+### G-220
 
-**IMPLEMENTED / LOCAL PASS.** Falta smoke ambiental do build `0.4.0-dev.1`.
+**IMPLEMENTED / LOCAL PASS / ENV SMOKE PENDING.**
 
-### G-230 — Knowledge Document
+PASS ambiental exige no smoke:
 
-Bloqueado até smoke G-220; depois, schema/hash/canonicalização.
+- fingerprint equal;
+- changed posts = 0;
+- corpus count unchanged;
+- extractor errors = 0;
+- throwables = 0.
 
-### G-240 — Real Content Acceptance
+### G-230
 
-Validação real representativa com prova de zero mutação.
+Bloqueado até G-220 ambiental; depois schema/hash/canonicalização.
 
-### G-245 — Elementor Normalization & Production Readiness
+### G-240
 
-Planejado. Exige preflight, projection plan, gateway, journal/rollback, stale-source guard, dry-run e canário.
+Real Content Acceptance com prova de zero mutação.
 
-### G-250 — Lifecycle / package
+### G-245
 
-Somente após remover instrumentação temporária, validar clean install/update/deactivate/activate, regressão das SPECs anteriores e package final.
+Elementor Normalization & Production Readiness: preflight, projection plan, gateway, journal/rollback, stale-source, dry-run e canário.
 
-## 13. Fora de escopo neste momento
+### G-250
 
-- índice lexical;
-- chunks;
-- embeddings/MariaDB Vector;
+Cleanup de runners temporários, clean install/update/deactivate/activate, regressão e package final.
+
+## 14. Fora de escopo agora
+
+- índice lexical/chunks/embeddings;
+- MariaDB Vector;
 - Azure Foundry/RAG;
 - IA para reparar parsing;
 - IA para migrar/reescrever artigos;
 - migration editorial automática;
-- persistência durável de Knowledge Document sem consumidor que a justifique.
+- storage durável de Knowledge Document sem consumidor que justifique.
 
-## 14. Definition of Done
+## 15. Definition of Done
 
 A SPEC-004 termina quando existir:
 
@@ -300,4 +317,4 @@ A SPEC-004 termina quando existir:
 - aceitação em conteúdo real;
 - zero mutação por leitura comprovada;
 - estratégia segura de produção;
-- caminho de convergência Elementor explicitamente governado, sem transformar o plugin em CMS e sem migration editorial implícita.
+- caminho de convergência Elementor governado, reversível e separado do CMS/editor.

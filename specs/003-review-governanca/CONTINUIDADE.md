@@ -6,7 +6,7 @@
 - SPEC-002: concluída, baseline `0.2.0-rc.1`.
 - UX-001: baseline v1 congelada; UI as Code v0.2 é a referência executável.
 - addendum de consumo: `ux/001-product-experience-knowledge-workspace/heritage-addendum-public-summary-v1.md`.
-- SPEC-003: **R-001 PASS / R-010 PASS / S003 LOCAL PASS**.
+- SPEC-003: **R-001 PASS / R-010 PASS / G-001 PASS / G-030 local PASS**.
 
 ## Evidência do ambiente real
 
@@ -44,39 +44,54 @@ Decisões principais:
 - sem migração/dual-read/dual-write legado;
 - `AI Ready` e `_kb2ops_include_ai` permanecem fora do domínio.
 
-## Runtime mínimo implementado
+## Runtime mínimo
 
 Arquivos permanentes:
 
 - `class-review-contract.php`;
 - `class-review-store.php`.
 
-Evidência:
+Evidência local:
 
 - unitários: **PASS 19/19**;
-- PHP lint: **PASS 10/10**;
-- G-030 local: PASS;
-- package: `0.3.0-dev.1`;
-- SHA-256: `632d2e5e56a7d89abd513f3f4b0b7f75f1c20a8dbd05e6ee383869489cf00acd`.
+- G-030 determinístico local: PASS.
 
-O package ainda NÃO possui handler ou UI de Review. Esse comportamento é intencional: primeiro validamos que a nova base permanente não causa regressão na instalação real.
+## Smoke ambiental `0.3.0-dev.1`
+
+O operador confirmou o smoke completo com a resposta `funcionou, pode seguir` após validar ativação, Base de Conhecimento, listagem/artigo, Summary/Classificação e ausência de profiler/UI Review.
+
+Documento: `evidencia-smoke-dev1-s003.md`.
+
+**G-001: PASS.**
+
+## Build ativo para integração ambiental
+
+Package: `0.3.0-dev.2`  
+SHA-256: `915e2806f63c677fd2afe1bd60e7d0965f1c8667abb43a14c58ca53c7478e9c1`
+
+Tooling temporário:
+
+- `class-review-diagnostics.php`;
+- capability `manage_options`;
+- POST + nonce;
+- cria somente 1 post, 1 page e 4 termos de fixture;
+- exercita eventos `bdc_kb_review_event` reais;
+- verifica preservação de editorial, Summary, Classificação e markers legados da fixture;
+- injeta um evento malformado somente na fixture para comprovar erro explícito de integridade;
+- cleanup no `finally`;
+- não toca posts reais.
+
+Documento: `package-dev2-integration.md`.
 
 ## Próximo passo exato
 
-Executar smoke ambiental da `0.3.0-dev.1`:
-
-1. substituir o build de profiling pelo `0.3.0-dev.1`;
-2. ativar sem fatal;
-3. abrir Base de Conhecimento;
-4. abrir listagem e um artigo;
-5. confirmar Summary e Classificação íntegros;
-6. confirmar ausência de painel de profiling e ausência de UI Review nesta build.
-
-Após smoke PASS:
-
-1. promover G-001 ambiental;
-2. preparar tooling temporário para exercitar Review Store na Comments API real com fixture e cleanup;
-3. somente depois abrir handler HTTP G-070 e UI G-110.
+1. substituir `0.3.0-dev.1` por `0.3.0-dev.2`;
+2. abrir **Base de Conhecimento** como administrador;
+3. clicar **Executar diagnóstico Review/Governança e gerar JSON**;
+4. retornar `bdc-kb-review-diagnostics-*.json`;
+5. exigir `17 PASS / 0 FAIL / overall=PASS`;
+6. exigir `residual_posts=0`, `residual_terms=0`, `residual_review_events=0`;
+7. somente depois iniciar S004 / writer HTTP permanente e Gate G-070.
 
 ## UX / valor preservado
 
@@ -85,7 +100,7 @@ A tela histórica de artigo com **Resumo Executivo lateral** foi registrada como
 ## Proibições mantidas
 
 - não alterar `post_status` por decisão de governança;
-- não escrever `post_content` ou `_elementor_data`;
+- não escrever `post_content` ou `_elementor_data` de posts reais;
 - não criar score;
 - não criar `AI Ready`;
 - não duplicar estado em meta + histórico;
@@ -96,6 +111,6 @@ A tela histórica de artigo com **Resumo Executivo lateral** foi registrada como
 
 - R-001: **PASS**.
 - R-010: **PASS**.
-- G-030: **PASS local**.
-- G-001: **SMOKE AMBIENTAL PENDENTE**.
+- G-001: **PASS**.
+- G-030: **PASS local / integração ambiental T039 pendente**.
 - G-070/G-110/G-130: bloqueados pela sequência normal.

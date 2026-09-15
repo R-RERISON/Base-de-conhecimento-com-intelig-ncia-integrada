@@ -1,6 +1,6 @@
 # Design System v1 — UX-001
 
-**Status:** ESPECIFICAÇÃO FECHADA / componentização Figma em andamento  
+**Status:** ESPECIFICAÇÃO FECHADA / implementação UI as Code ativa  
 **Origem:** contratos atuais + Heritage Pack KB2Ops.
 
 ## 1. Foundations
@@ -8,9 +8,9 @@
 ### Grid e largura
 
 - grid lógico de 12 colunas em desktop;
-- largura de conteúdo administrativo legível; evitar full-width sem necessidade;
+- largura de conteúdo administrativo legível;
 - gutter base 24px;
-- spacing scale: `4, 8, 12, 16, 24, 32, 40, 48`;
+- spacing: `4, 8, 12, 16, 24, 32, 40, 48`;
 - breakpoint crítico WordPress: `782px`;
 - Context Panel opcional apenas em desktop largo.
 
@@ -22,7 +22,7 @@
 
 ### Elevação
 
-Sombras discretas e raras. Bordas definem estrutura; sombra só reforça sobreposição ou agrupamento importante.
+Bordas definem estrutura; sombra discreta só reforça agrupamento relevante.
 
 ## 2. Tokens de cor
 
@@ -59,7 +59,7 @@ Sombras discretas e raras. Bordas definem estrutura; sombra só reforça sobrepo
 
 ## 3. Tipografia
 
-No runtime WordPress, usar stack administrativa compatível com o ambiente. No Figma, usar Inter como proxy visual consistente.
+No runtime WordPress, usar stack administrativa compatível com o ambiente. No protótipo UI as Code, usar `Inter, Segoe UI, Roboto, Arial, sans-serif`, sem exigir webfont externa.
 
 Hierarquia:
 
@@ -71,14 +71,27 @@ Hierarquia:
 - Label: 13–14 semibold;
 - Meta/helper: 12–13 regular.
 
-Regras:
+## 4. Design System como código
 
-- label explícito sempre;
-- placeholder não substitui label;
-- caixa alta apenas para eyebrow/overline curto;
-- texto operacional prioriza legibilidade sobre branding.
+Os tokens devem existir como CSS Custom Properties no protótipo e posteriormente ser traduzidos para o CSS do plugin.
 
-## 4. Componentes canônicos
+Exemplos canônicos:
+
+- `--brand-navy`;
+- `--blue`;
+- `--bg`;
+- `--surface`;
+- `--surface-soft`;
+- `--text`;
+- `--muted`;
+- `--border`;
+- `--success`, `--warning`, `--danger`;
+- `--radius`;
+- `--focus`.
+
+Não há dependência de Tailwind, Bootstrap, npm ou biblioteca externa.
+
+## 5. Componentes canônicos
 
 ### Navegação
 
@@ -129,9 +142,7 @@ Regras:
 - Permission State;
 - Read-only State.
 
-## 5. Estados obrigatórios
-
-Todo componente interativo relevante deve prever:
+## 6. Estados obrigatórios
 
 - default;
 - hover;
@@ -142,47 +153,36 @@ Todo componente interativo relevante deve prever:
 - success quando aplicável;
 - read-only quando aplicável.
 
-## 6. Data density
+## 7. Data density
 
 ### Curadoria
 
-Preferência por densidade média-alta:
-
 - tabelas/listas para conjuntos grandes;
 - cards apenas para agrupamento ou resumo;
-- metadata secundária não deve competir com título/ação;
-- linha de tabela deve suportar leitura rápida e navegação por teclado.
+- metadata secundária não compete com título/ação;
+- linha de tabela suporta leitura rápida e teclado.
 
 ### Workspace
 
 - uma tarefa principal por domínio ativo;
-- até duas colunas em formulários desktop;
+- até duas colunas em desktop;
 - uma coluna <=782px;
 - painel lateral nunca reduz o formulário abaixo de largura confortável.
 
-## 7. Semântica de status
+## 8. Semântica de status
 
-Status sempre combina pelo menos dois sinais entre:
+Status combina pelo menos dois sinais entre texto, ícone, forma/badge e cor. Vermelho/verde nunca são a única diferenciação.
 
-- texto;
-- ícone;
-- forma/badge;
-- cor.
-
-Não usar vermelho/verde como única diferenciação.
-
-## 8. Acessibilidade
+## 9. Acessibilidade
 
 - WCAG AA para texto/controles relevantes;
 - foco perceptível;
-- targets adequados;
 - ordem DOM acompanha ordem visual;
 - tabs operáveis por teclado;
 - mensagens de erro associadas ao controle;
-- icon-only com nome acessível;
-- helper text não contém informação crítica exclusivamente visual.
+- icon-only com nome acessível.
 
-## 9. Padrões do Knowledge Workspace
+## 10. Padrões do Knowledge Workspace
 
 ### Context Header
 
@@ -190,7 +190,7 @@ Título, ID, contexto editorial e ações secundárias.
 
 ### Tabs
 
-Decisão v1: horizontais. Runtime atual: Visão geral, Summary e Classificação. Futuro Review/Histórico não aparecem como disponíveis antes do contrato.
+Horizontais. Runtime atual: Visão geral, Summary e Classificação. Review/Histórico não aparecem como disponíveis antes do contrato.
 
 ### Main Work Area
 
@@ -200,7 +200,7 @@ Domínio ativo e writer canônico correspondente.
 
 Opcional e apenas com informação real. Reflow em largura estreita.
 
-## 10. Anti-padrões bloqueados
+## 11. Anti-padrões bloqueados
 
 - página vertical infinita;
 - segundo writer por estética;
@@ -213,14 +213,12 @@ Opcional e apenas com informação real. Reflow em largura estreita.
 - feature futura parecendo disponível;
 - reintrodução de schema legado via mockup.
 
-## 11. Figma canônico
+## 12. Artefato canônico
 
-Arquivo: `UX-001 — Product Experience & Knowledge Workspace`  
-File key: `myCK7Aq0ih8C55ejcRZFVz`  
-URL: `https://www.figma.com/design/myCK7Aq0ih8C55ejcRZFVz`
+O artefato executável passa a ser `prototype/index.html`, descrito em `ui-as-code-strategy.md`.
 
-O Master Board já contém Foundations, Knowledge List, Knowledge Workspace, conceito de Review, responsive 782px e anti-padrões. A próxima wave é componentizar e elevar Workspace/List para alta fidelidade.
+O arquivo Figma criado durante a exploração fica arquivado como referência histórica e não participa de gate nem continuidade.
 
 ## Resultado
 
-A especificação textual de Design System v1 está fechada. O Gate UX-010 permanece dependente da componentização e aprovação dos Master Mockups em Figma.
+A especificação textual do Design System v1 está fechada. UX-010 depende agora do QA do protótipo UI as Code, e não de componentização em ferramenta externa.

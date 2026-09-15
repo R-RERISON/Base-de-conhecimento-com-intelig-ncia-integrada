@@ -17,7 +17,7 @@
 - [x] U010 Definir mapa global de navegação.
 - [x] U011 Definir arquitetura Knowledge List → Knowledge Workspace.
 - [x] U012 Definir navegação interna do Workspace — tabs horizontais v1.
-- [x] U013 Definir hierarquia de ações primárias/secundárias/destrutivas.
+- [x] U013 Definir hierarquia de ações.
 - [x] U014 Definir padrões de estado/feedback.
 - [x] U015 Definir wp-admin para Curadoria e shell separado apenas para Resolvedor futuro quando justificado.
 
@@ -25,51 +25,48 @@
 
 ## U020 — Design System v1
 
-- [x] U020 Definir foundations: grid, spacing, radius, elevation, typography e cores semânticas.
-- [x] U021 Definir inventário de componentes canônicos.
-- [x] U022 Definir data density para admin desktop.
-- [x] U023 Definir estados default/hover/focus/disabled/error/success/loading/empty.
-- [x] U024 Definir tokens e nomenclatura canônica.
+- [x] U020 Foundations: grid, spacing, radius, typography e cores semânticas.
+- [x] U021 Inventário de componentes canônicos.
+- [x] U022 Data density para admin desktop.
+- [x] U023 Estados default/hover/focus/disabled/error/success/loading/empty.
+- [x] U024 Tokens e nomenclatura canônica.
+- [x] U025 Migrar Design System para CSS Custom Properties e classes reutilizáveis no protótipo.
 
-**Especificação textual v1: PASS. Componentização Figma permanece em U052.**
+**Design System v1: PASS textual / execução UI as Code ativa.**
 
-## U030 — Master mockups
+## U030 — Master mockups → protótipos executáveis
 
-- [ ] U030 Knowledge List — alta fidelidade desktop. *(HF draft criado no Figma; QA visual final pendente)*
-- [ ] U031 Knowledge Workspace — Summary em alta fidelidade.
-- [ ] U032 Knowledge Workspace — Classification em alta fidelidade.
-- [ ] U033 Knowledge Workspace — Overview em alta fidelidade. *(HF draft node `9:2`; verificação visual executada; refinamento de wrapping pendente)*
-- [ ] U034 Review & Governance — mockup controlado. *(conceito v0.1 existente; domínio ainda não contratado)*
-- [ ] U035 Histórico/atividade — placeholder de arquitetura, sem domínio implementado.
-- [ ] U036 Empty/loading/error/permission states.
+- [x] U030 Knowledge List — primeira versão executável criada localmente.
+- [x] U031 Knowledge Workspace — Summary executável no mesmo shell.
+- [x] U032 Knowledge Workspace — Classificação executável no mesmo shell.
+- [x] U033 Knowledge Workspace — Overview executável.
+- [ ] U034 Review & Governance — mockup controlado, sem domínio contratado.
+- [ ] U035 Histórico/atividade — placeholder arquitetural.
+- [x] U036 Estados base: empty/loading/success/error/permission-read-only.
 
-**Gate UX-010: NOT_RUN.**
+**Gate UX-010: IN_PROGRESS — depende de QA visual/responsive e versionamento final do protótipo.**
 
 ## U040 — Responsividade e acessibilidade
 
-- [ ] U040 Desktop largo.
-- [ ] U041 Desktop administrativo estreito/tablet.
-- [ ] U042 Mobile de contingência/leitura operacional.
-- [ ] U043 Ordem de foco e navegação por teclado.
-- [ ] U044 Contraste e semântica de status.
-- [ ] U045 Labels, descriptions, aria/help patterns.
+- [ ] U040 Validar desktop largo.
+- [ ] U041 Validar 783–1199px.
+- [ ] U042 Validar <=782px/mobile de contingência.
+- [ ] U043 Validar ordem de foco e teclado.
+- [ ] U044 Validar contraste e semântica de status.
+- [ ] U045 Validar labels/descriptions/aria patterns.
 
-Especificação: `responsive-accessibility-v1.md`. Validação dos novos Master Mockups permanece pendente.
+Especificação: `responsive-accessibility-v1.md`.
 
 **Gate UX-030: NOT_RUN.**
 
-## U050 — Figma e handoff
+## U050 — Handoff UI as Code
 
-- [x] U050 Criar arquivo Figma canônico UX-001.
-- [ ] U051 Estruturar páginas: Foundations / Components / IA & Heritage / Screens / Responsive / Archive.
-- [ ] U052 Construir componentes reutilizáveis.
-- [ ] U053 Construir master mockups editáveis em alta fidelidade.
-- [ ] U054 Anotar regras de comportamento e domínio no arquivo.
-- [x] U055 Registrar URL/file key no repositório.
-
-Arquivo: `https://www.figma.com/design/myCK7Aq0ih8C55ejcRZFVz`  
-File key: `myCK7Aq0ih8C55ejcRZFVz`  
-Progresso: `figma-progress-v1.md`.
+- [x] U050 Decidir UI as Code como artefato canônico; Figma arquivado.
+- [x] U051 Definir diretório `prototype/` e contrato de zero dependências.
+- [x] U052 Traduzir tokens para CSS Custom Properties.
+- [x] U053 Criar navegação entre List / Overview / Summary / Classificação / States.
+- [ ] U054 Versionar QA checklist e evidências visuais locais.
+- [ ] U055 Fechar pacote de handoff no Git.
 
 **Gate UX-050: IN_PROGRESS.**
 
@@ -79,16 +76,17 @@ Progresso: `figma-progress-v1.md`.
 - [ ] U061 Review de aderência ao legado KB2Ops.
 - [ ] U062 Fechar decisões pendentes.
 - [ ] U063 Congelar baseline UX v1.
-- [ ] U064 Autorizar planejamento detalhado/implementação da SPEC-003.
+- [ ] U064 Autorizar planejamento/implementação da SPEC-003.
 
 ## Próximo bloco de execução
 
-1. U051/U052 — estruturar Figma e componentizar Design System;
-2. finalizar QA/refino de U033 e U030;
-3. U031/U032 — Summary e Classificação dentro do Workspace;
-4. U036 + U040–U045 — estados, responsive e acessibilidade;
-5. UX-010 só passa após aprovação visual dos Master Mockups.
+1. versionar o protótipo UI as Code no repositório;
+2. executar QA em 1440px, 1024px, 782px e ~492px;
+3. validar teclado/foco e semântica;
+4. corrigir gaps visuais;
+5. fechar UX-010 + UX-030 + UX-050;
+6. somente então autorizar SPEC-003.
 
 ## Regra
 
-Nenhum mockup autoriza schema, writer, estado de negócio ou integração futura. A UI representa o que já é contrato ou marca explicitamente hipótese/futuro.
+Nenhum mockup/protótipo autoriza schema, writer, estado de negócio ou integração futura. Ferramentas externas podem ajudar, mas nunca podem bloquear a continuidade.

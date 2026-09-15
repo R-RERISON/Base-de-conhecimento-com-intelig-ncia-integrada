@@ -6,8 +6,8 @@
 - SPEC-002: concluída, baseline `0.2.0-rc.1`.
 - UX-001: baseline v1 congelada; UI as Code v0.2 é a referência executável.
 - addendum de consumo: `ux/001-product-experience-knowledge-workspace/heritage-addendum-public-summary-v1.md`.
-- SPEC-003: **R-001 PASS / R-010 PASS / G-001 PASS / G-030 PASS**.
-- etapa ativa: **DS-010 — Design System Runtime Foundation**.
+- SPEC-003: **R-001 PASS / R-010 PASS / G-001 PASS / G-030 PASS / DS-010 PASS**.
+- etapa ativa: **G-070 — Writer HTTP e Segurança de Review**.
 
 ## Evidência do ambiente real
 
@@ -66,37 +66,63 @@ Evidências:
 
 ## Design System Runtime Foundation
 
-Documento: `design-system-runtime-plan.md`.
+Documento: `evidencia-design-system-runtime-dev3.md`.
 
-A fundação visual não será adiada para o fim da SPEC-003. Antes de abrir o handler/UI de Review, o runtime existente recebe o Design System v1 de forma isolada e sem alterar contratos funcionais.
+Build validado: `0.3.0-dev.3`.
 
-Build: `0.3.0-dev.3`  
-SHA-256: `081a9b0411e3e60020aa9b875c1a09d33c32ece2000011aa830186617eec542f`
+As capturas do ambiente real comprovaram:
 
-Implementado no build:
+- tokens/surfaces/hierarquia do Design System presentes no runtime;
+- Knowledge List mais legível;
+- contexto do artigo, Summary e Classificação visualmente coerentes;
+- nenhuma regressão funcional reportada.
 
-- tokens canônicos como CSS Custom Properties;
-- navy/blue/surfaces/border/radius/spacing/focus do UX-001;
-- hierarquia visual para cabeçalho, contexto do artigo e tabela;
-- Summary e Classificação em superfícies coerentes;
-- inputs/selects/legacy reference refinados;
-- responsive <=782px e <=520px;
-- foco visível;
-- nenhuma alteração em Summary Store, Classification Store ou Review Store;
-- runner `class-review-diagnostics.php` removido do package.
+Também ficou registrado um achado de arquitetura UX: o runtime ainda empilha `Summary -> Classificação`. Esse formato NÃO será ampliado com um terceiro bloco Review. A convergência para Workspace/tabs será feita no G-110 após aprovação do writer HTTP.
 
-O markup funcional permanece conservador nesta etapa. Tabs completas/Workspace com Review real entram somente depois do G-070.
+**DS-010: PASS — Runtime Foundation.**
+
+Reflow/foco definitivo em `<=782px` e `~492px` permanece dentro do G-110 Browser Acceptance, quando o Workspace final existir.
+
+## Writer HTTP permanente / build ativo
+
+Package: `0.3.0-dev.4`  
+SHA-256: `31564fb8bd0da0e0e501c0edeee434f75ce01a1a95410422065a219fa9b033cb`
+
+Arquivos novos:
+
+- permanente: `class-review-admin.php`;
+- temporário: `class-review-http-diagnostics.php`.
+
+Contrato HTTP:
+
+- POST only;
+- nonce vinculado ao post;
+- `edit_post(post_id)`;
+- allowlist `target_state`/`note`;
+- reviewer capability continua validada pelo `Review_Store`;
+- PRG;
+- `NO_CHANGE`, `FAIL_SAFE`, `PARTIAL_FAILURE_CRITICAL` preservados.
+
+Runner temporário:
+
+- usa somente 2 posts, 1 page e 4 termos temporários;
+- testa GET/nonce/mass assignment/payload inválido/post type/ID inexistente;
+- testa `edit_post` e `edit_others_posts` com negação assinada restrita à fixture;
+- testa POST válido, NO_CHANGE, nota obrigatória, limite de bytes, `needs_changes` e `approved`;
+- verifica preservação de editorial/Summary/Classificação/legado;
+- cleanup obrigatório.
+
+Documento: `package-dev4-http.md`.
 
 ## Próximo passo exato
 
-1. substituir `0.3.0-dev.2` por `0.3.0-dev.3`;
-2. abrir a listagem da Base de Conhecimento e um artigo;
-3. confirmar que a linguagem visual mudou e continua coerente dentro do wp-admin;
-4. salvar um Summary sem alterar seu conteúdo sem necessidade e confirmar feedback normal;
-5. abrir Classificação e confirmar controles/vocabulários íntegros;
-6. reduzir a janela para aproximadamente 782px e validar uso/foco;
-7. retornar screenshot da listagem e do artigo;
-8. com smoke PASS, fechar DS-010 e iniciar S004/G-070.
+1. substituir `0.3.0-dev.3` por `0.3.0-dev.4`;
+2. abrir **Base de Conhecimento** como administrador;
+3. clicar **Executar segurança HTTP Review e gerar JSON**;
+4. retornar `bdc-kb-review-http-security-*.json`;
+5. exigir `22 PASS / 0 FAIL / overall=PASS`;
+6. exigir `residual_posts=0`, `residual_terms=0`, `residual_review_events=0`;
+7. somente depois abrir G-110 e integrar Review ao Knowledge Workspace com tabs.
 
 ## UX / valor preservado
 
@@ -111,7 +137,8 @@ A tela histórica de artigo com **Resumo Executivo lateral** foi registrada como
 - não duplicar estado em meta + histórico;
 - não criar tabela própria sem necessidade comprovada;
 - não recuperar stores KB2Ops vazios por nostalgia arquitetural;
-- não expor Review como ação antes de G-070.
+- não expor UI funcional de Review antes de G-070 PASS;
+- não adicionar Review como terceiro bloco vertical.
 
 ## Gates
 
@@ -119,5 +146,6 @@ A tela histórica de artigo com **Resumo Executivo lateral** foi registrada como
 - R-010: **PASS**.
 - G-001: **PASS**.
 - G-030: **PASS**.
-- DS-010: **AGUARDANDO SMOKE VISUAL `0.3.0-dev.3`**.
-- G-070/G-110/G-130: pendentes na sequência normal.
+- DS-010: **PASS**.
+- G-070: **IMPLEMENTADO / AGUARDANDO EXECUÇÃO REAL**.
+- G-110/G-130: bloqueados pela sequência normal.

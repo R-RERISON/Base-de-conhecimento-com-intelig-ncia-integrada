@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.3",
+  "mode": "temporary_classification_http_diagnostics",
+  "generated_at": "2026-09-15T10:58:20+00:00",
+  "environment": {"wordpress":"6.9.4","php":"8.5.10","plugin":"0.2.0-dev.7","multisite":false},
+  "safety": {"fixture_marker":"spec002-classification-http-v1","persistent_report":false,"real_content_modified":false,"loopback_target":"https://conhecimento-h.bcnet.bcb.gov.br/wp-admin/admin-post.php","stale_removed_before":{"posts":0,"terms":0,"users":0}},
+  "checks": [
+    {"id":"HTTP-HARNESS-01","gate":"HARNESS","status":"PASS","message":"Cookies autenticados do operador disponíveis para loopback."},
+    {"id":"HTTP-HARNESS-02","gate":"HARNESS","status":"PASS","message":"Dois posts e uma page temporários criados."},
+    {"id":"HTTP-HARNESS-03","gate":"HARNESS","status":"PASS","message":"Cinco termos temporários criados."},
+    {"id":"HTTP-HARNESS-04","gate":"HARNESS","status":"PASS","message":"Instrumentação assinada de negação de edit_post preparada para a fixture."},
+    {"id":"G070-H01","gate":"G-070","status":"PASS","message":"GET no handler real é rejeitado com HTTP 405."},
+    {"id":"G070-H02","gate":"G-070","status":"PASS","message":"Nonce ausente é bloqueado sem mutação."},
+    {"id":"G070-H03","gate":"G-070","status":"PASS","message":"Nonce inválido é bloqueado sem mutação."},
+    {"id":"G070-H04","gate":"G-070","status":"PASS","message":"Nonce é vinculado ao post e não pode ser reutilizado em outro artigo."},
+    {"id":"G070-H05","gate":"G-070","status":"PASS","message":"Payload ausente é bloqueado sem mutação."},
+    {"id":"G070-H06","gate":"G-070","status":"PASS","message":"Payload escalar é bloqueado sem mutação."},
+    {"id":"G070-H07","gate":"G-070","status":"PASS","message":"Mass assignment/campo fora da allowlist é rejeitado sem mutação."},
+    {"id":"G070-H08","gate":"G-070","status":"PASS","message":"Payload XSS em term ID é rejeitado sem mutação."},
+    {"id":"G070-H09","gate":"G-070","status":"PASS","message":"Post type fora do escopo é rejeitado pelo handler real."},
+    {"id":"G070-H10","gate":"G-070","status":"PASS","message":"ID inexistente é rejeitado pelo handler real."},
+    {"id":"G070-H11","gate":"G-070","status":"PASS","message":"Negação assinada de edit_post atravessa o handler HTTP real e bloqueia antes da mutação."},
+    {"id":"G070-H12","gate":"G-070","status":"PASS","message":"POST válido usa PRG, persiste e relê a classificação canônica."},
+    {"id":"G001-H01","gate":"G-001","status":"PASS","message":"Handler HTTP não altera título, post_content, _elementor_data ou stores legados."},
+    {"id":"REG001-H01","gate":"REGRESSION-SPEC-001","status":"PASS","message":"Handler de Classificação preserva integralmente o Summary."}
+  ],
+  "observations": {"idor":{"http_code":302,"redirect_status":"forbidden","state_preserved":true,"method":"signed_homologation_map_meta_cap_deny","redirect_location":"conhecimento-h.bcnet.bcb.gov.br /wp-admin/admin.php bdc_classification_status=forbidden"},"valid_post":{"http_code":302,"redirect_status":"saved","audience_matches":true,"knowledge_type_matches":true,"catalog_item_preserved":true}},
+  "summary": {"pass":18,"fail":0,"overall":"PASS","duration_ms":5045},
+  "cleanup": {"posts_deleted_count":3,"terms_deleted_count":5,"users_deleted_count":0,"residual_posts":0,"residual_terms":0,"residual_users":0},
+  "limitations": ["Loopback HTTP depende de o WordPress conseguir realizar request para o próprio admin-post.php.","Cookies de loopback do operador são regenerados a partir do session token vigente para auth/secure_auth/logged_in.","Releituras após loopback limpam cache de relações do objeto antes de comparar o estado canônico.","XSS neste domínio é testado como payload inválido de term ID; a Classificação não aceita texto livre no write.","O H11 usa negação assinada de edit_post exclusiva de homologação porque a política corporativa /acesso-restrito/ intercepta roles reduzidas antes do admin-post.php.","Esta classe, os parâmetros de force-deny e as fixtures são exclusivos de homologação e não pertencem ao package final."]
+}

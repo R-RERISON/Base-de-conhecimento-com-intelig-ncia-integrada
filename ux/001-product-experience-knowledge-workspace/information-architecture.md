@@ -1,99 +1,153 @@
-# Arquitetura de Informação v0 — UX-001
+# Arquitetura de Informação v1 — UX-001
+
+**Status:** FECHADA para Gate UX-005  
+**Baseline funcional:** `0.2.0-rc.1`
 
 ## Objetivo
 
-Definir a organização conceitual do produto antes dos mockups detalhados. Este documento é uma hipótese controlada a ser validada visualmente e contra as jornadas reais.
+Organizar o produto antes da alta fidelidade, preservando WordPress/Elementor como fonte editorial e impedindo que cada SPEC crie um novo shell ou uma nova página vertical independente.
 
-## Estrutura global proposta
+## 1. Experiência de Curadoria
 
-### 1. Base de Conhecimento
+Permanece dentro do **wp-admin** enquanto esse shell for suficiente.
 
-Entrada operacional principal.
+### 1.1 Base de Conhecimento
 
-- Lista de conhecimentos
-- Abrir Knowledge Workspace
-- Criar/editar conteúdo editorial continua pertencendo ao WordPress/Elementor conforme contrato
+Entrada operacional principal:
 
-### 2. Vocabulários
+`Knowledge List -> Knowledge Workspace -> domínio ativo -> ação -> feedback -> permanência no contexto`
 
-Gestão controlada das taxonomias canônicas existentes.
+### 1.2 Knowledge List
 
-- Audiências
-- Equipes responsáveis
-- Tipos de conhecimento
-- Itens de catálogo
+Decisão: lista/tabela densa como padrão, inspirada na tela de Posts do KB2Ops.
 
-A gestão pode continuar usando a UI nativa WordPress enquanto entregar a experiência adequada. UX-001 não cria um segundo writer apenas para uniformidade visual.
+Responsabilidades:
 
-### 3. Governança
+- localizar artigos;
+- abrir Workspace;
+- filtrar quando houver contrato correspondente;
+- apresentar metadados reais, não métricas inventadas.
 
-Futuro domínio da SPEC-003. Na UX-001 aparece somente como arquitetura visual/placeholder controlado.
+### 1.3 Knowledge Workspace
 
-Possíveis superfícies de experiência a validar:
+Recipiente canônico dos domínios associados ao artigo.
 
-- fila de revisão;
+Estrutura:
+
+- Context Header;
+- tabs horizontais;
+- Main Work Area;
+- Context Panel opcional em desktop quando existir informação acionável.
+
+Domínios atuais:
+
+- Visão geral;
+- Summary;
+- Classificação.
+
+Domínios reservados para SPEC futura:
+
+- Review & Governança;
+- Histórico.
+
+Nenhuma reserva arquitetural autoriza runtime ou schema.
+
+### 1.4 Vocabulários
+
+As quatro taxonomias canônicas continuam usando UI nativa WordPress enquanto não houver evidência de inadequação:
+
+- Audiências;
+- Equipes responsáveis;
+- Tipos de conhecimento;
+- Itens de catálogo.
+
+Não criar segundo writer por uniformidade estética.
+
+## 2. Experiência de Governança
+
+Domínio futuro da SPEC-003.
+
+A UX-001 reserva encaixe para:
+
 - estado do conhecimento;
 - responsável/revisor;
-- qualidade;
-- histórico de decisões.
+- decisão de revisão;
+- critérios de qualidade;
+- histórico de decisão.
 
-Nenhuma dessas superfícies define contrato de dados nesta etapa.
+Esses itens são apenas estrutura de experiência até a SPEC-003 definir owner, estados, transições, permissões e persistência.
 
-### 4. Busca
+## 3. Experiência do Resolvedor
 
-Futuro domínio. Reservar coerência de navegação, filtro e resultados; não implementar nem definir algoritmo.
+O benchmark KB2Ops mostrou que Search Home, Results e Knowledge Result formam uma experiência diferente da curadoria.
 
-### 5. Operações / Inteligência
+Decisão: **separação conceitual Curador x Resolvedor**.
 
-Futuro. Só deve existir se as SPECs posteriores justificarem casos de uso operacionais concretos.
+Fluxo futuro:
 
-## Jornada primária
+`Search Home -> Search Results -> Knowledge Result -> resolução / detalhe / escalonamento`
 
-`Lista de conhecimentos -> selecionar artigo -> Knowledge Workspace -> domínio desejado -> ação -> feedback -> permanência no contexto`
+Pode reutilizar Design System e dados canônicos, mas não é obrigado a reutilizar o shell wp-admin.
 
-A navegação não deve obrigar retorno constante à lista após cada save.
+## 4. Operações / Inteligência
 
-## Knowledge Workspace
+Dashboard, Relatórios, Telemetria, Indexação e Configurações só ganham superfície permanente quando existir caso de uso e owner funcional.
 
-### Cabeçalho contextual
+Migração/Limpeza não pertence à navegação normal; é lifecycle temporário quando necessário.
 
-- breadcrumb/contexto;
-- título do artigo;
-- identificador/metadata essencial;
-- estado visual quando o domínio Review existir;
-- ações contextuais.
+## 5. Decisões de navegação
 
-### Navegação interna
+### Global
 
-Hipótese preferencial: tabs ou subnav persistente, sujeita a validação de densidade e acessibilidade.
+- não duplicar a sidebar do WordPress com uma segunda sidebar própria dentro do wp-admin;
+- `Base de Conhecimento` é a entrada do domínio de curadoria;
+- novas entradas globais exigem caso de uso, não estética.
 
-Domínios previstos:
+### Workspace
 
-- Visão geral
-- Summary
-- Classificação
-- Review & Governança — futuro
-- Histórico — futuro
+- **tabs horizontais** são o padrão v1;
+- o artigo permanece identificável durante toda a jornada;
+- save não retorna automaticamente à lista;
+- ações secundárias ficam visualmente separadas da ação primária;
+- ações destrutivas não competem com save.
 
-### Painel contextual
+## 6. Context Panel
 
-Opcional, apenas se aumentar eficiência e não reduzir legibilidade. Pode receber estado, qualidade, responsável e sinais de saúde quando esses contratos existirem.
+Decisão v1:
 
-## Regras
+- opcional >=1200px;
+- só existe com informação real/acionável;
+- reflowa abaixo do conteúdo entre 783–1199px;
+- fluxo único <=782px;
+- não vira segundo writer.
 
-1. Um domínio não deve abrir novo shell administrativo sem necessidade.
-2. Ações destrutivas nunca competem visualmente com a ação primária.
-3. O usuário deve saber sempre qual artigo está sendo tratado.
-4. Save não deve causar perda de contexto.
-5. Referência legada é informação secundária e não pode parecer valor canônico.
-6. Estado vazio deve orientar a próxima ação sem sugerir criação automática indevida.
-7. Funcionalidades futuras devem ser visualmente distinguíveis de recursos implementados durante prototipação.
+## 7. Feedback
 
-## Decisões ainda abertas
+Padrão:
 
-- tabs horizontais vs navegação lateral interna;
-- presença ou não de painel contextual fixo;
-- densidade ideal da Knowledge List;
-- até que ponto manter aparência wp-admin nativa vs camada visual própria;
-- comportamento de Workspace em 782px e abaixo;
-- mobile: edição completa vs experiência de consulta/ação essencial.
+- sucesso: confirmação textual próxima ao contexto;
+- validação: junto ao campo/grupo;
+- forbidden: sem mutação e com mensagem clara;
+- erro sistêmico: preserva contexto e não promete sucesso;
+- estado nunca depende só de cor.
+
+## 8. Jornada primária
+
+`Lista -> artigo -> Workspace -> Summary ou Classificação -> salvar -> feedback -> continuar no mesmo artigo`
+
+## 9. Jornada de vocabulário
+
+`Workspace/Classificação -> Gerenciar vocabulário -> UI nativa da taxonomia -> retornar ao artigo`
+
+## 10. Regra de autoridade
+
+1. contratos funcionais atuais;
+2. UX-001 congelada;
+3. evidência visual/usabilidade KB2Ops;
+4. preferência estética.
+
+## Gate
+
+**UX-005 — PASS.**
+
+A arquitetura global, o fluxo List -> Workspace, a navegação interna, a hierarquia de ações, feedback e divisão wp-admin/UI futura estão definidos o suficiente para avançar para Design System v1 + Master Mockups.

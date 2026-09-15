@@ -58,7 +58,7 @@
 		if (!form) { throw new Error('form ausente'); }
 		if (mutate) { mutate(form); }
 		var pending = waitNextLoad(loaded);
-		form.submit();
+		loaded.win.HTMLFormElement.prototype.submit.call(form);
 		await pending;
 		return loaded;
 	}
@@ -251,7 +251,7 @@
 			form.appendChild(input);
 		});
 		document.body.appendChild(form);
-		form.submit();
+		window.HTMLFormElement.prototype.submit.call(form);
 	}
 
 	async function run() {

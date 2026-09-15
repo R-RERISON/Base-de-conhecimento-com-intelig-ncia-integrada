@@ -23,5 +23,10 @@ final class Plugin {
 		add_action( 'admin_enqueue_scripts', array( Admin_Page::class, 'enqueue_assets' ) );
 		add_action( 'admin_post_' . Admin_Page::ACTION, array( Admin_Page::class, 'handle_save' ) );
 		add_action( 'admin_post_' . Classification_Admin::ACTION, array( Classification_Admin::class, 'handle_save' ) );
+		add_action( 'admin_post_' . Review_Admin::ACTION, array( Review_Admin::class, 'handle_save' ) );
+
+		if ( defined( 'BDC_KB_REVIEW_HTTP_DIAGNOSTICS_BUILD' ) && BDC_KB_REVIEW_HTTP_DIAGNOSTICS_BUILD ) {
+			Review_HTTP_Diagnostics::register();
+		}
 	}
 }

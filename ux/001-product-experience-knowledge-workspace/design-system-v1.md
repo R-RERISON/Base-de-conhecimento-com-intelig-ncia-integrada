@@ -1,107 +1,137 @@
-# Design System v1 — Diretrizes Iniciais
+# Design System v1 — UX-001
 
-**Status:** draft para UX-001  
-**Objetivo:** impedir divergência visual entre SPECs e criar componentes reutilizáveis antes de multiplicar telas.
+**Status:** ESPECIFICAÇÃO FECHADA / componentização Figma em andamento  
+**Origem:** contratos atuais + Heritage Pack KB2Ops.
 
-## Foundations
+## 1. Foundations
 
 ### Grid e largura
 
-- conteúdo administrativo com largura máxima legível, evitando full-width indiscriminado;
-- grid de 12 colunas para layouts complexos;
-- espaçamento baseado em múltiplos de 4px;
-- densidade administrativa moderada: alta eficiência sem compactação excessiva;
-- breakpoint crítico operacional: 782px, alinhado ao comportamento WordPress já homologado;
-- mobile abaixo disso deve preservar funções essenciais e legibilidade.
+- grid lógico de 12 colunas em desktop;
+- largura de conteúdo administrativo legível; evitar full-width sem necessidade;
+- gutter base 24px;
+- spacing scale: `4, 8, 12, 16, 24, 32, 40, 48`;
+- breakpoint crítico WordPress: `782px`;
+- Context Panel opcional apenas em desktop largo.
 
-### Tipografia
+### Radius
 
-- usar a stack nativa do ambiente administrativo sempre que possível;
-- hierarquia limitada e previsível: page title, section title, subsection, body, helper, metadata;
-- labels sempre explícitos; placeholder nunca substitui label;
-- evitar excesso de caixa alta.
+- `radius-sm`: 10px;
+- `radius-md`: 16px;
+- `radius-lg`: 22px.
 
-### Cores
+### Elevação
 
-- foundations devem partir da paleta administrativa existente, com tokens semânticos próprios;
-- tokens obrigatórios: `surface`, `surface-muted`, `text-primary`, `text-secondary`, `border`, `primary`, `success`, `warning`, `danger`, `info`, `focus`;
-- estado nunca depende exclusivamente de cor;
-- contraste mínimo deve atender WCAG AA para texto e controles relevantes.
+Sombras discretas e raras. Bordas definem estrutura; sombra só reforça sobreposição ou agrupamento importante.
 
-### Espaçamento
+## 2. Tokens de cor
 
-Escala proposta: 4, 8, 12, 16, 24, 32, 40, 48.
+### Brand
 
-Não usar margens arbitrárias por tela quando existir token equivalente.
+- `brand-navy`: `#0B1F4D`;
+- `brand-blue-500`: `#1677FF`;
+- `brand-blue-600`: `#0B63E5`;
+- `brand-blue-700`: `#084FB8`.
 
-## Componentes essenciais
+### Surface
 
-### Navigation
+- `bg-app`: `#F6F8FB`;
+- `surface`: `#FFFFFF`;
+- `surface-soft`: `#FBFCFD`;
+- `border`: `#DFE5EC`.
 
-- breadcrumb;
-- tabs/subnav de workspace;
-- pagination;
-- back/context link.
+### Text
 
-### Actions
+- `text-primary`: `#172033`;
+- `text-secondary`: `#475467`;
+- `text-muted`: `#667085`.
 
-- primary button;
-- secondary button;
-- tertiary/text action;
-- destructive action;
-- icon-only apenas com accessible name.
+### Semantic
 
-### Data entry
+- `success`: `#14AE6C`;
+- `success-bg`: `#E8F8F0`;
+- `warning`: `#C98500`;
+- `warning-bg`: `#FFF5DC`;
+- `danger`: `#D92D20`;
+- `danger-bg`: `#FEECEB`;
+- `info`: `#0B63E5`;
+- `focus`: `#1677FF`.
 
-- text field;
-- textarea;
-- single select;
-- multi select;
-- checkbox/radio quando domínio exigir;
-- helper/error text;
-- field group.
+## 3. Tipografia
 
-### Data display
+No runtime WordPress, usar stack administrativa compatível com o ambiente. No Figma, usar Inter como proxy visual consistente.
 
-- badge/status;
-- metadata pair;
-- table/list row;
-- card/panel;
-- callout;
-- legacy-reference block;
-- activity item.
+Hierarquia:
+
+- Display: 40/48 bold;
+- H1: 32/40 bold;
+- H2: 24/32 bold;
+- H3: 18–20 semibold;
+- Body: 14–16 regular;
+- Label: 13–14 semibold;
+- Meta/helper: 12–13 regular.
+
+Regras:
+
+- label explícito sempre;
+- placeholder não substitui label;
+- caixa alta apenas para eyebrow/overline curto;
+- texto operacional prioriza legibilidade sobre branding.
+
+## 4. Componentes canônicos
+
+### Navegação
+
+- Breadcrumb;
+- Workspace Tabs;
+- Back link;
+- Pagination;
+- Filter bar.
+
+### Ações
+
+- Button Primary;
+- Button Secondary;
+- Button Tertiary/Text;
+- Button Danger;
+- Icon Button com accessible name;
+- Overflow Menu.
+
+### Dados / estado
+
+- Status Badge;
+- Metadata Pair;
+- Dense Table Row;
+- Card/Panel;
+- Callout;
+- Activity Item;
+- Legacy Reference Block.
+
+### Entrada
+
+- Text Field;
+- Textarea;
+- Single Select;
+- Multi Select;
+- Checkbox/Radio quando houver contrato;
+- Helper Text;
+- Validation Message;
+- Field Group.
 
 ### Feedback
 
-- success notice;
-- warning notice;
-- error notice;
-- inline validation;
-- loading/skeleton;
-- empty state;
-- permission/read-only state.
+- Success Notice;
+- Warning Notice;
+- Error Notice;
+- Inline Validation;
+- Empty State;
+- Loading/Skeleton;
+- Permission State;
+- Read-only State.
 
-## Workspace patterns
+## 5. Estados obrigatórios
 
-### Header
-
-Deve manter identidade do artigo durante toda a jornada. Campos mínimos visuais:
-
-- breadcrumb/contexto;
-- título;
-- metadata essencial;
-- status quando existir contrato;
-- ações relacionadas ao artigo.
-
-### Internal navigation
-
-Preferência inicial: tabs horizontais responsivas. Alternativa: subnav lateral somente se testes de densidade mostrarem ganho claro.
-
-### Main + context panel
-
-Permitido em desktop quando painel contextual tiver informação realmente acionável. Em largura estreita, painel deve reflow para o fluxo principal; não usar coluna fixa que reduza controles.
-
-## Estados obrigatórios por componente
+Todo componente interativo relevante deve prever:
 
 - default;
 - hover;
@@ -109,39 +139,88 @@ Permitido em desktop quando painel contextual tiver informação realmente acion
 - active/selected;
 - disabled;
 - validation error;
+- success quando aplicável;
 - read-only quando aplicável.
 
-## Critérios de componentização
+## 6. Data density
 
-Um padrão vira componente quando:
+### Curadoria
 
-1. aparece em duas ou mais telas; ou
-2. carrega comportamento de estado/feedback crítico; ou
-3. precisa de consistência para acessibilidade.
+Preferência por densidade média-alta:
 
-## Anti-padrões proibidos
+- tabelas/listas para conjuntos grandes;
+- cards apenas para agrupamento ou resumo;
+- metadata secundária não deve competir com título/ação;
+- linha de tabela deve suportar leitura rápida e navegação por teclado.
 
-- página vertical infinita criada pela soma de SPECs;
-- segundo writer só para “ficar bonito”;
+### Workspace
+
+- uma tarefa principal por domínio ativo;
+- até duas colunas em formulários desktop;
+- uma coluna <=782px;
+- painel lateral nunca reduz o formulário abaixo de largura confortável.
+
+## 7. Semântica de status
+
+Status sempre combina pelo menos dois sinais entre:
+
+- texto;
+- ícone;
+- forma/badge;
+- cor.
+
+Não usar vermelho/verde como única diferenciação.
+
+## 8. Acessibilidade
+
+- WCAG AA para texto/controles relevantes;
+- foco perceptível;
+- targets adequados;
+- ordem DOM acompanha ordem visual;
+- tabs operáveis por teclado;
+- mensagens de erro associadas ao controle;
+- icon-only com nome acessível;
+- helper text não contém informação crítica exclusivamente visual.
+
+## 9. Padrões do Knowledge Workspace
+
+### Context Header
+
+Título, ID, contexto editorial e ações secundárias.
+
+### Tabs
+
+Decisão v1: horizontais. Runtime atual: Visão geral, Summary e Classificação. Futuro Review/Histórico não aparecem como disponíveis antes do contrato.
+
+### Main Work Area
+
+Domínio ativo e writer canônico correspondente.
+
+### Context Panel
+
+Opcional e apenas com informação real. Reflow em largura estreita.
+
+## 10. Anti-padrões bloqueados
+
+- página vertical infinita;
+- segundo writer por estética;
 - modal para fluxo principal longo;
 - placeholder como label;
-- cor como único indicador de estado;
-- ações destrutivas próximas/visualmente equivalentes à ação principal;
-- cards para toda informação sem necessidade hierárquica;
-- dashboard ornamental sem pergunta operacional concreta;
-- mockup que mostre feature futura como se estivesse disponível.
+- cor como único estado;
+- ação destrutiva equivalente à primária;
+- cards para tudo;
+- dashboard ornamental;
+- feature futura parecendo disponível;
+- reintrodução de schema legado via mockup.
 
-## Figma
+## 11. Figma canônico
 
-O arquivo canônico deverá conter páginas:
+Arquivo: `UX-001 — Product Experience & Knowledge Workspace`  
+File key: `myCK7Aq0ih8C55ejcRZFVz`  
+URL: `https://www.figma.com/design/myCK7Aq0ih8C55ejcRZFVz`
 
-1. `00 Foundations`
-2. `01 Components`
-3. `02 IA & Flows`
-4. `03 Knowledge List`
-5. `04 Knowledge Workspace`
-6. `05 Review & Governance`
-7. `06 Responsive`
-8. `99 Archive`
+O Master Board já contém Foundations, Knowledge List, Knowledge Workspace, conceito de Review, responsive 782px e anti-padrões. A próxima wave é componentizar e elevar Workspace/List para alta fidelidade.
 
-Componentes e tokens devem ser usados nos mockups, não copiados manualmente tela a tela.
+## Resultado
+
+A especificação textual de Design System v1 está fechada. O Gate UX-010 permanece dependente da componentização e aprovação dos Master Mockups em Figma.

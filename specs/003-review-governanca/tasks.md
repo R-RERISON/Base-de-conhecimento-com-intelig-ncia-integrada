@@ -85,22 +85,27 @@ Evidências finais:
 
 Plano: `g110-workspace-browser-acceptance-plan.md`.
 
-- [x] T050 Implementar shell Knowledge Workspace: Context Header + tabs + Main Work Area — `0.3.0-dev.6`, smoke real pendente.
-- [x] T050A Preservar writers atuais de Summary e Classificação sem mudança de persistência — implementação concluída, regressão ambiental pendente.
-- [x] T050B Integrar Review como tab própria usando `Review_Admin`/`Review_Store`/`Review_Contract` — implementação concluída, smoke real pendente.
-- [ ] T050C Integrar Histórico como projection read-only dos eventos `bdc_kb_review_event`, sem novo writer/store.
-- [x] T051 Não exibir score/AI Ready/progresso ou métricas não contratadas no `dev.6`.
-- [ ] T052 Confirmar ambientalmente Summary/Classificação, vocabulários e permanência no contexto.
-- [ ] T053 Implementar/validar teclado, foco, labels e feedback sem dependência exclusiva de cor.
+- [x] T050 Implementar shell Knowledge Workspace: Context Header + tabs + Main Work Area — `0.3.0-dev.6`.
+- [x] T050A Preservar writers atuais de Summary e Classificação sem mudança de persistência.
+- [x] T050B Integrar Review como tab própria usando `Review_Admin`/`Review_Store`/`Review_Contract`.
+- [x] T050B1 Smoke ambiental inicial do `0.3.0-dev.6` — PASS por captura + confirmação do operador; evidência `evidencia-g110-dev6-smoke.md`.
+- [x] T050C Implementar Histórico como projection read-only de `Review_Store::history()` — `0.3.0-dev.7`, homologação ambiental pendente.
+- [x] T051 Não exibir score/AI Ready/progresso ou métricas não contratadas.
+- [ ] T052 Confirmar ambientalmente regressão Summary/Classificação, vocabulários e permanência no contexto no build final do G-110.
+- [x] T053A Implementar navegação de foco `ArrowLeft`/`ArrowRight`/`Home`/`End` entre tabs — `0.3.0-dev.7`.
+- [ ] T053B Validar teclado, foco, labels e feedback no browser real.
 - [ ] T054 Testar 1440px/1024px/782px/~492px e zero overflow horizontal.
-- [ ] T055 Criar Browser Acceptance com fixtures controladas e cleanup obrigatório.
+- [ ] T055 Executar Browser Acceptance final com fixtures controladas e cleanup obrigatório.
 - [ ] T056 Validar `unreviewed -> in_review -> needs_changes -> approved` pela UI real.
 - [ ] T057 Validar `NO_CHANGE`, permission denied, note required e histórico consistente.
-- [ ] T058 Confirmar cleanup zero resíduos do runner/browser acceptance.
+- [ ] T058 Confirmar cleanup zero resíduos do Browser Acceptance.
 
-Package: `0.3.0-dev.6`; documento `package-dev6-workspace-review.md`.
+Packages:
 
-**Gate G-110: ACTIVE — W-001/W-002 IMPLEMENTADOS / AGUARDANDO SMOKE AMBIENTAL.**
+- `0.3.0-dev.6` — W-001/W-002, smoke ambiental inicial PASS;
+- `0.3.0-dev.7` — W-003 Histórico + teclado, documento `package-dev7-history-keyboard.md`.
+
+**Gate G-110: ACTIVE — W-001/W-002 PASS ambiental inicial; W-003/teclado implementados no dev.7 e aguardando homologação final.**
 
 ## S006 — Lifecycle / fechamento
 
@@ -115,4 +120,4 @@ Package: `0.3.0-dev.6`; documento `package-dev6-workspace-review.md`.
 
 ## Regra
 
-G-110 está aberto, mas não está aprovado. O `0.3.0-dev.6` implementa somente W-001/W-002. O próximo passo obrigatório é smoke real do Workspace e da tab Review; Histórico, acessibilidade completa, viewports e Browser Acceptance entram depois, sem ampliar escopo antes da evidência ambiental.
+G-110 está aberto, mas não está aprovado. O `0.3.0-dev.6` comprovou o shell real do Workspace. O `0.3.0-dev.7` adiciona somente Histórico read-only e navegação por teclado, sem modificar stores canônicos. O próximo gate depende de homologação em browser real, responsividade, transições e cleanup.

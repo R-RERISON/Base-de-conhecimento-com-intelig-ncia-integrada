@@ -7,20 +7,13 @@
 - UX-001: baseline v1 congelada; UI as Code v0.2 é a referência executável.
 - SPEC-003: **R-001 PASS / R-010 PASS / G-001 PASS / G-030 PASS / DS-010 PASS / G-070 PASS**.
 - etapa ativa: **G-110 — Knowledge Workspace / Browser Acceptance**.
-- build ativo: **`0.3.0-dev.6` — W-001/W-002 implementados, aguardando smoke ambiental**.
+- build ativo: **`0.3.0-dev.7` — Histórico read-only + teclado implementados, aguardando homologação ambiental final**.
 
 ## G-070 fechado
 
 Evidência final real:
 
 `evidencias/bdc-kb-review-http-security-20260915-165537.json`
-
-Ambiente:
-
-- WordPress `6.9.4`;
-- PHP `8.5.10`;
-- plugin `0.3.0-dev.5`;
-- multisite: não.
 
 Resultado:
 
@@ -29,8 +22,6 @@ Resultado:
 - `residual_posts=0`;
 - `residual_terms=0`;
 - `residual_review_events=0`.
-
-Documento: `evidencia-g070-dev5-pass.md`.
 
 **G-070: PASS determinístico + ambiental.**
 
@@ -45,98 +36,88 @@ Documento: `evidencia-g070-dev5-pass.md`.
 - actor = `user_id`;
 - data = `comment_date_gmt`;
 - sem meta paralela de current state;
-- sem `_reviewed_by`/`_reviewed_at`;
 - sem tabela customizada;
+- sem writer próprio para Histórico;
 - `AI Ready` fora do domínio.
 
-## G-110 — plano ativo
+## G-110 — evidência ambiental do `0.3.0-dev.6`
 
-Plano formal: `g110-workspace-browser-acceptance-plan.md`.
+Documento: `evidencia-g110-dev6-smoke.md`.
 
-Autoridade UX:
+O operador instalou o build e confirmou funcionamento conforme orientado. A captura real comprova:
 
-- Context Header;
-- tabs horizontais;
-- Main Work Area;
-- Context Panel somente quando real/acionável;
-- uma coluna em `<=782px`;
-- permanência no contexto do artigo após save.
+- Context Header do Knowledge Workspace;
+- navegação horizontal por tabs;
+- `Visão geral`, `Summary`, `Classificação` e `Review & Governança`;
+- overview como superfície própria, sem empilhamento vertical dos domínios;
+- card de Review exibindo estado canônico.
 
-Review não pode ser anexado como terceiro bloco vertical.
+Decisão:
 
-## Build `0.3.0-dev.6`
+- **W-001 Workspace shell: PASS ambiental inicial**;
+- **W-002 Review no Workspace: PASS ambiental inicial**.
 
-Documento: `package-dev6-workspace-review.md`.
+Esse smoke não fecha G-110.
 
-ZIP instalável SHA-256:
+## Build ativo — `0.3.0-dev.7`
 
-`f97d5ec1f170babbc120d7ee2674b9276ca87d6c3cb9024c255381514d605e01`
+Documento: `package-dev7-history-keyboard.md`.
 
-PHP lint: **PASS 13/13**.
+SHA-256 do ZIP instalável:
 
-### W-001 implementado
+`1a8e85acdc63af7c5bc568bb9bf518019cf2644c403c9252d8d1761b76958dc9`
 
-`class-admin-page.php` agora compõe o Knowledge Workspace com:
+Validação local:
 
-- Visão geral;
-- Summary;
-- Classificação;
-- Review & Governança.
+- PHP lint: **PASS 13/13**;
+- JavaScript syntax check: **PASS**;
+- estrutura instalável WordPress: PASS.
 
-A tela deixou de empilhar Summary/Classificação como arquitetura principal. A listagem abre o artigo no Workspace.
+### W-003 — Histórico
 
-Summary e Classificação permanecem com stores/writers existentes.
+A tab `Histórico` foi adicionada ao Workspace.
 
-### W-002 implementado
+A implementação:
 
-`class-review-admin.php` agora possui UI server-rendered usando somente contratos aprovados:
+- usa somente `Review_Store::history()`;
+- é read-only;
+- não cria metadata, tabela ou writer;
+- exibe transição `from -> to`, ator, data, estado final e nota;
+- possui empty state quando não há eventos;
+- limita a projeção aos 50 eventos mais recentes nesta primeira slice.
 
-- estado atual;
-- última decisão, actor e data;
-- nota da última decisão;
-- targets derivados da máquina de estados;
-- targets de reviewer filtrados visualmente por `edit_others_posts`;
-- formulário independente;
-- nonce post-bound;
-- PRG de volta à tab Review.
+`Review_Store`, `Review_Contract`, `Summary_Store` e `Classification_Store` permanecem inalterados.
 
-Segurança permanece server-side no handler/store.
+### Teclado
 
-### Design System
+Novo asset `assets/js/workspace.js`:
 
-Novo asset:
+- `ArrowRight`: próximo tab link;
+- `ArrowLeft`: tab link anterior;
+- `Home`: primeiro tab link;
+- `End`: último tab link.
 
-`assets/css/workspace.css`
+A ativação continua nativa por link/Enter. O servidor permanece a autoridade da tab ativa.
 
-`admin.css` continua sendo a foundation validada no DS-010.
+### Visual
 
-## Ainda NÃO implementado/aceito
+Novo asset `assets/css/history.css` estende a foundation existente sem substituir `admin.css`/`workspace.css`.
 
-- Histórico completo read-only;
-- Browser Acceptance automatizado;
-- validação final de teclado/foco;
-- 1440/1024/782/~492;
-- zero overflow comprovado no browser real;
-- cleanup dos runners G-070;
-- package RC.
-
-Portanto, **G-110 continua ACTIVE, não PASS**.
+A overview passa a comportar quatro domínios em desktop, dois em largura intermediária e uma coluna em viewport estreito.
 
 ## Próximo passo exato
 
-1. substituir `0.3.0-dev.5` por `0.3.0-dev.6`;
-2. abrir **Base de Conhecimento**;
-3. abrir um artigo em **Abrir Workspace**;
-4. capturar **Visão geral**;
-5. capturar **Summary**;
-6. capturar **Classificação**;
-7. capturar **Review & Governança**;
-8. confirmar save de Summary e permanência na tab;
-9. confirmar save de Classificação e permanência no domínio;
-10. em artigo de homologação, executar `unreviewed -> in_review` via Review e confirmar feedback/estado;
-11. retornar screenshots/resultado para fechamento ambiental de W-001/W-002.
+1. instalar/substituir pelo `0.3.0-dev.7`;
+2. abrir o mesmo artigo de homologação no Workspace;
+3. confirmar a nova tab **Histórico**;
+4. antes de qualquer evento, confirmar empty state quando aplicável;
+5. executar uma transição real em Review e confirmar que o Histórico reflete exatamente o evento;
+6. testar foco nas tabs com setas, Home e End;
+7. validar desktop e reduzir largura até aproximadamente 782px e 492px, observando overflow horizontal;
+8. confirmar Summary e Classificação sem regressão;
+9. retornar capturas/resultado.
 
-Somente depois entram W-003 Histórico e Browser Acceptance completo.
+Após essa evidência entra o Browser Acceptance final do G-110; só depois abre G-130.
 
 ## Artefatos temporários ainda presentes
 
@@ -155,8 +136,7 @@ Remover apenas no G-130, após G-110 PASS:
 - não duplicar estado em meta + histórico;
 - não criar tabela própria sem necessidade comprovada;
 - não criar writer próprio para Histórico;
-- não recuperar stores KB2Ops vazios;
-- não ampliar o Workspace antes do smoke do `dev.6`.
+- não recuperar stores KB2Ops vazios.
 
 ## Gates
 
@@ -166,5 +146,5 @@ Remover apenas no G-130, após G-110 PASS:
 - G-030: **PASS**.
 - DS-010: **PASS**.
 - G-070: **PASS — 22/22, cleanup zero resíduos**.
-- G-110: **ACTIVE — W-001/W-002 implementados / aguardando smoke ambiental**.
+- G-110: **ACTIVE — W-001/W-002 PASS ambiental inicial; dev.7 aguardando homologação W-003/teclado/responsividade**.
 - G-130: **BLOQUEADO até G-110 PASS**.

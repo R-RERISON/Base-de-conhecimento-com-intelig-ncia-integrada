@@ -6,7 +6,7 @@
 - [x] T002 Ler contrato editorial WordPress/Elementor existente.
 - [x] T003 Inventariar prior art do KB2Ops `Content_Extractor`.
 - [x] T004 Registrar riscos/limitações que não devem ser copiados automaticamente.
-- [ ] T005 Implementar profiler temporário read-only `0.4.0-profile.1`.
+- [x] T005 Implementar profiler temporário read-only `0.4.0-profile.1`; package validado e com source parity 16/16.
 - [ ] T006 Medir posts por status e source kind.
 - [ ] T007 Medir validade/presença/tamanho de `_elementor_data`.
 - [ ] T008 Medir Gutenberg block names e distribuição.
@@ -18,7 +18,9 @@
 - [ ] T014 Comprovar fingerprint editorial before/after idêntico.
 - [ ] T015 Preservar JSON real sanitizado e análise do profiler.
 
-**Gate R-200: NOT_RUN — profiler ambiental pendente.**
+Package ativo: `package-profile1.md` — SHA-256 `eeae2f7a5c37dead27bd21f486bea7a64b75d510392a35b742ec6eb338a59bdd`.
+
+**Gate R-200: NOT_RUN — profiler implementado; execução ambiental e JSON pendentes.**
 
 ## S002 — R-210 / Extraction Contract
 

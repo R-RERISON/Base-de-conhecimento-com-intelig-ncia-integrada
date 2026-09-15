@@ -44,12 +44,22 @@ Contrato: `domain-contract.md`. Estado atual é derivado do último evento appen
 - [x] T036 Unitários determinísticos — PASS 19/19.
 - [x] T037 PHP lint PASS 10/10 e package `0.3.0-dev.1` gerado.
 - [x] T038 Smoke ambiental `0.3.0-dev.1` — PASS por evidência do operador; Summary/Classificação sem regressão e nenhuma UI Review antecipada.
-- [ ] T039 Executar integração real do `Review_Store` na WordPress Comments API via `0.3.0-dev.2`, exigir 17/17 e cleanup zero resíduos.
+- [x] T039 Integração real do `Review_Store` na WordPress Comments API via `0.3.0-dev.2` — PASS 17/17, cleanup zero resíduos.
 
 **Gate G-001: PASS.**  
-Evidência: `evidencia-smoke-dev1-s003.md`.
+**Gate G-030: PASS determinístico + ambiental.**
 
-**Gate G-030: PASS determinístico local / integração ambiental pendente T039.**
+## S003.5 — Design System Runtime Foundation
+
+- [x] T039A Formalizar `design-system-runtime-plan.md`.
+- [ ] T039B Traduzir tokens UX-001 para CSS Custom Properties do plugin.
+- [ ] T039C Aplicar Context Header/surfaces/hierarquia à Knowledge List e artigo.
+- [ ] T039D Refinar Summary/Classificação sem alterar writers.
+- [ ] T039E Validar foco e reflow <=782px.
+- [ ] T039F Smoke visual + regressão funcional.
+
+**Gate DS-010: EM EXECUÇÃO.**  
+Design System entra agora; nenhuma ação de Review é exposta antes de G-070.
 
 ## S004 — HTTP e segurança
 
@@ -88,4 +98,4 @@ Evidência: `evidencia-smoke-dev1-s003.md`.
 
 ## Regra
 
-R-001, R-010 e G-001 estão PASS. O próximo passo obrigatório é T039: provar a integração real do event log na Comments API com fixtures temporárias antes de abrir o writer HTTP permanente.
+R-001, R-010, G-001 e G-030 estão PASS. A fundação visual do Design System entra antes da UI funcional de Review para impedir dívida de interface. Aparência não autoriza comportamento: Review continua sem writer HTTP/UI até G-070.

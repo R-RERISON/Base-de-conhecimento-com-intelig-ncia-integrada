@@ -1,0 +1,48 @@
+{
+    "schema_version": "1.0.1",
+    "mode": "temporary_classification_diagnostics",
+    "generated_at": "2026-09-15T00:30:21+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.2.0-dev.3",
+        "multisite": false
+    },
+    "safety": {
+        "fixture_marker": "spec002-classification-v1",
+        "persistent_report": false,
+        "real_content_modified": false,
+        "requires_capability": "manage_options",
+        "stale_posts_removed_before_run": 0,
+        "stale_terms_removed_before_run": 0
+    },
+    "checks": [
+        {"id":"HARNESS-01","gate":"HARNESS","status":"PASS","message":"Fixture post temporária criada."},
+        {"id":"HARNESS-02","gate":"HARNESS","status":"PASS","message":"Dois termos temporários criados para cada taxonomia canônica."},
+        {"id":"C010-01","gate":"C-010","status":"PASS","message":"Quatro taxonomias canônicas exatas."},
+        {"id":"C010-02","gate":"C-010","status":"PASS","message":"Taxonomias são administrativas, não públicas e sem writer paralelo via REST/meta box/quick edit."},
+        {"id":"G030-01","gate":"G-030","status":"PASS","message":"Leitura canônica é side-effect free."},
+        {"id":"G030-02","gate":"G-030","status":"PASS","message":"Update parcial altera somente conceito enviado e preserva omitidos."},
+        {"id":"G030-03","gate":"G-030","status":"PASS","message":"NO_CHANGE/dedupe não executa write de relação."},
+        {"id":"G030-04","gate":"G-030","status":"PASS","message":"Campo fora da allowlist falha sem mutação."},
+        {"id":"G030-05","gate":"G-030","status":"PASS","message":"Termo inexistente falha sem mutação."},
+        {"id":"G030-06","gate":"G-030","status":"PASS","message":"Termo existente em outra taxonomia é rejeitado."},
+        {"id":"G030-07","gate":"G-030","status":"PASS","message":"Tipo de conhecimento rejeita múltiplos termos."},
+        {"id":"G030-08","gate":"G-030","status":"PASS","message":"Conceito múltiplo deduplica/ordena IDs e persiste termos existentes."},
+        {"id":"G030-09","gate":"G-030","status":"PASS","message":"Valor vazio remove relações canônicas do conceito."},
+        {"id":"G070-01","gate":"G-070","status":"PASS","message":"Capability por objeto bloqueia write e preserva estado."},
+        {"id":"G070-02","gate":"G-070","status":"PASS","message":"Post type page é rejeitado pelo domínio."},
+        {"id":"B006-C01","gate":"B-006","status":"PASS","message":"Inconsistência de read-after-write aciona compensação e restaura snapshot real."},
+        {"id":"B006-C02","gate":"B-006","status":"PASS","message":"Reread final divergente após compensação é promovido a PARTIAL_FAILURE_CRITICAL."},
+        {"id":"G001-C01","gate":"G-001","status":"PASS","message":"Classificação não alterou título, post_content ou _elementor_data."},
+        {"id":"G030-10","gate":"G-030","status":"PASS","message":"Stores legados permanecem read-only durante writes canônicos."},
+        {"id":"REG001-01","gate":"REGRESSION-SPEC-001","status":"PASS","message":"Summary continua gravando sem alterar classificação canônica."}
+    ],
+    "summary": {"pass": 20, "fail": 0, "overall": "PASS", "duration_ms": 705},
+    "cleanup": {"post_fixture_deleted": true, "terms_deleted_count": 8, "residual_posts": 0, "residual_terms": 0},
+    "limitations": [
+        "Fault injection B-006 atua somente nas releituras canônicas fields=ids; leituras internas fields=tt_ids do wp_set_object_terms são ignoradas. Não simula falha física do banco.",
+        "Nonce/mass-assignment do handler HTTP completo serão exercitados em um gate HTTP separado após este diagnóstico técnico.",
+        "Esta classe deve ser removida do package final da SPEC-002."
+    ]
+}

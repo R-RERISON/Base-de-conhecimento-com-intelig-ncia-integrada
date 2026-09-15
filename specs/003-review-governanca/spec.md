@@ -1,6 +1,6 @@
 # SPEC-003 — Review & Governança do Conhecimento
 
-**Status:** R-001 PASS / R-010 PASS / S003 RUNTIME MÍNIMO AUTORIZADO  
+**Status:** R-001 PASS / R-010 PASS / G-001 PASS / G-030 PASS / DS-010 PASS / G-070 PASS / G-110 ACTIVE  
 **Baseline funcional:** `0.2.0-rc.1`  
 **Baseline UX:** `ux/001-product-experience-knowledge-workspace/ux-baseline-v1.md`  
 **Domain Contract:** `specs/003-review-governanca/domain-contract.md`
@@ -126,7 +126,7 @@ Evidência: `evidencia-profiling-s001.md`.
 
 A baseline UX v1 reserva Review & Governança no Knowledge Workspace.
 
-A primeira UI real só pode mostrar fatos contratados:
+A UI real só pode mostrar fatos contratados:
 
 - estado atual;
 - última decisão, ator e data quando existirem;
@@ -135,6 +135,8 @@ A primeira UI real só pode mostrar fatos contratados:
 - histórico real.
 
 A tela histórica do artigo com Resumo Executivo lateral foi registrada em `heritage-addendum-public-summary-v1.md`. Essa superfície pertence ao futuro Resolvedor e será projection read-only dos owners canônicos, não um novo writer.
+
+O G-110 foi aberto após o PASS do G-070. O build `0.3.0-dev.6` implementa W-001/W-002: shell do Knowledge Workspace + tab Review & Governança. Histórico e Browser Acceptance completo permanecem pendentes.
 
 ## 11. Segurança do writer
 
@@ -162,23 +164,27 @@ A tela histórica do artigo com Resumo Executivo lateral foi registrada em `heri
 
 ### G-001 — Bootstrap/registration
 
-Registro mínimo sem side effects e sem regressão SPEC-001/002.
+**PASS.** Registro mínimo sem side effects e sem regressão SPEC-001/002.
 
 ### G-030 — Deterministic domain/store
 
-Unitários para transições, no-op, note, autorização, insert failure, read-after-write, compensação e integridade do último evento.
+**PASS.** Unitários + integração real da Comments API aprovados.
+
+### DS-010 — Design System Runtime Foundation
+
+**PASS.** Foundation visual validada no runtime real.
 
 ### G-070 — HTTP Security
 
-GET, nonce, nonce-post binding, mass assignment, capability/IDOR, payload inválido e PRG real.
+**PASS.** Evidência final `0.3.0-dev.5`: `22 PASS / 0 FAIL / overall=PASS`, cleanup zero resíduos.
 
 ### G-110 — Browser Acceptance
 
-Workspace, estados, feedback, teclado, viewport estreito e regressão Summary/Classificação.
+**ACTIVE.** `0.3.0-dev.6` implementa W-001/W-002 e aguarda smoke ambiental. Histórico, teclado/foco final, viewports e Browser Acceptance permanecem pendentes.
 
 ### G-130 — Lifecycle/Clean package
 
-Sem fixture/runner residual, deactivate/activate limpo e package RC reproduzível.
+**BLOCKED até G-110 PASS.** Sem fixture/runner residual, deactivate/activate limpo e package RC reproduzível.
 
 ## 13. Critério de saída
 

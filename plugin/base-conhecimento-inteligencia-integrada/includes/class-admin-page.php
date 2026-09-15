@@ -56,8 +56,9 @@ final class Admin_Page {
 		$post_id = self::get_request_post_id();
 
 		echo '<div class="wrap bdc-kb-admin">';
-		echo '<h1>' . esc_html__( 'Base de Conhecimento — Summary narrativo', 'bdc-knowledge-base' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'Base de Conhecimento — Gestão do Conhecimento', 'bdc-knowledge-base' ) . '</h1>';
 		self::render_feedback();
+		Classification_Admin::render_feedback();
 
 		if ( $post_id > 0 ) {
 			self::render_editor( $post_id );
@@ -122,7 +123,7 @@ final class Admin_Page {
 	private static function render_editor( int $post_id ): void {
 		$post = get_post( $post_id );
 		if ( ! is_object( $post ) || Meta_Contract::POST_TYPE !== $post->post_type ) {
-			self::render_inline_error( 'O artigo informado não existe ou não pertence ao escopo da SPEC-001.' );
+			self::render_inline_error( 'O artigo informado não existe ou não pertence ao escopo da Base de Conhecimento.' );
 			self::render_back_link();
 			return;
 		}
@@ -162,6 +163,8 @@ final class Admin_Page {
 
 		submit_button( __( 'Salvar Summary', 'bdc-knowledge-base' ) );
 		echo '</form>';
+
+		Classification_Admin::render_panel( $post_id );
 	}
 
 	private static function render_list(): void {
@@ -182,7 +185,7 @@ final class Admin_Page {
 			)
 		);
 
-		echo '<p>' . esc_html__( 'Selecione um artigo para ler ou editar somente os três campos narrativos autorizados.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p>' . esc_html__( 'Selecione um artigo para gerenciar o Summary narrativo e a Classificação de Conhecimento.', 'bdc-knowledge-base' ) . '</p>';
 		echo '<table class="widefat fixed striped bdc-kb-table">';
 		echo '<thead><tr><th>' . esc_html__( 'Artigo', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Status', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Ação', 'bdc-knowledge-base' ) . '</th></tr></thead><tbody>';
 
@@ -206,7 +209,7 @@ final class Admin_Page {
 			echo '<td><strong>' . esc_html( get_the_title( $post ) ) . '</strong><br><span class="description">#' . esc_html( (string) $post->ID ) . '</span></td>';
 			echo '<td>' . esc_html( $status_label ) . '</td>';
 			echo '<td>' . esc_html( get_the_modified_date( '', $post ) ) . '</td>';
-			echo '<td><a class="button" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Editar Summary', 'bdc-knowledge-base' ) . '</a></td>';
+			echo '<td><a class="button" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Gerenciar conhecimento', 'bdc-knowledge-base' ) . '</a></td>';
 			echo '</tr>';
 			++$rendered;
 		}

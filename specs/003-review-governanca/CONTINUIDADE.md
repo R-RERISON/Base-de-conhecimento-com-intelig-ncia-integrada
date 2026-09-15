@@ -7,7 +7,7 @@
 - UX-001: baseline v1 congelada; UI as Code v0.2 é a referência executável.
 - addendum de consumo: `ux/001-product-experience-knowledge-workspace/heritage-addendum-public-summary-v1.md`.
 - SPEC-003: **R-001 PASS / R-010 PASS / G-001 PASS / G-030 PASS / DS-010 PASS**.
-- etapa ativa: **G-070 — Writer HTTP e Segurança de Review**.
+- etapa ativa: **G-070 — Writer HTTP e Segurança de Review / rerun `0.3.0-dev.5`**.
 
 ## Evidência do ambiente real
 
@@ -83,17 +83,11 @@ Também ficou registrado um achado de arquitetura UX: o runtime ainda empilha `S
 
 Reflow/foco definitivo em `<=782px` e `~492px` permanece dentro do G-110 Browser Acceptance, quando o Workspace final existir.
 
-## Writer HTTP permanente / build ativo
+## Writer HTTP permanente
 
-Package: `0.3.0-dev.4`  
-SHA-256: `31564fb8bd0da0e0e501c0edeee434f75ce01a1a95410422065a219fa9b033cb`
+Arquivo permanente: `class-review-admin.php`.
 
-Arquivos novos:
-
-- permanente: `class-review-admin.php`;
-- temporário: `class-review-http-diagnostics.php`.
-
-Contrato HTTP:
+Contrato HTTP preservado:
 
 - POST only;
 - nonce vinculado ao post;
@@ -103,26 +97,63 @@ Contrato HTTP:
 - PRG;
 - `NO_CHANGE`, `FAIL_SAFE`, `PARTIAL_FAILURE_CRITICAL` preservados.
 
-Runner temporário:
+## Evidência real do G-070 — `0.3.0-dev.4`
 
-- usa somente 2 posts, 1 page e 4 termos temporários;
-- testa GET/nonce/mass assignment/payload inválido/post type/ID inexistente;
-- testa `edit_post` e `edit_others_posts` com negação assinada restrita à fixture;
-- testa POST válido, NO_CHANGE, nota obrigatória, limite de bytes, `needs_changes` e `approved`;
-- verifica preservação de editorial/Summary/Classificação/legado;
-- cleanup obrigatório.
+Arquivo bruto:
 
-Documento: `package-dev4-http.md`.
+`evidencias/bdc-kb-review-http-security-20260915-155801.json`
+
+Resultado:
+
+- `15 PASS / 7 FAIL`;
+- `overall=FAIL`;
+- `residual_posts=0`;
+- `residual_terms=0`;
+- `residual_review_events=0`.
+
+Os testes H01-H13 passaram. As falhas ficaram concentradas em H14-H20, isto é, nas asserções que dependem da visão pós-write no processo pai do runner.
+
+Observações decisivas do próprio relatório:
+
+- `object_capability`: `302 / forbidden`;
+- `valid_submit`: `302 / saved`;
+- `reviewer_capability`: `302 / forbidden`.
+
+Isso indica que o request filho atravessou o `admin-post.php` e o writer retornou os statuses esperados, enquanto as verificações posteriores do runner permaneceram incompatíveis com a mutação recém-realizada.
+
+Diagnóstico documentado em `evidencia-g070-dev4-cache-coherence.md`: incoerência de cache de Comments API entre o request PHP filho do loopback e o processo pai que executa `Review_Store::read()` / `event_count()`.
+
+**G-070 NÃO está aprovado.** O resultado `0.3.0-dev.4` foi preservado como evidência de FAIL real; ele não foi reinterpretado como PASS.
+
+## Build ativo para rerun — `0.3.0-dev.5`
+
+Alteração deliberadamente limitada ao harness temporário:
+
+- novo `class-review-http-cache-coherence.php`;
+- carregado somente com `BDC_KB_REVIEW_HTTP_DIAGNOSTICS_BUILD=true`;
+- após loopback destinado ao writer Review, o processo pai avança `wp_cache_set_comments_last_changed()` antes das releituras do harness;
+- `class-review-admin.php` permanece inalterado;
+- `class-review-store.php` permanece inalterado;
+- nenhuma regra de segurança foi relaxada.
+
+Documento: `package-dev5-http-cache-coherence.md`.
+
+Artefatos temporários a remover antes do RC:
+
+- `class-review-http-diagnostics.php`;
+- `class-review-http-cache-coherence.php`;
+- flag `BDC_KB_REVIEW_HTTP_DIAGNOSTICS_BUILD`.
 
 ## Próximo passo exato
 
-1. substituir `0.3.0-dev.3` por `0.3.0-dev.4`;
+1. instalar/substituir o build atual por `0.3.0-dev.5`;
 2. abrir **Base de Conhecimento** como administrador;
 3. clicar **Executar segurança HTTP Review e gerar JSON**;
-4. retornar `bdc-kb-review-http-security-*.json`;
+4. retornar o novo `bdc-kb-review-http-security-*.json`;
 5. exigir `22 PASS / 0 FAIL / overall=PASS`;
-6. exigir `residual_posts=0`, `residual_terms=0`, `residual_review_events=0`;
-7. somente depois abrir G-110 e integrar Review ao Knowledge Workspace com tabs.
+6. exigir novamente `residual_posts=0`, `residual_terms=0`, `residual_review_events=0`;
+7. somente depois alterar G-070 para PASS e abrir G-110;
+8. G-110 deve integrar Review ao Knowledge Workspace com tabs, sem criar terceiro bloco vertical.
 
 ## UX / valor preservado
 
@@ -138,7 +169,8 @@ A tela histórica de artigo com **Resumo Executivo lateral** foi registrada como
 - não criar tabela própria sem necessidade comprovada;
 - não recuperar stores KB2Ops vazios por nostalgia arquitetural;
 - não expor UI funcional de Review antes de G-070 PASS;
-- não adicionar Review como terceiro bloco vertical.
+- não adicionar Review como terceiro bloco vertical;
+- não modificar writer/store permanentes para mascarar falha do harness.
 
 ## Gates
 
@@ -147,5 +179,6 @@ A tela histórica de artigo com **Resumo Executivo lateral** foi registrada como
 - G-001: **PASS**.
 - G-030: **PASS**.
 - DS-010: **PASS**.
-- G-070: **IMPLEMENTADO / AGUARDANDO EXECUÇÃO REAL**.
-- G-110/G-130: bloqueados pela sequência normal.
+- G-070: **NÃO APROVADO — `0.3.0-dev.4` = 15 PASS / 7 FAIL; `0.3.0-dev.5` aguardando execução real**.
+- G-110: **BLOQUEADO**.
+- G-130: **BLOQUEADO pela sequência normal**.

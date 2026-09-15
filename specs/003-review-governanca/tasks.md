@@ -67,16 +67,18 @@ O PASS valida tokens, surfaces e linguagem visual no runtime; NÃO aprova o layo
 
 ## S004 — HTTP e segurança
 
-- [ ] T040 Handler POST + nonce vinculado.
-- [ ] T041 Capability por objeto.
-- [ ] T042 Allowlist de transição/payload.
-- [ ] T043 PRG.
-- [ ] T044 Runner HTTP temporário.
-- [ ] T045 GET/nonce/mass-assignment/IDOR/payload inválido.
-- [ ] T046 POST válido + reread + regressão SPEC-001/002.
-- [ ] T047 Cleanup zero resíduos.
+- [x] T040 Handler POST + nonce vinculado implementado em `class-review-admin.php`.
+- [x] T041 Capability por objeto `edit_post(post_id)` preservada no handler/store.
+- [x] T042 Allowlist exata de payload `target_state`/`note` implementada.
+- [x] T043 PRG implementado com statuses explícitos.
+- [x] T044 Runner HTTP temporário criado em `class-review-http-diagnostics.php`.
+- [ ] T045 Executar GET/nonce/mass-assignment/IDOR/payload inválido no ambiente real.
+- [ ] T046 Executar POST válido + reread + regressão SPEC-001/002.
+- [ ] T047 Confirmar cleanup zero resíduos.
 
-**Gate G-070: NOT_RUN.**
+Package: `0.3.0-dev.4`; documento `package-dev4-http.md`.
+
+**Gate G-070: IMPLEMENTADO / AGUARDANDO EXECUÇÃO REAL.**
 
 ## S005 — UX / Browser Acceptance
 
@@ -102,4 +104,4 @@ O PASS valida tokens, surfaces e linguagem visual no runtime; NÃO aprova o layo
 
 ## Regra
 
-R-001, R-010, G-001, G-030 e DS-010 estão PASS. O próximo gate é G-070: provar o writer HTTP permanente de Review antes de expor a UI funcional. O G-110 será responsável por convergir Summary, Classificação e Review para o Knowledge Workspace, evitando um terceiro bloco vertical.
+R-001, R-010, G-001, G-030 e DS-010 estão PASS. O writer HTTP permanente de Review e o runner G-070 estão implementados no `0.3.0-dev.4`; o próximo passo obrigatório é executar o JSON de segurança no ambiente real. O G-110 só abre após G-070 PASS e será responsável por convergir Summary, Classificação e Review para o Knowledge Workspace, evitando um terceiro bloco vertical.

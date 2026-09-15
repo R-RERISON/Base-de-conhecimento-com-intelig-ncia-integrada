@@ -5,132 +5,137 @@
 - SPEC-001: concluída.
 - SPEC-002: concluída, baseline `0.2.0-rc.1`.
 - UX-001: baseline v1 congelada; UI as Code v0.2 é a referência executável.
-- SPEC-003: **R-001 PASS / R-010 PASS / G-001 PASS / G-030 PASS / DS-010 PASS / G-070 PASS**.
-- etapa ativa: **G-110 — Knowledge Workspace / Browser Acceptance**.
-- build ativo: **`0.3.0-dev.11` — rerun final após correção do PRG de Classificação**.
+- SPEC-003: **R-001 PASS / R-010 PASS / G-001 PASS / G-030 PASS / DS-010 PASS / G-070 PASS / G-110 PASS**.
+- etapa ativa: **G-130 — Lifecycle / fechamento**.
+- build ativo: **`0.3.0-rc.1` — runtime limpo, lifecycle ambiental pendente**.
 
-## Estado funcional comprovado
+## G-110 fechado
 
-- W-001 Workspace shell: PASS ambiental inicial (`dev.6`);
-- W-002 Review & Governança no Workspace: PASS ambiental inicial (`dev.6`);
-- W-003 Histórico read-only: PASS ambiental inicial (`dev.7`);
-- teclado/foco/links: PASS em browser real;
-- reflow 1440/1024/782/492: PASS no `dev.10`;
-- Summary: render/save/permanência na tab PASS no `dev.10`;
-- Review: `unreviewed -> in_review -> needs_changes -> approved` PASS no `dev.10`;
-- `NO_CHANGE`, note required, capability visual e Histórico consistente: PASS no `dev.10`;
-- server assertions: 7/7 PASS no `dev.10`;
-- cleanup: zero resíduos no `dev.10`;
-- G-070: PASS 22/22 com cleanup zero.
+Evidência final real:
 
-## Browser Acceptance `0.3.0-dev.10` — FAIL localizado
-
-Evidência bruta:
-
-`evidencias/bdc-kb-g110-browser-acceptance-20260915-194552.json`
-
-Diagnóstico:
-
-`evidencia-g110-dev10-classification-prg.md`
-
-Resultado:
-
-- browser: **21 PASS / 1 FAIL**;
-- server: **7 PASS / 0 FAIL**;
-- `overall=FAIL`;
-- cleanup: `residual_posts=0`, `residual_terms=0`, `residual_review_events=0`.
-
-Único FAIL:
-
-`G110-B10 — Classificação salva pelo formulário real e permanece no contexto/tab.`
-
-A URL após o save continha:
-
-- `bdc_classification_status=saved`;
-- `post_id` correto;
-- **não continha `tab=classification`**.
-
-Ao mesmo tempo, `G110-S05` passou, portanto a Classificação foi persistida corretamente no store canônico.
-
-Conclusão: não é falha de persistência nem de segurança. É um bug real e localizado de PRG/UX.
-
-## Diagnóstico de código
-
-`Classification_Admin::redirect()` montava:
-
-- `page`;
-- `bdc_classification_status`;
-- `post_id`.
-
-Faltava:
-
-`tab=classification`
-
-Isso quebrava o requisito de permanência no mesmo domínio após salvar.
-
-## Build ativo — `0.3.0-dev.11`
-
-Correção mínima e permanente:
-
-- `Classification_Admin::redirect()` agora inclui `'tab' => 'classification'`;
-- nenhuma alteração em `Classification_Store`;
-- nenhuma alteração em `Classification_Contract`;
-- nenhuma alteração em `Summary_Store`;
-- nenhuma alteração em `Review_Store`/`Review_Contract`;
-- nenhuma alteração de schema/persistência;
-- Browser Acceptance continua habilitado para o rerun final.
+`evidencias/bdc-kb-g110-browser-acceptance-20260915-200043.json`
 
 Documento:
 
-`package-dev11-classification-prg.md`
+`evidencia-g110-dev11-pass.md`
 
-ZIP instalável SHA-256:
+Ambiente:
 
-`85766f0298afe5bb10c779f0901e7b3e2b010792b66034e0e86f1f4023f7d3c8`
+- WordPress `6.9.4`;
+- PHP `8.5.10`;
+- plugin `0.3.0-dev.11`;
+- multisite: não.
+
+Resultado:
+
+- browser: **22 PASS / 0 FAIL**;
+- server: **7 PASS / 0 FAIL**;
+- `overall=PASS`;
+- `residual_posts=0`;
+- `residual_terms=0`;
+- `residual_review_events=0`.
+
+O gate comprovou em browser real:
+
+- Workspace com cinco tabs autorizadas;
+- Summary e Classificação salvando e permanecendo em suas tabs;
+- Review `unreviewed -> in_review -> needs_changes -> approved`;
+- `NO_CHANGE` sem evento extra;
+- nota obrigatória em `needs_changes`;
+- UI filtrada por capability;
+- Histórico read-only consistente com o event log;
+- teclado, foco e Enter;
+- reflow em 1440 / 1024 / 782 / 492 px;
+- preservação de `post_status`, `post_content` e `_elementor_data`;
+- cleanup integral.
+
+**G-110: PASS determinístico + ambiental.**
+
+## Contrato permanente preservado
+
+- owner de Review & Governança permanece o domínio SPEC-003;
+- estado inicial implícito: `unreviewed`;
+- estados: `unreviewed`, `in_review`, `needs_changes`, `approved`, `excluded`;
+- fonte canônica: Comments API append-only, `comment_type=bdc_kb_review_event`;
+- estado atual = último evento válido;
+- Histórico = projection read-only do event log;
+- sem meta paralela de current state;
+- sem tabela customizada;
+- sem writer próprio para Histórico;
+- `post_status` independente de governança;
+- `AI Ready`, score e métricas artificiais fora do domínio.
+
+## G-130 — cleanup executado
+
+Após o PASS de G-110 foram removidos do runtime:
+
+- `includes/class-review-http-cache-coherence.php`;
+- `includes/class-review-http-diagnostics.php`;
+- `includes/class-workspace-browser-diagnostics.php`;
+- `assets/js/browser-acceptance.js`;
+- flags `BDC_KB_REVIEW_HTTP_DIAGNOSTICS_BUILD` e `BDC_KB_WORKSPACE_BROWSER_DIAGNOSTICS_BUILD`;
+- hooks condicionais dos runners G-070/G-110.
+
+Busca no código atual não encontrou referências residuais às classes/flags de diagnóstico.
+
+Nenhum Store/Contract permanente foi removido ou refatorado durante o cleanup.
+
+## Package ativo — `0.3.0-rc.1`
+
+Documento:
+
+`package-0.3.0-rc.1-clean.md`
+
+SHA-256:
+
+`7f681a3f62d792d30ccb016ae64b03e83d5cc46c4b2b1e2c2d96d41e3dfd0db5`
+
+Tamanho:
+
+`31.036 bytes`
 
 Validação local:
 
-- PHP lint: PASS 14/14;
-- JavaScript syntax: PASS 2/2;
-- integridade ZIP: PASS;
-- estrutura instalável WordPress: PASS.
+- PHP lint: **PASS 11/11**;
+- `assets/js/workspace.js`: syntax PASS;
+- `unzip -t`: PASS;
+- estrutura instalável WordPress: PASS;
+- zero artefatos temporários no ZIP;
+- source parity: **15/15 arquivos permanentes do build coincidem exatamente com os blobs do `main` pós-cleanup**;
+- zero arquivo excedente no diretório de build.
 
-O `dev.11` deve repetir o runner completo, não somente B10, para impedir falso positivo por correção localizada.
+O RC foi reconstruído a partir do `main` limpo. Não foi produzido simplesmente removendo runners de um ZIP de desenvolvimento.
 
-## Próximo passo exato
+## Próximo passo exato — lifecycle ambiental
 
-1. instalar/substituir pelo `0.3.0-dev.11`;
-2. abrir **Base de Conhecimento** como administrador;
-3. executar **Browser Acceptance G-110 e gerar JSON**;
-4. aguardar sem fechar a aba;
-5. retornar o novo `bdc-kb-g110-browser-acceptance-*.json`;
-6. exigir `browser_fail=0`;
-7. exigir `server_fail=0`;
-8. exigir `overall=PASS`;
-9. exigir `residual_posts=0`, `residual_terms=0`, `residual_review_events=0`;
-10. somente então promover G-110 para PASS e abrir G-130.
+1. substituir o `0.3.0-dev.11` pelo `0.3.0-rc.1`;
+2. confirmar versão `0.3.0-rc.1` na tela de plugins;
+3. confirmar que os blocos de homologação G-070/G-110 não aparecem mais;
+4. abrir Base de Conhecimento e um artigo no Workspace;
+5. confirmar as cinco tabs: Visão geral, Summary, Classificação, Review & Governança e Histórico;
+6. fazer smoke de renderização de Summary e Classificação sem alterar conteúdo desnecessariamente;
+7. confirmar que Review e Histórico existentes continuam legíveis;
+8. desativar o plugin;
+9. ativar novamente;
+10. repetir abertura da Knowledge List/Workspace e confirmar ausência de fatal error, warnings ou perda de dados.
 
-## Artefatos temporários ainda presentes
+Somente após essa evidência:
 
-Remover no G-130 somente após G-110 PASS:
+- T062 pode ser marcado PASS;
+- G-130 pode ser promovido a PASS;
+- T065 pode congelar a baseline final da SPEC-003.
 
-- `class-review-http-diagnostics.php`;
-- `class-review-http-cache-coherence.php`;
-- `class-workspace-browser-diagnostics.php`;
-- `assets/js/browser-acceptance.js`;
-- flags `BDC_KB_REVIEW_HTTP_DIAGNOSTICS_BUILD` e `BDC_KB_WORKSPACE_BROWSER_DIAGNOSTICS_BUILD`.
+## Proibições durante G-130
 
-## Proibições mantidas
-
+- não adicionar feature;
+- não refatorar Store/Contract;
+- não alterar schema;
+- não criar migração;
+- não reintroduzir runners de homologação no RC;
 - não alterar `post_status` por governança;
-- não escrever `post_content` ou `_elementor_data` de posts reais;
-- não criar score;
-- não criar `AI Ready`;
+- não escrever `post_content` ou `_elementor_data` por Review;
 - não duplicar estado em meta + histórico;
-- não criar tabela própria sem necessidade comprovada;
-- não criar writer próprio para Histórico;
-- não recuperar stores KB2Ops vazios;
-- não ampliar o Workspace antes de G-110 PASS.
+- não criar tabela própria sem nova SPEC/necessidade comprovada.
 
 ## Gates
 
@@ -139,6 +144,6 @@ Remover no G-130 somente após G-110 PASS:
 - G-001: PASS.
 - G-030: PASS.
 - DS-010: PASS.
-- G-070: PASS — 22/22, cleanup zero resíduos.
-- G-110: **ACTIVE / NÃO APROVADO — dev.10 21/1 browser e 7/7 server; dev.11 aguardando rerun real**.
-- G-130: BLOQUEADO até G-110 PASS.
+- G-070: PASS — 22/22, cleanup zero.
+- G-110: **PASS — dev.11 22/22 browser, 7/7 server, cleanup zero**.
+- G-130: **ACTIVE — cleanup e RC concluídos; lifecycle ambiental pendente**.

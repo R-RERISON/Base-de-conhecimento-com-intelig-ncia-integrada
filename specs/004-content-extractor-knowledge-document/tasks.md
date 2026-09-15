@@ -18,11 +18,6 @@
 - [x] T014 Comprovar fingerprint editorial before/after idêntico.
 - [x] T015 Preservar JSON real sanitizado e análise do profiler.
 
-Evidências:
-
-- `evidence/r200-content-profile-20260915T213342Z.json`;
-- `r200-corpus-analysis.md`.
-
 **Gate R-200: PASS — 2026-09-15.**
 
 ## S002 — R-210 / Extraction Contract
@@ -42,7 +37,7 @@ Evidências:
 Contratos:
 
 - `extraction-contract-v1.md` — `FROZEN v1.0.0`;
-- `extraction-contract-v1.1.md` — `FROZEN v1.1.0`, amendment compatível.
+- `extraction-contract-v1.1.md` — `FROZEN v1.1.0`.
 
 **Gate R-210: PASS.**
 
@@ -60,12 +55,24 @@ Contratos:
 - [x] T039 Unit tests shortcodes/fallback/error isolation e zero-write.
 - [x] T040 Provar repetibilidade da saída intermediária.
 - [x] T041 Adicionar readiness `native/projectable/review_required/blocked` para futura migração Elementor, sem writer.
-- [x] T042 Integrar extractor como serviço sem hooks/jobs e desabilitar profiler temporário no build dev.
-- [ ] T043 Executar smoke do build `0.4.0-dev.1` no WordPress de homologação.
+- [x] T042 Integrar extractor como serviço read-only e desabilitar o profiler R-200.
+- [x] T043 Implementar runner ambiental temporário G-220 (`manage_options`, POST+nonce, agregados sem conteúdo/IDs).
+- [x] T044 Gerar e validar package `0.4.0-smoke.1`: lint 20/20, JS PASS, ZIP integrity PASS, parity 9/9, unit 14/14 sobre ZIP extraído.
+- [ ] T045 Instalar `0.4.0-smoke.1` no WordPress de homologação e executar smoke ambiental.
+- [ ] T046 Validar fingerprint equal, zero changed posts, corpus unchanged, zero extractor errors e zero throwables.
+- [ ] T047 Executar smoke manual das superfícies existentes Summary/Classificação/Review.
+- [ ] T048 Remover/desabilitar runner G-220 após evidência ambiental aceita.
 
-Evidência local: `g220-local-validation.md` — **14/14 unit tests PASS**, lint PASS e zero-write comprovado por stubs.
+Evidências:
 
-**Gate G-220: IMPLEMENTED / LOCAL PASS — fechamento ambiental pendente de T043.**
+- `g220-local-validation.md`;
+- `package-smoke1.md`.
+
+Package SHA-256:
+
+`3dad9f5f7c01e7970d314a0d0788756ad694cc9f3b9327a2834ead90b86e4c8f`
+
+**Gate G-220: IMPLEMENTED / LOCAL PASS — fechamento ambiental pendente de T045–T047.**
 
 ## S004 — G-230 / Knowledge Document
 
@@ -99,14 +106,12 @@ Evidência local: `g220-local-validation.md` — **14/14 unit tests PASS**, lint
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 
-Direção arquitetural: Elementor é o editor operacional padrão futuro; legacy/Gutenberg/plain representam fontes que devem ser avaliadas para convergência editorial controlada.
-
 - [x] T080 Congelar `elementor-normalization-contract-v1.md`.
 - [x] T081 Congelar `production-rollout-contract-v1.md`.
 - [ ] T082 Implementar Production Preflight read-only para comparar homologação x produção.
 - [ ] T083 Congelar matriz de compatibilidade WordPress/PHP/Elementor/plugins relevantes.
 - [ ] T084 Implementar Projection Plan read-only por post (`native/projectable/review_required/blocked`).
-- [ ] T085 Implementar `Elementor_Gateway` version-gated usando Document lifecycle; writer permanece desabilitado por default.
+- [ ] T085 Implementar `Elementor_Gateway` version-gated usando Document lifecycle; writer desabilitado por default.
 - [ ] T086 Definir/persistir journal transacional suficiente para rollback editorial.
 - [ ] T087 Implementar dry-run de migração sem writes.
 - [ ] T088 Implementar stale-source guard por hash/modified.
@@ -114,11 +119,6 @@ Direção arquitetural: Elementor é o editor operacional padrão futuro; legacy
 - [ ] T090 Executar canário em homologação e validar abertura/save no editor Elementor + frontend.
 - [ ] T091 Testar rollback integral do canário.
 - [ ] T092 Produzir runbook de instalação/upgrade/migration/rollback para produção.
-
-Contratos:
-
-- `elementor-normalization-contract-v1.md`;
-- `production-rollout-contract-v1.md`.
 
 **Gate G-245: PLANNED — writer editorial NÃO autorizado ainda.**
 
@@ -140,9 +140,10 @@ Contratos:
 ## Regras constitucionais de continuidade
 
 1. Content Extractor/Knowledge Document permanecem read-only.
-2. Normalização editorial para Elementor é um fluxo de migration separado e explícito.
-3. Instalação/activation/update do plugin nunca converte posts automaticamente.
+2. Normalização editorial para Elementor é fluxo de migration separado e explícito.
+3. Instalação/activation/update nunca converte posts automaticamente.
 4. Nenhuma migration editorial em massa antes de dry-run, journal/rollback e canário.
 5. Usuário/editor vence sobre migration atrasada: source divergente vira `STALE_SOURCE`.
 6. IA não é usada para reparar parsing nem para writer inicial de Elementor.
-7. Nenhuma etapa posterior pode compensar lacuna de segurança da anterior.
+7. Runner de smoke é temporário e não chega ao RC/produção.
+8. Nenhuma etapa posterior compensa lacuna de segurança da anterior.

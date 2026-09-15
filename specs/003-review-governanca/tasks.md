@@ -123,22 +123,24 @@ Evidências Browser Acceptance:
 
 - [x] T060 Remover runners/hooks/assets temporários G-070/G-110 e flags de diagnóstico.
 - [x] T061 Gerar package limpo `0.3.0-rc.1` a partir do `main` pós-cleanup.
-- [ ] T062 Instalar/substituir RC, desativar e ativar no ambiente real sem regressão.
+- [x] T062 Instalar/substituir RC, desativar e ativar no ambiente real sem regressão — PASS por confirmação do operador.
 - [x] T063 Confirmar cleanup das fixtures do último Browser Acceptance — zero resíduos.
 - [x] T064 Atualizar evidência final G-110, package RC e continuidade técnica.
-- [ ] T065 Congelar baseline final da SPEC-003 após lifecycle smoke do RC.
+- [x] T065 Congelar baseline final da SPEC-003 em `0.3.0-rc.1`.
 
 Package RC:
 
 - `package-0.3.0-rc.1-clean.md`;
+- `evidencia-g130-rc1-pass.md`;
 - SHA-256: `7f681a3f62d792d30ccb016ae64b03e83d5cc46c4b2b1e2c2d96d41e3dfd0db5`;
 - PHP lint: 11/11 PASS;
 - JavaScript permanente: syntax PASS;
 - source parity: 15/15 blobs do build coincidem com `main`;
-- zero artefatos temporários no ZIP.
+- zero artefatos temporários no ZIP;
+- lifecycle ambiental deactivate/activate: PASS.
 
-**Gate G-130: ACTIVE — RC limpo gerado; lifecycle ambiental do RC pendente.**
+**Gate G-130: PASS ambiental.**
 
-## Regra
+## Estado final
 
-G-110 está fechado. O produto funcional fica congelado em `0.3.0-rc.1`; nenhuma nova feature ou refatoração é autorizada durante G-130. O único passo permitido antes do congelamento da SPEC-003 é validar o lifecycle real do RC: instalação/substituição, deactivate/activate e smoke das cinco tabs sem runners de homologação.
+**SPEC-003 concluída.** `0.3.0-rc.1` é a baseline congelada para a SPEC-004. Novas mudanças funcionais devem pertencer à próxima SPEC e preservar os contratos de Summary, Classificação, Review, Histórico e Workspace já aprovados.

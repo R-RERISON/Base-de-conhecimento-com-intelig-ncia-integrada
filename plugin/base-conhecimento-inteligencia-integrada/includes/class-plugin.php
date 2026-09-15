@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Registra apenas os hooks necessários aos vertical slices autorizados.
+ * Registra apenas os hooks necessários ao vertical slice autorizado.
  */
 final class Plugin {
 
@@ -23,5 +23,9 @@ final class Plugin {
 		add_action( 'admin_enqueue_scripts', array( Admin_Page::class, 'enqueue_assets' ) );
 		add_action( 'admin_post_' . Admin_Page::ACTION, array( Admin_Page::class, 'handle_save' ) );
 		add_action( 'admin_post_' . Classification_Admin::ACTION, array( Classification_Admin::class, 'handle_save' ) );
+
+		if ( defined( 'BDC_KB_HOMOLOGATION_BUILD' ) && BDC_KB_HOMOLOGATION_BUILD && class_exists( Classification_Diagnostics::class ) ) {
+			Classification_Diagnostics::register();
+		}
 	}
 }

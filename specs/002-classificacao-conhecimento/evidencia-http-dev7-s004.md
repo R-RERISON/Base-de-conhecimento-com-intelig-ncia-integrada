@@ -8,5 +8,5 @@ O ambiente corporativo interceptava roles reduzidas em `/acesso-restrito/` antes
 
 Cleanup: 3 posts/page removidos; 5 termos removidos; 0 usuários temporários no dev7; resíduos 0/0/0.
 
-JSON: `evidencias/bdc-kb-classification-http-security-20260915-105820.json`.
-SHA-256: `6f739f4b13dd3c941587fece4d170b2781987b992bd7ee96fab64465afa00fa2`.
+Espelho normalizado versionado: `evidencias/bdc-kb-classification-http-security-20260915-105820.json`.
+SHA-256 da evidência original recebida: `6f739f4b13dd3c941587fece4d170b2781987b992bd7ee96fab64465afa00fa2`.

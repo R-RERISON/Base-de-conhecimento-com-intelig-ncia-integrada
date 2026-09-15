@@ -55,13 +55,15 @@ Contrato: `domain-contract.md`. Estado atual é derivado do último evento appen
 - [x] T039B Traduzir tokens UX-001 para CSS Custom Properties do plugin.
 - [x] T039C Aplicar surfaces/hierarquia à Knowledge List e contexto do artigo sem mudar navegação.
 - [x] T039D Refinar visual de Summary/Classificação sem alterar writers.
-- [ ] T039E Validar foco e reflow <=782px no ambiente real.
-- [ ] T039F Smoke visual + regressão funcional do `0.3.0-dev.3`.
+- [x] T039E Smoke visual desktop real do `0.3.0-dev.3` + regressão funcional — PASS por capturas/evidência do operador.
+- [ ] T039F Reflow/foco <=782px e ~492px — deliberadamente transferido para G-110 Browser Acceptance após entrada do Workspace final.
+
+Evidência: `evidencia-design-system-runtime-dev3.md`.
 
 Package visual: `0.3.0-dev.3` — PHP lint PASS 10/10; runner Review Diagnostics removido.
 
-**Gate DS-010: AGUARDANDO SMOKE VISUAL.**  
-Design System entra agora; nenhuma ação de Review é exposta antes de G-070.
+**Gate DS-010: PASS — Runtime Foundation.**  
+O PASS valida tokens, surfaces e linguagem visual no runtime; NÃO aprova o layout final do Knowledge Workspace. As capturas confirmaram que o empilhamento vertical `Summary -> Classificação` deve ser substituído por Workspace/tabs em G-110, antes de adicionar Review como superfície visual.
 
 ## S004 — HTTP e segurança
 
@@ -78,7 +80,7 @@ Design System entra agora; nenhuma ação de Review é exposta antes de G-070.
 
 ## S005 — UX / Browser Acceptance
 
-- [ ] T050 Integrar Review ao Knowledge Workspace conforme UX v1.
+- [ ] T050 Integrar Review ao Knowledge Workspace conforme UX v1, substituindo empilhamento vertical por navegação canônica.
 - [ ] T051 Não exibir score/AI Ready não contratados.
 - [ ] T052 Preservar Summary/Classificação e navegação.
 - [ ] T053 Testar teclado/foco.
@@ -100,4 +102,4 @@ Design System entra agora; nenhuma ação de Review é exposta antes de G-070.
 
 ## Regra
 
-R-001, R-010, G-001 e G-030 estão PASS. A fundação visual do Design System entra antes da UI funcional de Review para impedir dívida de interface. Aparência não autoriza comportamento: Review continua sem writer HTTP/UI até G-070.
+R-001, R-010, G-001, G-030 e DS-010 estão PASS. O próximo gate é G-070: provar o writer HTTP permanente de Review antes de expor a UI funcional. O G-110 será responsável por convergir Summary, Classificação e Review para o Knowledge Workspace, evitando um terceiro bloco vertical.

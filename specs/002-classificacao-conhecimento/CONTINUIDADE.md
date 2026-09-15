@@ -3,28 +3,19 @@
 ## Estado
 
 - SPEC-001: CONCLUÍDA para desenvolvimento/homologação.
-- Baseline funcional: `0.1.0-rc.1`.
+- Baseline de regressão: `0.1.0-rc.1`.
 - SPEC ativa: **SPEC-002 — Classificação de Conhecimento**.
-- S001 profiling real: **PASS**.
 - C-001: **PASS**.
-- C-010: **PASS documental**.
-- S002 contratos físicos/segurança: **PASS documental**.
-- Runtime permanente de classificação: **IMPLEMENTADO em 0.2.0-dev.1**.
-- Smoke visual real do `0.2.0-dev.1`: **PASS**.
-- Próximo gate: diagnóstico técnico real do `0.2.0-dev.2`.
+- C-010: **PASS**.
+- G-001: **PASS**.
+- G-030: **PASS**.
+- B-006: **PASS**.
+- G-070: **PASS**.
+- G-110: **PASS**.
+- Regressão SPEC-001: **PASS**.
+- G-130: **PENDENTE lifecycle real do RC limpo**.
 
-## Evidência de profiling
-
-Ambiente real: WordPress 6.9.4 / PHP 8.5.10 / plugin `0.2.0-profile.1`.
-
-- 622 posts no escopo;
-- 36 linhas de postmeta classificatório entre 11 stores históricos;
-- stores KB2Ops perfilados sem dados neste ambiente;
-- stores GRE com cobertura ~0,96%–1,45% e forte heterogeneidade/freeform;
-- nenhum merge autorizado entre service/affected_service ou technologies/systems_involved;
-- decisão: não migrar automaticamente legado.
-
-## Slice canônico autorizado
+## Slice canônico
 
 Taxonomias WordPress namespaced:
 
@@ -33,52 +24,39 @@ Taxonomias WordPress namespaced:
 - `knowledge_type` -> `bdc_kb_knowledge_type` — single;
 - `catalog_item` -> `bdc_kb_catalog_item` — multi.
 
-Legado é somente referência read-only; sem dual-write e sem auto-promoção a termo.
+Legado permanece somente referência read-only. Não há dual-write, seed automático ou migração destrutiva.
 
-## Smoke `0.2.0-dev.1`
+## Evidência funcional final
 
-Comprovado visualmente no WordPress real:
+- técnico `0.2.0-dev.3`: 20/20 PASS;
+- HTTP `0.2.0-dev.7`: 18/18 PASS;
+- browser `0.2.0-dev.8`: overall PASS, 2 manual PASS, 0 auto FAIL, min viewport 492x660;
+- todos os runners encerraram com zero resíduos e sem modificar conteúdo real.
 
-- Summary da SPEC-001 permanece legível e íntegro;
-- painel de Classificação aparece no mesmo shell wp-admin;
-- quatro conceitos renderizam;
-- nenhum valor legado é selecionado automaticamente;
-- vocabulários inicialmente vazios;
-- links de gerenciamento aparecem para administrador;
-- sem fatal error observado.
+## RC preparado
 
-## Homologação `0.2.0-dev.2`
+- build: `0.2.0-rc.1`;
+- SHA-256: `a5120299ea907d271bc39b318857ba033cf0cf340fe1836289f42a4c717b8fb5`;
+- PHP lint: PASS 8/8;
+- scan por instrumentação temporária: PASS;
+- runners/flags de homologação removidos;
+- nenhuma rotina destrutiva de uninstall introduzida;
+- pequena melhoria CSS: multi-select de vocabulário vazio fica compacto, sem alterar contrato ou write path.
 
-Build temporário com runner onclick autossuficiente.
+## Próximo passo exato — G-130
 
-O runner usa somente fixtures próprias e cobre:
+1. substituir `0.2.0-dev.8` por `0.2.0-rc.1`;
+2. confirmar versão `0.2.0-rc.1` e ausência de qualquer painel/botão de homologação;
+3. abrir a listagem e um artigo real apenas para leitura;
+4. confirmar Summary e painel Classificação normais;
+5. confirmar que os quatro links de vocabulário continuam disponíveis para administrador;
+6. desativar o plugin;
+7. ativar novamente;
+8. repetir listagem + leitura de Summary/Classificação;
+9. confirmar que dados existentes permanecem e nenhum fixture reaparece.
 
-- contrato das quatro taxonomias;
-- read side-effect free;
-- update parcial/omitidos;
-- NO_CHANGE zero relação escrita;
-- allowlist;
-- termo inexistente;
-- termo de taxonomia errada;
-- cardinalidade single/multi;
-- empty/remove;
-- capability por objeto;
-- post type fora do escopo;
-- B-006 por inconsistência controlada de read-after-write;
-- preservação editorial;
-- legado read-only;
-- regressão de write do Summary da SPEC-001;
-- cleanup de post e termos temporários.
+Não é necessário alterar conteúdo real no lifecycle.
 
-## Próximo passo exato
+## Depois do G-130
 
-1. instalar por substituição `0.2.0-dev.2`;
-2. abrir Base de Conhecimento;
-3. clicar **Executar diagnóstico Classificação e gerar JSON**;
-4. enviar `bdc-kb-classification-diagnostics-*.json`;
-5. exigir `summary.overall=PASS`, `cleanup.residual_posts=0` e `cleanup.residual_terms=0`;
-6. somente depois preparar negativos HTTP/browser da Classificação.
-
-## Regra
-
-Não criar dados canônicos reais para “testar”. Homologação usa fixtures próprias até os gates técnicos estarem PASS.
+Se PASS: fechar T046B/T047, congelar `0.2.0-rc.1` como baseline e abrir **SPEC-003 — Review & Governança**. Não iniciar Search, vetores ou IA antes dessa decisão.

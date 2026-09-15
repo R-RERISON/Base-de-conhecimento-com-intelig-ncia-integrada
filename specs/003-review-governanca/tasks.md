@@ -2,19 +2,19 @@
 
 ## S001 — Descoberta / Current State
 
-- [ ] T001 Congelar baseline `0.2.0-rc.1` + UX v1.
-- [ ] T002 Inventariar artefatos históricos de review/governança no código GRE/KB2Ops disponível.
-- [ ] T003 Mapear metas/taxonomias/tabelas candidatas.
-- [ ] T004 Mapear writers e consumers históricos.
-- [ ] T005 Mapear roles/capabilities e handlers relacionados.
-- [ ] T006 Construir profiler read-only temporário.
+- [x] T001 Congelar baseline `0.2.0-rc.1` + UX v1.
+- [x] T002 Inventariar artefatos históricos de review/governança no código GRE/KB2Ops disponível.
+- [x] T003 Mapear metas/taxonomias/tabelas candidatas.
+- [x] T004 Mapear writers e consumers históricos.
+- [x] T005 Mapear roles/capabilities e handlers relacionados.
+- [x] T006 Construir profiler read-only temporário.
 - [ ] T007 Medir cobertura/distribuição de valores por store candidato.
 - [ ] T008 Medir presença de actor/timestamp auditável.
 - [ ] T009 Comparar com `post_status` e identificar sobreposição/conflito.
 - [ ] T010 Registrar política de legado: migrável / advisory / descartado.
 - [ ] T011 Gerar evidência JSON e cleanup do profiler.
 
-**Gate R-001: NOT_RUN.**
+**Gate R-001: NOT_RUN — aguardando execução do `0.3.0-profile.1` no ambiente real.**
 
 ## S002 — Domain Contract
 

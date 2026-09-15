@@ -283,6 +283,7 @@ final class Classification_Admin {
 	private static function redirect( int $post_id, string $status ): never {
 		$args = array(
 			'page'                      => Admin_Page::PAGE_SLUG,
+			'tab'                       => 'classification',
 			'bdc_classification_status' => sanitize_key( $status ),
 		);
 

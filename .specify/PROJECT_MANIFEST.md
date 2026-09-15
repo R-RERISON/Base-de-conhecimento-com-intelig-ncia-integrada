@@ -10,7 +10,7 @@
 
 ## Missão
 
-Construir uma plataforma única para governar a Base de Conhecimento sem substituir WordPress/Elementor como fonte editorial, evoluindo por vertical slices, com experiência de uso coerente e dados derivados reconstruíveis.
+Construir uma plataforma única para governar a Base de Conhecimento sem substituir WordPress/Elementor como fonte editorial, evoluindo por vertical slices, com experiência coerente e dados derivados reconstruíveis.
 
 ## Estado consolidado
 
@@ -55,11 +55,15 @@ Entregáveis mínimos:
 - mapa de navegação;
 - inventário de telas;
 - Design System v1;
-- Knowledge Workspace master mockup;
-- Review & Governance mockup;
+- Knowledge Workspace master;
+- Knowledge List;
+- Summary + Classificação no mesmo shell;
+- Review & Governance como antecipação visual controlada;
 - estados responsivos/acessibilidade;
-- mapa de herança visual KB2Ops: preservar / evoluir / descartar;
-- arquivo Figma editável como referência visual canônica.
+- mapa de herança visual KB2Ops;
+- **protótipo UI as Code executável e versionado no Git**.
+
+Figma e outras ferramentas externas são opcionais e não podem ser requisito de gate, build, teste ou continuidade.
 
 UX-001 não cria novas regras de negócio e não autoriza features futuras por antecipação. Cada SPEC funcional continua sendo autoridade do domínio que implementa.
 
@@ -68,15 +72,13 @@ UX-001 não cria novas regras de negócio e não autoriza features futuras por a
 - Editorial: `WP_Post` + Elementor.
 - Summary: Post Metadata API do WordPress.
 - Classificação: WordPress Taxonomy API, quatro conceitos canônicos do slice atual.
-- UX/UI: baseline transversal definida por UX-001 e refinada por SPEC sem quebrar o Design System canônico.
+- UX/UI: documentação UX-001 + protótipo UI as Code versionado.
 - O plugin não escreve `_elementor_data`.
 - O plugin não reescreve silenciosamente `post_content`.
 - Projeções/cache/índices nunca são fonte editorial.
 - IA é assistiva e continua fora das SPECs 001/002.
 
 ## Estratégia de produto
-
-Ordem canônica de evolução:
 
 1. Core + Summary — concluído;
 2. Classificação de Conhecimento — concluído;
@@ -95,6 +97,6 @@ A UX-001 é transversal e não substitui a numeração das SPECs funcionais.
 
 Compilar, passar unitário ou ter mockup aprovado isoladamente não basta. `FAIL`, `NOT_RUN`, `NOT_CONFIGURED` ou `STALE` em gate MUST bloqueia o avanço correspondente.
 
-Nenhum mockup pode transformar hipótese visual em contrato de domínio. Nenhuma implementação de nova feature pode ignorar o baseline UX congelado sem decisão explícita de mudança.
+Nenhum protótipo pode transformar hipótese visual em contrato de domínio. Nenhuma feature pode ignorar o baseline UX congelado sem decisão explícita.
 
 **GO de desenvolvimento/homologação != GO de produção.**

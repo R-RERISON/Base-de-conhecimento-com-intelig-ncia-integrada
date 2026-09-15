@@ -239,19 +239,37 @@
 		closeFrame(loaded);
 	}
 
-	function finalize() {
-		var form = document.createElement('form');
-		form.method = 'post';
-		form.action = cfg.adminPostUrl;
-		[['action', cfg.finalizeAction], ['post_id', String(cfg.postId)], ['token', cfg.token], ['nonce', cfg.finalizeNonce], ['browser_results', JSON.stringify(tests)]].forEach(function (pair) {
-			var input = document.createElement('input');
-			input.type = 'hidden';
-			input.name = pair[0];
-			input.value = pair[1];
-			form.appendChild(input);
+	async function finalize() {
+		var data = new FormData();
+		data.set('action', cfg.finalizeAction);
+		data.set('post_id', String(cfg.postId));
+		data.set('token', cfg.token);
+		data.set('nonce', cfg.finalizeNonce);
+		data.set('browser_results', JSON.stringify(tests));
+		var response = await fetch(cfg.adminPostUrl, {
+			method: 'POST',
+			body: data,
+			credentials: 'same-origin',
+			cache: 'no-store'
 		});
-		document.body.appendChild(form);
-		window.HTMLFormElement.prototype.submit.call(form);
+		if (!response.ok) { throw new Error('finalize HTTP ' + response.status); }
+		var payload = await response.json();
+		var report = payload && payload.success === true && payload.data ? payload.data : payload;
+		if (!report || !report.summary) { throw new Error('relatório final inválido'); }
+		var blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json;charset=utf-8' });
+		var href = URL.createObjectURL(blob);
+		var link = document.createElement('a');
+		link.href = href;
+		link.download = 'bdc-kb-g110-browser-acceptance-' + new Date().toISOString().replace(/[-:]/g, '').replace(/\..+/, '').replace('T', '-') + '.json';
+		document.body.appendChild(link);
+		link.click();
+		link.remove();
+		window.setTimeout(function () { URL.revokeObjectURL(href); }, 1000);
+		var notice = document.createElement('div');
+		notice.className = 'notice ' + (report.summary.overall === 'PASS' ? 'notice-success' : 'notice-error');
+		notice.innerHTML = '<p><strong>G-110 Browser Acceptance: ' + report.summary.overall + '</strong> — JSON baixado.</p>';
+		var wrap = document.querySelector('.bdc-kb-admin');
+		if (wrap) { wrap.insertBefore(notice, wrap.firstChild); }
 	}
 
 	async function run() {
@@ -267,7 +285,15 @@
 		} catch (error) {
 			add('G110-B99', false, 'Exceção durante Browser Acceptance.', error && error.message ? error.message : String(error));
 		}
-		finalize();
+		try {
+			await finalize();
+		} catch (finalizeError) {
+			var notice = document.createElement('div');
+			notice.className = 'notice notice-error';
+			notice.textContent = 'G-110: falha ao finalizar/baixar JSON: ' + (finalizeError && finalizeError.message ? finalizeError.message : String(finalizeError));
+			var wrap = document.querySelector('.bdc-kb-admin');
+			if (wrap) { wrap.insertBefore(notice, wrap.firstChild); }
+		}
 	}
 
 	window.setTimeout(run, 400);

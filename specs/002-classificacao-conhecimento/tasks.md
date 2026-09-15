@@ -43,13 +43,21 @@
 - [x] T042B Segurança HTTP `0.2.0-dev.7` — PASS 18/18; G-070; cleanup zero.
 - [x] T043 Browser acceptance `0.2.0-dev.8` — PASS; 2 manual PASS / 0 manual FAIL / 0 auto FAIL; viewport mínimo 492x660; cleanup zero.
 - [x] T044 Zero write editorial e zero write nos stores legados — PASS nas três camadas de evidência.
-- [x] T045 Retirar integralmente instrumentos temporários do RC — PASS local; scan de instrumentação PASS.
+- [x] T045 Retirar integralmente instrumentos temporários do RC — PASS; scan de instrumentação limpo.
 - [x] T046A Preparar package limpo `0.2.0-rc.1` — PASS local; PHP lint 8/8; SHA-256 `a5120299ea907d271bc39b318857ba033cf0cf340fe1836289f42a4c717b8fb5`.
-- [ ] T046B Executar lifecycle real G-130 no WordPress: substituir/ativar RC, confirmar ausência de homologação, desativar/reativar, reler Summary/Classificação.
-- [ ] T047 Fechar DoD/continuidade e decidir abertura da SPEC-003 após G-130 PASS.
+- [x] T046B Lifecycle real G-130 — PASS por confirmação do operador: substituição/ativação RC, ausência de homologação, desativação/reativação e releitura sem regressão.
+- [x] T047 Fechar DoD/continuidade e autorizar UX-001 antes da SPEC-003.
 
-## Regra de avanço
+## Estado final
 
-O runtime permanente continua autorizado somente para os quatro conceitos aprovados. Serviço, serviço afetado, tecnologias, sistemas, keywords e versões permanecem fora do slice.
+**SPEC-002 — CONCLUÍDA para desenvolvimento/homologação.**
 
-Nenhum valor histórico cria automaticamente termo canônico. G-130 é o único gate restante da SPEC-002.
+Baseline funcional congelada: `0.2.0-rc.1`.
+
+A conclusão não é GO de produção/cutover. Preflight de coexistência produtiva continua obrigatório antes de qualquer rollout em produção.
+
+## Próxima linha de trabalho
+
+**UX-001 — Product Experience & Knowledge Workspace** é a próxima trilha ativa e deve anteceder a implementação da SPEC-003.
+
+A UX-001 define arquitetura de informação, inventário de telas, Design System e mockups principais sem autorizar features futuras por antecipação.

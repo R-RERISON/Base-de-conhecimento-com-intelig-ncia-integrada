@@ -1,69 +1,38 @@
 # Current State — SPEC-004 Content Extractor e Knowledge Document
 
-## Baseline
+## Baseline e gates
 
 - baseline de entrada: `0.3.0-rc.1`;
-- SPEC-001 Summary: concluída;
-- SPEC-002 Classificação: concluída;
-- SPEC-003 Review & Governança: concluída;
+- SPEC-001/002/003: concluídas;
 - R-200: **PASS**;
 - R-210: **PASS**;
-- G-220: **IMPLEMENTED / LOCAL PASS / ENV SMOKE PENDING**;
-- package ativo de homologação: `0.4.0-smoke.1`.
+- G-220: **PASS ambiental**;
+- G-230: **IMPLEMENTED / LOCAL PASS / ENV SMOKE PENDING**.
 
-Contratos:
+## Ambiente de homologação validado
 
-- `extraction-contract-v1.md` — v1.0.0;
-- `extraction-contract-v1.1.md` — v1.1.0;
-- `elementor-normalization-contract-v1.md`;
-- `production-rollout-contract-v1.md`.
+Smoke G-220 executado sobre cópia de produção:
 
-## Direção editorial
+- WordPress `6.9.4`;
+- PHP `8.5.10`;
+- Elementor `4.1.0`;
+- multisite: não;
+- 622 posts.
 
-Elementor é o editor padrão atual da equipe. O corpus majoritariamente Legacy HTML é consequência histórica de migrações anteriores e não define a direção editorial futura.
+Evidência: `evidence/g220-smoke-20260915T221710Z.json`.
 
-A arquitetura separa:
+Segurança comprovada:
 
-1. **knowledge normalization** — read-only, multi-source e editor-independent;
-2. **editorial normalization para Elementor** — migration futura, explícita, versionada, auditável e reversível.
+- fingerprint editorial antes/depois idêntico;
+- zero posts alterados;
+- corpus 622 → 622;
+- zero extractor errors;
+- zero throwables;
+- sem persistência/renderização arbitrária.
 
-O plugin não vira CMS próprio.
+## Runtime Content Extractor
 
-## Evidência R-200
-
-Corpus: 622 posts.
-
-Distribuição estatística exclusiva:
-
-- Legacy HTML: 496 (79,74%);
-- Elementor: 74;
-- Plain text: 31;
-- Shortcode/plain: 10;
-- Mixed Elementor + blocks: 6;
-- Gutenberg: 3;
-- Empty: 2.
-
-Elementor:
-
-- presente em 80;
-- 39 JSON válidos;
-- 41 inválidos;
-- widgets observados: `text-editor` e `shortcode`.
-
-Gutenberg:
-
-- 9 posts com blocos;
-- `core/freeform`, `core/heading`, `core/paragraph`, `core/list`, `core/table`.
-
-Segurança do profiler:
-
-- fingerprint before/after idêntico;
-- 0 posts alterados;
-- corpus 622 → 622.
-
-## G-220 implementado
-
-Componentes permanentes:
+Implementado e ambientalmente aceito:
 
 - `Content_Normalizer`;
 - `Shortcode_Inspector`;
@@ -73,105 +42,108 @@ Componentes permanentes:
 - `Gutenberg_Adapter`;
 - `Content_Extractor`.
 
-Características:
+Resultado ambiental:
 
-- read-only;
-- sem hook/job próprio no núcleo do extractor;
-- sem storage;
-- sem IA/rede externa;
-- sem `do_shortcode()`;
-- sem `render_block()`;
-- sem renderização Elementor;
-- sem writers editoriais;
-- soft budget 256 KiB / hard safety limit 1 MiB;
-- sem truncamento silencioso;
-- `DOMDocument` opcional com fallback estrutural determinístico.
+- 21.969 fragments;
+- `legacy_html`: 536;
+- `plain_text`: 41;
+- `elementor`: 34;
+- `mixed`: 5;
+- `gutenberg`: 4;
+- `empty`: 2.
+
+A diferença em relação ao profiler R-200 é esperada: o extractor definitivo classifica Elementor inválido pela estratégia efetiva de fallback, principalmente Legacy HTML.
 
 ## Readiness Elementor
 
-A saída intermediária classifica:
+- native: 39;
+- projectable: 505;
+- review_required: 78;
+- blocked: 0.
 
-- `native`;
-- `projectable`;
-- `review_required`;
-- `blocked`.
+Isso significa 544/622 (87,46%) nativos ou projetáveis para o futuro pipeline de normalização; nenhum bloqueio estrutural foi observado nesta classificação inicial.
 
-Isso não grava `_elementor_data`; serve de base ao futuro Projection Plan.
+## Knowledge Document v1
 
-## Validação local
+Implementado em memória:
 
-`g220-local-validation.md`:
+- `Canonical_JSON`;
+- `Knowledge_Document`;
+- schema `1.0.0`;
+- sections ordenadas;
+- structure canônica;
+- `source_hash`;
+- `document_hash`;
+- proveniência de extração;
+- readiness Elementor apenas informativa.
 
-- lint: PASS;
-- 14/14 unit tests: PASS;
-- zero-write após cada caso;
-- repetibilidade: PASS;
-- fallback sem `DOMDocument`: PASS.
+Contrato: `knowledge-document-contract-v1.md`.
 
-## Package `0.4.0-smoke.1`
+### Hash semantics
+
+`source_hash` é baseado no conhecimento semanticamente extraído, não no JSON/HTML bruto.
+
+`document_hash` representa a projeção canônica da entidade editorial e exclui do payload do hash:
+
+- `document_hash`;
+- `canonical_url`;
+- `modified_gmt`.
+
+URL e data continuam presentes no documento como envelope operacional.
+
+## Testes locais
+
+- Content Extractor: **14/14 PASS**;
+- Knowledge Document: **10/10 PASS**;
+- zero-write: PASS;
+- canonical JSON repetível: PASS;
+- alteração semântica/título/ordem altera hashes: PASS;
+- URL/data/ruído bruto não usado não contamina hashes semânticos: PASS.
+
+## Package ambiental atual
+
+`0.4.0-smoke.2`
 
 SHA-256:
 
-`3dad9f5f7c01e7970d314a0d0788756ad694cc9f3b9327a2834ead90b86e4c8f`
+`1466cd4fcd18120d0b2405bf04ec629230f23c2a2e759869a8123c45cedaf204`
 
-Validações:
+Validação do artefato:
 
-- PHP lint antes/depois da extração do ZIP: 20/20 PASS;
+- 25 arquivos;
+- PHP lint extraído: 21/21 PASS;
 - JS syntax: PASS;
 - ZIP integrity: PASS;
-- source parity novos/alterados: 9/9 PASS;
-- 14/14 testes executados contra o conteúdo extraído do próprio ZIP.
+- parity: 25/25 PASS;
+- G-220 tests: 14/14 PASS;
+- G-230 tests: 10/10 PASS.
 
-Flags:
+O profiler R-200 e o runner G-220 não fazem parte desse package. Somente o runner temporário G-230 está habilitado.
 
-- `BDC_KB_SPEC004_PROFILE_BUILD=false`;
-- `BDC_KB_SPEC004_SMOKE_BUILD=true`.
+## Direção editorial e produção
 
-O antigo profiler permanece fisicamente até cleanup, mas não é carregado/registrado.
+Elementor permanece padrão editorial futuro.
 
-### Smoke runner temporário
+A arquitetura separa:
 
-`Content_Extractor_Smoke` adiciona somente no build de homologação:
+1. knowledge plane read-only;
+2. editorial migration plane explícito.
 
-**Base de Conhecimento → Smoke G-220**
+Migration editorial nunca roda em installation/activation/update e exige preflight, dry-run, stale-source guard, journal/rollback, canário e batches retomáveis.
 
-Controles:
+Contratos:
 
-- `manage_options`;
-- POST + nonce;
-- nenhuma persistência;
-- nenhum conteúdo/ID/título/URL exportado;
-- fingerprint editorial before/after;
-- agregação de source kinds, warnings, strategies, facts, readiness e performance.
-
-Este runner não poderá chegar ao RC/produção.
-
-## Produção
-
-Homologação é cópia da produção, mas o rollout futuro será target-aware.
-
-G-245 exigirá:
-
-- Production Preflight;
-- matriz WordPress/PHP/Elementor/plugins;
-- versionamento independente de runtime/schema/projection/migration;
-- dry-run;
-- journal/rollback;
-- stale-source guard;
-- canário;
-- batches retomáveis;
-- runbook.
-
-Activation/update nunca executará migration editorial para Elementor.
+- `elementor-normalization-contract-v1.md`;
+- `production-rollout-contract-v1.md`.
 
 ## Próximo passo
 
-Instalar `0.4.0-smoke.1` em homologação, executar smoke das funcionalidades existentes e o runner G-220, retornar o JSON e fechar o gate ambiental somente se:
+Executar `0.4.0-smoke.2` em homologação e retornar `bdc-kb-spec004-g230-smoke-*.json`.
 
-- fingerprint equal = true;
-- changed posts = 0;
-- corpus count unchanged;
-- extractor errors = 0;
-- throwables = 0.
+G-230 exige duas passagens completas de 622 documentos com:
 
-Depois disso inicia G-230.
+- zero errors;
+- zero throwables;
+- zero hash mismatches;
+- zero canonical JSON mismatches;
+- zero mutação editorial.

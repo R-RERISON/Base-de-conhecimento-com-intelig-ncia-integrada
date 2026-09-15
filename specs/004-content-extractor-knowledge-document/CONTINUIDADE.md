@@ -9,7 +9,7 @@
 - R-210: **PASS**.
 - G-220 — Content Extractor: **PASS ambiental**.
 - G-230 — Knowledge Document: **PASS ambiental — 2026-09-15**.
-- G-240 — Real Content Acceptance: **TOOLING READY / HUMAN ACCEPTANCE PENDING**.
+- G-240 — Real Content Acceptance: **PACKAGE READY / HUMAN ACCEPTANCE PENDING**.
 - branch atual: `spec004-g240-real-content-acceptance`.
 - G-245 — normalização Elementor/produção: planejado; writer ainda proibido.
 
@@ -67,9 +67,28 @@ Slots:
 
 A seleção usa métricas estruturais, mediana para casos típicos e score determinístico para casos complexos. O submit recalcula a amostra e rejeita alteração/omissão silenciosa via `selection_mismatches`.
 
-## Ferramenta temporária
+## Package temporário G-240
 
 Build: `0.4.0-acceptance.1`.
+
+Documento: `package-acceptance1.md`.
+
+SHA-256:
+
+`8391a0c2ace748711087c327a48d63aa2fa009963c2d4584488d2c1ed5679d82`
+
+Validação final:
+
+- runtime files: `25`;
+- PHP lint staging: `21/21 PASS`;
+- PHP lint ZIP extraído: `21/21 PASS`;
+- JS syntax: `1/1 PASS`;
+- ZIP integrity: PASS;
+- staging/ZIP parity: `25/25 PASS`;
+- acceptance safety scan: PASS;
+- runner acceptance Git/package blob: `5b88be5c9a3283e2055aea81950fdffed82f79f8` em ambos;
+- bootstrap Git/package blob: `49ea1b55b7535914c69c62f9434ae208b3970006` em ambos;
+- Profiler R-200, Smoke G-220 e Smoke G-230 fisicamente ausentes do ZIP.
 
 Menu esperado:
 
@@ -81,8 +100,9 @@ A página:
 - exibe fonte editorial e Knowledge Document lado a lado;
 - não executa shortcode, dynamic block ou render Elementor;
 - não persiste seleção/verdict/conteúdo;
-- materializa conteúdo completo apenas dos slots selecionados;
+- primeiro passe mantém apenas metadados estruturais leves e materializa conteúdo completo somente dos slots selecionados;
 - usa stale fingerprint por post;
+- recalcula a amostra no submit;
 - reconstrói o Knowledge Document duas vezes no submit;
 - exporta JSON sem corpo editorial, título ou URL;
 - exporta post ID somente para rastreabilidade da amostra.
@@ -138,6 +158,6 @@ Permanece separado:
 - R-210: **PASS**.
 - G-220: **PASS**.
 - G-230: **PASS**.
-- G-240: **TOOLING READY / HUMAN ACCEPTANCE PENDING**.
+- G-240: **PACKAGE READY / HUMAN ACCEPTANCE PENDING**.
 - G-245: **PLANNED — writer não autorizado**.
 - G-250: **NOT_RUN**.

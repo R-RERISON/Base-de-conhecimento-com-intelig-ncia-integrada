@@ -45,6 +45,15 @@
 	margin: 0;
 }
 
+@media (max-width: 782px) {
+	.bdc-kb-table th:nth-child(2),
+	.bdc-kb-table td:nth-child(2),
+	.bdc-kb-table th:nth-child(3),
+	.bdc-kb-table td:nth-child(3) {
+		display: none;
+	}
+}
+
 .bdc-kb-section-separator {
 	margin: 32px 0 24px;
 }
@@ -84,11 +93,8 @@
 	border: 1px solid #dcdcde;
 }
 
-@media (max-width: 782px) {
-	.bdc-kb-table th:nth-child(2),
-	.bdc-kb-table td:nth-child(2),
-	.bdc-kb-table th:nth-child(3),
-	.bdc-kb-table td:nth-child(3) {
-		display: none;
-	}
+/* Empty vocabulary: avoid a tall blank multi-select while preserving the native control contract. */
+.bdc-kb-term-select[multiple]:empty {
+	height: 38px;
+	min-height: 38px;
 }

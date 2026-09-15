@@ -32,62 +32,58 @@
 - [x] U024 Tokens e nomenclatura canônica.
 - [x] U025 Migrar Design System para CSS Custom Properties e classes reutilizáveis no protótipo.
 
-**Design System v1: PASS textual / execução UI as Code ativa.**
+**Design System v1: PASS.**
 
-## U030 — Master mockups → protótipos executáveis
+## U030 — Master prototype executável
 
-- [x] U030 Knowledge List — primeira versão executável versionada.
-- [x] U031 Knowledge Workspace — Summary executável no mesmo shell.
-- [x] U032 Knowledge Workspace — Classificação executável no mesmo shell.
-- [x] U033 Knowledge Workspace — Overview executável.
-- [ ] U034 Review & Governance — mockup controlado, sem domínio contratado.
-- [ ] U035 Histórico/atividade — placeholder arquitetural.
+- [x] U030 Knowledge List — UI as Code v0.2.
+- [x] U031 Knowledge Workspace — Summary no mesmo shell.
+- [x] U032 Knowledge Workspace — Classificação no mesmo shell.
+- [x] U033 Knowledge Workspace — Overview.
+- [x] U034 Review & Governança — conceito controlado, explicitamente não contratual.
+- [x] U035 Histórico/atividade — encaixe arquitetural representado sem persistência contratada.
 - [x] U036 Estados base: empty/loading/success/error/permission-read-only.
 
-**Gate UX-010: IN_PROGRESS — depende de QA visual/responsive final.**
+**Gate UX-010: PASS.**
 
 ## U040 — Responsividade e acessibilidade
 
-- [ ] U040 Validar desktop largo.
-- [ ] U041 Validar 783–1199px.
-- [ ] U042 Validar <=782px/mobile de contingência.
-- [ ] U043 Validar ordem de foco e teclado.
-- [ ] U044 Validar contraste e semântica de status.
-- [ ] U045 Validar labels/descriptions/aria patterns.
+- [x] U040 Desktop largo 1440px — PASS.
+- [x] U041 1024px — PASS.
+- [x] U042 782px e 492px — PASS, sem overflow horizontal.
+- [x] U043 Tabs por teclado + foco visível — PASS no protótipo.
+- [x] U044 Pares principais de contraste WCAG AA — PASS.
+- [x] U045 Labels/ARIA/feedback — PASS no QA automatizado.
 
-Especificação: `responsive-accessibility-v1.md`. Checklist: `prototype/visual-checklist.md`.
+Evidência: `prototype/QA-v0.2.md`.
 
-**Gate UX-030: NOT_RUN.**
+**Gate UX-030: PASS para protótipo. Browser acceptance real será repetido quando a nova shell for implementada no plugin.**
 
 ## U050 — Handoff UI as Code
 
-- [x] U050 Decidir UI as Code como artefato canônico; Figma arquivado.
-- [x] U051 Definir diretório `prototype/` e contrato de zero dependências.
-- [x] U052 Traduzir tokens para CSS Custom Properties.
-- [x] U053 Criar navegação entre List / Overview / Summary / Classificação / States.
-- [x] U054 Versionar checklist de QA visual.
-- [x] U055 Versionar protótipo navegável no Git.
+- [x] U050 UI as Code definido como artefato canônico; Figma arquivado.
+- [x] U051 Diretório `prototype/` com zero dependências externas.
+- [x] U052 Tokens em CSS Custom Properties.
+- [x] U053 HTML/CSS/JS separados e reutilizáveis.
+- [x] U054 Checklist/QA visual versionado.
+- [x] U055 Protótipo navegável versionado no Git.
 
-**Gate UX-050: PASS estrutural / evidência visual final será fechada junto ao UX-030.**
+**Gate UX-050: PASS.**
 
 ## U060 — Fechamento
 
-- [ ] U060 Review técnico com contratos SPEC-001/002.
-- [ ] U061 Review de aderência ao legado KB2Ops.
-- [ ] U062 Fechar decisões pendentes.
-- [ ] U063 Congelar baseline UX v1.
-- [ ] U064 Autorizar planejamento/implementação da SPEC-003.
+- [x] U060 Review técnico com contratos SPEC-001/002 — PASS.
+- [x] U061 Review de aderência ao legado KB2Ops — PASS.
+- [x] U062 Fechar decisões pendentes de shell/tabs/responsividade/tooling.
+- [x] U063 Congelar baseline UX v1 em `ux-baseline-v1.md`.
+- [x] U064 Autorizar planejamento da SPEC-003 Review & Governança.
 
-## Próximo bloco de execução
+## Resultado
 
-1. executar QA em 1440px, 1024px, 782px e ~492px;
-2. validar teclado/foco e semântica;
-3. corrigir gaps visuais do protótipo;
-4. fechar U034/U035 somente como arquitetura, sem domínio novo;
-5. fechar UX-010 + UX-030;
-6. executar U060/U061 e congelar UX v1;
-7. somente então autorizar SPEC-003.
+**UX-001: CONCLUÍDA PARA BASELINE DE PRODUTO.**
+
+Próxima frente: `SPEC-003 — Review & Governança`.
 
 ## Regra
 
-Nenhum protótipo autoriza schema, writer, estado de negócio ou integração futura. Ferramentas externas podem ajudar, mas nunca podem bloquear a continuidade.
+Nenhum protótipo autoriza schema, writer, estado de negócio ou integração futura. A implementação da SPEC-003 precisa definir seus próprios owners, estados, transições, capabilities, persistência e gates antes de alterar runtime.

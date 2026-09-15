@@ -54,6 +54,21 @@ final class Admin_Page {
 			array( 'bdc-kb-admin' ),
 			BDC_KB_VERSION
 		);
+
+		wp_enqueue_style(
+			'bdc-kb-history',
+			BDC_KB_URL . 'assets/css/history.css',
+			array( 'bdc-kb-workspace' ),
+			BDC_KB_VERSION
+		);
+
+		wp_enqueue_script(
+			'bdc-kb-workspace',
+			BDC_KB_URL . 'assets/js/workspace.js',
+			array(),
+			BDC_KB_VERSION,
+			true
+		);
 	}
 
 	public static function render(): void {
@@ -167,6 +182,9 @@ final class Admin_Page {
 			case 'review':
 				Review_Admin::render_panel( $post_id );
 				break;
+			case 'history':
+				Review_Admin::render_history_panel( $post_id );
+				break;
 			case 'overview':
 			default:
 				self::render_overview( $post_id );
@@ -198,9 +216,10 @@ final class Admin_Page {
 			'summary'        => 'Summary',
 			'classification' => 'Classificação',
 			'review'         => 'Review & Governança',
+			'history'        => 'Histórico',
 		);
 
-		echo '<nav class="bdc-kb-tabs" aria-label="' . esc_attr__( 'Domínios do Knowledge Workspace', 'bdc-knowledge-base' ) . '">';
+		echo '<nav class="bdc-kb-tabs" aria-label="' . esc_attr__( 'Domínios do Knowledge Workspace', 'bdc-knowledge-base' ) . '" data-bdc-workspace-tabs>';
 		foreach ( $tabs as $tab => $label ) {
 			$url = self::workspace_url( $post_id, $tab );
 			$class = 'bdc-kb-tab' . ( $tab === $active_tab ? ' is-active' : '' );
@@ -227,6 +246,7 @@ final class Admin_Page {
 		self::render_overview_card( 'Summary', 'Conteúdo narrativo canônico da SPEC-001.', self::workspace_url( $post_id, 'summary' ), 'Abrir Summary' );
 		self::render_overview_card( 'Classificação', 'Vocabulários canônicos e relações taxonômicas da SPEC-002.', self::workspace_url( $post_id, 'classification' ), 'Abrir Classificação' );
 		self::render_overview_card( 'Review & Governança', 'Estado atual: ' . $state_label . '.', self::workspace_url( $post_id, 'review' ), 'Abrir Review' );
+		self::render_overview_card( 'Histórico', 'Linha do tempo read-only das decisões de governança registradas.', self::workspace_url( $post_id, 'history' ), 'Abrir Histórico' );
 		echo '</div>';
 		echo '</section>';
 	}
@@ -376,7 +396,7 @@ final class Admin_Page {
 	private static function get_request_tab(): string {
 		if ( isset( $_GET['tab'] ) && is_scalar( $_GET['tab'] ) ) {
 			$tab = sanitize_key( wp_unslash( (string) $_GET['tab'] ) );
-			return in_array( $tab, array( 'overview', 'summary', 'classification', 'review' ), true )
+			return in_array( $tab, array( 'overview', 'summary', 'classification', 'review', 'history' ), true )
 				? $tab
 				: self::DEFAULT_TAB;
 		}

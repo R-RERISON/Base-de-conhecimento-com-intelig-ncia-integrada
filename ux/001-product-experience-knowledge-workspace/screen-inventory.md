@@ -1,73 +1,125 @@
-# Inventário de Telas v0 — UX-001
+# Inventário de Telas v1 — UX-001
+
+**Status:** FECHADO para Gate UX-001  
+**Baseline funcional:** `0.2.0-rc.1`
 
 ## Objetivo
 
-Mapear as superfícies de produto para impedir crescimento acidental da interface e orientar mockups priorizados.
+Mapear superfícies reais, referências históricas e superfícies futuras para impedir crescimento acidental da interface e orientar mockups priorizados.
 
-## Grupo A — existentes / contrato real
+## Família A — Curadoria / contrato real
 
 ### A01 — Knowledge List
 
 Estado: existente.  
 Função: listar artigos e abrir contexto de trabalho.  
+Evolução UX: incorporar busca/filtros/status apenas quando suportados por contrato; referência forte K02 do benchmark KB2Ops.  
 Prioridade mockup: ALTA.
 
 ### A02 — Knowledge Workspace / artigo
 
 Estado: existe como página administrativa com Summary + Classificação.  
-Função: editar domínios estruturados associados ao artigo sem alterar conteúdo editorial.  
+Função: trabalhar domínios estruturados associados ao artigo sem alterar o conteúdo editorial.  
+Evolução UX: substituir a página incremental por workspace com cabeçalho contextual + navegação interna.  
+Referência forte: K03 do benchmark KB2Ops.  
 Prioridade mockup: CRÍTICA.
 
 ### A03 — Summary
 
-Estado: implementado/homologado.  
-Campos: objetivo, escalonamento, importante.  
-Prioridade mockup: CRÍTICA como parte do Workspace.
+Estado: implementado/homologado na SPEC-001.  
+Campos canônicos: objetivo, escalonamento, importante.  
+Prioridade mockup: CRÍTICA como domínio do Workspace.
 
 ### A04 — Classificação
 
-Estado: implementado/homologado.  
-Conceitos: audiência, equipe responsável, tipo de conhecimento, item de catálogo.  
-Prioridade mockup: CRÍTICA como parte do Workspace.
+Estado: implementado/homologado na SPEC-002.  
+Conceitos canônicos: audiência, equipe responsável, tipo de conhecimento, item de catálogo.  
+Prioridade mockup: CRÍTICA como domínio do Workspace.  
+Referência K08 deve ser adaptada ao contrato atual, sem reintroduzir campos históricos.
 
 ### A05 — Gestão de Vocabulários
 
 Estado: UI nativa WordPress.  
-Prioridade mockup: MÉDIA; primeiro avaliar se a UI nativa é suficiente antes de criar substituta.
+Escopo: quatro taxonomias canônicas.  
+Decisão v1: permanecer nativa até evidência concreta de inadequação.  
+Prioridade mockup: BAIXA/MÉDIA.
 
-## Grupo B — próxima SPEC / antecipação visual controlada
+## Família B — Governança / antecipação visual controlada
 
 ### B01 — Review & Governance
 
 Estado: futura SPEC-003.  
-Mockup permitido: estrutura de experiência, estados visuais hipotéticos claramente marcados.  
-Mockup proibido: congelar schema, transições ou permissões sem SPEC.
+Mockup permitido: estrutura de experiência e encaixe no Workspace.  
+Mockup proibido: congelar estados, schema, transições, SLA ou permissões sem SPEC.
 
 ### B02 — Fila de revisão
 
-Estado: hipótese de produto a validar.  
-Só entra no baseline se a SPEC-003 comprovar necessidade.
+Estado: hipótese com suporte visual histórico no KB2Ops, ainda sem contrato novo.  
+Decisão: reservar arquitetura; não promover a superfície a runtime antes da SPEC-003.
 
 ### B03 — Histórico / atividade
 
 Estado: arquitetura futura.  
-Pode aparecer como placeholder para validar navegação e densidade.
+Pode aparecer como tab/placeholder para validar navegação e densidade, sem definir persistência.
 
-## Grupo C — roadmap futuro
+## Família C — Resolvedor / Search futuro
 
-### C01 — Search
-### C02 — Search Results / filtros
-### C03 — Content Extractor
-### C04 — Telemetria / Inteligência de Busca
-### C05 — Operações / Indexação
-### C06 — Semantic Search / Vetores
-### C07 — IA / Foundry / RAG
+O benchmark KB2Ops mostrou uma experiência de resolvedor visualmente distinta da curadoria. Essa separação é adotada como princípio arquitetural futuro, não como autorização de implementação.
 
-Estas telas não recebem mockup de alta fidelidade nesta fase. UX-001 deve apenas garantir espaço arquitetural para que não exijam outro produto/shell no futuro.
+### C01 — Search Home
+
+Referência: K05/K12.  
+Função futura: entrada por problema/pergunta, atalhos e descoberta.
+
+### C02 — Search Results
+
+Referência: K06.  
+Função futura: query persistente, filtros, relevância e lista de resultados.
+
+### C03 — Knowledge Result / artigo operacional
+
+Referência: K07.  
+Função futura: resolução rápida, decisão, escalonamento e detalhes progressivos.
+
+### C04 — Favoritos / Histórico de busca
+
+Observado como padrão no benchmark, mas não autorizado no roadmap funcional atual.  
+Estado: NÃO PLANEJADO até caso de uso.
+
+## Família D — Operações / Inteligência futura
+
+### D01 — Dashboard / Visão Geral
+
+Referência: K01.  
+Decisão: somente quando existirem métricas canônicas e perguntas operacionais explícitas. Dashboard ornamental é proibido.
+
+### D02 — Relatórios e Métricas
+
+Referência: K09.  
+Dependência: futura Telemetria/Inteligência de Busca.
+
+### D03 — Configurações
+
+Referência: K10.  
+Decisão: apenas settings com contrato e owner real; não criar central de toggles especulativa.
+
+### D04 — Migração / Limpeza
+
+Referência: K11.  
+Decisão: DESCARTADA como superfície permanente. Pode existir apenas como lifecycle/setup temporário quando necessário.
+
+## Família E — Roadmap técnico sem tela canônica nesta fase
+
+- Content Extractor;
+- Operações/Indexação;
+- Semantic Search/Vetores;
+- IA/Foundry/RAG.
+
+Esses domínios devem caber na arquitetura, mas não recebem tela final de alta fidelidade sem SPEC funcional.
 
 ## Estados transversais obrigatórios
 
-Toda tela relevante deve prever:
+Toda superfície relevante deve prever:
 
 - default;
 - empty;
@@ -78,18 +130,47 @@ Toda tela relevante deve prever:
 - forbidden/no permission;
 - read-only;
 - stale/conflict quando aplicável;
-- largura <=782px.
+- desktop largo;
+- largura administrativa <=782px;
+- foco/teclado.
+
+## Jornadas v1
+
+### J01 — Curador
+
+`Knowledge List -> artigo -> Knowledge Workspace -> Summary/Classificação -> salvar -> feedback -> permanecer no contexto`
+
+### J02 — Gestor de vocabulário
+
+`Workspace/Classificação -> gerenciar vocabulário -> UI nativa de taxonomia -> voltar ao artigo`
+
+### J03 — Governança futura
+
+`Fila/Lista -> Workspace -> Review & Governance -> decisão -> feedback -> histórico`
+
+A transição só vira contrato na SPEC-003.
+
+### J04 — Resolvedor futuro
+
+`Search -> Results -> Knowledge Result -> resolução rápida / detalhe / escalonamento`
 
 ## Prioridade de prototipação
 
 1. Knowledge Workspace master — desktop.
-2. Knowledge Workspace — 782px/estreito.
-3. Knowledge List — desktop e estreito.
-4. Summary + Classification integrados ao Workspace.
+2. Knowledge List — desktop.
+3. Summary + Classificação integrados ao Workspace.
+4. Workspace 782px/estreito.
 5. Review & Governance conceitual.
 6. Component states / empty / error / permission.
-7. Vocabulários, somente se a UI nativa mostrar inadequação concreta.
+7. Search/Resolvedor apenas como arquitetura nesta wave.
+8. Vocabulários somente se UI nativa falhar em teste concreto.
 
-## Regra de cobertura
+## Evidência histórica
 
-Uma tela só entra como “canônica” quando sua jornada, ações, estado vazio, erro, responsividade e relação com permissões estiverem documentados. Screenshot bonito isolado não fecha UX.
+Referência visual catalogada em `evidence-kb2ops-visual-benchmark.md` com 12 superfícies observadas e matriz PRESERVAR/EVOLUIR/DESCARTAR.
+
+## Gate
+
+**UX-001 — PASS.**
+
+O inventário atual, a referência KB2Ops e as quatro jornadas principais são suficientes para avançar para Design System + Master Mockups sem depender de memória ou de uma tela futura não contratada.

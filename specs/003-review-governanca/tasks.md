@@ -8,28 +8,30 @@
 - [x] T004 Mapear writers e consumers históricos.
 - [x] T005 Mapear roles/capabilities e handlers relacionados.
 - [x] T006 Construir profiler read-only temporário.
-- [ ] T007 Medir cobertura/distribuição de valores por store candidato.
-- [ ] T008 Medir presença de actor/timestamp auditável.
-- [ ] T009 Comparar com `post_status` e identificar sobreposição/conflito.
-- [ ] T010 Registrar política de legado: migrável / advisory / descartado.
-- [ ] T011 Gerar evidência JSON e cleanup do profiler.
+- [x] T007 Medir cobertura/distribuição de valores por store candidato.
+- [x] T008 Medir presença de actor/timestamp auditável.
+- [x] T009 Comparar com `post_status` e identificar sobreposição/conflito.
+- [x] T010 Registrar política de legado: migrável / advisory / descartado.
+- [x] T011 Gerar evidência JSON e registrar resultado do profiler.
 
-**Gate R-001: NOT_RUN — aguardando execução do `0.3.0-profile.1` no ambiente real.**
+**Gate R-001: PASS.**  
+Evidência: `evidencia-profiling-s001.md`. O ambiente possui 622 posts e zero rows nos seis stores históricos de Review/Governança; não há passivo de migração.
 
 ## S002 — Domain Contract
 
-- [ ] T020 Definir owner canônico do estado de governança.
-- [ ] T021 Definir conjunto mínimo de estados.
-- [ ] T022 Definir estado inicial/ausência de decisão.
-- [ ] T023 Definir transições válidas.
-- [ ] T024 Definir capabilities/atores por transição.
-- [ ] T025 Decidir se reviewer/responsável é necessário na primeira slice.
-- [ ] T026 Decidir primitiva do estado atual.
-- [ ] T027 Decidir primitiva de histórico/auditoria.
-- [ ] T028 Definir contrato de atomicidade/compensação.
-- [ ] T029 Fechar política de migração/coexistência legada.
+- [x] T020 Definir owner canônico do estado de governança.
+- [x] T021 Definir conjunto mínimo de estados.
+- [x] T022 Definir estado inicial/ausência de decisão.
+- [x] T023 Definir transições válidas.
+- [x] T024 Definir capabilities/atores por transição.
+- [x] T025 Decidir se reviewer/responsável é necessário na primeira slice.
+- [x] T026 Decidir primitiva do estado atual.
+- [x] T027 Decidir primitiva de histórico/auditoria.
+- [x] T028 Definir contrato de atomicidade/compensação.
+- [x] T029 Fechar política de migração/coexistência legada.
 
-**Gate R-010: NOT_RUN.**
+**Gate R-010: PASS.**  
+Contrato: `domain-contract.md`. Estado atual é derivado do último evento append-only `bdc_kb_review_event`; não existe meta paralela de current state.
 
 ## S003 — Runtime mínimo
 
@@ -37,12 +39,12 @@
 - [ ] T031 Implementar leitura do estado.
 - [ ] T032 Implementar transição determinística.
 - [ ] T033 Implementar auditoria mínima aprovada.
-- [ ] T034 Implementar read-after-write e consistência estado/histórico.
+- [ ] T034 Implementar read-after-write e consistência do evento canônico.
 - [ ] T035 Implementar compensation/fail-safe ou estado crítico conforme contrato.
 - [ ] T036 Unitários determinísticos.
 - [ ] T037 PHP lint e package dev.
 
-**Gate G-001/G-030: NOT_RUN.**
+**Gate G-001/G-030: EM EXECUÇÃO.**
 
 ## S004 — HTTP e segurança
 
@@ -81,4 +83,4 @@
 
 ## Regra
 
-Nenhuma tarefa de S003 ou posterior é autorizada enquanto R-001 e R-010 não estiverem PASS. O primeiro movimento é evidência, não implementação.
+R-001 e R-010 estão PASS. S003 está autorizada, mantendo vertical slice mínima, WordPress-first e sem migração/dual-write legado.

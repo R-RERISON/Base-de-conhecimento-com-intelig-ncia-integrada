@@ -1,6 +1,6 @@
 <?php
 /**
- * Superfície administrativa server-rendered da SPEC-001.
+ * Superfície administrativa da Base de Conhecimento.
  *
  * @package BDC_Knowledge_Base
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Lista posts editáveis e gerencia os três campos narrativos.
+ * Lista posts editáveis e compõe o Knowledge Workspace canônico.
  */
 final class Admin_Page {
 
@@ -22,6 +22,7 @@ final class Admin_Page {
 	private const NONCE_FIELD  = 'bdc_kb_nonce';
 	private const NONCE_PREFIX = 'bdc_kb_save_summary_';
 	private const PER_PAGE     = 20;
+	private const DEFAULT_TAB  = 'overview';
 
 	public static function register_menu(): void {
 		add_menu_page(
@@ -46,6 +47,13 @@ final class Admin_Page {
 			array(),
 			BDC_KB_VERSION
 		);
+
+		wp_enqueue_style(
+			'bdc-kb-workspace',
+			BDC_KB_URL . 'assets/css/workspace.css',
+			array( 'bdc-kb-admin' ),
+			BDC_KB_VERSION
+		);
 	}
 
 	public static function render(): void {
@@ -59,9 +67,10 @@ final class Admin_Page {
 		echo '<h1>' . esc_html__( 'Base de Conhecimento — Gestão do Conhecimento', 'bdc-knowledge-base' ) . '</h1>';
 		self::render_feedback();
 		Classification_Admin::render_feedback();
+		Review_Admin::render_feedback();
 
 		if ( $post_id > 0 ) {
-			self::render_editor( $post_id );
+			self::render_workspace( $post_id );
 		} else {
 			self::render_list();
 		}
@@ -120,7 +129,7 @@ final class Admin_Page {
 		self::redirect( $post_id, 'validation_error' );
 	}
 
-	private static function render_editor( int $post_id ): void {
+	private static function render_workspace( int $post_id ): void {
 		$post = get_post( $post_id );
 		if ( ! is_object( $post ) || Meta_Contract::POST_TYPE !== $post->post_type ) {
 			self::render_inline_error( 'O artigo informado não existe ou não pertence ao escopo da Base de Conhecimento.' );
@@ -134,17 +143,108 @@ final class Admin_Page {
 			return;
 		}
 
-		$snapshot = Summary_Store::read( $post_id );
-		if ( is_wp_error( $snapshot ) ) {
-			self::render_inline_error( 'Não foi possível carregar o Summary deste artigo.' );
+		$summary = Summary_Store::read( $post_id );
+		if ( is_wp_error( $summary ) ) {
+			self::render_inline_error( 'Não foi possível carregar o contexto deste artigo.' );
 			self::render_back_link();
 			return;
 		}
 
+		$tab = self::get_request_tab();
+
 		self::render_back_link();
-		echo '<div class="bdc-kb-context">';
-		echo '<h2>' . esc_html( (string) $snapshot['title'] ) . '</h2>';
-		echo '<p><strong>' . esc_html__( 'Post ID:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( (string) $post_id ) . '</p>';
+		self::render_context_header( $post, $summary );
+		self::render_tabs( $post_id, $tab );
+
+		echo '<main class="bdc-kb-workspace-main" id="bdc-kb-workspace-main">';
+		switch ( $tab ) {
+			case 'summary':
+				self::render_summary_panel( $post_id, $summary );
+				break;
+			case 'classification':
+				Classification_Admin::render_panel( $post_id );
+				break;
+			case 'review':
+				Review_Admin::render_panel( $post_id );
+				break;
+			case 'overview':
+			default:
+				self::render_overview( $post_id );
+				break;
+		}
+		echo '</main>';
+	}
+
+	/** @param object $post WP_Post-like object. @param array<string,mixed> $summary */
+	private static function render_context_header( object $post, array $summary ): void {
+		$status_object = get_post_status_object( (string) $post->post_status );
+		$status_label  = is_object( $status_object ) ? (string) $status_object->label : (string) $post->post_status;
+
+		echo '<header class="bdc-kb-context bdc-kb-workspace-header">';
+		echo '<div>';
+		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Knowledge Workspace', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h2>' . esc_html( (string) $summary['title'] ) . '</h2>';
+		echo '<div class="bdc-kb-context-meta">';
+		echo '<span><strong>' . esc_html__( 'Post ID:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( (string) $post->ID ) . '</span>';
+		echo '<span><strong>' . esc_html__( 'Editorial:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( $status_label ) . '</span>';
+		echo '</div>';
+		echo '</div>';
+		echo '</header>';
+	}
+
+	private static function render_tabs( int $post_id, string $active_tab ): void {
+		$tabs = array(
+			'overview'       => 'Visão geral',
+			'summary'        => 'Summary',
+			'classification' => 'Classificação',
+			'review'         => 'Review & Governança',
+		);
+
+		echo '<nav class="bdc-kb-tabs" aria-label="' . esc_attr__( 'Domínios do Knowledge Workspace', 'bdc-knowledge-base' ) . '">';
+		foreach ( $tabs as $tab => $label ) {
+			$url = self::workspace_url( $post_id, $tab );
+			$class = 'bdc-kb-tab' . ( $tab === $active_tab ? ' is-active' : '' );
+			$current = $tab === $active_tab ? ' aria-current="page"' : '';
+			echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '"' . $current . '>' . esc_html( $label ) . '</a>';
+		}
+		echo '</nav>';
+	}
+
+	private static function render_overview( int $post_id ): void {
+		$review = Review_Store::read( $post_id );
+		if ( is_wp_error( $review ) ) {
+			self::render_inline_error( 'Não foi possível carregar o estado de Review & Governança.' );
+			return;
+		}
+
+		$state       = (string) ( $review['state'] ?? Review_Contract::STATE_UNREVIEWED );
+		$state_label = Review_Contract::states()[ $state ] ?? $state;
+
+		echo '<section class="bdc-kb-overview" aria-labelledby="bdc-kb-overview-title">';
+		echo '<h3 id="bdc-kb-overview-title">' . esc_html__( 'Visão geral do conhecimento', 'bdc-knowledge-base' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Use as abas para trabalhar em cada domínio sem perder o contexto do artigo.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<div class="bdc-kb-overview-grid">';
+		self::render_overview_card( 'Summary', 'Conteúdo narrativo canônico da SPEC-001.', self::workspace_url( $post_id, 'summary' ), 'Abrir Summary' );
+		self::render_overview_card( 'Classificação', 'Vocabulários canônicos e relações taxonômicas da SPEC-002.', self::workspace_url( $post_id, 'classification' ), 'Abrir Classificação' );
+		self::render_overview_card( 'Review & Governança', 'Estado atual: ' . $state_label . '.', self::workspace_url( $post_id, 'review' ), 'Abrir Review' );
+		echo '</div>';
+		echo '</section>';
+	}
+
+	private static function render_overview_card( string $title, string $description, string $url, string $action ): void {
+		echo '<article class="bdc-kb-overview-card">';
+		echo '<h4>' . esc_html( $title ) . '</h4>';
+		echo '<p>' . esc_html( $description ) . '</p>';
+		echo '<a class="button" href="' . esc_url( $url ) . '">' . esc_html( $action ) . '</a>';
+		echo '</article>';
+	}
+
+	/** @param array<string,mixed> $snapshot */
+	private static function render_summary_panel( int $post_id, array $snapshot ): void {
+		echo '<section class="bdc-kb-domain-panel" aria-labelledby="bdc-kb-summary-title">';
+		echo '<div class="bdc-kb-domain-heading">';
+		echo '<h3 id="bdc-kb-summary-title">' . esc_html__( 'Summary', 'bdc-knowledge-base' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Conteúdo narrativo canônico. O writer e a persistência permanecem os mesmos da SPEC-001.', 'bdc-knowledge-base' ) . '</p>';
 		echo '</div>';
 
 		echo '<form class="bdc-kb-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
@@ -163,8 +263,7 @@ final class Admin_Page {
 
 		submit_button( __( 'Salvar Summary', 'bdc-knowledge-base' ) );
 		echo '</form>';
-
-		Classification_Admin::render_panel( $post_id );
+		echo '</section>';
 	}
 
 	private static function render_list(): void {
@@ -185,7 +284,7 @@ final class Admin_Page {
 			)
 		);
 
-		echo '<p>' . esc_html__( 'Selecione um artigo para gerenciar o Summary narrativo e a Classificação de Conhecimento.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p>' . esc_html__( 'Selecione um artigo para abrir o Knowledge Workspace e trabalhar em Summary, Classificação e Review & Governança.', 'bdc-knowledge-base' ) . '</p>';
 		echo '<table class="widefat fixed striped bdc-kb-table">';
 		echo '<thead><tr><th>' . esc_html__( 'Artigo', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Status', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Ação', 'bdc-knowledge-base' ) . '</th></tr></thead><tbody>';
 
@@ -197,19 +296,13 @@ final class Admin_Page {
 
 			$status_object = get_post_status_object( (string) $post->post_status );
 			$status_label  = is_object( $status_object ) ? (string) $status_object->label : (string) $post->post_status;
-			$edit_url      = add_query_arg(
-				array(
-					'page'    => self::PAGE_SLUG,
-					'post_id' => (int) $post->ID,
-				),
-				admin_url( 'admin.php' )
-			);
+			$edit_url      = self::workspace_url( (int) $post->ID, self::DEFAULT_TAB );
 
 			echo '<tr>';
 			echo '<td><strong>' . esc_html( get_the_title( $post ) ) . '</strong><br><span class="description">#' . esc_html( (string) $post->ID ) . '</span></td>';
 			echo '<td>' . esc_html( $status_label ) . '</td>';
 			echo '<td>' . esc_html( get_the_modified_date( '', $post ) ) . '</td>';
-			echo '<td><a class="button" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Gerenciar conhecimento', 'bdc-knowledge-base' ) . '</a></td>';
+			echo '<td><a class="button" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Abrir Workspace', 'bdc-knowledge-base' ) . '</a></td>';
 			echo '</tr>';
 			++$rendered;
 		}
@@ -269,7 +362,7 @@ final class Admin_Page {
 
 	private static function render_back_link(): void {
 		$url = admin_url( 'admin.php?page=' . self::PAGE_SLUG );
-		echo '<p><a href="' . esc_url( $url ) . '">&larr; ' . esc_html__( 'Voltar para artigos', 'bdc-knowledge-base' ) . '</a></p>';
+		echo '<p class="bdc-kb-back"><a href="' . esc_url( $url ) . '">&larr; ' . esc_html__( 'Voltar para artigos', 'bdc-knowledge-base' ) . '</a></p>';
 	}
 
 	private static function get_request_post_id(): int {
@@ -280,10 +373,43 @@ final class Admin_Page {
 		return absint( wp_unslash( (string) $_GET['post_id'] ) );
 	}
 
+	private static function get_request_tab(): string {
+		if ( isset( $_GET['tab'] ) && is_scalar( $_GET['tab'] ) ) {
+			$tab = sanitize_key( wp_unslash( (string) $_GET['tab'] ) );
+			return in_array( $tab, array( 'overview', 'summary', 'classification', 'review' ), true )
+				? $tab
+				: self::DEFAULT_TAB;
+		}
+
+		if ( isset( $_GET['bdc_summary_status'] ) ) {
+			return 'summary';
+		}
+		if ( isset( $_GET['bdc_classification_status'] ) ) {
+			return 'classification';
+		}
+		if ( isset( $_GET['bdc_review_status'] ) ) {
+			return 'review';
+		}
+
+		return self::DEFAULT_TAB;
+	}
+
+	public static function workspace_url( int $post_id, string $tab = self::DEFAULT_TAB ): string {
+		return add_query_arg(
+			array(
+				'page'    => self::PAGE_SLUG,
+				'post_id' => $post_id,
+				'tab'     => sanitize_key( $tab ),
+			),
+			admin_url( 'admin.php' )
+		);
+	}
+
 	private static function redirect( int $post_id, string $status ): never {
 		$args = array(
 			'page'               => self::PAGE_SLUG,
 			'bdc_summary_status' => sanitize_key( $status ),
+			'tab'                => 'summary',
 		);
 
 		if ( $post_id > 0 ) {

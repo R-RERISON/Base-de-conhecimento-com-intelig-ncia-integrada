@@ -6,9 +6,10 @@
 - baseline de entrada: `0.3.0-rc.1`.
 - SPEC-004: **ATIVA**.
 - etapa ativa: **R-200 — Current State do corpus**.
+- build ativo: **`0.4.0-profile.1` — profiler read-only pronto para execução ambiental**.
 - nenhuma mudança permanente de runtime da SPEC-004 ainda autorizada.
 
-## Decisões já herdadas
+## Decisões herdadas
 
 - WordPress/Elementor são fonte editorial.
 - Content Extractor é read-only.
@@ -31,20 +32,48 @@ KB2Ops `Content_Extractor` confirma valor de:
 
 A implementação histórica não será copiada; Gutenberg dedicado, hashes e Knowledge Document versionado são lacunas desta nova SPEC.
 
-## Próximo build
-
-`0.4.0-profile.1`
+## Build ativo — `0.4.0-profile.1`
 
 Escopo exclusivo:
 
 - profiler de corpus temporário;
 - somente `manage_options`;
+- POST + nonce;
 - somente leitura;
-- exporta estatística/nomes estruturais, nunca corpo textual;
+- exporta estatísticas e nomes estruturais, nunca corpo textual;
+- não exporta títulos, URLs ou IDs dos artigos;
 - não executa shortcode/widget;
+- não renderiza Elementor nem dynamic blocks;
 - mede fingerprint editorial antes/depois;
-- não persiste progresso;
+- não persiste progresso/resultado;
 - deve ser removido antes do RC.
+
+Package: `package-profile1.md`.
+
+SHA-256 do ZIP:
+
+`eeae2f7a5c37dead27bd21f486bea7a64b75d510392a35b742ec6eb338a59bdd`
+
+Validação local:
+
+- PHP lint: **12/12 PASS**;
+- JavaScript permanente: syntax PASS;
+- source parity: **16/16**;
+- ZIP integrity: PASS.
+
+## Próximo passo exato
+
+1. instalar/substituir o plugin por `0.4.0-profile.1`;
+2. confirmar a versão na tela de plugins;
+3. abrir **Base de Conhecimento → Profiler SPEC-004**;
+4. evitar edição concorrente de posts durante a execução;
+5. clicar **Executar profiler read-only e baixar JSON**;
+6. retornar `bdc-kb-spec004-content-profile-*.json`;
+7. exigir `safety.editorial_fingerprint_equal=true`;
+8. exigir `safety.changed_posts_during_run=0`;
+9. exigir corpus count before = after;
+10. analisar distribuição Elementor/Gutenberg/legacy/widgets/shortcodes/tamanhos;
+11. somente então fechar R-200 e escrever o `Extraction Contract v1`.
 
 ## Critério R-200
 
@@ -59,4 +88,4 @@ O JSON ambiental deve permitir responder objetivamente:
 7. quais budgets de tamanho/performance são necessários;
 8. se a execução foi realmente read-only.
 
-Somente depois disso o `Extraction Contract v1` pode ser fechado.
+**R-200 permanece NOT_RUN até a evidência ambiental.**

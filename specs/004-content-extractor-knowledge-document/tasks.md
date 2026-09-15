@@ -23,8 +23,6 @@ Evidências:
 - `evidence/r200-content-profile-20260915T213342Z.json`;
 - `r200-corpus-analysis.md`.
 
-Package executado: `package-profile1.md` — SHA-256 `eeae2f7a5c37dead27bd21f486bea7a64b75d510392a35b742ec6eb338a59bdd`.
-
 **Gate R-200: PASS — 2026-09-15.**
 
 ## S002 — R-210 / Extraction Contract
@@ -39,26 +37,35 @@ Package executado: `package-profile1.md` — SHA-256 `eeae2f7a5c37dead27bd21f486
 - [x] T027 Definir warnings/códigos de integridade.
 - [x] T028 Definir política de conteúdo vazio/corrompido.
 - [x] T029 Congelar `Extraction Contract v1`.
+- [x] T029A Incorporar direção editorial Elementor e portabilidade/produção no amendment `v1.1.0`.
 
-Contrato: `extraction-contract-v1.md` — `FROZEN v1.0.0`.
+Contratos:
 
-**Gate R-210: PASS — contrato congelado; nenhum runtime permanente implementado nesta etapa.**
+- `extraction-contract-v1.md` — `FROZEN v1.0.0`;
+- `extraction-contract-v1.1.md` — `FROZEN v1.1.0`, amendment compatível.
+
+**Gate R-210: PASS.**
 
 ## S003 — G-220 / Content Extractor determinístico
 
-- [ ] T030 Implementar detector de source kind.
-- [ ] T031 Implementar adapter Elementor.
-- [ ] T032 Implementar adapter Gutenberg.
-- [ ] T033 Implementar adapter HTML legado.
-- [ ] T034 Implementar normalizador estrutural/textual.
-- [ ] T035 Implementar fallback controlado apenas conforme R-210.
-- [ ] T036 Adicionar cache somente in-request se necessário.
-- [ ] T037 Unit tests Elementor/Gutenberg/legacy.
-- [ ] T038 Unit tests conteúdo inválido/vazio/corrompido.
-- [ ] T039 Unit tests shortcodes/fallback/error isolation.
-- [ ] T040 Provar repetibilidade do extractor.
+- [x] T030 Implementar detector read-only de origem/flags e budgets.
+- [x] T031 Implementar adapter Elementor allowlisted (`text-editor`/`shortcode`) sem renderização.
+- [x] T032 Implementar adapter Gutenberg estático sem `render_block()`.
+- [x] T033 Implementar adapter Legacy HTML com `DOMDocument` opcional e fallback estrutural.
+- [x] T034 Implementar normalizador estrutural/textual determinístico.
+- [x] T035 Implementar fallback fail-soft conforme R-210/R-210.1.
+- [x] T036 Avaliar cache in-request: não necessário no escopo atual; nenhuma persistência adicionada.
+- [x] T037 Unit tests Elementor/Gutenberg/legacy.
+- [x] T038 Unit tests conteúdo inválido/vazio/corrompido/oversize.
+- [x] T039 Unit tests shortcodes/fallback/error isolation e zero-write.
+- [x] T040 Provar repetibilidade da saída intermediária.
+- [x] T041 Adicionar readiness `native/projectable/review_required/blocked` para futura migração Elementor, sem writer.
+- [x] T042 Integrar extractor como serviço sem hooks/jobs e desabilitar profiler temporário no build dev.
+- [ ] T043 Executar smoke do build `0.4.0-dev.1` no WordPress de homologação.
 
-**Gate G-220: READY — próximo gate; implementação ainda não iniciada nesta branch.**
+Evidência local: `g220-local-validation.md` — **14/14 unit tests PASS**, lint PASS e zero-write comprovado por stubs.
+
+**Gate G-220: IMPLEMENTED / LOCAL PASS — fechamento ambiental pendente de T043.**
 
 ## S004 — G-230 / Knowledge Document
 
@@ -71,37 +78,71 @@ Contrato: `extraction-contract-v1.md` — `FROZEN v1.0.0`.
 - [ ] T056 Testar mudança de hash para alteração semântica relevante.
 - [ ] T057 Testar que metadados/layout irrelevantes não contaminam documento quando contrato assim determinar.
 - [ ] T058 Confirmar ausência de storage durável não autorizado.
+- [ ] T059 Incorporar `elementor_compatibility` somente como proveniência/readiness, sem acoplar Knowledge Document ao editor.
 
-**Gate G-230: BLOQUEADO por G-220.**
+**Gate G-230: BLOQUEADO até smoke ambiental de G-220.**
 
 ## S005 — G-240 / Real Content Acceptance
 
 - [ ] T060 Selecionar amostra representativa baseada no profiler.
 - [ ] T061 Validar Elementor típico.
 - [ ] T062 Validar Elementor complexo/widgets corporativos.
-- [ ] T063 Validar Gutenberg se presente.
+- [ ] T063 Validar Gutenberg.
 - [ ] T064 Validar HTML legado.
 - [ ] T065 Validar shortcode/tabela relevante.
-- [ ] T066 Validar conteúdo vazio/corrompido quando presente.
+- [ ] T066 Validar conteúdo vazio/corrompido.
 - [ ] T067 Repetir build e comparar hashes.
 - [ ] T068 Comparar conteúdo derivado com fonte por inspeção controlada.
 - [ ] T069 Provar zero mutação de `post_content`, `_elementor_data`, `post_status`, modified/publicação e revisões por leitura.
 
 **Gate G-240: BLOQUEADO por G-230.**
 
-## S006 — G-250 / Lifecycle e baseline
+## S006 — G-245 / Elementor Normalization & Production Readiness
 
-- [ ] T070 Remover profiler/runners temporários.
-- [ ] T071 Gerar `0.4.0-rc.1` clean.
-- [ ] T072 Source parity do package.
-- [ ] T073 PHP lint/JS syntax/ZIP integrity.
-- [ ] T074 Deactivate/activate no ambiente real.
-- [ ] T075 Smoke de regressão das SPECs 001–003.
-- [ ] T076 Smoke de Content Extractor/Knowledge Document sem write.
-- [ ] T077 Congelar baseline final SPEC-004.
+Direção arquitetural: Elementor é o editor operacional padrão futuro; legacy/Gutenberg/plain representam fontes que devem ser avaliadas para convergência editorial controlada.
+
+- [x] T080 Congelar `elementor-normalization-contract-v1.md`.
+- [x] T081 Congelar `production-rollout-contract-v1.md`.
+- [ ] T082 Implementar Production Preflight read-only para comparar homologação x produção.
+- [ ] T083 Congelar matriz de compatibilidade WordPress/PHP/Elementor/plugins relevantes.
+- [ ] T084 Implementar Projection Plan read-only por post (`native/projectable/review_required/blocked`).
+- [ ] T085 Implementar `Elementor_Gateway` version-gated usando Document lifecycle; writer permanece desabilitado por default.
+- [ ] T086 Definir/persistir journal transacional suficiente para rollback editorial.
+- [ ] T087 Implementar dry-run de migração sem writes.
+- [ ] T088 Implementar stale-source guard por hash/modified.
+- [ ] T089 Implementar migração explícita em lotes retomáveis, sem activation/update automático.
+- [ ] T090 Executar canário em homologação e validar abertura/save no editor Elementor + frontend.
+- [ ] T091 Testar rollback integral do canário.
+- [ ] T092 Produzir runbook de instalação/upgrade/migration/rollback para produção.
+
+Contratos:
+
+- `elementor-normalization-contract-v1.md`;
+- `production-rollout-contract-v1.md`.
+
+**Gate G-245: PLANNED — writer editorial NÃO autorizado ainda.**
+
+## S007 — G-250 / Lifecycle, package e baseline final
+
+- [ ] T100 Remover definitivamente profiler/runners temporários.
+- [ ] T101 Gerar `0.4.0-rc.1` clean.
+- [ ] T102 Source parity do package.
+- [ ] T103 PHP lint/JS syntax/ZIP integrity.
+- [ ] T104 Validar instalação limpa e update sobre baseline compatível.
+- [ ] T105 Deactivate/activate no ambiente real sem job editorial implícito.
+- [ ] T106 Smoke de regressão das SPECs 001–003.
+- [ ] T107 Smoke de Content Extractor/Knowledge Document sem write.
+- [ ] T108 Validar production preflight e comportamento fail-closed para versão Elementor não homologada.
+- [ ] T109 Congelar baseline final SPEC-004.
 
 **Gate G-250: NOT_RUN.**
 
-## Regra
+## Regras constitucionais de continuidade
 
-R-200 e R-210 estão concluídos. O próximo passo é G-220, seguindo estritamente `extraction-contract-v1.md`. Nenhuma decisão de runtime pode contornar o contrato por conveniência, renderização arbitrária ou execução de componentes terceiros.
+1. Content Extractor/Knowledge Document permanecem read-only.
+2. Normalização editorial para Elementor é um fluxo de migration separado e explícito.
+3. Instalação/activation/update do plugin nunca converte posts automaticamente.
+4. Nenhuma migration editorial em massa antes de dry-run, journal/rollback e canário.
+5. Usuário/editor vence sobre migration atrasada: source divergente vira `STALE_SOURCE`.
+6. IA não é usada para reparar parsing nem para writer inicial de Elementor.
+7. Nenhuma etapa posterior pode compensar lacuna de segurança da anterior.

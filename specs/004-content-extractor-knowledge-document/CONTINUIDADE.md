@@ -9,24 +9,25 @@
 - R-210 — Extraction Contract: **PASS**.
 - contrato de extração ativo: **`Extraction Contract v1.1.0`**.
 - G-220 — Content Extractor: **IMPLEMENTED / LOCAL PASS**.
-- build atual: **`0.4.0-dev.1`**.
+- package ambiental ativo: **`0.4.0-smoke.1`**.
 - próximo passo operacional: **smoke read-only no WordPress de homologação**.
-- G-230 continua bloqueado até esse smoke.
+- G-230 continua bloqueado até a evidência desse smoke.
 
 ## Direção editorial consolidada
 
 O R-200 mostrou predominância de legacy HTML por razões históricas/migrações, mas isso não altera a direção futura:
 
 - **Elementor é o editor operacional padrão atual da equipe**;
-- o extractor precisa continuar multi-source para compreender todo o legado;
+- o extractor continua multi-source para compreender todo o legado;
 - o Knowledge Document permanece independente do editor;
-- a convergência dos posts para Elementor será tratada como **migration editorial explícita**, e não como efeito colateral do extractor.
+- a convergência dos posts para Elementor será uma **migration editorial explícita**, nunca efeito colateral da leitura.
 
-Contratos adicionados:
+Contratos:
 
+- `extraction-contract-v1.md`;
+- `extraction-contract-v1.1.md`;
 - `elementor-normalization-contract-v1.md`;
-- `production-rollout-contract-v1.md`;
-- `extraction-contract-v1.1.md`.
+- `production-rollout-contract-v1.md`.
 
 ## Separação arquitetural obrigatória
 
@@ -45,7 +46,7 @@ Nunca escreve em `post_content` ou `_elementor_data`.
 
 Futuro writer administrativo:
 
-- projection plan;
+- Projection Plan;
 - Elementor Gateway versionado;
 - dry-run;
 - journal/rollback;
@@ -55,9 +56,9 @@ Futuro writer administrativo:
 
 Nunca roda automaticamente em activation/update.
 
-## Build `0.4.0-dev.1`
+## Runtime G-220
 
-Componentes permanentes adicionados:
+Componentes permanentes implementados:
 
 - `Content_Normalizer`;
 - `Shortcode_Inspector`;
@@ -69,48 +70,81 @@ Componentes permanentes adicionados:
 
 Características:
 
-- sem hook próprio;
-- sem cron/job;
-- sem storage;
+- serviço read-only;
+- sem cron/job/storage;
 - sem IA/rede externa;
 - sem `do_shortcode()`;
 - sem `render_block()`;
 - sem renderização Elementor;
 - sem writers editoriais;
-- profiler R-200 desabilitado no bootstrap (`BDC_KB_SPEC004_PROFILE_BUILD=false`).
+- `DOMDocument` opcional com fallback estrutural determinístico.
 
-O arquivo do profiler ainda fica no source até G-250 para rastreabilidade e será removido antes do RC.
+## Readiness Elementor
 
-## Readiness Elementor na saída intermediária
+A saída intermediária informa:
 
-O extractor informa:
+- `native`;
+- `projectable`;
+- `review_required`;
+- `blocked`.
 
-- `native` — Elementor válido;
-- `projectable` — fonte apta a futura projection determinística;
-- `review_required` — conteúdo exige adapter/revisão;
-- `blocked` — condição atual impede migration segura.
+Isso é diagnóstico para migration futura; não grava Elementor.
 
-Isso é somente diagnóstico read-only.
-
-## Validação local G-220
+## Validação local
 
 Evidência: `g220-local-validation.md`.
 
-Resultado:
-
-- PHP lint dos novos arquivos: **PASS**;
+- lint dos componentes novos: **PASS**;
 - unit tests SPEC-004: **14/14 PASS**;
-- zero-write checado após cada teste;
+- zero-write verificado após cada cenário;
 - repetibilidade: PASS;
-- fallback sem `DOMDocument`: PASS no runner local.
+- fallback sem `DOMDocument`: PASS.
 
-A ausência de `ext-dom` no PHP CLI de teste foi tratada como caso de portabilidade, não como nova dependência obrigatória do plugin.
+## Package ambiental — `0.4.0-smoke.1`
+
+Documento: `package-smoke1.md`.
+
+SHA-256:
+
+`3dad9f5f7c01e7970d314a0d0788756ad694cc9f3b9327a2834ead90b86e4c8f`
+
+Build flags:
+
+- `BDC_KB_SPEC004_PROFILE_BUILD=false`;
+- `BDC_KB_SPEC004_SMOKE_BUILD=true`.
+
+Validação do package:
+
+- PHP lint antes/depois de extrair: **20/20 PASS**;
+- JS syntax: **PASS**;
+- ZIP integrity: **PASS**;
+- source parity dos arquivos novos/alterados: **9/9 PASS**;
+- unit tests contra os arquivos extraídos do ZIP: **14/14 PASS**.
+
+### Runner temporário
+
+Menu esperado:
+
+**Base de Conhecimento → Smoke G-220**
+
+O runner:
+
+- exige `manage_options`;
+- POST + nonce;
+- percorre o corpus usando o extractor real;
+- não exporta texto, IDs, títulos ou URLs;
+- não persiste resultado;
+- calcula fingerprint before/after;
+- agrega source kinds, warnings, strategies, facts e `elementor_compatibility`;
+- deve ser removido/desabilitado após o gate ambiental.
+
+O antigo **Profiler SPEC-004** não deve aparecer porque o profile build está desabilitado.
 
 ## Produção
 
-O desenvolvimento ocorre em homologação baseada em cópia de produção. Mesmo assim, promotion futura deve assumir que os ambientes podem divergir.
+O desenvolvimento ocorre em homologação baseada em cópia de produção, mas a promoção futura deve detectar divergências de ambiente.
 
-Antes de produção haverá G-245 com:
+G-245 cobrirá:
 
 1. Production Preflight;
 2. versão exata WordPress/PHP/Elementor/plugins relevantes;
@@ -130,17 +164,23 @@ Plugin rollback e editorial rollback são independentes.
 
 ## Próximo passo exato
 
-No ambiente WordPress de homologação:
-
-1. instalar/substituir pelo build `0.4.0-dev.1` quando o package for disponibilizado;
-2. confirmar ativação sem fatal;
-3. confirmar que **Profiler SPEC-004 não aparece mais no menu**;
-4. smoke das telas/flows existentes de Summary, Classificação e Review;
-5. executar runner read-only controlado do G-220 sobre amostra representativa — sem persistir conteúdo;
-6. verificar zero alteração de fingerprint/status/modified/revisões;
-7. validar casos Elementor válido, Elementor inválido, legacy HTML, Gutenberg, shortcode e plain text;
-8. retornar a evidência do smoke;
-9. só então fechar G-220 ambiental e iniciar G-230.
+1. instalar/substituir o plugin por `0.4.0-smoke.1` em homologação;
+2. confirmar a versão na tela de plugins;
+3. confirmar que **Profiler SPEC-004** não aparece;
+4. confirmar que **Base de Conhecimento → Smoke G-220** aparece;
+5. fazer smoke rápido das superfícies existentes de Summary, Classificação e Review;
+6. evitar edição concorrente de posts;
+7. clicar **Executar smoke read-only e baixar JSON**;
+8. retornar `bdc-kb-spec004-g220-smoke-*.json`;
+9. exigir:
+   - `safety.editorial_fingerprint_equal=true`;
+   - `safety.changed_posts_during_run=0`;
+   - corpus before = after;
+   - `extraction.extractor_errors=0`;
+   - `extraction.throwables=0`;
+10. analisar warnings/readiness/performance;
+11. fechar G-220 ambiental;
+12. somente então iniciar G-230.
 
 ## Gates
 

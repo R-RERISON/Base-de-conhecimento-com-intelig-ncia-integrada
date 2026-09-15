@@ -6,7 +6,7 @@
 - SPEC-002: concluída, baseline `0.2.0-rc.1`.
 - UX-001: baseline v1 congelada; UI as Code v0.2 é a referência executável.
 - addendum de consumo: `ux/001-product-experience-knowledge-workspace/heritage-addendum-public-summary-v1.md`.
-- SPEC-003: **R-001 PASS / R-010 PASS / S003 AUTORIZADA**.
+- SPEC-003: **R-001 PASS / R-010 PASS / S003 LOCAL PASS**.
 
 ## Evidência do ambiente real
 
@@ -44,19 +44,39 @@ Decisões principais:
 - sem migração/dual-read/dual-write legado;
 - `AI Ready` e `_kb2ops_include_ai` permanecem fora do domínio.
 
+## Runtime mínimo implementado
+
+Arquivos permanentes:
+
+- `class-review-contract.php`;
+- `class-review-store.php`.
+
+Evidência:
+
+- unitários: **PASS 19/19**;
+- PHP lint: **PASS 10/10**;
+- G-030 local: PASS;
+- package: `0.3.0-dev.1`;
+- SHA-256: `632d2e5e56a7d89abd513f3f4b0b7f75f1c20a8dbd05e6ee383869489cf00acd`.
+
+O package ainda NÃO possui handler ou UI de Review. Esse comportamento é intencional: primeiro validamos que a nova base permanente não causa regressão na instalação real.
+
 ## Próximo passo exato
 
-Executar **S003 — Runtime mínimo**:
+Executar smoke ambiental da `0.3.0-dev.1`:
 
-1. implementar `Review_Contract`;
-2. implementar `Review_Store` sobre eventos canônicos;
-3. implementar leitura de estado/histórico;
-4. implementar máquina de transições e capability contract;
-5. implementar nota obrigatória para `needs_changes`/`excluded`;
-6. implementar read-after-write + compensation do evento recém-criado;
-7. criar unitários determinísticos;
-8. PHP lint;
-9. gerar `0.3.0-dev.1` somente quando G-001/G-030 estiverem sustentados por evidência.
+1. substituir o build de profiling pelo `0.3.0-dev.1`;
+2. ativar sem fatal;
+3. abrir Base de Conhecimento;
+4. abrir listagem e um artigo;
+5. confirmar Summary e Classificação íntegros;
+6. confirmar ausência de painel de profiling e ausência de UI Review nesta build.
+
+Após smoke PASS:
+
+1. promover G-001 ambiental;
+2. preparar tooling temporário para exercitar Review Store na Comments API real com fixture e cleanup;
+3. somente depois abrir handler HTTP G-070 e UI G-110.
 
 ## UX / valor preservado
 
@@ -76,5 +96,6 @@ A tela histórica de artigo com **Resumo Executivo lateral** foi registrada como
 
 - R-001: **PASS**.
 - R-010: **PASS**.
-- G-001/G-030: EM EXECUÇÃO.
-- G-070/G-110/G-130: BLOCKED pela sequência normal de implementação/homologação.
+- G-030: **PASS local**.
+- G-001: **SMOKE AMBIENTAL PENDENTE**.
+- G-070/G-110/G-130: bloqueados pela sequência normal.

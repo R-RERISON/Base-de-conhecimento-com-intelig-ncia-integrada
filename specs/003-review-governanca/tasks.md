@@ -35,16 +35,17 @@ Contrato: `domain-contract.md`. Estado atual é derivado do último evento appen
 
 ## S003 — Runtime mínimo
 
-- [ ] T030 Registrar contrato/owner sem side effects.
-- [ ] T031 Implementar leitura do estado.
-- [ ] T032 Implementar transição determinística.
-- [ ] T033 Implementar auditoria mínima aprovada.
-- [ ] T034 Implementar read-after-write e consistência do evento canônico.
-- [ ] T035 Implementar compensation/fail-safe ou estado crítico conforme contrato.
-- [ ] T036 Unitários determinísticos.
-- [ ] T037 PHP lint e package dev.
+- [x] T030 Registrar contrato/owner sem side effects.
+- [x] T031 Implementar leitura do estado.
+- [x] T032 Implementar transição determinística.
+- [x] T033 Implementar auditoria mínima aprovada.
+- [x] T034 Implementar read-after-write e consistência do evento canônico.
+- [x] T035 Implementar compensation/fail-safe ou estado crítico conforme contrato.
+- [x] T036 Unitários determinísticos — PASS 19/19.
+- [x] T037 PHP lint PASS 10/10 e package `0.3.0-dev.1` gerado.
 
-**Gate G-001/G-030: EM EXECUÇÃO.**
+**Gate G-030: PASS determinístico local.**  
+**Gate G-001: PASS estático / SMOKE AMBIENTAL PENDENTE no `0.3.0-dev.1`.**
 
 ## S004 — HTTP e segurança
 
@@ -83,4 +84,4 @@ Contrato: `domain-contract.md`. Estado atual é derivado do último evento appen
 
 ## Regra
 
-R-001 e R-010 estão PASS. S003 está autorizada, mantendo vertical slice mínima, WordPress-first e sem migração/dual-write legado.
+R-001 e R-010 estão PASS. O runtime canônico mínimo está implementado e unitariamente comprovado. O próximo passo é smoke ambiental da build `0.3.0-dev.1`; nenhuma UI/handler Review é aberta antes desse smoke.

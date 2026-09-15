@@ -1,205 +1,204 @@
 # SPEC-004 — Content Extractor e Knowledge Document
 
-**Status:** ATIVA — R-200 PASS / R-210 PASS / G-220 READY  
+**Status:** ATIVA — R-200 PASS / R-210 PASS / G-220 PASS / G-230 LOCAL PASS  
 **Baseline de entrada:** `0.3.0-rc.1`  
 **Pré-requisito:** SPEC-003 concluída — PASS.  
-**Contrato ativo:** `extraction-contract-v1.md` — `FROZEN v1.0.0`.
+**Contratos ativos:** `extraction-contract-v1.1.md` e `knowledge-document-contract-v1.md`.
 
 ## 1. Problema
 
 Busca lexical, busca semântica, IA assistida, chunks e embeddings precisam consumir uma representação semântica confiável do conteúdo editorial. Usar diretamente HTML, `_elementor_data` ou blocos serializados como conhecimento introduz ruído, instabilidade, detalhes de layout e risco de execução de componentes terceiros.
 
-A fonte editorial continua sendo WordPress/Elementor. Esta SPEC cria somente uma **projeção derivada e reconstruível**.
+A fonte editorial continua sendo WordPress/Elementor. Esta SPEC cria uma **projeção derivada e reconstruível**, sem transformar o plugin em CMS.
 
 ## 2. Resultado esperado
 
-Entregar dois componentes conceituais:
+### Content Extractor read-only
 
-1. **Content Extractor read-only**
-   - identifica a fonte editorial efetiva;
-   - extrai conteúdo semântico de Elementor, Gutenberg/blocos e HTML/conteúdo legado;
-   - preserva ordem e limites semânticos relevantes;
-   - não executa código arbitrário como caminho principal;
-   - possui fallback de renderização controlado somente quando justificado.
+- identifica a fonte editorial efetiva;
+- extrai conteúdo semântico de Elementor, Gutenberg/blocos e HTML/conteúdo legado;
+- preserva ordem e boundaries;
+- não executa código arbitrário;
+- falha de forma isolada/fail-soft;
+- não persiste resultado.
 
-2. **Knowledge Document**
-   - projeção canônica, determinística e reconstruível;
-   - schema explicitamente versionado;
-   - contém somente dados necessários aos consumidores futuros;
-   - possui `source_hash` e `document_hash` determinísticos;
-   - não é fonte editorial e não possui writer editorial;
-   - não exige tabela própria nesta SPEC sem evidência de necessidade.
+### Knowledge Document
 
-## 3. Invariantes constitucionais
+- projeção canônica in-memory;
+- schema versionado;
+- seções em ordem;
+- `source_hash` e `document_hash` determinísticos;
+- proveniência/warnings/readiness;
+- sem HTML/JSON bruto;
+- sem storage durável nesta SPEC.
 
-A execução de extração/projeção **NUNCA** pode, como efeito colateral:
+### Elementor Normalization / Production Readiness
 
-- escrever em `post_content`;
-- escrever em `_elementor_data`;
-- alterar `post_status`;
-- alterar data editorial/publicação;
-- criar revisão editorial;
-- publicar ou atualizar o post;
-- transformar o Knowledge Document em segundo CMS;
-- executar shortcodes/widgets arbitrários por padrão;
-- depender de IA, Foundry, vetor ou serviço externo.
+Elementor é o padrão editorial futuro da equipe, mas a convergência do legado ocorre por migration administrativa separada:
 
-O contrato editorial existente continua integralmente válido.
+- nunca em activation/update;
+- preflight;
+- dry-run;
+- stale-source guard;
+- journal/rollback;
+- canário;
+- batches retomáveis;
+- writer futuro version-gated.
 
-## 4. Estratégia WordPress-first
+## 3. Invariantes
 
-Ordem conceitual de leitura:
+Extração/Knowledge Document nunca podem:
 
-1. `WP_Post` e APIs nativas;
-2. detecção por flags independentes de Elementor/blocos/HTML/plain/shortcodes;
-3. Gutenberg via estrutura de blocos, sem renderização dinâmica como primeira opção;
-4. Elementor válido via `_elementor_data` decodificado e traversal semântico controlado;
-5. HTML legado em `post_content`, preservando limites estruturais relevantes;
-6. plain text quando não houver markup estrutural;
-7. renderização completa apenas como fallback explicitamente autorizado após evidência real.
+- escrever em `post_content` ou `_elementor_data`;
+- alterar status/data/revisões/publicação;
+- executar shortcodes/widgets/dynamic blocks arbitrariamente;
+- depender de IA/Foundry/vetor/rede externa;
+- persistir projeções sem gate específico;
+- migrar conteúdo para Elementor implicitamente.
 
-A precedência e os detalhes definitivos estão congelados em `extraction-contract-v1.md`.
+## 4. Estratégia de leitura
 
-## 5. Referência histórica
+1. `WP_Post`/APIs nativas;
+2. flags independentes de origem;
+3. Elementor válido via traversal allowlisted;
+4. Gutenberg via estrutura estática;
+5. Legacy HTML como adapter de primeira classe;
+6. plain text;
+7. fallback renderizado somente com autorização posterior baseada em evidência.
 
-O KB2Ops possui um `Content_Extractor` comprovado que:
+## 5. R-200 — evidência do corpus
 
-- mantém o post como fonte da verdade;
-- tenta extrair `_elementor_data` de forma determinística;
-- usa renderização Elementor somente como fallback;
-- restringe expansão de shortcodes a uma allowlist pequena;
-- produz texto e fatos estruturais.
+Corpus: 622 posts.
 
-Esse comportamento é **referência de requisitos e casos de falha**, não autorização para copiar a classe ou suas escolhas integralmente.
+Descobertas históricas:
 
-## 6. Knowledge Document — shape mínimo provisório
+- forte predominância Legacy HTML;
+- Elementor presente em 80 posts no profiler, 39 JSON válidos / 41 inválidos;
+- Gutenberg residual, porém real;
+- shortcodes com falsos positivos textuais por colchetes;
+- budgets observados abaixo do soft limit de 256 KiB.
 
-A projeção deve convergir para algo equivalente a:
+R-200 foi executado read-only com fingerprint idêntico e zero mutação.
 
-```text
-schema_version
-post_id
-source_kind
-source_hash
-document_hash
-title
-canonical_url
-modified_gmt
-sections[]
-  kind
-  heading
-  text
-  ordinal
-structure
-  headings
-  lists
-  tables
-  images
-  links
-  code_blocks
-  shortcodes
-extraction
-  strategy
-  fallback_used
-  warnings[]
-```
+## 6. R-210 — Extraction Contract
 
-Restrições:
+Contratos:
 
-- nenhum HTML/JSON bruto é necessário no documento canônico;
-- conteúdo derivado deve manter ordem determinística;
-- campos vazios ou puramente visuais não devem poluir a projeção;
-- IDs internos de Elementor só entram se provarem valor semântico/operacional;
-- Summary, Classificação e Review não são duplicados automaticamente dentro do corpo editorial do Knowledge Document; integrações futuras devem consumir seus próprios owners.
+- `extraction-contract-v1.md`;
+- `extraction-contract-v1.1.md`.
 
-O schema final e canonicalização serão congelados em G-230.
+Definem source selection, adapters, shortcodes, fallback, warnings, budgets e direção editorial Elementor sem autorizar writer.
 
-## 7. Hashes
+## 7. G-220 — Content Extractor
 
-### `source_hash`
+**PASS ambiental em 2026-09-15.**
 
-Representa a fonte editorial relevante lida pelo extrator. Deve mudar quando o conteúdo que afeta a extração mudar e permanecer estável para leituras idênticas.
+Evidência: `evidence/g220-smoke-20260915T221710Z.json`.
 
-### `document_hash`
+Ambiente:
 
-Representa a serialização canônica do Knowledge Document, excluindo o próprio `document_hash`. Deve ser reproduzível entre execuções idênticas.
+- WordPress `6.9.4`;
+- PHP `8.5.10`;
+- Elementor `4.1.0`;
+- 622 posts.
 
-Algoritmo inicial candidato: SHA-256 sobre representação canônica UTF-8.
+Resultado:
 
-## 8. R-200 — descoberta ambiental concluída
-
-Profiler read-only executado em `2026-09-15T21:33:42Z` sobre 622 posts com:
-
-- fingerprint editorial before/after idêntico;
+- fingerprint before/after idêntico;
 - zero posts alterados;
-- corpus count 622 antes/depois;
-- sem execução de shortcode, Elementor ou dynamic blocks;
-- sem persistência de resultados.
+- zero extractor errors;
+- zero throwables;
+- 21.969 fragments;
+- readiness Elementor: 39 native / 505 projectable / 78 review_required / 0 blocked.
 
-Evidências:
+## 8. G-230 — Knowledge Document
 
-- `evidence/r200-content-profile-20260915T213342Z.json`;
-- `r200-corpus-analysis.md`.
+Contrato: `knowledge-document-contract-v1.md` — v1.0.0.
 
-Principais achados:
+Implementação:
 
-- 79,74% `legacy_html` no source kind estatístico;
-- Elementor presente em 80 posts, com 39 JSON válidos e 41 inválidos;
-- Gutenberg presente em 9 posts;
-- widgets Elementor confirmados: `text-editor` e `shortcode`;
-- blocos confirmados: `core/freeform`, `core/heading`, `core/paragraph`, `core/list`, `core/table`;
-- shortcode detection textual contém falsos positivos por colchetes técnicos;
-- `post_content` máximo observado 156.636 B;
-- `_elementor_data` máximo observado 110.029 B;
-- não há evidência atual que justifique cache/storage durável ou renderização completa como caminho normal.
+- `Canonical_JSON`;
+- `Knowledge_Document`;
+- schema `1.0.0`;
+- canonicalização determinística;
+- `source_hash` semântico;
+- `document_hash` semântico da projeção;
+- URL/data preservadas como envelope operacional fora do hash;
+- `elementor_compatibility` apenas como proveniência/readiness;
+- nenhum storage durável.
 
-## 9. Gates
+Validação local:
 
-### R-200 — Current State
+- G-230: **10/10 PASS**;
+- regressão G-220 no mesmo package: **14/14 PASS**.
 
-**PASS.** Corpus real perfilado e formatos/fallbacks necessários documentados sem mutação editorial.
+Package ambiental atual: `0.4.0-smoke.2`.
 
-### R-210 — Extraction Contract
+SHA-256:
 
-**PASS.** Source selection, normalização, boundaries, shortcodes, fallback, budgets e política de erros congelados em `extraction-contract-v1.md` v1.0.0.
+`1466cd4fcd18120d0b2405bf04ec629230f23c2a2e759869a8123c45cedaf204`
 
-### G-220 — Extractor determinístico
+G-230 fecha apenas após duas passagens no corpus real com zero mismatch de hashes/JSON e zero mutação editorial.
 
-**READY.** PASS com testes unitários cobrindo Elementor, Gutenberg, HTML legado, conteúdo vazio/corrompido, shortcodes, guardrails e repetibilidade.
+## 9. G-240 — Real Content Acceptance
 
-### G-230 — Knowledge Document
+Após G-230:
 
-PASS quando o mesmo input produzir exatamente o mesmo documento/hash e alterações semânticas relevantes alterarem o hash esperado.
+`post real → extractor → Knowledge Document → hashes → inspeção controlada`
 
-### G-240 — Real Content Acceptance
+A amostra deverá cobrir Elementor, Legacy HTML, Gutenberg, shortcodes/tabelas, conteúdo inválido/corrompido e casos `review_required`.
 
-PASS em posts reais representativos quando:
+## 10. G-245 — Elementor Normalization & Production Readiness
 
-`post real → extração → Knowledge Document → hash → validação humana/estrutural`
+Contratos:
 
-com confirmação antes/depois de que `post_content`, `_elementor_data`, `post_status` e estado editorial relevante permaneceram inalterados.
+- `elementor-normalization-contract-v1.md`;
+- `production-rollout-contract-v1.md`.
 
-### G-250 — Lifecycle / package
+Nenhum writer está autorizado ainda.
 
-PASS somente após remover instrumentação temporária, gerar package limpo e validar deactivate/activate sem regressão das SPECs 001–003.
+Produção exigirá diferença explícita entre:
 
-## 10. Fora de escopo
+- upgrade de código;
+- migration de schema/config própria do plugin;
+- migration editorial Elementor.
 
-Esta SPEC não implementa:
+A migration editorial é sempre explícita e reversível.
+
+## 11. G-250 — Lifecycle
+
+Antes do RC:
+
+- remover runners/profile temporários;
+- package clean `0.4.0-rc.1`;
+- source parity/lint/JS/ZIP;
+- instalação limpa + update;
+- deactivate/activate;
+- regressão SPECs 001–003;
+- smoke extractor/document;
+- production preflight.
+
+## 12. Fora de escopo atual
 
 - índice lexical;
-- tabela de chunks;
+- chunks persistidos;
 - embeddings;
 - MariaDB Vector;
-- Azure Foundry;
-- RAG;
-- ranking de busca;
-- telemetria de busca;
-- geração ou correção editorial por IA;
-- persistência durável de projeções sem justificativa específica.
+- Azure Foundry/RAG;
+- ranking/telemetria de busca;
+- writer editorial automático;
+- IA para reparar parsing/migração.
 
-Esses consumidores passam a ter um contrato confiável para usar nas SPECs posteriores.
+## 13. Gates
 
-## 11. Definition of Done
+- R-200: **PASS**.
+- R-210: **PASS**.
+- G-220: **PASS**.
+- G-230: **IMPLEMENTED / LOCAL PASS — ENV SMOKE PENDING**.
+- G-240: **BLOCKED por G-230**.
+- G-245: **PLANNED — writer não autorizado**.
+- G-250: **NOT_RUN**.
 
-A SPEC-004 termina somente quando existir um extrator WordPress-first determinístico, um Knowledge Document versionado/hashado, aceitação em conteúdo real e evidência objetiva de **zero mutação editorial**.
+## 14. Definition of Done
+
+A SPEC-004 termina apenas quando o extractor e o Knowledge Document estiverem aceitos em conteúdo real, a promoção para produção estiver governada, qualquer normalização Elementor estiver separada/segura e houver evidência objetiva de zero mutação editorial nos fluxos read-only.

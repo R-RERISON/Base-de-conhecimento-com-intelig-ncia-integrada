@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0.0",
+  "mode": "temporary_spec004_g220_read_only_smoke",
+  "generated_at": "2026-09-15T22:17:10+00:00",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.4.0-smoke.1",
+    "elementor": "4.1.0",
+    "domdocument_available": true,
+    "multisite": false
+  },
+  "safety": {
+    "read_only_design": true,
+    "exports_editorial_content": false,
+    "exports_post_ids": false,
+    "exports_titles_or_urls": false,
+    "executes_shortcodes": false,
+    "renders_elementor": false,
+    "renders_dynamic_blocks": false,
+    "persists_progress_or_results": false,
+    "editorial_fingerprint_before": "477551b4573ac2bb085a4576a412541f3e8319aaaf1cccb357bd60a70ce16e82",
+    "editorial_fingerprint_after": "477551b4573ac2bb085a4576a412541f3e8319aaaf1cccb357bd60a70ce16e82",
+    "editorial_fingerprint_equal": true,
+    "changed_posts_during_run": 0,
+    "corpus_count_before": 622,
+    "corpus_count_after": 622
+  },
+  "extraction": {
+    "total_posts": 622,
+    "source_kinds": {
+      "legacy_html": 536,
+      "plain_text": 41,
+      "elementor": 34,
+      "mixed": 5,
+      "gutenberg": 4,
+      "empty": 2
+    },
+    "elementor_compatibility": {
+      "projectable": 505,
+      "review_required": 78,
+      "native": 39
+    },
+    "strategies": {
+      "legacy_html": 546,
+      "elementor": 39,
+      "plain_text": 31,
+      "gutenberg": 9,
+      "empty": 2
+    },
+    "warnings": {
+      "HTML_PARSE_RECOVERED": 62,
+      "SHORTCODE_NOT_EXPANDED:table": 45,
+      "ELEMENTOR_JSON_INVALID": 41,
+      "SHORTCODE_NOT_EXPANDED:wpt": 4,
+      "SHORTCODE_NOT_EXPANDED:caption": 2,
+      "SHORTCODE_NOT_EXPANDED:video": 1,
+      "SHORTCODE_NOT_EXPANDED:dbc_table": 1,
+      "SHORTCODE_NOT_EXPANDED:faq_wd": 1,
+      "SHORTCODE_NOT_EXPANDED:bdc_resumo_executivo": 1
+    },
+    "structure": {
+      "headings": 1047,
+      "lists": 3749,
+      "tables": 518,
+      "images": 4629,
+      "links": 6965,
+      "code_blocks": 81,
+      "shortcodes": 70
+    },
+    "fragments_total": 21969,
+    "extractor_errors": 0,
+    "throwables": 0
+  },
+  "performance": {
+    "runtime_ms": 1807,
+    "peak_memory_bytes": 31457280
+  },
+  "gate_expectations": {
+    "editorial_fingerprint_equal": true,
+    "changed_posts_during_run": 0,
+    "corpus_count_unchanged": true,
+    "extractor_errors": 0,
+    "throwables": 0
+  }
+}

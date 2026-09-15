@@ -1,0 +1,70 @@
+{
+    "schema_version": "1.0.0",
+    "mode": "temporary_spec004_g230_read_only_smoke",
+    "generated_at": "2026-09-15T23:34:50+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-smoke.2",
+        "elementor": "4.1.0",
+        "knowledge_document_schema": "1.0.0",
+        "multisite": false
+    },
+    "safety": {
+        "read_only_design": true,
+        "exports_editorial_content": false,
+        "exports_post_ids": false,
+        "exports_titles_or_urls": false,
+        "persists_documents_or_hashes": false,
+        "editorial_fingerprint_before": "94f1cc7974665b20cf43782b29844518146269a8e622feb63de3ac989fbda8fe",
+        "editorial_fingerprint_after": "94f1cc7974665b20cf43782b29844518146269a8e622feb63de3ac989fbda8fe",
+        "editorial_fingerprint_equal": true,
+        "changed_posts_during_run": 0,
+        "corpus_count_before": 622,
+        "corpus_count_after": 622
+    },
+    "knowledge_documents": {
+        "total_posts": 622,
+        "first_pass_documents": 622,
+        "second_pass_documents": 622,
+        "first_pass_errors": 0,
+        "second_pass_errors": 0,
+        "first_pass_throwables": 0,
+        "second_pass_throwables": 0,
+        "hash_mismatches": 0,
+        "canonical_json_mismatches": 0,
+        "unique_source_hashes": 601,
+        "unique_document_hashes": 622,
+        "sections_total": 21969,
+        "source_kinds": {
+            "legacy_html": 536,
+            "plain_text": 41,
+            "elementor": 34,
+            "mixed": 5,
+            "gutenberg": 4,
+            "empty": 2
+        },
+        "elementor_compatibility": {
+            "projectable": 505,
+            "review_required": 78,
+            "native": 39
+        },
+        "aggregate_source_hash": "53bac368abb9bbcf9d55b59db457aa6044e371ee7ab96e88b0374638a1cfc415",
+        "aggregate_document_hash": "839012c3336a3c6323be1b5bd2abc18146cac67254c376dc0c8a966426d7c0dd"
+    },
+    "performance": {
+        "runtime_ms": 3096,
+        "peak_memory_bytes": 31457280
+    },
+    "gate_expectations": {
+        "editorial_fingerprint_equal": true,
+        "changed_posts_during_run": 0,
+        "corpus_count_unchanged": true,
+        "first_pass_errors": 0,
+        "second_pass_errors": 0,
+        "first_pass_throwables": 0,
+        "second_pass_throwables": 0,
+        "hash_mismatches": 0,
+        "canonical_json_mismatches": 0
+    }
+}

@@ -1,211 +1,149 @@
 # Current State — SPEC-004 Content Extractor e Knowledge Document
 
-## Baseline de entrada
+## Baseline e gates
 
-- plugin: `0.3.0-rc.1`;
-- SPEC-001 Summary: concluída;
-- SPEC-002 Classificação: concluída;
-- SPEC-003 Review & Governança: concluída;
-- Workspace/Histórico: baseline ambiental aprovada;
-- runtime temporário de homologação anterior: removido.
+- baseline de entrada: `0.3.0-rc.1`;
+- SPEC-001/002/003: concluídas;
+- R-200: **PASS**;
+- R-210: **PASS**;
+- G-220: **PASS ambiental**;
+- G-230: **IMPLEMENTED / LOCAL PASS / ENV SMOKE PENDING**.
 
-## Estado dos gates
+## Ambiente de homologação validado
 
-- R-200 — Current State do corpus: **PASS**;
-- R-210 — Extraction Contract: **PASS**;
-- G-220 — Extractor determinístico: **READY / NOT_STARTED**.
-
-O contrato congelado é `extraction-contract-v1.md`, versão `1.0.0`.
-
-## O que existe no novo plugin
-
-O runtime permanente atual ainda não possui `Content_Extractor`, `Knowledge_Document`, índice, chunks, embeddings ou tabela derivada de conteúdo. Portanto o fechamento de R-200/R-210 não introduziu dívida de runtime nesse domínio.
-
-O build temporário `0.4.0-profile.1` contém somente o profiler read-only e deve ser removido em G-250 antes do RC.
-
-O plugin atual já possui contratos que a SPEC-004 não pode quebrar:
-
-- Summary tem owner próprio;
-- Classificação tem owner próprio;
-- Review usa event log canônico;
-- Histórico é read-only;
-- Workspace é a superfície administrativa integrada;
-- fonte editorial não pertence ao plugin.
-
-## Fonte editorial autorizada
-
-A arquitetura do projeto define:
-
-- `WP_Post` + Elementor como fonte editorial;
-- leitura autorizada de `post_content`;
-- leitura autorizada de `_elementor_data`;
-- HTML renderizado apenas como fallback controlado;
-- escrita em `_elementor_data` proibida.
-
-A evidência do R-200 mostrou, porém, que a **representação predominante do corpus atual é Legacy HTML**, não Elementor. Isso muda a prioridade dos adapters sem mudar a autoridade editorial do WordPress.
-
-## Evidência ambiental R-200
-
-Execução sanitizada preservada em:
-
-- `evidence/r200-content-profile-20260915T213342Z.json`;
-- `r200-corpus-analysis.md`.
-
-Ambiente:
+Smoke G-220 executado sobre cópia de produção:
 
 - WordPress `6.9.4`;
 - PHP `8.5.10`;
-- plugin `0.4.0-profile.1`;
+- Elementor `4.1.0`;
 - multisite: não;
-- corpus: 622 posts.
+- 622 posts.
 
-Segurança:
+Evidência: `evidence/g220-smoke-20260915T221710Z.json`.
 
-- fingerprint before/after idêntico;
-- zero posts alterados durante a execução;
-- corpus 622 antes e 622 depois;
-- sem execução de shortcode/widget/bloco dinâmico;
-- sem persistência do profiler.
+Segurança comprovada:
 
-## Distribuição real do corpus
+- fingerprint editorial antes/depois idêntico;
+- zero posts alterados;
+- corpus 622 → 622;
+- zero extractor errors;
+- zero throwables;
+- sem persistência/renderização arbitrária.
 
-Source kind estatístico exclusivo:
+## Runtime Content Extractor
 
-- Legacy HTML: 496 (79,74%);
-- Elementor: 74 (11,90%);
-- Plain text: 31 (4,98%);
-- Shortcode/plain: 10 (1,61%);
-- Mixed Elementor + blocks: 6 (0,96%);
-- Gutenberg: 3 (0,48%);
-- Empty: 2 (0,32%).
+Implementado e ambientalmente aceito:
 
-Flags não exclusivas:
+- `Content_Normalizer`;
+- `Shortcode_Inspector`;
+- `Legacy_HTML_Adapter`;
+- `Content_Source`;
+- `Elementor_Adapter`;
+- `Gutenberg_Adapter`;
+- `Content_Extractor`.
 
-- Elementor: 80;
-- Gutenberg: 9;
-- HTML: 579;
-- shortcode-like: 61;
-- plain text: 620.
+Resultado ambiental:
 
-## Elementor — resultado da hipótese
+- 21.969 fragments;
+- `legacy_html`: 536;
+- `plain_text`: 41;
+- `elementor`: 34;
+- `mixed`: 5;
+- `gutenberg`: 4;
+- `empty`: 2.
 
-Dos 80 posts com `_elementor_data`:
+A diferença em relação ao profiler R-200 é esperada: o extractor definitivo classifica Elementor inválido pela estratégia efetiva de fallback, principalmente Legacy HTML.
 
-- 39 possuem JSON válido;
-- 41 possuem JSON inválido;
-- 0 possuem meta de tipo inesperado;
-- 0 dos JSON válidos ficaram sem campo semântico conhecido.
+## Readiness Elementor
 
-Widgets confirmados:
+- native: 39;
+- projectable: 505;
+- review_required: 78;
+- blocked: 0.
 
-- `text-editor`;
-- `shortcode`.
+Isso significa 544/622 (87,46%) nativos ou projetáveis para o futuro pipeline de normalização; nenhum bloqueio estrutural foi observado nesta classificação inicial.
 
-Campos confirmados:
+## Knowledge Document v1
 
-- `editor`;
-- `shortcode`.
+Implementado em memória:
 
-Conclusão: traversal semântico resolve os casos válidos observados sem necessidade de renderização. JSON inválido é frequente e deve ser tratado como condição normal fail-soft, com fallback seguro para `post_content` quando aplicável.
+- `Canonical_JSON`;
+- `Knowledge_Document`;
+- schema `1.0.0`;
+- sections ordenadas;
+- structure canônica;
+- `source_hash`;
+- `document_hash`;
+- proveniência de extração;
+- readiness Elementor apenas informativa.
 
-## Gutenberg — resultado da hipótese
+Contrato: `knowledge-document-contract-v1.md`.
 
-Há 9 posts com blocos. Blocos observados:
+### Hash semantics
 
-- `core/freeform`;
-- `core/heading`;
-- `core/paragraph`;
-- `core/list`;
-- `core/table`.
+`source_hash` é baseado no conhecimento semanticamente extraído, não no JSON/HTML bruto.
 
-Gutenberg é minoritário, mas deve possuir adapter dedicado. `core/freeform` deve reutilizar parsing Legacy HTML.
+`document_hash` representa a projeção canônica da entidade editorial e exclui do payload do hash:
 
-## Shortcodes — resultado da hipótese
+- `document_hash`;
+- `canonical_url`;
+- `modified_gmt`.
 
-O profiler registrou 108 ocorrências textuais, incluindo tags prováveis (`table`, `n2`, `wpt`, `caption`, `dbc_table`, `faq_wd`, `bdc_resumo_executivo`) e falsos positivos evidentes/fortes candidatos (`hkey_*`, `seu`, `tipo`, `banco`).
+URL e data continuam presentes no documento como envelope operacional.
 
-Conclusão: regex genérica sobre colchetes não pode determinar shortcode semântico. O contrato v1 exige tag registrada/allowlisted e proíbe execução genérica.
+## Testes locais
 
-## Estruturas dominantes
+- Content Extractor: **14/14 PASS**;
+- Knowledge Document: **10/10 PASS**;
+- zero-write: PASS;
+- canonical JSON repetível: PASS;
+- alteração semântica/título/ordem altera hashes: PASS;
+- URL/data/ruído bruto não usado não contamina hashes semânticos: PASS.
 
-No `post_content` bruto:
+## Package ambiental atual
 
-- headings: 1.020;
-- listas: 3.700;
-- tabelas: 513;
-- imagens: 4.595;
-- links: 10.208;
-- code/pre: 83.
+`0.4.0-smoke.2`
 
-Isso obriga preservação explícita de boundaries de headings, listas, tabelas e código.
+SHA-256:
 
-## Tamanhos e budgets
+`1466cd4fcd18120d0b2405bf04ec629230f23c2a2e759869a8123c45cedaf204`
 
-`post_content`:
+Validação do artefato:
 
-- p50 3.929 B;
-- p95 28.662 B;
-- max 156.636 B.
+- 25 arquivos;
+- PHP lint extraído: 21/21 PASS;
+- JS syntax: PASS;
+- ZIP integrity: PASS;
+- parity: 25/25 PASS;
+- G-220 tests: 14/14 PASS;
+- G-230 tests: 10/10 PASS.
 
-`_elementor_data`:
+O profiler R-200 e o runner G-220 não fazem parte desse package. Somente o runner temporário G-230 está habilitado.
 
-- p50 0 B;
-- p95 15.419 B;
-- max 110.029 B.
+## Direção editorial e produção
 
-Profiler:
+Elementor permanece padrão editorial futuro.
 
-- 1.253 ms para 622 posts;
-- pico ~28 MiB.
+A arquitetura separa:
 
-Contrato v1:
+1. knowledge plane read-only;
+2. editorial migration plane explícito.
 
-- soft warning >256 KiB por fonte;
-- hard safety limit 1 MiB por fonte;
-- sem truncamento silencioso;
-- sem justificativa atual para cache/storage durável.
+Migration editorial nunca roda em installation/activation/update e exige preflight, dry-run, stale-source guard, journal/rollback, canário e batches retomáveis.
 
-## Prior art — KB2Ops
+Contratos:
 
-Referência: `R-RERISON/KB2Ops-Operational-Knowledge-Engine`, `plugin/kb2ops/includes/class-content-extractor.php`.
-
-Comportamentos úteis observados:
-
-- valida post type;
-- mantém caches somente in-request;
-- detecta Elementor pela presença de `_elementor_data`;
-- percorre JSON Elementor com allowlist de campos textuais;
-- tenta fallback renderizado apenas quando necessário;
-- captura `Throwable` de renderização;
-- expande somente shortcodes de tabela permitidos;
-- preserva boundaries antes de remover markup;
-- produz contagens estruturais de imagens/tabelas/headings/shortcodes.
-
-Limitações que não serão herdadas automaticamente:
-
-- traversal genérico por nome de chave;
-- lista fixa não confrontada com corpus;
-- ausência de Gutenberg dedicado;
-- mistura entre extração e renderização;
-- ausência de Knowledge Document versionado/hashado;
-- fallback renderizado implícito.
-
-## Hipóteses R-200 — resultado
-
-1. **Confirmada:** Elementor válido observado pode ser extraído sem renderização completa.
-2. **Confirmada com ressalva:** há tags adicionais, mas o profiler também revelou falsos positivos por colchetes técnicos.
-3. **Confirmada:** existe volume dominante de HTML legado e volume não nulo de Gutenberg/plain.
-4. **Confirmada:** há combinação mista Elementor + blocks.
-5. **Confirmada:** tabelas/shortcodes exigem política própria.
-6. **Confirmada:** há documentos grandes o suficiente para justificar guardrails, mas não para justificar persistência/cache durável.
-
-## Risco principal atualizado
-
-O maior risco continua sendo produzir representação aparentemente limpa que omite conteúdo operacional. Agora existem dois riscos quantitativamente comprovados:
-
-1. tratar Elementor como dominante quando 79,74% do corpus é Legacy HTML;
-2. considerar qualquer `[texto]` shortcode e remover/alterar conteúdo técnico legítimo.
+- `elementor-normalization-contract-v1.md`;
+- `production-rollout-contract-v1.md`.
 
 ## Próximo passo
 
-Implementar G-220 estritamente conforme `extraction-contract-v1.md`, sem introduzir write editorial, renderização arbitrária, IA ou storage durável.
+Executar `0.4.0-smoke.2` em homologação e retornar `bdc-kb-spec004-g230-smoke-*.json`.
+
+G-230 exige duas passagens completas de 622 documentos com:
+
+- zero errors;
+- zero throwables;
+- zero hash mismatches;
+- zero canonical JSON mismatches;
+- zero mutação editorial.

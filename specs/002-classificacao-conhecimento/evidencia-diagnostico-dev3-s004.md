@@ -6,5 +6,5 @@ Cobertura: contrato das quatro taxonomias, leitura side-effect free, update parc
 
 Cleanup: post fixture removido; 8 termos removidos; resíduos 0/0.
 
-JSON: `evidencias/bdc-kb-classification-diagnostics-20260915-003021.json`.
-SHA-256: `92861b28cff90fb1595f11d292f780e4b54d07c54e738dedcdf1d802221101f8`.
+Espelho normalizado versionado: `evidencias/bdc-kb-classification-diagnostics-20260915-003021.json`.
+SHA-256 da evidência original recebida: `92861b28cff90fb1595f11d292f780e4b54d07c54e738dedcdf1d802221101f8`.

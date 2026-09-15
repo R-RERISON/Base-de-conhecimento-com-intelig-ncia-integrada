@@ -36,7 +36,7 @@
 
 ## U030 — Master mockups → protótipos executáveis
 
-- [x] U030 Knowledge List — primeira versão executável criada localmente.
+- [x] U030 Knowledge List — primeira versão executável versionada.
 - [x] U031 Knowledge Workspace — Summary executável no mesmo shell.
 - [x] U032 Knowledge Workspace — Classificação executável no mesmo shell.
 - [x] U033 Knowledge Workspace — Overview executável.
@@ -44,7 +44,7 @@
 - [ ] U035 Histórico/atividade — placeholder arquitetural.
 - [x] U036 Estados base: empty/loading/success/error/permission-read-only.
 
-**Gate UX-010: IN_PROGRESS — depende de QA visual/responsive e versionamento final do protótipo.**
+**Gate UX-010: IN_PROGRESS — depende de QA visual/responsive final.**
 
 ## U040 — Responsividade e acessibilidade
 
@@ -55,7 +55,7 @@
 - [ ] U044 Validar contraste e semântica de status.
 - [ ] U045 Validar labels/descriptions/aria patterns.
 
-Especificação: `responsive-accessibility-v1.md`.
+Especificação: `responsive-accessibility-v1.md`. Checklist: `prototype/visual-checklist.md`.
 
 **Gate UX-030: NOT_RUN.**
 
@@ -65,10 +65,10 @@ Especificação: `responsive-accessibility-v1.md`.
 - [x] U051 Definir diretório `prototype/` e contrato de zero dependências.
 - [x] U052 Traduzir tokens para CSS Custom Properties.
 - [x] U053 Criar navegação entre List / Overview / Summary / Classificação / States.
-- [ ] U054 Versionar QA checklist e evidências visuais locais.
-- [ ] U055 Fechar pacote de handoff no Git.
+- [x] U054 Versionar checklist de QA visual.
+- [x] U055 Versionar protótipo navegável no Git.
 
-**Gate UX-050: IN_PROGRESS.**
+**Gate UX-050: PASS estrutural / evidência visual final será fechada junto ao UX-030.**
 
 ## U060 — Fechamento
 
@@ -80,13 +80,14 @@ Especificação: `responsive-accessibility-v1.md`.
 
 ## Próximo bloco de execução
 
-1. versionar o protótipo UI as Code no repositório;
-2. executar QA em 1440px, 1024px, 782px e ~492px;
-3. validar teclado/foco e semântica;
-4. corrigir gaps visuais;
-5. fechar UX-010 + UX-030 + UX-050;
-6. somente então autorizar SPEC-003.
+1. executar QA em 1440px, 1024px, 782px e ~492px;
+2. validar teclado/foco e semântica;
+3. corrigir gaps visuais do protótipo;
+4. fechar U034/U035 somente como arquitetura, sem domínio novo;
+5. fechar UX-010 + UX-030;
+6. executar U060/U061 e congelar UX v1;
+7. somente então autorizar SPEC-003.
 
 ## Regra
 
-Nenhum mockup/protótipo autoriza schema, writer, estado de negócio ou integração futura. Ferramentas externas podem ajudar, mas nunca podem bloquear a continuidade.
+Nenhum protótipo autoriza schema, writer, estado de negócio ou integração futura. Ferramentas externas podem ajudar, mas nunca podem bloquear a continuidade.

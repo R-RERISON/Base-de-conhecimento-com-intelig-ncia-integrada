@@ -26,6 +26,7 @@ final class Plugin {
 		add_action( 'admin_post_' . Review_Admin::ACTION, array( Review_Admin::class, 'handle_save' ) );
 
 		if ( defined( 'BDC_KB_REVIEW_HTTP_DIAGNOSTICS_BUILD' ) && BDC_KB_REVIEW_HTTP_DIAGNOSTICS_BUILD ) {
+			Review_HTTP_Cache_Coherence::register();
 			Review_HTTP_Diagnostics::register();
 		}
 	}

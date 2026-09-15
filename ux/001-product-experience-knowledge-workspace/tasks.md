@@ -35,10 +35,10 @@
 
 ## U030 — Master mockups
 
-- [ ] U030 Knowledge List — alta fidelidade desktop. *(draft v0.1 existente no Master Board)*
+- [ ] U030 Knowledge List — alta fidelidade desktop. *(HF draft criado no Figma; QA visual final pendente)*
 - [ ] U031 Knowledge Workspace — Summary em alta fidelidade.
 - [ ] U032 Knowledge Workspace — Classification em alta fidelidade.
-- [ ] U033 Knowledge Workspace — Overview em alta fidelidade. *(draft v0.1 existente)*
+- [ ] U033 Knowledge Workspace — Overview em alta fidelidade. *(HF draft node `9:2`; verificação visual executada; refinamento de wrapping pendente)*
 - [ ] U034 Review & Governance — mockup controlado. *(conceito v0.1 existente; domínio ainda não contratado)*
 - [ ] U035 Histórico/atividade — placeholder de arquitetura, sem domínio implementado.
 - [ ] U036 Empty/loading/error/permission states.
@@ -54,6 +54,8 @@
 - [ ] U044 Contraste e semântica de status.
 - [ ] U045 Labels, descriptions, aria/help patterns.
 
+Especificação: `responsive-accessibility-v1.md`. Validação dos novos Master Mockups permanece pendente.
+
 **Gate UX-030: NOT_RUN.**
 
 ## U050 — Figma e handoff
@@ -66,7 +68,8 @@
 - [x] U055 Registrar URL/file key no repositório.
 
 Arquivo: `https://www.figma.com/design/myCK7Aq0ih8C55ejcRZFVz`  
-File key: `myCK7Aq0ih8C55ejcRZFVz`
+File key: `myCK7Aq0ih8C55ejcRZFVz`  
+Progresso: `figma-progress-v1.md`.
 
 **Gate UX-050: IN_PROGRESS.**
 
@@ -81,11 +84,10 @@ File key: `myCK7Aq0ih8C55ejcRZFVz`
 ## Próximo bloco de execução
 
 1. U051/U052 — estruturar Figma e componentizar Design System;
-2. U033 — elevar Knowledge Workspace Overview para alta fidelidade;
+2. finalizar QA/refino de U033 e U030;
 3. U031/U032 — Summary e Classificação dentro do Workspace;
-4. U030 — elevar Knowledge List;
-5. U036 + U040–U045 — estados, responsive e acessibilidade;
-6. UX-010 só passa após aprovação visual dos Master Mockups.
+4. U036 + U040–U045 — estados, responsive e acessibilidade;
+5. UX-010 só passa após aprovação visual dos Master Mockups.
 
 ## Regra
 

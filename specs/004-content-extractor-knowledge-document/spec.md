@@ -1,8 +1,9 @@
 # SPEC-004 — Content Extractor e Knowledge Document
 
-**Status:** ATIVA — Discovery / Current State  
+**Status:** ATIVA — R-200 PASS / R-210 PASS / G-220 READY  
 **Baseline de entrada:** `0.3.0-rc.1`  
-**Pré-requisito:** SPEC-003 concluída — PASS.
+**Pré-requisito:** SPEC-003 concluída — PASS.  
+**Contrato ativo:** `extraction-contract-v1.md` — `FROZEN v1.0.0`.
 
 ## 1. Problema
 
@@ -47,13 +48,17 @@ O contrato editorial existente continua integralmente válido.
 
 ## 4. Estratégia WordPress-first
 
-Ordem preferencial de leitura:
+Ordem conceitual de leitura:
 
 1. `WP_Post` e APIs nativas;
-2. Gutenberg via estrutura de blocos (`parse_blocks`/contratos de bloco), sem renderização dinâmica como primeira opção;
-3. Elementor via `_elementor_data` decodificado e traversal semântico controlado;
-4. HTML legado em `post_content`, preservando limites estruturais relevantes;
-5. renderização completa apenas como fallback explícito, mensurável e protegido contra falha.
+2. detecção por flags independentes de Elementor/blocos/HTML/plain/shortcodes;
+3. Gutenberg via estrutura de blocos, sem renderização dinâmica como primeira opção;
+4. Elementor válido via `_elementor_data` decodificado e traversal semântico controlado;
+5. HTML legado em `post_content`, preservando limites estruturais relevantes;
+6. plain text quando não houver markup estrutural;
+7. renderização completa apenas como fallback explicitamente autorizado após evidência real.
+
+A precedência e os detalhes definitivos estão congelados em `extraction-contract-v1.md`.
 
 ## 5. Referência histórica
 
@@ -69,7 +74,7 @@ Esse comportamento é **referência de requisitos e casos de falha**, não autor
 
 ## 6. Knowledge Document — shape mínimo provisório
 
-O contrato final só será congelado após o profiler do corpus real, mas a projeção deve convergir para algo equivalente a:
+A projeção deve convergir para algo equivalente a:
 
 ```text
 schema_version
@@ -107,6 +112,8 @@ Restrições:
 - IDs internos de Elementor só entram se provarem valor semântico/operacional;
 - Summary, Classificação e Review não são duplicados automaticamente dentro do corpo editorial do Knowledge Document; integrações futuras devem consumir seus próprios owners.
 
+O schema final e canonicalização serão congelados em G-230.
+
 ## 7. Hashes
 
 ### `source_hash`
@@ -119,37 +126,46 @@ Representa a serialização canônica do Knowledge Document, excluindo o própri
 
 Algoritmo inicial candidato: SHA-256 sobre representação canônica UTF-8.
 
-## 8. Descoberta obrigatória antes do runtime
+## 8. R-200 — descoberta ambiental concluída
 
-Antes de fechar o contrato do extrator, executar profiler read-only no corpus real para medir, sem exportar conteúdo editorial:
+Profiler read-only executado em `2026-09-15T21:33:42Z` sobre 622 posts com:
 
-- quantidade de posts por status;
-- presença e validade de `_elementor_data`;
-- posts com blocos Gutenberg;
-- HTML legado/plain/shortcodes;
-- combinações/mistos;
-- tipos de widgets Elementor;
-- nomes de blocos Gutenberg;
-- tags de shortcodes;
-- tamanhos de `post_content`/`_elementor_data`;
-- incidência de tabelas, headings, listas, imagens, links e código;
-- casos em que traversal estrutural não encontra texto suficiente e um fallback poderia ser necessário.
+- fingerprint editorial before/after idêntico;
+- zero posts alterados;
+- corpus count 622 antes/depois;
+- sem execução de shortcode, Elementor ou dynamic blocks;
+- sem persistência de resultados.
 
-O profiler deve comprovar não mutação por snapshot/hash antes/depois.
+Evidências:
+
+- `evidence/r200-content-profile-20260915T213342Z.json`;
+- `r200-corpus-analysis.md`.
+
+Principais achados:
+
+- 79,74% `legacy_html` no source kind estatístico;
+- Elementor presente em 80 posts, com 39 JSON válidos e 41 inválidos;
+- Gutenberg presente em 9 posts;
+- widgets Elementor confirmados: `text-editor` e `shortcode`;
+- blocos confirmados: `core/freeform`, `core/heading`, `core/paragraph`, `core/list`, `core/table`;
+- shortcode detection textual contém falsos positivos por colchetes técnicos;
+- `post_content` máximo observado 156.636 B;
+- `_elementor_data` máximo observado 110.029 B;
+- não há evidência atual que justifique cache/storage durável ou renderização completa como caminho normal.
 
 ## 9. Gates
 
 ### R-200 — Current State
 
-PASS quando o corpus real tiver sido perfilado e os formatos/fallbacks necessários estiverem documentados sem mutação editorial.
+**PASS.** Corpus real perfilado e formatos/fallbacks necessários documentados sem mutação editorial.
 
 ### R-210 — Extraction Contract
 
-PASS quando source selection, normalização, boundaries, shortcodes, fallback e política de erros estiverem congelados.
+**PASS.** Source selection, normalização, boundaries, shortcodes, fallback, budgets e política de erros congelados em `extraction-contract-v1.md` v1.0.0.
 
 ### G-220 — Extractor determinístico
 
-PASS com testes unitários cobrindo Elementor, Gutenberg, HTML legado, conteúdo vazio/corrompido, shortcodes e repetibilidade.
+**READY.** PASS com testes unitários cobrindo Elementor, Gutenberg, HTML legado, conteúdo vazio/corrompido, shortcodes, guardrails e repetibilidade.
 
 ### G-230 — Knowledge Document
 

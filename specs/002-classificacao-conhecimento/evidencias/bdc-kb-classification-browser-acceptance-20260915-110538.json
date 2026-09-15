@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "mode": "temporary_classification_browser_acceptance",
+  "generated_at": "2026-09-15T11:05:38+00:00",
+  "environment": {"wordpress":"6.9.4","php":"8.5.10","plugin":"0.2.0-dev.8","browser_label":"Microsoft Edge 153.0.0.0 / Windows NT 10.0","viewport":"492x660","min_viewport_observed":"492x660","device_pixel_ratio":1,"user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0"},
+  "fixture": {"post_id":46728,"marker":"spec002-browser-v1","terms_count":7,"state_sha256":"187cee62aea8e4e6306279fc8bd5192afe6fa3b2aa28a71a512d95730f88ea22","deleted":true},
+  "checks": [
+    {"id":"G110-06","gate":"G-110","status":"PASS","message":"Navegação por teclado e ordem de foco na Classificação são utilizáveis.","source":"operator_assertion_required"},
+    {"id":"G110-07","gate":"G-110","status":"PASS","message":"Após reduzir a janela para 782px ou menos, Summary + Classificação permanecem utilizáveis sem perda funcional.","source":"operator_assertion_required"},
+    {"id":"G110-A01","gate":"G-110/G-030","status":"PASS","message":"Os quatro conceitos persistiram e foram relidos após o save real da Classificação.","source":"fixture_assertion"},
+    {"id":"G110-A02","gate":"G-001","status":"PASS","message":"O save via UI não alterou título, post_content ou _elementor_data da fixture.","source":"fixture_assertion"},
+    {"id":"G110-A03","gate":"G-030","status":"PASS","message":"A referência legada permaneceu read-only durante o save canônico.","source":"fixture_assertion"},
+    {"id":"G110-A04","gate":"REGRESSION-SPEC-001","status":"PASS","message":"O save da Classificação preservou integralmente o Summary da fixture.","source":"fixture_assertion"},
+    {"id":"G110-A05","gate":"G-110/G-070","status":"PASS","message":"O fluxo normal retornou por POST-Redirect-GET com status saved.","source":"request_assertion"},
+    {"id":"G110-A06","gate":"G-110","status":"PASS","message":"Viewport do navegador foi coletado automaticamente.","source":"browser_runtime_assertion"},
+    {"id":"G110-A07","gate":"G-110","status":"PASS","message":"DOM confirma shell do wp-admin e ausência de sidebar secundária do plugin.","source":"browser_dom_assertion"},
+    {"id":"G110-A08","gate":"G-110","status":"PASS","message":"DOM da etapa inicial confirma listagem, ação de gerenciamento e paginação quando necessária.","source":"browser_dom_assertion"},
+    {"id":"G110-A09","gate":"G-110","status":"PASS","message":"DOM confirma quatro selects rotulados, cardinalidade single/multi e referência legada visível.","source":"browser_dom_assertion"},
+    {"id":"G110-A10","gate":"G-110","status":"PASS","message":"Feedback textual de sucesso da Classificação está presente no wp-admin.","source":"browser_dom_assertion"},
+    {"id":"G110-A11","gate":"G-110","status":"PASS","message":"O navegador observou largura administrativa de 782px ou menos durante o teste.","source":"browser_runtime_assertion"}
+  ],
+  "summary": {"manual_pass":2,"manual_fail":0,"auto_fail":0,"overall":"PASS"},
+  "cleanup": {"post_fixture_deleted":true,"terms_deleted_count":7,"residual_posts":0,"residual_terms":0},
+  "notes":"PASS",
+  "safety": {"real_content_modified":false,"persistent_report":false,"requires_capability":"manage_options","source":"automated_dom_runtime_plus_two_required_operator_assertions"},
+  "limitations": ["Somente navegação por teclado/foco e usabilidade real em viewport estreito permanecem como observação humana guiada.","Persistência, PRG, regressões editoriais/Summary/legado, shell, listagem, semântica dos quatro selects, feedback e viewport são verificados automaticamente.","O cenário usa somente post e termos temporários próprios e deve ser removido do package final da SPEC-002."]
+}

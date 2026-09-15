@@ -35,3 +35,7 @@ require_once BDC_KB_DIR . 'includes/class-admin-page.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
 
 \BDC\KnowledgeBase\Plugin::register();
+
+if ( defined( 'BDC_KB_WORKSPACE_BROWSER_DIAGNOSTICS_BUILD' ) && BDC_KB_WORKSPACE_BROWSER_DIAGNOSTICS_BUILD ) {
+	\BDC\KnowledgeBase\Workspace_Browser_Diagnostics::register();
+}

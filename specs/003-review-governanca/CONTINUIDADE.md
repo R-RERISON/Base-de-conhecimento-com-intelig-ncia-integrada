@@ -64,31 +64,39 @@ Evidências:
 **G-001: PASS.**  
 **G-030: PASS determinístico + ambiental.**
 
-## Correção de sequência — Design System entra agora
+## Design System Runtime Foundation
 
 Documento: `design-system-runtime-plan.md`.
 
 A fundação visual não será adiada para o fim da SPEC-003. Antes de abrir o handler/UI de Review, o runtime existente recebe o Design System v1 de forma isolada e sem alterar contratos funcionais.
 
-Escopo DS-010:
+Build: `0.3.0-dev.3`  
+SHA-256: `081a9b0411e3e60020aa9b875c1a09d33c32ece2000011aa830186617eec542f`
 
-- CSS Custom Properties canônicas;
-- surfaces/radius/spacing/focus;
-- Context Header do artigo;
-- Knowledge List com hierarquia/densidade coerentes;
-- Summary e Classificação apresentados como panels do mesmo produto;
-- reflow <=782px;
-- nenhum Review falso, score ou AI Ready.
+Implementado no build:
+
+- tokens canônicos como CSS Custom Properties;
+- navy/blue/surfaces/border/radius/spacing/focus do UX-001;
+- hierarquia visual para cabeçalho, contexto do artigo e tabela;
+- Summary e Classificação em superfícies coerentes;
+- inputs/selects/legacy reference refinados;
+- responsive <=782px e <=520px;
+- foco visível;
+- nenhuma alteração em Summary Store, Classification Store ou Review Store;
+- runner `class-review-diagnostics.php` removido do package.
+
+O markup funcional permanece conservador nesta etapa. Tabs completas/Workspace com Review real entram somente depois do G-070.
 
 ## Próximo passo exato
 
-1. gerar build visual `0.3.0-dev.3` sem o runner de integração já concluído;
-2. aplicar somente fundação visual/markup seguro;
-3. executar smoke visual em listagem + artigo;
-4. confirmar Summary e Classificação funcionais;
-5. fechar DS-010;
-6. iniciar S004 — handler HTTP Review e G-070;
-7. somente após G-070 integrar ações reais de Review ao Workspace no G-110.
+1. substituir `0.3.0-dev.2` por `0.3.0-dev.3`;
+2. abrir a listagem da Base de Conhecimento e um artigo;
+3. confirmar que a linguagem visual mudou e continua coerente dentro do wp-admin;
+4. salvar um Summary sem alterar seu conteúdo sem necessidade e confirmar feedback normal;
+5. abrir Classificação e confirmar controles/vocabulários íntegros;
+6. reduzir a janela para aproximadamente 782px e validar uso/foco;
+7. retornar screenshot da listagem e do artigo;
+8. com smoke PASS, fechar DS-010 e iniciar S004/G-070.
 
 ## UX / valor preservado
 
@@ -111,5 +119,5 @@ A tela histórica de artigo com **Resumo Executivo lateral** foi registrada como
 - R-010: **PASS**.
 - G-001: **PASS**.
 - G-030: **PASS**.
-- DS-010: **EM EXECUÇÃO**.
+- DS-010: **AGUARDANDO SMOKE VISUAL `0.3.0-dev.3`**.
 - G-070/G-110/G-130: pendentes na sequência normal.

@@ -14,7 +14,8 @@
 - [x] T010 Registrar política de legado: migrável / advisory / descartado.
 - [x] T011 Gerar evidência JSON e registrar resultado do profiler.
 
-**Gate R-001: PASS.**  
+**Gate R-001: PASS.**
+
 Evidência: `evidencia-profiling-s001.md`. O ambiente possui 622 posts e zero rows nos seis stores históricos de Review/Governança; não há passivo de migração.
 
 ## S002 — Domain Contract
@@ -30,7 +31,8 @@ Evidência: `evidencia-profiling-s001.md`. O ambiente possui 622 posts e zero ro
 - [x] T028 Definir contrato de atomicidade/compensação.
 - [x] T029 Fechar política de migração/coexistência legada.
 
-**Gate R-010: PASS.**  
+**Gate R-010: PASS.**
+
 Contrato: `domain-contract.md`. Estado atual é derivado do último evento append-only `bdc_kb_review_event`; não existe meta paralela de current state.
 
 ## S003 — Runtime mínimo
@@ -43,7 +45,7 @@ Contrato: `domain-contract.md`. Estado atual é derivado do último evento appen
 - [x] T035 Implementar compensation/fail-safe ou estado crítico conforme contrato.
 - [x] T036 Unitários determinísticos — PASS 19/19.
 - [x] T037 PHP lint PASS 10/10 e package `0.3.0-dev.1` gerado.
-- [x] T038 Smoke ambiental `0.3.0-dev.1` — PASS por evidência do operador; Summary/Classificação sem regressão e nenhuma UI Review antecipada.
+- [x] T038 Smoke ambiental `0.3.0-dev.1` — PASS.
 - [x] T039 Integração real do `Review_Store` na WordPress Comments API via `0.3.0-dev.2` — PASS 17/17, cleanup zero resíduos.
 
 **Gate G-001: PASS.**  
@@ -55,15 +57,12 @@ Contrato: `domain-contract.md`. Estado atual é derivado do último evento appen
 - [x] T039B Traduzir tokens UX-001 para CSS Custom Properties do plugin.
 - [x] T039C Aplicar surfaces/hierarquia à Knowledge List e contexto do artigo sem mudar navegação.
 - [x] T039D Refinar visual de Summary/Classificação sem alterar writers.
-- [x] T039E Smoke visual desktop real do `0.3.0-dev.3` + regressão funcional — PASS por capturas/evidência do operador.
-- [ ] T039F Reflow/foco <=782px e ~492px — deliberadamente transferido para G-110 Browser Acceptance após entrada do Workspace final.
+- [x] T039E Smoke visual desktop real do `0.3.0-dev.3` + regressão funcional — PASS.
+- [ ] T039F Reflow/foco <=782px e ~492px — transferido para G-110 Browser Acceptance após entrada do Workspace final.
 
 Evidência: `evidencia-design-system-runtime-dev3.md`.
 
-Package visual: `0.3.0-dev.3` — PHP lint PASS 10/10; runner Review Diagnostics removido.
-
-**Gate DS-010: PASS — Runtime Foundation.**  
-O PASS valida tokens, surfaces e linguagem visual no runtime; NÃO aprova o layout final do Knowledge Workspace. As capturas confirmaram que o empilhamento vertical `Summary -> Classificação` deve ser substituído por Workspace/tabs em G-110, antes de adicionar Review como superfície visual.
+**Gate DS-010: PASS — Runtime Foundation.**
 
 ## S004 — HTTP e segurança
 
@@ -72,37 +71,48 @@ O PASS valida tokens, surfaces e linguagem visual no runtime; NÃO aprova o layo
 - [x] T042 Allowlist exata de payload `target_state`/`note` implementada.
 - [x] T043 PRG implementado com statuses explícitos.
 - [x] T044 Runner HTTP temporário criado em `class-review-http-diagnostics.php`.
-- [x] T045 Executar GET/nonce/mass-assignment/IDOR/payload inválido no ambiente real — PASS nos casos H02-H13 do `0.3.0-dev.4`.
+- [x] T045 Executar GET/nonce/mass-assignment/IDOR/payload inválido no ambiente real.
 - [x] T045A Registrar evidência bruta do `0.3.0-dev.4` — `15 PASS / 7 FAIL`, cleanup zero resíduos.
-- [x] T045B Diagnosticar falha em bloco H14-H20 como incoerência de cache de Comments API entre loopback filho e processo pai do harness.
+- [x] T045B Diagnosticar falha H14-H20 como incoerência de cache de Comments API entre loopback filho e processo pai do harness.
 - [x] T045C Implementar hardening test-only em `class-review-http-cache-coherence.php`, sem alterar writer/store permanentes.
-- [ ] T046 Reexecutar POST válido + reread + regressão SPEC-001/002 no `0.3.0-dev.5` e exigir H14-H20 PASS.
+- [x] T046 Reexecutar POST válido + reread + regressão SPEC-001/002 no `0.3.0-dev.5` — H14-H21 PASS.
 - [x] T047 Confirmar cleanup zero resíduos no `0.3.0-dev.4`.
-- [ ] T048 Confirmar cleanup zero resíduos novamente no `0.3.0-dev.5`.
+- [x] T048 Confirmar cleanup zero resíduos novamente no `0.3.0-dev.5`.
+- [x] T049 Registrar evidência final G-070 — `22 PASS / 0 FAIL / overall=PASS`.
 
 Evidências:
 
-- `evidencias/bdc-kb-review-http-security-20260915-155801.json`;
-- `evidencia-g070-dev4-cache-coherence.md`.
+- `evidencias/bdc-kb-review-http-security-20260915-155801.json` — FAIL histórico preservado;
+- `evidencia-g070-dev4-cache-coherence.md`;
+- `evidencias/bdc-kb-review-http-security-20260915-165537.json` — PASS final;
+- `evidencia-g070-dev5-pass.md`.
 
-Package de rerun: `0.3.0-dev.5`; documento `package-dev5-http-cache-coherence.md`.
-
-**Gate G-070: NÃO APROVADO — aguardando rerun real do `0.3.0-dev.5`.**
+**Gate G-070: PASS determinístico + ambiental.**
 
 ## S005 — UX / Browser Acceptance
 
-- [ ] T050 Integrar Review ao Knowledge Workspace conforme UX v1, substituindo empilhamento vertical por navegação canônica.
-- [ ] T051 Não exibir score/AI Ready não contratados.
-- [ ] T052 Preservar Summary/Classificação e navegação.
-- [ ] T053 Testar teclado/foco.
-- [ ] T054 Testar desktop/782px/~492px.
-- [ ] T055 Browser acceptance com fixture e cleanup.
+Plano ativo: `g110-workspace-browser-acceptance-plan.md`.
 
-**Gate G-110: NOT_RUN.**
+- [ ] T050 Refatorar tela do artigo para Knowledge Workspace: Context Header + tabs + Main Work Area.
+- [ ] T050A Preservar writers atuais de Summary e Classificação sem mudança de persistência.
+- [ ] T050B Integrar Review como tab própria usando `Review_Admin`/`Review_Store`/`Review_Contract`.
+- [ ] T050C Integrar Histórico como projection read-only dos eventos `bdc_kb_review_event`, sem novo writer/store.
+- [ ] T051 Não exibir score/AI Ready/progresso ou outras métricas não contratadas.
+- [ ] T052 Preservar Summary/Classificação, vocabulários e permanência no contexto do artigo.
+- [ ] T053 Implementar/validar teclado, foco, labels e feedback sem dependência exclusiva de cor.
+- [ ] T054 Testar 1440px/1024px/782px/~492px e zero overflow horizontal.
+- [ ] T055 Criar Browser Acceptance com fixtures controladas e cleanup obrigatório.
+- [ ] T056 Validar `unreviewed -> in_review -> needs_changes -> approved` pela UI real.
+- [ ] T057 Validar `NO_CHANGE`, permission denied, note required e histórico consistente.
+- [ ] T058 Confirmar cleanup zero resíduos do runner/browser acceptance.
+
+**Gate G-110: ACTIVE / IMPLEMENTAÇÃO AUTORIZADA.**
+
+Build sugerido para W-001 + W-002: `0.3.0-dev.6`.
 
 ## S006 — Lifecycle / fechamento
 
-- [ ] T060 Remover profiler/runners/hooks temporários.
+- [ ] T060 Remover profiler/runners/hooks temporários, incluindo `class-review-http-diagnostics.php`, `class-review-http-cache-coherence.php` e flag de diagnostics.
 - [ ] T061 Gerar package clean RC.
 - [ ] T062 deactivate/activate sem regressão.
 - [ ] T063 Confirmar zero resíduos de teste.
@@ -113,4 +123,4 @@ Package de rerun: `0.3.0-dev.5`; documento `package-dev5-http-cache-coherence.md
 
 ## Regra
 
-R-001, R-010, G-001, G-030 e DS-010 estão PASS. O `0.3.0-dev.4` comprovou a camada negativa de segurança e cleanup, mas não aprovou G-070 por sete falhas nas asserções pós-write. O `0.3.0-dev.5` corrige apenas a coerência de cache do harness e deve repetir o mesmo gate real. O G-110 só abre após `22 PASS / 0 FAIL / overall=PASS` e cleanup zero resíduos.
+R-001, R-010, G-001, G-030, DS-010 e G-070 estão PASS. G-110 está formalmente aberto. A próxima alteração de runtime deve convergir a tela atual para o Knowledge Workspace da UX-001; Review não pode ser anexado como terceiro bloco vertical. G-130 somente inicia após Browser Acceptance real do G-110.

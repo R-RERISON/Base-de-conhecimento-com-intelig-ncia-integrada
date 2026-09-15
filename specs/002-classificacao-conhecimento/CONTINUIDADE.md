@@ -5,80 +5,80 @@
 - SPEC-001: CONCLUÍDA para desenvolvimento/homologação.
 - Baseline funcional: `0.1.0-rc.1`.
 - SPEC ativa: **SPEC-002 — Classificação de Conhecimento**.
-- S001 profiling: **PASS**.
-- S002 contratos físicos: **PASS**.
-- S003 runtime mínimo: **PASS local**.
-- Build atual: `0.2.0-dev.1`.
-- Gates WordPress reais da SPEC-002: ainda NOT_RUN.
+- S001 profiling real: **PASS**.
+- C-001: **PASS**.
+- C-010: **PASS documental**.
+- S002 contratos físicos/segurança: **PASS documental**.
+- Runtime permanente de classificação: **IMPLEMENTADO em 0.2.0-dev.1**.
+- Smoke visual real do `0.2.0-dev.1`: **PASS**.
+- Próximo gate: diagnóstico técnico real do `0.2.0-dev.2`.
 
-## Evidência S001
+## Evidência de profiling
 
-Profiler `0.2.0-profile.1` executado em WordPress 6.9.4 / PHP 8.5.10:
+Ambiente real: WordPress 6.9.4 / PHP 8.5.10 / plugin `0.2.0-profile.1`.
 
-- 622 posts;
-- 36 meta rows nos 11 stores candidatos;
-- zero writes;
-- stores KB2Ops perfilados sem dados;
-- GRE com cobertura 0,96%–1,45%;
-- legado inadequado para migração automática;
-- `service↔affected_service` sem merge;
-- `technologies↔systems_involved` sem merge.
+- 622 posts no escopo;
+- 36 linhas de postmeta classificatório entre 11 stores históricos;
+- stores KB2Ops perfilados sem dados neste ambiente;
+- stores GRE com cobertura ~0,96%–1,45% e forte heterogeneidade/freeform;
+- nenhum merge autorizado entre service/affected_service ou technologies/systems_involved;
+- decisão: não migrar automaticamente legado.
 
-Arquivo original: `bdc-kb-classification-profile-20260914-235424.json`.
-SHA-256: `f11356632ee2f5720c6399c38af01bb4d0f4342af7e6e57b049fe0e07dda556b`.
+## Slice canônico autorizado
 
-## Decisão C-010
+Taxonomias WordPress namespaced:
 
-Primeiro slice canônico:
+- `audience` -> `bdc_kb_audience` — multi;
+- `responsible_team` -> `bdc_kb_responsible_team` — multi;
+- `knowledge_type` -> `bdc_kb_knowledge_type` — single;
+- `catalog_item` -> `bdc_kb_catalog_item` — multi.
 
-- `bdc_kb_audience` — multi;
-- `bdc_kb_responsible_team` — multi;
-- `bdc_kb_knowledge_type` — single;
-- `bdc_kb_catalog_item` — multi.
+Legado é somente referência read-only; sem dual-write e sem auto-promoção a termo.
 
-Primitive: WordPress Taxonomy API.
+## Smoke `0.2.0-dev.1`
 
-Regras:
+Comprovado visualmente no WordPress real:
 
-- sem seed/migração automática;
-- sem dual-write;
-- legado apenas referência read-only não canônica;
-- artigo só seleciona termos existentes;
-- gestão de vocabulário usa UI nativa WordPress;
-- assignment via handler próprio com POST/nonce/`edit_post`;
-- Summary permanece independente.
+- Summary da SPEC-001 permanece legível e íntegro;
+- painel de Classificação aparece no mesmo shell wp-admin;
+- quatro conceitos renderizam;
+- nenhum valor legado é selecionado automaticamente;
+- vocabulários inicialmente vazios;
+- links de gerenciamento aparecem para administrador;
+- sem fatal error observado.
 
-## Runtime `0.2.0-dev.1`
+## Homologação `0.2.0-dev.2`
 
-Adicionados:
+Build temporário com runner onclick autossuficiente.
 
-- `Classification_Contract`;
-- `Classification_Store`;
-- `Classification_Admin`;
-- integração visual na tela existente.
+O runner usa somente fixtures próprias e cobre:
 
-Evidência local:
+- contrato das quatro taxonomias;
+- read side-effect free;
+- update parcial/omitidos;
+- NO_CHANGE zero relação escrita;
+- allowlist;
+- termo inexistente;
+- termo de taxonomia errada;
+- cardinalidade single/multi;
+- empty/remove;
+- capability por objeto;
+- post type fora do escopo;
+- B-006 por inconsistência controlada de read-after-write;
+- preservação editorial;
+- legado read-only;
+- regressão de write do Summary da SPEC-001;
+- cleanup de post e termos temporários.
 
-- PHP lint: PASS 8/8;
-- unitário Classification Store: PASS 15/15;
-- fault injection cobre `FAIL_SAFE` e `PARTIAL_FAILURE_CRITICAL`.
+## Próximo passo exato
 
-## Próximo passo exato — T040
+1. instalar por substituição `0.2.0-dev.2`;
+2. abrir Base de Conhecimento;
+3. clicar **Executar diagnóstico Classificação e gerar JSON**;
+4. enviar `bdc-kb-classification-diagnostics-*.json`;
+5. exigir `summary.overall=PASS`, `cleanup.residual_posts=0` e `cleanup.residual_terms=0`;
+6. somente depois preparar negativos HTTP/browser da Classificação.
 
-No WordPress de homologação:
+## Regra
 
-1. substituir o build temporário de profiling por `0.2.0-dev.1`;
-2. confirmar versão e ausência de fatal error;
-3. abrir Base de Conhecimento e confirmar que Summary/listagem continuam normais;
-4. abrir um artigo existente;
-5. confirmar que a nova seção **Classificação de Conhecimento** aparece abaixo do Summary;
-6. confirmar que nenhuma classificação histórica foi preselecionada automaticamente;
-7. como administrador, confirmar que os links **Gerenciar vocabulários** abrem as telas nativas das quatro taxonomias;
-8. não criar/migrar termos ainda se o objetivo for apenas smoke;
-9. enviar screenshot/resultado.
-
-Após smoke PASS: preparar build de homologação onclick para G-030/G-070 com termos e post fixture temporários, cleanup integral e JSON de evidência.
-
-## Restrições
-
-Serviço, serviço afetado, tecnologias, sistemas, keywords, versões, Review, Search, Analytics e IA permanecem fora do slice atual.
+Não criar dados canônicos reais para “testar”. Homologação usa fixtures próprias até os gates técnicos estarem PASS.

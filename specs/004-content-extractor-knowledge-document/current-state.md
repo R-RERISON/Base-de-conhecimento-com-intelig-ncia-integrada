@@ -9,29 +9,29 @@
 - R-200: **PASS**;
 - R-210: **PASS**;
 - G-220: **IMPLEMENTED / LOCAL PASS / ENV SMOKE PENDING**;
-- build atual: `0.4.0-dev.1`.
+- package ativo de homologação: `0.4.0-smoke.1`.
 
-Contratos ativos:
+Contratos:
 
 - `extraction-contract-v1.md` — v1.0.0;
-- `extraction-contract-v1.1.md` — amendment v1.1.0;
+- `extraction-contract-v1.1.md` — v1.1.0;
 - `elementor-normalization-contract-v1.md`;
 - `production-rollout-contract-v1.md`.
 
 ## Direção editorial
 
-A descoberta ambiental mostrou forte legado histórico, mas a direção operacional foi esclarecida:
+Elementor é o editor padrão atual da equipe. O corpus majoritariamente Legacy HTML é consequência histórica de migrações anteriores e não define a direção editorial futura.
 
-- Elementor é o editor padrão atual da equipe;
-- Legacy HTML/Gutenberg/plain precisam continuar sendo compreendidos pelo extractor;
-- o Knowledge Document deve continuar independente do editor;
-- a convergência editorial para Elementor será migration explícita, versionada e reversível.
+A arquitetura separa:
 
-Portanto, **79,74% de legacy HTML descreve o passado do corpus, não a arquitetura editorial desejada**.
+1. **knowledge normalization** — read-only, multi-source e editor-independent;
+2. **editorial normalization para Elementor** — migration futura, explícita, versionada, auditável e reversível.
+
+O plugin não vira CMS próprio.
 
 ## Evidência R-200
 
-Corpus real: 622 posts.
+Corpus: 622 posts.
 
 Distribuição estatística exclusiva:
 
@@ -48,27 +48,22 @@ Elementor:
 - presente em 80;
 - 39 JSON válidos;
 - 41 inválidos;
-- widgets confirmados: `text-editor` e `shortcode`.
+- widgets observados: `text-editor` e `shortcode`.
 
 Gutenberg:
 
 - 9 posts com blocos;
 - `core/freeform`, `core/heading`, `core/paragraph`, `core/list`, `core/table`.
 
-Tamanhos máximos observados:
-
-- `post_content`: 156.636 B;
-- `_elementor_data`: 110.029 B.
-
 Segurança do profiler:
 
-- fingerprint editorial before/after idêntico;
+- fingerprint before/after idêntico;
 - 0 posts alterados;
 - corpus 622 → 622.
 
-## Runtime G-220 implementado
+## G-220 implementado
 
-O build `0.4.0-dev.1` adiciona:
+Componentes permanentes:
 
 - `Content_Normalizer`;
 - `Shortcode_Inspector`;
@@ -78,104 +73,105 @@ O build `0.4.0-dev.1` adiciona:
 - `Gutenberg_Adapter`;
 - `Content_Extractor`.
 
-O extractor é um serviço puro chamado explicitamente por futuros consumidores. Não possui hook próprio, cron, job, tabela ou writer.
+Características:
 
-### Comportamentos
+- read-only;
+- sem hook/job próprio no núcleo do extractor;
+- sem storage;
+- sem IA/rede externa;
+- sem `do_shortcode()`;
+- sem `render_block()`;
+- sem renderização Elementor;
+- sem writers editoriais;
+- soft budget 256 KiB / hard safety limit 1 MiB;
+- sem truncamento silencioso;
+- `DOMDocument` opcional com fallback estrutural determinístico.
 
-- Elementor válido: traversal allowlisted;
-- Elementor inválido: warning + fallback seguro;
-- Gutenberg: parsing estrutural sem render dinâmico;
-- Legacy HTML: boundaries/facts preservados;
-- plain text: normalização determinística;
-- shortcodes: reconhecimento controlado sem callback;
-- hard limit: sem truncamento silencioso;
-- saída inclui hashes da matéria-prima e readiness Elementor.
+## Readiness Elementor
 
-### Portabilidade
-
-`DOMDocument` é opcional. Quando indisponível, Legacy adapter usa fallback estrutural determinístico e emite `HTML_DOM_UNAVAILABLE`.
-
-Isso foi necessário porque o PHP CLI do runner local não possui `ext-dom`. O plugin não ganha uma dependência de instalação desnecessária por causa disso.
-
-## Readiness para Elementor
-
-A saída intermediária classifica cada post como:
+A saída intermediária classifica:
 
 - `native`;
 - `projectable`;
 - `review_required`;
 - `blocked`.
 
-Essa classificação **não é writer**. Ela serve de base para o futuro Projection Plan e migration controlada.
+Isso não grava `_elementor_data`; serve de base ao futuro Projection Plan.
 
-Elementor válido continua `native` mesmo que o corpus geral seja historicamente legado.
+## Validação local
 
-## Validação local G-220
+`g220-local-validation.md`:
 
-`g220-local-validation.md` registra:
-
-- lint dos arquivos novos: PASS;
+- lint: PASS;
 - 14/14 unit tests: PASS;
-- zero-write após cada cenário;
+- zero-write após cada caso;
 - repetibilidade: PASS;
-- casos Legacy/Elementor/Gutenberg/plain/shortcode/empty/oversize cobertos.
+- fallback sem `DOMDocument`: PASS.
 
-## Profiler temporário
+## Package `0.4.0-smoke.1`
 
-O source do profiler ainda existe até G-250, mas o build atual define:
+SHA-256:
 
-`BDC_KB_SPEC004_PROFILE_BUILD=false`
+`3dad9f5f7c01e7970d314a0d0788756ad694cc9f3b9327a2834ead90b86e4c8f`
 
-Consequências:
+Validações:
 
-- profiler não é carregado;
-- submenu/runner não são registrados;
-- não participa do runtime `0.4.0-dev.1`.
+- PHP lint antes/depois da extração do ZIP: 20/20 PASS;
+- JS syntax: PASS;
+- ZIP integrity: PASS;
+- source parity novos/alterados: 9/9 PASS;
+- 14/14 testes executados contra o conteúdo extraído do próprio ZIP.
 
-## Produção — novo requisito explícito
+Flags:
 
-Homologação deriva de cópia da produção, mas promotion não deve assumir ambientes eternamente idênticos.
+- `BDC_KB_SPEC004_PROFILE_BUILD=false`;
+- `BDC_KB_SPEC004_SMOKE_BUILD=true`.
 
-G-245 introduz production readiness com:
+O antigo profiler permanece fisicamente até cleanup, mas não é carregado/registrado.
 
-- target preflight;
+### Smoke runner temporário
+
+`Content_Extractor_Smoke` adiciona somente no build de homologação:
+
+**Base de Conhecimento → Smoke G-220**
+
+Controles:
+
+- `manage_options`;
+- POST + nonce;
+- nenhuma persistência;
+- nenhum conteúdo/ID/título/URL exportado;
+- fingerprint editorial before/after;
+- agregação de source kinds, warnings, strategies, facts, readiness e performance.
+
+Este runner não poderá chegar ao RC/produção.
+
+## Produção
+
+Homologação é cópia da produção, mas o rollout futuro será target-aware.
+
+G-245 exigirá:
+
+- Production Preflight;
 - matriz WordPress/PHP/Elementor/plugins;
-- versões independentes de runtime/schema/projection/migration;
+- versionamento independente de runtime/schema/projection/migration;
 - dry-run;
 - journal/rollback;
 - stale-source guard;
 - canário;
-- lotes retomáveis;
+- batches retomáveis;
 - runbook.
 
-### Regra de activation/update
-
-Activation/update pode futuramente executar apenas migrations pequenas e idempotentes de estado/schema **próprio do plugin**, se houver necessidade.
-
-Activation/update nunca:
-
-- converte posts para Elementor;
-- percorre corpus inteiro para writer;
-- executa IA;
-- regrava `_elementor_data`/`post_content`.
-
-## Elementor writer futuro
-
-O writer ficará atrás de `Elementor_Gateway` version-gated e deverá usar o lifecycle oficial do Document do Elementor quando homologado.
-
-Gravação direta dispersa em metas internas do Elementor é proibida por padrão.
-
-Antes de writer são obrigatórios G-230, G-240 e os controles do G-245.
-
-## Risco principal atual
-
-Os maiores riscos agora estão explicitamente separados:
-
-1. **perda semântica na leitura** — tratado pelo extractor e G-240;
-2. **corrupção editorial na conversão para Elementor** — tratado por projection plan, canário, journal/rollback e gateway;
-3. **diferença homologação/produção** — tratada por preflight e compatibility matrix;
-4. **migration concorrente com edição humana** — tratada por source hash/`STALE_SOURCE`.
+Activation/update nunca executará migration editorial para Elementor.
 
 ## Próximo passo
 
-Gerar/validar o package `0.4.0-dev.1` e executar smoke read-only em homologação. Somente depois fechar G-220 ambiental e iniciar G-230.
+Instalar `0.4.0-smoke.1` em homologação, executar smoke das funcionalidades existentes e o runner G-220, retornar o JSON e fechar o gate ambiental somente se:
+
+- fingerprint equal = true;
+- changed posts = 0;
+- corpus count unchanged;
+- extractor errors = 0;
+- throwables = 0.
+
+Depois disso inicia G-230.

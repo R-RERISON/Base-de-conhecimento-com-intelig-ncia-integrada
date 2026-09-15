@@ -45,6 +45,45 @@
 	margin: 0;
 }
 
+.bdc-kb-section-separator {
+	margin: 32px 0 24px;
+}
+
+.bdc-kb-classification {
+	max-width: 900px;
+}
+
+.bdc-kb-vocabulary-links {
+	margin: 12px 0 20px;
+	padding: 10px 12px;
+	background: #fff;
+	border-left: 4px solid #2271b1;
+}
+
+.bdc-kb-term-select {
+	width: 100%;
+	max-width: 640px;
+	min-height: 38px;
+}
+
+.bdc-kb-classification-field {
+	padding: 14px 0;
+	border-bottom: 1px solid #dcdcde;
+}
+
+.bdc-kb-legacy-reference {
+	margin-top: 10px;
+	max-width: 760px;
+}
+
+.bdc-kb-legacy-reference pre {
+	white-space: pre-wrap;
+	word-break: break-word;
+	background: #f6f7f7;
+	padding: 10px;
+	border: 1px solid #dcdcde;
+}
+
 @media (max-width: 782px) {
 	.bdc-kb-table th:nth-child(2),
 	.bdc-kb-table td:nth-child(2),

@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
- * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança e Content Extractor determinístico.
- * Version: 0.4.0-smoke.1
+ * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança, Content Extractor e Knowledge Document determinísticos.
+ * Version: 0.4.0-smoke.2
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,9 +13,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-smoke.1' );
+define( 'BDC_KB_VERSION', '0.4.0-smoke.2' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
-define( 'BDC_KB_SPEC004_SMOKE_BUILD', true );
+define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
+define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', true );
 define( 'BDC_KB_FILE', __FILE__ );
 define( 'BDC_KB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
@@ -35,21 +36,28 @@ require_once BDC_KB_DIR . 'includes/class-content-source.php';
 require_once BDC_KB_DIR . 'includes/class-elementor-adapter.php';
 require_once BDC_KB_DIR . 'includes/class-gutenberg-adapter.php';
 require_once BDC_KB_DIR . 'includes/class-content-extractor.php';
+require_once BDC_KB_DIR . 'includes/class-canonical-json.php';
+require_once BDC_KB_DIR . 'includes/class-knowledge-document.php';
 require_once BDC_KB_DIR . 'includes/class-admin-page.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
 
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-content-profile.php';
 }
-
-if ( defined( 'BDC_KB_SPEC004_SMOKE_BUILD' ) && BDC_KB_SPEC004_SMOKE_BUILD ) {
+if ( defined( 'BDC_KB_SPEC004_G220_SMOKE_BUILD' ) && BDC_KB_SPEC004_G220_SMOKE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-content-extractor-smoke.php';
+}
+if ( defined( 'BDC_KB_SPEC004_G230_SMOKE_BUILD' ) && BDC_KB_SPEC004_G230_SMOKE_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-knowledge-document-smoke.php';
 }
 
 \BDC\KnowledgeBase\Plugin::register();
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
 	\BDC\KnowledgeBase\Content_Profile::register();
 }
-if ( defined( 'BDC_KB_SPEC004_SMOKE_BUILD' ) && BDC_KB_SPEC004_SMOKE_BUILD ) {
+if ( defined( 'BDC_KB_SPEC004_G220_SMOKE_BUILD' ) && BDC_KB_SPEC004_G220_SMOKE_BUILD ) {
 	\BDC\KnowledgeBase\Content_Extractor_Smoke::register();
+}
+if ( defined( 'BDC_KB_SPEC004_G230_SMOKE_BUILD' ) && BDC_KB_SPEC004_G230_SMOKE_BUILD ) {
+	\BDC\KnowledgeBase\Knowledge_Document_Smoke::register();
 }

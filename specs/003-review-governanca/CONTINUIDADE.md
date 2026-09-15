@@ -4,64 +4,77 @@
 
 - SPEC-001: concluída.
 - SPEC-002: concluída, baseline `0.2.0-rc.1`.
-- UX-001: baseline v1 congelada; UI as Code v0.2 aprovado como referência executável.
-- SPEC-003: **S001 em execução**.
-- T001–T006: concluídas.
-- Implementação de runtime permanece **bloqueada**.
+- UX-001: baseline v1 congelada; UI as Code v0.2 é a referência executável.
+- addendum de consumo: `ux/001-product-experience-knowledge-workspace/heritage-addendum-public-summary-v1.md`.
+- SPEC-003: **R-001 PASS / R-010 PASS / S003 AUTORIZADA**.
 
-## Baseline histórica fechada
+## Evidência do ambiente real
 
-Documento: `baseline-historico-s001.md`.
+Profiler `0.3.0-profile.1` executado em WordPress 6.9.4 / PHP 8.5.10:
 
-Stores históricos sob profiling:
+- corpus: 622 posts;
+- seis stores históricos de review analisados;
+- meta rows encontradas: 0;
+- posts com qualquer dado histórico de review: 0;
+- writes do profiler: 0;
+- conteúdo editorial lido: não;
+- notas/IDs de usuários exportados: não.
 
-- `_kb2ops_review_state`;
-- `_kb2ops_review_notes`;
-- `_kb2ops_reviewed_at`;
-- `_kb2ops_reviewed_by`;
-- `_kb2ops_include_ai`;
-- `_kb2ops_review_history`.
+Documento: `evidencia-profiling-s001.md`.
 
-Estados históricos `unreviewed`, `in_review`, `approved`, `excluded` continuam apenas candidatos.
+Conclusão: não existe passivo real de migração de Review/Governança no ambiente analisado.
 
-## Profiler autorizado
+## Domain Contract aprovado
 
-- build: `0.3.0-profile.1`;
-- ferramenta versionada: `tools/homologation/spec003/class-review-profiler.php`;
-- package SHA-256: `bb5a27fd455fc9cf6b2d98e4bb4e8855c2e07daecaa2a3c98a414377acaccf27`;
-- modo: read-only;
-- capability: `manage_options`;
-- não exporta notas humanas ou IDs de usuários;
-- não lê conteúdo editorial;
-- não persiste relatório.
+Documento: `domain-contract.md`.
+
+Decisões principais:
+
+- owner: Review & Governança;
+- estado inicial implícito: `unreviewed`;
+- estados: `unreviewed`, `in_review`, `needs_changes`, `approved`, `excluded`;
+- fonte canônica: eventos append-only via WordPress Comments API;
+- `comment_type`: `bdc_kb_review_event`;
+- estado atual = último evento válido;
+- actor = `user_id` do evento;
+- data = `comment_date_gmt`;
+- sem meta paralela de current state;
+- sem `_reviewed_by`/`_reviewed_at` duplicados;
+- sem tabela customizada;
+- sem migração/dual-read/dual-write legado;
+- `AI Ready` e `_kb2ops_include_ai` permanecem fora do domínio.
 
 ## Próximo passo exato
 
-1. instalar/substituir temporariamente pelo `0.3.0-profile.1`;
-2. abrir **Base de Conhecimento** com usuário administrador;
-3. executar **Profiling Review/Governança — gerar JSON**;
-4. retornar o arquivo `bdc-kb-review-profile-*.json`;
-5. analisar T007–T010;
-6. registrar evidência e fechar R-001;
-7. somente então decidir o Domain Contract R-010.
+Executar **S003 — Runtime mínimo**:
 
-## O que NÃO fazer agora
+1. implementar `Review_Contract`;
+2. implementar `Review_Store` sobre eventos canônicos;
+3. implementar leitura de estado/histórico;
+4. implementar máquina de transições e capability contract;
+5. implementar nota obrigatória para `needs_changes`/`excluded`;
+6. implementar read-after-write + compensation do evento recém-criado;
+7. criar unitários determinísticos;
+8. PHP lint;
+9. gerar `0.3.0-dev.1` somente quando G-001/G-030 estiverem sustentados por evidência.
 
-- não criar meta canônica de review;
-- não promover `approved/in_review/...` para contrato novo;
-- não criar reviewer/responsável;
-- não criar histórico persistente novo;
+## UX / valor preservado
+
+A tela histórica de artigo com **Resumo Executivo lateral** foi registrada como patrimônio de produto. No futuro Resolvedor, esse painel será uma projection read-only composta por owners canônicos, não um novo writer.
+
+## Proibições mantidas
+
+- não alterar `post_status` por decisão de governança;
+- não escrever `post_content` ou `_elementor_data`;
 - não criar score;
 - não criar `AI Ready`;
-- não migrar legado;
-- não iniciar S003 enquanto R-001 e R-010 não estiverem PASS.
+- não duplicar estado em meta + histórico;
+- não criar tabela própria sem necessidade comprovada;
+- não recuperar stores KB2Ops vazios por nostalgia arquitetural.
 
-## Gate atual
+## Gates
 
-- R-001: NOT_RUN — aguardando JSON real.
-- R-010: BLOCKED por R-001.
-- G-001/G-030/G-070/G-110/G-130: BLOCKED.
-
-## Regra
-
-A primeira entrega da SPEC-003 deve aumentar conhecimento sobre o estado real do ambiente, não aumentar quantidade de código permanente.
+- R-001: **PASS**.
+- R-010: **PASS**.
+- G-001/G-030: EM EXECUÇÃO.
+- G-070/G-110/G-130: BLOCKED pela sequência normal de implementação/homologação.

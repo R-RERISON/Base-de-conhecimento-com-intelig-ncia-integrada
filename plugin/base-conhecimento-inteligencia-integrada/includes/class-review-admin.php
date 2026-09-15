@@ -203,6 +203,56 @@ final class Review_Admin {
 		echo '</section>';
 	}
 
+	public static function render_history_panel( int $post_id ): void {
+		$history = Review_Store::history( $post_id, 50, 0 );
+		if ( is_wp_error( $history ) ) {
+			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar o histórico canônico de Review & Governança.', 'bdc-knowledge-base' ) . '</p></div>';
+			return;
+		}
+
+		echo '<section class="bdc-kb-history" aria-labelledby="bdc-kb-history-title">';
+		echo '<div class="bdc-kb-domain-heading">';
+		echo '<h3 id="bdc-kb-history-title">' . esc_html__( 'Histórico de Governança', 'bdc-knowledge-base' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Projeção read-only dos eventos canônicos de Review. Esta superfície não possui writer próprio.', 'bdc-knowledge-base' ) . '</p>';
+		echo '</div>';
+
+		if ( empty( $history ) ) {
+			echo '<div class="bdc-kb-empty-state">';
+			echo '<strong>' . esc_html__( 'Nenhuma decisão registrada', 'bdc-knowledge-base' ) . '</strong>';
+			echo '<p>' . esc_html__( 'Quando uma decisão de governança for registrada, ela aparecerá aqui em ordem cronológica reversa.', 'bdc-knowledge-base' ) . '</p>';
+			echo '</div>';
+			echo '</section>';
+			return;
+		}
+
+		echo '<ol class="bdc-kb-history-list">';
+		foreach ( $history as $event ) {
+			$from       = isset( $event['from'] ) && is_string( $event['from'] ) ? $event['from'] : '';
+			$to         = isset( $event['to'] ) && is_string( $event['to'] ) ? $event['to'] : '';
+			$from_label = Review_Contract::states()[ $from ] ?? $from;
+			$to_label   = Review_Contract::states()[ $to ] ?? $to;
+			$actor_id   = isset( $event['actor_id'] ) ? (int) $event['actor_id'] : 0;
+			$decision   = self::decision_label( $event['decision_at'] ?? null );
+			$note       = isset( $event['note'] ) && is_string( $event['note'] ) ? $event['note'] : '';
+
+			echo '<li class="bdc-kb-history-item">';
+			echo '<div class="bdc-kb-history-head">';
+			echo '<div>';
+			echo '<strong>' . esc_html( $from_label . ' → ' . $to_label ) . '</strong>';
+			echo '<p>' . esc_html( self::actor_label( $actor_id ) . ' · ' . $decision ) . '</p>';
+			echo '</div>';
+			echo '<span class="bdc-kb-state-badge bdc-kb-state-' . esc_attr( $to ) . '">' . esc_html( $to_label ) . '</span>';
+			echo '</div>';
+			if ( '' !== $note ) {
+				echo '<div class="bdc-kb-history-note">' . nl2br( esc_html( $note ) ) . '</div>';
+			}
+			echo '</li>';
+		}
+		echo '</ol>';
+		echo '<p class="description">' . esc_html__( 'Exibindo até 50 eventos mais recentes. A fonte da verdade permanece o event log canônico.', 'bdc-knowledge-base' ) . '</p>';
+		echo '</section>';
+	}
+
 	/** @return array<int,string> */
 	private static function available_targets( int $post_id, string $state ): array {
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {

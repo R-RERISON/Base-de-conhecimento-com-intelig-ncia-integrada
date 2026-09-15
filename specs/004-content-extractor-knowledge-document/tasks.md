@@ -25,16 +25,7 @@ Contratos:
 
 ## S003 — G-220 / Content Extractor determinístico
 
-- [x] T030 Implementar detector read-only de origem/flags e budgets.
-- [x] T031 Implementar adapter Elementor allowlisted sem renderização.
-- [x] T032 Implementar adapter Gutenberg estático sem `render_block()`.
-- [x] T033 Implementar adapter Legacy HTML com `DOMDocument` opcional e fallback estrutural.
-- [x] T034 Implementar normalizador estrutural/textual determinístico.
-- [x] T035 Implementar fallback fail-soft conforme R-210/R-210.1.
-- [x] T036 Confirmar ausência de necessidade de cache/persistência.
-- [x] T037–T040 Testes de adapters, inválidos, shortcodes, budgets, zero-write e repetibilidade.
-- [x] T041 Adicionar readiness `native/projectable/review_required/blocked` para futura migração Elementor, sem writer.
-- [x] T042 Integrar extractor como serviço read-only.
+- [x] T030–T042 Implementar detector, adapters, normalização, fallback, testes, readiness Elementor e integração read-only.
 - [x] T043 Implementar runner ambiental temporário G-220.
 - [x] T044 Gerar e validar package `0.4.0-smoke.1`.
 - [x] T045 Executar `0.4.0-smoke.1` no WordPress de homologação.
@@ -45,22 +36,10 @@ Evidências:
 
 - `g220-local-validation.md`;
 - `package-smoke1.md`;
+- `g220-smoke-analysis.md`;
 - `evidence/g220-smoke-20260915T221710Z.json`.
 
-Resultado ambiental:
-
-- WordPress `6.9.4` / PHP `8.5.10` / Elementor `4.1.0`;
-- 622 posts processados;
-- `editorial_fingerprint_equal=true`;
-- `changed_posts_during_run=0`;
-- `extractor_errors=0`;
-- `throwables=0`;
-- 21.969 fragments;
-- Elementor readiness: 39 native / 505 projectable / 78 review_required / 0 blocked.
-
 **Gate G-220: PASS — 2026-09-15.**
-
-> Smoke manual completo de Summary/Classificação/Review permanece como regressão de lifecycle em G-250; não é usado para mascarar ou substituir o gate específico do extractor.
 
 ## S004 — G-230 / Knowledge Document
 
@@ -76,21 +55,38 @@ Resultado ambiental:
 - [x] T059 Incorporar `elementor_compatibility` somente como proveniência/readiness.
 - [x] T059A Implementar runner ambiental G-230 com duas passagens e comparação hash/JSON sem exportar conteúdo.
 - [x] T059B Gerar/validar package `0.4.0-smoke.2`.
-- [ ] T059C Executar smoke G-230 no WordPress de homologação.
-- [ ] T059D Exigir 622 documentos nas duas passagens, zero errors/throwables, zero hash mismatch, zero canonical JSON mismatch e zero mutação editorial.
+- [x] T059C Executar smoke G-230 no WordPress de homologação.
+- [x] T059D Comprovar 622 documentos nas duas passagens, zero errors/throwables, zero hash mismatch, zero canonical JSON mismatch e zero mutação editorial.
 
-Evidências locais:
+Evidências:
 
 - `knowledge-document-contract-v1.md`;
 - `g230-local-validation.md` — **10/10 PASS**;
-- G-220 regression no mesmo package — **14/14 PASS**;
-- `package-smoke2.md`.
+- `package-smoke2.md`;
+- `g230-smoke-analysis.md`;
+- `evidence/g230-smoke-20260915T233450Z.json`.
+
+Resultado ambiental:
+
+- first pass: `622/622`;
+- second pass: `622/622`;
+- errors: `0/0`;
+- throwables: `0/0`;
+- `hash_mismatches=0`;
+- `canonical_json_mismatches=0`;
+- `editorial_fingerprint_equal=true`;
+- `changed_posts_during_run=0`;
+- unique source hashes: `601`;
+- unique document hashes: `622`;
+- sections: `21.969`;
+- runtime duas passagens: `3096 ms`;
+- peak memory: `31.457.280 bytes`.
 
 Package `0.4.0-smoke.2` SHA-256:
 
 `1466cd4fcd18120d0b2405bf04ec629230f23c2a2e759869a8123c45cedaf204`
 
-**Gate G-230: IMPLEMENTED / LOCAL PASS — ENV SMOKE PENDING.**
+**Gate G-230: PASS — 2026-09-15.**
 
 ## S005 — G-240 / Real Content Acceptance
 
@@ -105,7 +101,7 @@ Package `0.4.0-smoke.2` SHA-256:
 - [ ] T068 Comparar conteúdo derivado com fonte por inspeção controlada.
 - [ ] T069 Provar zero mutação editorial em amostra real.
 
-**Gate G-240: BLOQUEADO por G-230.**
+**Gate G-240: READY — próximo gate.**
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 

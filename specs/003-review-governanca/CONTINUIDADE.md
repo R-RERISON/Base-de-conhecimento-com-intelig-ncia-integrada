@@ -80,6 +80,21 @@ Correção mínima e permanente:
 - nenhuma alteração de schema/persistência;
 - Browser Acceptance continua habilitado para o rerun final.
 
+Documento:
+
+`package-dev11-classification-prg.md`
+
+ZIP instalável SHA-256:
+
+`85766f0298afe5bb10c779f0901e7b3e2b010792b66034e0e86f1f4023f7d3c8`
+
+Validação local:
+
+- PHP lint: PASS 14/14;
+- JavaScript syntax: PASS 2/2;
+- integridade ZIP: PASS;
+- estrutura instalável WordPress: PASS.
+
 O `dev.11` deve repetir o runner completo, não somente B10, para impedir falso positivo por correção localizada.
 
 ## Próximo passo exato

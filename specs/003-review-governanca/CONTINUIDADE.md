@@ -7,66 +7,86 @@
 - UX-001: baseline v1 congelada; UI as Code v0.2 é a referência executável.
 - SPEC-003: **R-001 PASS / R-010 PASS / G-001 PASS / G-030 PASS / DS-010 PASS / G-070 PASS**.
 - etapa ativa: **G-110 — Knowledge Workspace / Browser Acceptance**.
-- build ativo: **`0.3.0-dev.10` — rerun do Browser Acceptance com submit nativo explícito no harness**.
+- build ativo: **`0.3.0-dev.11` — rerun final após correção do PRG de Classificação**.
 
-## Estado funcional já comprovado
+## Estado funcional comprovado
 
 - W-001 Workspace shell: PASS ambiental inicial (`dev.6`);
 - W-002 Review & Governança no Workspace: PASS ambiental inicial (`dev.6`);
 - W-003 Histórico read-only: PASS ambiental inicial (`dev.7`);
-- teclado/foco/links: PASS parcial real nos `dev.8` e `dev.9` antes da exceção do harness;
-- G-070: **PASS 22/22 com cleanup zero**.
+- teclado/foco/links: PASS em browser real;
+- reflow 1440/1024/782/492: PASS no `dev.10`;
+- Summary: render/save/permanência na tab PASS no `dev.10`;
+- Review: `unreviewed -> in_review -> needs_changes -> approved` PASS no `dev.10`;
+- `NO_CHANGE`, note required, capability visual e Histórico consistente: PASS no `dev.10`;
+- server assertions: 7/7 PASS no `dev.10`;
+- cleanup: zero resíduos no `dev.10`;
+- G-070: PASS 22/22 com cleanup zero.
 
-## Browser Acceptance `0.3.0-dev.9` — FAIL preservado
+## Browser Acceptance `0.3.0-dev.10` — FAIL localizado
 
-Evidência:
+Evidência bruta:
 
-`evidencias/bdc-kb-g110-browser-acceptance-20260915-193517.json`
+`evidencias/bdc-kb-g110-browser-acceptance-20260915-194552.json`
+
+Diagnóstico:
+
+`evidencia-g110-dev10-classification-prg.md`
 
 Resultado:
 
-- browser: **7 PASS / 1 FAIL**;
-- server: **3 PASS / 4 FAIL**;
+- browser: **21 PASS / 1 FAIL**;
+- server: **7 PASS / 0 FAIL**;
 - `overall=FAIL`;
 - cleanup: `residual_posts=0`, `residual_terms=0`, `residual_review_events=0`.
 
-A exceção foi novamente:
+Único FAIL:
 
-`form.submit is not a function`
+`G110-B10 — Classificação salva pelo formulário real e permanece no contexto/tab.`
 
-O shim do `dev.9` tentou renomear controles `name="submit"` após load dos iframes. No browser real isso não restaurou de forma confiável o método `submit` da instância `HTMLFormElement` utilizada pelo runner.
+A URL após o save continha:
 
-A falha ocorreu antes do primeiro POST real; por isso Summary/Classificação/Review permaneceram sem mutação e S04-S07 falharam em cascata. S01-S03 passaram e o cleanup foi integral.
+- `bdc_classification_status=saved`;
+- `post_id` correto;
+- **não continha `tab=classification`**.
 
-Documento: `evidencia-g110-dev9-submit-collision-reproduzida.md`.
+Ao mesmo tempo, `G110-S05` passou, portanto a Classificação foi persistida corretamente no store canônico.
 
-## Build ativo — `0.3.0-dev.10`
+Conclusão: não é falha de persistência nem de segurança. É um bug real e localizado de PRG/UX.
 
-Correção somente no harness:
+## Diagnóstico de código
 
-- `assets/js/browser-acceptance.js` usa `loaded.win.HTMLFormElement.prototype.submit.call(form)`;
-- isso ignora named properties do formulário chamadas `submit`;
-- `class-workspace-browser-submit-shim.php` foi removido;
-- `Review_Store`, `Review_Contract`, `Review_Admin`, `Summary_Store`, `Classification_Store`, `Classification_Admin` e writers permanentes não foram alterados.
+`Classification_Admin::redirect()` montava:
 
-Package: `package-dev10-browser-rerun.md`.
+- `page`;
+- `bdc_classification_status`;
+- `post_id`.
 
-ZIP SHA-256:
+Faltava:
 
-`eee8dbed4e4cc1c8baaa5b07bd9522f063612ff8586bc93ba18352f35c41b8eb`
+`tab=classification`
 
-Validação local:
+Isso quebrava o requisito de permanência no mesmo domínio após salvar.
 
-- PHP lint: **PASS 14/14**;
-- `workspace.js`: syntax PASS;
-- `browser-acceptance.js`: syntax PASS;
-- ZIP WordPress: PASS.
+## Build ativo — `0.3.0-dev.11`
+
+Correção mínima e permanente:
+
+- `Classification_Admin::redirect()` agora inclui `'tab' => 'classification'`;
+- nenhuma alteração em `Classification_Store`;
+- nenhuma alteração em `Classification_Contract`;
+- nenhuma alteração em `Summary_Store`;
+- nenhuma alteração em `Review_Store`/`Review_Contract`;
+- nenhuma alteração de schema/persistência;
+- Browser Acceptance continua habilitado para o rerun final.
+
+O `dev.11` deve repetir o runner completo, não somente B10, para impedir falso positivo por correção localizada.
 
 ## Próximo passo exato
 
-1. substituir `0.3.0-dev.9` por `0.3.0-dev.10`;
+1. instalar/substituir pelo `0.3.0-dev.11`;
 2. abrir **Base de Conhecimento** como administrador;
-3. clicar **Executar Browser Acceptance G-110 e gerar JSON**;
+3. executar **Browser Acceptance G-110 e gerar JSON**;
 4. aguardar sem fechar a aba;
 5. retornar o novo `bdc-kb-g110-browser-acceptance-*.json`;
 6. exigir `browser_fail=0`;
@@ -95,16 +115,15 @@ Remover no G-130 somente após G-110 PASS:
 - não criar tabela própria sem necessidade comprovada;
 - não criar writer próprio para Histórico;
 - não recuperar stores KB2Ops vazios;
-- não alterar runtime permanente para mascarar falha do harness;
 - não ampliar o Workspace antes de G-110 PASS.
 
 ## Gates
 
-- R-001: **PASS**.
-- R-010: **PASS**.
-- G-001: **PASS**.
-- G-030: **PASS**.
-- DS-010: **PASS**.
-- G-070: **PASS — 22/22, cleanup zero resíduos**.
-- G-110: **ACTIVE / NÃO APROVADO — dev.8 e dev.9 FAIL preservados; dev.10 aguardando rerun real**.
-- G-130: **BLOQUEADO até G-110 PASS**.
+- R-001: PASS.
+- R-010: PASS.
+- G-001: PASS.
+- G-030: PASS.
+- DS-010: PASS.
+- G-070: PASS — 22/22, cleanup zero resíduos.
+- G-110: **ACTIVE / NÃO APROVADO — dev.10 21/1 browser e 7/7 server; dev.11 aguardando rerun real**.
+- G-130: BLOQUEADO até G-110 PASS.

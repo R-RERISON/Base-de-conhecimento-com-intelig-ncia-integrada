@@ -17,5 +17,5 @@ Ambiente: Edge 153 / Windows; viewport e mínimo observado 492x660.
 
 Cleanup: post fixture + 7 termos removidos; resíduos 0/0.
 
-JSON: `evidencias/bdc-kb-classification-browser-acceptance-20260915-110538.json`.
-SHA-256: `308fd4bde646e4963457d7e3605f5871827d7d800c3d4f21378a13108f7822ea`.
+Espelho normalizado versionado: `evidencias/bdc-kb-classification-browser-acceptance-20260915-110538.json`.
+SHA-256 da evidência original recebida: `308fd4bde646e4963457d7e3605f5871827d7d800c3d4f21378a13108f7822ea`.

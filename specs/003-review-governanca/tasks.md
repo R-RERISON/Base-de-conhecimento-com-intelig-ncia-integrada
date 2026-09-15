@@ -43,9 +43,13 @@ Contrato: `domain-contract.md`. Estado atual é derivado do último evento appen
 - [x] T035 Implementar compensation/fail-safe ou estado crítico conforme contrato.
 - [x] T036 Unitários determinísticos — PASS 19/19.
 - [x] T037 PHP lint PASS 10/10 e package `0.3.0-dev.1` gerado.
+- [x] T038 Smoke ambiental `0.3.0-dev.1` — PASS por evidência do operador; Summary/Classificação sem regressão e nenhuma UI Review antecipada.
+- [ ] T039 Executar integração real do `Review_Store` na WordPress Comments API via `0.3.0-dev.2`, exigir 17/17 e cleanup zero resíduos.
 
-**Gate G-030: PASS determinístico local.**  
-**Gate G-001: PASS estático / SMOKE AMBIENTAL PENDENTE no `0.3.0-dev.1`.**
+**Gate G-001: PASS.**  
+Evidência: `evidencia-smoke-dev1-s003.md`.
+
+**Gate G-030: PASS determinístico local / integração ambiental pendente T039.**
 
 ## S004 — HTTP e segurança
 
@@ -84,4 +88,4 @@ Contrato: `domain-contract.md`. Estado atual é derivado do último evento appen
 
 ## Regra
 
-R-001 e R-010 estão PASS. O runtime canônico mínimo está implementado e unitariamente comprovado. O próximo passo é smoke ambiental da build `0.3.0-dev.1`; nenhuma UI/handler Review é aberta antes desse smoke.
+R-001, R-010 e G-001 estão PASS. O próximo passo obrigatório é T039: provar a integração real do event log na Comments API com fixtures temporárias antes de abrir o writer HTTP permanente.

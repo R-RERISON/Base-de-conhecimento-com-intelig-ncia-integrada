@@ -5,7 +5,7 @@
 **Produto:** Base de Conhecimento com Inteligência Integrada  
 **Tipo:** Plugin WordPress único, modular internamente  
 **Idioma:** Português do Brasil  
-**Estado:** SPEC-000 concluída / SPEC-001 concluída / SPEC-002 concluída / UX-001 ativa  
+**Estado:** SPEC-000 concluída / SPEC-001 concluída / SPEC-002 concluída / UX-001 concluída / SPEC-003 planejamento ativo  
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
 ## Missão
@@ -44,46 +44,50 @@ Baseline funcional atual:
 
 ### UX-001 — Product Experience & Knowledge Workspace
 
-**ATIVA.**
+**CONCLUÍDA para baseline de produto.**
 
-Objetivo: estabelecer a baseline transversal de experiência antes da implementação da SPEC-003.
+Resultado:
 
-Entregáveis mínimos:
-
-- princípios UX;
-- arquitetura de informação;
-- mapa de navegação;
-- inventário de telas;
+- arquitetura de informação fechada;
 - Design System v1;
-- Knowledge Workspace master;
-- Knowledge List;
-- Summary + Classificação no mesmo shell;
-- Review & Governance como antecipação visual controlada;
-- estados responsivos/acessibilidade;
-- mapa de herança visual KB2Ops;
-- **protótipo UI as Code executável e versionado no Git**.
+- Knowledge List + Knowledge Workspace;
+- Summary/Classificação integrados ao Workspace;
+- Review/Governança acomodado apenas como conceito futuro;
+- responsive/accessibility validados no protótipo;
+- Heritage Pack KB2Ops;
+- UI as Code v0.2 como artefato visual canônico;
+- Figma não é dependência operacional.
 
-Figma e outras ferramentas externas são opcionais e não podem ser requisito de gate, build, teste ou continuidade.
+Gates UX-001/UX-005/UX-010/UX-030/UX-050: PASS.
 
-UX-001 não cria novas regras de negócio e não autoriza features futuras por antecipação. Cada SPEC funcional continua sendo autoridade do domínio que implementa.
+### SPEC-003 — Review & Governança
+
+**PLANEJAMENTO ATIVO / RUNTIME BLOQUEADO ATÉ R-001 + R-010.**
+
+Caminho canônico:
+
+`specs/003-review-governanca/`
+
+Primeiro objetivo: inventariar stores, writers, consumers, capabilities e semântica histórica antes de definir estado canônico, reviewer, histórico ou qualquer score.
 
 ## Fonte da verdade e fronteiras
 
 - Editorial: `WP_Post` + Elementor.
 - Summary: Post Metadata API do WordPress.
 - Classificação: WordPress Taxonomy API, quatro conceitos canônicos do slice atual.
-- UX/UI: documentação UX-001 + protótipo UI as Code versionado.
+- UX/UI: baseline UX-001 + protótipo UI as Code versionado.
+- Review/Governança: sem owner canônico até R-010 da SPEC-003.
 - O plugin não escreve `_elementor_data`.
 - O plugin não reescreve silenciosamente `post_content`.
 - Projeções/cache/índices nunca são fonte editorial.
-- IA é assistiva e continua fora das SPECs 001/002.
+- IA é assistiva e permanece fora das SPECs 001/002/003 enquanto não houver SPEC própria.
 
 ## Estratégia de produto
 
 1. Core + Summary — concluído;
 2. Classificação de Conhecimento — concluído;
-3. **UX-001 — Product Experience & Knowledge Workspace — ativo**;
-4. Review & Governança — próximo após baseline UX;
+3. UX-001 Product Experience & Knowledge Workspace — concluído;
+4. **Review & Governança — planejamento ativo**;
 5. Content Extractor;
 6. Search lexical + qualidade/Golden Queries;
 7. Telemetria/Inteligência de Busca;
@@ -91,12 +95,10 @@ UX-001 não cria novas regras de negócio e não autoriza features futuras por a
 9. Semantic Search/Vetores;
 10. IA/Foundry/RAG.
 
-A UX-001 é transversal e não substitui a numeração das SPECs funcionais.
-
 ## Regra de liberação
 
-Compilar, passar unitário ou ter mockup aprovado isoladamente não basta. `FAIL`, `NOT_RUN`, `NOT_CONFIGURED` ou `STALE` em gate MUST bloqueia o avanço correspondente.
+Compilar, passar unitário ou ter protótipo aprovado isoladamente não basta. `FAIL`, `NOT_RUN`, `NOT_CONFIGURED` ou `STALE` em gate MUST bloqueia o avanço correspondente.
 
-Nenhum protótipo pode transformar hipótese visual em contrato de domínio. Nenhuma feature pode ignorar o baseline UX congelado sem decisão explícita.
+Nenhum mockup/protótipo transforma hipótese em contrato de domínio. Nenhuma implementação de nova feature pode ignorar o baseline UX congelado sem decisão explícita de mudança.
 
 **GO de desenvolvimento/homologação != GO de produção.**

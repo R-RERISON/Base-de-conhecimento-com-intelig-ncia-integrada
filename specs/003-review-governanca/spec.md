@@ -1,28 +1,26 @@
 # SPEC-003 — Review & Governança do Conhecimento
 
-**Status:** PLANEJAMENTO ATIVO / IMPLEMENTAÇÃO AINDA NÃO AUTORIZADA  
+**Status:** R-001 PASS / R-010 PASS / S003 RUNTIME MÍNIMO AUTORIZADO  
 **Baseline funcional:** `0.2.0-rc.1`  
-**Baseline UX:** `ux/001-product-experience-knowledge-workspace/ux-baseline-v1.md`
+**Baseline UX:** `ux/001-product-experience-knowledge-workspace/ux-baseline-v1.md`  
+**Domain Contract:** `specs/003-review-governanca/domain-contract.md`
 
 ## Mantra
 
 > Quem não sabe onde está, não sabe para onde quer ir.
 
-A SPEC-003 começa por inventário real de stores, writers, estados, capabilities e fluxos históricos. Nenhum estado, score, reviewer ou SLA será criado apenas porque apareceu em mockup antigo.
+A SPEC-003 começou por inventário real de stores, writers, estados, capabilities e fluxos históricos. O profiling real encontrou zero rows de Review/Governança nos seis stores KB2Ops candidatos em um corpus de 622 posts. A implementação segue, portanto, como domínio greenfield controlado, sem migração ou dual-read legado.
 
 ## 1. Problema
 
-Summary e Classificação já possuem owners canônicos. Ainda não existe owner canônico para responder, de forma auditável:
+Summary e Classificação já possuem owners canônicos. Review & Governança precisa responder, de forma auditável:
 
 - qual é o estado de governança do conhecimento;
-- quem pode revisar/decidir;
-- quem é responsável por uma decisão quando esse conceito for necessário;
-- quando ocorreu a última decisão válida;
-- qual decisão anterior existia;
+- quem tomou a última decisão válida;
+- quando ocorreu a decisão;
+- de qual estado para qual estado houve transição;
 - quais mudanças de estado são permitidas;
-- como distinguir estado editorial do WordPress de estado de governança do conhecimento.
-
-Sem esse domínio, futuras capacidades de qualidade, Search, IA e elegibilidade podem inferir confiança a partir de sinais frágeis ou conflitantes.
+- como manter governança separada do estado editorial WordPress.
 
 ## 2. Objetivo
 
@@ -45,106 +43,122 @@ Criar um domínio mínimo, explícito e auditável de Review & Governança sem:
 - Classificação: contrato SPEC-002;
 - Search/IA: SPECs posteriores.
 
-### Domínio a definir nesta SPEC
+### Owner desta SPEC
 
-Apenas após R-001/R-010:
+Review & Governança é owner das decisões humanas de governança.
 
-- owner do estado de governança;
-- conjunto mínimo de estados;
-- transições válidas;
-- actor/capability por transição;
-- representação do responsável/revisor, se necessária;
-- registro auditável da decisão;
-- leitura consolidada para o Knowledge Workspace.
+A fonte canônica da primeira slice é um event log append-only usando WordPress Comments API, `comment_type=bdc_kb_review_event`. O estado atual é derivado do último evento válido; não existe post meta paralela de `current_state`.
 
-## 4. Princípios obrigatórios
+## 4. Estados canônicos da primeira slice
 
-1. **Editorial != governança.** `publish/draft/private/...` não será usado como substituto do estado de governança.
+- `unreviewed` — estado inicial implícito, quando não existe evento;
+- `in_review` — submetido/reaberto para revisão;
+- `needs_changes` — revisão exige correções;
+- `approved` — decisão humana explícita de aprovação;
+- `excluded` — decisão humana explícita de retirar do conjunto governado, sem apagar ou despublicar o post.
+
+`approved` não implica publish, Search, indexação, IA ou AI Ready.
+
+## 5. Princípios obrigatórios
+
+1. **Editorial != governança.** `publish/draft/private/...` não substitui o estado de governança.
 2. **Decisão humana explícita.** IA futura pode sugerir; não aprova conteúdo por inferência.
-3. **Histórico não é decorativo.** Se a SPEC autorizar histórico, ele deve representar eventos reais e rastreáveis.
-4. **Menor primitiva WordPress adequada.** Preferir APIs nativas antes de tabela customizada, desde que preservem integridade, consulta e auditoria necessárias.
-5. **Sem migração implícita.** Dados históricos só migram com evidência de semântica equivalente.
-6. **Capability por objeto.** Não confiar apenas em menus/páginas; o handler revalida autorização no artigo alvo.
-7. **PRG e read-after-write.** Fluxos administrativos seguem a disciplina já homologada nas SPECs anteriores.
-8. **Falha parcial é crítica.** Estado atual e histórico não podem divergir silenciosamente.
-9. **Sem score até haver fórmula + owner + ação.** “Qualidade 92” não existe apenas porque é visualmente atraente.
-10. **UX-001 é contrato de experiência, não de dados.** A SPEC-003 deve caber no Workspace existente sem recuperar o antigo Knowledge Studio monolítico.
+3. **Histórico é fonte da verdade.** Estado e auditoria não são dois stores concorrentes.
+4. **WordPress-first.** Usar Comments API antes de tabela customizada para o volume atual.
+5. **Sem migração implícita.** O ambiente real não possui rows legadas; adapters não serão inventados.
+6. **Capability por objeto.** Toda transição revalida `edit_post(post_id)`.
+7. **Reviewer real para decisão.** Aprovar, pedir ajustes, excluir e reabrir estados finais exigem também `edit_others_posts` na primeira slice.
+8. **PRG e read-after-write.** Fluxos administrativos seguem a disciplina das SPECs anteriores.
+9. **Falha parcial é crítica.** Evento recém-inserido cuja releitura diverge deve ser compensado; se a restauração falhar, estado crítico explícito.
+10. **Sem score até haver fórmula + owner + ação.**
+11. **UX-001 é contrato de experiência, não de dados.**
 
-## 5. Hipóteses controladas — NÃO CONTRATUAIS
+## 6. Máquina de transições
 
-Estas primitivas serão avaliadas, não assumidas:
+Permitidas:
 
-- estado atual como post meta enum canônico;
-- reviewer/responsável como user ID canônico quando o caso de uso provar necessidade;
-- histórico append-only por primitiva WordPress adequada (por exemplo, custom comment type) antes de considerar tabela customizada;
-- estado inicial neutro para artigos sem decisão canônica;
-- UI de Review como nova tab do Knowledge Workspace somente após domínio autorizado.
+- `unreviewed -> in_review|approved|excluded`;
+- `in_review -> approved|needs_changes|excluded`;
+- `needs_changes -> in_review|approved|excluded`;
+- `approved -> in_review|needs_changes|excluded`;
+- `excluded -> in_review`.
 
-Nenhuma hipótese acima pode virar runtime antes do Gate R-010.
+Mesmo estado -> mesmo estado = `NO_CHANGE`, zero write.
 
-## 6. Escopo da primeira slice
+Demais transições = inválidas, zero write.
 
-A primeira slice deve ser deliberadamente pequena:
+Notas são obrigatórias para `needs_changes` e `excluded`, opcionais para `in_review` e `approved`, com máximo de 2000 bytes antes da sanitização.
 
-- leitura do estado de governança;
-- uma máquina de transição mínima e comprovada;
-- decisão humana explícita;
-- auditoria mínima suficiente para responder quem/quando/de qual estado/para qual estado;
-- visualização no Knowledge Workspace;
-- nenhum score de qualidade;
-- nenhum `AI Ready`;
-- nenhum workflow complexo de SLA/escalation automática.
+## 7. Actor e timestamp
 
-## 7. Evidência obrigatória antes de definir estado
+Não haverá meta canônica duplicada de reviewer/data.
 
-O profiler read-only deve responder pelo menos:
+- actor = `user_id` do evento;
+- instante = `comment_date_gmt` do evento;
+- histórico = sequência de eventos `bdc_kb_review_event`.
 
-- quais metas/taxonomias/tabelas históricas parecem representar review, aprovação, revisor, qualidade ou elegibilidade;
-- cobertura por posts e distribuição de valores;
-- writers/consumers identificáveis no código legado disponível;
-- capabilities/roles históricas relacionadas;
-- se há timestamps/atores confiáveis;
-- sobreposição ou conflito com `post_status`;
-- se algum legado possui semântica forte o bastante para migração;
-- volume esperado de eventos para escolher primitiva de histórico.
+## 8. Evidência R-001
 
-## 8. UX autorizada nesta fase
+O profiler `0.3.0-profile.1` executado no ambiente real confirmou:
 
-A baseline UX v1 já provou que Review & Governança cabe no Knowledge Workspace. Durante S001/S002 pode existir apenas:
+- WordPress 6.9.4;
+- PHP 8.5.10;
+- 622 posts no escopo;
+- 0 meta rows nos seis stores históricos;
+- 0 actors/timestamps/history;
+- 0 posts com qualquer dado legado de review;
+- `writes_performed=false`.
 
-- placeholder/conceito visual claramente rotulado;
-- documentação de estados candidatos;
-- nenhuma ação falsa no runtime.
+Evidência: `evidencia-profiling-s001.md`.
 
-A tab real só entra quando o domínio e o writer forem aprovados.
+**R-001: PASS.**
 
-## 9. Segurança
+## 9. Política de legado
 
-Quando houver writer:
+- migração: não necessária;
+- dual-read: não criar;
+- dual-write: proibido;
+- `_kb2ops_include_ai`: fora do domínio;
+- `AI Ready`: fora do domínio;
+- estados históricos KB2Ops: referência semântica, não dados importados.
+
+## 10. UX
+
+A baseline UX v1 reserva Review & Governança no Knowledge Workspace.
+
+A primeira UI real só pode mostrar fatos contratados:
+
+- estado atual;
+- última decisão, ator e data quando existirem;
+- transições disponíveis ao usuário;
+- nota da decisão;
+- histórico real.
+
+A tela histórica do artigo com Resumo Executivo lateral foi registrada em `heritage-addendum-public-summary-v1.md`. Essa superfície pertence ao futuro Resolvedor e será projection read-only dos owners canônicos, não um novo writer.
+
+## 11. Segurança do writer
 
 - POST only;
 - nonce vinculado ao post e à ação;
-- `current_user_can()` no objeto alvo;
-- allowlist exata de transição;
-- payload tipado e limitado;
-- validação completa antes da primeira mutação;
-- snapshot do estado atual;
-- write mínimo;
-- append auditável quando aplicável;
+- `current_user_can('edit_post', post_id)`;
+- `edit_others_posts` para decisões de reviewer conforme contrato;
+- allowlist exata de estado/transição;
+- note tipada e limitada;
+- validação integral antes da inserção;
+- um único evento canônico por transição;
 - read-after-write;
-- compensação quando possível;
-- estado crítico explícito quando não for possível restaurar consistência;
+- compensation somente do evento recém-criado quando necessário;
 - logs sem conteúdo editorial bruto.
 
-## 10. Gates
+## 12. Gates
 
 ### R-001 — Current-state evidence
 
-PASS somente com inventário read-only suficiente para decidir o domínio sem adivinhação.
+**PASS.**
 
 ### R-010 — Domain Contract
 
-PASS somente quando owner, estados, transições, capabilities, primitivas e política de legado estiverem fechados.
+**PASS.** Contrato detalhado em `domain-contract.md`.
 
 ### G-001 — Bootstrap/registration
 
@@ -152,7 +166,7 @@ Registro mínimo sem side effects e sem regressão SPEC-001/002.
 
 ### G-030 — Deterministic domain/store
 
-Unitários para transições, no-op, payload inválido, autorização, read-after-write e consistência estado/histórico.
+Unitários para transições, no-op, note, autorização, insert failure, read-after-write, compensação e integridade do último evento.
 
 ### G-070 — HTTP Security
 
@@ -166,13 +180,13 @@ Workspace, estados, feedback, teclado, viewport estreito e regressão Summary/Cl
 
 Sem fixture/runner residual, deactivate/activate limpo e package RC reproduzível.
 
-## 11. Critério de saída
+## 13. Critério de saída
 
 SPEC-003 só é concluída quando:
 
 - o estado de governança possui owner único;
 - transições são determinísticas e autorizadas;
-- decisões são auditáveis de modo proporcional ao escopo;
+- decisões são auditáveis;
 - editorial/Summary/Classificação permanecem íntegros;
 - legado não é promovido silenciosamente;
 - UX respeita a baseline UX-001;

@@ -1,29 +1,30 @@
-# UX-001 — Protótipo UI as Code
+# UX-001 — UI as Code v0.2
 
-Abra `index.html` diretamente no navegador.
+Protótipo visual executável e sem dependências externas para a Base de Conhecimento com Inteligência Integrada.
 
-Não requer:
+## Uso
 
-- npm;
-- build;
-- servidor;
-- Figma;
-- MCP;
-- licença;
-- conexão com serviços externos.
+Abra `index.html` diretamente no navegador. Não requer npm, build, Figma, MCP, servidor ou conta externa.
 
-## Vistas
+## Views
 
 - Knowledge List;
 - Workspace — Visão geral;
 - Workspace — Summary;
 - Workspace — Classificação;
+- Review & Governança — **conceito futuro controlado**;
 - Estados transversais.
 
-## Escopo
+## QA desta versão
 
-O protótipo é um contrato visual executável. Ele não escreve no WordPress e não autoriza schema, writer ou feature futura. Summary e Classificação refletem apenas os contratos homologados das SPEC-001 e SPEC-002.
+- 1440px, 1024px, 782px e 492px;
+- zero overflow horizontal nos quatro viewports;
+- feedback de Summary/Classificação;
+- navegação de tabs com setas;
+- `aria-expanded` do filtro;
+- IDs únicos e labels associados;
+- contraste AA validado para pares de texto/status principais.
 
-## QA mínimo
+## Regra
 
-Validar em 1440px, 1024px, 782px e aproximadamente 492px. Verificar ordem de foco, labels, tabs, overflow, ações e leitura dos estados sem depender exclusivamente de cor.
+O protótipo é um contrato visual executável. Ele não escreve no WordPress e não autoriza schema, writer ou feature futura. Summary e Classificação refletem apenas os contratos homologados das SPEC-001 e SPEC-002; Review & Governança aparece somente para comprovar encaixe visual antes da SPEC-003.

@@ -94,23 +94,33 @@ Plano: `g110-workspace-browser-acceptance-plan.md`.
 - [x] T051 Não exibir score/AI Ready/progresso ou métricas não contratadas.
 - [ ] T052 Confirmar ambientalmente regressão Summary/Classificação, vocabulários e permanência no contexto no build final do G-110.
 - [x] T053A Implementar navegação de foco `ArrowLeft`/`ArrowRight`/`Home`/`End` entre tabs — `0.3.0-dev.7`.
-- [ ] T053B Validar teclado, foco, labels e feedback no browser real.
-- [ ] T054 Testar 1440px/1024px/782px/~492px e zero overflow horizontal. Desktop amplo possui PASS visual inicial por captura do dev.7; viewports restantes pendentes.
+- [x] T053B Browser real `0.3.0-dev.8`: teclado, foco visível e semântica de link/Enter — PASS antes da interrupção do harness.
+- [ ] T054 Testar 1440px/1024px/782px/~492px e zero overflow horizontal. Desktop amplo possui PASS visual inicial; runner dev.8 interrompeu antes dos probes de viewport.
 - [ ] T055 Executar Browser Acceptance final com fixtures controladas e cleanup obrigatório.
 - [ ] T056 Validar `unreviewed -> in_review -> needs_changes -> approved` pela UI real.
 - [ ] T057 Validar `NO_CHANGE`, permission denied, note required e histórico consistente.
-- [ ] T058 Confirmar cleanup zero resíduos do Browser Acceptance.
+- [x] T058A `0.3.0-dev.8`: cleanup zero resíduos mesmo após exceção do harness.
+- [x] T058B Diagnosticar FAIL do dev.8: `form.submit is not a function`, colisão DOM do controle `name="submit"`; nenhuma evidência de regressão permanente.
+- [x] T058C Implementar hardening test-only `class-workspace-browser-submit-shim.php` no `0.3.0-dev.9`.
+- [ ] T058D Rerun completo `0.3.0-dev.9`: exigir `browser_fail=0`, `server_fail=0`, `overall=PASS` e cleanup zero resíduos.
+
+Evidências Browser Acceptance:
+
+- `evidencias/bdc-kb-g110-browser-acceptance-20260915-192838.json` — `0.3.0-dev.8`, **FAIL preservado**;
+- `evidencia-g110-dev8-submit-collision.md`.
 
 Packages:
 
 - `0.3.0-dev.6` — W-001/W-002, smoke ambiental inicial PASS;
-- `0.3.0-dev.7` — W-003 Histórico + teclado; Histórico com PASS ambiental inicial.
+- `0.3.0-dev.7` — W-003 Histórico + teclado; Histórico com PASS ambiental inicial;
+- `0.3.0-dev.8` — Browser Acceptance, interrompido pelo harness após 7 browser PASS / 1 FAIL; cleanup zero;
+- `0.3.0-dev.9` — rerun com correção exclusivamente test-only da colisão `form.submit`.
 
-**Gate G-110: ACTIVE — W-001/W-002/W-003 PASS ambiental inicial; teclado, responsividade estreita, regressão final e Browser Acceptance ainda pendentes.**
+**Gate G-110: ACTIVE — NÃO APROVADO; aguardando rerun real completo do `0.3.0-dev.9`.**
 
 ## S006 — Lifecycle / fechamento
 
-- [ ] T060 Remover profiler/runners/hooks temporários, incluindo runners G-070.
+- [ ] T060 Remover profiler/runners/hooks temporários, incluindo runners G-070/G-110 e submit shim.
 - [ ] T061 Gerar package clean RC.
 - [ ] T062 deactivate/activate sem regressão.
 - [ ] T063 Confirmar zero resíduos de teste.
@@ -121,4 +131,4 @@ Packages:
 
 ## Regra
 
-G-110 está aberto, mas não está aprovado. O `0.3.0-dev.7` já comprovou no ambiente real o shell, Review e Histórico read-only. O próximo passo é exclusivamente Browser Acceptance final: teclado/foco, viewports estreitos, regressão Summary/Classificação, cenários negativos e cleanup. Nenhum novo domínio deve ser adicionado antes do fechamento do gate.
+G-110 continua aberto. O `0.3.0-dev.8` confirmou Workspace, tabs, teclado/foco, ausência de features proibidas, labels de Summary e preservação editorial, mas abortou no primeiro POST por erro do próprio harness (`form.submit is not a function`). O `0.3.0-dev.9` altera somente a instrumentação temporária e deve repetir o gate completo. Nenhum novo domínio ou mudança de Store/Contract/Writer permanente é autorizado antes do PASS.

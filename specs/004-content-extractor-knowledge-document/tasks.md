@@ -2,12 +2,7 @@
 
 ## S001 — R-200 / Current State do corpus
 
-- [x] T001 Confirmar baseline de entrada `0.3.0-rc.1` e fechamento da SPEC-003.
-- [x] T002 Ler contrato editorial WordPress/Elementor existente.
-- [x] T003 Inventariar prior art do KB2Ops `Content_Extractor`.
-- [x] T004 Registrar riscos/limitações que não devem ser copiados automaticamente.
-- [x] T005 Implementar profiler temporário read-only `0.4.0-profile.1`.
-- [x] T006–T015 Medir corpus real, estruturas, formatos, budgets, fallback e zero mutação.
+- [x] T001–T015 Descoberta ambiental, profiler, formatos, structures, budgets, fallback e zero mutação.
 
 **Gate R-200: PASS — 2026-09-15.**
 
@@ -16,21 +11,11 @@
 - [x] T020–T029 Congelar source precedence, adapters, shortcodes, fallback, normalização, warnings e budgets.
 - [x] T029A Incorporar direção editorial Elementor e portabilidade/produção no amendment `v1.1.0`.
 
-Contratos:
-
-- `extraction-contract-v1.md` — `FROZEN v1.0.0`;
-- `extraction-contract-v1.1.md` — `FROZEN v1.1.0`.
-
 **Gate R-210: PASS.**
 
 ## S003 — G-220 / Content Extractor determinístico
 
-- [x] T030–T042 Implementar detector, adapters, normalização, fallback, testes, readiness Elementor e integração read-only.
-- [x] T043 Implementar runner ambiental temporário G-220.
-- [x] T044 Gerar e validar package `0.4.0-smoke.1`.
-- [x] T045 Executar `0.4.0-smoke.1` no WordPress de homologação.
-- [x] T046 Validar fingerprint equal, zero changed posts, corpus 622→622, zero extractor errors e zero throwables.
-- [x] T048 Desabilitar runner G-220 no build seguinte; não será promovido a RC.
+- [x] T030–T048 Implementação, testes, smoke ambiental e desativação do runner anterior.
 
 Evidências:
 
@@ -43,65 +28,47 @@ Evidências:
 
 ## S004 — G-230 / Knowledge Document
 
-- [x] T050 Congelar schema version 1 em `knowledge-document-contract-v1.md`.
-- [x] T051 Implementar builder canônico `Knowledge_Document`.
-- [x] T052 Implementar `Canonical_JSON` com ordenação determinística de mapas e preservação de listas.
-- [x] T053 Implementar `source_hash` SHA-256 sobre conhecimento semântico extraído.
-- [x] T054 Implementar `document_hash` SHA-256 com envelope operacional fora do escopo do hash.
-- [x] T055 Testar estabilidade de hash/JSON para input idêntico.
-- [x] T056 Testar mudança de hash para alteração semântica/título/ordem.
-- [x] T057 Testar neutralidade de URL/data operacional e ruído bruto/layout não utilizado.
-- [x] T058 Confirmar ausência de storage durável não autorizado.
-- [x] T059 Incorporar `elementor_compatibility` somente como proveniência/readiness.
-- [x] T059A Implementar runner ambiental G-230 com duas passagens e comparação hash/JSON sem exportar conteúdo.
-- [x] T059B Gerar/validar package `0.4.0-smoke.2`.
-- [x] T059C Executar smoke G-230 no WordPress de homologação.
-- [x] T059D Comprovar 622 documentos nas duas passagens, zero errors/throwables, zero hash mismatch, zero canonical JSON mismatch e zero mutação editorial.
+- [x] T050–T059D Schema, canonical JSON, hashes, testes e smoke ambiental em duas passagens.
 
 Evidências:
 
 - `knowledge-document-contract-v1.md`;
-- `g230-local-validation.md` — **10/10 PASS**;
+- `g230-local-validation.md`;
 - `package-smoke2.md`;
 - `g230-smoke-analysis.md`;
 - `evidence/g230-smoke-20260915T233450Z.json`.
-
-Resultado ambiental:
-
-- first pass: `622/622`;
-- second pass: `622/622`;
-- errors: `0/0`;
-- throwables: `0/0`;
-- `hash_mismatches=0`;
-- `canonical_json_mismatches=0`;
-- `editorial_fingerprint_equal=true`;
-- `changed_posts_during_run=0`;
-- unique source hashes: `601`;
-- unique document hashes: `622`;
-- sections: `21.969`;
-- runtime duas passagens: `3096 ms`;
-- peak memory: `31.457.280 bytes`.
-
-Package `0.4.0-smoke.2` SHA-256:
-
-`1466cd4fcd18120d0b2405bf04ec629230f23c2a2e759869a8123c45cedaf204`
 
 **Gate G-230: PASS — 2026-09-15.**
 
 ## S005 — G-240 / Real Content Acceptance
 
-- [ ] T060 Selecionar amostra representativa baseada no profiler/smokes.
-- [ ] T061 Validar Elementor típico.
-- [ ] T062 Validar Elementor complexo/widgets corporativos.
-- [ ] T063 Validar Gutenberg.
-- [ ] T064 Validar HTML legado.
-- [ ] T065 Validar shortcode/tabela relevante.
-- [ ] T066 Validar conteúdo vazio/corrompido.
-- [ ] T067 Repetir build e comparar hashes.
-- [ ] T068 Comparar conteúdo derivado com fonte por inspeção controlada.
-- [ ] T069 Provar zero mutação editorial em amostra real.
+- [x] T060 Congelar contrato `real-content-acceptance-contract-v1.md` e amostra determinística por slots.
+- [ ] T061 Validar Elementor típico por inspeção humana.
+- [ ] T062 Validar Elementor/Mixed complexo por inspeção humana.
+- [ ] T063 Validar Gutenberg por inspeção humana.
+- [ ] T064 Validar HTML legado típico/complexo por inspeção humana.
+- [ ] T065 Validar shortcode/tabela relevante por inspeção humana.
+- [ ] T066 Validar vazio/corrompido/review_required quando disponíveis.
+- [x] T067 Incorporar repetibilidade no relatório final por dupla reconstrução do Knowledge Document.
+- [x] T068 Implementar ferramenta read-only de comparação lado a lado fonte editorial × Knowledge Document.
+- [x] T069 Implementar stale guard, revalidação da seleção determinística e fingerprint before/after sem persistência.
+- [ ] T069A Executar `0.4.0-acceptance.1` em homologação e retornar JSON de evidência.
+- [ ] T069B Exigir todos os slots disponíveis revisados e aprovados, zero stale, zero selection mismatch, zero repeatability failure e zero mutação editorial.
 
-**Gate G-240: READY — próximo gate.**
+Contrato:
+
+- `real-content-acceptance-contract-v1.md` — `FROZEN v1.0.0`.
+
+Tooling:
+
+- build temporário `0.4.0-acceptance.1`;
+- menu `Base de Conhecimento → Aceitação G-240`;
+- conteúdo da fonte só é mostrado localmente no wp-admin;
+- JSON de evidência não exporta corpo, título ou URL;
+- post ID é exportado apenas para rastreabilidade da amostra;
+- seleção é recalculada no submit para impedir substituição/omissão silenciosa de slots.
+
+**Gate G-240: TOOLING READY / HUMAN ACCEPTANCE PENDING.**
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 
@@ -144,5 +111,5 @@ Package `0.4.0-smoke.2` SHA-256:
 4. Nenhuma migration editorial em massa antes de dry-run, journal/rollback e canário.
 5. Usuário/editor vence sobre migration atrasada: source divergente vira `STALE_SOURCE`.
 6. IA não é usada para reparar parsing nem para writer inicial de Elementor.
-7. Runners de smoke são temporários e não chegam ao RC/produção.
+7. Runners/acceptance tools são temporários e não chegam ao RC/produção.
 8. Nenhuma etapa posterior compensa lacuna de segurança da anterior.

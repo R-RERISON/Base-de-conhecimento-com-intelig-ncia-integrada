@@ -7,35 +7,42 @@
 - [x] T003 Inventariar prior art do KB2Ops `Content_Extractor`.
 - [x] T004 Registrar riscos/limitações que não devem ser copiados automaticamente.
 - [x] T005 Implementar profiler temporário read-only `0.4.0-profile.1`; package validado e com source parity 16/16.
-- [ ] T006 Medir posts por status e source kind.
-- [ ] T007 Medir validade/presença/tamanho de `_elementor_data`.
-- [ ] T008 Medir Gutenberg block names e distribuição.
-- [ ] T009 Medir HTML legado/plain/shortcodes e combinações mistas.
-- [ ] T010 Medir widget types Elementor sem exportar conteúdo.
-- [ ] T011 Medir shortcode tags sem executar shortcodes.
-- [ ] T012 Medir estrutura: headings/listas/tabelas/imagens/links/code.
-- [ ] T013 Medir candidatos a fallback renderizado.
-- [ ] T014 Comprovar fingerprint editorial before/after idêntico.
-- [ ] T015 Preservar JSON real sanitizado e análise do profiler.
+- [x] T006 Medir posts por status e source kind.
+- [x] T007 Medir validade/presença/tamanho de `_elementor_data`.
+- [x] T008 Medir Gutenberg block names e distribuição.
+- [x] T009 Medir HTML legado/plain/shortcodes e combinações mistas.
+- [x] T010 Medir widget types Elementor sem exportar conteúdo.
+- [x] T011 Medir shortcode tags sem executar shortcodes.
+- [x] T012 Medir estrutura: headings/listas/tabelas/imagens/links/code.
+- [x] T013 Medir candidatos a fallback renderizado.
+- [x] T014 Comprovar fingerprint editorial before/after idêntico.
+- [x] T015 Preservar JSON real sanitizado e análise do profiler.
 
-Package ativo: `package-profile1.md` — SHA-256 `eeae2f7a5c37dead27bd21f486bea7a64b75d510392a35b742ec6eb338a59bdd`.
+Evidências:
 
-**Gate R-200: NOT_RUN — profiler implementado; execução ambiental e JSON pendentes.**
+- `evidence/r200-content-profile-20260915T213342Z.json`;
+- `r200-corpus-analysis.md`.
+
+Package executado: `package-profile1.md` — SHA-256 `eeae2f7a5c37dead27bd21f486bea7a64b75d510392a35b742ec6eb338a59bdd`.
+
+**Gate R-200: PASS — 2026-09-15.**
 
 ## S002 — R-210 / Extraction Contract
 
-- [ ] T020 Fechar source precedence para Elementor/Gutenberg/legacy/mixed.
-- [ ] T021 Fechar contrato de traversal Elementor baseado no corpus.
-- [ ] T022 Fechar contrato de Gutenberg/blocks.
-- [ ] T023 Fechar contrato de HTML legado.
-- [ ] T024 Fechar política de shortcode allowlist/placeholder.
-- [ ] T025 Fechar política de render fallback e budget.
-- [ ] T026 Definir normalização de whitespace/boundaries.
-- [ ] T027 Definir warnings/códigos de integridade.
-- [ ] T028 Definir política de conteúdo vazio/corrompido.
-- [ ] T029 Congelar `Extraction Contract v1`.
+- [x] T020 Fechar source precedence para Elementor/Gutenberg/legacy/mixed.
+- [x] T021 Fechar contrato de traversal Elementor baseado no corpus.
+- [x] T022 Fechar contrato de Gutenberg/blocks.
+- [x] T023 Fechar contrato de HTML legado.
+- [x] T024 Fechar política de shortcode allowlist/placeholder.
+- [x] T025 Fechar política de render fallback e budget.
+- [x] T026 Definir normalização de whitespace/boundaries.
+- [x] T027 Definir warnings/códigos de integridade.
+- [x] T028 Definir política de conteúdo vazio/corrompido.
+- [x] T029 Congelar `Extraction Contract v1`.
 
-**Gate R-210: BLOQUEADO por R-200.**
+Contrato: `extraction-contract-v1.md` — `FROZEN v1.0.0`.
+
+**Gate R-210: PASS — contrato congelado; nenhum runtime permanente implementado nesta etapa.**
 
 ## S003 — G-220 / Content Extractor determinístico
 
@@ -51,7 +58,7 @@ Package ativo: `package-profile1.md` — SHA-256 `eeae2f7a5c37dead27bd21f486bea7
 - [ ] T039 Unit tests shortcodes/fallback/error isolation.
 - [ ] T040 Provar repetibilidade do extractor.
 
-**Gate G-220: BLOQUEADO por R-210.**
+**Gate G-220: READY — próximo gate; implementação ainda não iniciada nesta branch.**
 
 ## S004 — G-230 / Knowledge Document
 
@@ -97,4 +104,4 @@ Package ativo: `package-profile1.md` — SHA-256 `eeae2f7a5c37dead27bd21f486bea7
 
 ## Regra
 
-A etapa ativa é somente R-200. Não implementar runtime permanente do extractor nem Knowledge Document antes da evidência ambiental do corpus real.
+R-200 e R-210 estão concluídos. O próximo passo é G-220, seguindo estritamente `extraction-contract-v1.md`. Nenhuma decisão de runtime pode contornar o contrato por conveniência, renderização arbitrária ou execução de componentes terceiros.

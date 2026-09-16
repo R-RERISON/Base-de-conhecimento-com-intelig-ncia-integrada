@@ -76,7 +76,7 @@
 - [x] T080E Adicionar inventário read-only de plugins ativos e dependências observáveis de shortcodes, sem exportar corpo editorial.
 - [x] T080F Garantir `writer_allowed=false` e `migration_execution_allowed=false` independentemente do resultado do preflight.
 - [x] T080G Adicionar testes locais de política; lint PASS e 7/7 cenários PASS.
-- [ ] T080H Gerar package `0.4.0-g245-preflight.1` e validar integridade/paridade.
+- [x] T080H Gerar package `0.4.0-g245-preflight.1`; 29/29 PHP lint PASS, ZIP integrity PASS e paridade Git PASS.
 - [ ] T080I Executar preflight em homologação e versionar evidência JSON.
 - [ ] T080J Classificar gaps reais encontrados e congelar matriz de compatibilidade inicial.
 

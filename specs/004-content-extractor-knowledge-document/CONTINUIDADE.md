@@ -3,161 +3,158 @@
 ## Estado atual
 
 - SPEC-003: concluída.
-- baseline de entrada: `0.3.0-rc.1`.
-- SPEC-004: **ATIVA**.
+- baseline consolidado em `main`: commit `a676f8daaaf9a794d503ccd6a2c28178be1fb8bf`.
 - R-200: **PASS**.
 - R-210: **PASS**.
 - G-220 — Content Extractor: **PASS ambiental**.
-- G-230 — Knowledge Document: **PASS ambiental — 2026-09-15**.
-- G-240 — Real Content Acceptance: **PACKAGE READY / HUMAN ACCEPTANCE PENDING**.
-- branch atual: `spec004-g240-real-content-acceptance`.
-- G-245 — normalização Elementor/produção: planejado; writer ainda proibido.
+- G-230/v1 — Knowledge Document determinístico: **PASS ambiental**.
+- G-240/v1 — Real Content Acceptance: **FAIL CONTROLADO — perda estrutural**.
+- remediação atual: **Knowledge Document v2 / structural remediation**.
+- branch: `spec004-g240-real-content-acceptance`.
+- PR #3: **DRAFT / NÃO MERGEAR** antes de novo G-240 PASS.
+- G-245 — Elementor/produção: **BLOCKED por G-240**; writer proibido.
 
-## Baseline consolidado
+## Evidência que bloqueou G-240
 
-PR #2 foi mergeado em `main` no commit:
+Arquivo:
 
-`a676f8daaaf9a794d503ccd6a2c28178be1fb8bf`
+- `evidence/g240-acceptance-20260916T085721Z.json`.
 
-Esse baseline contém:
+Resultado:
 
-- Content Extractor determinístico/read-only;
-- Knowledge Document schema `1.0.0`;
-- `source_hash` semântico;
-- `document_hash` canônico;
-- evidências ambientais G-220/G-230;
-- contratos de normalização Elementor e rollout de produção.
+- 8/8 slots revisados;
+- 0/8 slots passaram;
+- 0 stale;
+- 0 repeatability failures;
+- 0 selection mismatches;
+- fingerprint editorial igual;
+- 0 posts alterados.
 
-## Evidência G-230
+Padrão humano:
 
-- `evidence/g230-smoke-20260915T233450Z.json`;
-- first pass `622/622`;
-- second pass `622/622`;
-- errors `0/0`;
-- throwables `0/0`;
-- `hash_mismatches=0`;
-- `canonical_json_mismatches=0`;
-- fingerprint editorial idêntico;
-- zero posts alterados;
-- 601 unique source hashes / 622 unique document hashes;
-- 21.969 sections;
-- runtime das duas passagens: 3096 ms;
-- peak memory ~30 MiB.
+- 8/8 `coverage_complete=true`;
+- 8/8 `order_preserved=true`;
+- 8/8 `no_invented_text=true`;
+- 7/8 `structure_adequate=false`, reason `structure_loss`;
+- 0/8 marcaram “acceptable_for_knowledge_use”.
 
-## G-240 — objetivo
+Conclusão: o v1 é determinístico e textual/ordinalmente fiel na amostra, mas sua projeção plana perde relações semânticas.
 
-Determinismo não prova fidelidade semântica. O G-240 valida se o Knowledge Document realmente preserva o conhecimento da fonte editorial, na ordem e estrutura necessárias, sem inventar conteúdo.
+Análise de causa raiz:
 
-Contrato ativo:
+- `g240-failure-analysis-20260916.md`.
 
-`real-content-acceptance-contract-v1.md` — `FROZEN v1.0.0`.
+## Causa raiz v1
 
-## Amostra determinística
+- `<li>` era preservado como texto, mas sem identidade da lista, `ul/ol`, profundidade, pai/filho e índice;
+- listas aninhadas podiam contaminar o texto do item pai;
+- `<tr>` virava string `A | B`, perdendo `th/td`, linha/célula, `rowspan/colspan` e identidade da tabela;
+- parágrafos/listas/tabelas não carregavam ancestry de headings;
+- Elementor `text-editor` e Gutenberg convergiam para o mesmo modelo plano;
+- `sections[]` v1 não tinha uma estrutura canônica de árvore/lista/tabela.
 
-Slots:
+## Decisão de arquitetura
 
-1. `elementor_native_typical`;
-2. `elementor_or_mixed_complex`;
-3. `legacy_typical`;
-4. `legacy_complex`;
-5. `gutenberg`;
-6. `shortcode_or_table`;
-7. `review_required`;
-8. `empty_or_corrupt`.
+Knowledge Document v1 permanece como evidência histórica de G-230 e determinismo, mas está:
 
-A seleção usa métricas estruturais, mediana para casos típicos e score determinístico para casos complexos. O submit recalcula a amostra e rejeita alteração/omissão silenciosa via `selection_mismatches`.
+**`SUPERSEDED_FOR_AI`**
 
-## Package temporário G-240
+Novo contrato ativo para remediação:
 
-Build: `0.4.0-acceptance.1`.
+- `knowledge-document-contract-v2.md` — **FROZEN `2.0.0`**.
 
-Documento: `package-acceptance1.md`.
+Não haverá tentativa de mascarar a falha via IA, renderização dinâmica ou migração Elementor.
 
-SHA-256:
+## Knowledge Document v2
 
-`8391a0c2ace748711087c327a48d63aa2fa009963c2d4584488d2c1ed5679d82`
+Novos elementos:
 
-Validação final:
+- `sections[]` continua como visão linear/diagnóstica;
+- `heading_path[]` explícito;
+- `blocks[]` como representação semântica canônica;
+- listas com `ordered|unordered`, profundidade, item ID, parent item, item index e children;
+- tabelas com caption, linhas, células, `header|data`, `rowspan` e `colspan`;
+- `structure` ampliado com paragraphs/list_items/table_rows/table_cells;
+- `ai_readiness` objetivo.
 
-- runtime files: `25`;
-- PHP lint staging: `21/21 PASS`;
-- PHP lint ZIP extraído: `21/21 PASS`;
-- JS syntax: `1/1 PASS`;
-- ZIP integrity: PASS;
-- staging/ZIP parity: `25/25 PASS`;
-- acceptance safety scan: PASS;
-- runner acceptance Git/package blob: `5b88be5c9a3283e2055aea81950fdffed82f79f8` em ambos;
-- bootstrap Git/package blob: `49ea1b55b7535914c69c62f9434ae208b3970006` em ambos;
-- Profiler R-200, Smoke G-220 e Smoke G-230 fisicamente ausentes do ZIP.
+### AI readiness
 
-Menu esperado:
+Estados:
 
-**Base de Conhecimento → Aceitação G-240**
+- `candidate_ready`: estrutura reconciliada e sem gaps críticos conhecidos;
+- `review_required`: estrutura representada, mas warnings semânticos permanecem (shortcode/widget/bloco dinâmico etc.);
+- `not_ready`: perda estrutural objetiva, hard limit, fallback crítico ou conteúdo inesperadamente ausente;
+- `not_applicable`: fonte realmente vazia.
 
-A página:
+Esse status não é uma aprovação genérica da IA. É um sinal técnico para consumidores futuros e não substitui a aceitação humana.
 
-- exige `manage_options`;
-- exibe fonte editorial e Knowledge Document lado a lado;
-- não executa shortcode, dynamic block ou render Elementor;
-- não persiste seleção/verdict/conteúdo;
-- primeiro passe mantém apenas metadados estruturais leves e materializa conteúdo completo somente dos slots selecionados;
-- usa stale fingerprint por post;
-- recalcula a amostra no submit;
-- reconstrói o Knowledge Document duas vezes no submit;
-- exporta JSON sem corpo editorial, título ou URL;
-- exporta post ID somente para rastreabilidade da amostra.
+## Aceitação humana v2
 
-## Veredito humano por slot
+A pergunta subjetiva “aceitável para busca/IA” foi removida.
 
-Marcar somente quando verdadeiro:
+O operador avalia somente:
 
-- cobertura completa;
-- ordem semântica preservada;
-- nenhum texto inventado;
-- estrutura adequada;
-- aceitável para busca/IA.
+1. cobertura completa;
+2. ordem semântica preservada;
+3. nenhum texto inventado;
+4. estrutura semântica preservada.
 
-Se houver falha, selecionar reason enum apropriada. Não forçar PASS.
+A tela exibe `ai_readiness` calculado e renderiza semanticamente listas/tabelas/headings.
 
-## Gate G-240
+## Amostra A/B congelada
 
-PASS exige:
+O reteste usa exatamente os mesmos posts que revelaram a falha v1:
 
-- todos os slots disponíveis revisados;
-- todos os slots disponíveis aprovados nos cinco critérios;
-- `selection_mismatches=0`;
-- `stale_slots=0`;
-- `repeatability_failures=0`;
-- fingerprint before/after igual;
-- zero changed posts durante geração da evidência.
+- `elementor_native_typical`: 44981;
+- `elementor_or_mixed_complex`: 1290;
+- `legacy_typical`: 370;
+- `legacy_complex`: 1307;
+- `gutenberg`: 45782;
+- `shortcode_or_table`: 36431;
+- `review_required`: 1289;
+- `empty_or_corrupt`: 28748.
 
-Qualquer falha bloqueia G-240 e volta para correção do extractor/contract. IA ou migração Elementor não mascaram divergência.
+Os fingerprints editoriais observados no v1 viram baseline A/B. Qualquer alteração posterior marca o item como `stale`.
 
-## Produção / normalização Elementor
+## Implementação v2 já presente no draft
 
-Permanece separado:
+- `class-legacy-html-adapter.php`: preservação estrutural de listas/tabelas;
+- `class-semantic-structure.php`: heading ancestry, blocks, reconciliação estrutural e AI readiness;
+- `class-knowledge-document.php`: schema `2.0.0`, blocks e hashes v2;
+- `class-knowledge-document-v2-smoke.php`: duas passagens full-corpus;
+- `class-real-content-acceptance-v2.php`: reteste A/B dos mesmos oito casos;
+- `tests/unit/spec004-semantic-structure-v2.php`: testes sintéticos estruturais.
+
+Build de desenvolvimento atual: `0.4.0-acceptance.2`.
+
+## Sequência obrigatória antes de novo G-240
+
+1. fechar validação local/package `0.4.0-acceptance.2`;
+2. em homologação executar **Base de Conhecimento → Validação KD v2**;
+3. exigir duas passagens completas, zero errors/throwables/hash mismatch/JSON mismatch;
+4. exigir `structure_incomplete=0`, fingerprint igual e zero writes;
+5. somente após esse PASS executar **Aceitação G-240 v2**;
+6. revisar os mesmos oito casos com os quatro critérios observáveis;
+7. qualquer falha estrutural mantém G-240 bloqueado;
+8. somente G-240 v2 PASS libera G-245.
+
+## Produção / Elementor
+
+Permanece inalterado:
 
 - Elementor é direção editorial futura;
-- Knowledge plane continua multi-source e read-only;
-- activation/update nunca migra posts;
-- G-245 exige Production Preflight, version gate, dry-run, journal/rollback, stale-source guard, canário e batches retomáveis.
-
-## Próximo passo exato
-
-1. instalar `0.4.0-acceptance.1` em homologação;
-2. confirmar que apenas `Aceitação G-240` aparece como ferramenta temporária da SPEC-004;
-3. abrir a tela e revisar todos os slots disponíveis;
-4. marcar critérios somente quando objetivamente satisfeitos;
-5. para qualquer discrepância, deixar critério desmarcado e escolher reason;
-6. gerar `bdc-kb-spec004-g240-acceptance-*.json`;
-7. retornar o JSON para análise e fechamento/correção do G-240.
+- Knowledge plane é multi-source e read-only;
+- installation/activation/update nunca migra posts automaticamente;
+- migration editorial exige Production Preflight, version gate, dry-run, journal/rollback, stale-source guard, canário e batches retomáveis;
+- writer continua desabilitado.
 
 ## Gates
 
 - R-200: **PASS**.
 - R-210: **PASS**.
 - G-220: **PASS**.
-- G-230: **PASS**.
-- G-240: **PACKAGE READY / HUMAN ACCEPTANCE PENDING**.
-- G-245: **PLANNED — writer não autorizado**.
+- G-230/v1: **PASS determinístico**.
+- G-240/v1: **FAIL CONTROLADO — STRUCTURE LOSS**.
+- G-240/v2: **REMEDIATION ACTIVE / ENV SMOKE PENDING**.
+- G-245: **BLOCKED**.
 - G-250: **NOT_RUN**.

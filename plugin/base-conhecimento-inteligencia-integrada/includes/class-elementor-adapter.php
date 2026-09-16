@@ -68,6 +68,7 @@ final class Elementor_Adapter {
 			$editor = isset( $settings['editor'] ) && is_scalar( $settings['editor'] ) ? (string) $settings['editor'] : '';
 			if ( '' !== trim( $editor ) ) {
 				$partial = Legacy_HTML_Adapter::extract( $editor, 'elementor:text-editor' );
+				$partial = Semantic_DOM_Expectation::apply( $editor, $partial );
 				self::merge_result( $result, $partial );
 			}
 			return;
@@ -85,6 +86,7 @@ final class Elementor_Adapter {
 					continue;
 				}
 				$partial = Legacy_HTML_Adapter::extract( $inner, 'elementor:shortcode:' . (string) $match['tag'] );
+				$partial = Semantic_DOM_Expectation::apply( $inner, $partial );
 				self::merge_result( $result, $partial );
 			}
 			return;

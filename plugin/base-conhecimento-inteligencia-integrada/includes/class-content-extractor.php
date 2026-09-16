@@ -167,7 +167,7 @@ final class Content_Extractor {
 	 */
 	private static function merge_result( array &$target, array $source ): void {
 		$namespace = 'extract-merge-' . count( $target['fragments'] );
-		$source['fragments'] = Legacy_HTML_Adapter::namespace_fragments( $source['fragments'], $namespace );
+		$source['fragments'] = Content_Normalizer::namespace_structural_ids( $source['fragments'], $namespace );
 		foreach ( $source['fragments'] as $fragment ) {
 			$fragment['ordinal'] = count( $target['fragments'] );
 			$target['fragments'][] = $fragment;
@@ -268,7 +268,7 @@ final class Content_Extractor {
 					$reasons[] = $warning;
 					break;
 				}
-			}
+		}
 		}
 
 		$reasons = self::unique_preserve_order( $reasons );

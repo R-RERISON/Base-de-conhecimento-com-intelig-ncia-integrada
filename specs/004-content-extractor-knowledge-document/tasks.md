@@ -17,58 +17,63 @@
 
 - [x] T030–T048 Implementação, testes, smoke ambiental e desativação do runner anterior.
 
-Evidências:
-
-- `g220-local-validation.md`;
-- `package-smoke1.md`;
-- `g220-smoke-analysis.md`;
-- `evidence/g220-smoke-20260915T221710Z.json`.
-
 **Gate G-220: PASS — 2026-09-15.**
 
-## S004 — G-230 / Knowledge Document
+## S004 — G-230 / Knowledge Document v1
 
-- [x] T050–T059D Schema, canonical JSON, hashes, testes e smoke ambiental em duas passagens.
+- [x] T050–T059D Schema v1, canonical JSON, hashes, testes e smoke ambiental em duas passagens.
 
 Evidências:
 
 - `knowledge-document-contract-v1.md`;
 - `g230-local-validation.md`;
-- `package-smoke2.md`;
 - `g230-smoke-analysis.md`;
 - `evidence/g230-smoke-20260915T233450Z.json`.
 
-**Gate G-230: PASS — 2026-09-15.**
+**Gate G-230/v1: PASS de determinismo — 2026-09-15.**
+
+> O G-240 posterior demonstrou que determinismo não bastava: o schema v1 perdeu relações estruturais. v1 permanece como evidência histórica, mas está `SUPERSEDED_FOR_AI`.
 
 ## S005 — G-240 / Real Content Acceptance
 
-- [x] T060 Congelar contrato `real-content-acceptance-contract-v1.md` e amostra determinística por slots.
-- [ ] T061 Validar Elementor típico por inspeção humana.
-- [ ] T062 Validar Elementor/Mixed complexo por inspeção humana.
-- [ ] T063 Validar Gutenberg por inspeção humana.
-- [ ] T064 Validar HTML legado típico/complexo por inspeção humana.
-- [ ] T065 Validar shortcode/tabela relevante por inspeção humana.
-- [ ] T066 Validar vazio/corrompido/review_required quando disponíveis.
-- [x] T067 Incorporar repetibilidade no relatório final por dupla reconstrução do Knowledge Document.
-- [x] T068 Implementar ferramenta read-only de comparação lado a lado fonte editorial × Knowledge Document.
-- [x] T069 Implementar stale guard, revalidação da seleção determinística e fingerprint before/after sem persistência.
-- [ ] T069A Executar `0.4.0-acceptance.1` em homologação e retornar JSON de evidência.
-- [ ] T069B Exigir todos os slots disponíveis revisados e aprovados, zero stale, zero selection mismatch, zero repeatability failure e zero mutação editorial.
+### G-240 v1
 
-Contrato:
+- [x] T060 Congelar contrato de aceite e amostra determinística.
+- [x] T061–T066 Revisar os 8 slots reais em homologação.
+- [x] T067 Repetibilidade por dupla reconstrução.
+- [x] T068 Comparação lado a lado fonte × Knowledge Document.
+- [x] T069 Stale guard/fingerprint/zero persistência.
+- [x] T069A Executar `0.4.0-acceptance.1` e retornar evidência.
+- [x] T069B Analisar resultado: 8/8 revisados, 0/8 aprovados, 7/8 `structure_loss`.
 
-- `real-content-acceptance-contract-v1.md` — `FROZEN v1.0.0`.
+Evidências:
 
-Tooling:
+- `evidence/g240-acceptance-20260916T085721Z.json`;
+- `g240-failure-analysis-20260916.md`.
 
-- build temporário `0.4.0-acceptance.1`;
-- menu `Base de Conhecimento → Aceitação G-240`;
-- conteúdo da fonte só é mostrado localmente no wp-admin;
-- JSON de evidência não exporta corpo, título ou URL;
-- post ID é exportado apenas para rastreabilidade da amostra;
-- seleção é recalculada no submit para impedir substituição/omissão silenciosa de slots.
+**Gate G-240 v1: FAIL CONTROLADO — perda estrutural.**
 
-**Gate G-240: TOOLING READY / HUMAN ACCEPTANCE PENDING.**
+Achado positivo: todos os 8 casos preservaram cobertura textual, ordem e ausência de texto inventado. A falha concentrou-se na representação estrutural.
+
+### Remediação estrutural / Knowledge Document v2
+
+- [x] T070 Congelar `knowledge-document-contract-v2.md` (`2.0.0`).
+- [x] T071 Introduzir `Semantic_Structure` e `heading_path`.
+- [x] T072 Preservar listas: `ul/ol`, profundidade, item pai/filho e ordem.
+- [x] T073 Preservar tabelas: linhas, células, `header|data`, `rowspan`, `colspan` e caption.
+- [x] T074 Evoluir `Knowledge_Document` para schema `2.0.0` com `blocks[]`.
+- [x] T075 Adicionar `ai_readiness` calculado (`candidate_ready|review_required|not_ready|not_applicable`).
+- [x] T076 Remover `acceptable_for_knowledge_use` do veredito humano; manter apenas critérios observáveis.
+- [x] T077 Congelar os mesmos 8 posts do G-240 v1 como amostra A/B da remediação.
+- [x] T078 Adicionar teste unitário v2 para heading path, lista aninhada, tabela, hashes e AI readiness.
+- [x] T079 Implementar smoke ambiental v2 em duas passagens sobre todo o corpus.
+- [x] T079A Implementar acceptance v2 lado a lado com render semântico de `blocks[]`.
+- [ ] T079B Gerar/validar package `0.4.0-acceptance.2`.
+- [ ] T079C Executar `Validação KD v2` em homologação e exigir zero mismatch/zero mutation/zero `structure_incomplete`.
+- [ ] T079D Reexecutar os mesmos 8 casos no `Aceitação G-240 v2`.
+- [ ] T079E Fechar G-240 somente se os quatro critérios humanos passarem, sem stale/repeatability failure e com limitações refletidas em `ai_readiness`.
+
+**Gate G-240: FAIL / STRUCTURAL REMEDIATION ACTIVE.**
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 
@@ -86,11 +91,11 @@ Tooling:
 - [ ] T091 Testar rollback integral do canário.
 - [ ] T092 Produzir runbook de instalação/upgrade/migration/rollback para produção.
 
-**Gate G-245: PLANNED — writer editorial NÃO autorizado ainda.**
+**Gate G-245: BLOCKED por G-240 — writer editorial NÃO autorizado.**
 
 ## S007 — G-250 / Lifecycle, package e baseline final
 
-- [ ] T100 Remover definitivamente profiler/runners temporários.
+- [ ] T100 Remover definitivamente profiler/runners/acceptance tools temporários.
 - [ ] T101 Gerar `0.4.0-rc.1` clean.
 - [ ] T102 Source parity do package.
 - [ ] T103 PHP lint/JS syntax/ZIP integrity.
@@ -112,4 +117,5 @@ Tooling:
 5. Usuário/editor vence sobre migration atrasada: source divergente vira `STALE_SOURCE`.
 6. IA não é usada para reparar parsing nem para writer inicial de Elementor.
 7. Runners/acceptance tools são temporários e não chegam ao RC/produção.
-8. Nenhuma etapa posterior compensa lacuna de segurança da anterior.
+8. Determinismo sem fidelidade estrutural não é aceite de conhecimento.
+9. Nenhuma etapa posterior compensa lacuna de segurança ou semântica da anterior.

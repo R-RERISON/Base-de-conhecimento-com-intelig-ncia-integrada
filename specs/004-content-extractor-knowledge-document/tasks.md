@@ -23,13 +23,6 @@
 
 - [x] T050–T059D Schema v1, canonical JSON, hashes, testes e smoke ambiental em duas passagens.
 
-Evidências:
-
-- `knowledge-document-contract-v1.md`;
-- `g230-local-validation.md`;
-- `g230-smoke-analysis.md`;
-- `evidence/g230-smoke-20260915T233450Z.json`.
-
 **Gate G-230/v1: PASS de determinismo — 2026-09-15.**
 
 > O G-240 posterior demonstrou que determinismo não bastava: o schema v1 perdeu relações estruturais. v1 permanece como evidência histórica, mas está `SUPERSEDED_FOR_AI`.
@@ -38,22 +31,9 @@ Evidências:
 
 ### G-240 v1
 
-- [x] T060 Congelar contrato de aceite e amostra determinística.
-- [x] T061–T066 Revisar os 8 slots reais em homologação.
-- [x] T067 Repetibilidade por dupla reconstrução.
-- [x] T068 Comparação lado a lado fonte × Knowledge Document.
-- [x] T069 Stale guard/fingerprint/zero persistência.
-- [x] T069A Executar `0.4.0-acceptance.1` e retornar evidência.
-- [x] T069B Analisar resultado: 8/8 revisados, 0/8 aprovados, 7/8 `structure_loss`.
-
-Evidências:
-
-- `evidence/g240-acceptance-20260916T085721Z.json`;
-- `g240-failure-analysis-20260916.md`.
+- [x] T060–T069B Aceite real inicial: 8/8 revisados, 0/8 aprovados, 7/8 `structure_loss`.
 
 **Gate G-240 v1: FAIL CONTROLADO — perda estrutural.**
-
-Achado positivo: todos os 8 casos preservaram cobertura textual, ordem e ausência de texto inventado. A falha concentrou-se na representação estrutural.
 
 ### Remediação estrutural / Knowledge Document v2
 
@@ -68,72 +48,34 @@ Achado positivo: todos os 8 casos preservaram cobertura textual, ordem e ausênc
 - [x] T078 Adicionar teste unitário v2 para heading path, lista aninhada, tabela, hashes e AI readiness.
 - [x] T079 Implementar smoke ambiental v2 em duas passagens sobre todo o corpus.
 - [x] T079A Implementar acceptance v2 lado a lado com render semântico de `blocks[]`.
-- [x] T079B Gerar/validar package `0.4.0-acceptance.2`.
-- [x] T079C Executar `Validação KD v2` com `acceptance.2`: determinismo/zero-write PASS; 82/622 `structure_incomplete`.
-- [x] T079C1 Versionar `evidence/kd-v2-smoke-20260916T100412Z.json` e bloquear G-240 v2.
-- [x] T079C2 Instrumentar diagnóstico agregado e gerar `0.4.0-acceptance.3` sem relaxar parser/schema/gate.
-- [x] T079C3 Executar `acceptance.3`: 82/622 reproduzidos; 62 legacy_html, 14 elementor, 5 mixed, 1 gutenberg; mismatches concentrados em headings/lists/list_items/tables.
-- [x] T079C3A Versionar `evidence/kd-v2-smoke-20260916T101517Z.json`.
-- [x] T079C4A Comprovar risco de colisão de IDs estruturais locais (`list-0`, `table-0`, item IDs) entre parciais Elementor/Gutenberg/mixed.
-- [x] T079C4B Implementar namespace determinístico de IDs estruturais nos merges, sem alterar schema `2.0.0` ou critério do gate.
-- [x] T079C4C Adicionar regressão `spec004-structural-id-namespace.php` para duas listas/tabelas independentes.
-- [x] T079C4D Gerar/validar package `0.4.0-acceptance.4` para experimento full-corpus controlado.
-- [x] T079C5 Executar `acceptance.4`: `structure_incomplete` 82→78; mixed 5→2; Gutenberg 1→0; assinaturas `actual > expected` eliminadas.
-- [x] T079C5A Versionar `evidence/kd-v2-smoke-20260916T104818Z.json`.
-- [x] T079C6A Isolar perda em listas aninhadas: `list_item` vazio descartado podia deixar sublista órfã.
-- [x] T079C6B Preservar `list_item` vazio como `structural_anchor=true`, `text=""`, sem inventar conteúdo.
-- [x] T079C6C Gerar e validar `0.4.0-acceptance.5`.
-- [x] T079C6D Executar `acceptance.5`: `structure_incomplete` 78→50; legacy 62→44; Elementor 14→5; mixed 2→1; `list_items` mismatch zerou; lists ficaram em 5 docs.
-- [x] T079C6E Versionar `evidence/kd-v2-smoke-20260916T112024Z.json`.
-- [x] T079C7A Isolar classe dominante residual: `headings` em 47 docs (`504 expected / 302 actual`).
-- [x] T079C7B Implementar recursão condicionada para wrappers desconhecidos que contenham descendentes estruturais.
-- [x] T079C7C Adicionar telemetria agregada `extraction_warnings` e diagnósticos de headings/tabelas/listas sem exportar IDs/títulos/URLs/conteúdo.
-- [x] T079C7D Gerar/validar `0.4.0-acceptance.6`; PHP lint 23/23, JS syntax, ZIP integrity, parity 27/27 e Git↔package blobs críticos iguais.
-- [x] T079C7E Executar `acceptance.6`: segurança/determinismo PASS, porém `structure_incomplete` permaneceu 50; hipótese de wrapper como causa dominante rejeitada.
-- [x] T079C7F Versionar `evidence/kd-v2-smoke-20260916T114435Z.json`.
-- [x] T079C8A Analisar telemetria do `acceptance.6`: identificar headings vazios e headings locais dentro de listas/tabelas como diferença entre estrutura DOM bruta e unidade semântica global.
-- [x] T079C8B Congelar `knowledge-document-contract-v2.0.1-amendment.md`; evoluir Knowledge Document para `2.0.1` sem mudar a forma externa do schema.
-- [x] T079C8C Implementar `Semantic_DOM_Expectation`, calculando expected diretamente do DOM e independentemente de `sections[]`/`blocks[]`.
-- [x] T079C8D Classificar `HTML_LOCAL_HEADING_FLATTENED:*` e `HTML_NESTED_LIST_IN_TABLE_FLATTENED:*` como `review_required`; `HTML_NESTED_TABLE_UNREPRESENTED:*` como `not_ready`.
-- [x] T079C8E Endurecer smoke report `1.3.0`: além de `structure_incomplete=0`, exigir `ai_readiness.not_ready=0` em ambas as passagens.
-- [x] T079C8F Gerar/validar `0.4.0-acceptance.7`: 28/28 package parity, PHP lint 24/24, JS syntax, ZIP integrity, KD regression 12/12, namespace 6/6 e safety scan PASS.
-- [x] T079C8G Fechar Git↔package byte parity dos blobs críticos e remover marcadores temporários de reconciliação.
-- [x] T079C8H Executar `acceptance.7`: `structure_incomplete` **50→5**, headings mismatch **47→0**, safety/determinismo PASS; restaram 3 docs de listas e 2 de tabelas.
-- [x] T079C8I Versionar `evidence/kd-v2-smoke-20260916T124150Z.json`.
-- [x] T079C9A Isolar o resíduo em cinco casos: listas `105 expected / 90 actual` e tabelas `6 / 4`, sem heading mismatch.
-- [x] T079C9B Preparar `0.4.0-acceptance.8` **diagnóstico-only** sem alterar parser/schema/readiness/gate; adicionar telemetria para parser-unreachable, sem conteúdo materializável e image-only.
-- [x] T079C9C Validar package `acceptance.8`: 28 runtime files, PHP lint 24/24, ZIP integrity, KD regression 12/12, namespace 6/6 e Git↔package parity dos dois arquivos alterados.
-- [ ] T079C9D Executar `Validação KD v2` com `acceptance.8` e classificar os 3 mismatches de listas e 2 de tabelas pelas novas métricas diagnósticas.
-- [ ] T079C9E Aplicar somente a correção comprovada até `structure_incomplete=0` e `not_ready=0`, sem relaxar o gate.
-- [ ] T079D Reexecutar os mesmos 8 casos no `Aceitação G-240 v2` somente após full-corpus PASS.
+- [x] T079B–T079C8 Remediações incrementais baseadas em evidência: collisions de IDs, structural anchors, expectation semântica DOM e gate `not_ready=0`.
+- [x] T079C9A Isolar resíduo final em 5 documentos: 3 listas e 2 tabelas.
+- [x] T079C9B–T079C9C Instrumentar `acceptance.8` diagnóstico-only.
+- [x] T079C9D Executar `acceptance.8` e classificar resíduo.
+- [x] T079C9E Executar diagnóstico final `.9` e pipeline `.10`; comprovar que a perda ocorria exclusivamente em HTML/DOM → fragments do Legacy adapter.
+- [x] T079C9F Implementar `acceptance.11`: travessia recursiva até fronteiras `ul|ol|table` e preservação de `alt` em células image-only.
+- [x] T079C9G Executar full-corpus `acceptance.11`: `structure_incomplete=0`, `not_ready=0`, `gate.pass=true`, zero writes/errors/throwables/hash mismatches/canonical JSON mismatches.
+- [x] T079C9H Versionar `evidence/kd-v2-smoke-20260916T150651Z.json` e análise `g240-v2-full-corpus-pass-20260916.md`.
+- [ ] T079D Reexecutar agora os mesmos 8 casos em `Aceitação G-240 v2` no build `0.4.0-acceptance.11`.
 - [ ] T079E Fechar G-240 somente se os quatro critérios humanos passarem, sem stale/repeatability failure e com limitações refletidas em `ai_readiness`.
 
-### Evidência `acceptance.7`
+### Full-corpus v2 — PASS ambiental
+
+Evidência: `evidence/kd-v2-smoke-20260916T150651Z.json`.
 
 - ambiente: WordPress `6.9.4`, PHP `8.5.10`, Elementor `4.1.0`, KD `2.0.1`, `DOMDocument=true`;
-- corpus `622 → 622`, duas passagens completas;
-- zero errors/throwables/hash mismatch/canonical JSON mismatch;
-- fingerprint editorial igual e zero posts alterados;
-- `structure_incomplete=5` nas duas passagens;
-- por source: 4 legacy_html, 1 elementor;
-- headings mismatch: zero;
-- lists: 3 docs, expected 105, actual 90, delta 15;
-- tables: 2 docs, expected 6, actual 4, delta 2;
-- `ai_readiness`: 546 candidate_ready, 69 review_required, 5 not_ready, 2 not_applicable;
-- gate permanece FAIL porque exige `structure_incomplete=0` e `not_ready=0`.
+- corpus `622 → 622`;
+- duas passagens: `622/622` documentos;
+- zero errors/throwables;
+- zero hash mismatch;
+- zero canonical JSON mismatch;
+- fingerprint editorial idêntico;
+- zero posts alterados;
+- `structure_incomplete=0` nas duas passagens;
+- `ai_readiness`: 548 candidate_ready, 72 review_required, 0 not_ready, 2 not_applicable;
+- `gate.pass=true`.
 
-### Candidato `acceptance.8`
-
-- plugin `0.4.0-acceptance.8`;
-- Knowledge Document permanece `2.0.1`;
-- parser Legacy permanece inalterado;
-- readiness e gate permanecem inalterados;
-- adiciona somente warnings diagnósticos para listas/tabelas inacessíveis ao parser, sem conteúdo materializável ou image-only;
-- SHA-256 package: `a089fbd5cdb0fe6cc04a418f9eface8d135ac9d0fee1232307c5a3463b9d0091`;
-- bootstrap Git↔ZIP: `6f115f8241b774a9f04e7ecbc84a17fb4925730a`;
-- Semantic_DOM_Expectation Git↔ZIP: `125908183b0e2fd931b9aa84cf01930d9205b499`.
-
-**Gate G-240: FAIL CONTROLADO / `acceptance.8` DIAGNOSTIC ENV SMOKE PENDING.**
+**Estado G-240 v2: FULL-CORPUS PASS / A/B HUMAN ACCEPTANCE PENDING.**
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 
@@ -151,7 +93,7 @@ Achado positivo: todos os 8 casos preservaram cobertura textual, ordem e ausênc
 - [ ] T091 Testar rollback integral do canário.
 - [ ] T092 Produzir runbook de instalação/upgrade/migration/rollback para produção.
 
-**Gate G-245: BLOCKED por G-240 — writer editorial NÃO autorizado.**
+**Gate G-245: BLOCKED por G-240 humano — writer editorial NÃO autorizado.**
 
 ## S007 — G-250 / Lifecycle, package e baseline final
 

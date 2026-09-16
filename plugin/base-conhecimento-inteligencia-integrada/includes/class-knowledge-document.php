@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Knowledge_Document {
 
-	public const SCHEMA_VERSION = '2.0.0';
+	public const SCHEMA_VERSION = '2.0.1';
 
 	/**
 	 * Constrói o documento canônico a partir da fonte editorial atual.

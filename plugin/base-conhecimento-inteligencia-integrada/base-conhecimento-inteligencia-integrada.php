@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança, Content Extractor e Knowledge Document determinísticos.
- * Version: 0.4.0-g245-preflight.1
+ * Version: 0.4.0-g245-projection.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-g245-preflight.1' );
+define( 'BDC_KB_VERSION', '0.4.0-g245-projection.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -22,6 +22,7 @@ define( 'BDC_KB_SPEC004_KD_V2_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_FINAL_DIAG_BUILD', false );
 define( 'BDC_KB_SPEC004_PIPELINE_DIAG_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_PREFLIGHT_BUILD', true );
+define( 'BDC_KB_SPEC004_G245_PROJECTION_SMOKE_BUILD', true );
 define( 'BDC_KB_FILE', __FILE__ );
 define( 'BDC_KB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
@@ -47,6 +48,7 @@ require_once BDC_KB_DIR . 'includes/class-content-extractor.php';
 require_once BDC_KB_DIR . 'includes/class-canonical-json.php';
 require_once BDC_KB_DIR . 'includes/class-semantic-structure.php';
 require_once BDC_KB_DIR . 'includes/class-knowledge-document.php';
+require_once BDC_KB_DIR . 'includes/class-elementor-projection-plan.php';
 require_once BDC_KB_DIR . 'includes/class-admin-page.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
 
@@ -74,6 +76,9 @@ if ( defined( 'BDC_KB_SPEC004_PIPELINE_DIAG_BUILD' ) && BDC_KB_SPEC004_PIPELINE_
 if ( defined( 'BDC_KB_SPEC004_G245_PREFLIGHT_BUILD' ) && BDC_KB_SPEC004_G245_PREFLIGHT_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-production-preflight.php';
 }
+if ( defined( 'BDC_KB_SPEC004_G245_PROJECTION_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_PROJECTION_SMOKE_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-elementor-projection-plan-smoke.php';
+}
 
 \BDC\KnowledgeBase\Plugin::register();
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
@@ -99,4 +104,7 @@ if ( defined( 'BDC_KB_SPEC004_PIPELINE_DIAG_BUILD' ) && BDC_KB_SPEC004_PIPELINE_
 }
 if ( defined( 'BDC_KB_SPEC004_G245_PREFLIGHT_BUILD' ) && BDC_KB_SPEC004_G245_PREFLIGHT_BUILD ) {
 	\BDC\KnowledgeBase\Production_Preflight::register();
+}
+if ( defined( 'BDC_KB_SPEC004_G245_PROJECTION_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_PROJECTION_SMOKE_BUILD ) {
+	\BDC\KnowledgeBase\Elementor_Projection_Plan_Smoke::register();
 }

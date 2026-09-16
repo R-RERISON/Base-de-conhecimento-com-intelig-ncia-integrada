@@ -71,4 +71,36 @@ final class Content_Normalizer {
 
 		return $fragment;
 	}
+
+	/**
+	 * Namespaces structural IDs before independently parsed fragments are merged.
+	 * Prevents local deterministic IDs (list-0/table-0/...) from colliding across
+	 * Elementor widgets, Gutenberg blocks and mixed source adapters.
+	 *
+	 * @param array<int,array<string,mixed>> $fragments
+	 * @return array<int,array<string,mixed>>
+	 */
+	public static function namespace_structural_ids( array $fragments, string $namespace ): array {
+		$namespace = preg_replace( '/[^A-Za-z0-9_.:-]+/', '-', $namespace ) ?? '';
+		$namespace = trim( $namespace, '-' );
+		if ( '' === $namespace ) {
+			$namespace = 'merge';
+		}
+		$prefix = $namespace . '::';
+
+		foreach ( $fragments as &$fragment ) {
+			if ( ! is_array( $fragment ) || ! is_array( $fragment['meta'] ?? null ) ) {
+				continue;
+			}
+			foreach ( array( 'list_id', 'item_id', 'parent_item_id', 'table_id', 'image_id' ) as $key ) {
+				$value = isset( $fragment['meta'][ $key ] ) ? (string) $fragment['meta'][ $key ] : '';
+				if ( '' !== $value ) {
+					$fragment['meta'][ $key ] = $prefix . $value;
+				}
+			}
+		}
+		unset( $fragment );
+
+		return $fragments;
+	}
 }

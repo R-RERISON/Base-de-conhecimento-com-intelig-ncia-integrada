@@ -53,7 +53,7 @@ if ( defined( 'BDC_KB_SPEC004_G230_SMOKE_BUILD' ) && BDC_KB_SPEC004_G230_SMOKE_B
 	require_once BDC_KB_DIR . 'includes/class-knowledge-document-smoke.php';
 }
 if ( defined( 'BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD' ) && BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD ) {
-	require_once BDC_KB_DIR . 'includes/class-real-content-acceptance.php';
+	require_once BDC_KB_DIR . 'includes/class-real-content-acceptance-v2.php';
 }
 
 \BDC\KnowledgeBase\Plugin::register();
@@ -67,5 +67,5 @@ if ( defined( 'BDC_KB_SPEC004_G230_SMOKE_BUILD' ) && BDC_KB_SPEC004_G230_SMOKE_B
 	\BDC\KnowledgeBase\Knowledge_Document_Smoke::register();
 }
 if ( defined( 'BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD' ) && BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD ) {
-	\BDC\KnowledgeBase\Real_Content_Acceptance::register();
+	\BDC\KnowledgeBase\Real_Content_Acceptance_V2::register();
 }

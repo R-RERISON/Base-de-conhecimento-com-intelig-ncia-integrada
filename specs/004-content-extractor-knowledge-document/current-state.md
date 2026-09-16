@@ -2,37 +2,74 @@
 
 ## Baseline e gates
 
-- baseline de entrada: `0.3.0-rc.1`;
-- SPEC-001/002/003: concluídas;
-- R-200: **PASS**;
-- R-210: **PASS**;
-- G-220: **PASS ambiental**;
-- G-230: **IMPLEMENTED / LOCAL PASS / ENV SMOKE PENDING**.
+- SPEC-001/002/003: concluídas.
+- R-200: **PASS**.
+- R-210: **PASS**.
+- G-220: **PASS ambiental**.
+- G-230/v1: **PASS de determinismo / superseded for AI**.
+- G-240/v1: **FAIL CONTROLADO — perda estrutural**.
+- G-240/v2/KD 2.0.1: **PASS técnico / FAIL humano — hierarchy fidelity**.
+- KD 2.1.0 / `0.4.0-acceptance.12`: **PASS técnico full-corpus + PASS humano 8/8**.
+- **G-240: PASS / CLOSED**.
+- **G-245: IN PROGRESS — Production Preflight read-only**.
+- G-250: NOT_RUN.
 
-## Ambiente de homologação validado
+## Baseline ambiental validada
 
-Smoke G-220 executado sobre cópia de produção:
+Ambiente de homologação, cópia de produção:
 
 - WordPress `6.9.4`;
 - PHP `8.5.10`;
 - Elementor `4.1.0`;
 - multisite: não;
-- 622 posts.
+- corpus: 622 posts;
+- DOMDocument: ativo.
 
-Evidência: `evidence/g220-smoke-20260915T221710Z.json`.
+A validação KD 2.1 full-corpus executou duas passagens 622/622 com:
 
-Segurança comprovada:
-
-- fingerprint editorial antes/depois idêntico;
-- zero posts alterados;
-- corpus 622 → 622;
-- zero extractor errors;
+- zero errors;
 - zero throwables;
-- sem persistência/renderização arbitrária.
+- zero hash mismatch;
+- zero canonical JSON mismatch;
+- zero structure_incomplete;
+- zero `not_ready`;
+- zero mutação editorial;
+- gate técnico PASS.
 
-## Runtime Content Extractor
+Readiness KD 2.1 observado:
 
-Implementado e ambientalmente aceito:
+- candidate_ready: 387;
+- review_required: 233;
+- not_applicable: 2;
+- not_ready: 0.
+
+## Fechamento humano G-240
+
+Mesmo conjunto fixo de oito slots das rodadas anteriores:
+
+- 8/8 revisados;
+- coverage 8/8;
+- order 8/8;
+- no invented text 8/8;
+- structure preserved 8/8;
+- human_pass 8/8;
+- gate_pass 8/8;
+- stale 0;
+- repeatability failures 0;
+- sample mismatch 0;
+- system not_ready 0;
+- gate global true.
+
+Os posts 1290, 370 e 1307, que haviam exposto perda de hierarchy fidelity em KD 2.0.1, fecharam com estrutura humana preservada em KD 2.1.0.
+
+Evidências:
+
+- `evidence/kd-v21-smoke-summary-20260916T172538Z.json`;
+- `evidence/g240-kd21-acceptance-20260916T193359Z.json`.
+
+## Runtime Content Extractor / Knowledge Document
+
+Componentes principais ativos na baseline:
 
 - `Content_Normalizer`;
 - `Shortcode_Inspector`;
@@ -40,110 +77,119 @@ Implementado e ambientalmente aceito:
 - `Content_Source`;
 - `Elementor_Adapter`;
 - `Gutenberg_Adapter`;
-- `Content_Extractor`.
+- `Content_Extractor`;
+- `Canonical_JSON`;
+- `Semantic_Structure`;
+- `Hierarchy_Relationships`;
+- `Numbered_Hierarchy_Resolver`;
+- `Knowledge_Document` schema `2.1.0`.
 
-Resultado ambiental:
+O knowledge plane permanece estritamente read-only.
 
-- 21.969 fragments;
-- `legacy_html`: 536;
-- `plain_text`: 41;
-- `elementor`: 34;
-- `mixed`: 5;
-- `gutenberg`: 4;
-- `empty`: 2.
+## Readiness Elementor conhecida
 
-A diferença em relação ao profiler R-200 é esperada: o extractor definitivo classifica Elementor inválido pela estratégia efetiva de fallback, principalmente Legacy HTML.
-
-## Readiness Elementor
+Full-corpus KD 2.1:
 
 - native: 39;
 - projectable: 505;
 - review_required: 78;
 - blocked: 0.
 
-Isso significa 544/622 (87,46%) nativos ou projetáveis para o futuro pipeline de normalização; nenhum bloqueio estrutural foi observado nesta classificação inicial.
+Isso é uma classificação de readiness; não autoriza migration.
 
-## Knowledge Document v1
+## G-245 — Production Preflight v1
 
-Implementado em memória:
+Branch dedicada:
 
-- `Canonical_JSON`;
-- `Knowledge_Document`;
-- schema `1.0.0`;
-- sections ordenadas;
-- structure canônica;
-- `source_hash`;
-- `document_hash`;
-- proveniência de extração;
-- readiness Elementor apenas informativa.
+`spec004-g245-production-readiness`
 
-Contrato: `knowledge-document-contract-v1.md`.
+Build inicial:
 
-### Hash semantics
+`0.4.0-g245-preflight.1`
 
-`source_hash` é baseado no conhecimento semanticamente extraído, não no JSON/HTML bruto.
+Novo componente:
 
-`document_hash` representa a projeção canônica da entidade editorial e exclui do payload do hash:
+`Production_Preflight`
 
-- `document_hash`;
-- `canonical_url`;
-- `modified_gmt`.
+Princípios:
 
-URL e data continuam presentes no documento como envelope operacional.
+1. read-only;
+2. nenhuma execução de shortcode;
+3. nenhuma chamada externa/loopback no v1;
+4. nenhuma persistência de resultado;
+5. nenhuma escrita em `post_content`;
+6. nenhuma escrita em `_elementor_data`;
+7. `writer_allowed=false` sempre;
+8. `migration_execution_allowed=false` sempre.
 
-## Testes locais
+O preflight coleta fatos do ambiente e classifica checks como:
 
-- Content Extractor: **14/14 PASS**;
-- Knowledge Document: **10/10 PASS**;
-- zero-write: PASS;
-- canonical JSON repetível: PASS;
-- alteração semântica/título/ordem altera hashes: PASS;
-- URL/data/ruído bruto não usado não contamina hashes semânticos: PASS.
+- `compatible`;
+- `review_required`;
+- `blocking`.
 
-## Package ambiental atual
+Checks iniciais:
 
-`0.4.0-smoke.2`
+- WordPress >= 6.6;
+- PHP >= 8.1;
+- DOMDocument;
+- Elementor carregado;
+- versão Elementor na matriz homologada;
+- backup confirmado quando target=production;
+- dependências observáveis de shortcodes;
+- WP-Cron;
+- loopback explicitamente não testado no v1.
 
-SHA-256:
+A matriz inicial reconhece apenas Elementor `4.1.0`, pois é a única versão já comprovada pela homologação atual. Versões diferentes exigem revisão; Elementor ausente bloqueia migration, mas não o knowledge plane read-only.
 
-`1466cd4fcd18120d0b2405bf04ec629230f23c2a2e759869a8123c45cedaf204`
+O preflight também inventaria plugins ativos e tenta mapear handlers de shortcodes usados para `plugin:<slug>`, `wordpress-core` ou `unknown`, sem exportar o corpo editorial.
 
-Validação do artefato:
+## Testes G-245 locais
 
-- 25 arquivos;
-- PHP lint extraído: 21/21 PASS;
-- JS syntax: PASS;
-- ZIP integrity: PASS;
-- parity: 25/25 PASS;
-- G-220 tests: 14/14 PASS;
-- G-230 tests: 10/10 PASS.
+`tests/unit/spec004-production-preflight.php`
 
-O profiler R-200 e o runner G-220 não fazem parte desse package. Somente o runner temporário G-230 está habilitado.
+Validações já exercitadas:
 
-## Direção editorial e produção
+- baseline homologada sem blocking;
+- versão Elementor desconhecida => review_required;
+- produção sem backup confirmado => blocking;
+- Elementor ausente => blocking para migration;
+- shortcode usado sem handler => review_required;
+- PHP abaixo de 8.1 => blocking.
 
-Elementor permanece padrão editorial futuro.
+Resultado local do incremento: **PHP lint PASS + 7/7 assertions PASS**.
 
-A arquitetura separa:
-
-1. knowledge plane read-only;
-2. editorial migration plane explícito.
-
-Migration editorial nunca roda em installation/activation/update e exige preflight, dry-run, stale-source guard, journal/rollback, canário e batches retomáveis.
-
-Contratos:
+## Contratos que governam G-245
 
 - `elementor-normalization-contract-v1.md`;
 - `production-rollout-contract-v1.md`.
 
+A arquitetura continua separando:
+
+1. knowledge plane read-only;
+2. editorial migration plane explícito.
+
+Migration editorial nunca roda em installation/activation/update.
+
 ## Próximo passo
 
-Executar `0.4.0-smoke.2` em homologação e retornar `bdc-kb-spec004-g230-smoke-*.json`.
+1. empacotar `0.4.0-g245-preflight.1`;
+2. validar ZIP/lint/paridade;
+3. instalar em homologação;
+4. abrir **Base de Conhecimento → Preflight G-245**;
+5. executar primeiro com target `Homologação`;
+6. retornar `bdc-kb-spec004-g245-preflight-*.json`;
+7. classificar os gaps reais antes de implementar Projection Plan.
 
-G-230 exige duas passagens completas de 622 documentos com:
+## Guardrails
 
-- zero errors;
-- zero throwables;
-- zero hash mismatches;
-- zero canonical JSON mismatches;
-- zero mutação editorial.
+- nenhuma migration está autorizada;
+- nenhum writer está habilitado;
+- nenhuma tabela/journal foi criada;
+- nenhum Knowledge Document é persistido;
+- preflight não é gate final de G-245;
+- produção não será usada como ambiente experimental.
+
+> Quem não sabe onde está, não sabe para onde quer ir.
+
+Baseline conhecida para o próximo avanço: **KD 2.1.0 / G-240 PASS / G-245 preflight read-only iniciado**.

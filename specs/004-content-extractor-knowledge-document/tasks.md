@@ -78,33 +78,37 @@ Achado positivo: todos os 8 casos preservaram cobertura textual, ordem e ausênc
 - [x] T079C4B Implementar namespace determinístico de IDs estruturais nos merges, sem alterar schema `2.0.0` ou critério do gate.
 - [x] T079C4C Adicionar regressão `spec004-structural-id-namespace.php` para duas listas/tabelas independentes.
 - [x] T079C4D Gerar/validar package `0.4.0-acceptance.4` para experimento full-corpus controlado.
-- [x] T079C5 Executar `Validação KD v2` com `acceptance.4`: `structure_incomplete` caiu de 82 para 78; mixed 5→2; Gutenberg 1→0; Legacy permaneceu 62; Elementor permaneceu 14.
-- [x] T079C5A Confirmar que desapareceram assinaturas `actual > expected`, comprovando a correção da classe de fusão/colisão de árvores.
-- [x] T079C5B Versionar `evidence/kd-v2-smoke-20260916T104818Z.json`.
-- [x] T079C6A Isolar segunda causa comprovável de listas: `list_item` vazio era descartado antes da projeção e podia deixar sublista com `parent_item_id` órfão.
-- [x] T079C6B Preservar `list_item` vazio como `structural_anchor=true`, mantendo `text=""`; `Semantic_Structure` aceita vazio somente quando a âncora é explícita.
-- [x] T079C6C Gerar e validar `0.4.0-acceptance.5` sem alterar o critério `structure_incomplete=0`.
-- [ ] T079C6D Executar `Validação KD v2` com `acceptance.5` e medir impacto em `lists`/`list_items` e no total de `structure_incomplete`.
-- [ ] T079C7 Se ainda houver divergência, instrumentar/corrigir somente a classe residual comprovada (headings/wrappers/tabelas), mantendo raw expected × semantic actual como guarda independente.
+- [x] T079C5 Executar `acceptance.4`: `structure_incomplete` 82→78; mixed 5→2; Gutenberg 1→0; assinaturas `actual > expected` eliminadas.
+- [x] T079C5A Versionar `evidence/kd-v2-smoke-20260916T104818Z.json`.
+- [x] T079C6A Isolar perda em listas aninhadas: `list_item` vazio descartado podia deixar sublista órfã.
+- [x] T079C6B Preservar `list_item` vazio como `structural_anchor=true`, `text=""`, sem inventar conteúdo.
+- [x] T079C6C Gerar e validar `0.4.0-acceptance.5`.
+- [x] T079C6D Executar `acceptance.5`: `structure_incomplete` 78→50; legacy 62→44; Elementor 14→5; mixed 2→1; `list_items` mismatch zerou; lists ficaram em 5 docs.
+- [x] T079C6E Versionar `evidence/kd-v2-smoke-20260916T112024Z.json`.
+- [x] T079C7A Isolar classe dominante residual: `headings` em 47 docs (`504 expected / 302 actual`), com assimetria entre contagem DOM profunda e allowlist de wrappers atravessados pelo parser.
+- [x] T079C7B Implementar recursão condicionada para wrappers desconhecidos que contenham descendentes estruturais, sem alterar comportamento de wrappers inline comuns.
+- [x] T079C7C Adicionar telemetria agregada `extraction_warnings` e diagnósticos de headings/tabelas/listas sem exportar IDs/títulos/URLs/conteúdo.
+- [x] T079C7D Gerar/validar `0.4.0-acceptance.6`; PHP lint 23/23, JS syntax, ZIP integrity, parity 27/27 e Git↔package blobs críticos iguais.
+- [ ] T079C7E Executar `Validação KD v2` com `acceptance.6` e medir redução dos 47 mismatches de headings, usando `extraction_warnings` para qualquer resíduo.
+- [ ] T079C8 Corrigir somente classe residual comprovada até `structure_incomplete=0`, sem relaxar raw expected × semantic actual.
 - [ ] T079D Reexecutar os mesmos 8 casos no `Aceitação G-240 v2` somente após full-corpus PASS.
 - [ ] T079E Fechar G-240 somente se os quatro critérios humanos passarem, sem stale/repeatability failure e com limitações refletidas em `ai_readiness`.
 
-### Evidência `acceptance.4`
+### Evidência `acceptance.5`
 
 - ambiente: WordPress `6.9.4`, PHP `8.5.10`, Elementor `4.1.0`, KD `2.0.0`, `DOMDocument=true`;
 - corpus `622 → 622`, duas passagens completas;
 - zero errors/throwables/hash mismatch/canonical JSON mismatch;
 - fingerprint editorial igual e zero posts alterados;
-- `structure_incomplete=78` nas duas passagens;
-- por source: 62 legacy_html, 14 elementor, 2 mixed; Gutenberg zerou;
+- `structure_incomplete=50` nas duas passagens;
+- por source: 44 legacy_html, 5 elementor, 1 mixed;
 - headings: 47 docs, expected 504, actual 302;
-- lists: 43 docs, expected 1150, actual 604;
-- list_items: 38 docs, expected 1450, actual 1001;
+- lists: 5 docs, expected 113, actual 96;
+- `list_items`: zero mismatch;
 - tables: 2 docs, expected 6, actual 4;
-- `ai_readiness`: 499 candidate_ready, 78 not_ready, 43 review_required, 2 not_applicable;
-- todas as assinaturas residuais são `expected > actual`.
+- `ai_readiness`: 523 candidate_ready, 50 not_ready, 47 review_required, 2 not_applicable.
 
-**Gate G-240: FAIL CONTROLADO / STRUCTURAL EMISSION REMEDIATION ACTIVE.**
+**Gate G-240: FAIL CONTROLADO / HEADING-WRAPPER REMEDIATION ACTIVE.**
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 

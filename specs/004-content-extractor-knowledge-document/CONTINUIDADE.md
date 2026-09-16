@@ -7,40 +7,59 @@
 - R-200: **PASS**.
 - R-210: **PASS**.
 - G-220 — Content Extractor: **PASS ambiental**.
-- G-230/v1 — Knowledge Document determinístico: **PASS ambiental**.
+- G-230/v1 — Knowledge Document determinístico: **PASS ambiental**; v1 permanece `SUPERSEDED_FOR_AI` após G-240 v1.
 - G-240/v1 — Real Content Acceptance: **FAIL CONTROLADO — perda estrutural**.
-- G-240/v2 — `acceptance.2` e `acceptance.3`: **FAIL CONTROLADO — 82/622 structure_incomplete**.
-- remediação atual: **correção controlada de colisões de IDs estruturais / `0.4.0-acceptance.4`**.
+- G-240/v2 — `acceptance.4`: **FAIL CONTROLADO — 78/622 structure_incomplete**.
+- remediação atual: **preservação de item-pai vazio como âncora estrutural / `0.4.0-acceptance.5`**.
 - branch: `spec004-g240-real-content-acceptance`.
 - PR #3: **DRAFT / NÃO MERGEAR** antes de G-240 v2 PASS.
 - G-245 — Elementor/produção: **BLOCKED por G-240**; writer proibido.
+- G-250: **NOT_RUN**.
 
-## Evidência G-240 v1
+## Contrato ativo
 
-- `evidence/g240-acceptance-20260916T085721Z.json`.
-- 8/8 slots revisados; 0/8 passaram; zero stale/repeatability/selection mismatch; fingerprint igual; zero posts alterados.
-- 8/8 cobertura completa; 8/8 ordem preservada; 8/8 sem texto inventado; 7/8 `structure_loss`.
+`knowledge-document-contract-v2.md` — **FROZEN `2.0.0`**.
 
-Conclusão: v1 determinístico e textual/ordinalmente fiel, porém estruturalmente insuficiente. v1 permanece `SUPERSEDED_FOR_AI`.
+Invariantes preservados:
 
-## Knowledge Document v2
+- construção read-only;
+- nenhuma persistência de documento/hash/cache/progresso;
+- nenhum write em `post_content`, `_elementor_data`, status, revisão ou publicação;
+- nenhum `do_shortcode()` genérico;
+- nenhum `render_block()` ou renderização dinâmica arbitrária;
+- nenhuma dependência de IA, Foundry, embeddings ou vetores;
+- `structure_incomplete=0` continua requisito obrigatório do smoke full-corpus.
 
-Contrato ativo: `knowledge-document-contract-v2.md` — **FROZEN `2.0.0`**.
+## Histórico resumido da remediação
 
-- `sections[]` para visão linear/diagnóstica;
-- `heading_path[]` explícito;
-- `blocks[]` semânticos;
-- listas ordered/unordered, profundidade, item ID, parent/children;
-- tabelas com caption, rows/cells, header/data, rowspan/colspan;
-- `ai_readiness` objetivo: candidate_ready/review_required/not_ready/not_applicable.
+### G-240 v1
 
-A pergunta subjetiva “aceitável para IA” permanece removida da aceitação humana.
+Evidência: `evidence/g240-acceptance-20260916T085721Z.json`.
 
-## Smoke `0.4.0-acceptance.3`
+- 8/8 slots revisados;
+- 8/8 cobertura textual completa;
+- 8/8 ordem preservada;
+- 8/8 sem texto inventado;
+- 7/8 com `structure_loss`.
 
-Evidência versionada:
+Conclusão: Knowledge Document v1 era determinístico, porém semanticamente plano demais para listas/tabelas/hierarquia.
 
-- `evidence/kd-v2-smoke-20260916T101517Z.json`.
+### `0.4.0-acceptance.3`
+
+Evidência: `evidence/kd-v2-smoke-20260916T101517Z.json`.
+
+- corpus 622/622 nas duas passagens;
+- zero errors/throwables/hash mismatch/canonical JSON mismatch;
+- fingerprint editorial idêntico;
+- zero posts alterados;
+- `structure_incomplete=82`;
+- distribuição: 62 legacy_html, 14 elementor, 5 mixed, 1 gutenberg.
+
+O diagnóstico encontrou assinaturas `actual > expected` em listas, compatíveis com fusão indevida de árvores por IDs locais repetidos.
+
+### `0.4.0-acceptance.4`
+
+Evidência: `evidence/kd-v2-smoke-20260916T104818Z.json`.
 
 Ambiente:
 
@@ -53,90 +72,98 @@ Ambiente:
 Segurança/determinismo:
 
 - corpus `622 → 622`;
-- fingerprint editorial idêntico;
-- `changed_posts_during_run=0`;
 - 622/622 documentos nas duas passagens;
-- zero errors/throwables;
-- zero hash mismatch;
-- zero canonical JSON mismatch.
+- zero errors;
+- zero throwables;
+- zero source/document hash mismatch;
+- zero canonical JSON mismatch;
+- fingerprint editorial antes/depois idêntico;
+- `changed_posts_during_run=0`.
 
-Bloqueio reproduzido:
+Resultado estrutural:
 
-- `structure_incomplete=82` nas duas passagens;
-- `ai_readiness`: 495 candidate_ready, 82 not_ready, 43 review_required, 2 not_applicable.
+- `structure_incomplete`: **82 → 78**;
+- legacy_html: **62 → 62**;
+- elementor: **14 → 14**;
+- mixed: **5 → 2**;
+- gutenberg: **1 → 0**;
+- `candidate_ready`: 495 → 499.
 
-Distribuição dos 82:
+Métricas residuais:
 
-- legacy_html: 62;
-- elementor: 14;
-- mixed: 5;
-- gutenberg: 1.
+- headings: 47 docs, expected 504, actual 302;
+- lists: 43 docs, expected 1150, actual 604;
+- list_items: 38 docs, expected 1450, actual 1001;
+- tables: 2 docs, expected 6, actual 4.
 
-Métricas divergentes:
+Conclusão importante: após o namespace estrutural, todas as assinaturas residuais passaram a ser `expected > actual`. A classe de fusão/colisão foi efetivamente removida; o resíduo é de **estrutura detectada na fonte mas não materializada em `blocks[]`**.
 
-- headings: 47 documentos, expected 504, actual 302;
-- lists: 47 documentos, expected 1196, actual 626;
-- list_items: 40 documentos, expected 1540, actual 1107;
-- tables: 8 documentos, expected 19, actual 10.
+## Segunda causa comprovada — item pai vazio de sublista
 
-As assinaturas também apresentam casos `actual > expected` para `list_items`, o que é compatível com fusão incorreta de árvores e não apenas estruturas vazias.
+O fluxo v2 identifica listas filhas por `parent_item_id`.
 
-## Diagnóstico técnico
+Antes do `acceptance.5`, um `<li>` cujo texto próprio normalizado fosse vazio era descartado por `Content_Normalizer::fragment()`, mesmo quando continha uma `<ul>/<ol>` filha. A sublista permanecia com `parent_item_id`, porém o item-pai não existia na projeção. O resultado era uma subárvore órfã que não podia ser materializada corretamente pelo `Semantic_Structure`.
 
-Foram identificadas duas classes potenciais, mantidas separadas:
+Esse caso explica uma classe objetiva de `expected > actual` em `lists`/`list_items` sem necessidade de relaxar o gate.
 
-1. **colisão de IDs estruturais locais entre parciais**: cada widget/bloco pode produzir `list-0`, `table-0`, etc.; ao combinar resultados, `Semantic_Structure` agrupa por esses IDs e pode fundir estruturas independentes;
-2. **Legacy HTML**: as 62 divergências restantes podem envolver diferença entre estrutura DOM observada e estrutura semanticamente emitida. Essa segunda causa ainda não será corrigida sem evidência adicional.
+## `0.4.0-acceptance.5`
 
-## `0.4.0-acceptance.4` — correção experimental isolada
+Correção isolada:
 
-Escopo desta rodada: corrigir **somente** a classe 1.
+1. `Content_Normalizer::fragment()` preserva `list_item` de texto vazio quando existe identidade estrutural válida (`list_id` + `item_id`);
+2. o fragmento recebe `meta.structural_anchor=true`;
+3. `text` permanece `""` — nenhum conteúdo é inventado;
+4. `Semantic_Structure::sections()` aceita texto vazio somente nesse caso explicitamente marcado;
+5. a sublista volta a encontrar o item-pai e mantém a relação pai/filho;
+6. o mesmo `structure_complete` continua comparando expected × actual sem tolerância ou compensação.
 
-Foi introduzido namespace determinístico de `list_id`, `item_id`, `parent_item_id`, `table_id` e `image_id` antes de merges em:
+Deliberadamente não alterados nesta rodada:
 
+- `Legacy_HTML_Adapter`;
 - Elementor Adapter;
 - Gutenberg Adapter;
-- Content Extractor.
-
-O helper canônico está em `Content_Normalizer::namespace_structural_ids()`.
-
-Deliberadamente não alterados:
-
-- Legacy HTML parser;
-- `Semantic_Structure`;
 - Knowledge Document schema/hash contract;
-- regra `structure_incomplete=0`.
+- runner ambiental KD v2;
+- política de shortcodes;
+- critério `structure_incomplete=0`;
+- qualquer writer/migration Elementor.
 
-Regressão dedicada `tests/unit/spec004-structural-id-namespace.php` garante que duas listas/tabelas com IDs locais iguais permanecem estruturas independentes após merge.
+Regressões:
+
+- `tests/unit/spec004-structural-id-namespace.php`;
+- `tests/unit/spec004-empty-list-anchor.php`.
 
 Package:
 
-- `package-acceptance4.md`;
-- versão `0.4.0-acceptance.4`;
-- SHA-256 `f70066dcf915f8e62428b7fe43becce3ea476be92f489305fbd59c3a19658159`;
+- `package-acceptance5.md`;
+- versão `0.4.0-acceptance.5`;
+- SHA-256 `43c5783263683c44ce98fdb1196b0d289e5cf1fe779df698f23bbccc04aca51c`;
 - PHP lint 23/23 PASS;
 - JS syntax PASS;
 - ZIP integrity PASS;
-- package parity 27/27 PASS;
+- staging ↔ ZIP parity 27/27 PASS;
 - KD v2 regression 12/12 PASS;
-- namespace regression PASS;
+- namespace regression 6/6 PASS;
+- structural-anchor regression PASS;
 - safety scan PASS.
+
+Limitação local: o PHP CLI utilizado para validação não possui `DOMDocument`; portanto o caminho DOM real permanece para validação ambiental. A homologação observada possui `DOMDocument=true`.
 
 ## Sequência obrigatória atual
 
-1. instalar/substituir pelo `0.4.0-acceptance.4` em homologação;
-2. **não executar Aceitação G-240 v2**;
+1. instalar/substituir pelo `0.4.0-acceptance.5` em homologação;
+2. **não executar ainda Aceitação G-240 v2**;
 3. executar somente **Base de Conhecimento → Validação KD v2**;
-4. comparar distribuição de `structure_incomplete` contra `acceptance.3`;
-5. se Elementor/mixed/Gutenberg zerarem ou reduzirem conforme esperado, considerar comprovada a correção de colisões;
-6. se Legacy permanecer, diagnosticar/corrigir apenas sua causa comprovada;
-7. repetir full-corpus até `structure_incomplete=0` com zero mutation/determinismo intacto;
-8. somente então reexecutar os mesmos 8 casos da Aceitação G-240 v2;
+4. retornar o novo `bdc-kb-spec004-kd-v2-smoke-*.json`;
+5. exigir novamente corpus invariável, fingerprint igual, zero writes/errors/throwables/hash mismatch/JSON mismatch;
+6. medir especialmente a redução de `lists` e `list_items`;
+7. se `structure_incomplete=0`, reexecutar os mesmos oito casos A/B do G-240 v2;
+8. se ainda houver resíduo, instrumentar/corrigir somente a classe restante comprovada — headings/wrappers/tabelas — sem alterar o gate;
 9. somente G-240 v2 PASS libera G-245.
 
 ## Amostra A/B congelada
 
-O reteste humano continua usando exatamente os mesmos oito posts do G-240 v1 e os fingerprints anteriores como baseline. Qualquer alteração editorial torna o slot `stale`.
+O reteste humano continua usando exatamente os mesmos oito posts do G-240 v1 e seus fingerprints anteriores como baseline. Qualquer alteração editorial posterior torna o slot `stale`.
 
 ## Produção / Elementor
 
@@ -155,6 +182,6 @@ Permanece inalterado:
 - G-220: **PASS**.
 - G-230/v1: **PASS determinístico**.
 - G-240/v1: **FAIL CONTROLADO — STRUCTURE LOSS**.
-- G-240/v2: **FAIL CONTROLADO / COLLISION REMEDIATION ENV SMOKE PENDING**.
+- G-240/v2: **FAIL CONTROLADO / `acceptance.5` ENV SMOKE PENDING**.
 - G-245: **BLOCKED**.
 - G-250: **NOT_RUN**.

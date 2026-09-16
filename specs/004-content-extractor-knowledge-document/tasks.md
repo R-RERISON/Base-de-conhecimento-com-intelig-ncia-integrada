@@ -8,6 +8,7 @@
 - G-230/v1: PASS de determinismo; v1 superseded for AI.
 - G-240/v1: FAIL CONTROLADO — perda estrutural.
 - G-240/v2/KD 2.0.1: full-corpus técnico PASS, porém aceite humano A/B **FAIL CONTROLADO — HIERARCHY FIDELITY**.
+- KD 2.1.0 / build `0.4.0-acceptance.12`: implementação pronta para validação ambiental.
 - G-245: BLOCKED.
 - G-250: NOT_RUN.
 
@@ -20,18 +21,12 @@
 - [x] Preservar structural anchors de listas.
 - [x] Introduzir expectativa semântica DOM independente.
 - [x] Corrigir materialização de listas/tabelas no Legacy adapter.
-- [x] Atingir full-corpus PASS no `0.4.0-acceptance.11` / KD `2.0.1`:
-  - 622/622 em duas passagens;
-  - zero errors/throwables;
-  - zero hash/canonical JSON mismatch;
-  - zero `structure_incomplete`;
-  - zero `not_ready`;
-  - zero write editorial.
+- [x] Atingir full-corpus PASS no `0.4.0-acceptance.11` / KD `2.0.1`.
 - [x] Executar A/B humano nos mesmos oito posts do G-240 v1.
 - [x] Versionar `evidence/g240-v2-acceptance-20260916T153610Z.json`.
 - [x] Registrar `g240-v2-hierarchy-gap-analysis-20260916.md`.
 
-### Resultado humano atual
+### Baseline humana
 
 - 8/8 revisados;
 - cobertura completa 8/8;
@@ -44,19 +39,19 @@
 - sample mismatch 0;
 - gate=false.
 
-### Próxima evolução — KD `2.1.0`
+### Evolução — KD `2.1.0`
 
-- [ ] T079F Congelar contrato `knowledge-document-contract-v2.1.0.md` para hierarchy fidelity.
-- [ ] T079G Implementar expected/actual relationship fidelity independente de contagens: parent edges, max depth, sibling order e tree signature.
-- [ ] T079H Implementar `Numbered_Hierarchy_Resolver` conservador para `1`, `1.1`, `1.2`, `1.2.1`, sem cruzar contexto semântico.
-- [ ] T079I Adicionar proveniência/confiança de hierarquia: `explicit_dom|numbering_inferred|heading_inferred|flat` e `authoritative|deterministic|ambiguous`.
-- [ ] T079J Fazer DOM explícito vencer numeração; conflito → `HIERARCHY_NUMBERING_CONFLICT` + `review_required`.
-- [ ] T079K Sinal hierárquico forte não resolvido → `HIERARCHY_AMBIGUOUS`; nunca `candidate_ready`.
-- [ ] T079L Corrigir acceptance gate: `review_required` humanamente aprovado não falha automaticamente; `not_ready` continua bloqueante.
-- [ ] T079M Testes sintéticos: árvore DOM explícita, numeração resolvível, conflito, ambiguidade, versão/IP não confundidos com outline.
-- [ ] T079N Reexecutar full-corpus com relacionamento/hierarquia até zero perda explícita/ambígua bloqueante.
+- [x] T079F Congelar contrato `knowledge-document-contract-v2.1.0.md` para hierarchy fidelity.
+- [x] T079G Implementar expected/actual relationship fidelity independente de contagens: parent edges, max depth, sibling order e tree signature.
+- [x] T079H Implementar `Numbered_Hierarchy_Resolver` conservador para `1`, `1.1`, `1.2`, `1.2.1`, sem cruzar source + `heading_path`.
+- [x] T079I Adicionar proveniência/confiança de hierarquia: `explicit_dom|numbering_inferred|heading_inferred|flat` e `authoritative|deterministic|ambiguous`.
+- [x] T079J Fazer DOM explícito vencer numeração; conflito → `HIERARCHY_NUMBERING_CONFLICT` + `review_required`.
+- [x] T079K Sinal hierárquico forte não resolvido → `HIERARCHY_AMBIGUOUS`; nunca `candidate_ready`.
+- [x] T079L Corrigir acceptance gate: `review_required` humanamente aprovado não falha automaticamente; `not_ready` continua bloqueante.
+- [x] T079M Testes sintéticos de árvore explícita, numeração resolvível, conflito DOM×numeração, ambiguidade, token isolado e IPv4 não confundido com outline.
+- [ ] T079N Reexecutar full-corpus com KD 2.1.0 / `0.4.0-acceptance.12`; analisar todos os `HIERARCHY_*` e atingir gate técnico aceitável.
 - [ ] T079O Reexecutar os mesmos oito casos A/B.
-- [ ] T079P Fechar G-240 somente após 8/8 estrutura humana preservada e limitações explicitamente refletidas no readiness.
+- [ ] T079P Fechar G-240 somente após 8/8 estrutura humana preservada, `gate_pass=true` e limitações refletidas no readiness.
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 

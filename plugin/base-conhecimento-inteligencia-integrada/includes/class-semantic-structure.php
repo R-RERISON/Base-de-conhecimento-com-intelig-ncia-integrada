@@ -92,6 +92,7 @@ final class Semantic_Structure {
 				if ( ! is_array( $list ) ) {
 					continue;
 				}
+				// Listas filhas são embutidas no item pai e não emitidas como top-level.
 				if ( '' !== (string) ( $list['parent_item_id'] ?? '' ) ) {
 					$emitted_lists[ $list_id ] = true;
 					continue;
@@ -355,7 +356,6 @@ final class Semantic_Structure {
 				if ( is_array( $child ) ) {
 					self::count_list_tree( $child, $actual );
 				}
-			}
 		}
 	}
 }

@@ -129,6 +129,7 @@ final class Content_Extractor {
 
 		if ( $flags['has_html'] || $flags['has_registered_shortcode_syntax'] ) {
 			$result = Legacy_HTML_Adapter::extract( $content, 'post_content' );
+			$result = Semantic_DOM_Expectation::apply( $content, $result );
 			$result['strategy'] = 'legacy_html';
 			return $result;
 		}

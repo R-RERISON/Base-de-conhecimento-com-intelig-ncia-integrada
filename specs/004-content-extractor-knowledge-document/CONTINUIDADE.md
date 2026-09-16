@@ -9,8 +9,8 @@
 - G-220 — Content Extractor: **PASS ambiental**.
 - G-230/v1 — Knowledge Document determinístico: **PASS ambiental**; v1 permanece `SUPERSEDED_FOR_AI` após G-240 v1.
 - G-240/v1 — Real Content Acceptance: **FAIL CONTROLADO — perda estrutural**.
-- G-240/v2 — `acceptance.4`: **FAIL CONTROLADO — 78/622 structure_incomplete**.
-- remediação atual: **preservação de item-pai vazio como âncora estrutural / `0.4.0-acceptance.5`**.
+- G-240/v2 — `acceptance.5`: **FAIL CONTROLADO — 50/622 structure_incomplete**.
+- remediação atual: **travessia de wrappers estruturais legados / `0.4.0-acceptance.6`**.
 - branch: `spec004-g240-real-content-acceptance`.
 - PR #3: **DRAFT / NÃO MERGEAR** antes de G-240 v2 PASS.
 - G-245 — Elementor/produção: **BLOCKED por G-240**; writer proibido.
@@ -48,18 +48,24 @@ Conclusão: Knowledge Document v1 era determinístico, porém semanticamente pla
 
 Evidência: `evidence/kd-v2-smoke-20260916T101517Z.json`.
 
-- corpus 622/622 nas duas passagens;
-- zero errors/throwables/hash mismatch/canonical JSON mismatch;
-- fingerprint editorial idêntico;
-- zero posts alterados;
 - `structure_incomplete=82`;
-- distribuição: 62 legacy_html, 14 elementor, 5 mixed, 1 gutenberg.
-
-O diagnóstico encontrou assinaturas `actual > expected` em listas, compatíveis com fusão indevida de árvores por IDs locais repetidos.
+- 62 legacy_html, 14 elementor, 5 mixed, 1 gutenberg;
+- havia assinaturas `actual > expected`, compatíveis com colisão/fusão de IDs estruturais locais.
 
 ### `0.4.0-acceptance.4`
 
 Evidência: `evidence/kd-v2-smoke-20260916T104818Z.json`.
+
+- `structure_incomplete`: **82 → 78**;
+- mixed: **5 → 2**;
+- gutenberg: **1 → 0**;
+- todas as assinaturas `actual > expected` desapareceram.
+
+Conclusão: namespace determinístico removeu a classe de fusão/colisão; o resíduo passou a ser exclusivamente `expected > actual`.
+
+### `0.4.0-acceptance.5`
+
+Evidência: `evidence/kd-v2-smoke-20260916T112024Z.json`.
 
 Ambiente:
 
@@ -73,92 +79,84 @@ Segurança/determinismo:
 
 - corpus `622 → 622`;
 - 622/622 documentos nas duas passagens;
-- zero errors;
-- zero throwables;
+- zero errors/throwables;
 - zero source/document hash mismatch;
 - zero canonical JSON mismatch;
-- fingerprint editorial antes/depois idêntico;
+- fingerprint editorial idêntico;
 - `changed_posts_during_run=0`.
 
 Resultado estrutural:
 
-- `structure_incomplete`: **82 → 78**;
-- legacy_html: **62 → 62**;
-- elementor: **14 → 14**;
-- mixed: **5 → 2**;
-- gutenberg: **1 → 0**;
-- `candidate_ready`: 495 → 499.
+- `structure_incomplete`: **78 → 50**;
+- legacy_html: **62 → 44**;
+- elementor: **14 → 5**;
+- mixed: **2 → 1**;
+- `candidate_ready`: **499 → 523**;
+- `list_items` mismatch: **38 docs → 0**;
+- lists mismatch: **43 docs → 5**;
+- headings: **47 docs**, expected `504`, actual `302`;
+- tables: 2 docs, expected `6`, actual `4`.
 
-Métricas residuais:
+Conclusão: a âncora estrutural vazia resolveu a perda de relação pai/filho em listas aninhadas. O gargalo passou a ser predominantemente heading traversal.
 
-- headings: 47 docs, expected 504, actual 302;
-- lists: 43 docs, expected 1150, actual 604;
-- list_items: 38 docs, expected 1450, actual 1001;
-- tables: 2 docs, expected 6, actual 4.
+## Terceira causa comprovada — wrappers estruturais não atravessados
 
-Conclusão importante: após o namespace estrutural, todas as assinaturas residuais passaram a ser `expected > actual`. A classe de fusão/colisão foi efetivamente removida; o resíduo é de **estrutura detectada na fonte mas não materializada em `blocks[]`**.
+`Legacy_HTML_Adapter::collect_structure()` conta headings/listas/tabelas em qualquer profundidade do DOM.
 
-## Segunda causa comprovada — item pai vazio de sublista
+Entretanto o walker histórico atravessava recursivamente apenas uma allowlist limitada de wrappers (`div`, `section`, `article`, `main`, `header`, `footer`, `aside`, `nav`, `figure`, `figcaption`). Um wrapper legado ou desconhecido contendo heading/lista/tabela podia ser contado na origem e depois achatado como texto, impedindo a materialização do descendente em `blocks[]`.
 
-O fluxo v2 identifica listas filhas por `parent_item_id`.
+Essa assimetria é especialmente compatível com o padrão residual do `acceptance.5`: 47/50 documentos divergentes por headings, sem `actual > expected`.
 
-Antes do `acceptance.5`, um `<li>` cujo texto próprio normalizado fosse vazio era descartado por `Content_Normalizer::fragment()`, mesmo quando continha uma `<ul>/<ol>` filha. A sublista permanecia com `parent_item_id`, porém o item-pai não existia na projeção. O resultado era uma subárvore órfã que não podia ser materializada corretamente pelo `Semantic_Structure`.
+## `0.4.0-acceptance.6`
 
-Esse caso explica uma classe objetiva de `expected > actual` em `lists`/`list_items` sem necessidade de relaxar o gate.
+Correção controlada:
 
-## `0.4.0-acceptance.5`
+1. wrappers conhecidos continuam seguindo o comportamento anterior;
+2. wrappers inline comuns sem descendentes estruturais continuam achatados como texto;
+3. wrapper desconhecido só é atravessado quando contém descendant semanticamente estrutural (`h1..h6`, `p`, `ul/ol`, `table`, `blockquote`, `pre`, `img`);
+4. nenhum tema/widget/shortcode/bloco dinâmico é renderizado;
+5. a regra `structure_incomplete=0` permanece inalterada.
 
-Correção isolada:
+Telemetria temporária:
 
-1. `Content_Normalizer::fragment()` preserva `list_item` de texto vazio quando existe identidade estrutural válida (`list_id` + `item_id`);
-2. o fragmento recebe `meta.structural_anchor=true`;
-3. `text` permanece `""` — nenhum conteúdo é inventado;
-4. `Semantic_Structure::sections()` aceita texto vazio somente nesse caso explicitamente marcado;
-5. a sublista volta a encontrar o item-pai e mantém a relação pai/filho;
-6. o mesmo `structure_complete` continua comparando expected × actual sem tolerância ou compensação.
+- report sobe para schema `1.2.0`;
+- agrega `extraction_warnings`;
+- `HTML_STRUCTURAL_WRAPPER_TRAVERSED:<tag>`;
+- `HTML_DIAG_EMPTY_HEADINGS:<count>`;
+- `HTML_DIAG_HEADINGS_IN_TABLE:<count>`;
+- `HTML_DIAG_HEADINGS_IN_LIST:<count>`;
+- `HTML_DIAG_NESTED_TABLES:<count>`;
+- `HTML_DIAG_LISTS_IN_TABLES:<count>`.
 
-Deliberadamente não alterados nesta rodada:
-
-- `Legacy_HTML_Adapter`;
-- Elementor Adapter;
-- Gutenberg Adapter;
-- Knowledge Document schema/hash contract;
-- runner ambiental KD v2;
-- política de shortcodes;
-- critério `structure_incomplete=0`;
-- qualquer writer/migration Elementor.
-
-Regressões:
-
-- `tests/unit/spec004-structural-id-namespace.php`;
-- `tests/unit/spec004-empty-list-anchor.php`.
+A telemetria não exporta IDs, títulos, URLs ou conteúdo e não altera `ai_readiness` por si só.
 
 Package:
 
-- `package-acceptance5.md`;
-- versão `0.4.0-acceptance.5`;
-- SHA-256 `43c5783263683c44ce98fdb1196b0d289e5cf1fe779df698f23bbccc04aca51c`;
+- `package-acceptance6.md`;
+- versão `0.4.0-acceptance.6`;
+- SHA-256 `e9879812b670b0a322920e137e4f1027808a92f93faae24ce7ece8122c9f3e09`;
 - PHP lint 23/23 PASS;
 - JS syntax PASS;
 - ZIP integrity PASS;
 - staging ↔ ZIP parity 27/27 PASS;
-- KD v2 regression 12/12 PASS;
-- namespace regression 6/6 PASS;
-- structural-anchor regression PASS;
-- safety scan PASS.
+- safety scan PASS;
+- blobs críticos Git ↔ package iguais:
+  - bootstrap `144415925f7d86c240f56c8235a91d2724a907eb`;
+  - Legacy adapter `6c7061111d9acd47b4ebe044f8b44eac4efe0a41`;
+  - smoke v2 `ea5c415b1d1b99b84168e5cd999050ec511ae7c2`.
 
 Limitação local: o PHP CLI utilizado para validação não possui `DOMDocument`; portanto o caminho DOM real permanece para validação ambiental. A homologação observada possui `DOMDocument=true`.
 
 ## Sequência obrigatória atual
 
-1. instalar/substituir pelo `0.4.0-acceptance.5` em homologação;
+1. instalar/substituir pelo `0.4.0-acceptance.6` em homologação;
 2. **não executar ainda Aceitação G-240 v2**;
 3. executar somente **Base de Conhecimento → Validação KD v2**;
 4. retornar o novo `bdc-kb-spec004-kd-v2-smoke-*.json`;
-5. exigir novamente corpus invariável, fingerprint igual, zero writes/errors/throwables/hash mismatch/JSON mismatch;
-6. medir especialmente a redução de `lists` e `list_items`;
+5. exigir corpus invariável, fingerprint igual, zero writes/errors/throwables/hash mismatch/JSON mismatch;
+6. medir especialmente redução de `headings` e ler `extraction_warnings` para qualquer resíduo;
 7. se `structure_incomplete=0`, reexecutar os mesmos oito casos A/B do G-240 v2;
-8. se ainda houver resíduo, instrumentar/corrigir somente a classe restante comprovada — headings/wrappers/tabelas — sem alterar o gate;
+8. se ainda houver resíduo, corrigir somente a classe comprovada — por exemplo headings dentro de tabelas/listas, headings vazios, nested tables — sem alterar o gate;
 9. somente G-240 v2 PASS libera G-245.
 
 ## Amostra A/B congelada
@@ -182,6 +180,6 @@ Permanece inalterado:
 - G-220: **PASS**.
 - G-230/v1: **PASS determinístico**.
 - G-240/v1: **FAIL CONTROLADO — STRUCTURE LOSS**.
-- G-240/v2: **FAIL CONTROLADO / `acceptance.5` ENV SMOKE PENDING**.
+- G-240/v2: **FAIL CONTROLADO / `acceptance.6` ENV SMOKE PENDING**.
 - G-245: **BLOCKED**.
 - G-250: **NOT_RUN**.

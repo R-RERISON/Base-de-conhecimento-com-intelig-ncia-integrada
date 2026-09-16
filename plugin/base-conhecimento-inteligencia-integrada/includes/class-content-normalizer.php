@@ -53,8 +53,16 @@ final class Content_Normalizer {
 		bool $preserve_whitespace = false
 	): ?array {
 		$text = self::text( $text, $preserve_whitespace );
-		if ( '' === $text ) {
+		$structural_anchor = 'list_item' === $kind
+			&& '' === $text
+			&& '' !== (string) ( $meta['list_id'] ?? '' )
+			&& '' !== (string) ( $meta['item_id'] ?? '' );
+
+		if ( '' === $text && ! $structural_anchor ) {
 			return null;
+		}
+		if ( $structural_anchor ) {
+			$meta['structural_anchor'] = true;
 		}
 
 		$fragment = array(

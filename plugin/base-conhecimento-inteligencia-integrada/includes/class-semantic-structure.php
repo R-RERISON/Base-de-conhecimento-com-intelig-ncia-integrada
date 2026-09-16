@@ -28,15 +28,16 @@ final class Semantic_Structure {
 				continue;
 			}
 			$kind = isset( $fragment['kind'] ) ? (string) $fragment['kind'] : 'paragraph';
+			$meta = is_array( $fragment['meta'] ?? null ) ? $fragment['meta'] : array();
 			$text = Content_Normalizer::text(
 				isset( $fragment['text'] ) ? (string) $fragment['text'] : '',
 				'code' === $kind
 			);
-			if ( '' === $text ) {
+			$structural_anchor = 'list_item' === $kind && true === ( $meta['structural_anchor'] ?? false );
+			if ( '' === $text && ! $structural_anchor ) {
 				continue;
 			}
 
-			$meta = is_array( $fragment['meta'] ?? null ) ? $fragment['meta'] : array();
 			if ( 'heading' === $kind ) {
 				$level = max( 1, min( 6, (int) ( $meta['level'] ?? 1 ) ) );
 				foreach ( array_keys( $heading_stack ) as $existing_level ) {

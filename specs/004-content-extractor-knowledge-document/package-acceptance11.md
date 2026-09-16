@@ -34,6 +34,10 @@ SHA-256: `c96e91bb5947d882ae636c0cc2a4bd1e9f08f05efe29dc1c6d6164908cbe81e1`
 - Git↔package bootstrap: `653b4c9915a4abafb17fa2e3ffa474f66b05dbb5`;
 - Git↔package Legacy adapter: `d1b606ed24c9e1963981f4aeec3931a3d56c8894`.
 
+## Status
+
+**PACKAGE READY / ENV SMOKE PENDING.**
+
 ## Próximo gate ambiental
 
 Executar somente **Base de Conhecimento → Validação KD v2** e exigir:

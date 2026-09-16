@@ -10,7 +10,7 @@
 - G-240/v2/KD 2.0.1: full-corpus técnico PASS, porém aceite humano A/B **FAIL CONTROLADO — HIERARCHY FIDELITY**.
 - KD 2.1.0 / build `0.4.0-acceptance.12`: full-corpus técnico PASS + aceite humano 8/8 PASS.
 - **G-240: PASS / CLOSED.**
-- **G-245: IN PROGRESS — preflight read-only iniciado.**
+- **G-245: IN PROGRESS — T080 preflight concluído; Projection Plan read-only aberto.**
 - G-250: NOT_RUN.
 
 ## S005 — G-240 / Real Content Acceptance
@@ -65,9 +65,9 @@
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 
-**Status: IN PROGRESS — somente preflight read-only.**
+**Status: IN PROGRESS — somente subgates read-only autorizados.**
 
-### T080 — Production Preflight
+### T080 — Production Preflight — PASS WITH REVIEW ITEMS
 
 - [x] T080A Criar branch dedicada `spec004-g245-production-readiness` baseada no head aprovado de G-240.
 - [x] T080B Implementar `Production_Preflight` sem persistência, sem execução de shortcodes e sem rede externa.
@@ -77,12 +77,33 @@
 - [x] T080F Garantir `writer_allowed=false` e `migration_execution_allowed=false` independentemente do resultado do preflight.
 - [x] T080G Adicionar testes locais de política; lint PASS e 7/7 cenários PASS.
 - [x] T080H Gerar package `0.4.0-g245-preflight.1`; 29/29 PHP lint PASS, ZIP integrity PASS e paridade Git PASS.
-- [ ] T080I Executar preflight em homologação e versionar evidência JSON.
-- [ ] T080J Classificar gaps reais encontrados e congelar matriz de compatibilidade inicial.
+- [x] T080I Executar preflight em homologação e versionar evidência: zero blockers, dois review items, corpus 622→622 e fingerprint editorial idêntico.
+- [x] T080J Classificar gaps e congelar `g245-compatibility-matrix-v1.md`.
 
-### Próximos subgates após T080
+#### Evidência T080
 
-- [ ] Projection Plan read-only.
+- `evidence/g245-preflight-summary-20260916T215612Z.json`.
+- raw artifact SHA-256: `5b9e561b0d0053d6a4fe8fbcbc16cf45107620b1bd72d48517b17e54371c80da`.
+- runtime: WordPress `6.9.4`, PHP `8.5.10`, Elementor `4.1.0`, MariaDB `12.2.2`, DOMDocument ativo, WP-Cron habilitado.
+- blockers: 0.
+- review items: shortcodes legados sem handler (`faq_wd`, `wpt`) e loopback não testado.
+- `faq_wd`: classificado como legacy orphan; origem histórica externa compatível com 10WebFAQ/FAQ WD, ausente do runtime ativo.
+- `wpt`: origem não comprovada; permanece unknown legacy dependency.
+- esses gaps não bloqueiam Projection Plan read-only, mas continuam impedindo execução dinâmica/writer.
+
+### T081 — Projection Plan read-only
+
+- [ ] T081A Congelar contrato `elementor-projection-plan-contract-v1.md`.
+- [ ] T081B Implementar projeção determinística por `source_kind` sem persistência.
+- [ ] T081C Emitir `source_hash_before`, `projection_schema_version`, `projection_strategy`, `projection_hash`, warnings e `requires_review`.
+- [ ] T081D Preservar shortcodes como dependências opacas; nunca executar `do_shortcode()`.
+- [ ] T081E Forçar `requires_review=true` quando houver `faq_wd`, `wpt`, shortcode sem handler, conteúdo dinâmico ou compatibilidade `review_required`.
+- [ ] T081F Garantir plano canônico e repetível para o mesmo source hash.
+- [ ] T081G Adicionar testes de estratégias native/projectable/review_required e zero-write.
+- [ ] T081H Criar runner ambiental temporário para full-corpus de Projection Plan em duas passagens.
+
+### Próximos subgates após T081
+
 - [ ] Elementor_Gateway version-gated com writer disabled-by-default.
 - [ ] Journal/rollback.
 - [ ] Dry-run.
@@ -104,3 +125,4 @@ A abertura de G-245 autoriza apenas os subgates previstos. **Nenhum writer/migra
 7. G-240 PASS habilita a preparação de G-245, mas não autoriza persistência editorial automaticamente.
 8. Writer/migration Elementor permanecem disabled-by-default até aprovação explícita dos subgates de G-245.
 9. Preflight nunca é autorização de escrita; sua função é produzir fatos e bloqueios auditáveis.
+10. Projection Plan é documento derivado read-only; sua existência nunca autoriza write por efeito colateral.

@@ -101,7 +101,7 @@ final class Elementor_Adapter {
 	 */
 	private static function merge_result( array &$target, array $source ): void {
 		$namespace = 'elementor-merge-' . count( $target['fragments'] );
-		$source['fragments'] = Legacy_HTML_Adapter::namespace_fragments( $source['fragments'], $namespace );
+		$source['fragments'] = Content_Normalizer::namespace_structural_ids( $source['fragments'], $namespace );
 		foreach ( $source['fragments'] as $fragment ) {
 			$fragment['ordinal'] = count( $target['fragments'] );
 			$target['fragments'][] = $fragment;

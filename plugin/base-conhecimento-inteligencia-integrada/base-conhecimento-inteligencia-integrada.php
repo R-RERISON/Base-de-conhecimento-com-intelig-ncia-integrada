@@ -19,7 +19,8 @@ define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD', true );
 define( 'BDC_KB_SPEC004_KD_V2_SMOKE_BUILD', true );
-define( 'BDC_KB_SPEC004_FINAL_STRUCTURE_DIAG_BUILD', true );
+define( 'BDC_KB_SPEC004_FINAL_DIAG_BUILD', true );
+define( 'BDC_KB_SPEC004_PIPELINE_DIAG_BUILD', true );
 define( 'BDC_KB_FILE', __FILE__ );
 define( 'BDC_KB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
@@ -58,11 +59,14 @@ if ( defined( 'BDC_KB_SPEC004_G230_SMOKE_BUILD' ) && BDC_KB_SPEC004_G230_SMOKE_B
 if ( defined( 'BDC_KB_SPEC004_KD_V2_SMOKE_BUILD' ) && BDC_KB_SPEC004_KD_V2_SMOKE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-knowledge-document-v2-smoke.php';
 }
+if ( defined( 'BDC_KB_SPEC004_FINAL_DIAG_BUILD' ) && BDC_KB_SPEC004_FINAL_DIAG_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-final-structure-diagnostic.php';
+}
 if ( defined( 'BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD' ) && BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-real-content-acceptance-v2.php';
 }
-if ( defined( 'BDC_KB_SPEC004_FINAL_STRUCTURE_DIAG_BUILD' ) && BDC_KB_SPEC004_FINAL_STRUCTURE_DIAG_BUILD ) {
-	require_once BDC_KB_DIR . 'includes/class-final-structure-diagnostic.php';
+if ( defined( 'BDC_KB_SPEC004_PIPELINE_DIAG_BUILD' ) && BDC_KB_SPEC004_PIPELINE_DIAG_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-pipeline-structure-diagnostic.php';
 }
 
 \BDC\KnowledgeBase\Plugin::register();
@@ -78,9 +82,12 @@ if ( defined( 'BDC_KB_SPEC004_G230_SMOKE_BUILD' ) && BDC_KB_SPEC004_G230_SMOKE_B
 if ( defined( 'BDC_KB_SPEC004_KD_V2_SMOKE_BUILD' ) && BDC_KB_SPEC004_KD_V2_SMOKE_BUILD ) {
 	\BDC\KnowledgeBase\Knowledge_Document_V2_Smoke::register();
 }
+if ( defined( 'BDC_KB_SPEC004_FINAL_DIAG_BUILD' ) && BDC_KB_SPEC004_FINAL_DIAG_BUILD ) {
+	\BDC\KnowledgeBase\Final_Structure_Diagnostic::register();
+}
 if ( defined( 'BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD' ) && BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD ) {
 	\BDC\KnowledgeBase\Real_Content_Acceptance_V2::register();
 }
-if ( defined( 'BDC_KB_SPEC004_FINAL_STRUCTURE_DIAG_BUILD' ) && BDC_KB_SPEC004_FINAL_STRUCTURE_DIAG_BUILD ) {
-	\BDC\KnowledgeBase\Final_Structure_Diagnostic::register();
+if ( defined( 'BDC_KB_SPEC004_PIPELINE_DIAG_BUILD' ) && BDC_KB_SPEC004_PIPELINE_DIAG_BUILD ) {
+	\BDC\KnowledgeBase\Pipeline_Structure_Diagnostic::register();
 }

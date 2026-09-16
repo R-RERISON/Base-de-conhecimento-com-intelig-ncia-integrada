@@ -308,6 +308,7 @@ final class Elementor_Projection_Plan {
 					$out[] = $warning;
 					break;
 				}
+			}
 		}
 		return self::unique_preserve_order( $out );
 	}

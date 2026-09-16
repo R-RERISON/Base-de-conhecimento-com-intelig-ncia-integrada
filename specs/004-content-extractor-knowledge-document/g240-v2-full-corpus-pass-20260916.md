@@ -4,7 +4,7 @@ Data: 2026-09-16
 
 ## Evidência
 
-Arquivo: `evidence/kd-v2-smoke-20260916T150651Z.json`
+Arquivo: `evidence/kd-v2-smoke-20260916T150651Z.json`.
 
 Ambiente:
 
@@ -32,7 +32,7 @@ Ambiente:
 - hash_mismatches=0
 - canonical_json_mismatches=0
 
-## Fidelidade estrutural
+## Fidelidade estrutural por cardinalidade
 
 - first_pass_structure_incomplete=0
 - second_pass_structure_incomplete=0
@@ -42,25 +42,17 @@ Ambiente:
 - review_required=72
 - not_applicable=2
 
-Os `review_required` restantes são limitações explícitas e auditáveis, principalmente shortcodes não expandidos, headings locais achatados e listas dentro de tabelas achatadas; não são aceitos como perda estrutural silenciosa.
+`gate.pass=true` para o smoke full-corpus `1.3.0`.
 
-## Gate
+## Limitação descoberta posteriormente no A/B humano
 
-`gate.pass=true`.
+O aceite humano `evidence/g240-v2-acceptance-20260916T153610Z.json` demonstrou que o PASS acima prova **cardinalidade estrutural**, mas não necessariamente fidelidade de relações hierárquicas.
 
-O full-corpus do KD v2 está encerrado como PASS ambiental. Nenhuma alteração adicional no parser deve ser feita antes da aceitação humana A/B, salvo nova evidência objetiva de regressão.
+Resultado humano:
 
-## Próximo passo
+- estrutura preservada 5/8;
+- estrutura perdida 3/8 (1290, 370, 1307).
 
-Executar `Aceitação G-240 v2` no mesmo build `0.4.0-acceptance.11`, usando exatamente os oito posts congelados do G-240 v1.
+Portanto este documento permanece válido como evidência de full-corpus técnico do KD `2.0.1`, mas **não fecha G-240**.
 
-Critérios humanos por slot:
-
-1. cobertura completa;
-2. ordem semântica preservada;
-3. nenhum texto inventado;
-4. estrutura semântica preservada.
-
-AI readiness permanece calculado pelo sistema e não é checkbox humano.
-
-G-245 e qualquer writer/migration Elementor permanecem bloqueados até a evidência humana A/B ser aceita.
+A análise de relacionamento/hierarquia está em `g240-v2-hierarchy-gap-analysis-20260916.md` e conduz à proposta KD `2.1.0`.

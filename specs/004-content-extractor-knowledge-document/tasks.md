@@ -98,36 +98,42 @@ Achado positivo: todos os 8 casos preservaram cobertura textual, ordem e ausênc
 - [x] T079C8E Endurecer smoke report `1.3.0`: além de `structure_incomplete=0`, exigir `ai_readiness.not_ready=0` em ambas as passagens.
 - [x] T079C8F Gerar/validar `0.4.0-acceptance.7`: 28/28 package parity, PHP lint 24/24, JS syntax, ZIP integrity, KD regression 12/12, namespace 6/6 e safety scan PASS.
 - [x] T079C8G Fechar Git↔package byte parity dos blobs críticos e remover marcadores temporários de reconciliação.
-- [ ] T079C8H Executar `Validação KD v2` com `0.4.0-acceptance.7` e exigir `gate.pass=true` (`structure_incomplete=0` e `not_ready=0`).
+- [x] T079C8H Executar `acceptance.7`: `structure_incomplete` **50→5**, headings mismatch **47→0**, safety/determinismo PASS; restaram 3 docs de listas e 2 de tabelas.
+- [x] T079C8I Versionar `evidence/kd-v2-smoke-20260916T124150Z.json`.
+- [x] T079C9A Isolar o resíduo em cinco casos: listas `105 expected / 90 actual` e tabelas `6 / 4`, sem heading mismatch.
+- [x] T079C9B Preparar `0.4.0-acceptance.8` **diagnóstico-only** sem alterar parser/schema/readiness/gate; adicionar telemetria para parser-unreachable, sem conteúdo materializável e image-only.
+- [x] T079C9C Validar package `acceptance.8`: 28 runtime files, PHP lint 24/24, ZIP integrity, KD regression 12/12, namespace 6/6 e Git↔package parity dos dois arquivos alterados.
+- [ ] T079C9D Executar `Validação KD v2` com `acceptance.8` e classificar os 3 mismatches de listas e 2 de tabelas pelas novas métricas diagnósticas.
+- [ ] T079C9E Aplicar somente a correção comprovada até `structure_incomplete=0` e `not_ready=0`, sem relaxar o gate.
 - [ ] T079D Reexecutar os mesmos 8 casos no `Aceitação G-240 v2` somente após full-corpus PASS.
 - [ ] T079E Fechar G-240 somente se os quatro critérios humanos passarem, sem stale/repeatability failure e com limitações refletidas em `ai_readiness`.
 
-### Evidência `acceptance.6`
+### Evidência `acceptance.7`
 
-- ambiente: WordPress `6.9.4`, PHP `8.5.10`, Elementor `4.1.0`, KD `2.0.0`, `DOMDocument=true`;
+- ambiente: WordPress `6.9.4`, PHP `8.5.10`, Elementor `4.1.0`, KD `2.0.1`, `DOMDocument=true`;
 - corpus `622 → 622`, duas passagens completas;
 - zero errors/throwables/hash mismatch/canonical JSON mismatch;
 - fingerprint editorial igual e zero posts alterados;
-- `structure_incomplete=50` nas duas passagens;
-- por source: 44 legacy_html, 5 elementor, 1 mixed;
-- headings: 47 docs, expected 504, actual 302;
-- lists: 5 docs, expected 113, actual 96;
-- `list_items`: zero mismatch;
-- tables: 2 docs, expected 6, actual 4;
-- `ai_readiness`: 523 candidate_ready, 50 not_ready, 47 review_required, 2 not_applicable;
-- telemetria mostrou headings vazios e headings locais em listas/tabelas; wrappers atravessados não reduziram o mismatch.
+- `structure_incomplete=5` nas duas passagens;
+- por source: 4 legacy_html, 1 elementor;
+- headings mismatch: zero;
+- lists: 3 docs, expected 105, actual 90, delta 15;
+- tables: 2 docs, expected 6, actual 4, delta 2;
+- `ai_readiness`: 546 candidate_ready, 69 review_required, 5 not_ready, 2 not_applicable;
+- gate permanece FAIL porque exige `structure_incomplete=0` e `not_ready=0`.
 
-### Candidato `acceptance.7`
+### Candidato `acceptance.8`
 
-- plugin `0.4.0-acceptance.7`;
-- Knowledge Document `2.0.1`;
-- smoke report `1.3.0`;
-- `Semantic_DOM_Expectation` mantém expected independente de `blocks[]`;
-- gate exige `structure_incomplete=0` **e** `not_ready=0`;
-- SHA-256 package: `635016ef4a5acb4d94d04f7b0e9e05ce8d86af637c5654f96b0d58e3904cc91e`;
-- blobs Git↔package críticos reconciliados.
+- plugin `0.4.0-acceptance.8`;
+- Knowledge Document permanece `2.0.1`;
+- parser Legacy permanece inalterado;
+- readiness e gate permanecem inalterados;
+- adiciona somente warnings diagnósticos para listas/tabelas inacessíveis ao parser, sem conteúdo materializável ou image-only;
+- SHA-256 package: `a089fbd5cdb0fe6cc04a418f9eface8d135ac9d0fee1232307c5a3463b9d0091`;
+- bootstrap Git↔ZIP: `6f115f8241b774a9f04e7ecbc84a17fb4925730a`;
+- Semantic_DOM_Expectation Git↔ZIP: `125908183b0e2fd931b9aa84cf01930d9205b499`.
 
-**Gate G-240: FAIL CONTROLADO / `acceptance.7` ENV SMOKE PENDING.**
+**Gate G-240: FAIL CONTROLADO / `acceptance.8` DIAGNOSTIC ENV SMOKE PENDING.**
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 

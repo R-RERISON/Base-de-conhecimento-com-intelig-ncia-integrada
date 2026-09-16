@@ -164,6 +164,8 @@ final class Semantic_Structure {
 			'GUTENBERG_DYNAMIC_NOT_RENDERED:',
 			'GUTENBERG_BLOCK_UNSUPPORTED:',
 			'ELEMENTOR_WIDGET_UNSUPPORTED:',
+			'HTML_LOCAL_HEADING_FLATTENED:',
+			'HTML_NESTED_LIST_IN_TABLE_FLATTENED:',
 		);
 
 		$critical = false;
@@ -356,7 +358,6 @@ final class Semantic_Structure {
 				if ( is_array( $child ) ) {
 					self::count_list_tree( $child, $actual );
 				}
-			}
 		}
 	}
 }

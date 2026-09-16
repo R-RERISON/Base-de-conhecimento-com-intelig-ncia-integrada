@@ -152,9 +152,24 @@ final class Production_Preflight {
 	public static function assess( array $facts ): array {
 		$checks = array();
 
-		self::add_check( $checks, 'wordpress_version', version_compare( (string) ( $facts['wordpress'] ?? '0' ), '6.6', '>=' ) ? 'compatible' : 'blocking', version_compare( (string) ( $facts['wordpress'] ?? '0' ), '6.6', '>=' ) ? 'WordPress meets plugin minimum.' : 'WordPress is below plugin minimum 6.6.' );
-		self::add_check( $checks, 'php_version', version_compare( (string) ( $facts['php'] ?? '0' ), '8.1', '>=' ) ? 'compatible' : 'blocking', version_compare( (string) ( $facts['php'] ?? '0' ), '8.1', '>=' ) ? 'PHP meets plugin minimum.' : 'PHP is below plugin minimum 8.1.' );
-		self::add_check( $checks, 'domdocument', true === (bool) ( $facts['domdocument'] ?? false ) ? 'compatible' : 'blocking', true === (bool) ( $facts['domdocument'] ?? false ) ? 'DOMDocument available.' : 'DOMDocument is required by the validated extraction path.' );
+		self::add_check(
+			$checks,
+			'wordpress_version',
+			version_compare( (string) ( $facts['wordpress'] ?? '0' ), '6.6', '>=' ) ? 'compatible' : 'blocking',
+			version_compare( (string) ( $facts['wordpress'] ?? '0' ), '6.6', '>=' ) ? 'WordPress meets plugin minimum.' : 'WordPress is below plugin minimum 6.6.'
+		);
+		self::add_check(
+			$checks,
+			'php_version',
+			version_compare( (string) ( $facts['php'] ?? '0' ), '8.1', '>=' ) ? 'compatible' : 'blocking',
+			version_compare( (string) ( $facts['php'] ?? '0' ), '8.1', '>=' ) ? 'PHP meets plugin minimum.' : 'PHP is below plugin minimum 8.1.'
+		);
+		self::add_check(
+			$checks,
+			'domdocument',
+			true === (bool) ( $facts['domdocument'] ?? false ) ? 'compatible' : 'blocking',
+			true === (bool) ( $facts['domdocument'] ?? false ) ? 'DOMDocument available.' : 'DOMDocument is required by the validated extraction path.'
+		);
 
 		$elementor_loaded = true === (bool) ( $facts['elementor_loaded'] ?? false );
 		$elementor_version = (string) ( $facts['elementor_version'] ?? '' );
@@ -190,6 +205,7 @@ final class Production_Preflight {
 		} else {
 			self::add_check( $checks, 'wp_cron', 'compatible', 'WP-Cron is not disabled by configuration.' );
 		}
+
 		self::add_check( $checks, 'loopback', 'review_required', 'Loopback/network availability is intentionally not exercised by preflight v1.' );
 
 		$blocking = 0;
@@ -203,7 +219,12 @@ final class Production_Preflight {
 		}
 		$status = $blocking > 0 ? 'blocking' : ( $review > 0 ? 'review_required' : 'compatible' );
 
-		return array( 'status' => $status, 'blocking_count' => $blocking, 'review_required_count' => $review, 'checks' => $checks );
+		return array(
+			'status' => $status,
+			'blocking_count' => $blocking,
+			'review_required_count' => $review,
+			'checks' => $checks,
+		);
 	}
 
 	/** @param array<int,array<string,string>> $checks */
@@ -214,6 +235,7 @@ final class Production_Preflight {
 	/** @param array<int,int> $post_ids @return array<string,mixed> */
 	private static function collect_facts( string $target_environment, bool $backup_confirmed, array $post_ids ): array {
 		global $wpdb;
+
 		$db_version = method_exists( $wpdb, 'db_version' ) ? (string) $wpdb->db_version() : '';
 		$db_server = '';
 		if ( method_exists( $wpdb, 'get_var' ) ) {
@@ -237,10 +259,17 @@ final class Production_Preflight {
 			'memory_limit' => (string) ini_get( 'memory_limit' ),
 			'max_execution_time' => (string) ini_get( 'max_execution_time' ),
 			'wp_cron_disabled' => defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON,
-			'database' => array( 'engine' => $db_engine, 'client_version' => $db_version, 'server_version' => $db_server ),
+			'database' => array(
+				'engine' => $db_engine,
+				'client_version' => $db_version,
+				'server_version' => $db_server,
+			),
 			'active_plugins' => self::active_plugin_inventory(),
 			'shortcode_dependencies' => self::shortcode_dependency_inventory( $post_ids ),
-			'loopback' => array( 'status' => 'not_tested', 'reason' => 'Preflight v1 performs no external or loopback network request.' ),
+			'loopback' => array(
+				'status' => 'not_tested',
+				'reason' => 'Preflight v1 performs no external or loopback network request.',
+			),
 		);
 	}
 
@@ -259,7 +288,11 @@ final class Production_Preflight {
 		$out = array();
 		foreach ( $active as $plugin ) {
 			$meta = is_array( $all[ $plugin ] ?? null ) ? $all[ $plugin ] : array();
-			$out[] = array( 'plugin' => $plugin, 'version' => (string) ( $meta['Version'] ?? '' ), 'network_active' => in_array( $plugin, $network, true ) );
+			$out[] = array(
+				'plugin' => $plugin,
+				'version' => (string) ( $meta['Version'] ?? '' ),
+				'network_active' => in_array( $plugin, $network, true ),
+			);
 		}
 		return $out;
 	}
@@ -273,7 +306,8 @@ final class Production_Preflight {
 			if ( is_array( $elementor ) ) {
 				$elementor = wp_json_encode( $elementor, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 			}
-			$inspection = Shortcode_Inspector::inspect( $post_content . "\n" . ( is_string( $elementor ) ? $elementor : '' ) );
+			$combined = $post_content . "\n" . ( is_string( $elementor ) ? $elementor : '' );
+			$inspection = Shortcode_Inspector::inspect( $combined );
 			foreach ( (array) ( $inspection['matches'] ?? array() ) as $match ) {
 				$tag = strtolower( (string) ( $match['tag'] ?? '' ) );
 				if ( '' !== $tag ) {
@@ -299,7 +333,13 @@ final class Production_Preflight {
 				$unregistered[] = $tag;
 			}
 		}
-		return array( 'used_tags' => $tags, 'registered_used_tags' => $registered, 'unregistered_used_tags' => $unregistered, 'providers' => $providers, 'provider_unresolved_tags' => $unresolved );
+		return array(
+			'used_tags' => $tags,
+			'registered_used_tags' => $registered,
+			'unregistered_used_tags' => $unregistered,
+			'providers' => $providers,
+			'provider_unresolved_tags' => $unresolved,
+		);
 	}
 
 	private static function shortcode_provider( string $tag ): string {
@@ -340,7 +380,17 @@ final class Production_Preflight {
 
 	/** @return array<int,int> */
 	private static function post_ids(): array {
-		$ids = get_posts( array( 'post_type' => 'post', 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids', 'orderby' => 'ID', 'order' => 'ASC', 'suppress_filters' => false ) );
+		$ids = get_posts(
+			array(
+				'post_type' => 'post',
+				'post_status' => 'any',
+				'numberposts' => -1,
+				'fields' => 'ids',
+				'orderby' => 'ID',
+				'order' => 'ASC',
+				'suppress_filters' => false,
+			)
+		);
 		return array_values( array_map( 'intval', is_array( $ids ) ? $ids : array() ) );
 	}
 
@@ -356,7 +406,15 @@ final class Production_Preflight {
 			if ( is_array( $elementor ) ) {
 				$elementor = wp_json_encode( $elementor, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 			}
-			$line = implode( '|', array( (string) $post_id, (string) $post->post_modified_gmt, hash( 'sha256', (string) $post->post_content ), hash( 'sha256', is_string( $elementor ) ? $elementor : '' ) ) );
+			$line = implode(
+				'|',
+				array(
+					(string) $post_id,
+					(string) $post->post_modified_gmt,
+					hash( 'sha256', (string) $post->post_content ),
+					hash( 'sha256', is_string( $elementor ) ? $elementor : '' ),
+				)
+			);
 			hash_update( $ctx, $line . "\n" );
 		}
 		return hash_final( $ctx );

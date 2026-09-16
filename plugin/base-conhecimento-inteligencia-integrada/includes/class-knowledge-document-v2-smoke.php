@@ -128,7 +128,7 @@ final class Knowledge_Document_V2_Smoke {
 			&& 0 === $second['structure_incomplete'];
 
 		return array(
-			'schema_version' => '1.2.0',
+			'schema_version' => '1.3.0',
 			'mode' => 'temporary_spec004_kd_v2_read_only_smoke',
 			'generated_at' => gmdate( 'c' ),
 			'environment' => array(

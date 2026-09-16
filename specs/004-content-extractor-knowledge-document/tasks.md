@@ -68,12 +68,28 @@ Achado positivo: todos os 8 casos preservaram cobertura textual, ordem e ausênc
 - [x] T078 Adicionar teste unitário v2 para heading path, lista aninhada, tabela, hashes e AI readiness.
 - [x] T079 Implementar smoke ambiental v2 em duas passagens sobre todo o corpus.
 - [x] T079A Implementar acceptance v2 lado a lado com render semântico de `blocks[]`.
-- [ ] T079B Gerar/validar package `0.4.0-acceptance.2`.
-- [ ] T079C Executar `Validação KD v2` em homologação e exigir zero mismatch/zero mutation/zero `structure_incomplete`.
+- [x] T079B Gerar/validar package `0.4.0-acceptance.2`.
+- [x] T079C Executar `Validação KD v2` em homologação com `acceptance.2`: determinismo/zero-write PASS, critério estrutural FAIL com `82/622 structure_incomplete` nas duas passagens.
+- [x] T079C1 Registrar evidência `evidence/kd-v2-smoke-20260916T100412Z.json` e bloquear G-240 v2.
+- [x] T079C2 Instrumentar diagnóstico agregado sem IDs/conteúdo e gerar/validar `0.4.0-acceptance.3`.
+- [ ] T079C3 Executar `Validação KD v2` com `acceptance.3` e identificar por métrica/source/strategy a causa dos 82 mismatches.
+- [ ] T079C4 Corrigir somente a causa comprovada, reempacotar e exigir zero mismatch/zero mutation/zero `structure_incomplete`.
 - [ ] T079D Reexecutar os mesmos 8 casos no `Aceitação G-240 v2`.
 - [ ] T079E Fechar G-240 somente se os quatro critérios humanos passarem, sem stale/repeatability failure e com limitações refletidas em `ai_readiness`.
 
-**Gate G-240: FAIL / STRUCTURAL REMEDIATION ACTIVE.**
+Evidência ambiental v2 atual:
+
+- `0.4.0-acceptance.2` em WordPress `6.9.4`, PHP `8.5.10`, Elementor `4.1.0`;
+- `DOMDocument=true`;
+- 622/622 documentos em ambas as passagens;
+- zero errors/throwables;
+- zero hash/canonical JSON mismatch;
+- fingerprint editorial igual e zero posts alterados;
+- `structure_incomplete=82` em ambas as passagens;
+- `ai_readiness`: 495 `candidate_ready`, 82 `not_ready`, 43 `review_required`, 2 `not_applicable`;
+- `gate.pass=false`.
+
+**Gate G-240: FAIL CONTROLADO / STRUCTURAL DIAGNOSTIC ACTIVE.**
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 

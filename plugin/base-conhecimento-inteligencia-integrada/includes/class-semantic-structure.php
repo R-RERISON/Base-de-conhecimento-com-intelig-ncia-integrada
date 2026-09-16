@@ -302,7 +302,7 @@ final class Semantic_Structure {
 					'heading_path' => is_array( $section['heading_path'] ?? null ) ? $section['heading_path'] : array(),
 					'caption'      => '',
 					'rows'         => array(),
-			);
+				);
 			}
 			if ( 'table_caption' === $kind ) {
 				$tables[ $table_id ]['caption'] = (string) ( $section['text'] ?? '' );

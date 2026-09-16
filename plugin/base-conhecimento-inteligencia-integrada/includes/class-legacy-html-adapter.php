@@ -379,17 +379,14 @@ final class Legacy_HTML_Adapter {
 				)
 			);
 
-			foreach ( $child->childNodes as $nested ) {
-				if ( ! $nested instanceof \DOMElement ) {
-					continue;
-				}
-				$nested_tag = strtolower( $nested->tagName );
-				if ( in_array( $nested_tag, array( 'ul', 'ol' ), true ) ) {
-					self::append_list( $nested, $source, $fragments, $context, $depth + 1, $item_id );
-				} elseif ( 'table' === $nested_tag ) {
-					self::append_table( $nested, $source, $fragments, $context );
-				}
-			}
+			self::walk_nested_structures_recursive(
+				$child,
+				$source,
+				$fragments,
+				$context,
+				$depth + 1,
+				$item_id
+			);
 			++$item_index;
 		}
 	}
@@ -425,7 +422,7 @@ final class Legacy_HTML_Adapter {
 				if ( ! in_array( $cell_tag, array( 'th', 'td' ), true ) ) {
 					continue;
 				}
-				$text = Content_Normalizer::text( self::visible_text_excluding_tags( $cell, array( 'table' ) ) );
+				$text = Content_Normalizer::text( self::visible_text_with_image_alt_excluding_tags( $cell, array( 'table' ) ) );
 				$cells[] = array(
 					'cell_index' => $cell_index++,
 					'kind'       => 'th' === $cell_tag ? 'header' : 'data',
@@ -495,16 +492,42 @@ final class Legacy_HTML_Adapter {
 	 * @param array<string,int> $context
 	 */
 	private static function walk_nested_structures( \DOMElement $parent, string $source, array &$fragments, array &$context ): void {
+		self::walk_nested_structures_recursive( $parent, $source, $fragments, $context, 0, '' );
+	}
+
+	/**
+	 * Percorre wrappers internos até a primeira fronteira estrutural. Quando uma
+	 * lista/tabela é encontrada, o respectivo adapter assume sua subárvore e a
+	 * busca não desce novamente nela, evitando duplicidade.
+	 *
+	 * @param array<int,array<string,mixed>> $fragments
+	 * @param array<string,int> $context
+	 */
+	private static function walk_nested_structures_recursive(
+		\DOMElement $parent,
+		string $source,
+		array &$fragments,
+		array &$context,
+		int $list_depth,
+		string $parent_item_id
+	): void {
 		foreach ( $parent->childNodes as $child ) {
 			if ( ! $child instanceof \DOMElement ) {
 				continue;
 			}
 			$tag = strtolower( $child->tagName );
-			if ( in_array( $tag, array( 'ul', 'ol' ), true ) ) {
-				self::append_list( $child, $source, $fragments, $context, 0, '' );
-			} elseif ( 'table' === $tag ) {
-				self::append_table( $child, $source, $fragments, $context );
+			if ( in_array( $tag, array( 'script', 'style', 'noscript', 'pre', 'code' ), true ) ) {
+				continue;
 			}
+			if ( in_array( $tag, array( 'ul', 'ol' ), true ) ) {
+				self::append_list( $child, $source, $fragments, $context, $list_depth, $parent_item_id );
+				continue;
+			}
+			if ( 'table' === $tag ) {
+				self::append_table( $child, $source, $fragments, $context );
+				continue;
+			}
+			self::walk_nested_structures_recursive( $child, $source, $fragments, $context, $list_depth, $parent_item_id );
 		}
 	}
 
@@ -528,6 +551,37 @@ final class Legacy_HTML_Adapter {
 				continue;
 			}
 			$out .= self::visible_text_excluding_tags( $child, $excluded_tags );
+		}
+		return html_entity_decode( $out, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+	}
+
+	/** @param array<int,string> $excluded_tags */
+	private static function visible_text_with_image_alt_excluding_tags( \DOMNode $node, array $excluded_tags ): string {
+		$out = '';
+		foreach ( $node->childNodes as $child ) {
+			if ( $child instanceof \DOMText ) {
+				$out .= $child->nodeValue ?? '';
+				continue;
+			}
+			if ( ! $child instanceof \DOMElement ) {
+				continue;
+			}
+			$tag = strtolower( $child->tagName );
+			if ( in_array( $tag, array( 'script', 'style', 'noscript' ), true ) || in_array( $tag, $excluded_tags, true ) ) {
+				continue;
+			}
+			if ( 'br' === $tag ) {
+				$out .= "\n";
+				continue;
+			}
+			if ( 'img' === $tag ) {
+				$alt = Content_Normalizer::text( $child->getAttribute( 'alt' ) );
+				if ( '' !== $alt ) {
+					$out .= ' ' . $alt . ' ';
+				}
+				continue;
+			}
+			$out .= self::visible_text_with_image_alt_excluding_tags( $child, $excluded_tags );
 		}
 		return html_entity_decode( $out, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 	}

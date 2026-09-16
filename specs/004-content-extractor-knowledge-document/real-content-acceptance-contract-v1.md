@@ -1,172 +1,135 @@
-# Real Content Acceptance Contract v1 — SPEC-004 / G-240
+# Real Content Acceptance Contract — SPEC-004
 
-**Versão:** `1.0.0`  
-**Natureza:** aceitação humana/estrutural read-only sobre amostra real  
-**Pré-requisitos:** G-220 PASS + G-230 PASS
+## Histórico
 
-## 1. Objetivo
+### v1.0.0 — G-240 inicial
 
-Comprovar que um Knowledge Document determinístico também é semanticamente fiel à fonte editorial real.
+O primeiro contrato exigia cinco critérios humanos, incluindo `acceptable_for_knowledge_use`.
 
-G-220/G-230 provaram parsing, segurança, hashes e repetibilidade. G-240 responde uma pergunta diferente: **o conhecimento necessário foi efetivamente preservado, em ordem, sem invenção e com estrutura suficiente?**
+A execução real em `0.4.0-acceptance.1` resultou em **FAIL CONTROLADO**:
 
-## 2. Invariantes
+- 8/8 slots revisados;
+- 0/8 aprovados;
+- 7/8 com `structure_loss`;
+- zero stale/repeatability/selection/write failures.
 
-A ferramenta de aceitação:
+Evidência: `evidence/g240-acceptance-20260916T085721Z.json`.
 
-- é `manage_options`;
-- é read-only;
-- não altera `post_content`, `_elementor_data`, status, datas, revisões, termos ou metas editoriais;
-- não executa shortcode callback;
-- não renderiza dynamic blocks;
-- não renderiza Elementor como parte do extractor;
-- não persiste seleção, verdict, comentários, documento ou hashes;
-- não envia conteúdo para rede externa/IA;
-- pode exibir conteúdo ao administrador dentro do wp-admin porque a inspeção humana é o objetivo do gate;
-- o JSON de evidência não exporta corpo editorial, título ou URL.
+O resultado demonstrou duas coisas:
 
-## 3. Amostra mínima determinística
+1. o Knowledge Document v1 preservava cobertura textual, ordem e ausência de invenção na amostra;
+2. a representação estrutural era insuficiente para listas, tabelas e contexto hierárquico.
 
-A seleção deve tentar cobrir, sem duplicar posts quando houver alternativa:
+Também ficou claro que “aceitável para IA” não deve ser uma decisão subjetiva do operador.
 
-1. `elementor_native_typical` — Elementor válido/native representativo;
-2. `elementor_or_mixed_complex` — mixed ou Elementor mais estruturalmente rico;
-3. `legacy_typical` — Legacy HTML próximo da complexidade mediana;
-4. `legacy_complex` — Legacy HTML estruturalmente rico;
-5. `gutenberg` — post com blocks;
-6. `shortcode_or_table` — shortcode/tabela relevante;
-7. `review_required` — caso que exige revisão para futura migração Elementor;
-8. `empty_or_corrupt` — fonte vazia/corrompida quando disponível.
+## Amendment v1.1 — reteste estrutural com Knowledge Document v2
 
-Se uma categoria não existir, registrar `not_available`; não substituir silenciosamente por categoria diferente.
+**Estado:** FROZEN para remediação G-240.  
+**Knowledge Document:** `2.0.0`.  
+**Amostra:** os mesmos oito posts que falharam no v1, congelados para comparação A/B.
 
-## 4. Complexidade / seleção
+### 1. Natureza
 
-Para seleção determinística, calcular por post apenas métricas estruturais derivadas, por exemplo:
+O G-240 continua sendo inspeção humana de fidelidade, read-only e sem persistência.
 
-`score = sections + 3*headings + 3*lists + 5*tables + images + links + 2*code_blocks + 2*shortcodes + 4*warnings`
+A ferramenta:
 
-Regras:
+- não altera posts/metas/termos/options;
+- não executa shortcodes, blocos dinâmicos ou render Elementor arbitrário;
+- não usa IA para decidir se a extração “parece boa”;
+- exibe a fonte editorial real somente dentro do wp-admin;
+- exporta JSON sem corpo, título ou URL;
+- pode exportar post ID para rastreabilidade da amostra;
+- usa fingerprints para stale guard;
+- reconstrói o Knowledge Document mais de uma vez para repeatability.
 
-- `typical`: candidato cuja quantidade de sections esteja mais próxima da mediana da categoria;
-- `complex`: maior score; desempate por menor post ID;
-- demais slots: maior aderência ao slot e depois menor post ID;
-- a seleção deve permanecer estável para corpus editorial idêntico.
+### 2. Critérios humanos v2
 
-## 5. Superfície de inspeção
+O revisor marca somente o que pode comparar objetivamente:
 
-Cada card de aceitação deve mostrar ao administrador:
+- `coverage_complete`;
+- `order_preserved`;
+- `no_invented_text`;
+- `structure_preserved`.
 
-### Fonte editorial
+`acceptable_for_knowledge_use` foi removido.
 
-- post ID;
-- título apenas na tela local;
-- source flags;
-- source kind efetivo;
-- warnings/readiness;
-- conteúdo fonte apropriado ao tipo:
-  - Legacy/plain/Gutenberg: `post_content` escapado, sem execução;
-  - Elementor: `_elementor_data` escapado/formatado, sem renderização;
-- links administrativos de edição podem ser exibidos apenas na tela local.
+### 3. AI readiness
 
-### Knowledge Document
+O sistema calcula e exibe:
 
-- schema;
-- `source_hash`;
-- `document_hash`;
-- source kind;
-- sections em ordem;
-- facts estruturais;
-- strategies/warnings/readiness.
+- `candidate_ready`;
+- `review_required`;
+- `not_ready`;
+- `not_applicable`.
 
-Nenhum dado da tela de inspeção é persistido pelo plugin.
+Esse status é produzido por invariantes estruturais/warnings e não pelo operador.
 
-## 6. Critérios humanos obrigatórios
+O G-240 não exige que todos os documentos sejam `candidate_ready`: um caso `review_required` pode passar o gate humano quando a representação expõe fielmente seu conteúdo e também expõe a limitação que exige revisão. `not_ready` bloqueia consumidores futuros, mas a razão deve permanecer observável.
 
-Para cada amostra, o revisor responde somente flags estruturadas:
+### 4. Amostra A/B congelada
 
-- `coverage_complete` — informação relevante da fonte está representada;
-- `order_preserved` — sequência semântica relevante foi mantida;
-- `no_invented_text` — documento não introduz texto inexistente;
-- `structure_adequate` — headings/listas/tabelas/código/limites relevantes estão adequadamente representados;
-- `acceptable_for_knowledge_use` — documento pode ser usado por busca/IA sem reparo manual obrigatório.
+- `elementor_native_typical`: post 44981;
+- `elementor_or_mixed_complex`: post 1290;
+- `legacy_typical`: post 370;
+- `legacy_complex`: post 1307;
+- `gutenberg`: post 45782;
+- `shortcode_or_table`: post 36431;
+- `review_required`: post 1289;
+- `empty_or_corrupt`: post 28748.
 
-Falhas podem receber razões enum-only:
+Os fingerprints da evidência v1 são baseline. Mudança editorial posterior torna o slot `stale` e invalida comparação A/B até nova baseline consciente.
 
-- `missing_content`;
-- `wrong_order`;
-- `invented_text`;
-- `structure_loss`;
-- `shortcode_semantics_missing`;
-- `source_corrupt`;
-- `other_review_required`.
+### 5. Ordem operacional
 
-Sem campo livre no v1 para evitar exportação acidental de conteúdo.
+Antes do aceite humano v2:
 
-## 7. Stale guard da revisão
+1. executar full-corpus `Validação KD v2`;
+2. confirmar schema `2.0.0`;
+3. duas passagens completas;
+4. zero errors/throwables;
+5. zero hash/canonical JSON mismatch;
+6. zero `structure_incomplete`;
+7. fingerprint editorial igual;
+8. zero changed posts.
 
-Ao renderizar a amostra, gerar fingerprint bruto por post usando, no mínimo:
+Somente então executar `Aceitação G-240 v2`.
 
-- post status;
-- modified GMT;
-- hash do título;
-- hash de `post_content`;
-- hash de `_elementor_data`.
+### 6. PASS humano v2
 
-O fingerprint viaja apenas como hidden field. No submit final:
+PASS exige, para todos os oito slots válidos da baseline:
 
-- recomputar fingerprint;
-- se divergir, marcar `stale=true`;
-- verdict daquele post não pode contar como PASS;
-- não tentar reconciliar automaticamente.
+- quatro critérios humanos `true`;
+- `stale=false`;
+- `repeatable=true`;
+- post ID esperado preservado;
+- fingerprint de geração da evidência sem mudança;
+- zero write.
 
-## 8. Evidência JSON
+Falha em qualquer item mantém G-240 bloqueado.
 
-Pode exportar:
+### 7. Evidência e privacidade
 
-- schema/mode/generated_at;
-- ambiente e versão;
-- fingerprints agregados before/after da geração do relatório;
-- slots selecionados;
-- post IDs;
+O JSON pode exportar:
+
+- ambiente/versões;
+- post ID da amostra;
 - source/document hashes;
-- source kind;
-- readiness;
+- `ai_readiness` e reasons enum;
 - verdict flags;
-- reason enums;
-- stale flag;
-- contagens agregadas.
+- stale/repeatability;
+- fingerprints agregados.
 
-Não exporta:
+O JSON não exporta:
 
 - `post_content`;
 - `_elementor_data`;
-- sections/texto;
 - título;
 - URL;
-- conteúdo de shortcode.
+- texto das `sections[]`/`blocks[]`.
 
-## 9. Gate G-240
+### 8. Relação com G-245
 
-PASS exige simultaneamente:
+G-245 permanece bloqueado enquanto G-240 v2 não passar.
 
-- pelo menos um exemplar para cada categoria disponível do contrato;
-- todos os exemplos não-stale;
-- `coverage_complete=true`;
-- `order_preserved=true`;
-- `no_invented_text=true`;
-- `structure_adequate=true`;
-- `acceptable_for_knowledge_use=true`;
-- zero mutação editorial causada pela ferramenta;
-- hash/documento repetível durante a aceitação;
-- qualquer categoria `not_available` explicitamente registrada.
-
-Uma falha humana bloqueia G-240 e vira caso de correção do extractor/contract; não é mascarada por IA, renderização arbitrária ou migration Elementor.
-
-## 10. Relação com G-245
-
-G-240 valida o **knowledge plane**.
-
-Ele não autoriza writer Elementor. A classificação `native/projectable/review_required/blocked` continua apenas informativa até G-245 implementar preflight, dry-run, journal/rollback, stale-source guard e canário.
-
-**Estado:** `FROZEN v1.0.0`.
+A normalização para Elementor não pode ser usada para esconder uma falha do Knowledge Document. Primeiro provamos leitura/estrutura; depois projetamos/migramos armazenamento editorial.

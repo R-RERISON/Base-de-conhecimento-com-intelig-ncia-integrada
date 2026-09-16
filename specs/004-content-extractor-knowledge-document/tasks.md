@@ -85,16 +85,24 @@ Achado positivo: todos os 8 casos preservaram cobertura textual, ordem e ausênc
 - [x] T079C6C Gerar e validar `0.4.0-acceptance.5`.
 - [x] T079C6D Executar `acceptance.5`: `structure_incomplete` 78→50; legacy 62→44; Elementor 14→5; mixed 2→1; `list_items` mismatch zerou; lists ficaram em 5 docs.
 - [x] T079C6E Versionar `evidence/kd-v2-smoke-20260916T112024Z.json`.
-- [x] T079C7A Isolar classe dominante residual: `headings` em 47 docs (`504 expected / 302 actual`), com assimetria entre contagem DOM profunda e allowlist de wrappers atravessados pelo parser.
-- [x] T079C7B Implementar recursão condicionada para wrappers desconhecidos que contenham descendentes estruturais, sem alterar comportamento de wrappers inline comuns.
+- [x] T079C7A Isolar classe dominante residual: `headings` em 47 docs (`504 expected / 302 actual`).
+- [x] T079C7B Implementar recursão condicionada para wrappers desconhecidos que contenham descendentes estruturais.
 - [x] T079C7C Adicionar telemetria agregada `extraction_warnings` e diagnósticos de headings/tabelas/listas sem exportar IDs/títulos/URLs/conteúdo.
 - [x] T079C7D Gerar/validar `0.4.0-acceptance.6`; PHP lint 23/23, JS syntax, ZIP integrity, parity 27/27 e Git↔package blobs críticos iguais.
-- [ ] T079C7E Executar `Validação KD v2` com `acceptance.6` e medir redução dos 47 mismatches de headings, usando `extraction_warnings` para qualquer resíduo.
-- [ ] T079C8 Corrigir somente classe residual comprovada até `structure_incomplete=0`, sem relaxar raw expected × semantic actual.
+- [x] T079C7E Executar `acceptance.6`: segurança/determinismo PASS, porém `structure_incomplete` permaneceu 50; hipótese de wrapper como causa dominante rejeitada.
+- [x] T079C7F Versionar `evidence/kd-v2-smoke-20260916T114435Z.json`.
+- [x] T079C8A Analisar telemetria do `acceptance.6`: identificar headings vazios e headings locais dentro de listas/tabelas como diferença entre estrutura DOM bruta e unidade semântica global.
+- [x] T079C8B Congelar `knowledge-document-contract-v2.0.1-amendment.md`; evoluir Knowledge Document para `2.0.1` sem mudar a forma externa do schema.
+- [x] T079C8C Implementar `Semantic_DOM_Expectation`, calculando expected diretamente do DOM e independentemente de `sections[]`/`blocks[]`.
+- [x] T079C8D Classificar `HTML_LOCAL_HEADING_FLATTENED:*` e `HTML_NESTED_LIST_IN_TABLE_FLATTENED:*` como `review_required`; `HTML_NESTED_TABLE_UNREPRESENTED:*` como `not_ready`.
+- [x] T079C8E Endurecer smoke report `1.3.0`: além de `structure_incomplete=0`, exigir `ai_readiness.not_ready=0` em ambas as passagens.
+- [x] T079C8F Gerar/validar `0.4.0-acceptance.7`: 28/28 package parity, PHP lint 24/24, JS syntax, ZIP integrity, KD regression 12/12, namespace 6/6 e safety scan PASS.
+- [x] T079C8G Fechar Git↔package byte parity dos blobs críticos e remover marcadores temporários de reconciliação.
+- [ ] T079C8H Executar `Validação KD v2` com `0.4.0-acceptance.7` e exigir `gate.pass=true` (`structure_incomplete=0` e `not_ready=0`).
 - [ ] T079D Reexecutar os mesmos 8 casos no `Aceitação G-240 v2` somente após full-corpus PASS.
 - [ ] T079E Fechar G-240 somente se os quatro critérios humanos passarem, sem stale/repeatability failure e com limitações refletidas em `ai_readiness`.
 
-### Evidência `acceptance.5`
+### Evidência `acceptance.6`
 
 - ambiente: WordPress `6.9.4`, PHP `8.5.10`, Elementor `4.1.0`, KD `2.0.0`, `DOMDocument=true`;
 - corpus `622 → 622`, duas passagens completas;
@@ -106,9 +114,20 @@ Achado positivo: todos os 8 casos preservaram cobertura textual, ordem e ausênc
 - lists: 5 docs, expected 113, actual 96;
 - `list_items`: zero mismatch;
 - tables: 2 docs, expected 6, actual 4;
-- `ai_readiness`: 523 candidate_ready, 50 not_ready, 47 review_required, 2 not_applicable.
+- `ai_readiness`: 523 candidate_ready, 50 not_ready, 47 review_required, 2 not_applicable;
+- telemetria mostrou headings vazios e headings locais em listas/tabelas; wrappers atravessados não reduziram o mismatch.
 
-**Gate G-240: FAIL CONTROLADO / HEADING-WRAPPER REMEDIATION ACTIVE.**
+### Candidato `acceptance.7`
+
+- plugin `0.4.0-acceptance.7`;
+- Knowledge Document `2.0.1`;
+- smoke report `1.3.0`;
+- `Semantic_DOM_Expectation` mantém expected independente de `blocks[]`;
+- gate exige `structure_incomplete=0` **e** `not_ready=0`;
+- SHA-256 package: `635016ef4a5acb4d94d04f7b0e9e05ce8d86af637c5654f96b0d58e3904cc91e`;
+- blobs Git↔package críticos reconciliados.
+
+**Gate G-240: FAIL CONTROLADO / `acceptance.7` ENV SMOKE PENDING.**
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 

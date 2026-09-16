@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "source_artifact": "bdc-kb-spec004-g245-preflight-20260916-215612.json",
+  "source_sha256": "5b9e561b0d0053d6a4fe8fbcbc16cf45107620b1bd72d48517b17e54371c80da",
+  "generated_at": "2026-09-16T21:56:12+00:00",
+  "target_environment": "homologation",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.4.0-g245-preflight.1",
+    "elementor_loaded": true,
+    "elementor_version": "4.1.0",
+    "domdocument": true,
+    "multisite": false,
+    "memory_limit": "512M",
+    "max_execution_time": "300",
+    "wp_cron_disabled": false,
+    "database_engine": "mariadb",
+    "database_server_version": "12.2.2-MariaDB-ubu2404-log"
+  },
+  "shortcodes": {
+    "used_tags": ["bdc_resumo_executivo", "caption", "dbc_table", "faq_wd", "table", "video", "wpt"],
+    "registered_used_tags": ["bdc_resumo_executivo", "caption", "dbc_table", "table", "video"],
+    "unregistered_used_tags": ["faq_wd", "wpt"],
+    "providers": {
+      "bdc_resumo_executivo": "plugin:gerenciador-resumo-executivo",
+      "caption": "wordpress-core",
+      "dbc_table": "plugin:dbc-table-custom",
+      "table": "plugin:tablepress",
+      "video": "wordpress-core"
+    }
+  },
+  "assessment": {
+    "status": "review_required",
+    "blocking_count": 0,
+    "review_required_count": 2,
+    "review_required": [
+      "Used shortcode tags exist without a registered runtime handler: faq_wd, wpt",
+      "Loopback/network availability intentionally not tested by preflight v1"
+    ]
+  },
+  "safety": {
+    "read_only_design": true,
+    "writer_allowed": false,
+    "migration_execution_allowed": false,
+    "executes_shortcodes": false,
+    "calls_external_network": false,
+    "persists_results": false,
+    "writes_post_content": false,
+    "writes_elementor_data": false,
+    "corpus_count_before": 622,
+    "corpus_count_after": 622,
+    "corpus_unchanged": true,
+    "editorial_fingerprint_equal": true
+  },
+  "decision": {
+    "t080i": "PASS_WITH_REVIEW_ITEMS",
+    "blocking_for_projection_plan_read_only": false,
+    "blocking_for_writer": true,
+    "notes": [
+      "faq_wd is treated as a legacy orphan dependency pending content-specific handling.",
+      "wpt remains an unknown legacy dependency and must not be guessed or executed.",
+      "Loopback must be resolved before asynchronous migration jobs or production writer gates, not before read-only projection planning."
+    ]
+  }
+}

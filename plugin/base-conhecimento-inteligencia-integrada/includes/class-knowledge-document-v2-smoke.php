@@ -128,7 +128,7 @@ final class Knowledge_Document_V2_Smoke {
 			&& 0 === $second['structure_incomplete'];
 
 		return array(
-			'schema_version' => '1.0.0',
+			'schema_version' => '1.1.0',
 			'mode' => 'temporary_spec004_kd_v2_read_only_smoke',
 			'generated_at' => gmdate( 'c' ),
 			'environment' => array(
@@ -171,6 +171,12 @@ final class Knowledge_Document_V2_Smoke {
 				'source_kinds' => $first['source_kinds'],
 				'ai_readiness' => $first['ai_readiness'],
 				'elementor_compatibility' => $first['compatibility'],
+				'structure_incomplete_by_source_kind' => $first['structure_incomplete_by_source_kind'],
+				'structure_incomplete_by_strategy' => $first['structure_incomplete_by_strategy'],
+				'structure_incomplete_by_elementor_compatibility' => $first['structure_incomplete_by_compatibility'],
+				'structure_mismatch_metrics' => $first['structure_mismatch_metrics'],
+				'structure_mismatch_signatures' => $first['structure_mismatch_signatures'],
+				'ai_readiness_reasons' => $first['ai_readiness_reasons'],
 			),
 			'performance' => array(
 				'runtime_ms' => (int) round( ( microtime( true ) - $started ) * 1000 ),
@@ -195,6 +201,12 @@ final class Knowledge_Document_V2_Smoke {
 		$source_kinds = array();
 		$ai_readiness = array();
 		$compatibility = array();
+		$structure_incomplete_by_source_kind = array();
+		$structure_incomplete_by_strategy = array();
+		$structure_incomplete_by_compatibility = array();
+		$structure_mismatch_metrics = array();
+		$structure_mismatch_signatures = array();
+		$ai_readiness_reasons = array();
 
 		foreach ( $ids as $post_id ) {
 			try {
@@ -215,16 +227,64 @@ final class Knowledge_Document_V2_Smoke {
 				);
 				$sections_total += count( (array) ( $document['sections'] ?? array() ) );
 				$blocks_total += count( (array) ( $document['blocks'] ?? array() ) );
-				self::increment( $source_kinds, (string) ( $document['source_kind'] ?? 'unknown' ) );
+				$source_kind = (string) ( $document['source_kind'] ?? 'unknown' );
+				self::increment( $source_kinds, $source_kind );
 				$readiness = is_array( $document['ai_readiness'] ?? null ) ? $document['ai_readiness'] : array();
 				self::increment( $ai_readiness, (string) ( $readiness['status'] ?? 'unknown' ) );
-				if ( true !== ( $readiness['structure_complete'] ?? false ) ) {
-					++$structure_incomplete;
-				}
 				$status = isset( $document['extraction']['elementor_compatibility']['status'] )
 					? (string) $document['extraction']['elementor_compatibility']['status']
 					: 'unknown';
 				self::increment( $compatibility, $status );
+
+				$reasons = is_array( $readiness['reasons'] ?? null )
+					? array_values( array_map( 'strval', $readiness['reasons'] ) )
+					: array();
+				foreach ( $reasons as $reason ) {
+					self::increment( $ai_readiness_reasons, $reason );
+				}
+
+				if ( true !== ( $readiness['structure_complete'] ?? false ) ) {
+					++$structure_incomplete;
+					self::increment( $structure_incomplete_by_source_kind, $source_kind );
+					self::increment( $structure_incomplete_by_compatibility, $status );
+
+					$strategies = is_array( $document['extraction']['strategies'] ?? null )
+						? array_values( array_map( 'strval', $document['extraction']['strategies'] ) )
+						: array();
+					if ( empty( $strategies ) ) {
+						self::increment( $structure_incomplete_by_strategy, 'none' );
+					} else {
+						foreach ( array_unique( $strategies ) as $strategy ) {
+							self::increment( $structure_incomplete_by_strategy, $strategy );
+						}
+					}
+
+					foreach ( $reasons as $reason ) {
+						if ( ! str_starts_with( $reason, 'STRUCTURE_COUNT_MISMATCH:' ) ) {
+							continue;
+						}
+						self::increment( $structure_mismatch_signatures, $reason );
+						$parts = explode( ':', $reason, 4 );
+						if ( 4 !== count( $parts ) ) {
+							continue;
+						}
+						$key = (string) $parts[1];
+						$expected = (int) $parts[2];
+						$actual = (int) $parts[3];
+						if ( ! isset( $structure_mismatch_metrics[ $key ] ) ) {
+							$structure_mismatch_metrics[ $key ] = array(
+								'documents' => 0,
+								'expected_total' => 0,
+								'actual_total' => 0,
+								'absolute_delta_total' => 0,
+							);
+						}
+						++$structure_mismatch_metrics[ $key ]['documents'];
+						$structure_mismatch_metrics[ $key ]['expected_total'] += $expected;
+						$structure_mismatch_metrics[ $key ]['actual_total'] += $actual;
+						$structure_mismatch_metrics[ $key ]['absolute_delta_total'] += abs( $expected - $actual );
+					}
+				}
 			} catch ( \Throwable $error ) {
 				unset( $error );
 				++$throwables;
@@ -234,6 +294,12 @@ final class Knowledge_Document_V2_Smoke {
 		arsort( $source_kinds, SORT_NUMERIC );
 		arsort( $ai_readiness, SORT_NUMERIC );
 		arsort( $compatibility, SORT_NUMERIC );
+		arsort( $structure_incomplete_by_source_kind, SORT_NUMERIC );
+		arsort( $structure_incomplete_by_strategy, SORT_NUMERIC );
+		arsort( $structure_incomplete_by_compatibility, SORT_NUMERIC );
+		ksort( $structure_mismatch_metrics, SORT_STRING );
+		arsort( $structure_mismatch_signatures, SORT_NUMERIC );
+		arsort( $ai_readiness_reasons, SORT_NUMERIC );
 		return array(
 			'documents' => $documents,
 			'errors' => $errors,
@@ -244,6 +310,12 @@ final class Knowledge_Document_V2_Smoke {
 			'source_kinds' => $source_kinds,
 			'ai_readiness' => $ai_readiness,
 			'compatibility' => $compatibility,
+			'structure_incomplete_by_source_kind' => $structure_incomplete_by_source_kind,
+			'structure_incomplete_by_strategy' => $structure_incomplete_by_strategy,
+			'structure_incomplete_by_compatibility' => $structure_incomplete_by_compatibility,
+			'structure_mismatch_metrics' => $structure_mismatch_metrics,
+			'structure_mismatch_signatures' => $structure_mismatch_signatures,
+			'ai_readiness_reasons' => $ai_readiness_reasons,
 		);
 	}
 

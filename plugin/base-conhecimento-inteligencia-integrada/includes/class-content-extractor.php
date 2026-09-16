@@ -166,6 +166,8 @@ final class Content_Extractor {
 	 * @param array{fragments:array<int,array<string,mixed>>,structure:array<string,int>,warnings:array<int,string>} $source
 	 */
 	private static function merge_result( array &$target, array $source ): void {
+		$namespace = 'extract-merge-' . count( $target['fragments'] );
+		$source['fragments'] = Legacy_HTML_Adapter::namespace_fragments( $source['fragments'], $namespace );
 		foreach ( $source['fragments'] as $fragment ) {
 			$fragment['ordinal'] = count( $target['fragments'] );
 			$target['fragments'][] = $fragment;
@@ -192,7 +194,9 @@ final class Content_Extractor {
 		}
 	}
 
-	/** @param array<int,array<string,mixed>> $fragments */
+	/**
+	 * @param array<int,array<string,mixed>> $fragments
+	 */
 	private static function reindex_fragments( array &$fragments ): void {
 		foreach ( $fragments as $index => &$fragment ) {
 			$fragment['ordinal'] = $index;
@@ -200,7 +204,9 @@ final class Content_Extractor {
 		unset( $fragment );
 	}
 
-	/** @param array<int,array<string,mixed>> $fragments */
+	/**
+	 * @param array<int,array<string,mixed>> $fragments
+	 */
 	private static function source_kind(
 		bool $elementor_succeeded,
 		bool $post_content_used,

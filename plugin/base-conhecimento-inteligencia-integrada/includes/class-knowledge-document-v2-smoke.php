@@ -128,7 +128,7 @@ final class Knowledge_Document_V2_Smoke {
 			&& 0 === $second['structure_incomplete'];
 
 		return array(
-			'schema_version' => '1.1.0',
+			'schema_version' => '1.2.0',
 			'mode' => 'temporary_spec004_kd_v2_read_only_smoke',
 			'generated_at' => gmdate( 'c' ),
 			'environment' => array(
@@ -177,6 +177,7 @@ final class Knowledge_Document_V2_Smoke {
 				'structure_mismatch_metrics' => $first['structure_mismatch_metrics'],
 				'structure_mismatch_signatures' => $first['structure_mismatch_signatures'],
 				'ai_readiness_reasons' => $first['ai_readiness_reasons'],
+				'extraction_warnings' => $first['extraction_warnings'],
 			),
 			'performance' => array(
 				'runtime_ms' => (int) round( ( microtime( true ) - $started ) * 1000 ),
@@ -207,6 +208,7 @@ final class Knowledge_Document_V2_Smoke {
 		$structure_mismatch_metrics = array();
 		$structure_mismatch_signatures = array();
 		$ai_readiness_reasons = array();
+		$extraction_warnings = array();
 
 		foreach ( $ids as $post_id ) {
 			try {
@@ -241,6 +243,13 @@ final class Knowledge_Document_V2_Smoke {
 					: array();
 				foreach ( $reasons as $reason ) {
 					self::increment( $ai_readiness_reasons, $reason );
+				}
+
+				$warnings = is_array( $document['extraction']['warnings'] ?? null )
+					? array_values( array_map( 'strval', $document['extraction']['warnings'] ) )
+					: array();
+				foreach ( $warnings as $warning ) {
+					self::increment( $extraction_warnings, $warning );
 				}
 
 				if ( true !== ( $readiness['structure_complete'] ?? false ) ) {
@@ -300,6 +309,7 @@ final class Knowledge_Document_V2_Smoke {
 		ksort( $structure_mismatch_metrics, SORT_STRING );
 		arsort( $structure_mismatch_signatures, SORT_NUMERIC );
 		arsort( $ai_readiness_reasons, SORT_NUMERIC );
+		arsort( $extraction_warnings, SORT_NUMERIC );
 		return array(
 			'documents' => $documents,
 			'errors' => $errors,
@@ -316,6 +326,7 @@ final class Knowledge_Document_V2_Smoke {
 			'structure_mismatch_metrics' => $structure_mismatch_metrics,
 			'structure_mismatch_signatures' => $structure_mismatch_signatures,
 			'ai_readiness_reasons' => $ai_readiness_reasons,
+			'extraction_warnings' => $extraction_warnings,
 		);
 	}
 

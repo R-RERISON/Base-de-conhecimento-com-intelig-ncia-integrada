@@ -3,78 +3,53 @@
 ## Estado
 
 **G-240 v1: FAIL CONTROLADO — STRUCTURE LOSS.**  
-**G-240 v2: STRUCTURAL REMEDIATION ACTIVE.**
+**G-240 v2: STRUCTURAL REMEDIATION ACTIVE / `acceptance.11` ENV SMOKE PENDING.**
 
-Não executar o aceite humano enquanto o full-corpus KD v2 estiver com `gate.pass=false`.
+Não reutilizar builds anteriores para novo aceite humano.
 
-## O que o v1 provou
+## O que já foi comprovado
 
-A evidência `evidence/g240-acceptance-20260916T085721Z.json` mostrou:
+O G-240 v1 mostrou cobertura textual, ordem e ausência de invenção preservadas, mas perda estrutural em 7/8 casos.
 
-- 8/8 slots revisados;
-- cobertura completa nos 8;
-- ordem preservada nos 8;
-- nenhum texto inventado nos 8;
-- 7/8 com perda estrutural;
-- zero stale;
-- zero repeatability failure.
+A remediação v2 reduziu `structure_incomplete` de 82 para 5 sem relaxar o gate. Os diagnósticos `.8`, `.9` e `.10` isolaram a última classe de falha.
 
-O problema foi estrutural, não de determinismo ou cobertura textual.
+### Diagnóstico pipeline `.10`
 
-## Gate técnico antes do A/B humano
+Evidência: `evidence/pipeline-diag-20260916T143948Z.json`.
 
-A ferramenta **Base de Conhecimento → Validação KD v2** deve produzir simultaneamente:
+Para os cinco documentos restantes:
 
-- corpus invariável;
-- fingerprint editorial idêntico;
-- zero posts alterados;
-- zero errors/throwables;
-- zero hash/canonical JSON mismatch;
-- `structure_incomplete=0` nas duas passagens;
-- `ai_readiness.not_ready=0` nas duas passagens;
-- `DOMDocument=true`.
+- `raw_expected_lists == unwrapped_expected_lists`;
+- `raw_expected_tables == unwrapped_expected_tables`;
+- `fragment_list_containers == block_lists`;
+- `fragment_table_containers == block_tables`.
 
-## Último resultado — `acceptance.7`
+Conclusão: shortcode unwrap e `Semantic_Structure` não perdem containers. A perda ocorre exclusivamente no `Legacy_HTML_Adapter`, entre DOM e fragments.
 
-Evidência: `evidence/kd-v2-smoke-20260916T124150Z.json`.
+## Remediação `acceptance.11`
 
-- 622/622 documentos nas duas passagens;
-- segurança/determinismo PASS;
-- `structure_incomplete=5`;
-- `not_ready=5`;
-- headings mismatch zerado;
-- 3 documentos residuais por listas (`105 expected / 90 actual`);
-- 2 documentos residuais por tabelas (`6 / 4`).
+O parser passa a:
 
-## Build atual — `0.4.0-acceptance.8`
+1. atravessar recursivamente wrappers internos dentro de `li`, `p` e `blockquote` até encontrar a primeira fronteira estrutural `ul|ol|table`;
+2. ao encontrar a fronteira, delegar a subárvore ao adapter correspondente sem descer novamente nela, evitando duplicidade;
+3. preservar `alt` de imagens dentro de células de tabela como conteúdo semântico da célula.
 
-Build **diagnóstico-only**. Não altera parser, KD schema `2.0.1`, readiness ou gate. Adiciona somente:
+Não foram alterados:
 
-- `HTML_DIAG_LIST_PARSER_UNREACHABLE:<n>`;
-- `HTML_DIAG_LIST_NO_MATERIALIZABLE_CONTENT:<n>`;
-- `HTML_DIAG_LIST_IMAGE_ONLY:<n>`;
-- `HTML_DIAG_TABLE_PARSER_UNREACHABLE:<n>`;
-- `HTML_DIAG_TABLE_NO_MATERIALIZABLE_TEXT:<n>`;
-- `HTML_DIAG_TABLE_IMAGE_ONLY:<n>`.
+- schema KD `2.0.1`;
+- `Semantic_DOM_Expectation`;
+- `Semantic_Structure`;
+- hashes;
+- `ai_readiness`;
+- critério `structure_incomplete=0`;
+- critério `not_ready=0`.
 
-Objetivo: distinguir perda real de alcance do parser, markup estrutural sem conteúdo materializável e estruturas image-only antes da última correção.
+Package: `package-acceptance11.md`.
 
-## Execução atual
+## Sequência
 
-1. instalar `0.4.0-acceptance.8`;
+1. instalar `0.4.0-acceptance.11`;
 2. executar somente **Validação KD v2**;
-3. baixar e retornar `bdc-kb-spec004-kd-v2-smoke-*.json`;
-4. **não executar Aceitação G-240 v2 ainda**.
-
-## A/B humano posterior
-
-Somente após full-corpus PASS serão reutilizados exatamente os mesmos 8 posts do G-240 v1. O humano avaliará apenas:
-
-- cobertura;
-- ordem;
-- ausência de invenção;
-- estrutura preservada.
-
-`ai_readiness` é calculado pelo sistema, não por checkbox humano.
-
-Qualquer alteração editorial posterior ao baseline torna o slot `stale`.
+3. exigir full-corpus PASS;
+4. somente então repetir os mesmos oito posts A/B humanos;
+5. G-245 só é liberado após G-240 v2 PASS.

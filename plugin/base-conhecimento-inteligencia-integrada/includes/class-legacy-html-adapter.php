@@ -82,14 +82,19 @@ final class Legacy_HTML_Adapter {
 
 		self::remove_excluded_nodes( $xpath, $root );
 		self::collect_structure( $xpath, $root, $structure );
+		$warnings = array_merge( $warnings, self::structural_diagnostic_warnings( $xpath, $root ) );
 
 		$context = array(
-			'list_index'  => 0,
-			'table_index' => 0,
-			'image_index' => 0,
+			'list_index'          => 0,
+			'table_index'         => 0,
+			'image_index'         => 0,
+			'structural_wrappers' => array(),
 		);
 		self::walk_children( $root, $source, $fragments, $context );
 		self::reindex( $fragments );
+		foreach ( array_keys( (array) $context['structural_wrappers'] ) as $wrapper_tag ) {
+			$warnings[] = 'HTML_STRUCTURAL_WRAPPER_TRAVERSED:' . $wrapper_tag;
+		}
 
 		$structure['paragraphs'] = self::count_kind( $fragments, 'paragraph' );
 		$structure['list_items'] = self::count_kind( $fragments, 'list_item' );
@@ -134,6 +139,66 @@ final class Legacy_HTML_Adapter {
 				$node->parentNode->removeChild( $node );
 			}
 		}
+	}
+
+	/**
+	 * Diagnóstico agregado, sem conteúdo editorial, para explicar diferenças entre
+	 * estrutura DOM observada e blocos semanticamente materializados.
+	 *
+	 * @return array<int,string>
+	 */
+	private static function structural_diagnostic_warnings( \DOMXPath $xpath, \DOMElement $root ): array {
+		$warnings = array();
+		$heading_nodes = $xpath->query( './/h1|.//h2|.//h3|.//h4|.//h5|.//h6', $root );
+		$empty_headings = 0;
+		$headings_in_table = 0;
+		$headings_in_list = 0;
+
+		if ( $heading_nodes ) {
+			foreach ( $heading_nodes as $heading ) {
+				if ( ! $heading instanceof \DOMElement ) {
+					continue;
+				}
+				if ( '' === Content_Normalizer::text( self::visible_text( $heading ) ) ) {
+					++$empty_headings;
+				}
+				$ancestor = $heading->parentNode;
+				while ( $ancestor instanceof \DOMElement && $ancestor !== $root ) {
+					$ancestor_tag = strtolower( $ancestor->tagName );
+					if ( 'table' === $ancestor_tag ) {
+						++$headings_in_table;
+						break;
+					}
+					if ( 'li' === $ancestor_tag ) {
+						++$headings_in_list;
+						break;
+					}
+					$ancestor = $ancestor->parentNode;
+				}
+			}
+		}
+
+		if ( $empty_headings > 0 ) {
+			$warnings[] = 'HTML_DIAG_EMPTY_HEADINGS:' . $empty_headings;
+		}
+		if ( $headings_in_table > 0 ) {
+			$warnings[] = 'HTML_DIAG_HEADINGS_IN_TABLE:' . $headings_in_table;
+		}
+		if ( $headings_in_list > 0 ) {
+			$warnings[] = 'HTML_DIAG_HEADINGS_IN_LIST:' . $headings_in_list;
+		}
+
+		$nested_tables = $xpath->query( './/table//table', $root );
+		if ( $nested_tables && $nested_tables->length > 0 ) {
+			$warnings[] = 'HTML_DIAG_NESTED_TABLES:' . $nested_tables->length;
+		}
+
+		$lists_in_tables = $xpath->query( './/table//ul|.//table//ol', $root );
+		if ( $lists_in_tables && $lists_in_tables->length > 0 ) {
+			$warnings[] = 'HTML_DIAG_LISTS_IN_TABLES:' . $lists_in_tables->length;
+		}
+
+		return $warnings;
 	}
 
 	/** @param array<string,int> $structure */
@@ -226,6 +291,16 @@ final class Legacy_HTML_Adapter {
 				continue;
 			}
 
+			if ( self::has_structural_descendant( $child ) ) {
+				self::flush_inline_buffer( $inline_buffer, $source, $fragments );
+				if ( ! isset( $context['structural_wrappers'] ) || ! is_array( $context['structural_wrappers'] ) ) {
+					$context['structural_wrappers'] = array();
+				}
+				$context['structural_wrappers'][ $tag ] = true;
+				self::walk_children( $child, $source, $fragments, $context );
+				continue;
+			}
+
 			$inline_buffer .= self::visible_text( $child );
 		}
 		self::flush_inline_buffer( $inline_buffer, $source, $fragments );
@@ -233,6 +308,38 @@ final class Legacy_HTML_Adapter {
 
 	private static function is_container_tag( string $tag ): bool {
 		return in_array( $tag, array( 'div', 'section', 'article', 'main', 'header', 'footer', 'aside', 'nav', 'figure', 'figcaption' ), true );
+	}
+
+	/**
+	 * Detecta somente descendentes que carregam fronteira semântica própria.
+	 * Wrappers inline comuns continuam achatados; wrappers históricos/desconhecidos
+	 * passam a ser atravessados quando escondem headings, listas, tabelas ou outros
+	 * blocos estruturais que o coletor DOM já contabiliza.
+	 */
+	private static function has_structural_descendant( \DOMElement $element ): bool {
+		$stack = array();
+		foreach ( $element->childNodes as $child ) {
+			if ( $child instanceof \DOMElement ) {
+				$stack[] = $child;
+			}
+		}
+
+		while ( ! empty( $stack ) ) {
+			/** @var \DOMElement $node */
+			$node = array_pop( $stack );
+			$tag = strtolower( $node->tagName );
+			if ( preg_match( '/^h[1-6]$/', $tag )
+				|| in_array( $tag, array( 'p', 'ul', 'ol', 'table', 'blockquote', 'pre', 'img' ), true ) ) {
+				return true;
+			}
+			foreach ( $node->childNodes as $child ) {
+				if ( $child instanceof \DOMElement ) {
+					$stack[] = $child;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**

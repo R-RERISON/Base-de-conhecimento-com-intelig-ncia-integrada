@@ -60,7 +60,9 @@ final class Gutenberg_Adapter {
 
 			if ( '' === $name ) {
 				if ( '' !== trim( $inner_html ) ) {
-					self::merge_result( $result, Legacy_HTML_Adapter::extract( $inner_html, 'gutenberg:freeform' ) );
+					$partial = Legacy_HTML_Adapter::extract( $inner_html, 'gutenberg:freeform' );
+					$partial = Semantic_DOM_Expectation::apply( $inner_html, $partial );
+					self::merge_result( $result, $partial );
 				}
 				if ( ! empty( $inner_blocks ) ) {
 					self::walk_blocks( $inner_blocks, $result );
@@ -71,6 +73,7 @@ final class Gutenberg_Adapter {
 			if ( in_array( $name, array( 'core/freeform', 'core/heading', 'core/paragraph', 'core/list', 'core/table' ), true ) ) {
 				if ( '' !== trim( $inner_html ) ) {
 					$partial = Legacy_HTML_Adapter::extract( $inner_html, 'gutenberg:' . $name );
+					$partial = Semantic_DOM_Expectation::apply( $inner_html, $partial );
 					self::merge_result( $result, $partial );
 				}
 				if ( ! empty( $inner_blocks ) ) {
@@ -83,14 +86,18 @@ final class Gutenberg_Adapter {
 				$result['warnings'][] = 'GUTENBERG_BLOCK_UNSUPPORTED:' . $name;
 				self::walk_blocks( $inner_blocks, $result );
 				if ( '' !== trim( $inner_html ) ) {
-					self::merge_result( $result, Legacy_HTML_Adapter::extract( $inner_html, 'gutenberg:' . $name ) );
+					$partial = Legacy_HTML_Adapter::extract( $inner_html, 'gutenberg:' . $name );
+					$partial = Semantic_DOM_Expectation::apply( $inner_html, $partial );
+					self::merge_result( $result, $partial );
 				}
 				continue;
 			}
 
 			if ( '' !== trim( $inner_html ) ) {
 				$result['warnings'][] = 'GUTENBERG_BLOCK_UNSUPPORTED:' . $name;
-				self::merge_result( $result, Legacy_HTML_Adapter::extract( $inner_html, 'gutenberg:' . $name ) );
+				$partial = Legacy_HTML_Adapter::extract( $inner_html, 'gutenberg:' . $name );
+				$partial = Semantic_DOM_Expectation::apply( $inner_html, $partial );
+				self::merge_result( $result, $partial );
 			} else {
 				$result['warnings'][] = 'GUTENBERG_DYNAMIC_NOT_RENDERED:' . $name;
 			}

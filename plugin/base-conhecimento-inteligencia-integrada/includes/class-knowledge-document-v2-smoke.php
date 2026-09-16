@@ -125,7 +125,9 @@ final class Knowledge_Document_V2_Smoke {
 			&& 0 === $hash_mismatches
 			&& 0 === $json_mismatches
 			&& 0 === $first['structure_incomplete']
-			&& 0 === $second['structure_incomplete'];
+			&& 0 === $second['structure_incomplete']
+			&& 0 === (int) ( $first['ai_readiness']['not_ready'] ?? 0 )
+			&& 0 === (int) ( $second['ai_readiness']['not_ready'] ?? 0 );
 
 		return array(
 			'schema_version' => '1.3.0',
@@ -187,6 +189,7 @@ final class Knowledge_Document_V2_Smoke {
 				'pass' => $gate_pass,
 				'requires_domdocument' => true,
 				'requires_zero_structure_incomplete' => true,
+				'requires_zero_not_ready' => true,
 			),
 		);
 	}

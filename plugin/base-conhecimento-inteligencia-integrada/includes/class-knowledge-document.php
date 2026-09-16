@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Knowledge_Document {
 
-	public const SCHEMA_VERSION = '2.0.1';
+	public const SCHEMA_VERSION = '2.1.0';
 
 	/**
 	 * Constrói o documento canônico a partir da fonte editorial atual.
@@ -34,16 +34,24 @@ final class Knowledge_Document {
 		if ( $extraction instanceof \WP_Error ) {
 			return $extraction;
 		}
+		$source = array();
+		if ( class_exists( Content_Source::class ) ) {
+			$source_result = Content_Source::inspect( $post_id );
+			if ( is_array( $source_result ) ) {
+				$source = $source_result;
+			}
+		}
 		$url = function_exists( 'get_permalink' ) ? get_permalink( $post_id ) : '';
-		return self::from_extraction( $post, $extraction, is_string( $url ) ? $url : '' );
+		return self::from_extraction( $post, $extraction, is_string( $url ) ? $url : '', $source );
 	}
 
 	/**
 	 * @param object              $post WP_Post ou projeção equivalente.
 	 * @param array<string,mixed> $extraction Saída do Content_Extractor.
+	 * @param array<string,mixed> $source_context Fonte bruta read-only opcional para relationship fidelity.
 	 * @return array<string,mixed>|\WP_Error
 	 */
-	public static function from_extraction( object $post, array $extraction, string $canonical_url = '' ): array|\WP_Error {
+	public static function from_extraction( object $post, array $extraction, string $canonical_url = '', array $source_context = array() ): array|\WP_Error {
 		$post_id = isset( $post->ID ) ? (int) $post->ID : 0;
 		if ( $post_id <= 0 ) {
 			return new \WP_Error( 'bdc_kb_invalid_post', 'Post inválido para Knowledge Document.' );
@@ -54,10 +62,29 @@ final class Knowledge_Document {
 		$source_kind  = isset( $extraction['source_kind'] ) ? (string) $extraction['source_kind'] : 'empty';
 		$fragments    = is_array( $extraction['fragments'] ?? null ) ? $extraction['fragments'] : array();
 		$sections     = Semantic_Structure::sections( $fragments );
-		$blocks       = Semantic_Structure::blocks( $sections );
-		$structure    = self::structure( is_array( $extraction['structure'] ?? null ) ? $extraction['structure'] : array() );
-		$ai_readiness = Semantic_Structure::ai_readiness( $extraction, $sections, $blocks );
-		$extraction_projection = self::extraction_projection( $extraction );
+
+		$numbered = Numbered_Hierarchy_Resolver::resolve( $sections );
+		$sections = $numbered['sections'];
+		$blocks   = Semantic_Structure::blocks( $sections );
+
+		$strategies = is_array( $extraction['strategies'] ?? null ) ? array_values( array_map( 'strval', $extraction['strategies'] ) ) : array();
+		$relationships = Hierarchy_Relationships::evaluate( $source_context, $fragments, $strategies );
+
+		$effective_extraction = $extraction;
+		$effective_warnings = is_array( $effective_extraction['warnings'] ?? null ) ? array_values( array_map( 'strval', $effective_extraction['warnings'] ) ) : array();
+		$effective_warnings = array_merge(
+			$effective_warnings,
+			is_array( $relationships['reasons'] ?? null ) ? array_values( array_map( 'strval', $relationships['reasons'] ) ) : array(),
+			is_array( $numbered['warnings'] ?? null ) ? array_values( array_map( 'strval', $numbered['warnings'] ) ) : array()
+		);
+		$effective_extraction['warnings'] = self::unique_preserve_order( $effective_warnings );
+		$effective_extraction['relationship_fidelity'] = $relationships;
+
+		$structure     = self::structure( is_array( $extraction['structure'] ?? null ) ? $extraction['structure'] : array() );
+		$ai_readiness  = Semantic_Structure::ai_readiness( $effective_extraction, $sections, $blocks );
+		$ai_readiness  = self::apply_hierarchy_readiness( $ai_readiness, $relationships, $numbered );
+		$hierarchy     = self::hierarchy_projection( $relationships, $numbered );
+		$extraction_projection = self::extraction_projection( $effective_extraction );
 
 		$source_payload = array(
 			'schema_version' => self::SCHEMA_VERSION,
@@ -66,6 +93,7 @@ final class Knowledge_Document {
 			'sections'       => $sections,
 			'blocks'         => $blocks,
 			'structure'      => $structure,
+			'hierarchy'      => $hierarchy,
 		);
 		try {
 			$source_hash = Canonical_JSON::hash( $source_payload );
@@ -85,6 +113,7 @@ final class Knowledge_Document {
 			'sections'       => $sections,
 			'blocks'         => $blocks,
 			'structure'      => $structure,
+			'hierarchy'      => $hierarchy,
 			'ai_readiness'   => $ai_readiness,
 			'extraction'     => $extraction_projection,
 		);
@@ -106,6 +135,54 @@ final class Knowledge_Document {
 		} catch ( \JsonException $error ) {
 			return new \WP_Error( 'bdc_kb_document_json_failed', 'Falha ao serializar Knowledge Document.', array( 'exception' => get_class( $error ) ) );
 		}
+	}
+
+	/** @param array<string,mixed> $readiness @param array<string,mixed> $relationships @param array<string,mixed> $numbered @return array<string,mixed> */
+	private static function apply_hierarchy_readiness( array $readiness, array $relationships, array $numbered ): array {
+		$cardinality_complete = true === ( $readiness['structure_complete'] ?? false );
+		$relationship_complete = true === ( $relationships['complete'] ?? true );
+		$reasons = is_array( $readiness['reasons'] ?? null ) ? array_values( array_map( 'strval', $readiness['reasons'] ) ) : array();
+		$relationship_reasons = is_array( $relationships['reasons'] ?? null ) ? array_values( array_map( 'strval', $relationships['reasons'] ) ) : array();
+		$numbered_warnings = is_array( $numbered['warnings'] ?? null ) ? array_values( array_map( 'strval', $numbered['warnings'] ) ) : array();
+		$reasons = self::unique_preserve_order( array_merge( $reasons, $relationship_reasons, $numbered_warnings ) );
+
+		$status = (string) ( $readiness['status'] ?? 'not_ready' );
+		if ( ! $relationship_complete ) {
+			$status = 'not_ready';
+		} elseif ( 'not_ready' !== $status && ! empty( $numbered_warnings ) ) {
+			$status = 'review_required';
+		}
+
+		$readiness['status'] = $status;
+		$readiness['reasons'] = $reasons;
+		$readiness['cardinality_complete'] = $cardinality_complete;
+		$readiness['relationship_complete'] = $relationship_complete;
+		$readiness['structure_complete'] = $cardinality_complete && $relationship_complete;
+		$readiness['numbered_hierarchy_status'] = (string) ( $numbered['status'] ?? 'none' );
+		return $readiness;
+	}
+
+	/** @param array<string,mixed> $relationships @param array<string,mixed> $numbered @return array<string,mixed> */
+	private static function hierarchy_projection( array $relationships, array $numbered ): array {
+		return array(
+			'relationship_fidelity' => array(
+				'applicable'       => (bool) ( $relationships['applicable'] ?? false ),
+				'source_count'     => max( 0, (int) ( $relationships['source_count'] ?? 0 ) ),
+				'heading_enforced' => (bool) ( $relationships['heading_enforced'] ?? false ),
+				'expected'         => is_array( $relationships['expected'] ?? null ) ? $relationships['expected'] : array(),
+				'actual'           => is_array( $relationships['actual'] ?? null ) ? $relationships['actual'] : array(),
+				'complete'         => (bool) ( $relationships['complete'] ?? true ),
+				'reasons'          => is_array( $relationships['reasons'] ?? null ) ? array_values( array_map( 'strval', $relationships['reasons'] ) ) : array(),
+			),
+			'numbered_hierarchy' => array(
+				'status'              => (string) ( $numbered['status'] ?? 'none' ),
+				'strong_signal_count' => max( 0, (int) ( $numbered['strong_signal_count'] ?? 0 ) ),
+				'resolved_edges'      => max( 0, (int) ( $numbered['resolved_edges'] ?? 0 ) ),
+				'nodes'               => is_array( $numbered['nodes'] ?? null ) ? $numbered['nodes'] : array(),
+				'edges'               => is_array( $numbered['edges'] ?? null ) ? $numbered['edges'] : array(),
+				'warnings'            => is_array( $numbered['warnings'] ?? null ) ? array_values( array_map( 'strval', $numbered['warnings'] ) ) : array(),
+			),
+		);
 	}
 
 	/** @param array<string,mixed> $structure @return array<string,int> */
@@ -135,5 +212,19 @@ final class Knowledge_Document {
 				'reasons' => is_array( $compat['reasons'] ?? null ) ? array_values( array_map( 'strval', $compat['reasons'] ) ) : array(),
 			),
 		);
+	}
+
+	/** @param array<int,string> $values @return array<int,string> */
+	private static function unique_preserve_order( array $values ): array {
+		$out = array();
+		$seen = array();
+		foreach ( $values as $value ) {
+			if ( isset( $seen[ $value ] ) ) {
+				continue;
+			}
+			$seen[ $value ] = true;
+			$out[] = $value;
+		}
+		return $out;
 	}
 }

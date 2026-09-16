@@ -1,0 +1,54 @@
+{
+  "source_artifact": "bdc-kb-spec004-kd-v2-smoke-20260916-172538.json",
+  "source_sha256": "4ae43163f2aeb96f8c8d2677b83bf236d5b3f7a505281f1058c57394efdcffa5",
+  "generated_at": "2026-09-16T17:25:38+00:00",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.4.0-acceptance.12",
+    "elementor": "4.1.0",
+    "knowledge_document_schema": "2.1.0",
+    "domdocument": true
+  },
+  "safety": {
+    "read_only_design": true,
+    "editorial_fingerprint_equal": true,
+    "changed_posts_during_run": 0,
+    "corpus_count_before": 622,
+    "corpus_count_after": 622,
+    "corpus_unchanged": true
+  },
+  "knowledge_documents": {
+    "total_posts": 622,
+    "first_pass_documents": 622,
+    "second_pass_documents": 622,
+    "first_pass_errors": 0,
+    "second_pass_errors": 0,
+    "first_pass_throwables": 0,
+    "second_pass_throwables": 0,
+    "hash_mismatches": 0,
+    "canonical_json_mismatches": 0,
+    "first_pass_structure_incomplete": 0,
+    "second_pass_structure_incomplete": 0,
+    "sections_total": 26324,
+    "blocks_total": 20038,
+    "ai_readiness": {
+      "candidate_ready": 387,
+      "review_required": 233,
+      "not_applicable": 2,
+      "not_ready": 0
+    }
+  },
+  "hierarchy_observation": {
+    "explicit_relationship_mismatches": 0,
+    "numbering_conflicts": 6,
+    "ambiguity_occurrences_aggregated": 964,
+    "policy": "conflict/ambiguity remain review_required; only explicit relationship mismatch is blocking"
+  },
+  "gate": {
+    "pass": true,
+    "requires_domdocument": true,
+    "requires_zero_structure_incomplete": true,
+    "requires_zero_not_ready": true
+  }
+}

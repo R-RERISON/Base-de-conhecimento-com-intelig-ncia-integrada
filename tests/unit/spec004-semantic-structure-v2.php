@@ -15,6 +15,8 @@ namespace BDC\KnowledgeBase {
 	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-content-normalizer.php';
 	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-canonical-json.php';
 	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-semantic-structure.php';
+	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-hierarchy-relationships.php';
+	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-numbered-hierarchy-resolver.php';
 	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-knowledge-document.php';
 
 	function assert_v2( bool $condition, string $message ): void {
@@ -69,10 +71,11 @@ namespace BDC\KnowledgeBase {
 	$post = (object) array( 'ID' => 1, 'post_title' => 'Teste', 'post_modified_gmt' => '2026-09-16 00:00:00' );
 	$doc_a = Knowledge_Document::from_extraction( $post, $extraction, 'https://example.test/a' );
 	$doc_b = Knowledge_Document::from_extraction( $post, $extraction, 'https://example.test/b' );
-	assert_v2( is_array( $doc_a ) && '2.0.0' === $doc_a['schema_version'], 'Knowledge Document schema v2' );
+	assert_v2( is_array( $doc_a ) && '2.1.0' === $doc_a['schema_version'], 'Knowledge Document schema v2.1' );
 	assert_v2( $doc_a['source_hash'] === $doc_b['source_hash'], 'URL remains neutral to source hash' );
 	assert_v2( $doc_a['document_hash'] === $doc_b['document_hash'], 'URL remains neutral to document hash' );
 	assert_v2( 'candidate_ready' === $doc_a['ai_readiness']['status'], 'Knowledge Document exposes AI readiness' );
+	assert_v2( isset( $doc_a['hierarchy']['relationship_fidelity'] ), 'Knowledge Document exposes relationship fidelity' );
 
 	$changed = $extraction;
 	$changed['fragments'][3]['meta']['list_type'] = 'unordered';

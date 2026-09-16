@@ -288,7 +288,9 @@ final class Hierarchy_Relationships {
 		}
 		$list_metrics['heading_parent_edges'] = $heading_parent_edges;
 		$list_metrics['heading_path_transitions'] = $heading_path_transitions;
-		$list_metrics['heading_tree_signature'] = self::signature( $heading_signatures );
+		$list_metrics['heading_tree_signature'] = 1 === count( $heading_metrics )
+			? (string) $heading_metrics[0]['heading_tree_signature']
+			: self::signature( $heading_signatures );
 		return $list_metrics;
 	}
 

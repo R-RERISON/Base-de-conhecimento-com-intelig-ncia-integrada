@@ -69,27 +69,32 @@ Achado positivo: todos os 8 casos preservaram cobertura textual, ordem e ausênc
 - [x] T079 Implementar smoke ambiental v2 em duas passagens sobre todo o corpus.
 - [x] T079A Implementar acceptance v2 lado a lado com render semântico de `blocks[]`.
 - [x] T079B Gerar/validar package `0.4.0-acceptance.2`.
-- [x] T079C Executar `Validação KD v2` em homologação com `acceptance.2`: determinismo/zero-write PASS, critério estrutural FAIL com `82/622 structure_incomplete` nas duas passagens.
-- [x] T079C1 Registrar evidência `evidence/kd-v2-smoke-20260916T100412Z.json` e bloquear G-240 v2.
-- [x] T079C2 Instrumentar diagnóstico agregado sem IDs/conteúdo e gerar/validar `0.4.0-acceptance.3`.
-- [ ] T079C3 Executar `Validação KD v2` com `acceptance.3` e identificar por métrica/source/strategy a causa dos 82 mismatches.
-- [ ] T079C4 Corrigir somente a causa comprovada, reempacotar e exigir zero mismatch/zero mutation/zero `structure_incomplete`.
-- [ ] T079D Reexecutar os mesmos 8 casos no `Aceitação G-240 v2`.
+- [x] T079C Executar `Validação KD v2` com `acceptance.2`: determinismo/zero-write PASS; 82/622 `structure_incomplete`.
+- [x] T079C1 Versionar `evidence/kd-v2-smoke-20260916T100412Z.json` e bloquear G-240 v2.
+- [x] T079C2 Instrumentar diagnóstico agregado e gerar `0.4.0-acceptance.3` sem relaxar parser/schema/gate.
+- [x] T079C3 Executar `acceptance.3`: 82/622 reproduzidos; 62 legacy_html, 14 elementor, 5 mixed, 1 gutenberg; mismatches concentrados em headings/lists/list_items/tables.
+- [x] T079C3A Versionar `evidence/kd-v2-smoke-20260916T101517Z.json`.
+- [x] T079C4A Comprovar risco de colisão de IDs estruturais locais (`list-0`, `table-0`, item IDs) entre parciais Elementor/Gutenberg/mixed.
+- [x] T079C4B Implementar namespace determinístico de IDs estruturais nos merges, sem alterar `Semantic_Structure`, schema `2.0.0`, parser Legacy ou critério do gate.
+- [x] T079C4C Adicionar regressão `spec004-structural-id-namespace.php` para duas listas/tabelas independentes.
+- [x] T079C4D Gerar/validar package `0.4.0-acceptance.4` para experimento full-corpus controlado.
+- [ ] T079C5 Executar `Validação KD v2` com `acceptance.4` e medir redução de `structure_incomplete`, especialmente Elementor/mixed/Gutenberg.
+- [ ] T079C6 Se Legacy permanecer divergente, corrigir somente causa Legacy comprovada e repetir full-corpus até `structure_incomplete=0`.
+- [ ] T079D Reexecutar os mesmos 8 casos no `Aceitação G-240 v2` somente após full-corpus PASS.
 - [ ] T079E Fechar G-240 somente se os quatro critérios humanos passarem, sem stale/repeatability failure e com limitações refletidas em `ai_readiness`.
 
-Evidência ambiental v2 atual:
+### Evidência `acceptance.3`
 
-- `0.4.0-acceptance.2` em WordPress `6.9.4`, PHP `8.5.10`, Elementor `4.1.0`;
-- `DOMDocument=true`;
+- ambiente: WordPress `6.9.4`, PHP `8.5.10`, Elementor `4.1.0`, DOM disponível;
 - 622/622 documentos em ambas as passagens;
-- zero errors/throwables;
-- zero hash/canonical JSON mismatch;
+- zero errors/throwables/hash mismatch/canonical JSON mismatch;
 - fingerprint editorial igual e zero posts alterados;
-- `structure_incomplete=82` em ambas as passagens;
-- `ai_readiness`: 495 `candidate_ready`, 82 `not_ready`, 43 `review_required`, 2 `not_applicable`;
-- `gate.pass=false`.
+- `structure_incomplete=82` nas duas passagens;
+- por source: 62 legacy_html, 14 elementor, 5 mixed, 1 gutenberg;
+- mismatches: headings em 47 docs; lists em 47; list_items em 40; tables em 8;
+- `ai_readiness`: 495 candidate_ready, 82 not_ready, 43 review_required, 2 not_applicable.
 
-**Gate G-240: FAIL CONTROLADO / STRUCTURAL DIAGNOSTIC ACTIVE.**
+**Gate G-240: FAIL CONTROLADO / STRUCTURAL REMEDIATION ACTIVE.**
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 

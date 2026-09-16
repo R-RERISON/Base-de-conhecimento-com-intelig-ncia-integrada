@@ -1,0 +1,132 @@
+{
+    "schema_version": "1.0.0",
+    "mode": "temporary_spec004_final_structure_diagnostic",
+    "generated_at": "2026-09-16T13:54:35+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-acceptance.9",
+        "elementor": "4.1.0",
+        "knowledge_document_schema": "2.0.1",
+        "domdocument": true
+    },
+    "safety": {
+        "read_only_design": true,
+        "exports_editorial_content": false,
+        "exports_post_ids": false,
+        "exports_titles_or_urls": false,
+        "fingerprint_before": "93f1068a6439adf8cbe83930fe5e22ac962c14a3ec26dae4815f8fcb7aaf559e",
+        "fingerprint_after": "93f1068a6439adf8cbe83930fe5e22ac962c14a3ec26dae4815f8fcb7aaf559e",
+        "fingerprint_equal": true,
+        "changed_posts_during_run": 0
+    },
+    "diagnostic": {
+        "not_ready_documents": 5,
+        "errors": 0,
+        "throwables": 0,
+        "by_source_kind": {
+            "elementor": 1,
+            "legacy_html": 4
+        },
+        "by_signature": {
+            "elementor|STRUCTURE_COUNT_MISMATCH:lists:80:74": {
+                "documents": 1,
+                "contexts": {
+                    "lists_semantic": 80,
+                    "lists_inside_code": 0,
+                    "lists_inside_heading": 0,
+                    "lists_nested_in_list": 3,
+                    "lists_parser_unreachable": 0,
+                    "tables_semantic": 2,
+                    "tables_inside_code": 0,
+                    "tables_inside_heading": 0,
+                    "tables_parser_unreachable": 0,
+                    "tables_without_text": 0,
+                    "tables_image_only": 0
+                }
+            },
+            "legacy_html|STRUCTURE_COUNT_MISMATCH:lists:17:15": {
+                "documents": 1,
+                "contexts": {
+                    "lists_semantic": 17,
+                    "lists_inside_code": 0,
+                    "lists_inside_heading": 0,
+                    "lists_nested_in_list": 1,
+                    "lists_parser_unreachable": 1,
+                    "tables_semantic": 4,
+                    "tables_inside_code": 0,
+                    "tables_inside_heading": 0,
+                    "tables_parser_unreachable": 0,
+                    "tables_without_text": 0,
+                    "tables_image_only": 0
+                }
+            },
+            "legacy_html|STRUCTURE_COUNT_MISMATCH:lists:8:1": {
+                "documents": 1,
+                "contexts": {
+                    "lists_semantic": 8,
+                    "lists_inside_code": 0,
+                    "lists_inside_heading": 0,
+                    "lists_nested_in_list": 0,
+                    "lists_parser_unreachable": 0,
+                    "tables_semantic": 1,
+                    "tables_inside_code": 0,
+                    "tables_inside_heading": 0,
+                    "tables_parser_unreachable": 0,
+                    "tables_without_text": 0,
+                    "tables_image_only": 0
+                }
+            },
+            "legacy_html|STRUCTURE_COUNT_MISMATCH:tables:2:1": {
+                "documents": 1,
+                "contexts": {
+                    "lists_semantic": 54,
+                    "lists_inside_code": 0,
+                    "lists_inside_heading": 0,
+                    "lists_nested_in_list": 17,
+                    "lists_parser_unreachable": 0,
+                    "tables_semantic": 2,
+                    "tables_inside_code": 0,
+                    "tables_inside_heading": 0,
+                    "tables_parser_unreachable": 1,
+                    "tables_without_text": 1,
+                    "tables_image_only": 1
+                }
+            },
+            "legacy_html|STRUCTURE_COUNT_MISMATCH:tables:4:3": {
+                "documents": 1,
+                "contexts": {
+                    "lists_semantic": 40,
+                    "lists_inside_code": 0,
+                    "lists_inside_heading": 0,
+                    "lists_nested_in_list": 16,
+                    "lists_parser_unreachable": 0,
+                    "tables_semantic": 4,
+                    "tables_inside_code": 0,
+                    "tables_inside_heading": 0,
+                    "tables_parser_unreachable": 1,
+                    "tables_without_text": 0,
+                    "tables_image_only": 0
+                }
+            }
+        },
+        "contexts_total": {
+            "lists_semantic": 199,
+            "lists_inside_code": 0,
+            "lists_inside_heading": 0,
+            "lists_nested_in_list": 37,
+            "lists_parser_unreachable": 1,
+            "tables_semantic": 13,
+            "tables_inside_code": 0,
+            "tables_inside_heading": 0,
+            "tables_parser_unreachable": 2,
+            "tables_without_text": 1,
+            "tables_image_only": 1
+        },
+        "no_structure_signature": 0
+    },
+    "performance": {
+        "runtime_ms": 2952,
+        "peak_memory_bytes": 35651584
+    }
+}

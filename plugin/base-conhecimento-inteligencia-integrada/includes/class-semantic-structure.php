@@ -158,6 +158,7 @@ final class Semantic_Structure {
 			'SOURCE_OVERSIZE_HARD:',
 			'RENDER_FALLBACK_CANDIDATE',
 			'HTML_STRUCTURE_DEGRADED_NO_DOM',
+			'HTML_NESTED_TABLE_UNREPRESENTED:',
 		);
 		$review_prefixes = array(
 			'SHORTCODE_NOT_EXPANDED:',

@@ -12,12 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class Real_Content_Acceptance_V2 {
+
 	public const ACTION    = 'bdc_kb_spec004_g240_acceptance_v2';
 	public const PAGE_SLUG = 'bdc-kb-spec004-g240-acceptance-v2';
+
 	private const NONCE_ACTION = 'bdc_kb_spec004_g240_acceptance_v2_submit';
 	private const NONCE_FIELD  = 'bdc_kb_spec004_g240_acceptance_v2_nonce';
 
-	/** Amostra congelada pelo G-240 v1 para comparação A/B. */
+	/** Mesma amostra do G-240 v1 para comparação A/B. */
 	private const SAMPLE = array(
 		'elementor_native_typical' => array( 'label' => 'Elementor nativo — típico', 'post_id' => 44981, 'fingerprint' => '8b632a173c96ff9df10cd5b99e2187355efb4bc8d93cf7396cad3af3990e069f' ),
 		'elementor_or_mixed_complex' => array( 'label' => 'Elementor/Mixed — complexo', 'post_id' => 1290, 'fingerprint' => 'a813c8191fd9e2d4715aa6971a7a6a6ee2f926e37c65d8a97ea0041e058d7b81' ),
@@ -37,8 +39,13 @@ final class Real_Content_Acceptance_V2 {
 	);
 
 	private const REASONS = array(
-		'missing_content', 'wrong_order', 'invented_text', 'structure_loss',
-		'shortcode_semantics_missing', 'source_corrupt', 'other_review_required',
+		'missing_content',
+		'wrong_order',
+		'invented_text',
+		'structure_loss',
+		'shortcode_semantics_missing',
+		'source_corrupt',
+		'other_review_required',
 	);
 
 	public static function register(): void {
@@ -47,7 +54,14 @@ final class Real_Content_Acceptance_V2 {
 	}
 
 	public static function register_page(): void {
-		add_submenu_page( Admin_Page::PAGE_SLUG, 'Aceitação G-240 v2', 'Aceitação G-240 v2', 'manage_options', self::PAGE_SLUG, array( self::class, 'render_page' ) );
+		add_submenu_page(
+			Admin_Page::PAGE_SLUG,
+			'Aceitação G-240 v2',
+			'Aceitação G-240 v2',
+			'manage_options',
+			self::PAGE_SLUG,
+			array( self::class, 'render_page' )
+		);
 	}
 
 	public static function render_page(): void {
@@ -56,54 +70,86 @@ final class Real_Content_Acceptance_V2 {
 		}
 
 		echo '<div class="wrap"><h1>SPEC-004 — G-240 Real Content Acceptance v2</h1>';
-		echo '<div class="notice notice-warning inline"><p><strong>Reteste estrutural A/B.</strong> A amostra é exatamente a mesma que falhou no v1. O campo “aceitável para IA” foi removido; AI readiness é calculado pelo sistema.</p></div>';
+		echo '<div class="notice notice-warning inline"><p><strong>Reteste estrutural A/B.</strong> ';
+		echo 'A amostra é exatamente a mesma que falhou no v1. Revise apenas os quatro critérios observáveis; AI readiness é calculado pelo sistema.</p></div>';
+		echo '<p><strong>Pré-requisito:</strong> execute antes <em>Validação KD v2</em> e só continue se o JSON retornar <code>gate.pass=true</code>.</p>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '">';
 		wp_nonce_field( self::NONCE_ACTION, self::NONCE_FIELD );
 
 		foreach ( self::SAMPLE as $slot => $config ) {
-			$post_id = (int) $config['post_id'];
-			$post = get_post( $post_id );
-			$source = Content_Source::inspect( $post_id );
-			$document = Knowledge_Document::build( $post_id );
-			$current_fp = self::editorial_fingerprint( $post_id );
-			$stale = '' === $current_fp || ! hash_equals( (string) $config['fingerprint'], $current_fp );
-
-			echo '<hr style="margin:32px 0"><h2>' . esc_html( (string) $config['label'] ) . '</h2>';
-			echo '<input type="hidden" name="sample_id[' . esc_attr( $slot ) . ']" value="' . esc_attr( (string) $post_id ) . '">';
-			echo '<input type="hidden" name="sample_fingerprint[' . esc_attr( $slot ) . ']" value="' . esc_attr( $current_fp ) . '">';
-			if ( $stale ) {
-				echo '<div class="notice notice-error inline"><p><strong>STALE:</strong> este post mudou desde o aceite v1. O item não poderá passar sem nova baseline.</p></div>';
-			}
-			if ( ! is_object( $post ) || is_wp_error( $source ) || is_wp_error( $document ) ) {
-				echo '<div class="notice notice-error inline"><p>Falha ao materializar este item. O gate ficará bloqueado.</p></div>';
-				continue;
-			}
-
-			echo '<p><strong>Post ID:</strong> ' . esc_html( (string) $post_id ) . ' — <strong>' . esc_html( (string) ( $post->post_title ?? '' ) ) . '</strong></p>';
-			echo '<p><strong>source_kind:</strong> ' . esc_html( (string) ( $document['source_kind'] ?? '' ) ) . ' | <strong>schema:</strong> ' . esc_html( (string) ( $document['schema_version'] ?? '' ) ) . '</p>';
-		echo '<p><strong>AI readiness calculado:</strong> <code>' . esc_html( self::json( $document['ai_readiness'] ?? array() ) ) . '</code></p>';
-
-			echo '<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start">';
-			echo '<div><h3>Fonte editorial</h3>';
-			self::render_source( $source );
-			echo '</div><div><h3>Knowledge Document v2</h3>';
-			self::render_document( $document );
-			echo '</div></div>';
-
-			echo '<fieldset style="margin-top:20px;padding:14px;border:1px solid #ccd0d4"><legend><strong>Veredito humano — somente critérios observáveis</strong></legend>';
-			foreach ( self::VERDICT_FIELDS as $field => $label ) {
-				echo '<label style="display:block;margin:8px 0"><input type="checkbox" name="verdict[' . esc_attr( $slot ) . '][' . esc_attr( $field ) . ']" value="1"> ' . esc_html( $label ) . '</label>';
-			}
-			echo '<label><strong>Razão da falha, se houver:</strong> <select name="reason[' . esc_attr( $slot ) . ']"><option value="">—</option>';
-			foreach ( self::REASONS as $reason ) {
-				echo '<option value="' . esc_attr( $reason ) . '">' . esc_html( $reason ) . '</option>';
-			}
-			echo '</select></label></fieldset>';
+			self::render_item( (string) $slot, $config );
 		}
 
 		submit_button( 'Gerar evidência G-240 v2 (JSON)', 'primary', 'submit', true, array( 'style' => 'margin-top:24px' ) );
 		echo '</form></div>';
+	}
+
+	/** @param array<string,mixed> $config */
+	private static function render_item( string $slot, array $config ): void {
+		$post_id = (int) $config['post_id'];
+		$post = get_post( $post_id );
+		$source = Content_Source::inspect( $post_id );
+		$document = Knowledge_Document::build( $post_id );
+		$current_fp = self::editorial_fingerprint( $post_id );
+		$stale = '' === $current_fp || ! hash_equals( (string) $config['fingerprint'], $current_fp );
+
+		echo '<hr style="margin:32px 0"><h2>' . esc_html( (string) $config['label'] ) . '</h2>';
+		echo '<input type="hidden" name="sample_id[' . esc_attr( $slot ) . ']" value="' . esc_attr( (string) $post_id ) . '">';
+		echo '<input type="hidden" name="sample_fingerprint[' . esc_attr( $slot ) . ']" value="' . esc_attr( $current_fp ) . '">';
+
+		if ( $stale ) {
+			echo '<div class="notice notice-error inline"><p><strong>STALE:</strong> este post mudou desde o aceite v1. Este item não pode fechar o gate até nova baseline.</p></div>';
+		}
+		if ( ! is_object( $post ) || is_wp_error( $source ) || is_wp_error( $document ) ) {
+			echo '<div class="notice notice-error inline"><p>Falha ao materializar este item. O gate ficará bloqueado.</p></div>';
+			return;
+		}
+
+		echo '<p><strong>Post ID:</strong> ' . esc_html( (string) $post_id ) . ' — <strong>' . esc_html( (string) ( $post->post_title ?? '' ) ) . '</strong></p>';
+		echo '<p><strong>source_kind:</strong> ' . esc_html( (string) ( $document['source_kind'] ?? '' ) );
+		echo ' | <strong>schema:</strong> ' . esc_html( (string) ( $document['schema_version'] ?? '' ) ) . '</p>';
+		echo '<p><strong>AI readiness calculado:</strong> <code>' . esc_html( self::json( $document['ai_readiness'] ?? array() ) ) . '</code></p>';
+
+		echo '<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start">';
+		echo '<div><h3>Fonte editorial</h3>';
+		self::render_source( $source );
+		echo '</div><div><h3>Knowledge Document v2</h3>';
+		self::render_document( $document );
+		echo '</div></div>';
+
+		echo '<fieldset style="margin-top:20px;padding:14px;border:1px solid #ccd0d4"><legend><strong>Veredito humano — somente critérios observáveis</strong></legend>';
+		foreach ( self::VERDICT_FIELDS as $field => $label ) {
+			echo '<label style="display:block;margin:8px 0"><input type="checkbox" name="verdict[' . esc_attr( $slot ) . '][' . esc_attr( $field ) . ']" value="1"> ' . esc_html( $label ) . '</label>';
+		}
+		echo '<label style="display:block;margin-top:12px"><strong>Razão da falha, se houver:</strong> <select name="reason[' . esc_attr( $slot ) . ']"><option value="">—</option>';
+		foreach ( self::REASONS as $reason ) {
+			echo '<option value="' . esc_attr( $reason ) . '">' . esc_html( $reason ) . '</option>';
+		}
+		echo '</select></label></fieldset>';
+	}
+
+	/** @param array<string,mixed> $source */
+	private static function render_source( array $source ): void {
+		$flags = is_array( $source['flags'] ?? null ) ? $source['flags'] : array();
+		echo '<p><strong>Flags:</strong> <code>' . esc_html( self::json( $flags ) ) . '</code></p>';
+		$content = (string) ( $source['post_content'] ?? '' );
+		if ( '' !== trim( $content ) ) {
+			echo '<details open><summary><strong>post_content</strong></summary><pre style="max-height:500px;overflow:auto;white-space:pre-wrap">' . esc_html( $content ) . '</pre></details>';
+		}
+		$elementor = $source['elementor_raw'] ?? '';
+		$elementor_text = is_string( $elementor ) ? $elementor : self::json( $elementor );
+		if ( '' !== trim( $elementor_text ) ) {
+			echo '<details><summary><strong>_elementor_data</strong></summary><pre style="max-height:500px;overflow:auto;white-space:pre-wrap">' . esc_html( self::pretty_json_if_possible( $elementor_text ) ) . '</pre></details>';
+		}
+	}
+
+	/** @param array<string,mixed> $document */
+	private static function render_document( array $document ): void {
+		echo '<p><strong>Estrutura:</strong> <code>' . esc_html( self::json( $document['structure'] ?? array() ) ) . '</code></p>';
+		echo '<details open><summary><strong>blocks[] semânticos</strong></summary><pre style="max-height:700px;overflow:auto;white-space:pre-wrap">' . esc_html( self::pretty_json( $document['blocks'] ?? array() ) ) . '</pre></details>';
+		echo '<details><summary><strong>sections[]</strong></summary><pre style="max-height:700px;overflow:auto;white-space:pre-wrap">' . esc_html( self::pretty_json( $document['sections'] ?? array() ) ) . '</pre></details>';
+		echo '<details><summary><strong>warnings/proveniência</strong></summary><pre style="max-height:350px;overflow:auto;white-space:pre-wrap">' . esc_html( self::pretty_json( $document['extraction'] ?? array() ) ) . '</pre></details>';
 	}
 
 	public static function handle_submit(): void {
@@ -113,7 +159,9 @@ final class Real_Content_Acceptance_V2 {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( 'Permissão insuficiente.', '', array( 'response' => 403 ) );
 		}
-		$nonce = isset( $_POST[ self::NONCE_FIELD ] ) && is_scalar( $_POST[ self::NONCE_FIELD ] ) ? wp_unslash( (string) $_POST[ self::NONCE_FIELD ] ) : '';
+		$nonce = isset( $_POST[ self::NONCE_FIELD ] ) && is_scalar( $_POST[ self::NONCE_FIELD ] )
+			? wp_unslash( (string) $_POST[ self::NONCE_FIELD ] )
+			: '';
 		if ( ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
 			wp_die( 'Nonce inválido ou expirado.', '', array( 'response' => 403 ) );
 		}
@@ -123,6 +171,7 @@ final class Real_Content_Acceptance_V2 {
 		if ( ! is_string( $json ) ) {
 			wp_die( 'Falha ao serializar evidência.', '', array( 'response' => 500 ) );
 		}
+
 		nocache_headers();
 		header( 'Content-Type: application/json; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="bdc-kb-spec004-g240-v2-acceptance-' . gmdate( 'Ymd-His' ) . '.json"' );
@@ -137,21 +186,25 @@ final class Real_Content_Acceptance_V2 {
 		$posted_verdicts = isset( $_POST['verdict'] ) && is_array( $_POST['verdict'] ) ? wp_unslash( $_POST['verdict'] ) : array();
 		$posted_reasons = isset( $_POST['reason'] ) && is_array( $_POST['reason'] ) ? wp_unslash( $_POST['reason'] ) : array();
 
-		$ids = array_values( array_map( static fn ( array $config ): int => (int) $config['post_id'], self::SAMPLE ) );
-		$before = self::snapshot( $ids );
+		$all_ids = self::post_ids();
+		$before = self::snapshot( $all_ids );
 		$before_hash = self::aggregate_fingerprint( $before );
 		$items = array();
+		$reviewed = 0;
 		$passed = 0;
 		$stale_count = 0;
 		$repeatability_failures = 0;
 		$id_mismatches = 0;
+		$system_not_ready = 0;
 
 		foreach ( self::SAMPLE as $slot => $config ) {
 			$post_id = (int) $config['post_id'];
 			$submitted_id = isset( $posted_ids[ $slot ] ) ? (int) $posted_ids[ $slot ] : 0;
-			if ( $submitted_id !== $post_id ) {
+			$id_mismatch = $submitted_id !== $post_id;
+			if ( $id_mismatch ) {
 				++$id_mismatches;
 			}
+
 			$current_fp = self::editorial_fingerprint( $post_id );
 			$page_fp = isset( $posted_fps[ $slot ] ) && is_scalar( $posted_fps[ $slot ] ) ? (string) $posted_fps[ $slot ] : '';
 			$baseline_fp = (string) $config['fingerprint'];
@@ -172,12 +225,18 @@ final class Real_Content_Acceptance_V2 {
 
 			$verdict = array();
 			$all_true = true;
+			$any_marked = false;
 			foreach ( self::VERDICT_FIELDS as $field => $label ) {
 				unset( $label );
 				$value = isset( $posted_verdicts[ $slot ][ $field ] ) && '1' === (string) $posted_verdicts[ $slot ][ $field ];
 				$verdict[ $field ] = $value;
 				$all_true = $all_true && $value;
+				$any_marked = $any_marked || $value;
 			}
+			if ( $any_marked || isset( $posted_reasons[ $slot ] ) ) {
+				++$reviewed;
+			}
+
 			$reason = isset( $posted_reasons[ $slot ] ) && is_scalar( $posted_reasons[ $slot ] ) ? (string) $posted_reasons[ $slot ] : '';
 			if ( ! in_array( $reason, self::REASONS, true ) ) {
 				$reason = '';
@@ -185,7 +244,15 @@ final class Real_Content_Acceptance_V2 {
 			if ( ! $all_true && '' === $reason ) {
 				$reason = 'other_review_required';
 			}
-			$pass = $all_true && ! $stale && $repeatable && 0 === $id_mismatches;
+
+			$readiness = is_array( $doc_a ) && is_array( $doc_a['ai_readiness'] ?? null ) ? $doc_a['ai_readiness'] : array();
+			$readiness_status = (string) ( $readiness['status'] ?? 'not_ready' );
+			$system_ready = in_array( $readiness_status, array( 'candidate_ready', 'not_applicable' ), true );
+			if ( ! $system_ready ) {
+				++$system_not_ready;
+			}
+
+			$pass = $all_true && ! $stale && $repeatable && ! $id_mismatch && $system_ready;
 			if ( $pass ) {
 				++$passed;
 			}
@@ -193,29 +260,40 @@ final class Real_Content_Acceptance_V2 {
 			$items[] = array(
 				'slot' => $slot,
 				'post_id' => $post_id,
-				'source_kind' => is_array( $doc_a ) ? (string) ( $doc_a['source_kind'] ?? '' ) : 'error',
-				'schema_version' => is_array( $doc_a ) ? (string) ( $doc_a['schema_version'] ?? '' ) : 'error',
+				'source_kind' => is_array( $doc_a ) ? (string) ( $doc_a['source_kind'] ?? '' ) : '',
+				'schema_version' => is_array( $doc_a ) ? (string) ( $doc_a['schema_version'] ?? '' ) : '',
 				'source_hash' => is_array( $doc_a ) ? (string) ( $doc_a['source_hash'] ?? '' ) : '',
 				'document_hash' => is_array( $doc_a ) ? (string) ( $doc_a['document_hash'] ?? '' ) : '',
-				'ai_readiness' => is_array( $doc_a ) && is_array( $doc_a['ai_readiness'] ?? null ) ? $doc_a['ai_readiness'] : array( 'status' => 'error' ),
 				'baseline_editorial_fingerprint' => $baseline_fp,
 				'current_editorial_fingerprint' => $current_fp,
 				'stale' => $stale,
 				'repeatable' => $repeatable,
+				'ai_readiness' => $readiness,
+				'system_ready_for_knowledge_candidate' => $system_ready,
 				'verdict' => $verdict,
 				'reason' => $reason,
 				'pass' => $pass,
 			);
 		}
 
-		$after = self::snapshot( $ids );
+		$after_ids = self::post_ids();
+		$after = self::snapshot( $after_ids );
 		$after_hash = self::aggregate_fingerprint( $after );
 		$changed = self::changed_snapshot_count( $before, $after );
-		$gate_pass = count( self::SAMPLE ) === $passed && 0 === $stale_count && 0 === $repeatability_failures && 0 === $id_mismatches && 0 === $changed && hash_equals( $before_hash, $after_hash );
+		$fingerprint_equal = hash_equals( $before_hash, $after_hash );
+		$corpus_unchanged = $all_ids === $after_ids;
+		$gate_pass = count( self::SAMPLE ) === $passed
+			&& 0 === $stale_count
+			&& 0 === $repeatability_failures
+			&& 0 === $id_mismatches
+			&& 0 === $system_not_ready
+			&& $fingerprint_equal
+			&& $corpus_unchanged
+			&& 0 === $changed;
 
 		return array(
 			'schema_version' => '2.0.0',
-			'mode' => 'temporary_spec004_g240_real_content_acceptance_v2',
+			'mode' => 'temporary_spec004_g240_v2_real_content_acceptance',
 			'generated_at' => gmdate( 'c' ),
 			'environment' => array(
 				'wordpress' => get_bloginfo( 'version' ),
@@ -223,6 +301,7 @@ final class Real_Content_Acceptance_V2 {
 				'plugin' => defined( 'BDC_KB_VERSION' ) ? BDC_KB_VERSION : '',
 				'elementor' => defined( 'ELEMENTOR_VERSION' ) ? ELEMENTOR_VERSION : null,
 				'knowledge_document_schema' => Knowledge_Document::SCHEMA_VERSION,
+				'domdocument' => class_exists( '\\DOMDocument' ),
 			),
 			'safety' => array(
 				'read_only_design' => true,
@@ -230,101 +309,54 @@ final class Real_Content_Acceptance_V2 {
 				'exports_titles_or_urls' => false,
 				'exports_post_ids' => true,
 				'persists_results' => false,
-				'sample_fingerprint_before' => $before_hash,
-				'sample_fingerprint_after' => $after_hash,
-				'sample_fingerprint_equal' => hash_equals( $before_hash, $after_hash ),
+				'editorial_fingerprint_before' => $before_hash,
+				'editorial_fingerprint_after' => $after_hash,
+				'editorial_fingerprint_equal' => $fingerprint_equal,
 				'changed_posts_during_report_generation' => $changed,
+				'corpus_unchanged' => $corpus_unchanged,
 			),
 			'acceptance' => array(
 				'expected_slots' => count( self::SAMPLE ),
+				'reviewed_slots' => $reviewed,
 				'passed_slots' => $passed,
 				'stale_slots' => $stale_count,
 				'repeatability_failures' => $repeatability_failures,
 				'sample_id_mismatches' => $id_mismatches,
+				'system_not_ready_slots' => $system_not_ready,
 				'gate_pass' => $gate_pass,
 				'items' => $items,
 			),
 		);
 	}
 
-	/** @param array<string,mixed> $source */
-	private static function render_source( array $source ): void {
-		echo '<details open><summary><strong>post_content</strong></summary><pre style="white-space:pre-wrap;max-height:520px;overflow:auto;background:#fff;padding:12px;border:1px solid #ccd0d4">' . esc_html( (string) ( $source['post_content'] ?? '' ) ) . '</pre></details>';
-		if ( ! empty( $source['flags']['has_elementor_meta'] ) ) {
-			echo '<details><summary><strong>_elementor_data</strong> (raw, não executado)</summary><pre style="white-space:pre-wrap;max-height:520px;overflow:auto;background:#fff;padding:12px;border:1px solid #ccd0d4">' . esc_html( self::pretty( $source['elementor_raw'] ?? '' ) ) . '</pre></details>';
-		}
+	/** @return array<int,int> */
+	private static function post_ids(): array {
+		$ids = get_posts(
+			array(
+				'post_type' => 'post',
+				'post_status' => array( 'publish', 'draft', 'pending', 'private' ),
+				'posts_per_page' => -1,
+				'fields' => 'ids',
+				'orderby' => 'ID',
+				'order' => 'ASC',
+				'no_found_rows' => true,
+				'suppress_filters' => false,
+			)
+		);
+		return is_array( $ids ) ? array_values( array_map( 'intval', $ids ) ) : array();
 	}
 
-	/** @param array<string,mixed> $document */
-	private static function render_document( array $document ): void {
-		echo '<p><strong>structure:</strong> <code>' . esc_html( self::json( $document['structure'] ?? array() ) ) . '</code></p>';
-		echo '<p><strong>warnings:</strong> <code>' . esc_html( self::json( $document['extraction']['warnings'] ?? array() ) ) . '</code></p>';
-		foreach ( (array) ( $document['blocks'] ?? array() ) as $block ) {
-			if ( is_array( $block ) ) {
-				self::render_block( $block );
+	/** @param array<int,int> $ids @return array<int,string> */
+	private static function snapshot( array $ids ): array {
+		$out = array();
+		foreach ( $ids as $post_id ) {
+			$fingerprint = self::editorial_fingerprint( $post_id );
+			if ( '' !== $fingerprint ) {
+				$out[ $post_id ] = $fingerprint;
 			}
 		}
-		echo '<details style="margin-top:16px"><summary>sections[] para diagnóstico</summary><pre style="white-space:pre-wrap;max-height:420px;overflow:auto">' . esc_html( self::json( $document['sections'] ?? array(), true ) ) . '</pre></details>';
-	}
-
-	/** @param array<string,mixed> $block */
-	private static function render_block( array $block ): void {
-		$kind = (string) ( $block['kind'] ?? 'paragraph' );
-		$path = is_array( $block['heading_path'] ?? null ) ? $block['heading_path'] : array();
-		if ( $path && 'heading' !== $kind ) {
-			$labels = array_map( static fn ( array $part ): string => (string) ( $part['text'] ?? '' ), $path );
-			echo '<div style="font-size:11px;color:#646970;margin-top:10px">↳ ' . esc_html( implode( ' › ', $labels ) ) . '</div>';
-		}
-		if ( 'heading' === $kind ) {
-			$level = max( 1, min( 6, (int) ( $block['meta']['level'] ?? 2 ) ) );
-			echo '<h4 style="margin-bottom:4px">H' . esc_html( (string) $level ) . ' — ' . esc_html( (string) ( $block['text'] ?? '' ) ) . '</h4>';
-			return;
-		}
-		if ( 'list' === $kind ) {
-			self::render_list( $block );
-			return;
-		}
-		if ( 'table' === $kind ) {
-			if ( '' !== (string) ( $block['caption'] ?? '' ) ) {
-				echo '<p><strong>Caption:</strong> ' . esc_html( (string) $block['caption'] ) . '</p>';
-			}
-			echo '<table class="widefat striped" style="margin:8px 0"><tbody>';
-			foreach ( (array) ( $block['rows'] ?? array() ) as $row ) {
-				echo '<tr>';
-				foreach ( (array) ( $row['cells'] ?? array() ) as $cell ) {
-					$tag = 'header' === (string) ( $cell['kind'] ?? '' ) ? 'th' : 'td';
-					echo '<' . $tag . ' colspan="' . esc_attr( (string) max( 1, (int) ( $cell['colspan'] ?? 1 ) ) ) . '" rowspan="' . esc_attr( (string) max( 1, (int) ( $cell['rowspan'] ?? 1 ) ) ) . '">' . esc_html( (string) ( $cell['text'] ?? '' ) ) . '</' . $tag . '>';
-				}
-				echo '</tr>';
-			}
-			echo '</tbody></table>';
-			return;
-		}
-		if ( 'code' === $kind ) {
-			echo '<pre style="background:#f6f7f7;padding:10px">' . esc_html( (string) ( $block['text'] ?? '' ) ) . '</pre>';
-			return;
-		}
-		if ( 'quote' === $kind ) {
-			echo '<blockquote style="border-left:4px solid #646970;padding-left:12px">' . esc_html( (string) ( $block['text'] ?? '' ) ) . '</blockquote>';
-			return;
-		}
-		echo '<p><span style="font-size:11px;color:#646970">[' . esc_html( $kind ) . ']</span> ' . esc_html( (string) ( $block['text'] ?? '' ) ) . '</p>';
-	}
-
-	/** @param array<string,mixed> $list */
-	private static function render_list( array $list ): void {
-		$tag = 'ordered' === (string) ( $list['list_type'] ?? '' ) ? 'ol' : 'ul';
-		echo '<' . $tag . '>';
-		foreach ( (array) ( $list['items'] ?? array() ) as $item ) {
-			echo '<li>' . esc_html( (string) ( $item['text'] ?? '' ) );
-			foreach ( (array) ( $item['children'] ?? array() ) as $child ) {
-				if ( is_array( $child ) ) {
-					self::render_list( $child );
-				}
-			}
-			echo '</li>';
-		}
-		echo '</' . $tag . '>';
+		ksort( $out, SORT_NUMERIC );
+		return $out;
 	}
 
 	private static function editorial_fingerprint( int $post_id ): string {
@@ -334,44 +366,41 @@ final class Real_Content_Acceptance_V2 {
 		}
 		$elementor = get_post_meta( $post_id, '_elementor_data', true );
 		$elementor_string = is_string( $elementor ) ? $elementor : self::json( $elementor );
-		return hash( 'sha256', implode( "\n", array(
-			(string) $post_id,
-			(string) ( $post->post_status ?? '' ),
-			(string) ( $post->post_modified_gmt ?? '' ),
-			hash( 'sha256', (string) ( $post->post_title ?? '' ) ),
-			hash( 'sha256', (string) ( $post->post_content ?? '' ) ),
-			hash( 'sha256', $elementor_string ),
-		) ) );
-	}
-
-	/** @param array<int,int> $ids @return array<int,string> */
-	private static function snapshot( array $ids ): array {
-		$out = array();
-		foreach ( $ids as $id ) {
-			$out[ $id ] = self::editorial_fingerprint( $id );
-		}
-		ksort( $out, SORT_NUMERIC );
-		return $out;
+		return hash(
+			'sha256',
+			implode(
+				"\n",
+				array(
+					(string) $post_id,
+					(string) ( $post->post_status ?? '' ),
+					(string) ( $post->post_modified_gmt ?? '' ),
+					hash( 'sha256', (string) ( $post->post_title ?? '' ) ),
+					hash( 'sha256', (string) ( $post->post_content ?? '' ) ),
+					hash( 'sha256', $elementor_string ),
+				)
+			)
+		);
 	}
 
 	/** @param array<int,string> $snapshot */
 	private static function aggregate_fingerprint( array $snapshot ): string {
 		$parts = array();
-		foreach ( $snapshot as $id => $fingerprint ) {
-			$parts[] = $id . ':' . $fingerprint;
+		foreach ( $snapshot as $post_id => $fingerprint ) {
+			$parts[] = $post_id . ':' . $fingerprint;
 		}
 		return hash( 'sha256', implode( "\n", $parts ) );
 	}
 
 	/** @param array<int,string> $before @param array<int,string> $after */
 	private static function changed_snapshot_count( array $before, array $after ): int {
-		$count = 0;
-		foreach ( array_unique( array_merge( array_keys( $before ), array_keys( $after ) ) ) as $id ) {
-			if ( ( $before[ $id ] ?? null ) !== ( $after[ $id ] ?? null ) ) {
-				++$count;
+		$keys = array_unique( array_merge( array_keys( $before ), array_keys( $after ) ) );
+		$changed = 0;
+		foreach ( $keys as $key ) {
+			if ( ( $before[ $key ] ?? null ) !== ( $after[ $key ] ?? null ) ) {
+				++$changed;
 			}
 		}
-		return $count;
+		return $changed;
 	}
 
 	/** @param array<string,mixed> $document */
@@ -380,17 +409,18 @@ final class Real_Content_Acceptance_V2 {
 		return is_string( $json ) ? hash( 'sha256', $json ) : '';
 	}
 
-	private static function pretty( mixed $value ): string {
-		if ( is_string( $value ) ) {
-			$decoded = json_decode( $value, true );
-			return is_array( $decoded ) ? self::json( $decoded, true ) : $value;
-		}
-		return self::json( $value, true );
+	private static function pretty_json_if_possible( string $value ): string {
+		$decoded = json_decode( $value, true );
+		return is_array( $decoded ) ? self::pretty_json( $decoded ) : $value;
 	}
 
-	private static function json( mixed $value, bool $pretty = false ): string {
-		$flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | ( $pretty ? JSON_PRETTY_PRINT : 0 );
-		$json = function_exists( 'wp_json_encode' ) ? wp_json_encode( $value, $flags ) : json_encode( $value, $flags );
+	private static function pretty_json( mixed $value ): string {
+		$json = wp_json_encode( $value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+		return is_string( $json ) ? $json : '';
+	}
+
+	private static function json( mixed $value ): string {
+		$json = wp_json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 		return is_string( $json ) ? $json : '';
 	}
 }

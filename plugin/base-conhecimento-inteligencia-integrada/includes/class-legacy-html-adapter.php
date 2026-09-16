@@ -35,7 +35,7 @@ final class Legacy_HTML_Adapter {
 			);
 		}
 
-		if ( ! class_exists( '\DOMDocument' ) ) {
+		if ( ! class_exists( '\\DOMDocument' ) ) {
 			$fallback = self::extract_without_dom( $content, $source );
 			$fallback['structure']['shortcodes'] = $structure['shortcodes'];
 			$fallback['warnings'] = self::unique_preserve_order(
@@ -239,7 +239,14 @@ final class Legacy_HTML_Adapter {
 	 * @param array<int,array<string,mixed>> $fragments
 	 * @param array<string,int> $context
 	 */
-	private static function append_list( \DOMElement $list, string $source, array &$fragments, array &$context, int $depth, string $parent_item_id ): void {
+	private static function append_list(
+		\DOMElement $list,
+		string $source,
+		array &$fragments,
+		array &$context,
+		int $depth,
+		string $parent_item_id
+	): void {
 		$list_id = 'list-' . $context['list_index']++;
 		$list_type = 'ol' === strtolower( $list->tagName ) ? 'ordered' : 'unordered';
 		$item_index = 0;
@@ -289,7 +296,13 @@ final class Legacy_HTML_Adapter {
 		$caption_index = 0;
 		foreach ( $table->childNodes as $child ) {
 			if ( $child instanceof \DOMElement && 'caption' === strtolower( $child->tagName ) ) {
-				self::append_fragment( 'table_caption', self::visible_text( $child ), $source, $fragments, array( 'table_id' => $table_id, 'caption_index' => $caption_index++ ) );
+				self::append_fragment(
+					'table_caption',
+					self::visible_text( $child ),
+					$source,
+					$fragments,
+					array( 'table_id' => $table_id, 'caption_index' => $caption_index++ )
+				);
 			}
 		}
 
@@ -315,7 +328,17 @@ final class Legacy_HTML_Adapter {
 				);
 			}
 			$display = implode( ' | ', array_map( static fn ( array $cell ): string => (string) $cell['text'], $cells ) );
-			self::append_fragment( 'table_row', $display, $source, $fragments, array( 'table_id' => $table_id, 'row_index' => $row_index, 'cells' => $cells ) );
+			self::append_fragment(
+				'table_row',
+				$display,
+				$source,
+				$fragments,
+				array(
+					'table_id'  => $table_id,
+					'row_index' => $row_index,
+					'cells'     => $cells,
+				)
+			);
 		}
 	}
 
@@ -351,7 +374,13 @@ final class Legacy_HTML_Adapter {
 		if ( '' === $alt ) {
 			return;
 		}
-		self::append_fragment( 'image', $alt, $source, $fragments, array( 'image_id' => 'image-' . $context['image_index']++ ) );
+		self::append_fragment(
+			'image',
+			$alt,
+			$source,
+			$fragments,
+			array( 'image_id' => 'image-' . $context['image_index']++ )
+		);
 	}
 
 	/**
@@ -405,7 +434,14 @@ final class Legacy_HTML_Adapter {
 	}
 
 	/** @param array<int,array<string,mixed>> $fragments */
-	private static function append_fragment( string $kind, string $text, string $source, array &$fragments, array $meta = array(), bool $preserve = false ): void {
+	private static function append_fragment(
+		string $kind,
+		string $text,
+		string $source,
+		array &$fragments,
+		array $meta = array(),
+		bool $preserve = false
+	): void {
 		$fragment = Content_Normalizer::fragment( $kind, $text, $source, count( $fragments ), $meta, $preserve );
 		if ( null !== $fragment ) {
 			$fragments[] = $fragment;
@@ -419,8 +455,8 @@ final class Legacy_HTML_Adapter {
 	}
 
 	/**
-	 * Best-effort fallback quando ext-dom não estiver disponível.
-	 * Relações estruturais são marcadas como degradadas para impedir AI readiness READY.
+	 * Best-effort fallback when ext-dom is unavailable. Structural relations are
+	 * intentionally marked degraded so AI readiness cannot become READY.
 	 *
 	 * @return array{fragments:array<int,array<string,mixed>>,structure:array<string,int>,warnings:array<int,string>}
 	 */

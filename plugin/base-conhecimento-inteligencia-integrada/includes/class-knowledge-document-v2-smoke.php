@@ -1,6 +1,6 @@
 <?php
 /**
- * Smoke ambiental read-only do Knowledge Document v2 após remediação estrutural G-240.
+ * Smoke ambiental temporário e read-only do Knowledge Document v2.
  *
  * @package BDC_Knowledge_Base
  */
@@ -12,8 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class Knowledge_Document_V2_Smoke {
+
 	public const ACTION    = 'bdc_kb_spec004_kd_v2_smoke';
 	public const PAGE_SLUG = 'bdc-kb-spec004-kd-v2-smoke';
+
 	private const NONCE_ACTION = 'bdc_kb_spec004_kd_v2_smoke_run';
 	private const NONCE_FIELD  = 'bdc_kb_spec004_kd_v2_smoke_nonce';
 
@@ -23,37 +25,54 @@ final class Knowledge_Document_V2_Smoke {
 	}
 
 	public static function register_page(): void {
-		add_submenu_page( Admin_Page::PAGE_SLUG, 'Validação KD v2', 'Validação KD v2', 'manage_options', self::PAGE_SLUG, array( self::class, 'render_page' ) );
+		add_submenu_page(
+			Admin_Page::PAGE_SLUG,
+			'Validação KD v2',
+			'Validação KD v2',
+			'manage_options',
+			self::PAGE_SLUG,
+			array( self::class, 'render_page' )
+		);
 	}
 
 	public static function render_page(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( 'Permissão insuficiente.' );
+			wp_die( esc_html__( 'Permissão insuficiente.', 'bdc-knowledge-base' ) );
 		}
-		echo '<div class="wrap"><h1>SPEC-004 — Validação ambiental Knowledge Document v2</h1>';
-		echo '<div class="notice notice-warning inline"><p><strong>Read-only.</strong> Executa duas passagens sobre todo o corpus para validar schema 2.0.0, hashes, JSON canônico, estrutura e zero mutação.</p></div>';
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '">';
+
+		echo '<div class="wrap">';
+		echo '<h1>' . esc_html__( 'SPEC-004 — Validação ambiental Knowledge Document v2', 'bdc-knowledge-base' ) . '</h1>';
+		echo '<div class="notice notice-warning inline"><p><strong>' . esc_html__( 'Build temporário de homologação.', 'bdc-knowledge-base' ) . '</strong> ';
+		echo esc_html__( 'Executa duas passagens read-only sobre todo o corpus e valida determinismo, completude estrutural e ausência de mutação editorial. Não exporta conteúdo, títulos, URLs ou IDs.', 'bdc-knowledge-base' );
+		echo '</p></div>';
+		echo '<p>' . esc_html__( 'Evite edição concorrente durante a execução.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '">';
 		wp_nonce_field( self::NONCE_ACTION, self::NONCE_FIELD );
-		submit_button( 'Executar validação KD v2 e baixar JSON', 'primary' );
+		submit_button( __( 'Executar validação KD v2 e baixar JSON', 'bdc-knowledge-base' ), 'primary' );
 		echo '</form></div>';
 	}
 
 	public static function handle_run(): void {
 		if ( 'POST' !== strtoupper( (string) ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) {
-			wp_die( 'Método HTTP não permitido.', '', array( 'response' => 405 ) );
+			wp_die( esc_html__( 'Método HTTP não permitido.', 'bdc-knowledge-base' ), '', array( 'response' => 405 ) );
 		}
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( 'Permissão insuficiente.', '', array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Permissão insuficiente.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
 		}
-		$nonce = isset( $_POST[ self::NONCE_FIELD ] ) && is_scalar( $_POST[ self::NONCE_FIELD ] ) ? wp_unslash( (string) $_POST[ self::NONCE_FIELD ] ) : '';
+		$nonce = isset( $_POST[ self::NONCE_FIELD ] ) && is_scalar( $_POST[ self::NONCE_FIELD ] )
+			? wp_unslash( (string) $_POST[ self::NONCE_FIELD ] )
+			: '';
 		if ( ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
-			wp_die( 'Nonce inválido ou expirado.', '', array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Nonce inválido ou expirado.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
 		}
+
 		$report = self::run();
 		$json = wp_json_encode( $report, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 		if ( ! is_string( $json ) ) {
-			wp_die( 'Falha ao serializar relatório.', '', array( 'response' => 500 ) );
+			wp_die( esc_html__( 'Falha ao serializar o relatório.', 'bdc-knowledge-base' ), '', array( 'response' => 500 ) );
 		}
+
 		nocache_headers();
 		header( 'Content-Type: application/json; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="bdc-kb-spec004-kd-v2-smoke-' . gmdate( 'Ymd-His' ) . '.json"' );
@@ -67,7 +86,8 @@ final class Knowledge_Document_V2_Smoke {
 		$ids_before = self::post_ids();
 		$snapshot_before = self::editorial_snapshot( $ids_before );
 		$fingerprint_before = self::aggregate_fingerprint( $snapshot_before );
-		$first = self::document_pass( $ids_before );
+
+		$first  = self::document_pass( $ids_before );
 		$second = self::document_pass( $ids_before );
 
 		$hash_mismatches = 0;
@@ -89,19 +109,27 @@ final class Knowledge_Document_V2_Smoke {
 		$ids_after = self::post_ids();
 		$snapshot_after = self::editorial_snapshot( $ids_after );
 		$fingerprint_after = self::aggregate_fingerprint( $snapshot_after );
-		$changed = self::changed_snapshot_count( $snapshot_before, $snapshot_after );
-		$gate_pass = count( $ids_before ) === count( $ids_after )
+		$changed_count = self::changed_snapshot_count( $snapshot_before, $snapshot_after );
+
+		$corpus_unchanged = $ids_before === $ids_after;
+		$fingerprint_equal = hash_equals( $fingerprint_before, $fingerprint_after );
+		$gate_pass = $corpus_unchanged
+			&& $fingerprint_equal
+			&& 0 === $changed_count
 			&& count( $ids_before ) === count( $first['documents'] )
 			&& count( $ids_before ) === count( $second['documents'] )
-			&& 0 === $first['errors'] && 0 === $second['errors']
-			&& 0 === $first['throwables'] && 0 === $second['throwables']
-			&& 0 === $hash_mismatches && 0 === $json_mismatches
-			&& 0 === $first['structure_incomplete'] && 0 === $second['structure_incomplete']
-			&& 0 === $changed && hash_equals( $fingerprint_before, $fingerprint_after );
+			&& 0 === $first['errors']
+			&& 0 === $second['errors']
+			&& 0 === $first['throwables']
+			&& 0 === $second['throwables']
+			&& 0 === $hash_mismatches
+			&& 0 === $json_mismatches
+			&& 0 === $first['structure_incomplete']
+			&& 0 === $second['structure_incomplete'];
 
 		return array(
-			'schema_version' => '2.0.0',
-			'mode' => 'temporary_spec004_knowledge_document_v2_smoke',
+			'schema_version' => '1.0.0',
+			'mode' => 'temporary_spec004_kd_v2_read_only_smoke',
 			'generated_at' => gmdate( 'c' ),
 			'environment' => array(
 				'wordpress' => get_bloginfo( 'version' ),
@@ -109,6 +137,8 @@ final class Knowledge_Document_V2_Smoke {
 				'plugin' => defined( 'BDC_KB_VERSION' ) ? BDC_KB_VERSION : '',
 				'elementor' => defined( 'ELEMENTOR_VERSION' ) ? ELEMENTOR_VERSION : null,
 				'knowledge_document_schema' => Knowledge_Document::SCHEMA_VERSION,
+				'domdocument' => class_exists( '\\DOMDocument' ),
+				'multisite' => is_multisite(),
 			),
 			'safety' => array(
 				'read_only_design' => true,
@@ -118,12 +148,14 @@ final class Knowledge_Document_V2_Smoke {
 				'persists_documents_or_hashes' => false,
 				'editorial_fingerprint_before' => $fingerprint_before,
 				'editorial_fingerprint_after' => $fingerprint_after,
-				'editorial_fingerprint_equal' => hash_equals( $fingerprint_before, $fingerprint_after ),
-				'changed_posts_during_run' => $changed,
+				'editorial_fingerprint_equal' => $fingerprint_equal,
+				'changed_posts_during_run' => $changed_count,
 				'corpus_count_before' => count( $ids_before ),
 				'corpus_count_after' => count( $ids_after ),
+				'corpus_unchanged' => $corpus_unchanged,
 			),
 			'knowledge_documents' => array(
+				'total_posts' => count( $ids_before ),
 				'first_pass_documents' => count( $first['documents'] ),
 				'second_pass_documents' => count( $second['documents'] ),
 				'first_pass_errors' => $first['errors'],
@@ -138,12 +170,17 @@ final class Knowledge_Document_V2_Smoke {
 				'blocks_total' => $first['blocks_total'],
 				'source_kinds' => $first['source_kinds'],
 				'ai_readiness' => $first['ai_readiness'],
+				'elementor_compatibility' => $first['compatibility'],
 			),
 			'performance' => array(
 				'runtime_ms' => (int) round( ( microtime( true ) - $started ) * 1000 ),
 				'peak_memory_bytes' => memory_get_peak_usage( true ),
 			),
-			'gate_pass' => $gate_pass,
+			'gate' => array(
+				'pass' => $gate_pass,
+				'requires_domdocument' => true,
+				'requires_zero_structure_incomplete' => true,
+			),
 		);
 	}
 
@@ -157,6 +194,7 @@ final class Knowledge_Document_V2_Smoke {
 		$blocks_total = 0;
 		$source_kinds = array();
 		$ai_readiness = array();
+		$compatibility = array();
 
 		foreach ( $ids as $post_id ) {
 			try {
@@ -178,32 +216,51 @@ final class Knowledge_Document_V2_Smoke {
 				$sections_total += count( (array) ( $document['sections'] ?? array() ) );
 				$blocks_total += count( (array) ( $document['blocks'] ?? array() ) );
 				self::increment( $source_kinds, (string) ( $document['source_kind'] ?? 'unknown' ) );
-				$status = (string) ( $document['ai_readiness']['status'] ?? 'unknown' );
-				self::increment( $ai_readiness, $status );
-				if ( false === (bool) ( $document['ai_readiness']['structure_complete'] ?? false ) ) {
+				$readiness = is_array( $document['ai_readiness'] ?? null ) ? $document['ai_readiness'] : array();
+				self::increment( $ai_readiness, (string) ( $readiness['status'] ?? 'unknown' ) );
+				if ( true !== ( $readiness['structure_complete'] ?? false ) ) {
 					++$structure_incomplete;
 				}
+				$status = isset( $document['extraction']['elementor_compatibility']['status'] )
+					? (string) $document['extraction']['elementor_compatibility']['status']
+					: 'unknown';
+				self::increment( $compatibility, $status );
 			} catch ( \Throwable $error ) {
 				unset( $error );
 				++$throwables;
 			}
 		}
+
 		arsort( $source_kinds, SORT_NUMERIC );
 		arsort( $ai_readiness, SORT_NUMERIC );
+		arsort( $compatibility, SORT_NUMERIC );
 		return array(
-			'documents' => $documents, 'errors' => $errors, 'throwables' => $throwables,
-			'structure_incomplete' => $structure_incomplete, 'sections_total' => $sections_total,
-			'blocks_total' => $blocks_total, 'source_kinds' => $source_kinds, 'ai_readiness' => $ai_readiness,
+			'documents' => $documents,
+			'errors' => $errors,
+			'throwables' => $throwables,
+			'structure_incomplete' => $structure_incomplete,
+			'sections_total' => $sections_total,
+			'blocks_total' => $blocks_total,
+			'source_kinds' => $source_kinds,
+			'ai_readiness' => $ai_readiness,
+			'compatibility' => $compatibility,
 		);
 	}
 
 	/** @return array<int,int> */
 	private static function post_ids(): array {
-		$ids = get_posts( array(
-			'post_type' => 'post', 'post_status' => array( 'publish', 'draft', 'pending', 'private' ),
-			'posts_per_page' => -1, 'fields' => 'ids', 'orderby' => 'ID', 'order' => 'ASC',
-			'no_found_rows' => true, 'suppress_filters' => false,
-		) );
+		$ids = get_posts(
+			array(
+				'post_type' => 'post',
+				'post_status' => array( 'publish', 'draft', 'pending', 'private' ),
+				'posts_per_page' => -1,
+				'fields' => 'ids',
+				'orderby' => 'ID',
+				'order' => 'ASC',
+				'no_found_rows' => true,
+				'suppress_filters' => false,
+			)
+		);
 		return is_array( $ids ) ? array_values( array_map( 'intval', $ids ) ) : array();
 	}
 
@@ -217,10 +274,20 @@ final class Knowledge_Document_V2_Smoke {
 			}
 			$elementor = get_post_meta( $post_id, '_elementor_data', true );
 			$elementor_string = is_string( $elementor ) ? $elementor : self::stable_json( $elementor );
-			$snapshot[ $post_id ] = hash( 'sha256', implode( "\n", array(
-				(string) $post_id, (string) ( $post->post_status ?? '' ), (string) ( $post->post_modified_gmt ?? '' ),
-				hash( 'sha256', (string) ( $post->post_title ?? '' ) ), hash( 'sha256', (string) ( $post->post_content ?? '' ) ), hash( 'sha256', $elementor_string ),
-			) ) );
+			$snapshot[ $post_id ] = hash(
+				'sha256',
+				implode(
+					"\n",
+					array(
+						(string) $post_id,
+						(string) ( $post->post_status ?? '' ),
+						(string) ( $post->post_modified_gmt ?? '' ),
+						hash( 'sha256', (string) ( $post->post_title ?? '' ) ),
+						hash( 'sha256', (string) ( $post->post_content ?? '' ) ),
+						hash( 'sha256', $elementor_string ),
+					)
+				)
+			);
 		}
 		ksort( $snapshot, SORT_NUMERIC );
 		return $snapshot;
@@ -237,22 +304,24 @@ final class Knowledge_Document_V2_Smoke {
 
 	/** @param array<int,string> $before @param array<int,string> $after */
 	private static function changed_snapshot_count( array $before, array $after ): int {
-		$count = 0;
-		foreach ( array_unique( array_merge( array_keys( $before ), array_keys( $after ) ) ) as $id ) {
-			if ( ( $before[ $id ] ?? null ) !== ( $after[ $id ] ?? null ) ) {
-				++$count;
+		$keys = array_unique( array_merge( array_keys( $before ), array_keys( $after ) ) );
+		$changed = 0;
+		foreach ( $keys as $key ) {
+			if ( ( $before[ $key ] ?? null ) !== ( $after[ $key ] ?? null ) ) {
+				++$changed;
 			}
 		}
-		return $count;
+		return $changed;
 	}
 
 	/** @param array<string,int> $counts */
 	private static function increment( array &$counts, string $key ): void {
+		$key = '' === $key ? 'unknown' : $key;
 		$counts[ $key ] = (int) ( $counts[ $key ] ?? 0 ) + 1;
 	}
 
 	private static function stable_json( mixed $value ): string {
-		$json = function_exists( 'wp_json_encode' ) ? wp_json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) : json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+		$json = wp_json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 		return is_string( $json ) ? $json : '';
 	}
 }

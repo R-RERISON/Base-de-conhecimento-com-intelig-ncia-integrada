@@ -268,7 +268,7 @@ final class Content_Extractor {
 					$reasons[] = $warning;
 					break;
 				}
-		}
+			}
 		}
 
 		$reasons = self::unique_preserve_order( $reasons );

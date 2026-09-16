@@ -8,8 +8,9 @@
 - G-230/v1: PASS de determinismo; v1 superseded for AI.
 - G-240/v1: FAIL CONTROLADO — perda estrutural.
 - G-240/v2/KD 2.0.1: full-corpus técnico PASS, porém aceite humano A/B **FAIL CONTROLADO — HIERARCHY FIDELITY**.
-- KD 2.1.0 / build `0.4.0-acceptance.12`: implementação pronta para validação ambiental.
-- G-245: BLOCKED.
+- KD 2.1.0 / build `0.4.0-acceptance.12`: full-corpus técnico PASS + aceite humano 8/8 PASS.
+- **G-240: PASS / CLOSED.**
+- **G-245: READY — não iniciado.**
 - G-250: NOT_RUN.
 
 ## S005 — G-240 / Real Content Acceptance
@@ -26,7 +27,7 @@
 - [x] Versionar `evidence/g240-v2-acceptance-20260916T153610Z.json`.
 - [x] Registrar `g240-v2-hierarchy-gap-analysis-20260916.md`.
 
-### Baseline humana
+### Baseline humana que motivou KD 2.1
 
 - 8/8 revisados;
 - cobertura completa 8/8;
@@ -49,11 +50,22 @@
 - [x] T079K Sinal hierárquico forte não resolvido → `HIERARCHY_AMBIGUOUS`; nunca `candidate_ready`.
 - [x] T079L Corrigir acceptance gate: `review_required` humanamente aprovado não falha automaticamente; `not_ready` continua bloqueante.
 - [x] T079M Testes sintéticos de árvore explícita, numeração resolvível, conflito DOM×numeração, ambiguidade, token isolado e IPv4 não confundido com outline.
-- [ ] T079N Reexecutar full-corpus com KD 2.1.0 / `0.4.0-acceptance.12`; analisar todos os `HIERARCHY_*` e atingir gate técnico aceitável.
-- [ ] T079O Reexecutar os mesmos oito casos A/B.
-- [ ] T079P Fechar G-240 somente após 8/8 estrutura humana preservada, `gate_pass=true` e limitações refletidas no readiness.
+- [x] T079N Reexecutar full-corpus com KD 2.1.0 / `0.4.0-acceptance.12`; 622/622 em duas passagens, zero errors/throwables/hash/canonical mismatch, zero structure_incomplete, zero not_ready e gate técnico PASS.
+- [x] T079O Reexecutar os mesmos oito casos A/B; 8/8 human_pass e 8/8 gate_pass.
+- [x] T079P Fechar G-240 com 8/8 estrutura humana preservada, `gate_pass=true`, zero stale/repeatability/sample mismatch, zero `not_ready` e zero mutação editorial.
+
+### Evidências finais KD 2.1
+
+- `evidence/kd-v21-smoke-summary-20260916T172538Z.json` — resumo verificável do full-corpus; SHA-256 do artefato bruto registrado no arquivo.
+- `evidence/g240-kd21-acceptance-20260916T193359Z.json` — aceite humano final 8/8 PASS.
+- full-corpus: corpus 622→622, duas passagens 622/622, zero erros, zero throwables, zero hash mismatch, zero canonical JSON mismatch, zero structure_incomplete, zero `not_ready`.
+- A/B: 8/8 coverage, 8/8 order, 8/8 no invented text, 8/8 structure preserved, 8/8 gate_pass.
+- posts 1290, 370 e 1307, que motivaram KD 2.1, passaram `structure_preserved=true`.
+- `review_required` permanece explícito em casos conservadores; não é tratado como `not_ready`.
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
+
+**Status: READY — execução ainda não iniciada.**
 
 - [x] Contratos de Elementor/produção congelados.
 - [ ] Production Preflight read-only.
@@ -67,7 +79,7 @@
 - [ ] Canário e rollback.
 - [ ] Runbook produção.
 
-**G-245 permanece BLOCKED por G-240.**
+A abertura de G-245 autoriza apenas o planejamento e os subgates previstos. **Nenhum writer/migration deve ser habilitado antes de preflight, projection plan, dry-run, stale-source guard e critérios de rollback estarem aprovados.**
 
 ## Regras constitucionais
 
@@ -77,4 +89,5 @@
 4. Inferência textual só pode ser determinística, conservadora e auditável.
 5. DOM explícito vence inferência.
 6. `review_required` é limitação explícita, não sinônimo automático de `not_ready`.
-7. Writer/migration Elementor continua proibido até G-240 PASS.
+7. G-240 PASS habilita a preparação de G-245, mas não autoriza persistência editorial automaticamente.
+8. Writer/migration Elementor permanecem disabled-by-default até aprovação explícita dos subgates de G-245.

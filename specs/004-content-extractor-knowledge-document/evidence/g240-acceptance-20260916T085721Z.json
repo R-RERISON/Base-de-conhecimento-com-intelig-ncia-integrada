@@ -1,0 +1,218 @@
+{
+    "schema_version": "1.0.0",
+    "mode": "temporary_spec004_g240_real_content_acceptance",
+    "generated_at": "2026-09-16T08:57:21+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-acceptance.1",
+        "elementor": "4.1.0",
+        "knowledge_document_schema": "1.0.0"
+    },
+    "safety": {
+        "read_only_design": true,
+        "exports_editorial_content": false,
+        "exports_titles_or_urls": false,
+        "exports_post_ids": true,
+        "persists_results": false,
+        "editorial_fingerprint_before": "11ecc2b2b0ec02fe5b76b6b26babe150c636655b8d5b8e1c657582dd488969bb",
+        "editorial_fingerprint_after": "11ecc2b2b0ec02fe5b76b6b26babe150c636655b8d5b8e1c657582dd488969bb",
+        "editorial_fingerprint_equal": true,
+        "changed_posts_during_report_generation": 0
+    },
+    "acceptance": {
+        "expected_available_slots": 8,
+        "reviewed_slots": 8,
+        "passed_slots": 0,
+        "stale_slots": 0,
+        "repeatability_failures": 0,
+        "selection_mismatches": 0,
+        "gate_pass": false,
+        "items": [
+            {
+                "slot": "elementor_native_typical",
+                "status": "reviewed",
+                "post_id": 44981,
+                "source_kind": "mixed",
+                "elementor_compatibility": "native",
+                "source_hash": "1c8c6d0fc2f620e512a39d739a98ef4ed2b06a6d2e8a93576c87603b5518ccc1",
+                "document_hash": "1559eb7727ce2378adfe14548bb60c7c9697645722df171e7578afa5b06a24aa",
+                "expected_editorial_fingerprint": "8b632a173c96ff9df10cd5b99e2187355efb4bc8d93cf7396cad3af3990e069f",
+                "current_editorial_fingerprint": "8b632a173c96ff9df10cd5b99e2187355efb4bc8d93cf7396cad3af3990e069f",
+                "stale": false,
+                "repeatable": true,
+                "verdict": {
+                    "coverage_complete": true,
+                    "order_preserved": true,
+                    "no_invented_text": true,
+                    "structure_adequate": true,
+                    "acceptable_for_knowledge_use": false
+                },
+                "reason": "other_review_required",
+                "pass": false
+            },
+            {
+                "slot": "elementor_or_mixed_complex",
+                "status": "reviewed",
+                "post_id": 1290,
+                "source_kind": "elementor",
+                "elementor_compatibility": "native",
+                "source_hash": "ab5d06a9141585e41655d11c3084650ec069e1fb555f8e77992bf0d7d460d953",
+                "document_hash": "3d81591a61b63ca3971bb9f69ab2b22dea03892097b4a6adeca6753ec5603d9f",
+                "expected_editorial_fingerprint": "a813c8191fd9e2d4715aa6971a7a6a6ee2f926e37c65d8a97ea0041e058d7b81",
+                "current_editorial_fingerprint": "a813c8191fd9e2d4715aa6971a7a6a6ee2f926e37c65d8a97ea0041e058d7b81",
+                "stale": false,
+                "repeatable": true,
+                "verdict": {
+                    "coverage_complete": true,
+                    "order_preserved": true,
+                    "no_invented_text": true,
+                    "structure_adequate": false,
+                    "acceptable_for_knowledge_use": false
+                },
+                "reason": "structure_loss",
+                "pass": false
+            },
+            {
+                "slot": "legacy_typical",
+                "status": "reviewed",
+                "post_id": 370,
+                "source_kind": "legacy_html",
+                "elementor_compatibility": "projectable",
+                "source_hash": "915ce41d65a9760aa37795f8e2ce4edb0c63d7fc1ec9b88d2da8ecaf12b39d87",
+                "document_hash": "bc3834d1ba5bee110dd31c98f6cbde8e70de2273f3b5a8d1417fe84a56151302",
+                "expected_editorial_fingerprint": "5ef68c8633389f12ac86337af5b269b40c8a139cac5c8129b9b063c18f26c95d",
+                "current_editorial_fingerprint": "5ef68c8633389f12ac86337af5b269b40c8a139cac5c8129b9b063c18f26c95d",
+                "stale": false,
+                "repeatable": true,
+                "verdict": {
+                    "coverage_complete": true,
+                    "order_preserved": true,
+                    "no_invented_text": true,
+                    "structure_adequate": false,
+                    "acceptable_for_knowledge_use": false
+                },
+                "reason": "structure_loss",
+                "pass": false
+            },
+            {
+                "slot": "legacy_complex",
+                "status": "reviewed",
+                "post_id": 1307,
+                "source_kind": "legacy_html",
+                "elementor_compatibility": "projectable",
+                "source_hash": "74181f8cd1ffbfd39f8e45a1071daac742564f2be9417962e785ddbb9eb4fdb2",
+                "document_hash": "f04bbbee28c99bbf6c52c1ed42f0ace777616a3e0e5d92a31faa9fce06f7ff3f",
+                "expected_editorial_fingerprint": "8f481cb627d14911fa6e6b5ade0e533cdc4e1e11845afac6c74356a90f06f97e",
+                "current_editorial_fingerprint": "8f481cb627d14911fa6e6b5ade0e533cdc4e1e11845afac6c74356a90f06f97e",
+                "stale": false,
+                "repeatable": true,
+                "verdict": {
+                    "coverage_complete": true,
+                    "order_preserved": true,
+                    "no_invented_text": true,
+                    "structure_adequate": false,
+                    "acceptable_for_knowledge_use": false
+                },
+                "reason": "structure_loss",
+                "pass": false
+            },
+            {
+                "slot": "gutenberg",
+                "status": "reviewed",
+                "post_id": 45782,
+                "source_kind": "mixed",
+                "elementor_compatibility": "native",
+                "source_hash": "c6adaf6939ee598d599b0772c27e5bcd37400bd3b14f106afe229ac40594b67e",
+                "document_hash": "5b11749e330c0f98b1450c13ea7d47e277fe8310ce33e7d9b91edf126aae8adf",
+                "expected_editorial_fingerprint": "59682c7a6c0b4a902188e792b4bfb5d275c9989273824f769ee6f9d32a55153f",
+                "current_editorial_fingerprint": "59682c7a6c0b4a902188e792b4bfb5d275c9989273824f769ee6f9d32a55153f",
+                "stale": false,
+                "repeatable": true,
+                "verdict": {
+                    "coverage_complete": true,
+                    "order_preserved": true,
+                    "no_invented_text": true,
+                    "structure_adequate": false,
+                    "acceptable_for_knowledge_use": false
+                },
+                "reason": "structure_loss",
+                "pass": false
+            },
+            {
+                "slot": "shortcode_or_table",
+                "status": "reviewed",
+                "post_id": 36431,
+                "source_kind": "elementor",
+                "elementor_compatibility": "native",
+                "source_hash": "214c9581ce7ac722826788dd692d4d374d18f7e5234c8b812aa3d70286e3c5b7",
+                "document_hash": "719d2dfeb6782036419cd0dd92f9817b60a7a4c96b578abf46e540372e7e637f",
+                "expected_editorial_fingerprint": "f6df5a12e761b17e9d3fc6dd41f92f6635d19a72ecf70efec473cfdc28d4795f",
+                "current_editorial_fingerprint": "f6df5a12e761b17e9d3fc6dd41f92f6635d19a72ecf70efec473cfdc28d4795f",
+                "stale": false,
+                "repeatable": true,
+                "verdict": {
+                    "coverage_complete": true,
+                    "order_preserved": true,
+                    "no_invented_text": true,
+                    "structure_adequate": false,
+                    "acceptable_for_knowledge_use": false
+                },
+                "reason": "structure_loss",
+                "pass": false
+            },
+            {
+                "slot": "review_required",
+                "status": "reviewed",
+                "post_id": 1289,
+                "source_kind": "legacy_html",
+                "elementor_compatibility": "review_required",
+                "source_hash": "206b6474237f70ca6fb424c5a28f0b152b486bd5703df9e03148bbaa910a470d",
+                "document_hash": "1f812d28966538c2e3cb025b5158dc95797f94b9d2a27b2c823790a4e9e4b666",
+                "expected_editorial_fingerprint": "266bfee946967dfe7868d3ddd39e5cc5e0dc95dd745f0c583bca87429522e634",
+                "current_editorial_fingerprint": "266bfee946967dfe7868d3ddd39e5cc5e0dc95dd745f0c583bca87429522e634",
+                "stale": false,
+                "repeatable": true,
+                "verdict": {
+                    "coverage_complete": true,
+                    "order_preserved": true,
+                    "no_invented_text": true,
+                    "structure_adequate": false,
+                    "acceptable_for_knowledge_use": false
+                },
+                "reason": "structure_loss",
+                "pass": false
+            },
+            {
+                "slot": "empty_or_corrupt",
+                "status": "reviewed",
+                "post_id": 28748,
+                "source_kind": "legacy_html",
+                "elementor_compatibility": "review_required",
+                "source_hash": "a1e54470198b0384163df3af9030b7e5b7731f062ebe51619ba1df0d0d330fbd",
+                "document_hash": "dac1aebdc72eab13ce39f92b77d2d78fb7481c30a9870043565ae521deaabca3",
+                "expected_editorial_fingerprint": "4c8e6cccbe98b85a1fd16a633796c9e20b7921af9833da0cbf18e1c887f76053",
+                "current_editorial_fingerprint": "4c8e6cccbe98b85a1fd16a633796c9e20b7921af9833da0cbf18e1c887f76053",
+                "stale": false,
+                "repeatable": true,
+                "verdict": {
+                    "coverage_complete": true,
+                    "order_preserved": true,
+                    "no_invented_text": true,
+                    "structure_adequate": false,
+                    "acceptable_for_knowledge_use": false
+                },
+                "reason": "structure_loss",
+                "pass": false
+            }
+        ]
+    },
+    "gate_expectations": {
+        "all_available_slots_pass": true,
+        "selection_mismatches": 0,
+        "stale_slots": 0,
+        "repeatability_failures": 0,
+        "editorial_fingerprint_equal": true,
+        "changed_posts_during_report_generation": 0
+    }
+}

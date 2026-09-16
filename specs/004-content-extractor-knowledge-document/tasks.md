@@ -75,26 +75,36 @@ Achado positivo: todos os 8 casos preservaram cobertura textual, ordem e ausênc
 - [x] T079C3 Executar `acceptance.3`: 82/622 reproduzidos; 62 legacy_html, 14 elementor, 5 mixed, 1 gutenberg; mismatches concentrados em headings/lists/list_items/tables.
 - [x] T079C3A Versionar `evidence/kd-v2-smoke-20260916T101517Z.json`.
 - [x] T079C4A Comprovar risco de colisão de IDs estruturais locais (`list-0`, `table-0`, item IDs) entre parciais Elementor/Gutenberg/mixed.
-- [x] T079C4B Implementar namespace determinístico de IDs estruturais nos merges, sem alterar `Semantic_Structure`, schema `2.0.0`, parser Legacy ou critério do gate.
+- [x] T079C4B Implementar namespace determinístico de IDs estruturais nos merges, sem alterar schema `2.0.0` ou critério do gate.
 - [x] T079C4C Adicionar regressão `spec004-structural-id-namespace.php` para duas listas/tabelas independentes.
 - [x] T079C4D Gerar/validar package `0.4.0-acceptance.4` para experimento full-corpus controlado.
-- [ ] T079C5 Executar `Validação KD v2` com `acceptance.4` e medir redução de `structure_incomplete`, especialmente Elementor/mixed/Gutenberg.
-- [ ] T079C6 Se Legacy permanecer divergente, corrigir somente causa Legacy comprovada e repetir full-corpus até `structure_incomplete=0`.
+- [x] T079C5 Executar `Validação KD v2` com `acceptance.4`: `structure_incomplete` caiu de 82 para 78; mixed 5→2; Gutenberg 1→0; Legacy permaneceu 62; Elementor permaneceu 14.
+- [x] T079C5A Confirmar que desapareceram assinaturas `actual > expected`, comprovando a correção da classe de fusão/colisão de árvores.
+- [x] T079C5B Versionar `evidence/kd-v2-smoke-20260916T104818Z.json`.
+- [x] T079C6A Isolar segunda causa comprovável de listas: `list_item` vazio era descartado antes da projeção e podia deixar sublista com `parent_item_id` órfão.
+- [x] T079C6B Preservar `list_item` vazio como `structural_anchor=true`, mantendo `text=""`; `Semantic_Structure` aceita vazio somente quando a âncora é explícita.
+- [x] T079C6C Gerar e validar `0.4.0-acceptance.5` sem alterar o critério `structure_incomplete=0`.
+- [ ] T079C6D Executar `Validação KD v2` com `acceptance.5` e medir impacto em `lists`/`list_items` e no total de `structure_incomplete`.
+- [ ] T079C7 Se ainda houver divergência, instrumentar/corrigir somente a classe residual comprovada (headings/wrappers/tabelas), mantendo raw expected × semantic actual como guarda independente.
 - [ ] T079D Reexecutar os mesmos 8 casos no `Aceitação G-240 v2` somente após full-corpus PASS.
 - [ ] T079E Fechar G-240 somente se os quatro critérios humanos passarem, sem stale/repeatability failure e com limitações refletidas em `ai_readiness`.
 
-### Evidência `acceptance.3`
+### Evidência `acceptance.4`
 
-- ambiente: WordPress `6.9.4`, PHP `8.5.10`, Elementor `4.1.0`, DOM disponível;
-- 622/622 documentos em ambas as passagens;
+- ambiente: WordPress `6.9.4`, PHP `8.5.10`, Elementor `4.1.0`, KD `2.0.0`, `DOMDocument=true`;
+- corpus `622 → 622`, duas passagens completas;
 - zero errors/throwables/hash mismatch/canonical JSON mismatch;
 - fingerprint editorial igual e zero posts alterados;
-- `structure_incomplete=82` nas duas passagens;
-- por source: 62 legacy_html, 14 elementor, 5 mixed, 1 gutenberg;
-- mismatches: headings em 47 docs; lists em 47; list_items em 40; tables em 8;
-- `ai_readiness`: 495 candidate_ready, 82 not_ready, 43 review_required, 2 not_applicable.
+- `structure_incomplete=78` nas duas passagens;
+- por source: 62 legacy_html, 14 elementor, 2 mixed; Gutenberg zerou;
+- headings: 47 docs, expected 504, actual 302;
+- lists: 43 docs, expected 1150, actual 604;
+- list_items: 38 docs, expected 1450, actual 1001;
+- tables: 2 docs, expected 6, actual 4;
+- `ai_readiness`: 499 candidate_ready, 78 not_ready, 43 review_required, 2 not_applicable;
+- todas as assinaturas residuais são `expected > actual`.
 
-**Gate G-240: FAIL CONTROLADO / STRUCTURAL REMEDIATION ACTIVE.**
+**Gate G-240: FAIL CONTROLADO / STRUCTURAL EMISSION REMEDIATION ACTIVE.**
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 

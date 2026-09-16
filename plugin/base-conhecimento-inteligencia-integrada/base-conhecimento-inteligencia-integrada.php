@@ -34,6 +34,7 @@ require_once BDC_KB_DIR . 'includes/class-review-admin.php';
 require_once BDC_KB_DIR . 'includes/class-content-normalizer.php';
 require_once BDC_KB_DIR . 'includes/class-shortcode-inspector.php';
 require_once BDC_KB_DIR . 'includes/class-legacy-html-adapter.php';
+require_once BDC_KB_DIR . 'includes/class-semantic-dom-expectation.php';
 require_once BDC_KB_DIR . 'includes/class-content-source.php';
 require_once BDC_KB_DIR . 'includes/class-elementor-adapter.php';
 require_once BDC_KB_DIR . 'includes/class-gutenberg-adapter.php';

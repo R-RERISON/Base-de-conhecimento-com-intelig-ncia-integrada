@@ -100,6 +100,8 @@ final class Elementor_Adapter {
 	 * @param array{fragments:array<int,array<string,mixed>>,structure:array<string,int>,warnings:array<int,string>} $source
 	 */
 	private static function merge_result( array &$target, array $source ): void {
+		$namespace = 'elementor-merge-' . count( $target['fragments'] );
+		$source['fragments'] = Legacy_HTML_Adapter::namespace_fragments( $source['fragments'], $namespace );
 		foreach ( $source['fragments'] as $fragment ) {
 			$fragment['ordinal'] = count( $target['fragments'] );
 			$target['fragments'][] = $fragment;

@@ -21,7 +21,6 @@
 ## T097 — PASS AMBIENTAL
 
 Evidência: `evidence/g245-editorial-parity-t097-20260917T184418Z.json`.
-
 SHA-256 bruto: `6466fb0830d9ba65e79da9dc69b90da6a08fb4286391517eb0663849b10babec`.
 
 Resultado: 623/623 em duas passagens; errors/throwables/safety violations/parity mismatches/stale sources/manifest mismatches = 0; parity pass 611; native_noop 4; not_applicable 3; review_required 5; stale fresh 623; fingerprint editorial idêntico; `t097_static_editorial_parity_pass=true`.

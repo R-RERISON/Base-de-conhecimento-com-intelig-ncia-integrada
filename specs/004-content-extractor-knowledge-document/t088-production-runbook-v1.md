@@ -21,6 +21,7 @@ Este runbook não concede autorização de writer. Ele define **como** uma opera
 7. `review_required`, `blocked` ou dependência legada desconhecida nunca é autoaprovada.
 8. GO homologação não é GO produção.
 9. UX-002 permanece contrato visual do plugin; G-245 não pode alterá-la incidentalmente.
+10. O artigo fica sob lock exclusivo durante a janela crítica.
 
 ## 3. Pré-condições para iniciar um canário
 
@@ -32,14 +33,15 @@ Todas devem estar verdadeiras:
 - T083/T084/T085/T086 PASS;
 - T083B journal storage com **smoke ambiental PASS**;
 - T087A `technical_preconditions_satisfied=true`;
+- T087B-prep lock exclusivo PASS;
 - candidato `projectable` e `requires_review=false`;
 - dry-run `ready`;
 - source `fresh`;
 - rollback capsule íntegro;
 - payload de journal dentro do limite do contrato;
 - usuário executor com `manage_options`;
-- autorização humana específica para o post canário;
-- executor mutável mínimo revisado e version-gated;
+- autorização humana específica para o post/run canário;
+- executor mutável mínimo revisado, version-gated e disabled-by-default;
 - nenhum arquivo visual UX-002 alterado no diff da release.
 
 Se uma condição falhar: **ABORT**.
@@ -66,6 +68,7 @@ Antes de executar, registrar e apresentar:
 
 - post ID;
 - título apenas para identificação humana;
+- `run_id`;
 - `source_hash_before`;
 - `projection_hash`;
 - `dry_run_hash`;
@@ -83,7 +86,7 @@ A autorização deve ser específica para esse canário. Não reutilizar autoriz
 
 ### Fase A — Freeze e releitura
 
-1. adquirir lock exclusivo do artigo;
+1. adquirir lock exclusivo do artigo com `run_id` e token próprios;
 2. reconstruir Knowledge Document;
 3. reconstruir Projection Plan;
 4. recalcular dry-run;
@@ -91,7 +94,7 @@ A autorização deve ser específica para esse canário. Não reutilizar autoriz
 6. revalidar stale-source;
 7. confirmar que hashes continuam iguais aos do Authorization Pack.
 
-Qualquer mismatch: **ABORT antes de journal/write**.
+Qualquer mismatch: **ABORT antes de journal/write** e liberar lock com token exato.
 
 ### Fase B — Write-ahead journal
 
@@ -110,7 +113,8 @@ Após journal persistido e imediatamente antes do write:
 
 1. reconstruir source hash atual;
 2. comparar com `source_hash_before`;
-3. se divergente, registrar abort e liberar lock.
+3. confirmar que o lock ainda é o mesmo e está `held`;
+4. se qualquer condição divergir, abortar e liberar lock.
 
 Não reutilizar stale check anterior.
 
@@ -142,7 +146,7 @@ Obrigatório antes de considerar o canário aplicado:
 8. comparação humana before/after;
 9. confirmar ausência de texto inventado, perda de conteúdo, reordenação ou quebra visual.
 
-Qualquer FAIL: iniciar rollback imediato.
+Qualquer FAIL: iniciar rollback imediato mantendo o lock.
 
 ## 7. Rollback obrigatório do primeiro canário
 
@@ -160,7 +164,7 @@ Sequência:
 8. persistir evento `rolled_back` encadeado;
 9. validar Elementor e visualização novamente;
 10. comparação humana final;
-11. liberar lock.
+11. liberar lock com token exato.
 
 Se o alvo estiver stale após o write, rollback automático deve falhar fechado e a operação passa para incidente manual controlado.
 
@@ -178,7 +182,7 @@ Abortar imediatamente se ocorrer qualquer um:
 - journal não persistido ou capsule inválido;
 - payload > limite do storage;
 - capability/nonce/autorização inválida;
-- lock não adquirido;
+- lock não adquirido, expirado ou token divergente;
 - erro/throwable antes ou durante write;
 - pós-write estrutural/hierárquico FAIL;
 - visual/humano FAIL;
@@ -194,7 +198,7 @@ Após T087 PASS completo:
 1. revisar evidência do canário e rollback;
 2. definir tamanho inicial pequeno;
 3. usar T086 cursor/cohort hash;
-4. journal por artigo;
+4. lock + journal por artigo;
 5. stale check por artigo;
 6. checkpoint operacional somente após item verificado;
 7. interromper batch no primeiro erro crítico;
@@ -227,6 +231,7 @@ Registrar sem exportar conteúdo editorial bruto:
 - versões;
 - hashes before/plan/dry-run/after/restored;
 - journal event ids;
+- lock token apenas em evidência privada controlada, nunca em log público;
 - resultados stale/gateway;
 - operação executada;
 - verificação pós-write;
@@ -239,12 +244,18 @@ Registrar sem exportar conteúdo editorial bruto:
 
 O runbook está congelado como procedimento, porém sua seção mutável continua bloqueada.
 
-Antes do T087 canário faltam:
+Já fechado localmente:
+
+- journal storage WordPress-first implementado;
+- lock exclusivo de artigo implementado e testado;
+- Canary Readiness read-only implementado.
+
+Antes do T087 canário ainda faltam:
 
 1. smoke ambiental T083B com `gate.t083b_storage_pass=true`;
-2. lock exclusivo de artigo;
-3. executor mutável mínimo e version-gated;
-4. seleção do canário;
-5. Authorization Pack específico.
+2. executor mutável mínimo e version-gated, mantido disabled-by-default até autorização;
+3. seleção do canário;
+4. Authorization Pack específico;
+5. autorização específica do post/run.
 
 Nenhuma dessas pendências autoriza atalhos.

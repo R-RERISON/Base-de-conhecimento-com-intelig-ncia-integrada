@@ -19,7 +19,7 @@
 - merge G-240: `32a696386bf2ab5574d4d7725db78636fa51f36c`;
 - baseline institucional sincronizada: `422de89f5e341204b7549116cc2022fbc978f3ab`.
 
-A `main` contém o knowledge plane read-only aceito em G-240. O trabalho de G-245 continua isolado em `spec004-g245-production-readiness` até fechamento dos subgates aplicáveis.
+A branch `spec004-g245-production-readiness` foi sincronizada com essa baseline sem descarte do trabalho G-245. O trabalho incompleto continua isolado do runtime da `main`.
 
 ## Ambiente de homologação validado
 
@@ -98,26 +98,35 @@ Esses pontos não bloqueiam Projection Plan read-only, mas continuam bloqueando 
 
 ## G-245 — T081 Projection Plan read-only
 
-**IN PROGRESS.**
+**LOCAL READY / ENVIRONMENTAL PENDING.**
 
-Artefatos já presentes na branch:
+Build de trabalho: `0.4.0-g245-projection.2`.
 
-- contrato `elementor-projection-plan-contract-v1.md` congelado para T081;
-- `Elementor_Projection_Plan` read-only;
-- runner full-corpus `Elementor_Projection_Plan_Smoke`;
-- teste local `tests/unit/spec004-projection-plan-v1.php`;
-- build de trabalho `0.4.0-g245-projection.1`.
+Estado técnico:
 
-O plano é derivado de KD 2.1.0, source hash, source kind, compatibilidade Elementor, warnings e dependências de shortcode. Não usa LLM, embeddings, render dinâmico ou `do_shortcode()`.
+- contrato `elementor-projection-plan-contract-v1.md` congelado;
+- `Elementor_Projection_Plan` read-only e determinístico;
+- warnings estruturais/dinâmicos de migração agora forçam `requires_review=true` conforme contrato;
+- `SHORTCODE_NOT_EXPANDED` de handler registrado permanece warning opaco sem overblocking automático;
+- `faq_wd`, `wpt` e handlers ausentes continuam obrigatoriamente em review;
+- `projection_hash` é SHA-256 canônico e depende de `source_hash_before`;
+- todos os safety flags permanecem estritamente `false`;
+- runner full-corpus foi endurecido para falhar em hash inválido, safety violation ou warning crítico sem review;
+- teste local ampliado: **58 assertions PASS**;
+- lint PHP dos artefatos alterados: PASS no ambiente local de validação.
 
-Antes do fechamento de T081 ainda é obrigatório:
+Ainda não é permitido declarar T081 PASS porque falta evidência ambiental no WordPress de homologação.
 
-1. fechar divergências entre contrato e implementação;
-2. reexecutar lint/testes locais após correções;
-3. comprovar repetibilidade/zero-write;
-4. executar full-corpus ambiental em duas passagens;
-5. versionar evidência ambiental e distribuição por status/strategy;
-6. manter o PR #4 DRAFT enquanto o gate não estiver completo.
+Para fechar T081 ainda é obrigatório:
+
+1. instalar/executar a build `0.4.0-g245-projection.2` em homologação;
+2. executar o runner full-corpus em duas passagens;
+3. comprovar 622/622 em ambas as passagens;
+4. obter zero errors/throwables/hash mismatch/canonical mismatch;
+5. obter zero projection-hash/safety/writer/review-policy violations;
+6. comprovar corpus e fingerprint editorial inalterados;
+7. versionar a evidência ambiental e as distribuições de status/strategy/warnings;
+8. manter o PR #4 DRAFT até esse gate fechar.
 
 ## Guardrails
 

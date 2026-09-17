@@ -24,21 +24,14 @@ Canônica futura: `WP_Post.post_content` + WordPress Core Blocks.
 - KD é modelo semântico, não representação editorial lossless;
 - migração usa `Migration Fidelity Source -> Lossless Core Block Serializer`.
 
-## Baseline ambiental T097
+## T097 — PASS AMBIENTAL
 
 Ambiente: WordPress 6.9.4 / PHP 8.5.10.
-Corpus: **623 posts**.
+Corpus: 623 posts.
 
-Source kinds: legacy_html 536; plain_text 41; elementor 34; mixed 5; gutenberg 4; empty 3.
-
-T097 comprovou:
-
-- Block Registry: `core/freeform` e `core/shortcode` presentes;
+- Core Block Registry: `core/freeform` e `core/shortcode` presentes;
 - duas passagens 623/623;
-- errors/throwables/safety violations = 0;
-- parity mismatches = 0;
-- stale sources = 0;
-- manifest hash mismatches = 0;
+- errors/throwables/safety/parity/stale/manifest mismatches = 0;
 - parity pass 611;
 - native_noop 4;
 - not_applicable 3;
@@ -47,16 +40,12 @@ T097 comprovou:
 - fingerprint editorial before/after idêntico;
 - `t097_static_editorial_parity_pass=true`.
 
-Evidência:
-`evidence/g245-editorial-parity-t097-20260917T184418Z.json`.
-
-SHA-256 bruto:
-`6466fb0830d9ba65e79da9dc69b90da6a08fb4286391517eb0663849b10babec`.
+Evidência: `evidence/g245-editorial-parity-t097-20260917T184418Z.json`.
+SHA-256 bruto: `6466fb0830d9ba65e79da9dc69b90da6a08fb4286391517eb0663849b10babec`.
 
 ## T098 — Block Migration Protection
 
-Contrato:
-`block-migration-protection-contract-v1.md`.
+Contrato: `block-migration-protection-contract-v1.md`.
 
 Novas primitivas Core Blocks:
 
@@ -67,44 +56,38 @@ Novas primitivas Core Blocks:
 - `Block_Migration_Lock`;
 - `Block_Migration_Readiness_Smoke`.
 
-Validação local: **24/24 assertions PASS** e PHP lint PASS.
+Validação local: **24/24 assertions PASS** e lint PASS.
 
-T098 ainda não implementa writer. O smoke ambiental:
+O gate T098 permanece read-only. O smoke:
 
 - constrói dry-runs full-corpus;
 - prepara journals apenas em memória;
 - valida stale-source;
-- percorre cohort em batches de 25 com cursor íntegro;
+- percorre batches de 25 com cursor íntegro;
 - exige zero duplicidade e cobertura integral;
 - não persiste journal;
 - não adquire lock;
-- não escreve `post_content` ou `_elementor_data`;
+- não escreve `post_content`/`_elementor_data`;
 - não renderiza blocos/shortcodes;
-- não exporta conteúdo, URLs ou post IDs.
+- não exporta conteúdo/URLs/post IDs.
 
-Pacote:
+Pacote: `0.4.0-g245-readiness-t098.1`.
+SHA-256: `df08c57d9c7b7c6df8a66b026ebec1bd6c3d16e993c92ea65afac122e6d63ddf`.
 
-- `0.4.0-g245-readiness-t098.1`;
-- SHA-256 `df08c57d9c7b7c6df8a66b026ebec1bd6c3d16e993c92ea65afac122e6d63ddf`;
-- 50 PHP files lint PASS pré/pós ZIP;
-- UX-002 byte parity PASS.
+50 PHP files lint PASS pré/pós ZIP; UX-002 byte parity PASS.
 
 ## Próximo passo
 
-Executar T098 em homologação e retornar o JSON.
+Executar T098. PASS esperado: `gate_result.t098_block_migration_readiness_pass=true`.
 
-PASS esperado:
-`gate_result.t098_block_migration_readiness_pass=true`.
-
-Se PASS, T099A fará somente smoke controlado do novo journal store + lock com cleanup e sem write editorial. Depois T099B gera o Authorization Pack de um único `legacy_html` de baixo risco. O write real continua bloqueado até autorização específica.
+Se PASS: T099A journal-store + lock smoke com cleanup e sem write editorial; depois T099B Authorization Pack de 1 `legacy_html` de baixo risco; somente então T099C canário real com autorização específica.
 
 ## Guardrails
 
 - UX-002 não pode regredir;
-- plugin Gutenberg não pode virar dependência;
-- Elementor não pode ser removido antes de dependência zero;
+- plugin Gutenberg não vira dependência;
+- Elementor não é removido antes de dependência zero;
 - source mixed permanece humano;
-- nenhuma migração automática em activation/update;
 - nenhum writer está autorizado;
 - PR #4 permanece DRAFT.
 

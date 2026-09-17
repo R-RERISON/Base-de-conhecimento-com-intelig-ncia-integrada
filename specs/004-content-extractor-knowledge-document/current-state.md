@@ -9,7 +9,7 @@
 - G-245: **REBASELINED / IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT / NÃO MERGEAR.
 - ADR-004-001: **ACEITA**.
 - T090 Block Projection: **PASS LOCAL / READ-ONLY**.
-- T091: NEXT.
+- T091 Block Projection full-corpus smoke: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
 - G-250: NOT_RUN.
 
 ## Mudança arquitetural de 2026-09-17
@@ -117,19 +117,33 @@ Safety:
 
 Validação local: **23/23 assertions PASS + PHP lint PASS**.
 
+## T091 — Full-corpus Block Projection
+
+Runner: `class-block-projection-plan-smoke.php`.
+
+Pacote de homologação:
+
+- build `0.4.0-g245-block-projection-smoke.1`;
+- SHA-256 `d70b518bc20825a5d64984aef555f67a270ec065587c00bfefa3caad3e67028c`;
+- 37 PHP files lint PASS antes/depois do ZIP;
+- raiz única PASS;
+- UX-002 byte parity PASS;
+- Elementor Projection smoke disabled;
+- Journal smoke disabled;
+- Block Projection smoke enabled somente no pacote;
+- writer Elementor false.
+
+O runner executa duas passagens e exporta apenas métricas, contagens e hashes agregados. Não exporta conteúdo editorial nem post IDs, não serializa Blocks e não persiste `post_content`/`_elementor_data`.
+
 ## Próximo passo técnico
 
-T091 — **Block Projection full-corpus smoke read-only**:
+Executar T091 na homologação e devolver o JSON.
 
-1. executar duas passagens sobre os 622 posts;
-2. construir KD + Block Projection em cada passagem;
-3. comparar `block_projection_hash` e canonical representation;
-4. medir distribuição `native_noop/projectable/review_required/blocked/not_applicable` por source kind;
-5. agregar warnings/gaps sem exportar conteúdo editorial;
-6. provar fingerprint editorial unchanged;
-7. manter writer/migration false.
+Gate esperado:
 
-Somente a evidência T091 deve determinar expansão de allowlist. Não inventar suporte antes do corpus demonstrar necessidade.
+`gate_result.t091_block_projection_pass=true`.
+
+A distribuição de warnings/status/block names definirá T092. Não ampliar a allowlist antes da evidência real.
 
 ## Guardrails
 

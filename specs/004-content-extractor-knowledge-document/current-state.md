@@ -10,7 +10,7 @@
 - T080: **PASS WITH REVIEW ITEMS**.
 - T081: **PASS AMBIENTAL**.
 - T082–T086: **PASS LOCAL / CONTRATUAL**.
-- T083B Durable Journal Storage: **PASS LOCAL / ENVIRONMENTAL SMOKE PENDING**.
+- T083B Durable Journal Storage: **PASS AMBIENTAL**.
 - T087A Canary Readiness: **PASS LOCAL / READ-ONLY**.
 - T087B-prep Migration Lock: **PASS LOCAL**.
 - T087 mutável: **BLOCKED / NÃO EXECUTADO**.
@@ -40,24 +40,33 @@ T080 PASS WITH REVIEW ITEMS, blockers 0. T081 PASS ambiental: 622/622 em duas pa
 
 T082 Gateway: PASS local/contratual, 45 assertions. T083/T084 Journal contract + stale guard: PASS, 38 assertions. T085 Dry-run: PASS, 38 assertions. T086 Batches retomáveis: PASS, 37 assertions. Todos mantêm writer/migration/execution false conforme aplicável.
 
-## T083B — Durable Journal Storage
+## T083B — Durable Journal Storage — PASS AMBIENTAL
 
-Implementado em `0.4.0-g245-canary-prep.1` com storage **postmeta privado append-only** na chave `_bdc_kb_migration_journal`.
+Storage WordPress-first comprovado em homologação com **postmeta privado append-only** na chave `_bdc_kb_migration_journal`.
 
-Decisões principais:
+Decisões e prova:
 
-- sem custom table;
-- sem Options API;
-- Comments API rejeitada para journal por semântica/efeitos colaterais;
-- Base64 apenas como envelope de persistência do capsule; hashes continuam sobre payload original;
-- releitura obrigatória após persistência;
+- sem custom table, Options API, Comments API ou file storage;
+- rollback capsule persistida com Base64 somente como envelope de storage;
+- hashes permanecem calculados sobre payload editorial original;
 - cadeia linear por parent event;
 - fork/retry stale fail-closed;
 - `manage_options` obrigatório;
-- readback divergente dispara cleanup fail-safe;
-- limite v1 de 16 MiB por evento.
+- readback obrigatório e cleanup fail-safe;
+- limite v1 de 16 MiB por evento;
+- smoke executado com build `0.4.0-g245-journal-smoke.1`;
+- evento temporário criado com sucesso;
+- `roundtrip_exact=true`;
+- `record_integrity_ok=true`;
+- cleanup OK;
+- contagem de eventos `0 → 0` restaurada;
+- `post_content_unchanged=true`;
+- `elementor_data_unchanged=true`;
+- `editorial_unchanged=true`;
+- writer/migration false;
+- `gate.t083b_storage_pass=true`.
 
-Local: **22/22 assertions PASS + lint PASS**. O smoke ambiental existe, fica `false` por padrão em `BDC_KB_SPEC004_G245_JOURNAL_SMOKE_BUILD` e ainda precisa ser executado em homologação. Até `gate.t083b_storage_pass=true`, o storage não é considerado comprovado ambientalmente.
+Evidência: `evidence/g245-journal-storage-smoke-20260917T155150Z.json`. SHA-256 do arquivo recebido: `a05918e28e206766cb2b28e37c8ec64e9d18a39f44ecd28d02a7bbd6ffb2c118`.
 
 ## T087A — Canary Readiness
 
@@ -82,16 +91,17 @@ Implementado com `_bdc_kb_migration_lock` usando `add_post_meta(..., true)` para
 ## Próximo passo técnico
 
 1. implementar o menor executor mutável possível, version-gated e disabled-by-default, sem habilitá-lo;
-2. executar o smoke ambiental T083B em homologação;
-3. selecionar 1 candidato `projectable`, sem review/shortcode legado desconhecido;
-4. gerar Authorization Pack específico;
-5. somente então obter autorização específica e executar canário + rollback real.
+2. selecionar 1 candidato `projectable`, sem review/shortcode legado desconhecido;
+3. gerar Authorization Pack específico com hashes, Projection Plan, dry-run, journal/rollback e operação prevista;
+4. obter autorização específica para esse candidato/run;
+5. executar canário + rollback real;
+6. somente após evidências decidir T089 e eventual escalada para batches.
 
 ## Guardrails
 
 - WordPress/Elementor continuam fonte editorial;
 - UX-002 não pode regredir;
-- journal durável + stale recheck + lock são pré-condições;
+- journal durável + stale recheck + lock são pré-condições já fechadas tecnicamente;
 - produção não é ambiente experimental;
 - GO homologação != GO produção;
 - nenhum writer está autorizado neste estado;

@@ -7,125 +7,102 @@
 - G-220: PASS.
 - G-230/v1: PASS de determinismo; v1 superseded for AI.
 - G-240: **PASS / CLOSED / PROMOVIDO PARA `main`** com KD 2.1.0.
-- G-245: **IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT / NÃO MERGEAR.
-- T080: **PASS WITH REVIEW ITEMS**.
-- T081: **PASS AMBIENTAL**.
-- T082–T086: **PASS LOCAL / CONTRATUAL**, com T081 também comprovado ambientalmente.
-- T083B Journal Durable Storage: **PASS AMBIENTAL** em `0.4.0-g245-journal-smoke.1`.
-- T087A Canary Readiness: **PASS LOCAL / READ-ONLY**.
-- T087B-prep Exclusive Migration Lock: **PASS LOCAL**.
-- T087 canário mutável + rollback real: **BLOCKED / NÃO EXECUTADO**.
-- T088 Runbook: **FROZEN PROCEDURE / EXECUTION BLOCKED**.
-- T089 autorização/release de writer: NOT_RUN.
+- G-245: **REBASELINED / IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT / NÃO MERGEAR.
+- T080: PASS WITH REVIEW ITEMS.
+- T081 Elementor Projection: PASS AMBIENTAL histórico/read-only; destino Elementor agora SUPERSEDED.
+- T082–T086: PASS local/contratual; gates defensivos preservados para generalização.
+- T083B Durable Journal Storage: **PASS AMBIENTAL**.
+- T087A Readiness / T087B-prep Lock: PASS local/read-only.
+- T087C writer Elementor: **CANCELADO / SUPERSEDED antes de implementação**.
+- T088 Runbook: FROZEN; deve ser generalizado para Block Migration.
+- ADR-004-001: **ACEITA** — WordPress Core Blocks como destino editorial canônico.
+- T090 Block Projection Contract/Plan: **PASS LOCAL / READ-ONLY**, 23/23 assertions + lint.
+- T091 Block Projection full-corpus smoke: **NEXT**.
 - G-250: NOT_RUN.
 
 ## Baseline visual obrigatória
 
-A branch G-245 foi sincronizada com `main@6d0fc8e33f826ee957038483d22fa1b804bae056` no commit `145e16bf31f7afe2d3f08d087b79b69f3f40b885`, preservando integralmente a UX-002 homologada.
+UX-002 `0.4.0-ux002.3` permanece contrato visual obrigatório. G-245 não deve alterar os arquivos visuais canônicos sem UX-SPEC/aceite.
 
-Arquivos visuais canônicos devem permanecer fora do diff G-245 vs `main`: `class-admin-page.php`, `class-classification-admin.php`, `visual-foundation.css` e `class-visual-foundation.php`.
+## Decisão arquitetural vigente
 
-## S006 — G-245 / Elementor Normalization & Production Readiness
+`adr/ADR-004-001-wordpress-core-blocks-canonical-editorial-target.md`:
 
-**Regra:** nenhum PASS abaixo autoriza escrita editorial por si só.
+- `WP_Post.post_content` + WordPress Core Blocks = destino editorial futuro;
+- plugin Gutenberg = não dependência;
+- somente APIs estáveis do Core homologado;
+- Elementor = source adapter legado temporário;
+- nenhum novo writer em `_elementor_data`;
+- remoção do Elementor somente após dependência zero comprovada.
 
-### T080 — Production Preflight — PASS WITH REVIEW ITEMS
+## Gates históricos preservados
 
-- [x] Preflight read-only; blockers 0; writer/migration false.
-- [x] `faq_wd` classificado como legacy orphan e `wpt` como dependência legada desconhecida.
-- [x] Evidência: `evidence/g245-preflight-summary-20260916T215612Z.json`.
+### T080/T081
 
-### T081 — Projection Plan — PASS AMBIENTAL
+- Preflight e Projection Elementor forneceram diagnóstico real do corpus.
+- T081: 622/622 em duas passagens, zero mutação, hashes/canonical JSON estáveis.
+- Distribuição consolidada: 536 legacy_html, 41 plain_text, 34 elementor, 5 mixed, 4 gutenberg, 2 empty.
 
-- [x] Contrato determinístico congelado.
-- [x] 58 assertions locais PASS.
-- [x] Duas passagens 622/622.
-- [x] Zero errors/throwables/mismatches/violations; fingerprint preservado; `gate.t081_pass=true`.
-- [x] Evidência: `evidence/g245-projection-summary-20260917T111009Z.json`.
+### T083B — Journal Durable Storage
 
-### T082 — Gateway — PASS LOCAL / CONTRATUAL
+- postmeta privado append-only `_bdc_kb_migration_journal`;
+- round-trip byte-exato;
+- integrity/readback/cleanup;
+- smoke ambiental PASS;
+- `gate.t083b_storage_pass=true`;
+- `post_content` e `_elementor_data` inalterados.
 
-- [x] Elementor `4.1.0` homologado; ausente => blocking; versão divergente => review_required.
-- [x] feature flag default false + capability + hard phase gate.
-- [x] 45 assertions PASS; writer/migration false.
+### Gates reutilizáveis
 
-### T083/T084 — Journal contract + Stale-source — PASS LOCAL / CONTRATUAL
+Journal, stale-source, dry-run, batches, lock, readiness e runbook permanecem conceitos válidos. Nomes/classes Elementor-specific existentes são dívida nominal de transição e não autorizam writer Elementor.
 
-- [x] write-ahead/capsule/hashes/transições/rollback/idempotência.
-- [x] fresh/stale/blocking fail-closed.
-- [x] 38 assertions combinadas PASS.
+## T090 — Block Projection Contract / Plan — PASS LOCAL
 
-### T085 — Dry-run — PASS LOCAL / CONTRATUAL
+Artefatos:
 
-- [x] ready/review_required/noop/blocked.
-- [x] review_required não simula journal/apply.
-- [x] determinismo/hash e safety invariants.
-- [x] 38 assertions PASS + lint PASS.
+- `block-projection-contract-v1.md`;
+- `includes/class-block-projection-plan.php`;
+- `tests/unit/spec004-block-projection-plan.php`.
 
-### T086 — Batches retomáveis — PASS LOCAL / CONTRATUAL
+Allowlist v1:
 
-- [x] cohort determinístico, dedupe, cursor versionado, resume e stale/tamper fail-closed.
-- [x] zero duplicidade e cobertura exata do cohort.
-- [x] não existe executor; execution/writer/migration false.
-- [x] 37 assertions PASS + lint PASS.
+- heading → `core/heading`;
+- paragraph → `core/paragraph`;
+- code → `core/code`;
+- list → `core/list` + `core/list-item`;
+- table simples → `core/table`.
 
-### T083B — Journal Durable Storage — PASS AMBIENTAL
+Regras:
 
-- [x] storage WordPress-first escolhido: postmeta privado append-only `_bdc_kb_migration_journal`.
-- [x] custom table/options/comments/file storage rejeitados por princípio de negação.
-- [x] rollback capsule em Base64 para round-trip byte-exato, mantendo hashes sobre payload original.
-- [x] cadeia linear por `parent_event_id`; fork/retry stale bloqueados.
-- [x] `manage_options`, post existente, limite de payload e readback obrigatório.
-- [x] falha de readback tenta remover imediatamente o evento recém-criado.
-- [x] **22/22 assertions locais PASS + lint PASS**.
-- [x] smoke ambiental executado em WordPress 6.9.4 / PHP 8.5.10.
-- [x] evento temporário criado, round-trip exato, integridade válida e cleanup OK.
-- [x] count `0 → 0` restaurado após cleanup.
-- [x] `post_content` e `_elementor_data` preservados.
-- [x] `gate.t083b_storage_pass=true`.
+- source `gutenberg` pronto → `native_noop`;
+- tipos não suportados → `review_required`;
+- table rowspan/colspan → `review_required`;
+- KD `not_ready` → `blocked`;
+- empty → `not_applicable`;
+- `block_projection_hash` determinístico;
+- `serialized_post_content=null`;
+- writer/migration/persistence/network/shortcode/dynamic render = false;
+- não depende do plugin Gutenberg.
 
-Evidência: `evidence/g245-journal-storage-smoke-20260917T155150Z.json` — SHA-256 do arquivo recebido `a05918e28e206766cb2b28e37c8ec64e9d18a39f44ecd28d02a7bbd6ffb2c118`.
+Validação local: **23/23 assertions PASS + lint PASS**.
 
-Artefatos: `journal-storage-contract-v1.md`, `class-elementor-migration-journal-store.php`, `class-elementor-migration-journal-smoke.php`, `tests/unit/spec004-journal-durable-store.php`.
+## Próximos subgates
 
-### T087A — Canary Readiness — PASS LOCAL / READ-ONLY
-
-- [x] escopo 1, journal durável, capsule íntegro, dry-run ready, source fresh, versão homologada e identidade dos hashes.
-- [x] mesmo com autorização simulada, `execution_allowed=false` e executor separado obrigatório.
-- [x] 25 assertions PASS.
-
-### T087B-prep — Exclusive Migration Lock — PASS LOCAL
-
-- [x] postmeta privado único `_bdc_kb_migration_lock`.
-- [x] aquisição exclusiva com `add_post_meta(..., true)`.
-- [x] token obrigatório para release; release repetido idempotente.
-- [x] TTL 30–900s; lock expirado não sofre takeover automático.
-- [x] **18/18 assertions PASS + lint PASS**.
-- [x] lock não concede writer/migration.
-
-Artefatos: `migration-lock-contract-v1.md`, `class-elementor-migration-lock.php`, `tests/unit/spec004-migration-lock.php`.
-
-### T088 — Runbook — FROZEN PROCEDURE / EXECUTION BLOCKED
-
-- [x] sequência freeze → journal → stale recheck → write → verificação → rollback definida.
-- [x] abort conditions, Authorization Pack, batches e produção definidos.
-- [x] primeiro canário exige rollback real comprovado.
-- [x] `t088-production-runbook-v1.md` congelado.
-
-### Próximos subgates
-
-- [ ] T087C: menor executor mutável version-gated, **disabled-by-default**, sem habilitá-lo.
-- [ ] selecionar candidato canário de baixo risco e gerar Authorization Pack.
-- [ ] obter autorização específica para 1 canário.
-- [ ] executar canário + rollback real e fechar T087.
-- [ ] T089: somente após evidências, decidir autorização de writer/release e eventual escalada para batches.
+- [ ] T091: runner full-corpus Block Projection read-only, duas passagens, determinismo e distribuição.
+- [ ] T092: análise de gaps/allowlist a partir da evidência real; sem ampliar allowlist por hipótese.
+- [ ] T093: contrato de serialização Core Blocks + round-trip `serialize_blocks`/`parse_blocks`, ainda sem persistência.
+- [ ] T094: generalizar dry-run/journal/stale/lock/batches para Block Migration e remover acoplamento nominal Elementor quando seguro.
+- [ ] T095: canário Block Migration em 1 artigo de homologação + rollback real, somente após Authorization Pack específico.
+- [ ] T096: batches de migração homologados.
+- [ ] T097: inventário de dependência residual Elementor e gate de retirada futura.
+- [ ] G-250 Lifecycle/RC.
 
 ## Regras constitucionais
 
-1. Journal durável deve existir antes de qualquer byte editorial alterado.
-2. Stale-source deve ser revalidado imediatamente antes do write.
-3. Lock exclusivo é obrigatório do freeze até commit/rollback operacional.
-4. Writer/migration permanecem disabled-by-default.
-5. Nenhuma autorização genérica de continuidade equivale à autorização do canário específico.
+1. WordPress Core Blocks são o destino canônico futuro.
+2. Plugin Gutenberg não é dependência de produção.
+3. Elementor permanece até dependência zero; nunca é removido automaticamente.
+4. Nenhum writer `_elementor_data` será implementado como destino.
+5. Qualquer write em `post_content` exige gates e autorização explícitos.
 6. UX-002 não pode regredir.
-7. Trabalho incompleto permanece fora da `main` até gates e revisão.
+7. Trabalho incompleto permanece fora da `main`.

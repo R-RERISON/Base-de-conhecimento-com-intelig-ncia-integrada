@@ -12,55 +12,55 @@
 - ADR-004-001: Core Blocks como destino editorial canônico.
 - T091/T093/T094/T096/T097: PASS AMBIENTAL.
 - T095: PASS LOCAL / READ-ONLY.
-- T098.1: **FAIL CONTROLADO / SEM MUTAÇÃO**.
-- T098.2: **CORRIGIDO / REHOMOLOGAÇÃO PENDENTE**.
-- Nenhum writer/migration autorizado.
+- T098.1: FAIL CONTROLADO / SEM MUTAÇÃO.
+- T098.2: **PASS AMBIENTAL**.
+- T099A: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
+- Nenhum writer editorial autorizado.
 
-## T098.1
-Evidência: `evidence/g245-t098-readiness-fail-20260917T190620Z.json`.
-SHA-256 bruto: `b85e22c338d72f52dc11b3d113058618108b9dd20778b67a3062839c8eaba44d`.
+## Evidência T098.2
+Arquivo: `evidence/g245-t098-readiness-pass-20260917T191436Z.json`.
+SHA-256 bruto: `f7bf589858db6c6629cb937ba28dad4ef658d1e265225185dad77e55dd342ff0`.
 
-Resultado: 623 throwables por passagem, safety violations 0, corpus unchanged, fingerprint editorial unchanged e gate false.
+Resultado:
+- 623/623 em duas passagens;
+- errors/throwables/safety violations 0;
+- dry/journal hash mismatches 0;
+- ready 611, noop 7, review_required 5;
+- batch planner: 611 elegíveis, 25 batches, cobertura 611, zero duplicidade, zero cursor failure;
+- fingerprint editorial unchanged;
+- `t098_block_migration_readiness_pass=true`.
 
-Causa raiz: mismatch de integração no `Block_Migration_Dry_Run`:
-- `Core_Block_Editorial_Parity::validate()` inexistente; contrato real usa `assess()`;
-- `Block_Migration_Stale_Source_Guard::inspect_post()` inexistente; contrato real usa `assess()` / `assert_fresh()`;
-- `is_fresh` não existe; freshness é `status=fresh`.
+## T099A — próximo gate exato
+O smoke ambiental usa apenas postmeta privado temporário:
 
-## T098.2
-Pipeline corrigido:
-`Migration Fidelity Source -> Lossless Serializer -> parse_blocks -> Editorial Parity assess -> rebuild current source -> Stale Guard assess -> Dry Run simulate`.
+- `_bdc_kb_block_migration_journal`;
+- `_bdc_kb_block_migration_lock`.
 
-Runner adiciona somente assinatura agregada de throwable (`classe + basename:linha + hash curto da mensagem`) se necessário, sem conteúdo editorial.
+Fluxo:
+1. selecionar automaticamente um `legacy_html`/`plain_text` com dry-run ready e sem resíduos de journal/lock;
+2. capturar hashes editoriais before;
+3. persistir journal preparado e validar readback;
+4. adquirir lock exclusivo e validar readback;
+5. liberar lock;
+6. remover o journal criado pelo smoke;
+7. validar cleanup completo;
+8. confirmar hashes `post_content` e `_elementor_data` idênticos antes/depois.
 
-Validação local:
-- 28/28 assertions PASS;
-- 50 PHP lint PASS pré/pós ZIP;
-- UX-002 byte parity PASS;
-- writer OFF;
-- journal store não invocado;
-- lock não adquirido;
-- `post_content`/`_elementor_data` não escritos.
+Nenhum `wp_update_post`, nenhum writer `_elementor_data`, nenhum render/shortcode e nenhuma chamada externa.
 
-Pacote:
-- `0.4.0-g245-readiness-t098.2`;
-- SHA-256 `a37ebc3ff018f71c96546e56e2b8434db53ea148b7d9d253db0332b1d389cef7`.
+## Depois do T099A
+- T099B: Authorization Pack de um único `legacy_html` de baixo risco.
+- T099C: canário real + rollback, somente com autorização específica.
+- T100: batch controlado.
+- T101: dependência residual Elementor / gate de retirada.
+- G-250 Lifecycle/RC.
 
-## Próximo passo
-1. instalar T098.2;
-2. abrir `Base de Conhecimento > Block Migration Readiness G-245`;
-3. executar e devolver JSON;
-4. se PASS, fechar T098;
-5. T099A: journal store + lock com cleanup, sem write editorial;
-6. T099B: Authorization Pack de um `legacy_html` de baixo risco;
-7. T099C: canário real apenas com autorização específica.
-
-## Guardrails
-- UX-002 intacta;
-- plugin Gutenberg não é dependência;
-- Elementor não é removido agora;
-- source mixed exige humano;
-- nenhum write editorial autorizado nesta fase;
+## Guardrails absolutos
+- UX-002 intacta.
+- plugin Gutenberg não é dependência.
+- Elementor não é removido agora.
+- mixed exige humano.
+- nenhum write editorial sem gate + autorização específica.
 - PR #4 permanece DRAFT.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

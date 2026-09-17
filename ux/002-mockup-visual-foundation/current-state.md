@@ -6,46 +6,66 @@
 
 A baseline contém 10 referências PNG em `scr/` e mantém UX-001 como contrato visual anterior: Design System v1 + protótipo UI-as-Code.
 
-## Diagnóstico
+## Problema resolvido
 
-O runtime era WordPress-first funcionalmente, porém apresentava drift visual:
+O runtime era WordPress-first funcionalmente, porém apresentava drift visual e ainda herdava aparência genérica do wp-admin em fluxos centrais.
 
-- page title e tabelas ainda carregavam forte leitura de wp-admin;
-- controles `.button`, `.widefat`, notices e campos mantinham aparência nativa em vários estados;
-- shell do Workspace aproximava o protótipo, mas a linguagem não era suficientemente dominante/consistente;
-- inexistia regra constitucional explícita tornando os mockups atuais autoridade do runtime.
+## Implementação concluída
 
-## Implementação inicial concluída
+A UX-002 promoveu para o runtime uma fundação visual compartilhada e progressiva, preservando WordPress como shell/plataforma e suas APIs como primitives funcionais.
 
-Build de homologação: `0.4.0-ux002.1`.
+A build visual homologada é **`0.4.0-ux002.3`**.
 
-Implementado:
+Foram homologados como conjunto coerente:
 
-- Constituição `1.2.0` com mockups/Design System como autoridade visual e princípio de IA orientado a reduzir esforço de leitura/tempo para resposta confiável;
-- `visual-contract-v2.md`;
-- camada compartilhada `assets/css/visual-foundation.css`;
-- carregamento isolado pela classe `Visual_Foundation` somente na tela BDC;
-- tokens canônicos para cor, radius, border, shadow, foco e tipografia;
-- convergência de hero, botões, tabelas, paginação, formulários, tabs, cards, badges/notices e estados;
-- helpers reutilizáveis para toolbar, métricas, field-grid, form-actions e empty-state;
-- responsividade em 900/782/520px;
-- nenhuma alteração de payload, endpoint, capability, nonce, storage, `post_content` ou `_elementor_data`.
+- Knowledge List;
+- Knowledge Workspace;
+- Summary;
+- Classificação;
+- Review & Governança;
+- Histórico;
+- telas nativas dos quatro vocabulários com shell visual BDC;
+- navegação contextual entre Classificação e vocabulários, preservando o artigo de origem;
+- ações discretas para gerenciamento de vocabulários;
+- iconografia discreta com Dashicons nativos;
+- responsividade e hierarquia visual da fundação.
 
-## Validação técnica local
+Nenhuma alteração de payload, endpoint, capability, nonce, storage, `post_content` ou `_elementor_data` foi introduzida pela UX-002.
 
-- PHP lint: 29 arquivos do pacote PASS;
-- bootstrap UX-002: PASS;
-- `class-visual-foundation.php`: PASS;
-- CSS: 87 blocos abertos/87 fechados;
-- nenhum seletor global `body` introduzido;
-- ZIP reextraído e revalidado: PASS;
-- raiz única: PASS;
-- SHA-256 do pacote `0.4.0-ux002.1`: `d2e95e49600a0cd5776a8546ff34cc41109835b6838018fd379900d01179a215`.
+## Validação técnica
 
-## Estado do gate
+Na build visual final:
 
-**IMPLEMENTAÇÃO BASE: READY FOR HOMOLOGATION.**
+- PHP lint do pacote: **29/29 PASS**;
+- CSS: **182/182 blocos balanceados**;
+- JavaScript existente: válido;
+- raiz única do pacote: PASS;
+- instalação/upgrade em homologação: executados durante as iterações visuais;
+- nenhuma dependência visual externa adicionada.
 
-Ainda não declarar UX-002 PASS visual. Falta revisão humana contra `scr/` em desktop, 782px e 520px e smoke funcional dos fluxos Summary/Classificação/Review/Histórico.
+## Gate humano
 
-O PR #6 deve permanecer DRAFT até esse aceite.
+**PASS / APPROVED em 2026-09-17.**
+
+A homologação humana aprovou a fundação após as iterações `.1`, `.2` e `.3`. A `.3` fechou os ajustes finais de navegabilidade, ações de vocabulário e iconografia.
+
+## Contrato permanente
+
+A partir deste fechamento, qualquer nova tela, formulário, tabela, estado, componente ou alteração material de UI pertencente ao produto DEVE:
+
+1. seguir `ux/002-mockup-visual-foundation/visual-contract-v2.md`;
+2. usar `scr/` como referência quando houver mockup aplicável;
+3. reutilizar tokens/componentes BDC antes de criar variantes;
+4. preservar WordPress como shell sem aceitar aparência genérica do wp-admin como resultado final do produto;
+5. passar validação visual/responsiva antes de ser considerada Done.
+
+Divergência intencional exige decisão explícita e documentada.
+
+## Estado
+
+- UX-002: **PASS / CLOSED**;
+- build visual homologada: **`0.4.0-ux002.3`**;
+- Constituição 1.2.0: vigente;
+- Visual Contract v2: obrigatório;
+- PR #6: autorizado para promoção a `main`;
+- SPEC-004/G-245: permanece independente e não é promovida por este fechamento visual.

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Block_Projection_Plan {
 
-	public const SCHEMA_VERSION = '1.0.0';
+	public const SCHEMA_VERSION = '1.1.0';
 	public const TARGET = 'wordpress_core_blocks';
 
 	/** @return array<string,mixed>|\WP_Error */
@@ -134,6 +134,9 @@ final class Block_Projection_Plan {
 		}
 		if ( 'code' === $kind ) {
 			return array( 'block_name' => 'core/code', 'attrs' => array(), 'text' => $text, 'inner_blocks' => array() );
+		}
+		if ( 'quote' === $kind ) {
+			return array( 'block_name' => 'core/quote', 'attrs' => array(), 'text' => $text, 'inner_blocks' => array() );
 		}
 		if ( 'list' === $kind ) {
 			return self::map_list( $block );

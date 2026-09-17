@@ -65,18 +65,18 @@ Evidência:
 
 ### T081 — Projection Plan read-only
 
-**Status: IN PROGRESS — implementação/runner já existem; gate ambiental ainda não fechado.**
+**Status: LOCAL READY / ENVIRONMENTAL PENDING — build `0.4.0-g245-projection.2`.**
 
 - [x] T081A Congelar contrato `elementor-projection-plan-contract-v1.md`.
 - [x] T081B Implementar projeção determinística por `source_kind` sem persistência.
 - [x] T081C Emitir schema/version, `source_hash_before`, strategy, projection hash, warnings e `requires_review`.
 - [x] T081D Preservar shortcodes como dependências opacas; nunca executar `do_shortcode()`.
-- [ ] T081E Fechar integralmente as regras de `requires_review` do contrato para dependências, warnings dinâmicos/unsupported e compatibilidade não resolvida.
+- [x] T081E Fechar integralmente as regras de `requires_review`: compatibilidade unresolved/blocked, `faq_wd`, `wpt`, handler ausente, Gutenberg dinâmico/unsupported, widget Elementor unsupported, JSON Elementor inválido e source oversize hard.
 - [x] T081F Implementar canonicalização e hash determinístico.
-- [ ] T081G Reexecutar e ampliar testes locais de estratégias, repetibilidade e zero-write após correções finais.
-- [x] T081H Implementar runner ambiental temporário full-corpus em duas passagens, sem exportar conteúdo editorial bruto.
-- [ ] T081I Executar runner em homologação e versionar evidência full-corpus.
-- [ ] T081J Fechar gate T081 somente com 622/622 nas duas passagens, zero errors/throwables/hash mismatch/canonical mismatch, zero writer violations, zero legacy shortcode review violations e fingerprint editorial preservado.
+- [x] T081G Ampliar testes locais de estratégias, review policy, repetibilidade, hash e zero-write: 58 assertions PASS; lint PASS.
+- [x] T081H Endurecer runner ambiental full-corpus em duas passagens, sem exportar conteúdo editorial bruto, com validação independente de hash, safety e review policy.
+- [ ] T081I Executar build `.2` em homologação e versionar evidência full-corpus.
+- [ ] T081J Fechar gate somente com 622/622 nas duas passagens, zero errors/throwables/hash mismatch/canonical mismatch, zero projection-hash/safety/writer/review-policy violations e fingerprint editorial preservado.
 
 ### Próximos subgates após T081
 

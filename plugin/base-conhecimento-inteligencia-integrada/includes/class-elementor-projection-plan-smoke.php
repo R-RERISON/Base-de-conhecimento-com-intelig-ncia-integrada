@@ -123,13 +123,19 @@ final class Elementor_Projection_Plan_Smoke {
 			&& 0 === $second['throwables']
 			&& 0 === $hash_mismatches
 			&& 0 === $json_mismatches
+			&& 0 === $first['projection_hash_violations']
+			&& 0 === $second['projection_hash_violations']
 			&& 0 === $first['writer_allowed_violations']
 			&& 0 === $second['writer_allowed_violations']
+			&& 0 === $first['safety_violations']
+			&& 0 === $second['safety_violations']
 			&& 0 === $first['legacy_shortcode_review_violations']
-			&& 0 === $second['legacy_shortcode_review_violations'];
+			&& 0 === $second['legacy_shortcode_review_violations']
+			&& 0 === $first['migration_warning_review_violations']
+			&& 0 === $second['migration_warning_review_violations'];
 
 		return array(
-			'schema_version' => '1.0.0',
+			'schema_version' => '1.1.0',
 			'mode' => 'spec004_g245_projection_plan_read_only_smoke',
 			'generated_at' => gmdate( 'c' ),
 			'environment' => array(
@@ -151,8 +157,16 @@ final class Elementor_Projection_Plan_Smoke {
 				'second_pass_throwables' => $second['throwables'],
 				'projection_hash_mismatches' => $hash_mismatches,
 				'canonical_json_mismatches' => $json_mismatches,
-				'writer_allowed_violations' => $first['writer_allowed_violations'],
-				'legacy_shortcode_review_violations' => $first['legacy_shortcode_review_violations'],
+				'first_pass_projection_hash_violations' => $first['projection_hash_violations'],
+				'second_pass_projection_hash_violations' => $second['projection_hash_violations'],
+				'first_pass_writer_allowed_violations' => $first['writer_allowed_violations'],
+				'second_pass_writer_allowed_violations' => $second['writer_allowed_violations'],
+				'first_pass_safety_violations' => $first['safety_violations'],
+				'second_pass_safety_violations' => $second['safety_violations'],
+				'first_pass_legacy_shortcode_review_violations' => $first['legacy_shortcode_review_violations'],
+				'second_pass_legacy_shortcode_review_violations' => $second['legacy_shortcode_review_violations'],
+				'first_pass_migration_warning_review_violations' => $first['migration_warning_review_violations'],
+				'second_pass_migration_warning_review_violations' => $second['migration_warning_review_violations'],
 				'plan_status' => $first['plan_status'],
 				'projection_strategy' => $first['projection_strategy'],
 				'source_kind' => $first['source_kind'],
@@ -182,8 +196,11 @@ final class Elementor_Projection_Plan_Smoke {
 			),
 			'gate' => array(
 				't081_pass' => $gate_pass,
+				'requires_zero_projection_hash_violations' => true,
 				'requires_zero_writer_allowed' => true,
+				'requires_zero_safety_violations' => true,
 				'requires_legacy_shortcodes_review' => true,
+				'requires_migration_warnings_review' => true,
 				'note' => 'Projection Plan PASS never authorizes writer or migration execution.',
 			),
 		);
@@ -194,8 +211,11 @@ final class Elementor_Projection_Plan_Smoke {
 		$plans = array();
 		$errors = 0;
 		$throwables = 0;
+		$projection_hash_violations = 0;
 		$writer_allowed_violations = 0;
+		$safety_violations = 0;
 		$legacy_shortcode_review_violations = 0;
+		$migration_warning_review_violations = 0;
 		$plan_status = array();
 		$projection_strategy = array();
 		$source_kind = array();
@@ -216,8 +236,13 @@ final class Elementor_Projection_Plan_Smoke {
 					continue;
 				}
 
+				$projection_hash = (string) ( $plan['projection_hash'] ?? '' );
+				if ( 1 !== preg_match( '/^[a-f0-9]{64}$/', $projection_hash ) ) {
+					++$projection_hash_violations;
+				}
+
 				$plans[ $post_id ] = array(
-					'projection_hash' => (string) ( $plan['projection_hash'] ?? '' ),
+					'projection_hash' => $projection_hash,
 					'json_sha256' => hash( 'sha256', $json ),
 				);
 				self::increment( $plan_status, (string) ( $plan['plan_status'] ?? 'unknown' ) );
@@ -228,6 +253,9 @@ final class Elementor_Projection_Plan_Smoke {
 
 				if ( true === ( $plan['writer_allowed'] ?? false ) ) {
 					++$writer_allowed_violations;
+				}
+				if ( ! self::safety_is_read_only( $plan ) ) {
+					++$safety_violations;
 				}
 
 				$deps = is_array( $plan['dependencies']['shortcodes'] ?? null ) ? $plan['dependencies']['shortcodes'] : array();
@@ -245,7 +273,11 @@ final class Elementor_Projection_Plan_Smoke {
 				}
 
 				foreach ( (array) ( $plan['warnings'] ?? array() ) as $warning ) {
-					self::increment( $warnings, (string) $warning );
+					$warning = (string) $warning;
+					self::increment( $warnings, $warning );
+					if ( ! $review && self::warning_requires_review( $warning ) ) {
+						++$migration_warning_review_violations;
+					}
 				}
 			} catch ( \Throwable $error ) {
 				++$throwables;
@@ -262,8 +294,11 @@ final class Elementor_Projection_Plan_Smoke {
 			'plans' => $plans,
 			'errors' => $errors,
 			'throwables' => $throwables,
+			'projection_hash_violations' => $projection_hash_violations,
 			'writer_allowed_violations' => $writer_allowed_violations,
+			'safety_violations' => $safety_violations,
 			'legacy_shortcode_review_violations' => $legacy_shortcode_review_violations,
+			'migration_warning_review_violations' => $migration_warning_review_violations,
 			'plan_status' => $plan_status,
 			'projection_strategy' => $projection_strategy,
 			'source_kind' => $source_kind,
@@ -271,6 +306,26 @@ final class Elementor_Projection_Plan_Smoke {
 			'shortcode_dependencies' => $shortcode_dependencies,
 			'warnings' => $warnings,
 		);
+	}
+
+	/** @param array<string,mixed> $plan */
+	private static function safety_is_read_only( array $plan ): bool {
+		$safety = is_array( $plan['safety'] ?? null ) ? $plan['safety'] : array();
+		foreach ( array( 'persists_plan', 'executes_shortcodes', 'calls_external_network', 'writes_post_content', 'writes_elementor_data' ) as $key ) {
+			if ( false !== ( $safety[ $key ] ?? null ) ) {
+				return false;
+			}
+		}
+		return false === ( $plan['writer_allowed'] ?? null );
+	}
+
+	private static function warning_requires_review( string $warning ): bool {
+		foreach ( array( 'ELEMENTOR_JSON_INVALID', 'GUTENBERG_DYNAMIC_NOT_RENDERED:', 'GUTENBERG_BLOCK_UNSUPPORTED:', 'ELEMENTOR_WIDGET_UNSUPPORTED:', 'SOURCE_OVERSIZE_HARD:' ) as $prefix ) {
+			if ( str_starts_with( $warning, $prefix ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** @return array<int,int> */

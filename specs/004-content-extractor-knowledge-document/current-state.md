@@ -6,11 +6,15 @@
 - UX-001/UX-002: concluídas; UX-002 `0.4.0-ux002.3` é contrato visual obrigatório.
 - G-240: **PASS / CLOSED / promovido para `main`**.
 - KD 2.1.0: PASS técnico full-corpus + PASS humano 8/8.
-- G-245: **IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT.
+- G-245: **IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT / NÃO MERGEAR.
 - T080: **PASS WITH REVIEW ITEMS**.
 - T081: **PASS AMBIENTAL**.
 - T082–T086: **PASS LOCAL / CONTRATUAL**.
-- T087: **NEXT — preparação read-only permitida; canário mutável NÃO AUTORIZADO**.
+- T083B Durable Journal Storage: **PASS LOCAL / ENVIRONMENTAL SMOKE PENDING**.
+- T087A Canary Readiness: **PASS LOCAL / READ-ONLY**.
+- T087B-prep Migration Lock: **PASS LOCAL**.
+- T087 mutável: **BLOCKED / NÃO EXECUTADO**.
+- T088 Runbook: **FROZEN PROCEDURE / EXECUTION BLOCKED**.
 - G-250: NOT_RUN.
 
 ## Baseline `main` e UX
@@ -30,58 +34,67 @@ A UX-002 homologada permanece inviolável. Os arquivos visuais canônicos não d
 - DOMDocument ativo;
 - WP-Cron habilitado.
 
-## T080 / T081
+## Gates já comprovados
 
-T080 PASS WITH REVIEW ITEMS, blockers 0. T081 PASS ambiental: 622/622 em duas passagens, zero erros/mismatches/violações, fingerprint editorial idêntico, changed posts 0, `gate.t081_pass=true`, 44/44 checks independentes PASS.
+T080 PASS WITH REVIEW ITEMS, blockers 0. T081 PASS ambiental: 622/622 em duas passagens, zero erros/mismatches/violações, fingerprint editorial idêntico, changed posts 0 e `gate.t081_pass=true`.
 
-## T082 — Gateway
+T082 Gateway: PASS local/contratual, 45 assertions. T083/T084 Journal contract + stale guard: PASS, 38 assertions. T085 Dry-run: PASS, 38 assertions. T086 Batches retomáveis: PASS, 37 assertions. Todos mantêm writer/migration/execution false conforme aplicável.
 
-PASS LOCAL / CONTRATUAL. Version gate, feature flag default false, capability e hard phase gate. Writer/migration false. 45 assertions PASS.
+## T083B — Durable Journal Storage
 
-## T083 — Journal / rollback
+Implementado em `0.4.0-g245-canary-prep.1` com storage **postmeta privado append-only** na chave `_bdc_kb_migration_journal`.
 
-PASS LOCAL / CONTRATUAL. Write-ahead journal/capsule/hashes/rollback/idempotência contratados. **Storage durável ainda não implementado (`journal_persisted=false`) e é pré-condição obrigatória para qualquer write real.**
+Decisões principais:
 
-## T084 — Stale-source guard
+- sem custom table;
+- sem Options API;
+- Comments API rejeitada para journal por semântica/efeitos colaterais;
+- Base64 apenas como envelope de persistência do capsule; hashes continuam sobre payload original;
+- releitura obrigatória após persistência;
+- cadeia linear por parent event;
+- fork/retry stale fail-closed;
+- `manage_options` obrigatório;
+- readback divergente dispara cleanup fail-safe;
+- limite v1 de 16 MiB por evento.
 
-PASS LOCAL / CONTRATUAL. Fresh/stale/blocking; mismatch/hash inválido falham fechado. T083+T084: 38 assertions PASS.
+Local: **22/22 assertions PASS + lint PASS**. O smoke ambiental existe, fica `false` por padrão em `BDC_KB_SPEC004_G245_JOURNAL_SMOKE_BUILD` e ainda precisa ser executado em homologação. Até `gate.t083b_storage_pass=true`, o storage não é considerado comprovado ambientalmente.
 
-## T085 — Dry-run
+## T087A — Canary Readiness
 
-PASS LOCAL / CONTRATUAL em `0.4.0-g245-dryrun.1`. Determinístico, zero-write, ready/review/noop/blocked, review não prepara journal/apply, 38 assertions PASS.
+PASS LOCAL / READ-ONLY, 25 assertions. Mesmo quando todas as pré-condições técnicas e autorização simulada estão presentes, o readiness mantém `execution_allowed=false`, `writer_allowed=false` e `migration_execution_allowed=false`; exige executor mutável separado.
 
-## T086 — Batches retomáveis
+## T087B-prep — Exclusive Migration Lock
 
-PASS LOCAL / CONTRATUAL em `0.4.0-g245-batch.1`.
+Implementado com `_bdc_kb_migration_lock` usando `add_post_meta(..., true)` para exclusividade por artigo.
 
-- apenas dry-runs ready entram no cohort;
-- ordenação/dedupe determinísticos;
-- duplicata conflitante bloqueia;
-- batch size 1–100;
-- cursor versionado/integridade/cohort binding;
-- cursor adulterado ou stale bloqueia;
-- resume sem repetição;
-- cobertura exata e zero duplicidade entre batches;
-- cohort/batch hashes determinísticos;
-- `persists_checkpoint=false`;
-- não existe executor;
-- execution/writer/migration false;
-- 37 assertions PASS + lint PASS.
+- TTL padrão 300s; limites 30–900s;
+- token exato obrigatório para release;
+- release repetido é idempotent noop;
+- lock expirado não sofre takeover automático;
+- `manage_options` obrigatório;
+- lock não concede writer/migration;
+- **18/18 assertions PASS + lint PASS**.
 
-## Próximo passo — T087
+## T088 — Runbook
 
-Preparar **Canary Readiness** de forma read-only. O readiness deve tornar explícitos os blockers para uma execução real: journal durável, source fresh no último instante, Elementor homologado, dry-run ready, batch elegível, escopo canário mínimo, rollback capsule íntegro e autorização humana explícita.
+`t088-production-runbook-v1.md` está congelado como procedimento. Define freeze, lock, journal write-ahead, stale check final, write controlado, verificação pós-write, rollback obrigatório do primeiro canário, abort conditions, batches e requisitos adicionais de produção.
 
-**Não executar canário mutável sem autorização explícita posterior.**
+## Próximo passo técnico
+
+1. implementar o menor executor mutável possível, version-gated e disabled-by-default, sem habilitá-lo;
+2. executar o smoke ambiental T083B em homologação;
+3. selecionar 1 candidato `projectable`, sem review/shortcode legado desconhecido;
+4. gerar Authorization Pack específico;
+5. somente então obter autorização específica e executar canário + rollback real.
 
 ## Guardrails
 
 - WordPress/Elementor continuam fonte editorial;
 - UX-002 não pode regredir;
-- nenhum writer/migration está autorizado até aqui;
-- journal durável + stale recheck são pré-condições;
+- journal durável + stale recheck + lock são pré-condições;
 - produção não é ambiente experimental;
 - GO homologação != GO produção;
-- T087 mutável, rollback real e T089 dependem de autorização explícita.
+- nenhum writer está autorizado neste estado;
+- PR #4 permanece DRAFT.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

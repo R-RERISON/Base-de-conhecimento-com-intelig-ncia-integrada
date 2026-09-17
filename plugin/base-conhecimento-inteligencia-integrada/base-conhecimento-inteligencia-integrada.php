@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança, Content Extractor e Knowledge Document determinísticos.
- * Version: 0.4.0-g245-batch-auth.1
+ * Version: 0.4.0-g245-workspace-t100a.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-g245-batch-auth.1' );
+define( 'BDC_KB_VERSION', '0.4.0-g245-workspace-t100a.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -33,6 +33,7 @@ define( 'BDC_KB_SPEC004_G245_STORAGE_LOCK_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_AUTHORIZATION_PACK_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_T099C_CANARY_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_T100A_BATCH_AUTHORIZATION_PACK_BUILD', false );
+define( 'BDC_KB_SPEC004_G245_T100A_POST_WORKSPACE_BUILD', true );
 if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
 	define( 'BDC_KB_ELEMENTOR_WRITER_ENABLED', false );
 }
@@ -71,6 +72,9 @@ require_once BDC_KB_DIR . 'includes/class-block-migration-journal-store.php';
 require_once BDC_KB_DIR . 'includes/class-block-migration-dry-run.php';
 require_once BDC_KB_DIR . 'includes/class-block-migration-batch-plan.php';
 require_once BDC_KB_DIR . 'includes/class-block-migration-lock.php';
+require_once BDC_KB_DIR . 'includes/class-post-activity-registry.php';
+require_once BDC_KB_DIR . 'includes/class-post-management-context.php';
+require_once BDC_KB_DIR . 'includes/class-post-management-activities.php';
 // Elementor-target planning/gateway remain loaded only as historical/diagnostic contracts; no writer target.
 require_once BDC_KB_DIR . 'includes/class-elementor-projection-plan.php';
 require_once BDC_KB_DIR . 'includes/class-elementor-gateway.php';

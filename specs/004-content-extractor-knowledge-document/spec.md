@@ -1,23 +1,26 @@
 # SPEC-004 — Content Extractor e Knowledge Document
 
-**Status:** ATIVA — R-200 PASS / R-210 PASS / G-220 PASS / G-230 PASS / G-240 PASS-CLOSED / G-245 IN PROGRESS  
+**Status:** ATIVA — R-200 PASS / R-210 PASS / G-220 PASS / G-230 PASS / G-240 PASS-CLOSED / G-245 REBASELINED IN PROGRESS  
 **Baseline de entrada:** `0.3.0-rc.1`  
 **Baseline consolidada em `main`:** `0.4.0-acceptance.12` / Knowledge Document `2.1.0`  
 **Merge G-240:** `32a696386bf2ab5574d4d7725db78636fa51f36c`  
-**Pré-requisito:** SPEC-003 concluída — PASS.
+**Pré-requisito:** SPEC-003 concluída — PASS.  
+**ADR vigente:** `adr/ADR-004-001-wordpress-core-blocks-canonical-editorial-target.md`.
 
 ## 1. Problema
 
-Busca lexical, busca semântica, IA assistida, chunks e embeddings precisam consumir uma representação semântica confiável do conteúdo editorial. Usar diretamente HTML, `_elementor_data` ou blocos serializados como conhecimento introduz ruído, instabilidade, detalhes de layout e risco de execução de componentes terceiros.
+Busca lexical, busca semântica, IA assistida, chunks, embeddings e normalização editorial precisam consumir uma representação semântica confiável do conteúdo. Usar diretamente HTML legado, `_elementor_data` ou blocos serializados como conhecimento introduz ruído, instabilidade e detalhes de apresentação.
 
-A fonte editorial continua sendo WordPress/Elementor. Esta SPEC cria uma **projeção derivada, determinística e reconstruível**, sem transformar o plugin em CMS.
+A fonte editorial continua pertencendo ao WordPress. A arquitetura-alvo editorial passa a ser **`WP_Post.post_content` com WordPress Core Blocks**, usando apenas APIs estáveis do WordPress Core. Elementor permanece suportado como fonte legada durante a transição, não como destino futuro.
+
+Esta SPEC cria projeções derivadas, determinísticas e reconstruíveis, sem transformar o plugin em CMS ou editor paralelo.
 
 ## 2. Resultado esperado
 
 ### Content Extractor read-only
 
 - identifica a fonte editorial efetiva;
-- extrai conteúdo semântico de Elementor, Gutenberg/blocos, HTML legado e plain text;
+- extrai conteúdo semântico de Elementor legado, Gutenberg/Core Blocks, HTML legado e plain text;
 - preserva ordem, boundaries e estrutura relevante;
 - não executa código arbitrário;
 - falha de forma isolada/fail-soft;
@@ -33,21 +36,24 @@ A fonte editorial continua sendo WordPress/Elementor. Esta SPEC cria uma **proje
 - sem HTML/JSON bruto como fonte de conhecimento;
 - sem storage durável nesta etapa.
 
-### Elementor Normalization / Production Readiness
+### Canonical Block Normalization / Production Readiness
 
-Elementor é o padrão editorial futuro da equipe, mas a convergência do legado ocorre por migration administrativa separada e governada:
+A convergência do legado deve produzir WordPress Core Blocks em `post_content`, de forma administrativa, separada e governada:
 
 - nunca em activation/update;
 - preflight;
-- matriz de compatibilidade;
-- Projection Plan read-only;
-- gateway version-gated;
+- matriz de compatibilidade por fonte;
+- **Block Projection Plan read-only**;
 - dry-run;
 - stale-source guard;
 - journal/rollback;
+- lock exclusivo;
 - canário;
 - batches retomáveis;
-- autorização explícita para writer real.
+- autorização explícita para qualquer writer real;
+- paridade estrutural/editorial e rollback comprovados.
+
+O **plugin Gutenberg não é dependência**. Somente APIs/features estáveis presentes no WordPress Core homologado podem ser requisito do produto.
 
 ## 3. Invariantes
 
@@ -58,16 +64,18 @@ Extração/Knowledge Document nunca podem:
 - executar shortcodes/widgets/dynamic blocks arbitrariamente;
 - depender de IA/Foundry/vetor/rede externa;
 - persistir projeções sem gate específico;
-- migrar conteúdo para Elementor implicitamente.
+- migrar conteúdo implicitamente.
 
-G-245 também não autoriza escrita por existência de preflight, plano ou gateway. Writer/migration permanecem disabled-by-default até subgates e autorização explícita.
+G-245 também não autoriza escrita por existência de plano, journal, lock ou readiness. Writer/migration permanecem disabled-by-default até subgates, autorização e evidência.
+
+**Novo invariante:** nenhum writer futuro deve ter `_elementor_data` como destino. Elementor é fonte legada de leitura/migração.
 
 ## 4. Estratégia de leitura
 
 1. `WP_Post`/APIs nativas;
 2. flags independentes de origem;
-3. Elementor válido via traversal allowlisted;
-4. Gutenberg via estrutura estática;
+3. WordPress Core Blocks via estrutura estática (`parse_blocks`) quando presentes;
+4. Elementor válido via traversal allowlisted como source adapter legado;
 5. Legacy HTML como adapter de primeira classe;
 6. plain text;
 7. fallback adicional somente com autorização posterior baseada em evidência.
@@ -76,11 +84,12 @@ G-245 também não autoriza escrita por existência de preflight, plano ou gatew
 
 Corpus: 622 posts.
 
-Achados principais:
+Achados principais consolidados:
 
 - forte predominância Legacy HTML;
-- Elementor presente em 80 posts no profiler, 39 JSON válidos / 41 inválidos;
-- Gutenberg residual, porém real;
+- T081: 536 `legacy_html`, 41 `plain_text`, 34 `elementor`, 5 `mixed`, 4 `gutenberg`, 2 `empty`;
+- Elementor puro é parcela minoritária do corpus;
+- Gutenberg/Core Blocks é residual hoje, porém passa a ser o destino canônico futuro;
 - shortcodes com falsos positivos textuais por colchetes;
 - budgets observados abaixo do soft limit de 256 KiB.
 
@@ -93,7 +102,7 @@ Contratos:
 - `extraction-contract-v1.md`;
 - `extraction-contract-v1.1.md`.
 
-Definem source selection, adapters, shortcodes, fallback, warnings, budgets e direção editorial Elementor sem autorizar writer.
+Definem source selection, adapters, shortcodes, fallback, warnings e budgets. Qualquer menção anterior a “direção editorial Elementor” deve ser interpretada como **SUPERSEDED pela ADR-004-001**.
 
 ## 7. G-220 — Content Extractor
 
@@ -114,8 +123,9 @@ Resultado:
 - zero posts alterados;
 - zero extractor errors;
 - zero throwables;
-- 21.969 fragments;
-- readiness Elementor inicial: 39 native / 505 projectable / 78 review_required / 0 blocked.
+- 21.969 fragments.
+
+A compatibilidade Elementor calculada naquele gate permanece evidência histórica de source handling, não critério do novo destino.
 
 ## 8. G-230 — Knowledge Document determinístico
 
@@ -170,24 +180,79 @@ Contratos/evidências principais:
 - `evidence/kd-v21-smoke-summary-20260916T172538Z.json`;
 - `evidence/g240-kd21-acceptance-20260916T193359Z.json`.
 
-## 10. G-245 — Elementor Normalization & Production Readiness
+## 10. G-245 — Canonical Block Normalization & Production Readiness
 
-**Status: IN PROGRESS em branch dedicada `spec004-g245-production-readiness`; PR #4 DRAFT.**
+**Status: REBASELINED / IN PROGRESS em `spec004-g245-production-readiness`; PR #4 DRAFT.**
 
-O trabalho de G-245 não faz parte da baseline G-240 promovida para `main`.
+### 10.1 Histórico antes do pivot
 
-Production Preflight T080 já foi executado read-only em homologação:
+Foram concluídos com valor reutilizável:
 
-- blockers: 0;
-- itens `review_required`: shortcodes legados sem handler e loopback não testado no preflight v1;
-- corpus 622 → 622;
-- fingerprint editorial preservado;
+- T080 Production Preflight — PASS WITH REVIEW ITEMS;
+- T081 Elementor Projection Plan — PASS ambiental como diagnóstico/read-only;
+- T082 Gateway Elementor — PASS local/contratual, agora **SUPERSEDED como destino**;
+- T083/T084 journal + stale-source — preservados/generalizados;
+- T085 dry-run — preservado/generalizável;
+- T086 batches — preservados/generalizáveis;
+- T083B Durable Journal Storage — PASS ambiental;
+- T087A Canary Readiness — preservado como padrão de gate;
+- T087B Migration Lock — preservado;
+- T088 Runbook — deve ser generalizado de Elementor para Block Migration.
+
+Nenhum writer Elementor foi executado. Nenhum canário mutável ocorreu. `_elementor_data` não foi alterado por G-245.
+
+### 10.2 Decisão de pivot
+
+ADR-004-001 determina:
+
+- WordPress Core Blocks são o destino editorial canônico;
+- Elementor fica como source adapter legado;
+- plugin Gutenberg não é dependência;
+- APIs experimentais/plugin-only não entram no baseline de produção;
+- T087C writer Elementor é **CANCELADO/SUPERSEDED antes de implementação**.
+
+### 10.3 Novo subgate
+
+**T090 — Block Projection Contract / Plan read-only.**
+
+Objetivo:
+
+- mapear Knowledge Document → árvore canônica de Core Blocks;
+- suportar inicialmente somente blocos Core explicitamente allowlisted;
+- não renderizar dynamic blocks;
+- não executar shortcodes;
+- emitir `review_required` para conteúdo sem mapeamento seguro;
+- produzir `block_projection_hash` determinístico;
 - `writer_allowed=false`;
-- `migration_execution_allowed=false`.
+- zero persistência.
 
-A sequência restante deve continuar incremental, read-only primeiro, e só avançar para mutação após rollback e autorização explícita.
+Depois de T090, os gates defensivos existentes serão generalizados/reaplicados ao destino Blocks antes de qualquer novo canário.
 
-## 11. G-250 — Lifecycle / RC
+## 11. Estratégia de migração Elementor → Blocks
+
+Elementor não deve ser removido/desativado automaticamente.
+
+Fases:
+
+1. manter leitura do Elementor via `Elementor_Adapter`;
+2. projetar para Core Blocks;
+3. validar full-corpus e amostras humanas;
+4. executar canário governado em homologação;
+5. migrar em batches somente após rollback comprovado;
+6. inventariar dependências restantes;
+7. só propor remoção do plugin Elementor quando dependência efetiva for zero.
+
+Critério mínimo para retirada futura:
+
+- zero `elementor`;
+- zero `mixed` dependente de Elementor;
+- zero widget/shortcode Elementor necessário ao conteúdo ativo;
+- zero dependência runtime de `_elementor_data`;
+- paridade editorial/estrutural comprovada;
+- rollback comprovado;
+- gate explícito.
+
+## 12. G-250 — Lifecycle / RC
 
 **NOT_RUN.**
 
@@ -200,10 +265,11 @@ Antes do RC:
 - deactivate/activate;
 - regressão SPECs 001–003;
 - smoke extractor/document;
+- Block Projection full-corpus;
 - production preflight;
 - documentação/changelog atualizados.
 
-## 12. Fora de escopo atual
+## 13. Fora de escopo atual
 
 - índice lexical;
 - chunks persistidos;
@@ -211,19 +277,30 @@ Antes do RC:
 - MariaDB Vector;
 - Azure Foundry/RAG;
 - ranking/telemetria de busca;
-- writer editorial automático;
-- IA para reparar parsing/migração.
+- IA como writer editorial autônomo;
+- dependência do plugin Gutenberg;
+- APIs experimentais do Gutenberg;
+- remoção imediata do Elementor.
 
-## 13. Gates
+## 14. Gates
 
 - R-200: **PASS**.
 - R-210: **PASS**.
 - G-220: **PASS**.
 - G-230: **PASS**.
 - G-240: **PASS / CLOSED**.
-- G-245: **IN PROGRESS — branch/PR draft; writer não autorizado**.
+- G-245: **REBASELINED / IN PROGRESS — Blocks como destino; writer não autorizado**.
+- T090: **NEXT**.
 - G-250: **NOT_RUN**.
 
-## 14. Definition of Done
+## 15. Definition of Done
 
-A SPEC-004 termina apenas quando o Content Extractor e o Knowledge Document estiverem aceitos em conteúdo real, a promoção para produção estiver governada, qualquer normalização Elementor estiver separada/segura e houver evidência objetiva de zero mutação editorial nos fluxos read-only, além do fechamento dos requisitos aplicáveis de `docs/DEFINITION-OF-DONE.md`.
+A SPEC-004 termina apenas quando:
+
+- Content Extractor e Knowledge Document permanecerem aceitos em conteúdo real;
+- Block Projection estiver contratada, determinística e validada full-corpus;
+- WordPress Core Blocks forem comprovados como destino canônico sem dependência do plugin Gutenberg;
+- migração do legado estiver governada por dry-run, journal, stale-source, lock, rollback, canário e batches;
+- nenhum writer `_elementor_data` for introduzido;
+- houver evidência objetiva de zero mutação editorial nos fluxos read-only;
+- requisitos aplicáveis de `docs/DEFINITION-OF-DONE.md` estiverem fechados.

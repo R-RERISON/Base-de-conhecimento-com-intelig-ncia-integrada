@@ -20,8 +20,10 @@
 - T096 Lossless Core Block Serialization: PASS AMBIENTAL.
 - T097 Static Editorial Parity + stale-source: PASS AMBIENTAL.
 - T098.1 Block Migration Readiness: FAIL CONTROLADO / SEM MUTAÇÃO.
-- T098.2 Block Migration Readiness: **PASS AMBIENTAL**.
-- T099A Journal Store + Lock Smoke: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
+- T098.2 Block Migration Readiness: PASS AMBIENTAL.
+- T099A Journal Store + Lock Smoke: **PASS AMBIENTAL**.
+- T099B Authorization Pack: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE / READ-ONLY**.
+- T099C canário real: BLOCKED por autorização específica.
 - G-250: NOT_RUN.
 
 ## Baseline visual
@@ -31,44 +33,45 @@ UX-002 `0.4.0-ux002.3` permanece contrato visual obrigatório.
 Evidência: `evidence/g245-t098-readiness-pass-20260917T191436Z.json`.
 SHA-256 bruto: `f7bf589858db6c6629cb937ba28dad4ef658d1e265225185dad77e55dd342ff0`.
 
+Resultado: 623/623 em duas passagens; errors/throwables/safety violations 0; ready 611, noop 7, review_required 5; 25 batches cobrem 611 elegíveis sem duplicidade/cursor failure; fingerprint editorial unchanged; gate PASS.
+
+## T099A — PASS AMBIENTAL
+Evidência: `evidence/g245-t099a-storage-lock-20260917T193102Z.json`.
+SHA-256 bruto: `671e6f26de0d232569a7728651e7d42348677607b7ac5bcfc194012031d21ba8`.
+
+Target ambiental: post 358, `legacy_html`, dry-run `ready`.
+
 Resultado:
-- 623/623 em duas passagens;
-- errors/throwables/safety violations 0;
-- dry-run hash mismatches 0;
-- journal hash mismatches 0;
-- dry-run: ready 611, noop 7, review_required 5;
-- 611 journals preparados apenas em memória;
-- 25 batches cobrem os 611 elegíveis, duplicidade 0, cursor failures 0;
-- fingerprint editorial unchanged;
-- `t098_block_migration_readiness_pass=true`.
-
-## T099A — Journal Store + Lock ambiental
-Runtime: `includes/class-block-migration-storage-lock-smoke.php`.
-
-Objetivo: provar a trilha durável real antes de qualquer canário editorial.
-
-O smoke pode mutar somente:
-- `_bdc_kb_block_migration_journal`;
-- `_bdc_kb_block_migration_lock`.
-
-Critérios PASS:
-- candidato automático `legacy_html`/`plain_text` com dry-run ready;
-- journal 0 antes;
-- journal persistido + readback íntegro;
-- lock adquirido + readback íntegro;
-- lock liberado;
-- journal temporário removido;
-- journal 0 depois;
-- lock ausente depois;
+- journal 0 → persistido/readback PASS → cleanup PASS → 0;
+- lock ausente → adquirido/readback PASS → cleanup PASS → ausente;
 - `post_content` SHA-256 before/after igual;
 - `_elementor_data` SHA-256 before/after igual;
-- nenhum `wp_update_post`, writer, shortcode render, block render ou network.
+- errors 0;
+- nenhum write editorial;
+- `t099a_storage_lock_pass=true`.
+
+## T099B — Authorization Pack
+Contrato: `t099b-authorization-pack-contract-v1.md`.
+Runtime: `includes/class-block-migration-authorization-pack-smoke.php`.
+
+Seleção conservadora:
+- `legacy_html` + dry-run `ready`;
+- zero journal/lock residual;
+- `_elementor_data` vazio;
+- 1–30.000 bytes;
+- zero shortcode registrado;
+- zero script/iframe/form/object/embed/style;
+- zero comentário Core Block;
+- até 10 links, 1 imagem e 1 tabela;
+- post 358 é preferido apenas se continuar low-risk; caso contrário, menor `risk_score` determinístico.
+
+O pack exporta hashes, block names esperados, risco agregado, identificação humana do artigo e `authorization_id`. Não exporta corpo editorial/URLs e não persiste nada.
 
 ## Próximos subgates
 
-- [ ] executar T099A e versionar evidência.
-- [ ] T099B: selecionar 1 `legacy_html` de baixo risco e gerar Authorization Pack.
-- [ ] T099C: canário real de 1 artigo + rollback, somente com autorização específica.
+- [ ] executar T099B e versionar Authorization Pack.
+- [ ] solicitar autorização explícita para `post_id + authorization_id` específicos.
+- [ ] T099C: aplicar canário de 1 artigo, verificar e fazer rollback imediato.
 - [ ] T100: batches homologados.
 - [ ] T101: dependência residual Elementor / gate de retirada.
 - [ ] G-250 Lifecycle/RC.

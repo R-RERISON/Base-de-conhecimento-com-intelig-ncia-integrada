@@ -3,140 +3,81 @@
 ## Baseline e gates
 
 - SPEC-001/002/003: concluídas.
-- R-200: **PASS**.
-- R-210: **PASS**.
-- G-220: **PASS ambiental**.
-- G-230/v1: **PASS de determinismo / superseded for AI**.
-- G-240/v1: **FAIL CONTROLADO — perda estrutural**.
-- G-240/v2/KD 2.0.1: **PASS técnico / FAIL humano — hierarchy fidelity**.
-- KD 2.1.0 / `0.4.0-acceptance.12`: **PASS técnico full-corpus + PASS humano 8/8**.
-- **G-240: PASS / CLOSED / promovido para `main`.**
-- **G-245: IN PROGRESS em branch dedicada; PR #4 permanece DRAFT.**
+- R-200/R-210/G-220: PASS.
+- G-230/v1: PASS de determinismo / superseded for AI.
+- G-240: **PASS / CLOSED / promovido para `main`**.
+- KD 2.1.0 / `0.4.0-acceptance.12`: PASS técnico full-corpus + PASS humano 8/8.
+- G-245: **IN PROGRESS** em branch dedicada; PR #4 DRAFT.
+- T080: **PASS WITH REVIEW ITEMS**.
+- T081: **PASS AMBIENTAL**.
+- T082: **NEXT / NOT_STARTED**.
 - G-250: NOT_RUN.
 
 ## Baseline `main`
 
-- merge G-240: `32a696386bf2ab5574d4d7725db78636fa51f36c`;
-- baseline institucional sincronizada: `422de89f5e341204b7549116cc2022fbc978f3ab`.
+A `main` avançou para `72f26121373b12fa08f08ea8d38b4c8d73f8637c` com referências visuais em `scr/`. A branch G-245 incorpora essa referência sem alterar seus guardrails.
 
-A branch `spec004-g245-production-readiness` foi sincronizada com essa baseline sem descarte do trabalho G-245. O trabalho incompleto continua isolado do runtime da `main`.
-
-## Ambiente de homologação validado
+## Ambiente homologado
 
 - WordPress `6.9.4`;
 - PHP `8.5.10`;
 - Elementor `4.1.0`;
 - MariaDB `12.2.2`;
-- multisite: não;
 - corpus: 622 posts;
-- DOMDocument: ativo;
-- WP-Cron: habilitado.
-
-## Fechamento G-240 / KD 2.1
-
-Full-corpus:
-
-- corpus 622 → 622;
-- duas passagens 622/622;
-- errors: 0;
-- throwables: 0;
-- hash mismatches: 0;
-- canonical JSON mismatches: 0;
-- `structure_incomplete`: 0;
-- `not_ready`: 0;
-- fingerprint editorial before/after idêntico;
-- changed posts: 0;
-- gate técnico: PASS.
-
-Readiness observada:
-
-- candidate_ready: 387;
-- review_required: 233;
-- not_applicable: 2;
-- not_ready: 0.
-
-Aceite humano:
-
-- 8/8 coverage;
-- 8/8 order;
-- 8/8 no invented text;
-- 8/8 structure preserved;
-- 8/8 human_pass;
-- 8/8 gate_pass;
-- stale/repeatability/sample mismatch: 0.
-
-Evidências:
-
-- `evidence/kd-v21-smoke-summary-20260916T172538Z.json`;
-- `evidence/g240-kd21-acceptance-20260916T193359Z.json`.
+- DOMDocument ativo;
+- WP-Cron habilitado.
 
 ## G-245 — T080 Production Preflight
 
-**PASS WITH REVIEW ITEMS.**
+**PASS WITH REVIEW ITEMS.** Blockers: 0. `faq_wd` permanece legacy orphan; `wpt` permanece dependência legada desconhecida; loopback não foi testado no preflight v1. Writer/migration continuam false.
 
-Evidência:
-
-- `evidence/g245-preflight-summary-20260916T215612Z.json`;
-- raw SHA-256: `5b9e561b0d0053d6a4fe8fbcbc16cf45107620b1bd72d48517b17e54371c80da`.
-
-Resultado:
-
-- blockers: 0;
-- review items: 2;
-- `faq_wd`: legacy orphan;
-- `wpt`: unknown legacy dependency;
-- loopback/network: não testado no preflight v1;
-- corpus 622 → 622;
-- fingerprint editorial preservado;
-- zero persistência;
-- zero execução de shortcode;
-- zero escrita em `post_content`/`_elementor_data`;
-- `writer_allowed=false`;
-- `migration_execution_allowed=false`.
-
-Esses pontos não bloqueiam Projection Plan read-only, mas continuam bloqueando writer/migration até tratamento explícito.
+Evidência: `evidence/g245-preflight-summary-20260916T215612Z.json`.
 
 ## G-245 — T081 Projection Plan read-only
 
-**LOCAL READY / ENVIRONMENTAL PENDING.**
+**PASS AMBIENTAL em `0.4.0-g245-projection.2`.**
 
-Build de trabalho: `0.4.0-g245-projection.2`.
+Evidência: `evidence/g245-projection-summary-20260917T111009Z.json`.
 
-Estado técnico:
+Resultado comprovado:
 
-- contrato `elementor-projection-plan-contract-v1.md` congelado;
-- `Elementor_Projection_Plan` read-only e determinístico;
-- warnings estruturais/dinâmicos de migração agora forçam `requires_review=true` conforme contrato;
-- `SHORTCODE_NOT_EXPANDED` de handler registrado permanece warning opaco sem overblocking automático;
-- `faq_wd`, `wpt` e handlers ausentes continuam obrigatoriamente em review;
-- `projection_hash` é SHA-256 canônico e depende de `source_hash_before`;
-- todos os safety flags permanecem estritamente `false`;
-- runner full-corpus foi endurecido para falhar em hash inválido, safety violation ou warning crítico sem review;
-- teste local ampliado: **58 assertions PASS**;
-- lint PHP dos artefatos alterados: PASS no ambiente local de validação.
+- 622 posts;
+- primeira passagem: 622/622;
+- segunda passagem: 622/622;
+- errors/throwables: 0;
+- projection hash mismatches: 0;
+- canonical JSON mismatches: 0;
+- projection-hash violations: 0;
+- writer violations: 0;
+- safety violations: 0;
+- legacy-shortcode review violations: 0;
+- migration-warning review violations: 0;
+- fingerprint editorial before/after: idêntico;
+- changed posts: 0;
+- `gate.t081_pass=true`;
+- validação independente: 44/44 checks PASS.
 
-Ainda não é permitido declarar T081 PASS porque falta evidência ambiental no WordPress de homologação.
+Distribuição:
 
-Para fechar T081 ainda é obrigatório:
+- projectable: 503;
+- review_required: 84;
+- native_noop: 33;
+- not_applicable: 2.
 
-1. instalar/executar a build `0.4.0-g245-projection.2` em homologação;
-2. executar o runner full-corpus em duas passagens;
-3. comprovar 622/622 em ambas as passagens;
-4. obter zero errors/throwables/hash mismatch/canonical mismatch;
-5. obter zero projection-hash/safety/writer/review-policy violations;
-6. comprovar corpus e fingerprint editorial inalterados;
-7. versionar a evidência ambiental e as distribuições de status/strategy/warnings;
-8. manter o PR #4 DRAFT até esse gate fechar.
+O raw recebido possui SHA-256 `b342490b15999e0b64e48fa7f18f38f442efc924f8bab6b96569027be7106d57`.
+
+## Próximo passo — T082
+
+Projetar e implementar o **Elementor Gateway version-gated**, ainda com writer desabilitado por padrão. T082 não recebe autorização de escrita real. O gateway deve tornar explícitos contrato de versão, capability, feature flag, caminhos de negação e falhas seguras, preparando T083/T084 sem persistir conteúdo editorial.
 
 ## Guardrails
 
-- Content Extractor/KD permanecem read-only;
-- Projection Plan é derivado read-only e não autoriza escrita;
+- WordPress/Elementor continuam fonte editorial;
+- Content Extractor/KD/Projection Plan são derivados read-only;
 - nenhum writer Elementor está autorizado;
 - nenhuma migration Elementor está autorizada;
-- nenhum Knowledge Document/Projection Plan é persistido;
-- produção não será ambiente experimental;
-- GO de homologação não equivale a GO de produção;
-- próximos writer-related subgates exigem version gate, journal/rollback, stale-source guard, dry-run, batches retomáveis e canário controlado.
+- produção não é ambiente experimental;
+- GO de homologação != GO de produção;
+- qualquer futura persistência exige version gate, journal/rollback, stale-source guard, dry-run, batches retomáveis, canário e autorização explícita.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

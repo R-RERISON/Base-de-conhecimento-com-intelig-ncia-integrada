@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T081",
+  "status": "PASS",
+  "generated_at": "2026-09-17T11:10:09+00:00",
+  "source_artifact": "bdc-kb-spec004-g245-projection-smoke-20260917-111009.json",
+  "source_raw_sha256": "b342490b15999e0b64e48fa7f18f38f442efc924f8bab6b96569027be7106d57",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.4.0-g245-projection.2",
+    "elementor": "4.1.0",
+    "knowledge_document_schema": "2.1.0",
+    "projection_plan_schema": "1.0.0",
+    "matrix_version": "g245-compatibility-matrix-v1"
+  },
+  "corpus": {
+    "total_posts": 622,
+    "first_pass_plans": 622,
+    "second_pass_plans": 622,
+    "errors": 0,
+    "throwables": 0,
+    "projection_hash_mismatches": 0,
+    "canonical_json_mismatches": 0,
+    "projection_hash_violations": 0,
+    "writer_allowed_violations": 0,
+    "safety_violations": 0,
+    "legacy_shortcode_review_violations": 0,
+    "migration_warning_review_violations": 0
+  },
+  "distribution": {
+    "plan_status": {
+      "native_noop": 33,
+      "not_applicable": 2,
+      "projectable": 503,
+      "review_required": 84
+    },
+    "requires_review": {
+      "true": 84,
+      "false": 538
+    },
+    "source_kind": {
+      "elementor": 34,
+      "empty": 2,
+      "gutenberg": 4,
+      "legacy_html": 536,
+      "mixed": 5,
+      "plain_text": 41
+    }
+  },
+  "safety": {
+    "read_only_design": true,
+    "writer_allowed": false,
+    "migration_execution_allowed": false,
+    "corpus_unchanged": true,
+    "editorial_fingerprint_before": "a94b2deb32c88a19ab56e2ff3ddecd02e3eaac8d79d98baf58d7265de8e48799",
+    "editorial_fingerprint_after": "a94b2deb32c88a19ab56e2ff3ddecd02e3eaac8d79d98baf58d7265de8e48799",
+    "editorial_fingerprint_equal": true,
+    "changed_posts_during_run": 0
+  },
+  "performance": {
+    "runtime_ms": 11392,
+    "peak_memory_bytes": 37748736
+  },
+  "validation": {
+    "independent_checks_executed": 44,
+    "independent_checks_passed": 44,
+    "runner_t081_pass": true
+  },
+  "decision": "T081 PASS. Este PASS não autoriza writer nem execução de migração Elementor."
+}

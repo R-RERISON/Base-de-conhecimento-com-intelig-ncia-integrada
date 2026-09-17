@@ -6,29 +6,20 @@
 - R-210: PASS.
 - G-220: PASS.
 - G-230/v1: PASS de determinismo; v1 superseded for AI.
-- G-240/v1: FAIL CONTROLADO — perda estrutural.
-- G-240/v2/KD 2.0.1: full-corpus técnico PASS, porém aceite humano A/B FAIL CONTROLADO — HIERARCHY FIDELITY.
-- KD 2.1.0 / build `0.4.0-acceptance.12`: full-corpus técnico PASS + aceite humano 8/8 PASS.
-- **G-240: PASS / CLOSED / PROMOVIDO PARA `main`.**
-- merge G-240: `32a696386bf2ab5574d4d7725db78636fa51f36c`.
-- baseline institucional `main`: `422de89f5e341204b7549116cc2022fbc978f3ab`.
-- **G-245: IN PROGRESS somente em `spec004-g245-production-readiness`; PR #4 DRAFT.**
+- G-240: **PASS / CLOSED / PROMOVIDO PARA `main`** com KD 2.1.0.
+- G-245: **IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT.
+- T080 Production Preflight: **PASS WITH REVIEW ITEMS**.
+- T081 Projection Plan read-only: **PASS ambiental** em `0.4.0-g245-projection.2`.
+- T082 Elementor Gateway version-gated: **NEXT / NOT_STARTED**.
 - G-250: NOT_RUN.
 
 ## S005 — G-240 / Real Content Acceptance
 
-### Concluído
-
-- [x] Implementar e validar Content Extractor/KD v2 read-only.
-- [x] Corrigir colisões de IDs estruturais.
-- [x] Preservar structural anchors de listas.
-- [x] Introduzir expectativa semântica DOM independente.
-- [x] Corrigir materialização de listas/tabelas no Legacy adapter.
-- [x] Fechar KD 2.1.0 com relationship fidelity, proveniência/confiança e inferência conservadora.
-- [x] Executar full-corpus em duas passagens sem mutação editorial.
-- [x] Executar A/B humano nos mesmos oito posts.
-- [x] Atingir 8/8 structure preserved e 8/8 gate_pass.
-- [x] Promover PR #3 para `main`.
+- [x] Content Extractor/KD v2 read-only.
+- [x] KD 2.1.0 com relationship fidelity e inferência conservadora.
+- [x] Full-corpus em duas passagens sem mutação editorial.
+- [x] A/B humano 8/8 PASS.
+- [x] Promovido para `main` pelo merge `32a696386bf2ab5574d4d7725db78636fa51f36c`.
 
 Evidências finais:
 
@@ -37,50 +28,41 @@ Evidências finais:
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 
-**Status: IN PROGRESS — somente subgates governados; nenhuma escrita editorial autorizada.**
-
-Branch: `spec004-g245-production-readiness`  
-PR: `#4` — DRAFT / NÃO MERGEAR enquanto gates aplicáveis estiverem abertos.
+**Regra:** nenhuma escrita editorial está autorizada por T080/T081.
 
 ### T080 — Production Preflight — PASS WITH REVIEW ITEMS
 
-- [x] T080A Criar branch dedicada.
-- [x] T080B Implementar `Production_Preflight` read-only.
-- [x] T080C Avaliar WordPress/PHP/DOM/Elementor/backup/shortcodes/cron/loopback.
-- [x] T080D Homologar inicialmente Elementor `4.1.0` e tratar versões desconhecidas como review.
-- [x] T080E Inventariar plugins/shortcodes sem exportar corpo editorial.
-- [x] T080F Forçar `writer_allowed=false` e `migration_execution_allowed=false`.
-- [x] T080G Fechar testes locais.
-- [x] T080H Gerar package e validar lint/integridade/paridade.
-- [x] T080I Executar preflight em homologação.
-- [x] T080J Versionar evidência e matriz de compatibilidade.
+- [x] Preflight read-only.
+- [x] Inventário de ambiente/shortcodes/providers.
+- [x] `writer_allowed=false` e `migration_execution_allowed=false`.
+- [x] Evidência ambiental versionada.
+
+Evidência: `evidence/g245-preflight-summary-20260916T215612Z.json`.
+
+### T081 — Projection Plan read-only — PASS
+
+- [x] T081A Contrato `elementor-projection-plan-contract-v1.md` congelado.
+- [x] T081B Projeção determinística por `source_kind` sem persistência.
+- [x] T081C Schema/version, `source_hash_before`, strategy, projection hash, warnings e `requires_review`.
+- [x] T081D Shortcodes como dependências opacas; nunca `do_shortcode()`.
+- [x] T081E Review policy integral para casos críticos.
+- [x] T081F Canonicalização/hash determinístico.
+- [x] T081G 58 assertions locais PASS + lint PASS.
+- [x] T081H Runner ambiental full-corpus endurecido.
+- [x] T081I Executado em homologação: 622/622 + 622/622.
+- [x] T081J Gate fechado: zero errors/throwables/mismatches/violations, fingerprint preservado e `gate.t081_pass=true`.
 
 Evidência:
 
-- `evidence/g245-preflight-summary-20260916T215612Z.json`;
-- blockers: 0;
-- review items: `faq_wd`, `wpt` e loopback não testado;
-- corpus 622→622;
-- fingerprint editorial preservado.
+- `evidence/g245-projection-summary-20260917T111009Z.json`;
+- raw recebido SHA-256 `b342490b15999e0b64e48fa7f18f38f442efc924f8bab6b96569027be7106d57`;
+- plan status: 503 projectable, 84 review_required, 33 native_noop, 2 not_applicable;
+- changed posts: 0;
+- writer/migration: false.
 
-### T081 — Projection Plan read-only
+### Próximos subgates
 
-**Status: LOCAL READY / ENVIRONMENTAL PENDING — build `0.4.0-g245-projection.2`.**
-
-- [x] T081A Congelar contrato `elementor-projection-plan-contract-v1.md`.
-- [x] T081B Implementar projeção determinística por `source_kind` sem persistência.
-- [x] T081C Emitir schema/version, `source_hash_before`, strategy, projection hash, warnings e `requires_review`.
-- [x] T081D Preservar shortcodes como dependências opacas; nunca executar `do_shortcode()`.
-- [x] T081E Fechar integralmente as regras de `requires_review`: compatibilidade unresolved/blocked, `faq_wd`, `wpt`, handler ausente, Gutenberg dinâmico/unsupported, widget Elementor unsupported, JSON Elementor inválido e source oversize hard.
-- [x] T081F Implementar canonicalização e hash determinístico.
-- [x] T081G Ampliar testes locais de estratégias, review policy, repetibilidade, hash e zero-write: 58 assertions PASS; lint PASS.
-- [x] T081H Endurecer runner ambiental full-corpus em duas passagens, sem exportar conteúdo editorial bruto, com validação independente de hash, safety e review policy.
-- [ ] T081I Executar build `.2` em homologação e versionar evidência full-corpus.
-- [ ] T081J Fechar gate somente com 622/622 nas duas passagens, zero errors/throwables/hash mismatch/canonical mismatch, zero projection-hash/safety/writer/review-policy violations e fingerprint editorial preservado.
-
-### Próximos subgates após T081
-
-- [ ] T082 Elementor Gateway version-gated com writer disabled-by-default.
+- [ ] T082 Elementor Gateway version-gated com writer **disabled-by-default**.
 - [ ] T083 Journal/rollback.
 - [ ] T084 Stale-source guard.
 - [ ] T085 Dry-run.
@@ -91,12 +73,11 @@ Evidência:
 
 ## Regras constitucionais
 
-1. Content Extractor/KD são read-only.
+1. Content Extractor/KD/Projection Plan permanecem read-only.
 2. Determinismo sem fidelidade estrutural/hierárquica não é aceite.
 3. DOM explícito vence inferência.
 4. Inferência textual deve ser conservadora e auditável.
-5. `review_required` é limitação explícita, não `not_ready` automático.
-6. G-240 PASS não autoriza persistência editorial.
-7. Preflight e Projection Plan nunca autorizam escrita por efeito colateral.
-8. Writer/migration Elementor permanecem disabled-by-default até subgates, rollback e autorização explícita.
-9. `main` deve permanecer baseline conhecido; trabalho incompleto fica em branch dedicada.
+5. `review_required` é limitação explícita, não erro silencioso.
+6. PASS de T081 não autoriza persistência editorial.
+7. Writer/migration Elementor permanecem disabled-by-default até subgates, rollback e autorização explícita.
+8. Trabalho incompleto permanece fora da `main` até gates e revisão.

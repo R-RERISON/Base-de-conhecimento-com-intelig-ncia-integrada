@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança, Content Extractor e Knowledge Document determinísticos.
- * Version: 0.4.0-g245-projection.2
+ * Version: 0.4.0-g245-gateway.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-g245-projection.2' );
+define( 'BDC_KB_VERSION', '0.4.0-g245-gateway.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -23,6 +23,9 @@ define( 'BDC_KB_SPEC004_FINAL_DIAG_BUILD', false );
 define( 'BDC_KB_SPEC004_PIPELINE_DIAG_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_PREFLIGHT_BUILD', true );
 define( 'BDC_KB_SPEC004_G245_PROJECTION_SMOKE_BUILD', true );
+if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
+	define( 'BDC_KB_ELEMENTOR_WRITER_ENABLED', false );
+}
 define( 'BDC_KB_FILE', __FILE__ );
 define( 'BDC_KB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
@@ -49,6 +52,7 @@ require_once BDC_KB_DIR . 'includes/class-canonical-json.php';
 require_once BDC_KB_DIR . 'includes/class-semantic-structure.php';
 require_once BDC_KB_DIR . 'includes/class-knowledge-document.php';
 require_once BDC_KB_DIR . 'includes/class-elementor-projection-plan.php';
+require_once BDC_KB_DIR . 'includes/class-elementor-gateway.php';
 require_once BDC_KB_DIR . 'includes/class-admin-page.php';
 require_once BDC_KB_DIR . 'includes/class-visual-foundation.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';

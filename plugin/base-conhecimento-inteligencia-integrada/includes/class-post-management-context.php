@@ -22,17 +22,7 @@ final class Post_Management_Context {
 		}
 
 		$source = Migration_Fidelity_Source::build( $post_id );
-		$dry = Block_Migration_Dry_Run::build( $post_id );
-		$lock = Block_Migration_Lock::inspect( $post_id );
-		$journals = get_post_meta( $post_id, Block_Migration_Journal_Store::META_KEY, false );
-		$journal_count = is_array( $journals ) ? count( $journals ) : 0;
-		$latest_journal_state = '';
-		if ( $journal_count > 0 ) {
-			$latest = Block_Migration_Journal_Store::latest_for_post( $post_id );
-			if ( ! ( $latest instanceof \WP_Error ) ) {
-				$latest_journal_state = (string) ( $latest['record']['state'] ?? '' );
-			}
-		}
+		$core_activity = Post_Core_Blocks_Activity::assess( $post_id );
 
 		$summary = Summary_Store::read( $post_id );
 		$review = Review_Store::read( $post_id );
@@ -78,15 +68,21 @@ final class Post_Management_Context {
 			'governance' => array(
 				'review_state' => $review instanceof \WP_Error ? Review_Contract::STATE_UNREVIEWED : (string) ( $review['state'] ?? Review_Contract::STATE_UNREVIEWED ),
 			),
-			'core_blocks' => array(
-				'dry_run_status' => $dry instanceof \WP_Error ? 'unavailable' : (string) ( $dry['dry_run_status'] ?? 'unknown' ),
-				'serialized_post_content_sha256' => $dry instanceof \WP_Error ? '' : (string) ( $dry['serialized_post_content_sha256'] ?? '' ),
-				'journal_event_count' => $journal_count,
-				'latest_journal_state' => $latest_journal_state,
-				'lock_status' => $lock instanceof \WP_Error ? 'unavailable' : (string) ( $lock['status'] ?? 'unknown' ),
-				'writer_enabled' => false,
-				'migration_execution_enabled' => false,
-			),
+			'core_blocks' => $core_activity instanceof \WP_Error
+				? array(
+					'dry_run_status' => 'unavailable',
+					'journal_event_count' => 0,
+					'latest_journal_state' => '',
+					'lock_status' => 'unavailable',
+					'operational_status' => 'blocked',
+					'operational_reasons' => array( 'CORE_ACTIVITY_ERROR:' . $core_activity->get_error_code() ),
+					'authorization_ready' => false,
+					'authorization_id' => '',
+					'expected_block_names' => array(),
+					'writer_enabled' => false,
+					'migration_execution_enabled' => false,
+				)
+				: $core_activity,
 			'safety' => array(
 				'read_only_context' => true,
 				'writes_post_content' => false,

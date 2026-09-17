@@ -11,7 +11,7 @@
 - T080: **PASS WITH REVIEW ITEMS**.
 - T081: **PASS AMBIENTAL**.
 - T082–T086: **PASS LOCAL / CONTRATUAL**, com T081 também comprovado ambientalmente.
-- T083B Journal Durable Storage: **PASS LOCAL / SMOKE AMBIENTAL PENDENTE** em `0.4.0-g245-canary-prep.1`.
+- T083B Journal Durable Storage: **PASS AMBIENTAL** em `0.4.0-g245-journal-smoke.1`.
 - T087A Canary Readiness: **PASS LOCAL / READ-ONLY**.
 - T087B-prep Exclusive Migration Lock: **PASS LOCAL**.
 - T087 canário mutável + rollback real: **BLOCKED / NÃO EXECUTADO**.
@@ -69,7 +69,7 @@ Arquivos visuais canônicos devem permanecer fora do diff G-245 vs `main`: `clas
 - [x] não existe executor; execution/writer/migration false.
 - [x] 37 assertions PASS + lint PASS.
 
-### T083B — Journal Durable Storage — PASS LOCAL / SMOKE PENDENTE
+### T083B — Journal Durable Storage — PASS AMBIENTAL
 
 - [x] storage WordPress-first escolhido: postmeta privado append-only `_bdc_kb_migration_journal`.
 - [x] custom table/options/comments/file storage rejeitados por princípio de negação.
@@ -78,8 +78,13 @@ Arquivos visuais canônicos devem permanecer fora do diff G-245 vs `main`: `clas
 - [x] `manage_options`, post existente, limite de payload e readback obrigatório.
 - [x] falha de readback tenta remover imediatamente o evento recém-criado.
 - [x] **22/22 assertions locais PASS + lint PASS**.
-- [x] smoke ambiental implementado e **desabilitado por padrão**.
-- [ ] executar smoke em homologação e obter `gate.t083b_storage_pass=true`.
+- [x] smoke ambiental executado em WordPress 6.9.4 / PHP 8.5.10.
+- [x] evento temporário criado, round-trip exato, integridade válida e cleanup OK.
+- [x] count `0 → 0` restaurado após cleanup.
+- [x] `post_content` e `_elementor_data` preservados.
+- [x] `gate.t083b_storage_pass=true`.
+
+Evidência: `evidence/g245-journal-storage-smoke-20260917T155150Z.json` — SHA-256 do arquivo recebido `a05918e28e206766cb2b28e37c8ec64e9d18a39f44ecd28d02a7bbd6ffb2c118`.
 
 Artefatos: `journal-storage-contract-v1.md`, `class-elementor-migration-journal-store.php`, `class-elementor-migration-journal-smoke.php`, `tests/unit/spec004-journal-durable-store.php`.
 
@@ -109,7 +114,6 @@ Artefatos: `migration-lock-contract-v1.md`, `class-elementor-migration-lock.php`
 
 ### Próximos subgates
 
-- [ ] validar T083B ambientalmente em homologação.
 - [ ] T087C: menor executor mutável version-gated, **disabled-by-default**, sem habilitá-lo.
 - [ ] selecionar candidato canário de baixo risco e gerar Authorization Pack.
 - [ ] obter autorização específica para 1 canário.

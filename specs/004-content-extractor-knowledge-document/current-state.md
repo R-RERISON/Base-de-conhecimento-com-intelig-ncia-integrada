@@ -4,32 +4,21 @@
 
 - SPEC-001/002/003: concluídas.
 - UX-001/UX-002: concluídas; UX-002 `0.4.0-ux002.3` é contrato visual obrigatório.
-- R-200/R-210/G-220: PASS.
-- G-230/v1: PASS de determinismo / superseded for AI.
 - G-240: **PASS / CLOSED / promovido para `main`**.
-- KD 2.1.0 / `0.4.0-acceptance.12`: PASS técnico full-corpus + PASS humano 8/8.
-- G-245: **IN PROGRESS** em branch dedicada; PR #4 DRAFT.
+- KD 2.1.0: PASS técnico full-corpus + PASS humano 8/8.
+- G-245: **IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT.
 - T080: **PASS WITH REVIEW ITEMS**.
 - T081: **PASS AMBIENTAL**.
-- T082: **PASS LOCAL / CONTRATUAL**.
-- T083: **PASS LOCAL / CONTRATUAL**.
-- T084: **PASS LOCAL / CONTRATUAL**.
-- T085: **PASS LOCAL / CONTRATUAL**.
-- T086: **NEXT / NOT_STARTED**.
+- T082–T086: **PASS LOCAL / CONTRATUAL**.
+- T087: **NEXT — preparação read-only permitida; canário mutável NÃO AUTORIZADO**.
 - G-250: NOT_RUN.
 
 ## Baseline `main` e UX
 
-A `main` está em `6d0fc8e33f826ee957038483d22fa1b804bae056`, contendo a UX-002 homologada. A branch G-245 foi sincronizada no merge `145e16bf31f7afe2d3f08d087b79b69f3f40b885`.
+`main`: `6d0fc8e33f826ee957038483d22fa1b804bae056`.
+Sincronização G-245 + UX-002: `145e16bf31f7afe2d3f08d087b79b69f3f40b885`.
 
-Validação após T085: branch **48 commits à frente / 0 atrás** da `main`; nenhum arquivo visual canônico aparece no diff.
-
-Arquivos protegidos contra regressão visual durante G-245:
-
-- `includes/class-admin-page.php`;
-- `includes/class-classification-admin.php`;
-- `assets/css/visual-foundation.css`;
-- `includes/class-visual-foundation.php`.
+A UX-002 homologada permanece inviolável. Os arquivos visuais canônicos não devem aparecer no diff G-245 vs `main`.
 
 ## Ambiente homologado
 
@@ -41,53 +30,58 @@ Arquivos protegidos contra regressão visual durante G-245:
 - DOMDocument ativo;
 - WP-Cron habilitado.
 
-## T080 / T081 — evidência ambiental
+## T080 / T081
 
-T080: PASS WITH REVIEW ITEMS, blockers 0; `faq_wd` legacy orphan, `wpt` dependência legada desconhecida, loopback não testado. Writer/migration false.
+T080 PASS WITH REVIEW ITEMS, blockers 0. T081 PASS ambiental: 622/622 em duas passagens, zero erros/mismatches/violações, fingerprint editorial idêntico, changed posts 0, `gate.t081_pass=true`, 44/44 checks independentes PASS.
 
-T081: PASS ambiental em `0.4.0-g245-projection.2`: 622/622 + 622/622, zero erros/mismatches/violações, fingerprint editorial idêntico, changed posts 0, `gate.t081_pass=true`, 44/44 checks independentes PASS.
+## T082 — Gateway
 
-Evidências: `evidence/g245-preflight-summary-20260916T215612Z.json` e `evidence/g245-projection-summary-20260917T111009Z.json`.
-
-## T082 — Elementor Gateway
-
-PASS LOCAL / CONTRATUAL. Homologa explicitamente Elementor `4.1.0`; ausência bloqueia e versão diferente exige review. Feature flag default false, capability administrativa e hard phase gate mantêm `writer_allowed=false` mesmo no caminho hipoteticamente mais permissivo. 45 assertions PASS.
+PASS LOCAL / CONTRATUAL. Version gate, feature flag default false, capability e hard phase gate. Writer/migration false. 45 assertions PASS.
 
 ## T083 — Journal / rollback
 
-PASS LOCAL / CONTRATUAL. Contrato write-ahead com capsule de rollback, hashes de integridade, estados prepared/applied/partial_failure/rolled_back, bloqueio de rollback stale/tampered e idempotência.
-
-**Importante:** `journal_persisted=false`. Storage durável continua obrigatório antes de qualquer write real.
+PASS LOCAL / CONTRATUAL. Write-ahead journal/capsule/hashes/rollback/idempotência contratados. **Storage durável ainda não implementado (`journal_persisted=false`) e é pré-condição obrigatória para qualquer write real.**
 
 ## T084 — Stale-source guard
 
-PASS LOCAL / CONTRATUAL. Compara `source_hash_before` do plano com o Knowledge Document atual; estados fresh/stale/blocking; mismatch e hash inválido falham fechado. T083+T084: 38 assertions PASS.
+PASS LOCAL / CONTRATUAL. Fresh/stale/blocking; mismatch/hash inválido falham fechado. T083+T084: 38 assertions PASS.
 
-## T085 — Dry-run zero-write
+## T085 — Dry-run
 
-PASS LOCAL / CONTRATUAL em `0.4.0-g245-dryrun.1`.
+PASS LOCAL / CONTRATUAL em `0.4.0-g245-dryrun.1`. Determinístico, zero-write, ready/review/noop/blocked, review não prepara journal/apply, 38 assertions PASS.
 
-- ready/review_required/noop/blocked;
-- `ready` é simulação, nunca autorização;
-- review_required não prepara journal nem simula apply;
-- stale/gateway blocking/unsafe plan bloqueiam;
-- hash/JSON determinísticos;
-- `execution_allowed=false`, writer/migration false;
-- 38 assertions PASS + lint PASS.
+## T086 — Batches retomáveis
 
-## Próximo passo — T086
+PASS LOCAL / CONTRATUAL em `0.4.0-g245-batch.1`.
 
-Implementar **batches retomáveis read-only**, com particionamento determinístico, cursor/checkpoint explícito, idempotência, ausência de duplicidade e batch hash canônico. T086 não executará writer nem persistirá conteúdo editorial.
+- apenas dry-runs ready entram no cohort;
+- ordenação/dedupe determinísticos;
+- duplicata conflitante bloqueia;
+- batch size 1–100;
+- cursor versionado/integridade/cohort binding;
+- cursor adulterado ou stale bloqueia;
+- resume sem repetição;
+- cobertura exata e zero duplicidade entre batches;
+- cohort/batch hashes determinísticos;
+- `persists_checkpoint=false`;
+- não existe executor;
+- execution/writer/migration false;
+- 37 assertions PASS + lint PASS.
+
+## Próximo passo — T087
+
+Preparar **Canary Readiness** de forma read-only. O readiness deve tornar explícitos os blockers para uma execução real: journal durável, source fresh no último instante, Elementor homologado, dry-run ready, batch elegível, escopo canário mínimo, rollback capsule íntegro e autorização humana explícita.
+
+**Não executar canário mutável sem autorização explícita posterior.**
 
 ## Guardrails
 
 - WordPress/Elementor continuam fonte editorial;
-- Content Extractor/KD/Projection Plan são derivados reconstruíveis;
-- UX-002 permanece baseline visual inviolável;
-- nenhum writer/migration está autorizado;
-- journal durável e recheck stale imediatamente antes do write são pré-condições futuras;
+- UX-002 não pode regredir;
+- nenhum writer/migration está autorizado até aqui;
+- journal durável + stale recheck são pré-condições;
 - produção não é ambiente experimental;
 - GO homologação != GO produção;
-- canário/rollback real e autorização explícita ainda são obrigatórios.
+- T087 mutável, rollback real e T089 dependem de autorização explícita.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

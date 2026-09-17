@@ -19,9 +19,10 @@ Antes de qualquer alteração, reler `AGENTS.md`, `.specify/PROJECT_MANIFEST.md`
 - T091: PASS AMBIENTAL.
 - T092: PASS LOCAL.
 - T093: PASS AMBIENTAL.
-- T094 Editorial Fidelity: **PASS AMBIENTAL**.
-- T095 Migration Fidelity Source v1: **PASS LOCAL / READ-ONLY**.
-- T096 Lossless Core Block Serialization + round-trip: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**, 34/34 local.
+- T094 Editorial Fidelity: PASS AMBIENTAL.
+- T095 Migration Fidelity Source v1: PASS LOCAL / READ-ONLY.
+- T096 Lossless Core Block Serialization + round-trip: **PASS AMBIENTAL**.
+- T097 Static Editorial Parity + generic stale-source: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**, 20/20 local.
 - Nenhum writer/migration está autorizado.
 
 ## Decisão arquitetural vigente
@@ -36,52 +37,44 @@ Antes de qualquer alteração, reler `AGENTS.md`, `.specify/PROJECT_MANIFEST.md`
 
 Constituição da branch: v1.3.0.
 
-## Evidência T094
+## T096 comprovado
 
-Arquivo:
-`evidence/g245-editorial-fidelity-t094-20260917T180802Z.json`.
+Evidência resumida:
+`evidence/g245-lossless-t096-summary-20260917T182930Z.json`.
 
-SHA-256 bruto recebido:
-`87e86ea84fdd7def0651a8218971d449aa21b85f82c3bcd521429ebee58f7923`.
+SHA-256 do JSON bruto recebido:
+`7c71a436db3393fbf9be8f0add11fd32590d3a9804452e57173090e425925192`.
 
 Ambiente:
 
 - WordPress 6.9.4;
 - PHP 8.5.10;
-- Block Projection 1.1.0;
-- DOMDocument true;
+- Migration Fidelity Source 1.0.0;
+- Lossless Serializer 1.0.0;
 - Gutenberg plugin dependency false.
 
-Corpus: 623/623, errors 0, throwables 0.
+Resultado:
 
-Fidelity classes:
-
-- rich_html_source_required 467;
-- elementor_source_adapter_required 79;
-- shortcode_resolution_required 37;
-- kd_structure_sufficient_candidate 33;
-- native_core_blocks 4;
-- not_applicable 3.
-
-Características observadas:
-
-- links: 6.874 em 501 posts;
-- images: 4.595 em 346 posts;
-- inline formatting: 25.764 em 564 posts;
-- styled spans: 1.394;
-- line breaks: 1.319;
-- tables: 513;
-- rowspan cells: 463;
-- colspan cells: 13;
-- posts com shortcodes: 53;
-- posts com Elementor meta: 80;
-- Elementor text-editor widgets: 39;
-- Elementor shortcode widgets: 1;
-- editor HTML Elementor: 1.011 links, 587 imagens, 3.357 rich inline occurrences;
-- attachment URL resolved: 0;
-- attachment URL unresolved: 4.595.
-
-Safety: read-only, sem exportar conteúdo/URLs/post IDs, sem network/render, fingerprint editorial igual e `t094_editorial_fidelity_pass=true`.
+- corpus 623;
+- duas passagens 623/623;
+- errors 0;
+- throwables 0;
+- safety violations 0;
+- raw round-trip mismatches 0;
+- parse/serialize mismatches 0;
+- fidelity hash mismatches 0;
+- serialization hash mismatches 0;
+- source ready 615;
+- review_required 5;
+- not_applicable 3;
+- serialized_in_memory 611;
+- native_noop 4;
+- `core/freeform` 611;
+- `core/shortcode` 1;
+- 5 `mixed` permanecem review_required;
+- corpus unchanged;
+- fingerprint editorial before/after igual;
+- `gate_result.t096_lossless_roundtrip_pass=true`.
 
 ## Arquitetura de duas projeções
 
@@ -95,92 +88,63 @@ Uso: busca, IA, hierarquia, qualidade e guardrail semântico.
 
 `fonte -> Migration Fidelity Source -> Core Block Lossless Serializer`
 
-Uso: preservar o material editorial necessário à migração.
+Uso: preservar material editorial e migrar para Core Blocks sem perda.
 
-O KD não pode ser tratado como uma cópia editorial lossless.
+Mapeamento inicial:
 
-## T095 — Migration Fidelity Source v1
+- Gutenberg -> `native_noop`;
+- legacy HTML/plain text -> `core/freeform`;
+- Elementor text-editor -> `core/freeform`;
+- Elementor shortcode -> `core/shortcode`;
+- mixed/unsupported -> fail-closed.
 
-Contrato:
-`migration-fidelity-source-contract-v1.md`.
-
-Runtime:
-`plugin/base-conhecimento-inteligencia-integrada/includes/class-migration-fidelity-source.php`.
-
-Estratégias:
-
-- Gutenberg → `native_core_blocks`;
-- legacy HTML → unidade `post_content_rich_html` exata;
-- plain text → unidade `post_content_plain_text` exata;
-- Elementor → unidades ordenadas `elementor_text_editor_html` e `elementor_shortcode`;
-- mixed → `review_required`, preservando os dois canais para futura decisão humana.
-
-Cada unidade possui SHA-256/bytes e o documento possui `fidelity_hash` determinístico. Raw payload fica somente em memória.
-
-## T096 — Lossless Core Block Serialization
+## T097 — Static Editorial Parity
 
 Contrato:
-`core-block-lossless-serialization-contract-v1.md`.
+`core-block-editorial-parity-contract-v1.md`.
 
 Runtime:
 
-- `includes/class-core-block-lossless-serializer.php`;
-- `includes/class-core-block-lossless-roundtrip-smoke.php`.
+- `includes/class-block-migration-stale-source-guard.php`;
+- `includes/class-core-block-editorial-parity.php`;
+- `includes/class-core-block-editorial-parity-smoke.php`.
 
-Mapeamento v1:
+Validação local: **20/20 assertions PASS + PHP lint PASS**.
 
-- legacy HTML/plain text → `core/freeform`;
-- Elementor text-editor → `core/freeform`;
-- Elementor shortcode → `core/shortcode`;
-- Gutenberg existente → `native_noop`;
-- mixed/unsupported → fail-closed.
+O smoke executa duas passagens full-corpus e valida:
 
-Motivação: primeiro fazer uma **canonicalização lossless** para Core Blocks, sem tentar reconstruir semanticamente milhares de links/imagens/spans/tabelas de uma vez. Refinamento de `core/freeform` para blocos semânticos é etapa posterior.
+1. `core/freeform` e `core/shortcode` registrados no Block Registry;
+2. block name parseado igual ao mapping esperado;
+3. SHA-256 do `innerHTML` parseado igual ao raw source unit;
+4. Gutenberg nativo byte-equivalent;
+5. stale-source guard comparando `fidelity_hash`, `source_kind`, `post_content_sha256` e `elementor_data_sha256`;
+6. manifest determinístico entre passagens;
+7. corpus/fingerprint unchanged;
+8. zero render de blocks/shortcodes, zero write/network e zero export de conteúdo/URLs/post IDs.
 
-Validação local combinada T095/T096: **34/34 assertions PASS + PHP lint PASS**.
+## Pacote T097
 
-O smoke T096 executa duas passagens e valida com as APIs reais do Core:
-
-`Migration Fidelity Source -> serialize_blocks() -> parse_blocks() -> serialize_blocks()`.
-
-Critérios:
-
-- todo o corpus processado;
-- zero errors/throwables;
-- zero safety violations;
-- zero raw payload round-trip mismatch;
-- zero parse/serialize mismatch;
-- zero fidelity hash mismatch;
-- zero serialization hash mismatch;
-- Gutenberg `native_noop` byte-preserved;
-- corpus/fingerprint editorial unchanged;
-- nenhum conteúdo/URL/post ID exportado;
-- nenhum block/shortcode renderizado;
-- nenhuma persistência.
-
-## Pacote T096
-
-- `0.4.0-g245-lossless-t096.1`;
-- SHA-256 `5a2fc4ac31bfbe2b68cfe5f06d07057310760f54c9f5ecfc9fbc55b3b07ad961`;
-- 41 PHP files lint PASS pré/pós ZIP;
+- `0.4.0-g245-parity-t097.1`;
+- SHA-256 `79d82b6e8f7929247a4121c9ccbc2f94972902eab3039b12770b0714f99f11e0`;
+- 44 PHP files lint PASS pré/pós ZIP;
 - UX-002 byte parity PASS;
-- T094 smoke OFF;
-- T096 smoke ON;
+- T096 smoke OFF;
+- T097 smoke ON;
 - writer/migration OFF.
 
 ## Próximo passo exato
 
-1. instalar o pacote T096 em homologação;
-2. abrir `Base de Conhecimento > Lossless Blocks G-245`;
-3. executar `Executar T096 e baixar JSON`;
+1. instalar pacote T097 em homologação;
+2. abrir `Base de Conhecimento > Editorial Parity G-245`;
+3. executar `Executar T097 e baixar JSON`;
 4. devolver o JSON;
-5. versionar a evidência;
-6. se PASS, abrir T097 para paridade renderizada/editorial em cohort controlado;
-7. somente depois generalizar dry-run/journal/stale/lock/batch para Block Migration e preparar canário.
+5. versionar evidência;
+6. se PASS, iniciar T098 para generalizar journal/dry-run/lock/batch para Block Migration;
+7. depois montar Authorization Pack para exatamente 1 canário mutável.
 
 Gate esperado:
 
-`gate_result.t096_lossless_roundtrip_pass=true`.
+`gate_result.t097_static_editorial_parity_pass=true`.
 
 ## Guardrails absolutos
 
@@ -192,8 +156,7 @@ Gate esperado:
 - não usar KD como fonte editorial lossless;
 - não exportar raw payload em runners;
 - não decidir mixed source automaticamente;
-- não executar shortcodes para migrar;
-- não baixar/relinkar mídia;
+- não executar shortcodes nos gates read-only;
 - PR #4 permanece DRAFT.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

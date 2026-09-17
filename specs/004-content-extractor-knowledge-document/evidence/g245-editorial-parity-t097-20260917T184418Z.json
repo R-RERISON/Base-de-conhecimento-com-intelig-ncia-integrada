@@ -1,0 +1,60 @@
+{
+    "schema_version": "1.0.0",
+    "gate": "T097",
+    "mode": "static_editorial_parity_and_stale_source_read_only",
+    "generated_at": "2026-09-17T18:44:18+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-g245-parity-t097.1",
+        "migration_fidelity_source_schema": "1.0.0",
+        "lossless_serializer_schema": "1.0.0",
+        "editorial_parity_schema": "1.0.0",
+        "stale_guard_schema": "1.0.0",
+        "gutenberg_plugin_dependency": false
+    },
+    "block_registry": {"required": ["core/freeform", "core/shortcode"], "missing": [], "pass": true},
+    "corpus": {
+        "total_posts": 623,
+        "first_pass": 623,
+        "second_pass": 623,
+        "first_errors": 0,
+        "second_errors": 0,
+        "first_throwables": 0,
+        "second_throwables": 0,
+        "first_safety_violations": 0,
+        "second_safety_violations": 0,
+        "first_parity_mismatches": 0,
+        "second_parity_mismatches": 0,
+        "first_stale_sources": 0,
+        "second_stale_sources": 0,
+        "manifest_hash_mismatches": 0
+    },
+    "distribution": {
+        "source_kind": {"elementor": 34, "empty": 3, "gutenberg": 4, "legacy_html": 536, "mixed": 5, "plain_text": 41},
+        "parity_status": {"native_noop": 4, "not_applicable": 3, "pass": 611, "review_required": 5},
+        "parity_warnings": {"EDITORIAL_PARITY_SOURCE_REVIEW_REQUIRED": 5},
+        "stale_status": {"fresh": 623}
+    },
+    "safety": {
+        "read_only_design": true,
+        "renders_blocks": false,
+        "executes_shortcodes": false,
+        "writes_post_content": false,
+        "writes_elementor_data": false,
+        "writer_allowed": false,
+        "migration_execution_allowed": false,
+        "calls_external_network": false,
+        "depends_on_gutenberg_plugin": false,
+        "exports_editorial_content": false,
+        "exports_urls": false,
+        "exports_post_ids": false,
+        "corpus_unchanged": true,
+        "editorial_fingerprint_before": "343a005d6a52e2e861638f03ef108fdcff8dc42472f0ed97ba8927a5be26773a",
+        "editorial_fingerprint_after": "343a005d6a52e2e861638f03ef108fdcff8dc42472f0ed97ba8927a5be26773a",
+        "editorial_fingerprint_equal": true
+    },
+    "gate_result": {"t097_static_editorial_parity_pass": true},
+    "duration_ms": 6658,
+    "raw_json_sha256": "6466fb0830d9ba65e79da9dc69b90da6a08fb4286391517eb0663849b10babec"
+}

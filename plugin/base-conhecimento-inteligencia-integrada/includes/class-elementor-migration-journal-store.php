@@ -3,6 +3,9 @@
  * Durable append-only WordPress-first store for Elementor migration journals.
  * SPEC-004 / G-245 / T083B.
  *
+ * Uses private post metadata as an append-only event log. This avoids custom
+ * tables, comment-count side effects and exposure in the standard Comments UI.
+ *
  * @package BDC_Knowledge_Base
  */
 
@@ -14,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Elementor_Migration_Journal_Store {
 
-	public const COMMENT_TYPE = 'bdc_kb_migration_journal';
+	public const META_KEY = '_bdc_kb_migration_journal';
 	public const EVENT_SCHEMA = 1;
 	public const MAX_EVENT_BYTES = 16777216; // 16 MiB safety ceiling for v1.
 
@@ -73,15 +76,12 @@ final class Elementor_Migration_Journal_Store {
 			return new \WP_Error( 'bdc_kb_journal_store_invalid_event_id', 'event_id inválido.' );
 		}
 
-		$comment = get_comment( $event_id );
-		if ( ! is_object( $comment ) || self::COMMENT_TYPE !== (string) ( $comment->comment_type ?? '' ) ) {
+		$meta = get_metadata_by_mid( 'post', $event_id );
+		if ( ! is_object( $meta ) || self::META_KEY !== (string) ( $meta->meta_key ?? '' ) ) {
 			return new \WP_Error( 'bdc_kb_journal_store_event_not_found', 'Evento de journal não encontrado.' );
 		}
-		if ( '1' !== (string) ( $comment->comment_approved ?? '' ) ) {
-			return new \WP_Error( 'bdc_kb_journal_store_unapproved_event', 'Evento de journal não está aprovado/ativo.' );
-		}
 
-		$decoded = json_decode( (string) ( $comment->comment_content ?? '' ), true );
+		$decoded = json_decode( (string) ( $meta->meta_value ?? '' ), true );
 		if ( ! is_array( $decoded ) || self::EVENT_SCHEMA !== (int) ( $decoded['event_schema'] ?? 0 ) ) {
 			return new \WP_Error( 'bdc_kb_journal_store_malformed_event', 'Evento de journal malformado.' );
 		}
@@ -94,7 +94,7 @@ final class Elementor_Migration_Journal_Store {
 		if ( is_wp_error( $valid ) ) {
 			return $valid;
 		}
-		if ( (int) ( $record['post_id'] ?? 0 ) !== (int) ( $comment->comment_post_ID ?? 0 ) ) {
+		if ( (int) ( $record['post_id'] ?? 0 ) !== (int) ( $meta->post_id ?? 0 ) ) {
 			return new \WP_Error( 'bdc_kb_journal_store_post_mismatch', 'Evento de journal diverge do post associado.' );
 		}
 		if ( (string) ( $decoded['state'] ?? '' ) !== (string) ( $record['state'] ?? '' ) ) {
@@ -105,10 +105,10 @@ final class Elementor_Migration_Journal_Store {
 		}
 
 		return array(
-			'event_id' => (int) ( $comment->comment_ID ?? 0 ),
+			'event_id' => (int) ( $meta->meta_id ?? 0 ),
 			'parent_event_id' => (int) ( $decoded['parent_event_id'] ?? 0 ),
-			'actor_id' => (int) ( $comment->user_id ?? 0 ),
-			'created_at_gmt' => (string) ( $comment->comment_date_gmt ?? '' ),
+			'actor_id' => (int) ( $decoded['actor_id'] ?? 0 ),
+			'created_at_gmt' => (string) ( $decoded['created_at_gmt'] ?? '' ),
 			'record' => $record,
 		);
 	}
@@ -118,20 +118,21 @@ final class Elementor_Migration_Journal_Store {
 		if ( $post_id <= 0 ) {
 			return new \WP_Error( 'bdc_kb_journal_store_invalid_post_id', 'post_id inválido.' );
 		}
-		$comments = get_comments(
-			array(
-				'post_id' => $post_id,
-				'type' => self::COMMENT_TYPE,
-				'status' => 'approve',
-				'number' => 1,
-				'orderby' => 'comment_ID',
-				'order' => 'DESC',
-			)
+
+		global $wpdb;
+		if ( ! is_object( $wpdb ) || ! isset( $wpdb->postmeta ) || ! method_exists( $wpdb, 'prepare' ) || ! method_exists( $wpdb, 'get_var' ) ) {
+			return new \WP_Error( 'bdc_kb_journal_store_db_unavailable', 'Infraestrutura WordPress de metadata indisponível.' );
+		}
+		$sql = $wpdb->prepare(
+			"SELECT meta_id FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = %s ORDER BY meta_id DESC LIMIT 1",
+			$post_id,
+			self::META_KEY
 		);
-		if ( ! is_array( $comments ) || empty( $comments ) ) {
+		$event_id = (int) $wpdb->get_var( $sql );
+		if ( $event_id <= 0 ) {
 			return new \WP_Error( 'bdc_kb_journal_store_no_events', 'Nenhum evento durável encontrado para o post.' );
 		}
-		return self::read_event( (int) $comments[0]->comment_ID );
+		return self::read_event( $event_id );
 	}
 
 	/** @return array<string,mixed>|\WP_Error */
@@ -163,6 +164,8 @@ final class Elementor_Migration_Journal_Store {
 				'journal_id' => (string) ( $record['journal_id'] ?? '' ),
 				'run_id' => (string) ( $record['run_id'] ?? '' ),
 				'state' => (string) ( $record['state'] ?? '' ),
+				'actor_id' => $actor_id,
+				'created_at_gmt' => gmdate( 'c' ),
 				'record' => $portable,
 			),
 			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
@@ -171,15 +174,7 @@ final class Elementor_Migration_Journal_Store {
 			return new \WP_Error( 'bdc_kb_journal_store_payload_invalid', 'Payload do journal é inválido ou excede o limite de segurança.' );
 		}
 
-		$event_id = (int) wp_insert_comment(
-			array(
-				'comment_post_ID' => $post_id,
-				'comment_content' => $payload,
-				'comment_type' => self::COMMENT_TYPE,
-				'comment_approved' => 1,
-				'user_id' => $actor_id,
-			)
-		);
+		$event_id = (int) add_post_meta( $post_id, self::META_KEY, $payload, false );
 		if ( $event_id <= 0 ) {
 			return new \WP_Error( 'bdc_kb_journal_store_write_failed', 'Falha ao persistir evento de journal.' );
 		}
@@ -189,7 +184,7 @@ final class Elementor_Migration_Journal_Store {
 			return $readback;
 		}
 
-		$deleted = wp_delete_comment( $event_id, true );
+		$deleted = delete_metadata_by_mid( 'post', $event_id );
 		if ( $deleted ) {
 			return new \WP_Error( 'bdc_kb_journal_store_fail_safe', 'Persistência divergiu na releitura; evento recém-criado foi removido.' );
 		}

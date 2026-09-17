@@ -3,7 +3,7 @@
 ## Baseline e gates
 
 - SPEC-001/002/003: concluídas.
-- UX-001/UX-002: concluídas; UX-002 é contrato visual obrigatório.
+- UX-001/UX-002: concluídas; UX-002 `0.4.0-ux002.3` é contrato visual obrigatório.
 - R-200/R-210/G-220: PASS.
 - G-230/v1: PASS de determinismo / superseded for AI.
 - G-240: **PASS / CLOSED / promovido para `main`**.
@@ -12,21 +12,22 @@
 - T080: **PASS WITH REVIEW ITEMS**.
 - T081: **PASS AMBIENTAL**.
 - T082: **PASS LOCAL / CONTRATUAL**.
-- T083: **NEXT / NOT_STARTED**.
+- T083: **PASS LOCAL / CONTRATUAL**.
+- T084: **PASS LOCAL / CONTRATUAL**.
+- T085: **PASS LOCAL / CONTRATUAL**.
+- T086: **NEXT / NOT_STARTED**.
 - G-250: NOT_RUN.
 
-## Baseline `main` e preservação visual
+## Baseline `main` e UX
 
-A `main` atual está em `6d0fc8e33f826ee957038483d22fa1b804bae056`, merge da UX-002 homologada (`0.4.0-ux002.3`).
+A `main` está em `6d0fc8e33f826ee957038483d22fa1b804bae056`, contendo a UX-002 homologada. A branch G-245 foi sincronizada no merge `145e16bf31f7afe2d3f08d087b79b69f3f40b885` e deve permanecer sem diferenças nos arquivos visuais canônicos.
 
-A branch `spec004-g245-production-readiness` foi sincronizada manualmente com essa baseline no commit `145e16bf31f7afe2d3f08d087b79b69f3f40b885`, priorizando os arquivos da UX-002 como autoridade e conciliando apenas o bootstrap necessário ao G-245.
+Arquivos protegidos contra regressão visual durante G-245:
 
-Validação pós-sync:
-
-- branch G-245: ahead 31 / behind 0 imediatamente após o merge de baseline;
-- `class-admin-page.php`, `class-classification-admin.php`, `visual-foundation.css`, `class-visual-foundation.php`, UX-002 e governança visual ficaram alinhados à `main`;
-- o diff restante contra `main` contém apenas artefatos G-245;
-- T082 não alterou nenhum arquivo visual.
+- `includes/class-admin-page.php`;
+- `includes/class-classification-admin.php`;
+- `assets/css/visual-foundation.css`;
+- `includes/class-visual-foundation.php`.
 
 ## Ambiente homologado
 
@@ -38,88 +39,75 @@ Validação pós-sync:
 - DOMDocument ativo;
 - WP-Cron habilitado.
 
-## G-245 — T080 Production Preflight
+## T080 / T081 — evidência ambiental
 
-**PASS WITH REVIEW ITEMS.** Blockers: 0. `faq_wd` permanece legacy orphan; `wpt` permanece dependência legada desconhecida; loopback não foi testado no preflight v1. Writer/migration continuam false.
+T080: PASS WITH REVIEW ITEMS, blockers 0; `faq_wd` legacy orphan, `wpt` dependência legada desconhecida, loopback não testado. Writer/migration false.
 
-Evidência: `evidence/g245-preflight-summary-20260916T215612Z.json`.
+T081: PASS ambiental em `0.4.0-g245-projection.2`:
 
-## G-245 — T081 Projection Plan read-only
-
-**PASS AMBIENTAL em `0.4.0-g245-projection.2`.**
-
-Evidência: `evidence/g245-projection-summary-20260917T111009Z.json`.
-
-Resultado comprovado:
-
-- 622 posts;
-- primeira passagem: 622/622;
-- segunda passagem: 622/622;
-- errors/throwables: 0;
-- projection hash mismatches: 0;
-- canonical JSON mismatches: 0;
-- projection-hash violations: 0;
-- writer violations: 0;
-- safety violations: 0;
-- legacy-shortcode review violations: 0;
-- migration-warning review violations: 0;
-- fingerprint editorial before/after: idêntico;
+- 622/622 + 622/622;
+- zero errors/throwables;
+- zero projection hash/canonical JSON mismatches;
+- zero writer/safety/review-policy violations;
+- fingerprint editorial idêntico;
 - changed posts: 0;
 - `gate.t081_pass=true`;
-- validação independente: 44/44 checks PASS.
+- 44/44 checks independentes PASS.
 
-Distribuição:
+Evidências:
 
-- projectable: 503;
-- review_required: 84;
-- native_noop: 33;
-- not_applicable: 2.
+- `evidence/g245-preflight-summary-20260916T215612Z.json`;
+- `evidence/g245-projection-summary-20260917T111009Z.json`.
 
-O raw recebido possui SHA-256 `b342490b15999e0b64e48fa7f18f38f442efc924f8bab6b96569027be7106d57`.
+## T082 — Elementor Gateway
 
-## G-245 — T082 Elementor Gateway version-gated
+PASS LOCAL / CONTRATUAL. O gateway version-gated homologa explicitamente Elementor `4.1.0`; ausência bloqueia e versão diferente exige review. Feature flag default false, capability administrativa explícita e hard phase gate mantêm `writer_allowed=false` mesmo no caminho hipoteticamente mais permissivo.
 
-**PASS LOCAL / CONTRATUAL em `0.4.0-g245-gateway.1`.**
+Teste: 45 assertions PASS.
 
-Implementado:
+## T083 — Journal / rollback
 
-- `Elementor_Gateway` isolado;
-- contrato `elementor-gateway-contract-v1.md`;
-- versão Elementor homologada exata `4.1.0`;
-- ausência de Elementor => `blocking`;
-- versão diferente => `review_required`;
-- feature flag `BDC_KB_ELEMENTOR_WRITER_ENABLED` default `false`;
-- capability futura `manage_options`;
-- contrato explícito de action/nonce para futura mutação, sem handler writer registrado;
-- `source_hash_before` como requisito do stale-source guard T084;
-- hard gate de fase T082 em código impede qualquer writer mesmo com versão/flag/capability válidas;
-- `writer_allowed=false` e `migration_execution_allowed=false` sempre;
-- zero persistência, zero escrita em `post_content`, zero `_elementor_data`, zero rede e zero execução de shortcode.
+PASS LOCAL / CONTRATUAL. Contrato write-ahead congelado com capsule de rollback, hashes de integridade, estados prepared/applied/partial_failure/rolled_back, bloqueio de rollback stale/tampered e idempotência.
 
-Validação local:
+**Importante:** `journal_persisted=false`. O storage durável ainda não foi escolhido/implementado e continua requisito obrigatório antes de qualquer write real.
 
-- Gateway lint PASS;
-- teste T082 lint PASS;
-- bootstrap lint PASS;
-- **45 assertions PASS**.
+## T084 — Stale-source guard
 
-Artefatos: `elementor-gateway-contract-v1.md`, `package-g245-gateway1.md`, `tests/unit/spec004-elementor-gateway.php`.
+PASS LOCAL / CONTRATUAL. Compara `source_hash_before` do plano com o Knowledge Document atual; estados fresh/stale/blocking; mismatch e hash inválido falham fechado antes de qualquer write.
 
-## Próximo passo — T083
+T083+T084: 38 assertions PASS.
 
-Projetar e implementar o **Journal/Rollback Contract** ainda sem ativar writer real.
+## T085 — Dry-run zero-write
 
-T083 deve definir antes/depois, atomicidade possível, formato de journal, rollback idempotente, retenção/privacidade, correlação por execução e comportamento em falha parcial. A implementação deve permanecer sem mutação editorial até que o dry-run e os gates posteriores autorizem o caminho correto.
+PASS LOCAL / CONTRATUAL em `0.4.0-g245-dryrun.1`.
+
+- estados ready/review_required/noop/blocked;
+- `ready` é apenas simulação, nunca autorização;
+- review_required não prepara journal nem simula apply;
+- stale bloqueia;
+- gateway blocking bloqueia;
+- versão não homologada exige review;
+- Projection Plan unsafe bloqueia;
+- dry-run hash/JSON determinísticos;
+- `execution_allowed=false`;
+- `writer_allowed=false`;
+- `migration_execution_allowed=false`;
+- 38 assertions PASS + lint PASS.
+
+## Próximo passo — T086
+
+Implementar **batches retomáveis read-only**, com particionamento determinístico, cursor/checkpoint explícito, idempotência, ausência de duplicidade e batch hash canônico. T086 ainda não executará writer nem persistirá conteúdo editorial.
 
 ## Guardrails
 
 - WordPress/Elementor continuam fonte editorial;
-- Content Extractor/KD/Projection Plan são derivados read-only;
+- Content Extractor/KD/Projection Plan são derivados reconstruíveis;
+- UX-002 permanece baseline visual inviolável durante estes subgates;
 - nenhum writer Elementor está autorizado;
 - nenhuma migration Elementor está autorizada;
-- UX-002 permanece baseline visual obrigatória;
+- journal durável e recheck stale imediatamente antes do write são pré-condições futuras;
 - produção não é ambiente experimental;
 - GO de homologação != GO de produção;
-- qualquer futura persistência exige version gate, journal/rollback, stale-source guard, dry-run, batches retomáveis, canário e autorização explícita.
+- canário/rollback real e autorização explícita ainda são obrigatórios.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

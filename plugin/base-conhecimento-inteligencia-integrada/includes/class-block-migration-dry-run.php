@@ -3,17 +3,27 @@ namespace BDC\KnowledgeBase;
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 final class Block_Migration_Dry_Run {
-	public const SCHEMA_VERSION = '1.0.0';
+	public const SCHEMA_VERSION = '1.0.1';
 
 	public static function build( int $post_id ): array|\WP_Error {
 		$source = Migration_Fidelity_Source::build( $post_id );
 		if ( $source instanceof \WP_Error ) { return $source; }
 		$serialized = Core_Block_Lossless_Serializer::serialize_source( $source );
 		if ( $serialized instanceof \WP_Error ) { return $serialized; }
-		$parity = Core_Block_Editorial_Parity::validate( $source, $serialized );
-		if ( $parity instanceof \WP_Error ) { return $parity; }
-		$stale = Block_Migration_Stale_Source_Guard::inspect_post( $post_id, $source );
-		if ( $stale instanceof \WP_Error ) { return $stale; }
+
+		if ( ! function_exists( 'parse_blocks' ) ) {
+			return new \WP_Error( 'bdc_kb_block_dry_run_parse_unavailable', 'parse_blocks() indisponível no WordPress Core.' );
+		}
+		$parsed = parse_blocks( (string) ( $serialized['serialized_post_content'] ?? '' ) );
+		if ( ! is_array( $parsed ) ) {
+			return new \WP_Error( 'bdc_kb_block_dry_run_parse_failed', 'Falha ao interpretar serialized_post_content.' );
+		}
+		$parity = Core_Block_Editorial_Parity::assess( $source, $serialized, $parsed );
+
+		$current = Migration_Fidelity_Source::build( $post_id );
+		if ( $current instanceof \WP_Error ) { return $current; }
+		$stale = Block_Migration_Stale_Source_Guard::assess( $source, $current );
+
 		return self::simulate( $source, $serialized, $parity, $stale );
 	}
 
@@ -39,7 +49,7 @@ final class Block_Migration_Dry_Run {
 		} elseif ( 'serialized_in_memory' !== $serializer_status || 'pass' !== $parity_status ) {
 			$status = 'blocked'; $action = 'blocked'; $reasons[] = 'SERIALIZER_OR_PARITY_NOT_READY';
 		}
-		if ( true !== ( $stale['is_fresh'] ?? false ) || 'fresh' !== $stale_status ) {
+		if ( 'fresh' !== $stale_status ) {
 			$status = 'blocked'; $action = 'blocked'; $reasons[] = 'STALE_SOURCE_GUARD_NOT_FRESH:' . $stale_status;
 		}
 		foreach ( array( $source['safety'] ?? array(), $serialized['safety'] ?? array(), $parity['safety'] ?? array() ) as $safety ) {

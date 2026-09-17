@@ -1,6 +1,6 @@
 # T100C — Core Blocks Post Activity Contract v1
 
-**Status:** IMPLEMENTADO / PASS LOCAL / HOMOLOGAÇÃO PENDENTE  
+**Status:** PASS AMBIENTAL / READ-ONLY  
 **ADR:** ADR-004-002  
 **Contrato:** 1.0.0
 

@@ -3,8 +3,8 @@
  * Journal/rollback domain contract for future Elementor migration writes.
  * SPEC-004 / G-245 / T083.
  *
- * This class is intentionally storage-neutral and performs no persistence.
- * A future mutable phase must persist a prepared record before any editorial write.
+ * This class builds and validates rollback-safe journal records. Durable
+ * persistence is delegated to Elementor_Migration_Journal_Store.
  *
  * @package BDC_Knowledge_Base
  */
@@ -85,6 +85,73 @@ final class Elementor_Migration_Journal {
 	}
 
 	/** @return array<string,mixed>|\WP_Error */
+	public static function mark_persisted( array $record ): array|\WP_Error {
+		if ( self::STATE_PREPARED !== (string) ( $record['state'] ?? '' ) ) {
+			return new \WP_Error( 'bdc_kb_journal_persist_invalid_state', 'Somente journal prepared pode ser marcado como persistido.' );
+		}
+		$valid = self::validate_record( $record, false );
+		if ( $valid instanceof \WP_Error ) {
+			return $valid;
+		}
+		if ( true === ( $record['journal_persisted'] ?? false ) ) {
+			return $record;
+		}
+		$record['journal_persisted'] = true;
+		$record['journal_hash'] = '';
+		$hash = self::record_hash( $record );
+		if ( $hash instanceof \WP_Error ) {
+			return $hash;
+		}
+		$record['journal_hash'] = $hash;
+		return $record;
+	}
+
+	/** @return true|\WP_Error */
+	public static function validate_record( array $record, bool $require_persisted = false ): bool|\WP_Error {
+		if ( self::SCHEMA_VERSION !== (string) ( $record['schema_version'] ?? '' ) ) {
+			return new \WP_Error( 'bdc_kb_journal_schema_mismatch', 'schema_version do journal inválido.' );
+		}
+		if ( 1 !== preg_match( '/^[a-f0-9]{64}$/', (string) ( $record['journal_id'] ?? '' ) ) ) {
+			return new \WP_Error( 'bdc_kb_journal_invalid_id', 'journal_id inválido.' );
+		}
+		if ( 1 !== preg_match( '/^[A-Za-z0-9._:-]{8,128}$/', (string) ( $record['run_id'] ?? '' ) ) || (int) ( $record['post_id'] ?? 0 ) <= 0 ) {
+			return new \WP_Error( 'bdc_kb_journal_invalid_identity', 'Identidade do journal inválida.' );
+		}
+		if ( ! in_array( (string) ( $record['state'] ?? '' ), array( self::STATE_PREPARED, self::STATE_APPLIED, self::STATE_PARTIAL_FAILURE, self::STATE_ROLLED_BACK ), true ) ) {
+			return new \WP_Error( 'bdc_kb_journal_invalid_state', 'Estado do journal inválido.' );
+		}
+		if ( ! self::is_sha256( strtolower( trim( (string) ( $record['source_hash_before'] ?? '' ) ) ) ) || ! self::is_sha256( strtolower( trim( (string) ( $record['projection_hash'] ?? '' ) ) ) ) ) {
+			return new \WP_Error( 'bdc_kb_journal_invalid_hash', 'Hashes do journal inválidos.' );
+		}
+		if ( $require_persisted && true !== ( $record['journal_persisted'] ?? false ) ) {
+			return new \WP_Error( 'bdc_kb_journal_not_persisted', 'Journal durável é obrigatório para esta operação.' );
+		}
+		if ( true !== ( $record['journal_must_be_persisted_before_write'] ?? false ) || true === ( $record['writer_allowed'] ?? false ) || true === ( $record['migration_execution_allowed'] ?? false ) ) {
+			return new \WP_Error( 'bdc_kb_journal_safety_violation', 'Journal viola invariantes de segurança.' );
+		}
+
+		$payload = is_array( $record['rollback_payload'] ?? null ) ? $record['rollback_payload'] : null;
+		$payload_hash = strtolower( trim( (string) ( $record['rollback_payload_hash'] ?? '' ) ) );
+		if ( ! is_array( $payload ) || ! self::is_sha256( $payload_hash ) ) {
+			return new \WP_Error( 'bdc_kb_journal_missing_rollback_capsule', 'Rollback capsule ausente ou inválida.' );
+		}
+		$actual_payload_hash = self::hash_payload( $payload );
+		if ( $actual_payload_hash instanceof \WP_Error || ! hash_equals( $payload_hash, $actual_payload_hash ) ) {
+			return new \WP_Error( 'bdc_kb_journal_rollback_capsule_hash_mismatch', 'Rollback capsule falhou na validação de integridade.' );
+		}
+
+		$journal_hash = strtolower( trim( (string) ( $record['journal_hash'] ?? '' ) ) );
+		if ( ! self::is_sha256( $journal_hash ) ) {
+			return new \WP_Error( 'bdc_kb_journal_invalid_journal_hash', 'journal_hash inválido.' );
+		}
+		$actual_record_hash = self::record_hash( $record );
+		if ( $actual_record_hash instanceof \WP_Error || ! hash_equals( $journal_hash, $actual_record_hash ) ) {
+			return new \WP_Error( 'bdc_kb_journal_record_hash_mismatch', 'Journal falhou na validação de integridade.' );
+		}
+		return true;
+	}
+
+	/** @return array<string,mixed>|\WP_Error */
 	public static function mark_applied( array $record, string $source_hash_after ): array|\WP_Error {
 		return self::transition_after_write( $record, self::STATE_APPLIED, $source_hash_after );
 	}
@@ -157,6 +224,10 @@ final class Elementor_Migration_Journal {
 	private static function transition_after_write( array $record, string $state, string $source_hash_after ): array|\WP_Error {
 		if ( self::STATE_PREPARED !== (string) ( $record['state'] ?? '' ) ) {
 			return new \WP_Error( 'bdc_kb_journal_invalid_transition', 'Somente journal prepared pode registrar resultado de write.' );
+		}
+		$valid = self::validate_record( $record, true );
+		if ( $valid instanceof \WP_Error ) {
+			return $valid;
 		}
 		$after = strtolower( trim( $source_hash_after ) );
 		if ( ! self::is_sha256( $after ) ) {

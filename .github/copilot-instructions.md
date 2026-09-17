@@ -32,13 +32,33 @@ Prefira APIs nativas: posts, metadata, taxonomias, options/settings, capabilitie
 
 ## Elementor
 
-Regra absoluta: o plugin **não faz manutenção editorial do post**.
+Regra absoluta: o plugin **não faz manutenção editorial do post** sem gate/autorização explícita aplicável.
 
-- não escrever em `_elementor_data`;
 - não substituir Elementor;
 - não publicar silenciosamente;
-- não reescrever conteúdo editorial;
-- leitura e projeções derivadas são permitidas.
+- não reescrever conteúdo editorial silenciosamente;
+- leitura e projeções derivadas são permitidas;
+- qualquer writer/migration deve respeitar a SPEC e gates próprios.
+
+## Contrato visual obrigatório
+
+A baseline visual homologada é `0.4.0-ux002.3`.
+
+Para toda nova UI ou alteração material de UI, leia antes de implementar:
+
+1. `ux/002-mockup-visual-foundation/visual-contract-v2.md`;
+2. os mockups aplicáveis em `scr/`;
+3. quando necessário, o Design System/protótipo da UX-001.
+
+Regras:
+
+- WordPress continua shell/plataforma, mas **WordPress-first não significa WordPress-looking**;
+- aparência genérica do wp-admin não é resultado final aceitável para a superfície BDC;
+- reutilize tokens/componentes canônicos antes de criar variantes;
+- preserve hierarquia, densidade, navegação, estados, iconografia e responsividade do contrato;
+- valide desktop, 782px e 520px quando aplicáveis;
+- UI funcional, porém divergente do contrato, não está Done;
+- divergência deliberada exige justificativa e decisão documentada.
 
 ## Greenfield
 
@@ -51,6 +71,8 @@ Nenhuma funcionalidade existente é considerada substituída sem contrato e evid
 ## IA
 
 IA sugere; humano decide; WordPress persiste. Retrieval e fontes precedem síntese. Custo e uso devem ser observáveis.
+
+A IA deve reduzir esforço de escrita e principalmente esforço de leitura/tempo até uma resposta confiável; volume de conteúdo produzido não é métrica de sucesso isolada.
 
 ## Vetores
 

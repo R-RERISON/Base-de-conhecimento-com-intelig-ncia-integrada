@@ -58,7 +58,7 @@ final class Block_Migration_Readiness_Smoke {
 			&&true===$batch['pass']&&$a['ready']===$a['journals_prepared']&&$b['ready']===$b['journals_prepared'];
 
 		return array(
-			'schema_version'=>'1.0.0','gate'=>'T098','mode'=>'block_migration_defensive_readiness_read_only','generated_at'=>gmdate('c'),
+			'schema_version'=>'1.0.1','gate'=>'T098','mode'=>'block_migration_defensive_readiness_read_only','generated_at'=>gmdate('c'),
 			'environment'=>array('wordpress'=>get_bloginfo('version'),'php'=>PHP_VERSION,'plugin'=>defined('BDC_KB_VERSION')?BDC_KB_VERSION:'',
 				'journal_schema'=>Block_Migration_Journal::SCHEMA_VERSION,'dry_run_schema'=>Block_Migration_Dry_Run::SCHEMA_VERSION,
 				'batch_schema'=>Block_Migration_Batch_Plan::SCHEMA_VERSION,'stale_guard_schema'=>Block_Migration_Stale_Source_Guard::SCHEMA_VERSION,
@@ -66,6 +66,7 @@ final class Block_Migration_Readiness_Smoke {
 			'corpus'=>array('total_posts'=>count($ids),'first_pass'=>count($a['dry_runs']),'second_pass'=>count($b['dry_runs']),
 				'first_errors'=>$a['errors'],'second_errors'=>$b['errors'],'first_throwables'=>$a['throwables'],'second_throwables'=>$b['throwables'],
 				'first_safety_violations'=>$a['safety_violations'],'second_safety_violations'=>$b['safety_violations'],
+				'first_throwable_signatures'=>$a['throwable_signatures'],'second_throwable_signatures'=>$b['throwable_signatures'],
 				'dry_run_hash_mismatches'=>$dry_mismatch,'journal_hash_mismatches'=>$journal_mismatch),
 			'distribution'=>array('dry_run_status'=>$a['status'],'source_kind'=>$a['source_kind'],'journals_prepared_in_memory'=>$a['journals_prepared']),
 			'batch'=>array('eligible_total'=>$batch['eligible_total'],'excluded_total'=>$batch['excluded_total'],'batch_size'=>25,'batch_count'=>$batch['batch_count'],
@@ -82,7 +83,7 @@ final class Block_Migration_Readiness_Smoke {
 	}
 
 	private static function pass(array $ids): array {
-		$out=array('dry_runs'=>array(),'dry_hash'=>array(),'journal_hash'=>array(),'status'=>array(),'source_kind'=>array(),'ready'=>0,'journals_prepared'=>0,'errors'=>0,'throwables'=>0,'safety_violations'=>0);
+		$out=array('dry_runs'=>array(),'dry_hash'=>array(),'journal_hash'=>array(),'status'=>array(),'source_kind'=>array(),'ready'=>0,'journals_prepared'=>0,'errors'=>0,'throwables'=>0,'throwable_signatures'=>array(),'safety_violations'=>0);
 		foreach($ids as $id){
 			try{
 				$dry=Block_Migration_Dry_Run::build($id);
@@ -102,9 +103,13 @@ final class Block_Migration_Readiness_Smoke {
 				if($j instanceof \WP_Error){++$out['errors'];continue;}
 				$v=Block_Migration_Journal::validate_record($j,false);if($v instanceof \WP_Error){++$out['errors'];continue;}
 				$out['journal_hash'][$id]=(string)$j['journal_hash'];++$out['journals_prepared'];
-			}catch(\Throwable $e){++$out['throwables'];}
+			}catch(\Throwable $e){
+				++$out['throwables'];
+				$signature=get_class($e).'|'.basename($e->getFile()).':'.$e->getLine().'|'.substr(hash('sha256',$e->getMessage()),0,16);
+				$out['throwable_signatures'][$signature]=1+($out['throwable_signatures'][$signature]??0);
+			}
 		}
-		ksort($out['status']);ksort($out['source_kind']);return $out;
+		ksort($out['status']);ksort($out['source_kind']);ksort($out['throwable_signatures']);return $out;
 	}
 	private static function batch_walk(array $runs): array {
 		$cursor=null;$seen=array();$batches=0;$eligible=0;$excluded=0;$cursor_failures=0;$done=false;

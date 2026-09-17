@@ -17,7 +17,9 @@
 - T095: PASS LOCAL / READ-ONLY.
 - T098.1: FAIL CONTROLADO / SEM MUTAÇÃO.
 - T100 batch: **SUPERSEDED BEFORE EXECUTION**.
-- T100A Workspace: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+- T100A Workspace: **PASS LOCAL**.
+- T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
+- T100C Core Blocks Post Activity: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
 
 ## Evidência T099C
 
@@ -68,17 +70,20 @@ Conteúdo, Inteligência e Core Blocks começam read-only.
 
 No post 358 a aba Core Blocks deve refletir o audit trail já comprovado: journal `rolled_back`, lock `free`.
 
-## Próximo gate exato — T100B
+## Próximo gate exato — validação ambiental T100C
 
-Aceite ambiental/visual da Workspace:
-- lista sem regressão;
-- Gerenciar abre o post correto;
-- post_id permanece estável ao trocar abas;
-- Summary/Classificação/Review/Histórico continuam operacionais;
-- Conteúdo mostra fonte correta;
-- Inteligência não executa IA/rede;
-- Core Blocks mostra readiness/journal/lock e não possui writer;
-- UX-002 sem regressão material.
+Na Workspace de um post elegível, validar:
+- `Core Blocks` permanece no mesmo `post_id`;
+- `Estado operacional = ready_for_authorization` quando aplicável;
+- blocos esperados corretos;
+- journal/lock coerentes;
+- `authorization_id` presente e estável sem drift;
+- botão **Baixar Authorization Pack deste post** funciona;
+- pack retorna `authorized=false` e exige autorização humana explícita;
+- botão **Migrar para Core Blocks** permanece desabilitado;
+- nenhuma mutação editorial ocorre.
+
+Após PASS, o próximo gate é **T100D — executor unitário Core Blocks**, nunca em lote e nunca sem `post_id + authorization_id` específicos.
 
 ## Guardrails absolutos
 

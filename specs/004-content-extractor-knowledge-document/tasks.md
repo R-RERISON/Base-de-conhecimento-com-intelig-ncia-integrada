@@ -19,67 +19,54 @@
 - T095 Migration Fidelity Source v1: PASS LOCAL / READ-ONLY.
 - T096 Lossless Core Block Serialization: PASS AMBIENTAL.
 - T097 Static Editorial Parity + stale-source: PASS AMBIENTAL.
-- T098 Block Migration Protection: PASS LOCAL / HOMOLOGAÇÃO PENDENTE, 24/24 assertions.
+- T098.1 Block Migration Readiness: FAIL CONTROLADO / SEM MUTAÇÃO.
+- T098.2 Block Migration Readiness: **PASS AMBIENTAL**.
+- T099A Journal Store + Lock Smoke: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
 - G-250: NOT_RUN.
 
 ## Baseline visual
-
 UX-002 `0.4.0-ux002.3` permanece contrato visual obrigatório.
 
-## Arquitetura
+## T098.2 — PASS AMBIENTAL
+Evidência: `evidence/g245-t098-readiness-pass-20260917T191436Z.json`.
+SHA-256 bruto: `f7bf589858db6c6629cb937ba28dad4ef658d1e265225185dad77e55dd342ff0`.
 
-- `WP_Post.post_content` + WordPress Core Blocks = destino editorial canônico futuro.
-- plugin Gutenberg = não dependência.
-- Elementor = source adapter legado temporário.
-- nenhum writer `_elementor_data` como destino.
-- KD = modelo semântico/IA/guardrail.
-- Migration Fidelity Source + Lossless Serializer = trilha editorial lossless.
+Resultado:
+- 623/623 em duas passagens;
+- errors/throwables/safety violations 0;
+- dry-run hash mismatches 0;
+- journal hash mismatches 0;
+- dry-run: ready 611, noop 7, review_required 5;
+- 611 journals preparados apenas em memória;
+- 25 batches cobrem os 611 elegíveis, duplicidade 0, cursor failures 0;
+- fingerprint editorial unchanged;
+- `t098_block_migration_readiness_pass=true`.
 
-## T097 — PASS AMBIENTAL
+## T099A — Journal Store + Lock ambiental
+Runtime: `includes/class-block-migration-storage-lock-smoke.php`.
 
-Evidência: `evidence/g245-editorial-parity-t097-20260917T184418Z.json`.
-SHA-256 bruto: `6466fb0830d9ba65e79da9dc69b90da6a08fb4286391517eb0663849b10babec`.
+Objetivo: provar a trilha durável real antes de qualquer canário editorial.
 
-Resultado: 623/623 em duas passagens; Core registry PASS; errors/throwables/safety/parity/stale/manifest mismatches 0; parity pass 611; native_noop 4; not_applicable 3; review_required 5; stale fresh 623; fingerprint editorial unchanged; `t097_static_editorial_parity_pass=true`.
+O smoke pode mutar somente:
+- `_bdc_kb_block_migration_journal`;
+- `_bdc_kb_block_migration_lock`.
 
-## T098 — Block Migration Protection
-
-Contrato: `block-migration-protection-contract-v1.md`.
-
-Runtime:
-
-- `class-block-migration-journal.php`;
-- `class-block-migration-journal-store.php`;
-- `class-block-migration-dry-run.php`;
-- `class-block-migration-batch-plan.php`;
-- `class-block-migration-lock.php`;
-- `class-block-migration-readiness-smoke.php`.
-
-Local: 24/24 assertions PASS + lint.
-
-Invariantes:
-
-- writer/execution/migration allowed = false;
-- journal obrigatório antes de write futuro;
-- stale recheck imediatamente antes de write futuro;
-- lock exclusivo obrigatório;
-- rollback stale bloqueado;
-- source mixed permanece review;
-- batch cursor versionado, cohort hash e zero duplicidade;
-- T098 smoke não persiste journal e não adquire lock.
-
-Pacote:
-
-- `0.4.0-g245-readiness-t098.1`;
-- SHA-256 `df08c57d9c7b7c6df8a66b026ebec1bd6c3d16e993c92ea65afac122e6d63ddf`;
-- 50 PHP lint PASS pré/pós ZIP;
-- UX-002 byte parity PASS;
-- writers OFF.
+Critérios PASS:
+- candidato automático `legacy_html`/`plain_text` com dry-run ready;
+- journal 0 antes;
+- journal persistido + readback íntegro;
+- lock adquirido + readback íntegro;
+- lock liberado;
+- journal temporário removido;
+- journal 0 depois;
+- lock ausente depois;
+- `post_content` SHA-256 before/after igual;
+- `_elementor_data` SHA-256 before/after igual;
+- nenhum `wp_update_post`, writer, shortcode render, block render ou network.
 
 ## Próximos subgates
 
-- [ ] executar T098 e versionar evidência.
-- [ ] T099A: journal store + lock smoke com cleanup, sem write editorial.
+- [ ] executar T099A e versionar evidência.
 - [ ] T099B: selecionar 1 `legacy_html` de baixo risco e gerar Authorization Pack.
 - [ ] T099C: canário real de 1 artigo + rollback, somente com autorização específica.
 - [ ] T100: batches homologados.
@@ -87,14 +74,13 @@ Pacote:
 - [ ] G-250 Lifecycle/RC.
 
 ## Regras
-
 1. Core Blocks são o destino canônico.
 2. Plugin Gutenberg não é requisito.
 3. Elementor permanece até dependência zero.
 4. Nenhum writer `_elementor_data` será implementado como destino.
 5. Write em `post_content` exige gates e autorização explícitos.
 6. KD não é representação editorial lossless.
-7. Raw payload não sai em runners.
+7. Raw payload não sai em runners de corpus.
 8. Mixed não é decidido automaticamente.
 9. UX-002 não pode regredir.
 10. Trabalho incompleto permanece fora de `main`.

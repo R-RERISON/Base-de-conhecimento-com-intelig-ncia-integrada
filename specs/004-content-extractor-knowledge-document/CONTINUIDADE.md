@@ -17,121 +17,170 @@ Antes de qualquer alteração, reler `AGENTS.md`, `.specify/PROJECT_MANIFEST.md`
 - ADR-004-001: ACEITA — Core Blocks como destino editorial canônico.
 - T083B Durable Journal Storage: PASS AMBIENTAL.
 - T091: PASS AMBIENTAL.
-- T092 Block Projection 1.1: PASS LOCAL, 25/25.
-- T093: **PASS AMBIENTAL**.
-- T094 Editorial Fidelity: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**, 11/11 local.
+- T092: PASS LOCAL.
+- T093: PASS AMBIENTAL.
+- T094 Editorial Fidelity: **PASS AMBIENTAL**.
+- T095 Migration Fidelity Source v1: **PASS LOCAL / READ-ONLY**.
+- T096 Lossless Core Block Serialization + round-trip: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**, 34/34 local.
 - Nenhum writer/migration está autorizado.
 
-## T093 comprovado
+## Decisão arquitetural vigente
 
-Evidência resumida:
-`evidence/g245-block-projection-t093-summary-20260917T174835Z.json`.
+`WP_Post.post_content` + WordPress Core Blocks são o destino editorial canônico futuro.
 
-SHA-256 do JSON bruto recebido:
-`db04ba6ac564c9471e00491987ae2a8d8125a2c9b7462aca9dc55e6259e8da43`.
+- plugin Gutenberg NÃO é dependência de produção;
+- somente APIs estáveis do WordPress Core homologado;
+- Elementor é fonte legada temporária/read-only;
+- `_elementor_data` deve ser preservado durante a transição;
+- nenhum writer futuro usa `_elementor_data` como destino.
 
-Resultado:
+Constituição da branch: v1.3.0.
 
-- corpus 623;
-- duas passagens 623/623;
-- errors 0;
-- throwables 0;
-- projection hash mismatches 0;
-- canonical mismatches 0;
-- safety violations 0;
-- fingerprint editorial before/after igual;
-- `gate_result.t093_block_projection_pass=true`.
+## Evidência T094
 
-Plan status:
+Arquivo:
+`evidence/g245-editorial-fidelity-t094-20260917T180802Z.json`.
 
-- projectable 347;
-- review_required 269;
-- native_noop 4;
+SHA-256 bruto recebido:
+`87e86ea84fdd7def0651a8218971d449aa21b85f82c3bcd521429ebee58f7923`.
+
+Ambiente:
+
+- WordPress 6.9.4;
+- PHP 8.5.10;
+- Block Projection 1.1.0;
+- DOMDocument true;
+- Gutenberg plugin dependency false.
+
+Corpus: 623/623, errors 0, throwables 0.
+
+Fidelity classes:
+
+- rich_html_source_required 467;
+- elementor_source_adapter_required 79;
+- shortcode_resolution_required 37;
+- kd_structure_sufficient_candidate 33;
+- native_core_blocks 4;
 - not_applicable 3.
 
-KD readiness:
+Características observadas:
 
-- candidate_ready 387;
-- review_required 233;
-- not_applicable 3.
+- links: 6.874 em 501 posts;
+- images: 4.595 em 346 posts;
+- inline formatting: 25.764 em 564 posts;
+- styled spans: 1.394;
+- line breaks: 1.319;
+- tables: 513;
+- rowspan cells: 463;
+- colspan cells: 13;
+- posts com shortcodes: 53;
+- posts com Elementor meta: 80;
+- Elementor text-editor widgets: 39;
+- Elementor shortcode widgets: 1;
+- editor HTML Elementor: 1.011 links, 587 imagens, 3.357 rich inline occurrences;
+- attachment URL resolved: 0;
+- attachment URL unresolved: 4.595.
 
-Razões agregadas dos reviews:
+Safety: read-only, sem exportar conteúdo/URLs/post IDs, sem network/render, fingerprint editorial igual e `t094_editorial_fidelity_pass=true`.
 
-- HIERARCHY_AMBIGUOUS 964 ocorrências;
-- SHORTCODE_NOT_EXPANDED 55;
-- HTML_LOCAL_HEADING_FLATTENED 19;
-- HIERARCHY_NUMBERING_CONFLICT 6;
-- HTML_NESTED_LIST_IN_TABLE_FLATTENED 2.
+## Arquitetura de duas projeções
 
-## Descoberta que bloqueia serializer direto
+### Conhecimento
 
-O KD é semântico, não editorial lossless.
+`fonte -> Content Extractor -> Knowledge Document`
 
-No legado, o adapter materializa muitos blocos como texto visível. Portanto não preserva no KD toda a informação necessária para migração sem perda, especialmente:
+Uso: busca, IA, hierarquia, qualidade e guardrail semântico.
 
-- href de links;
-- src/attachment de imagens;
-- rich inline formatting;
-- alguns detalhes estruturais/editoriais de HTML e Elementor.
+### Migração lossless
 
-**Não implementar `KD -> serialize_blocks()` como writer.**
+`fonte -> Migration Fidelity Source -> Core Block Lossless Serializer`
 
-Arquitetura correta:
+Uso: preservar o material editorial necessário à migração.
 
-`fonte original -> Migration Fidelity Source -> Core Block Serializer`
+O KD não pode ser tratado como uma cópia editorial lossless.
 
-com KD em paralelo como guardrail semântico/estrutural:
+## T095 — Migration Fidelity Source v1
 
-`fonte original -> Content Extractor -> Knowledge Document`.
+Contrato:
+`migration-fidelity-source-contract-v1.md`.
 
-## T094 — Editorial Fidelity
+Runtime:
+`plugin/base-conhecimento-inteligencia-integrada/includes/class-migration-fidelity-source.php`.
 
-Contrato: `editorial-fidelity-contract-v1.md`.
-Runner: `includes/class-editorial-fidelity-inventory-smoke.php`.
+Estratégias:
 
-O runner conta/agrega sem exportar conteúdo, URLs ou IDs:
+- Gutenberg → `native_core_blocks`;
+- legacy HTML → unidade `post_content_rich_html` exata;
+- plain text → unidade `post_content_plain_text` exata;
+- Elementor → unidades ordenadas `elementor_text_editor_html` e `elementor_shortcode`;
+- mixed → `review_required`, preservando os dois canais para futura decisão humana.
 
-- links;
-- imagens e resolução de attachment por contagem;
-- inline formatting;
-- styled spans;
-- figures/captions/br;
-- tables/spans;
-- shortcodes;
-- Elementor widgets/media refs;
-- source × fidelity class.
+Cada unidade possui SHA-256/bytes e o documento possui `fidelity_hash` determinístico. Raw payload fica somente em memória.
 
-Classes:
+## T096 — Lossless Core Block Serialization
 
-- native_core_blocks;
-- not_applicable;
-- elementor_source_adapter_required;
-- shortcode_resolution_required;
-- rich_html_source_required;
-- complex_table_source_required;
-- kd_structure_sufficient_candidate.
+Contrato:
+`core-block-lossless-serialization-contract-v1.md`.
 
-Validação local: 11/11 PASS + lint.
+Runtime:
 
-Pacote de homologação:
+- `includes/class-core-block-lossless-serializer.php`;
+- `includes/class-core-block-lossless-roundtrip-smoke.php`.
 
-- `0.4.0-g245-editorial-fidelity-t094.1`;
-- SHA-256 `e25494a8c7be9bc2103e421ab7698d4a2f1114aea85fa2efdb0811a5a48f2caf`;
-- 38 PHP files lint PASS pré/pós ZIP;
+Mapeamento v1:
+
+- legacy HTML/plain text → `core/freeform`;
+- Elementor text-editor → `core/freeform`;
+- Elementor shortcode → `core/shortcode`;
+- Gutenberg existente → `native_noop`;
+- mixed/unsupported → fail-closed.
+
+Motivação: primeiro fazer uma **canonicalização lossless** para Core Blocks, sem tentar reconstruir semanticamente milhares de links/imagens/spans/tabelas de uma vez. Refinamento de `core/freeform` para blocos semânticos é etapa posterior.
+
+Validação local combinada T095/T096: **34/34 assertions PASS + PHP lint PASS**.
+
+O smoke T096 executa duas passagens e valida com as APIs reais do Core:
+
+`Migration Fidelity Source -> serialize_blocks() -> parse_blocks() -> serialize_blocks()`.
+
+Critérios:
+
+- todo o corpus processado;
+- zero errors/throwables;
+- zero safety violations;
+- zero raw payload round-trip mismatch;
+- zero parse/serialize mismatch;
+- zero fidelity hash mismatch;
+- zero serialization hash mismatch;
+- Gutenberg `native_noop` byte-preserved;
+- corpus/fingerprint editorial unchanged;
+- nenhum conteúdo/URL/post ID exportado;
+- nenhum block/shortcode renderizado;
+- nenhuma persistência.
+
+## Pacote T096
+
+- `0.4.0-g245-lossless-t096.1`;
+- SHA-256 `5a2fc4ac31bfbe2b68cfe5f06d07057310760f54c9f5ecfc9fbc55b3b07ad961`;
+- 41 PHP files lint PASS pré/pós ZIP;
 - UX-002 byte parity PASS;
-- T093 smoke OFF;
-- T094 smoke ON;
-- writer OFF.
+- T094 smoke OFF;
+- T096 smoke ON;
+- writer/migration OFF.
 
 ## Próximo passo exato
 
-1. instalar pacote T094 em homologação;
-2. abrir `Base de Conhecimento > Editorial Fidelity G-245`;
-3. executar `Executar T094 e baixar JSON`;
+1. instalar o pacote T096 em homologação;
+2. abrir `Base de Conhecimento > Lossless Blocks G-245`;
+3. executar `Executar T096 e baixar JSON`;
 4. devolver o JSON;
 5. versionar a evidência;
-6. definir `Migration Fidelity Source v1` estritamente conforme a distribuição real;
-7. somente depois iniciar serializer Core Blocks in-memory.
+6. se PASS, abrir T097 para paridade renderizada/editorial em cohort controlado;
+7. somente depois generalizar dry-run/journal/stale/lock/batch para Block Migration e preparar canário.
+
+Gate esperado:
+
+`gate_result.t096_lossless_roundtrip_pass=true`.
 
 ## Guardrails absolutos
 
@@ -140,9 +189,11 @@ Pacote de homologação:
 - não remover Elementor agora;
 - não escrever `_elementor_data`;
 - não escrever `post_content`;
-- não tratar KD como representação editorial lossless;
+- não usar KD como fonte editorial lossless;
+- não exportar raw payload em runners;
+- não decidir mixed source automaticamente;
 - não executar shortcodes para migrar;
-- não baixar mídia remota;
+- não baixar/relinkar mídia;
 - PR #4 permanece DRAFT.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

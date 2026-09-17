@@ -22,7 +22,9 @@
 
 Sincronização G-245 + UX-002: `145e16bf31f7afe2d3f08d087b79b69f3f40b885`.
 
-A branch deve permanecer `behind_by=0` e os seguintes arquivos visuais não podem aparecer no diff contra `main` durante T08x:
+Após T085, compare com `main`: **48 commits à frente, 0 atrás**, sem qualquer um dos arquivos visuais homologados no diff.
+
+Os seguintes arquivos visuais não podem aparecer no diff durante T08x:
 
 - `class-admin-page.php`;
 - `class-classification-admin.php`;
@@ -40,19 +42,16 @@ Evidência: `evidence/g245-projection-summary-20260917T111009Z.json`.
 ## T082 — Gateway
 
 - Elementor `4.1.0` homologado;
-- ausente => blocking;
-- diferente => review_required;
+- ausente => blocking; diferente => review_required;
 - feature flag default false;
 - capability futura `manage_options`;
 - hard phase gate;
-- writer/migration sempre false em T082;
+- writer/migration sempre false;
 - 45 assertions PASS.
 
 ## T083 — Journal / rollback
 
-Contrato storage-neutral fechado:
-
-- write-ahead journal deve ser durável antes do primeiro write futuro;
+- write-ahead journal durável deve existir antes do primeiro write futuro;
 - capsule before com `post_content` e `_elementor_data`;
 - hashes de integridade;
 - rollback stale/tampered bloqueado;
@@ -64,7 +63,6 @@ Contrato storage-neutral fechado:
 - `source_hash_before` vs Knowledge Document atual;
 - fresh/stale/blocking;
 - mismatch/hash inválido bloqueiam;
-- zero-write;
 - T083+T084: 38 assertions PASS.
 
 ## T085 — Dry-run
@@ -73,59 +71,41 @@ Contrato storage-neutral fechado:
 - ready/review_required/noop/blocked;
 - review_required não simula journal/apply;
 - stale e gateway blocking falham fechado;
-- versão Elementor não homologada => review;
+- versão não homologada => review;
 - unsafe plan => blocked;
 - `execution_allowed=false`, writer/migration false;
 - 38 assertions PASS + lint PASS.
 
-Artefatos:
-
-- `elementor-gateway-contract-v1.md`;
-- `journal-rollback-contract-v1.md`;
-- `stale-source-guard-contract-v1.md`;
-- `migration-dry-run-contract-v1.md`;
-- `tests/unit/spec004-elementor-gateway.php`;
-- `tests/unit/spec004-journal-stale-guards.php`;
-- `tests/unit/spec004-migration-dry-run.php`.
+Artefatos: `elementor-gateway-contract-v1.md`, `journal-rollback-contract-v1.md`, `stale-source-guard-contract-v1.md`, `migration-dry-run-contract-v1.md` e testes `spec004-*` correspondentes.
 
 ## Próximo passo exato — T086
 
-Implementar **batches retomáveis ainda read-only**.
-
-T086 deve demonstrar no mínimo:
+Implementar **batches retomáveis ainda read-only**:
 
 1. ordenação/deduplicação determinística dos candidatos elegíveis;
 2. batch size explícito e limitado;
 3. cursor/checkpoint versionado e validado;
-4. resume determinístico sem repetir itens já concluídos;
+4. resume determinístico sem repetir concluídos;
 5. zero duplicidade entre batches;
 6. batch hash canônico;
 7. cursor inválido/stale falha fechado;
 8. nenhum writer/executor editorial;
 9. zero persistência em `post_content`/`_elementor_data`;
-10. testes locais e documentação antes de avançar ao canário.
+10. testes locais e contrato congelado antes do canário.
 
 ## Guardrails preservados
 
 - WordPress/Elementor são a fonte editorial;
-- Knowledge Document e Projection Plan são reconstruíveis;
+- Knowledge Document/Projection Plan são reconstruíveis;
 - UX-002 não pode regredir;
-- journal durável ainda é pendência obrigatória antes de qualquer write;
+- journal durável ainda é pré-condição para qualquer write;
 - stale-source deverá ser revalidado imediatamente antes de qualquer write futuro;
 - writer/migration permanecem proibidos;
 - produção não é ambiente experimental;
 - PR #4 permanece DRAFT enquanto G-245 não fechar integralmente.
 
-## Reentrada obrigatória em novo chat
+## Reentrada obrigatória
 
-1. ler `AGENTS.md`;
-2. ler `.specify/PROJECT_MANIFEST.md`;
-3. ler `.specify/memory/constitution.md`;
-4. ler `specs/004-content-extractor-knowledge-document/`;
-5. ler `ux/002-mockup-visual-foundation/visual-contract-v2.md`;
-6. ler `docs/DEFINITION-OF-DONE.md`;
-7. confirmar branch/commit/PR no GitHub;
-8. confirmar diff visual limpo contra main;
-9. somente então avançar T086.
+Ler AGENTS, Manifesto, Constituição, SPEC-004, Visual Contract v2 e DoD; confirmar branch/commit/PR e diff visual limpo antes de modificar runtime.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

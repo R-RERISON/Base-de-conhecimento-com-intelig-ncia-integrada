@@ -10,8 +10,15 @@
 - G-245: **IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT.
 - T080 Production Preflight: **PASS WITH REVIEW ITEMS**.
 - T081 Projection Plan read-only: **PASS ambiental** em `0.4.0-g245-projection.2`.
-- T082 Elementor Gateway version-gated: **NEXT / NOT_STARTED**.
+- T082 Elementor Gateway version-gated: **PASS LOCAL / CONTRATUAL** em `0.4.0-g245-gateway.1`.
+- T083 Journal/rollback: **NEXT / NOT_STARTED**.
 - G-250: NOT_RUN.
+
+## Baseline visual obrigatória
+
+A branch G-245 foi sincronizada com `main@6d0fc8e33f826ee957038483d22fa1b804bae056` no commit `145e16bf31f7afe2d3f08d087b79b69f3f40b885`, preservando integralmente a UX-002 homologada.
+
+Após a sincronização, os arquivos visuais da UX-002 não aparecem no diff G-245 vs `main`; o diff remanescente contém apenas artefatos próprios do G-245.
 
 ## S005 — G-240 / Real Content Acceptance
 
@@ -28,7 +35,7 @@ Evidências finais:
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 
-**Regra:** nenhuma escrita editorial está autorizada por T080/T081.
+**Regra:** nenhuma escrita editorial está autorizada por T080/T081/T082.
 
 ### T080 — Production Preflight — PASS WITH REVIEW ITEMS
 
@@ -60,9 +67,32 @@ Evidência:
 - changed posts: 0;
 - writer/migration: false.
 
+### T082 — Elementor Gateway version-gated — PASS LOCAL / CONTRATUAL
+
+- [x] Contrato `elementor-gateway-contract-v1.md` congelado.
+- [x] Gateway isolado em `class-elementor-gateway.php`.
+- [x] versão homologada exata `4.1.0`.
+- [x] Elementor ausente => `blocking`.
+- [x] versão diferente de `4.1.0` => `review_required`.
+- [x] feature flag `BDC_KB_ELEMENTOR_WRITER_ENABLED` default `false`.
+- [x] capability futura `manage_options` explícita.
+- [x] contrato futuro de POST/nonce explícito, sem handler mutável registrado.
+- [x] `source_hash_before` registrado como requisito para o stale-source guard T084.
+- [x] hard gate de fase T082 impede bypass mesmo com versão + flag + capability válidas.
+- [x] `writer_allowed=false` e `migration_execution_allowed=false` invariantes.
+- [x] zero escrita em `post_content` e `_elementor_data`.
+- [x] PHP lint PASS em Gateway, teste e bootstrap.
+- [x] **45 assertions locais PASS**.
+- [x] baseline visual UX-002 preservada; nenhum arquivo visual alterado por T082.
+
+Artefatos:
+
+- `elementor-gateway-contract-v1.md`;
+- `package-g245-gateway1.md`;
+- `tests/unit/spec004-elementor-gateway.php`.
+
 ### Próximos subgates
 
-- [ ] T082 Elementor Gateway version-gated com writer **disabled-by-default**.
 - [ ] T083 Journal/rollback.
 - [ ] T084 Stale-source guard.
 - [ ] T085 Dry-run.
@@ -78,6 +108,7 @@ Evidência:
 3. DOM explícito vence inferência.
 4. Inferência textual deve ser conservadora e auditável.
 5. `review_required` é limitação explícita, não erro silencioso.
-6. PASS de T081 não autoriza persistência editorial.
+6. PASS de T081/T082 não autoriza persistência editorial.
 7. Writer/migration Elementor permanecem disabled-by-default até subgates, rollback e autorização explícita.
-8. Trabalho incompleto permanece fora da `main` até gates e revisão.
+8. UX-002 é contrato visual obrigatório; nenhum subgate G-245 pode regredir a baseline visual homologada.
+9. Trabalho incompleto permanece fora da `main` até gates e revisão.

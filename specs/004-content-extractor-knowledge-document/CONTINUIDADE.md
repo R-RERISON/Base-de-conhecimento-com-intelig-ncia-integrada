@@ -12,100 +12,54 @@
 - T082 Gateway: **PASS LOCAL / CONTRATUAL**.
 - T083 Journal/rollback: **PASS LOCAL / CONTRATUAL**.
 - T084 Stale-source guard: **PASS LOCAL / CONTRATUAL**.
-- T085 Dry-run: **PASS LOCAL / CONTRATUAL** em `0.4.0-g245-dryrun.1`.
-- T086 Batches retomáveis: **NEXT / NOT_STARTED**.
+- T085 Dry-run: **PASS LOCAL / CONTRATUAL**.
+- T086 Batches retomáveis: **PASS LOCAL / CONTRATUAL** em `0.4.0-g245-batch.1`.
+- T087A Canary Readiness: **PASS LOCAL / READ-ONLY**.
+- T087 canário mutável + rollback real: **BLOCKED / NÃO AUTORIZADO**.
+- T088 Runbook: **NEXT**.
 - writer/migration Elementor permanecem não autorizados.
 
 ## Baseline comprovada
 
 `main`: `6d0fc8e33f826ee957038483d22fa1b804bae056`.
-
 Sincronização G-245 + UX-002: `145e16bf31f7afe2d3f08d087b79b69f3f40b885`.
 
-Após T085, compare com `main`: **48 commits à frente, 0 atrás**, sem qualquer um dos arquivos visuais homologados no diff.
+Os arquivos visuais homologados devem permanecer fora do diff: `class-admin-page.php`, `class-classification-admin.php`, `visual-foundation.css`, `class-visual-foundation.php`.
 
-Os seguintes arquivos visuais não podem aparecer no diff durante T08x:
+## Gates fechados
 
-- `class-admin-page.php`;
-- `class-classification-admin.php`;
-- `visual-foundation.css`;
-- `class-visual-foundation.php`.
+- T081: 622/622 em duas passagens, zero mutação, `gate.t081_pass=true`.
+- T082: gateway version-gated, 45 assertions PASS.
+- T083/T084: journal contract + stale guard, 38 assertions PASS.
+- T085: dry-run zero-write, 38 assertions PASS.
+- T086: batches determinísticos/retomáveis, 37 assertions PASS.
+- T087A: readiness de canário read-only, 25 assertions PASS.
 
-## T080 / T081
+Todos mantêm `execution_allowed=false`, `writer_allowed=false` e `migration_execution_allowed=false` conforme aplicável.
 
-T080: PASS WITH REVIEW ITEMS, blockers 0, corpus/fingerprint preservados, writer/migration false.
+## T087A — Canary Readiness
 
-T081: 622/622 em duas passagens, zero errors/throwables/mismatches/violations, fingerprint editorial idêntico, changed posts=0, `gate.t081_pass=true`, 44/44 checks independentes PASS.
+Pré-condições explícitas: escopo 1, journal storage durável, capsule íntegro, dry-run ready, source fresh, Elementor homologado, identidade/hashes coerentes e dry-run zero-write.
 
-Evidência: `evidence/g245-projection-summary-20260917T111009Z.json`.
+Sem autorização explícita: `awaiting_explicit_authorization`. Com autorização simulada: `ready_for_controlled_canary`, mas ainda `execution_allowed=false` e `requires_separate_mutable_executor=true`.
 
-## T082 — Gateway
+**O T087 completo NÃO PASSOU.** Faltam storage durável comprovado, executor mutável mínimo, escolha do artigo canário, autorização humana explícita, evidência before/write/after/rollback e restauração integral.
 
-- Elementor `4.1.0` homologado;
-- ausente => blocking; diferente => review_required;
-- feature flag default false;
-- capability futura `manage_options`;
-- hard phase gate;
-- writer/migration sempre false;
-- 45 assertions PASS.
+## Próximo passo exato
 
-## T083 — Journal / rollback
+1. congelar T088 Runbook de homologação/produção;
+2. decidir/implementar storage durável WordPress-first para journal e smoke próprio;
+3. preparar pacote de homologação para readiness/storage, ainda sem writer;
+4. somente depois solicitar autorização específica para executar **um** canário mutável e seu rollback.
 
-- write-ahead journal durável deve existir antes do primeiro write futuro;
-- capsule before com `post_content` e `_elementor_data`;
-- hashes de integridade;
-- rollback stale/tampered bloqueado;
-- rollback repetido idempotent noop;
-- `journal_persisted=false` nesta fase.
+## Guardrails
 
-## T084 — Stale-source guard
-
-- `source_hash_before` vs Knowledge Document atual;
-- fresh/stale/blocking;
-- mismatch/hash inválido bloqueiam;
-- T083+T084: 38 assertions PASS.
-
-## T085 — Dry-run
-
-- deterministic zero-write;
-- ready/review_required/noop/blocked;
-- review_required não simula journal/apply;
-- stale e gateway blocking falham fechado;
-- versão não homologada => review;
-- unsafe plan => blocked;
-- `execution_allowed=false`, writer/migration false;
-- 38 assertions PASS + lint PASS.
-
-Artefatos: `elementor-gateway-contract-v1.md`, `journal-rollback-contract-v1.md`, `stale-source-guard-contract-v1.md`, `migration-dry-run-contract-v1.md` e testes `spec004-*` correspondentes.
-
-## Próximo passo exato — T086
-
-Implementar **batches retomáveis ainda read-only**:
-
-1. ordenação/deduplicação determinística dos candidatos elegíveis;
-2. batch size explícito e limitado;
-3. cursor/checkpoint versionado e validado;
-4. resume determinístico sem repetir concluídos;
-5. zero duplicidade entre batches;
-6. batch hash canônico;
-7. cursor inválido/stale falha fechado;
-8. nenhum writer/executor editorial;
-9. zero persistência em `post_content`/`_elementor_data`;
-10. testes locais e contrato congelado antes do canário.
-
-## Guardrails preservados
-
-- WordPress/Elementor são a fonte editorial;
-- Knowledge Document/Projection Plan são reconstruíveis;
 - UX-002 não pode regredir;
-- journal durável ainda é pré-condição para qualquer write;
-- stale-source deverá ser revalidado imediatamente antes de qualquer write futuro;
-- writer/migration permanecem proibidos;
+- journal write-ahead durável é obrigatório antes de write;
+- stale-source deve ser revalidado imediatamente antes de write;
+- canário inicial = 1 item;
 - produção não é ambiente experimental;
-- PR #4 permanece DRAFT enquanto G-245 não fechar integralmente.
-
-## Reentrada obrigatória
-
-Ler AGENTS, Manifesto, Constituição, SPEC-004, Visual Contract v2 e DoD; confirmar branch/commit/PR e diff visual limpo antes de modificar runtime.
+- nenhuma autorização de writer será inferida de “continue”, “vamos em frente” ou equivalente;
+- PR #4 permanece DRAFT.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

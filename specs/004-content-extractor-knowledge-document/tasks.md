@@ -21,57 +21,63 @@
 - T097 Static Editorial Parity + stale-source: PASS AMBIENTAL.
 - T098.1 Block Migration Readiness: FAIL CONTROLADO / SEM MUTAÇÃO.
 - T098.2 Block Migration Readiness: PASS AMBIENTAL.
-- T099A Journal Store + Lock Smoke: **PASS AMBIENTAL**.
-- T099B Authorization Pack: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE / READ-ONLY**.
-- T099C canário real: BLOCKED por autorização específica.
+- T099A Journal Store + Lock Smoke: PASS AMBIENTAL.
+- T099B Authorization Pack: **PASS AMBIENTAL / READ-ONLY**.
+- T099C canário real: **BLOCKED até autorização humana exata**.
 - G-250: NOT_RUN.
 
 ## Baseline visual
 UX-002 `0.4.0-ux002.3` permanece contrato visual obrigatório.
 
-## T098.2 — PASS AMBIENTAL
-Evidência: `evidence/g245-t098-readiness-pass-20260917T191436Z.json`.
-SHA-256 bruto: `f7bf589858db6c6629cb937ba28dad4ef658d1e265225185dad77e55dd342ff0`.
+## T099B — PASS AMBIENTAL
+Evidência: `evidence/g245-t099b-authorization-pack-20260917T193757Z.json`.
+SHA-256 bruto: `04d47e7839d67b34af6abf8b4ace87238f934f7ca751bc222e427206d813d8ce`.
 
-Resultado: 623/623 em duas passagens; errors/throwables/safety violations 0; ready 611, noop 7, review_required 5; 25 batches cobrem 611 elegíveis sem duplicidade/cursor failure; fingerprint editorial unchanged; gate PASS.
+Candidato congelado:
+- post_id: 358;
+- título: `LIA | Laboratório de Inteligência Analítica`;
+- status: publish;
+- source_kind: legacy_html;
+- risk_tier: low;
+- bytes: 1764;
+- links: 2;
+- images: 0;
+- tables: 1;
+- registered shortcodes: 0;
+- dangerous embeds/scripts: 0;
+- Core block comments: 0;
+- `_elementor_data` bytes: 0.
 
-## T099A — PASS AMBIENTAL
-Evidência: `evidence/g245-t099a-storage-lock-20260917T193102Z.json`.
-SHA-256 bruto: `671e6f26de0d232569a7728651e7d42348677607b7ac5bcfc194012031d21ba8`.
+Identidade do canário:
+- fidelity_hash_before: `5e4695f159494ad3a1715741bdf485da43d77a991f9f39ecdab02901d6b2bd2e`;
+- serialization_hash: `9e96a95d451c9463fa6bf37d7eec31c005df39da1774bd8de7ae110ee72f91cf`;
+- dry_run_hash: `b533eb953b705b85fd48c3ab26c9bc5d6b61ee4223449370662f6e606123fab3`;
+- post_content_sha256_before: `eb7f1c9c4e5426c9c5c473ade6c6b02312f526cad9a375b3bbe30ef0221479d0`;
+- serialized_post_content_sha256_expected: `af4101dda487e6f6239b8bb0546439a75e1691062fd27f9322cbb0d9c2f84050`;
+- expected block: `core/freeform`;
+- authorization_id: `1557c1ee50e1a7a46df7d7952032cb1dd0cb374c7222de8656bb9c055f561bc9`.
 
-Target ambiental: post 358, `legacy_html`, dry-run `ready`.
+## T099C — escopo exato autorizado somente após aprovação
+Escopo permitido após aprovação explícita:
+1. post 358 somente;
+2. revalidar `authorization_id` e hashes imediatamente antes do write;
+3. persistir journal durável antes do write;
+4. adquirir lock exclusivo;
+5. reexecutar stale-source guard;
+6. escrever somente `WP_Post.post_content` com a serialização Core Block determinística;
+7. preservar `_elementor_data` inalterado;
+8. verificar hash/paridade após write;
+9. executar rollback imediato obrigatório para o snapshot anterior;
+10. verificar restauração exata;
+11. liberar lock e manter journal de auditoria conforme contrato.
 
-Resultado:
-- journal 0 → persistido/readback PASS → cleanup PASS → 0;
-- lock ausente → adquirido/readback PASS → cleanup PASS → ausente;
-- `post_content` SHA-256 before/after igual;
-- `_elementor_data` SHA-256 before/after igual;
-- errors 0;
-- nenhum write editorial;
-- `t099a_storage_lock_pass=true`.
-
-## T099B — Authorization Pack
-Contrato: `t099b-authorization-pack-contract-v1.md`.
-Runtime: `includes/class-block-migration-authorization-pack-smoke.php`.
-
-Seleção conservadora:
-- `legacy_html` + dry-run `ready`;
-- zero journal/lock residual;
-- `_elementor_data` vazio;
-- 1–30.000 bytes;
-- zero shortcode registrado;
-- zero script/iframe/form/object/embed/style;
-- zero comentário Core Block;
-- até 10 links, 1 imagem e 1 tabela;
-- post 358 é preferido apenas se continuar low-risk; caso contrário, menor `risk_score` determinístico.
-
-O pack exporta hashes, block names esperados, risco agregado, identificação humana do artigo e `authorization_id`. Não exporta corpo editorial/URLs e não persiste nada.
+Até a autorização específica, `authorized=false` e nenhum write editorial é permitido.
 
 ## Próximos subgates
 
-- [ ] executar T099B e versionar Authorization Pack.
-- [ ] solicitar autorização explícita para `post_id + authorization_id` específicos.
-- [ ] T099C: aplicar canário de 1 artigo, verificar e fazer rollback imediato.
+- [x] executar T099B e versionar Authorization Pack.
+- [ ] obter autorização explícita para `post_id=358` + `authorization_id=1557c1ee50e1a7a46df7d7952032cb1dd0cb374c7222de8656bb9c055f561bc9`.
+- [ ] T099C: aplicar canário, verificar e fazer rollback imediato.
 - [ ] T100: batches homologados.
 - [ ] T101: dependência residual Elementor / gate de retirada.
 - [ ] G-250 Lifecycle/RC.

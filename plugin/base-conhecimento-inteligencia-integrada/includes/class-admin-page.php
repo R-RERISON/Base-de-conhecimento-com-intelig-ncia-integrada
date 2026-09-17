@@ -79,14 +79,13 @@ final class Admin_Page {
 		$post_id = self::get_request_post_id();
 
 		echo '<div class="wrap bdc-kb-admin">';
-		echo '<h1>' . esc_html__( 'Base de Conhecimento — Gestão do Conhecimento', 'bdc-knowledge-base' ) . '</h1>';
-		self::render_feedback();
-		Classification_Admin::render_feedback();
-		Review_Admin::render_feedback();
-
 		if ( $post_id > 0 ) {
 			self::render_workspace( $post_id );
 		} else {
+			self::render_list_header();
+			self::render_feedback();
+			Classification_Admin::render_feedback();
+			Review_Admin::render_feedback();
 			self::render_list();
 		}
 
@@ -167,10 +166,13 @@ final class Admin_Page {
 
 		$tab = self::get_request_tab();
 
-		self::render_back_link();
 		self::render_context_header( $post, $summary );
+		self::render_feedback();
+		Classification_Admin::render_feedback();
+		Review_Admin::render_feedback();
 		self::render_tabs( $post_id, $tab );
 
+		echo '<div class="bdc-kb-workspace-layout">';
 		echo '<main class="bdc-kb-workspace-main" id="bdc-kb-workspace-main">';
 		switch ( $tab ) {
 			case 'summary':
@@ -191,40 +193,73 @@ final class Admin_Page {
 				break;
 		}
 		echo '</main>';
+		self::render_context_sidebar( $post_id, $post, $summary );
+		echo '</div>';
 	}
 
 	/** @param object $post WP_Post-like object. @param array<string,mixed> $summary */
 	private static function render_context_header( object $post, array $summary ): void {
 		$status_object = get_post_status_object( (string) $post->post_status );
 		$status_label  = is_object( $status_object ) ? (string) $status_object->label : (string) $post->post_status;
+		$edit_url      = get_edit_post_link( (int) $post->ID, 'raw' );
 
 		echo '<header class="bdc-kb-context bdc-kb-workspace-header">';
-		echo '<div>';
-		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Knowledge Workspace', 'bdc-knowledge-base' ) . '</p>';
-		echo '<h2>' . esc_html( (string) $summary['title'] ) . '</h2>';
+		echo '<div class="bdc-kb-hero-copy">';
+		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Base de Conhecimento / Artigo', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h1>' . esc_html( (string) $summary['title'] ) . '</h1>';
 		echo '<div class="bdc-kb-context-meta">';
-		echo '<span><strong>' . esc_html__( 'Post ID:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( (string) $post->ID ) . '</span>';
+		echo '<span><strong>' . esc_html__( 'ID:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( (string) $post->ID ) . '</span>';
 		echo '<span><strong>' . esc_html__( 'Editorial:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( $status_label ) . '</span>';
 		echo '</div>';
+		echo '</div>';
+		echo '<div class="bdc-kb-hero-actions">';
+		echo '<a class="button bdc-kb-button-with-icon" href="' . esc_url( admin_url( 'admin.php?page=' . self::PAGE_SLUG ) ) . '"><span class="dashicons dashicons-arrow-left-alt2" aria-hidden="true"></span><span>' . esc_html__( 'Artigos', 'bdc-knowledge-base' ) . '</span></a>';
+		if ( is_string( $edit_url ) && '' !== $edit_url ) {
+			echo '<a class="button button-primary bdc-kb-button-with-icon" href="' . esc_url( $edit_url ) . '"><span class="dashicons dashicons-edit" aria-hidden="true"></span><span>' . esc_html__( 'Abrir no WordPress', 'bdc-knowledge-base' ) . '</span></a>';
+		}
 		echo '</div>';
 		echo '</header>';
 	}
 
+	/** @param object $post WP_Post-like object. @param array<string,mixed> $summary */
+	private static function render_context_sidebar( int $post_id, object $post, array $summary ): void {
+		$status_object = get_post_status_object( (string) $post->post_status );
+		$status_label  = is_object( $status_object ) ? (string) $status_object->label : (string) $post->post_status;
+		$filled        = self::summary_filled_count( $summary );
+		$term_count    = self::classification_term_count( $post_id );
+		$review        = Review_Store::read( $post_id );
+		$review_state  = is_wp_error( $review ) ? Review_Contract::STATE_UNREVIEWED : (string) ( $review['state'] ?? Review_Contract::STATE_UNREVIEWED );
+		$review_label  = Review_Contract::states()[ $review_state ] ?? $review_state;
+
+		echo '<aside class="bdc-kb-context-panel" aria-label="' . esc_attr__( 'Contexto do artigo', 'bdc-knowledge-base' ) . '">';
+		echo '<div class="bdc-kb-domain-heading"><h3>' . esc_html__( 'Contexto do artigo', 'bdc-knowledge-base' ) . '</h3><p>' . esc_html__( 'Informação editorial e governança em leitura.', 'bdc-knowledge-base' ) . '</p></div>';
+		echo '<dl class="bdc-kb-context-list">';
+		echo '<div><dt>' . esc_html__( 'Status editorial', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-badge bdc-kb-badge--success">' . esc_html( $status_label ) . '</span></dd></div>';
+		echo '<div><dt>' . esc_html__( 'Fonte editorial', 'bdc-knowledge-base' ) . '</dt><dd><strong>WordPress / Elementor</strong></dd></div>';
+		echo '<div><dt>' . esc_html__( 'Summary', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $filled . '/' . count( Meta_Contract::fields() ) . ' campos preenchidos' ) . '</dd></div>';
+		echo '<div><dt>' . esc_html__( 'Classificação', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $term_count > 0 ? $term_count . ' conceito(s)' : 'Sem termos canônicos' ) . '</dd></div>';
+		echo '<div><dt>' . esc_html__( 'Review', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-state-badge bdc-kb-state-' . esc_attr( $review_state ) . '">' . esc_html( $review_label ) . '</span></dd></div>';
+		echo '<div><dt>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( get_the_modified_date( '', $post ) ) . '</dd></div>';
+		echo '</dl>';
+		echo '<p class="bdc-kb-context-note">' . esc_html__( 'O Workspace gerencia conhecimento ao redor do artigo; a edição editorial continua no WordPress/Elementor.', 'bdc-knowledge-base' ) . '</p>';
+		echo '</aside>';
+	}
+
 	private static function render_tabs( int $post_id, string $active_tab ): void {
 		$tabs = array(
-			'overview'       => 'Visão geral',
-			'summary'        => 'Summary',
-			'classification' => 'Classificação',
-			'review'         => 'Review & Governança',
-			'history'        => 'Histórico',
+			'overview'       => array( 'label' => 'Visão geral', 'icon' => 'grid-view' ),
+			'summary'        => array( 'label' => 'Summary', 'icon' => 'media-text' ),
+			'classification' => array( 'label' => 'Classificação', 'icon' => 'tag' ),
+			'review'         => array( 'label' => 'Review & Governança', 'icon' => 'yes-alt' ),
+			'history'        => array( 'label' => 'Histórico', 'icon' => 'backup' ),
 		);
 
 		echo '<nav class="bdc-kb-tabs" aria-label="' . esc_attr__( 'Domínios do Knowledge Workspace', 'bdc-knowledge-base' ) . '" data-bdc-workspace-tabs>';
-		foreach ( $tabs as $tab => $label ) {
+		foreach ( $tabs as $tab => $definition ) {
 			$url = self::workspace_url( $post_id, $tab );
 			$class = 'bdc-kb-tab' . ( $tab === $active_tab ? ' is-active' : '' );
 			$current = $tab === $active_tab ? ' aria-current="page"' : '';
-			echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '"' . $current . '>' . esc_html( $label ) . '</a>';
+			echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '"' . $current . '><span class="dashicons dashicons-' . esc_attr( (string) $definition['icon'] ) . '" aria-hidden="true"></span><span>' . esc_html( (string) $definition['label'] ) . '</span></a>';
 		}
 		echo '</nav>';
 	}
@@ -243,19 +278,20 @@ final class Admin_Page {
 		echo '<h3 id="bdc-kb-overview-title">' . esc_html__( 'Visão geral do conhecimento', 'bdc-knowledge-base' ) . '</h3>';
 		echo '<p>' . esc_html__( 'Use as abas para trabalhar em cada domínio sem perder o contexto do artigo.', 'bdc-knowledge-base' ) . '</p>';
 		echo '<div class="bdc-kb-overview-grid">';
-		self::render_overview_card( 'Summary', 'Conteúdo narrativo canônico da SPEC-001.', self::workspace_url( $post_id, 'summary' ), 'Abrir Summary' );
-		self::render_overview_card( 'Classificação', 'Vocabulários canônicos e relações taxonômicas da SPEC-002.', self::workspace_url( $post_id, 'classification' ), 'Abrir Classificação' );
-		self::render_overview_card( 'Review & Governança', 'Estado atual: ' . $state_label . '.', self::workspace_url( $post_id, 'review' ), 'Abrir Review' );
-		self::render_overview_card( 'Histórico', 'Linha do tempo read-only das decisões de governança registradas.', self::workspace_url( $post_id, 'history' ), 'Abrir Histórico' );
+		self::render_overview_card( 'Summary', 'Conteúdo narrativo canônico da SPEC-001.', self::workspace_url( $post_id, 'summary' ), 'Abrir Summary', 'media-text' );
+		self::render_overview_card( 'Classificação', 'Vocabulários canônicos e relações taxonômicas da SPEC-002.', self::workspace_url( $post_id, 'classification' ), 'Abrir Classificação', 'tag' );
+		self::render_overview_card( 'Review & Governança', 'Estado atual: ' . $state_label . '.', self::workspace_url( $post_id, 'review' ), 'Abrir Review', 'yes-alt' );
+		self::render_overview_card( 'Histórico', 'Linha do tempo read-only das decisões de governança registradas.', self::workspace_url( $post_id, 'history' ), 'Abrir Histórico', 'backup' );
 		echo '</div>';
 		echo '</section>';
 	}
 
-	private static function render_overview_card( string $title, string $description, string $url, string $action ): void {
+	private static function render_overview_card( string $title, string $description, string $url, string $action, string $icon ): void {
 		echo '<article class="bdc-kb-overview-card">';
+		echo '<div class="bdc-kb-card-icon" aria-hidden="true"><span class="dashicons dashicons-' . esc_attr( $icon ) . '"></span></div>';
 		echo '<h4>' . esc_html( $title ) . '</h4>';
 		echo '<p>' . esc_html( $description ) . '</p>';
-		echo '<a class="button" href="' . esc_url( $url ) . '">' . esc_html( $action ) . '</a>';
+		echo '<a class="button bdc-kb-button-with-icon" href="' . esc_url( $url ) . '"><span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span><span>' . esc_html( $action ) . '</span></a>';
 		echo '</article>';
 	}
 
@@ -276,7 +312,7 @@ final class Admin_Page {
 			$field_id = 'bdc-kb-' . $field;
 			echo '<div class="bdc-kb-field">';
 			echo '<label for="' . esc_attr( $field_id ) . '"><strong>' . esc_html( $definition['label'] ) . '</strong></label>';
-			echo '<textarea class="large-text" rows="7" id="' . esc_attr( $field_id ) . '" name="summary[' . esc_attr( $field ) . ']" maxlength="32768">' . esc_textarea( (string) $snapshot[ $field ] ) . '</textarea>';
+			echo '<textarea class="large-text" rows="5" id="' . esc_attr( $field_id ) . '" name="summary[' . esc_attr( $field ) . ']" maxlength="32768">' . esc_textarea( (string) $snapshot[ $field ] ) . '</textarea>';
 			echo '<p class="description">' . esc_html__( 'Texto narrativo. Valor vazio remove a metadata correspondente.', 'bdc-knowledge-base' ) . '</p>';
 			echo '</div>';
 		}
@@ -286,56 +322,98 @@ final class Admin_Page {
 		echo '</section>';
 	}
 
+	private static function render_list_header(): void {
+		echo '<header class="bdc-kb-list-hero">';
+		echo '<div class="bdc-kb-hero-copy">';
+		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Knowledge Studio', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h1>' . esc_html__( 'Posts da Base de Conhecimento', 'bdc-knowledge-base' ) . '</h1>';
+		echo '<p>' . esc_html__( 'Localize artigos e gerencie Summary, Classificação e Governança sem substituir a edição editorial do WordPress.', 'bdc-knowledge-base' ) . '</p>';
+		echo '</div>';
+		echo '<div class="bdc-kb-hero-actions"><a class="button button-primary bdc-kb-button-with-icon" href="' . esc_url( admin_url( 'post-new.php' ) ) . '"><span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><span>' . esc_html__( 'Abrir novo artigo no WordPress', 'bdc-knowledge-base' ) . '</span></a></div>';
+		echo '</header>';
+	}
+
 	private static function render_list(): void {
 		$paged = isset( $_GET['paged'] ) && is_scalar( $_GET['paged'] )
 			? max( 1, absint( wp_unslash( (string) $_GET['paged'] ) ) )
 			: 1;
+		$search = isset( $_GET['s'] ) && is_scalar( $_GET['s'] )
+			? sanitize_text_field( wp_unslash( (string) $_GET['s'] ) )
+			: '';
 
-		$query = new \WP_Query(
-			array(
-				'post_type'           => Meta_Contract::POST_TYPE,
-				'post_status'         => array( 'publish', 'draft', 'pending', 'private', 'future' ),
-				'posts_per_page'      => self::PER_PAGE,
-				'paged'               => $paged,
-				'orderby'             => 'modified',
-				'order'               => 'DESC',
-				'ignore_sticky_posts' => true,
-				'perm'                => 'editable',
-			)
+		$args = array(
+			'post_type'           => Meta_Contract::POST_TYPE,
+			'post_status'         => array( 'publish', 'draft', 'pending', 'private', 'future' ),
+			'posts_per_page'      => self::PER_PAGE,
+			'paged'               => $paged,
+			'orderby'             => 'modified',
+			'order'               => 'DESC',
+			'ignore_sticky_posts' => true,
+			'perm'                => 'editable',
 		);
+		if ( '' !== $search ) {
+			$args['s'] = $search;
+		}
+		$query = new \WP_Query( $args );
 
-		echo '<p>' . esc_html__( 'Selecione um artigo para abrir o Knowledge Workspace e trabalhar em Summary, Classificação e Review & Governança.', 'bdc-knowledge-base' ) . '</p>';
-		echo '<table class="widefat fixed striped bdc-kb-table">';
-		echo '<thead><tr><th>' . esc_html__( 'Artigo', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Status', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Ação', 'bdc-knowledge-base' ) . '</th></tr></thead><tbody>';
+		echo '<form class="bdc-kb-toolbar" method="get" action="' . esc_url( admin_url( 'admin.php' ) ) . '">';
+		echo '<input type="hidden" name="page" value="' . esc_attr( self::PAGE_SLUG ) . '">';
+		echo '<label class="bdc-kb-search"><span class="screen-reader-text">' . esc_html__( 'Pesquisar artigos', 'bdc-knowledge-base' ) . '</span><input type="search" name="s" value="' . esc_attr( $search ) . '" placeholder="' . esc_attr__( 'Pesquisar título ou conteúdo…', 'bdc-knowledge-base' ) . '"></label>';
+		echo '<button class="button bdc-kb-button-with-icon" type="submit"><span class="dashicons dashicons-search" aria-hidden="true"></span><span>' . esc_html__( 'Pesquisar', 'bdc-knowledge-base' ) . '</span></button>';
+		echo '</form>';
+
+		$counts = wp_count_posts( Meta_Contract::POST_TYPE );
+		$total  = 0;
+		foreach ( array( 'publish', 'draft', 'pending', 'private', 'future' ) as $status ) {
+			$total += isset( $counts->{$status} ) ? (int) $counts->{$status} : 0;
+		}
+		echo '<div class="bdc-kb-metrics" aria-label="' . esc_attr__( 'Resumo da Base de Conhecimento', 'bdc-knowledge-base' ) . '">';
+		self::render_metric( (string) $total, 'artigos no escopo editorial' );
+		self::render_metric( (string) count( Meta_Contract::fields() ), 'campos Summary canônicos' );
+		self::render_metric( (string) count( Classification_Contract::fields() ), 'conceitos de Classificação' );
+		echo '</div>';
+
+		echo '<table class="widefat fixed bdc-kb-table">';
+		echo '<thead><tr><th>' . esc_html__( 'Artigo', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Summary', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Classificação', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Ações', 'bdc-knowledge-base' ) . '</th></tr></thead><tbody>';
 
 		$rendered = 0;
 		foreach ( $query->posts as $post ) {
 			if ( ! current_user_can( 'edit_post', (int) $post->ID ) ) {
 				continue;
 			}
-
-			$status_object = get_post_status_object( (string) $post->post_status );
-			$status_label  = is_object( $status_object ) ? (string) $status_object->label : (string) $post->post_status;
-			$edit_url      = self::workspace_url( (int) $post->ID, self::DEFAULT_TAB );
+			$status_object  = get_post_status_object( (string) $post->post_status );
+			$status_label   = is_object( $status_object ) ? (string) $status_object->label : (string) $post->post_status;
+			$workspace_url  = self::workspace_url( (int) $post->ID, self::DEFAULT_TAB );
+			$summary        = Summary_Store::read( (int) $post->ID );
+			$filled         = is_wp_error( $summary ) ? 0 : self::summary_filled_count( $summary );
+			$summary_total  = count( Meta_Contract::fields() );
+			$term_count     = self::classification_term_count( (int) $post->ID );
+			$summary_class  = $filled === $summary_total ? 'bdc-kb-badge--success' : ( $filled > 0 ? 'bdc-kb-badge--info' : 'bdc-kb-badge--warning' );
+			$summary_label  = $filled === $summary_total ? 'Completo' : ( $filled > 0 ? $filled . '/' . $summary_total . ' preenchidos' : 'Pendente' );
+			$class_label    = $term_count > 0 ? $term_count . ' conceito(s)' : 'Sem termos';
 
 			echo '<tr>';
-			echo '<td><strong>' . esc_html( get_the_title( $post ) ) . '</strong><br><span class="description">#' . esc_html( (string) $post->ID ) . '</span></td>';
-			echo '<td>' . esc_html( $status_label ) . '</td>';
+			echo '<td><a class="bdc-kb-article-link" href="' . esc_url( $workspace_url ) . '">' . esc_html( get_the_title( $post ) ) . '</a><span class="bdc-kb-row-meta">#' . esc_html( (string) $post->ID ) . ' · ' . esc_html( $status_label ) . '</span></td>';
+			echo '<td><span class="bdc-kb-badge ' . esc_attr( $summary_class ) . '">' . esc_html( $summary_label ) . '</span></td>';
+			echo '<td><span class="bdc-kb-badge' . ( $term_count > 0 ? ' bdc-kb-badge--info' : '' ) . '">' . esc_html( $class_label ) . '</span></td>';
 			echo '<td>' . esc_html( get_the_modified_date( '', $post ) ) . '</td>';
-			echo '<td><a class="button" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Abrir Workspace', 'bdc-knowledge-base' ) . '</a></td>';
+			echo '<td><a class="button bdc-kb-button-with-icon" href="' . esc_url( $workspace_url ) . '"><span class="dashicons dashicons-edit-page" aria-hidden="true"></span><span>' . esc_html__( 'Gerenciar', 'bdc-knowledge-base' ) . '</span></a></td>';
 			echo '</tr>';
 			++$rendered;
 		}
 
 		if ( 0 === $rendered ) {
-			echo '<tr><td colspan="4">' . esc_html__( 'Nenhum artigo editável foi encontrado nesta página.', 'bdc-knowledge-base' ) . '</td></tr>';
+			echo '<tr><td colspan="5"><div class="bdc-kb-empty-state"><div><strong>' . esc_html__( 'Nenhum artigo encontrado', 'bdc-knowledge-base' ) . '</strong><p>' . esc_html__( 'Ajuste a pesquisa ou verifique suas permissões de edição.', 'bdc-knowledge-base' ) . '</p></div></div></td></tr>';
 		}
-
 		echo '</tbody></table>';
 
+		$base_args = array( 'page' => self::PAGE_SLUG, 'paged' => '%#%' );
+		if ( '' !== $search ) {
+			$base_args['s'] = $search;
+		}
 		$pagination = paginate_links(
 			array(
-				'base'      => add_query_arg( 'paged', '%#%', admin_url( 'admin.php?page=' . self::PAGE_SLUG ) ),
+				'base'      => add_query_arg( $base_args, admin_url( 'admin.php' ) ),
 				'format'    => '',
 				'current'   => $paged,
 				'total'     => max( 1, (int) $query->max_num_pages ),
@@ -344,12 +422,37 @@ final class Admin_Page {
 				'next_text' => __( 'Próxima', 'bdc-knowledge-base' ),
 			)
 		);
-
 		if ( is_string( $pagination ) && '' !== $pagination ) {
 			echo '<nav class="bdc-kb-pagination" aria-label="' . esc_attr__( 'Paginação de artigos', 'bdc-knowledge-base' ) . '">' . wp_kses_post( $pagination ) . '</nav>';
 		}
-
 		wp_reset_postdata();
+	}
+
+	private static function render_metric( string $value, string $label ): void {
+		echo '<div class="bdc-kb-metric"><strong>' . esc_html( $value ) . '</strong><span>' . esc_html( $label ) . '</span></div>';
+	}
+
+	/** @param array<string,mixed> $summary */
+	private static function summary_filled_count( array $summary ): int {
+		$filled = 0;
+		foreach ( Meta_Contract::fields() as $field => $definition ) {
+			unset( $definition );
+			if ( isset( $summary[ $field ] ) && '' !== trim( (string) $summary[ $field ] ) ) {
+				++$filled;
+			}
+		}
+		return $filled;
+	}
+
+	private static function classification_term_count( int $post_id ): int {
+		$count = 0;
+		foreach ( Classification_Contract::fields() as $definition ) {
+			$terms = wp_get_object_terms( $post_id, (string) $definition['taxonomy'], array( 'fields' => 'ids' ) );
+			if ( ! is_wp_error( $terms ) ) {
+				$count += count( $terms );
+			}
+		}
+		return $count;
 	}
 
 	private static function render_feedback(): void {

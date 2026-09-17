@@ -50,6 +50,7 @@ require_once BDC_KB_DIR . 'includes/class-semantic-structure.php';
 require_once BDC_KB_DIR . 'includes/class-knowledge-document.php';
 require_once BDC_KB_DIR . 'includes/class-elementor-projection-plan.php';
 require_once BDC_KB_DIR . 'includes/class-admin-page.php';
+require_once BDC_KB_DIR . 'includes/class-visual-foundation.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
 
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
@@ -81,6 +82,7 @@ if ( defined( 'BDC_KB_SPEC004_G245_PROJECTION_SMOKE_BUILD' ) && BDC_KB_SPEC004_G
 }
 
 \BDC\KnowledgeBase\Plugin::register();
+\BDC\KnowledgeBase\Visual_Foundation::register();
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
 	\BDC\KnowledgeBase\Content_Profile::register();
 }

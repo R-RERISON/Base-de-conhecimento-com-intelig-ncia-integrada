@@ -90,6 +90,28 @@ Antes de alterar runtime:
 12. Criar/atualizar `CONTINUIDADE.md` da SPEC com prompt autossuficiente para novo chat.
 13. Conferir o handoff contra `docs/DEFINITION-OF-DONE.md`.
 
+## Contrato visual obrigatório
+
+A UX-002 foi homologada e fechada em `0.4.0-ux002.3`. A partir dessa baseline, **toda e qualquer nova tela, formulário, tabela, estado, componente ou alteração material de UI do produto deve seguir o contrato visual vigente**.
+
+Antes de implementar ou revisar UI, todo agente deve ler:
+
+1. `ux/002-mockup-visual-foundation/visual-contract-v2.md`;
+2. os mockups aplicáveis em `scr/`;
+3. quando necessário, o Design System e o protótipo da UX-001.
+
+Regras obrigatórias:
+
+- WordPress permanece shell/plataforma; aparência genérica do wp-admin não é resultado final aceitável para a superfície BDC;
+- reutilizar tokens/componentes canônicos antes de criar variantes;
+- usar mockup aplicável como referência de hierarquia, densidade, navegação, estados e iconografia;
+- novas features não podem criar um “micro-design” isolado;
+- validar desktop e breakpoints aplicáveis, foco, teclado, contraste e feedback;
+- alteração material de UI exige evidência visual humana antes de Done/merge;
+- divergência intencional do contrato exige justificativa explícita, risco de regressão e decisão documentada na SPEC/UX-SPEC.
+
+**Gate:** UI funcionalmente correta, mas visualmente divergente do contrato vigente, **não está concluída e não deve ser promovida**.
+
 ## Regra anti-regressão
 
 Nenhuma funcionalidade comprovada dos projetos de referência é considerada migrada apenas porque existe código equivalente.
@@ -164,7 +186,7 @@ Uma SPEC só termina quando:
 - testes passam;
 - segurança passa;
 - compatibilidade WordPress passa;
-- UI segue o Design System;
+- UI segue o Visual Contract vigente e os mockups aplicáveis;
 - acessibilidade básica passa;
 - documentação está atualizada;
 - nenhum dado editorial foi indevidamente alterado;

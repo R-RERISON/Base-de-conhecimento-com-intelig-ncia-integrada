@@ -1,7 +1,7 @@
 # Constituição — Base de Conhecimento com Inteligência Integrada
 
-**Versão:** 1.1.0  
-**Ratificação:** 2026-09-14  
+**Versão:** 1.2.0  
+**Ratificação:** 2026-09-17  
 **Idioma oficial:** Português do Brasil  
 **Mantra constitucional:** **“Quem não sabe onde está, não sabe para onde quer ir”.**
 
@@ -55,7 +55,7 @@ O plugin não deve:
 
 - substituir Elementor;
 - tornar-se editor de posts;
-- escrever em `_elementor_data`;
+- escrever em `_elementor_data` sem gate e autorização explícita aplicável;
 - reescrever silenciosamente `post_content`;
 - publicar posts em nome do autor;
 - alterar conteúdo editorial a partir de IA sem ação editorial explícita no fluxo oficial.
@@ -78,10 +78,10 @@ O plugin pode gerenciar a camada sistêmica ao redor do post:
 - lacunas;
 - saúde;
 - operações;
-- migrações.
+- migrações governadas.
 
 ### II.4 — Projeções não são fonte da verdade
-Índices, chunks, embeddings e Knowledge Records são projeções reconstruíveis. Nunca substituem o post oficial.
+Índices, chunks, embeddings, Knowledge Documents/Records e Projection Plans são projeções reconstruíveis. Nunca substituem o post oficial.
 
 ---
 
@@ -170,7 +170,7 @@ Funcionalidade anterior só é considerada substituída após evidência de pari
 Busca deve ter consultas de referência com expectativas versionadas antes de mudanças de ranking, semantic search, embeddings, reranking ou IA.
 
 ### VI.4 — UI também regride
-Fluxos visuais críticos devem possuir critérios de validação responsiva, acessível e funcional.
+Fluxos visuais críticos devem possuir critérios de validação responsiva, acessível e funcional. Alterações visuais devem ser comparadas com o contrato visual vigente e referências de mockup aplicáveis.
 
 ---
 
@@ -217,17 +217,23 @@ Todas as telas pertencem ao mesmo Design System e à mesma navegação de produt
 
 ## Artigo IX — Design System é contrato
 
-### IX.1 — Origem
-A linguagem visual do KB2Ops é referência inicial.
+### IX.1 — Autoridade visual
+Os mockups versionados em `scr/`, o Design System vigente e o protótipo UI-as-Code aprovado constituem a autoridade visual do produto. A linguagem visual do KB2Ops permanece referência histórica de origem, não runtime nem autorização para divergir dos mockups atuais.
 
 ### IX.2 — Implementação própria
-O novo plugin deve possuir seus próprios tokens/componentes, sem dependência de runtime do KB2Ops.
+O novo plugin deve possuir seus próprios tokens/componentes, sem dependência de runtime do KB2Ops e sem framework visual externo quando CSS/HTML nativos forem suficientes.
 
 ### IX.3 — Pixel faz parte do requisito
-Hierarquia, espaçamento, estados, responsividade, foco, feedback e consistência são critérios funcionais, não acabamento opcional.
+Hierarquia, espaçamento, densidade, tipografia, estados, responsividade, foco, feedback e consistência são critérios funcionais, não acabamento opcional.
 
 ### IX.4 — WordPress Admin continua shell
-Não criar uma segunda sidebar administrativa dentro do wp-admin.
+Não criar uma segunda sidebar administrativa dentro do wp-admin. O WordPress fornece shell, capabilities, navegação administrativa e primitives; isso não obriga a superfície do produto a adotar aparência genérica do wp-admin.
+
+### IX.5 — Mockups devem chegar ao runtime
+Toda tela, formulário, tabela, estado vazio, feedback e componente pertencente ao produto deve convergir para os mockups e Design System vigentes. Uma tela funcionalmente WordPress-first, mas visualmente divergente do contrato do produto, não está concluída.
+
+### IX.6 — Evolução visual progressiva, sem drift
+Não é obrigatório construir todas as telas antecipadamente. É obrigatório que cada nova tela ou alteração material reutilize tokens/componentes canônicos e já nasça no contrato visual vigente. Quando uma tela existente for tocada, ela deve convergir para o contrato em vez de criar mais uma variante. Divergência intencional exige justificativa e evidência.
 
 ---
 
@@ -249,6 +255,11 @@ Microsoft Foundry pode ser o primeiro provedor, mas o domínio não deve depende
 
 ### X.5 — WordPress HTTP API primeiro
 Integrações HTTP devem preferir `wp_remote_get`, `wp_remote_post` e APIs relacionadas.
+
+### X.6 — IA deve reduzir esforço cognitivo e tempo para a resposta
+**A IA deve reduzir o esforço de escrita da equipe, mas principalmente reduzir o esforço de leitura do usuário. O sucesso da base de conhecimento não é a quantidade de conteúdo produzido, e sim a velocidade com que alguém encontra uma resposta confiável.**
+
+Por consequência, funcionalidades de IA devem priorizar descoberta, síntese fundamentada, resposta direta, rastreabilidade e redução de tempo até uma resposta útil. Métricas de volume de conteúdo não substituem métricas de encontrabilidade, confiança, resolução e tempo para resposta.
 
 ---
 
@@ -323,7 +334,7 @@ Código pode usar termos técnicos em inglês quando isso for padrão da platafo
 
 ## Artigo XVI — Governança de Specs
 
-Nenhuma implementação sem SPEC ativa.
+Nenhuma implementação sem SPEC/UX-SPEC ativa.
 
 Cada SPEC deve conter no mínimo:
 
@@ -337,7 +348,7 @@ Cada SPEC deve conter no mínimo:
 - princípio de negação;
 - dados;
 - segurança;
-- UI/UX;
+- UI/UX e referência visual aplicável;
 - testes;
 - aceite;
 - regressão;
@@ -357,6 +368,15 @@ Mudanças nesta Constituição devem:
 4. mapear risco de regressão;
 5. receber nova versão semântica;
 6. atualizar data de ratificação.
+
+### XVII.1 — Emenda 1.2.0
+Problemas tratados: drift entre UX aprovada e runtime com aparência genérica do wp-admin; ausência de objetivo explícito de IA orientado à redução de esforço de leitura/tempo para resposta.
+
+Princípios afetados: Artigos VI, IX, X e XVI.
+
+Alternativa mais simples adotada: preservar WordPress como shell/plataforma e promover mockups/tokens existentes ao runtime, sem criar framework UI paralelo; preservar IA assistiva e acrescentar critério de valor orientado à encontrabilidade e confiança.
+
+Risco de regressão: visual/responsivo/acessibilidade e eventual leitura equivocada de IA como writer autônomo. Mitigação: UX-SPEC dedicada, validação responsiva, sem mudança de contratos de persistência e manutenção explícita da autoridade humana.
 
 ---
 

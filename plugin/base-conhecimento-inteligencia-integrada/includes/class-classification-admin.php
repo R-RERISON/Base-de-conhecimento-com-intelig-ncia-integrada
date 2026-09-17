@@ -121,9 +121,9 @@ final class Classification_Admin {
 		echo '<h2 id="bdc-kb-classification-title">' . esc_html__( 'Classificação de Conhecimento', 'bdc-knowledge-base' ) . '</h2>';
 		echo '<p>' . esc_html__( 'Selecione somente termos canônicos existentes. Valores legados aparecem apenas como referência e nunca são migrados automaticamente.', 'bdc-knowledge-base' ) . '</p>';
 
-		self::render_vocabulary_links();
+		self::render_vocabulary_links( $post_id );
 
-		echo '<form class="bdc-kb-form bdc-kb-classification-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+		echo '<form class="bdc-kb-form bdc-kb-classification-form bdc-kb-field-grid" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '">';
 		echo '<input type="hidden" name="post_id" value="' . esc_attr( (string) $post_id ) . '">';
 		wp_nonce_field( self::NONCE_PREFIX . $post_id, self::NONCE_FIELD );
@@ -132,7 +132,7 @@ final class Classification_Admin {
 			self::render_field( $post_id, $field, $definition, $snapshot['terms'][ $field ] ?? array() );
 		}
 
-		submit_button( __( 'Salvar Classificação', 'bdc-knowledge-base' ), 'secondary' );
+		submit_button( __( 'Salvar Classificação', 'bdc-knowledge-base' ), 'primary' );
 		echo '</form>';
 		echo '</section>';
 	}
@@ -218,24 +218,26 @@ final class Classification_Admin {
 		echo '</details>';
 	}
 
-	private static function render_vocabulary_links(): void {
+	private static function render_vocabulary_links( int $post_id ): void {
 		if ( ! current_user_can( 'manage_categories' ) ) {
 			return;
 		}
 
-		echo '<div class="bdc-kb-vocabulary-links"><strong>' . esc_html__( 'Gerenciar vocabulários:', 'bdc-knowledge-base' ) . '</strong> ';
-		$links = array();
+		echo '<div class="bdc-kb-vocabulary-links">';
+		echo '<span class="bdc-kb-vocabulary-links__label">' . esc_html__( 'Gerenciar vocabulários', 'bdc-knowledge-base' ) . '</span>';
+		echo '<div class="bdc-kb-vocabulary-actions">';
 		foreach ( Classification_Contract::fields() as $definition ) {
 			$url = add_query_arg(
 				array(
-					'taxonomy' => $definition['taxonomy'],
-					'post_type' => Classification_Contract::POST_TYPE,
+					'taxonomy'          => $definition['taxonomy'],
+					'post_type'          => Classification_Contract::POST_TYPE,
+					'bdc_return_post_id' => $post_id,
 				),
 				admin_url( 'edit-tags.php' )
 			);
-			$links[] = '<a href="' . esc_url( $url ) . '">' . esc_html( (string) $definition['label'] ) . '</a>';
+			echo '<a class="bdc-kb-vocabulary-action" href="' . esc_url( $url ) . '"><span class="dashicons dashicons-tag" aria-hidden="true"></span><span>' . esc_html( (string) $definition['label'] ) . '</span></a>';
 		}
-		echo wp_kses_post( implode( ' · ', $links ) );
+		echo '</div>';
 		echo '</div>';
 	}
 

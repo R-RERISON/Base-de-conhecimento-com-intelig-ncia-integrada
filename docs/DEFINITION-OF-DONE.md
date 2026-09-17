@@ -17,7 +17,7 @@ Uma funcionalidade não está pronta porque “funciona na máquina do desenvolv
 
 ## 3. Elementor / Editorial
 
-- [ ] Nenhuma escrita em `_elementor_data`.
+- [ ] Nenhuma escrita em `_elementor_data` sem gate/autorização aplicável.
 - [ ] Nenhuma alteração silenciosa de `post_content`.
 - [ ] Post continua editável/publicável no Elementor.
 - [ ] Dados derivados podem ser reconstruídos.
@@ -40,15 +40,25 @@ Uma funcionalidade não está pronta porque “funciona na máquina do desenvolv
 - [ ] Menor privilégio.
 - [ ] Dados sensíveis e telemetria avaliados.
 
-## 6. UI/UX
+## 6. UI/UX — Visual Contract obrigatório
 
-- [ ] Design System aplicado.
-- [ ] Navegação integrada.
-- [ ] Responsividade validada.
-- [ ] Teclado/foco básicos validados.
+Para qualquer funcionalidade com UI nova ou materialmente alterada:
+
+- [ ] `ux/002-mockup-visual-foundation/visual-contract-v2.md` foi lido e aplicado.
+- [ ] Mockup aplicável em `scr/` foi identificado; se não existir referência direta, isso foi registrado.
+- [ ] Tokens/componentes canônicos BDC foram reutilizados antes de criar variantes.
+- [ ] WordPress permanece shell/plataforma sem aparência genérica do wp-admin como resultado final da superfície BDC.
+- [ ] Navegação integrada e contexto do usuário foram preservados.
+- [ ] Responsividade foi validada em desktop e nos breakpoints aplicáveis de 782px e 520px.
+- [ ] Teclado/foco básicos foram validados.
+- [ ] Contraste e legibilidade foram validados.
 - [ ] Cor não é o único indicador de estado.
-- [ ] Feedback de erro/sucesso é claro.
-- [ ] Não existe visual de “plugin diferente” dentro da plataforma.
+- [ ] Feedback de erro/sucesso/read-only/disabled aplicável é claro.
+- [ ] Iconografia, quando usada, é consistente e não depende de biblioteca externa sem justificativa.
+- [ ] Alteração visual material passou revisão humana contra o mockup/contrato aplicável.
+- [ ] Divergência intencional do contrato possui justificativa, risco e decisão documentados.
+
+**Gate visual:** qualquer item aplicável acima em FAIL/NOT_RUN bloqueia Done e merge. Uma UI funcional, porém visualmente divergente da baseline homologada `0.4.0-ux002.3`, não está concluída.
 
 ## 7. Testes
 
@@ -79,6 +89,7 @@ Quando aplicável:
 - [ ] Hash/NO_CHANGE evita retrabalho.
 - [ ] Ausência de semantic/vector não derruba o core.
 - [ ] Retrieval e evidências são verificáveis.
+- [ ] A solução reduz esforço de leitura/tempo até resposta confiável; volume de conteúdo isoladamente não é métrica de sucesso.
 
 ## 10. Operação
 

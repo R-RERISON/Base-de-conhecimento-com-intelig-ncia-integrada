@@ -7,15 +7,16 @@
 - G-220: PASS.
 - G-230/v1: PASS de determinismo; v1 superseded for AI.
 - G-240: **PASS / CLOSED / PROMOVIDO PARA `main`** com KD 2.1.0.
-- G-245: **IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT.
+- G-245: **IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT / NÃO MERGEAR.
 - T080: **PASS WITH REVIEW ITEMS**.
-- T081: **PASS ambiental**.
-- T082: **PASS LOCAL / CONTRATUAL**.
-- T083: **PASS LOCAL / CONTRATUAL**.
-- T084: **PASS LOCAL / CONTRATUAL**.
-- T085: **PASS LOCAL / CONTRATUAL**.
-- T086 Batches retomáveis: **PASS LOCAL / CONTRATUAL** em `0.4.0-g245-batch.1`.
-- T087 Canário controlado + rollback: **NEXT / PREPARAÇÃO READ-ONLY**.
+- T081: **PASS AMBIENTAL**.
+- T082–T086: **PASS LOCAL / CONTRATUAL**, com T081 também comprovado ambientalmente.
+- T083B Journal Durable Storage: **PASS LOCAL / SMOKE AMBIENTAL PENDENTE** em `0.4.0-g245-canary-prep.1`.
+- T087A Canary Readiness: **PASS LOCAL / READ-ONLY**.
+- T087B-prep Exclusive Migration Lock: **PASS LOCAL**.
+- T087 canário mutável + rollback real: **BLOCKED / NÃO EXECUTADO**.
+- T088 Runbook: **FROZEN PROCEDURE / EXECUTION BLOCKED**.
+- T089 autorização/release de writer: NOT_RUN.
 - G-250: NOT_RUN.
 
 ## Baseline visual obrigatória
@@ -26,11 +27,12 @@ Arquivos visuais canônicos devem permanecer fora do diff G-245 vs `main`: `clas
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 
-**Regra:** nenhuma escrita editorial está autorizada por T080–T086.
+**Regra:** nenhum PASS abaixo autoriza escrita editorial por si só.
 
 ### T080 — Production Preflight — PASS WITH REVIEW ITEMS
 
 - [x] Preflight read-only; blockers 0; writer/migration false.
+- [x] `faq_wd` classificado como legacy orphan e `wpt` como dependência legada desconhecida.
 - [x] Evidência: `evidence/g245-preflight-summary-20260916T215612Z.json`.
 
 ### T081 — Projection Plan — PASS AMBIENTAL
@@ -43,64 +45,83 @@ Arquivos visuais canônicos devem permanecer fora do diff G-245 vs `main`: `clas
 
 ### T082 — Gateway — PASS LOCAL / CONTRATUAL
 
-- [x] `elementor-gateway-contract-v1.md`.
-- [x] Elementor `4.1.0` homologado; ausente blocking; diferente review_required.
+- [x] Elementor `4.1.0` homologado; ausente => blocking; versão divergente => review_required.
 - [x] feature flag default false + capability + hard phase gate.
-- [x] writer/migration false.
-- [x] 45 assertions PASS.
+- [x] 45 assertions PASS; writer/migration false.
 
-### T083 — Journal / rollback — PASS LOCAL / CONTRATUAL
+### T083/T084 — Journal contract + Stale-source — PASS LOCAL / CONTRATUAL
 
-- [x] `journal-rollback-contract-v1.md`.
-- [x] write-ahead/capsule/hashes/transições/rollback/idempotência contratados.
-- [x] `journal_persisted=false`; storage durável ainda pendente antes de qualquer write real.
+- [x] write-ahead/capsule/hashes/transições/rollback/idempotência.
+- [x] fresh/stale/blocking fail-closed.
+- [x] 38 assertions combinadas PASS.
 
-### T084 — Stale-source guard — PASS LOCAL / CONTRATUAL
+### T085 — Dry-run — PASS LOCAL / CONTRATUAL
 
-- [x] `stale-source-guard-contract-v1.md`.
-- [x] fresh/stale/blocking e fail-closed.
-- [x] T083+T084: 38 assertions PASS.
-
-### T085 — Dry-run zero-write — PASS LOCAL / CONTRATUAL
-
-- [x] `migration-dry-run-contract-v1.md`.
 - [x] ready/review_required/noop/blocked.
 - [x] review_required não simula journal/apply.
-- [x] stale/gateway blocking/unsafe plan fail-closed.
-- [x] hash/JSON determinísticos.
+- [x] determinismo/hash e safety invariants.
 - [x] 38 assertions PASS + lint PASS.
 
 ### T086 — Batches retomáveis — PASS LOCAL / CONTRATUAL
 
-- [x] `migration-batch-plan-contract-v1.md`.
-- [x] somente dry-runs `ready` elegíveis.
-- [x] ordenação canônica e dedupe por `post_id`.
-- [x] duplicata conflitante fail-closed.
-- [x] batch size 1–100; default 25.
-- [x] cursor versionado com `cohort_hash`, `next_offset` e `cursor_hash`.
-- [x] cursor adulterado e cursor stale fail-closed.
-- [x] resume sem repetir itens concluídos.
-- [x] zero duplicidade entre batches; cobertura exata do cohort.
-- [x] `cohort_hash` e `batch_hash` determinísticos.
-- [x] `persists_checkpoint=false`; não existe executor.
-- [x] writer/migration/execution false.
-- [x] **37 assertions PASS + lint PASS**.
+- [x] cohort determinístico, dedupe, cursor versionado, resume e stale/tamper fail-closed.
+- [x] zero duplicidade e cobertura exata do cohort.
+- [x] não existe executor; execution/writer/migration false.
+- [x] 37 assertions PASS + lint PASS.
+
+### T083B — Journal Durable Storage — PASS LOCAL / SMOKE PENDENTE
+
+- [x] storage WordPress-first escolhido: postmeta privado append-only `_bdc_kb_migration_journal`.
+- [x] custom table/options/comments/file storage rejeitados por princípio de negação.
+- [x] rollback capsule em Base64 para round-trip byte-exato, mantendo hashes sobre payload original.
+- [x] cadeia linear por `parent_event_id`; fork/retry stale bloqueados.
+- [x] `manage_options`, post existente, limite de payload e readback obrigatório.
+- [x] falha de readback tenta remover imediatamente o evento recém-criado.
+- [x] **22/22 assertions locais PASS + lint PASS**.
+- [x] smoke ambiental implementado e **desabilitado por padrão**.
+- [ ] executar smoke em homologação e obter `gate.t083b_storage_pass=true`.
+
+Artefatos: `journal-storage-contract-v1.md`, `class-elementor-migration-journal-store.php`, `class-elementor-migration-journal-smoke.php`, `tests/unit/spec004-journal-durable-store.php`.
+
+### T087A — Canary Readiness — PASS LOCAL / READ-ONLY
+
+- [x] escopo 1, journal durável, capsule íntegro, dry-run ready, source fresh, versão homologada e identidade dos hashes.
+- [x] mesmo com autorização simulada, `execution_allowed=false` e executor separado obrigatório.
+- [x] 25 assertions PASS.
+
+### T087B-prep — Exclusive Migration Lock — PASS LOCAL
+
+- [x] postmeta privado único `_bdc_kb_migration_lock`.
+- [x] aquisição exclusiva com `add_post_meta(..., true)`.
+- [x] token obrigatório para release; release repetido idempotente.
+- [x] TTL 30–900s; lock expirado não sofre takeover automático.
+- [x] **18/18 assertions PASS + lint PASS**.
+- [x] lock não concede writer/migration.
+
+Artefatos: `migration-lock-contract-v1.md`, `class-elementor-migration-lock.php`, `tests/unit/spec004-migration-lock.php`.
+
+### T088 — Runbook — FROZEN PROCEDURE / EXECUTION BLOCKED
+
+- [x] sequência freeze → journal → stale recheck → write → verificação → rollback definida.
+- [x] abort conditions, Authorization Pack, batches e produção definidos.
+- [x] primeiro canário exige rollback real comprovado.
+- [x] `t088-production-runbook-v1.md` congelado.
 
 ### Próximos subgates
 
-- [ ] T087 Canário controlado e rollback comprovado.
-- [ ] T088 Runbook de produção.
-- [ ] T089 Autorização explícita posterior para qualquer writer real.
-
-## Regra para T087
-
-T087 pode ter sua preparação/readiness implementada sem writer. **A execução real do canário não está autorizada por este avanço.** Antes de qualquer mutação são obrigatórios journal durável, stale recheck imediatamente antes do write, escopo canário mínimo, rollback comprovável e autorização humana explícita.
+- [ ] validar T083B ambientalmente em homologação.
+- [ ] T087C: menor executor mutável version-gated, **disabled-by-default**, sem habilitá-lo.
+- [ ] selecionar candidato canário de baixo risco e gerar Authorization Pack.
+- [ ] obter autorização específica para 1 canário.
+- [ ] executar canário + rollback real e fechar T087.
+- [ ] T089: somente após evidências, decidir autorização de writer/release e eventual escalada para batches.
 
 ## Regras constitucionais
 
-1. PASS de T081–T086 não autoriza persistência editorial.
-2. Journal durável é obrigatório antes do primeiro caminho mutável.
-3. Stale-source deve ser revalidado imediatamente antes de qualquer write futuro.
-4. Writer/migration permanecem disabled-by-default até canário, rollback e autorização explícita.
-5. UX-002 é contrato visual obrigatório e não pode regredir.
-6. Trabalho incompleto permanece fora da `main` até gates e revisão.
+1. Journal durável deve existir antes de qualquer byte editorial alterado.
+2. Stale-source deve ser revalidado imediatamente antes do write.
+3. Lock exclusivo é obrigatório do freeze até commit/rollback operacional.
+4. Writer/migration permanecem disabled-by-default.
+5. Nenhuma autorização genérica de continuidade equivale à autorização do canário específico.
+6. UX-002 não pode regredir.
+7. Trabalho incompleto permanece fora da `main` até gates e revisão.

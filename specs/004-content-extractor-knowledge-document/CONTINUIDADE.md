@@ -19,7 +19,7 @@
 - T100 batch: **SUPERSEDED BEFORE EXECUTION**.
 - T100A Workspace: **PASS LOCAL**.
 - T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
-- T100C Core Blocks Post Activity: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+- T100C Core Blocks Post Activity: **PASS AMBIENTAL / READ-ONLY**.
 
 ## Evidência T099C
 

@@ -2,23 +2,34 @@
 
 ## Estado atual
 
-- SPEC-003: concluída.
+- SPEC-001/002/003: concluídas.
 - R-200: PASS.
 - R-210: PASS.
 - G-220: PASS ambiental.
 - G-230/v1: PASS de determinismo; v1 superseded for AI.
 - G-240/v1: FAIL CONTROLADO — perda estrutural.
-- G-240/v2/KD 2.0.1: full-corpus técnico PASS, porém aceite humano A/B **FAIL CONTROLADO — HIERARCHY FIDELITY**.
-- KD 2.1.0 / build `0.4.0-acceptance.12`: **PASS técnico full-corpus + PASS humano 8/8**.
-- **G-240: CLOSED / PASS.**
-- evidência técnica resumida: `evidence/kd-v21-smoke-summary-20260916T172538Z.json`.
-- evidência humana final: `evidence/g240-kd21-acceptance-20260916T193359Z.json`.
+- G-240/v2/KD 2.0.1: full-corpus técnico PASS, porém aceite humano A/B FAIL CONTROLADO — HIERARCHY FIDELITY.
+- KD 2.1.0 / build `0.4.0-acceptance.12`: PASS técnico full-corpus + PASS humano 8/8.
+- **G-240: CLOSED / PASS e promovido para `main`.**
+- merge de referência G-240: `32a696386bf2ab5574d4d7725db78636fa51f36c`.
+- evidência técnica: `evidence/kd-v21-smoke-summary-20260916T172538Z.json`.
+- evidência humana: `evidence/g240-kd21-acceptance-20260916T193359Z.json`.
 - contrato KD 2.1.0 congelado: `knowledge-document-contract-v2.1.0.md`.
-- PR #3 permanece DRAFT/NÃO MERGEAR até revisão do fechamento e preparação segura do próximo gate.
-- **G-245: READY — ainda não iniciado.**
-- writer/migration Elementor permanecem disabled-by-default.
+- **G-245: IN PROGRESS somente em `spec004-g245-production-readiness`; PR #4 DRAFT.**
+- writer/migration Elementor permanecem não autorizados.
 
-## Evidência técnica que fecha T079N
+## Baseline comprovada em `main`
+
+A `main` contém o fechamento G-240 e permanece separada do trabalho G-245.
+
+Knowledge Document:
+
+- schema `2.1.0`;
+- Content Extractor/KD read-only;
+- relações hierárquicas conservadoras e auditáveis;
+- `review_required` preserva limitações conhecidas sem ser confundido com `not_ready`.
+
+## Evidência técnica que fechou G-240
 
 Ambiente de homologação:
 
@@ -26,7 +37,6 @@ Ambiente de homologação:
 - PHP 8.5.10;
 - Elementor 4.1.0;
 - plugin `0.4.0-acceptance.12`;
-- Knowledge Document schema `2.1.0`;
 - DOMDocument ativo.
 
 Full-corpus:
@@ -38,28 +48,24 @@ Full-corpus:
 - throwables: 0;
 - hash mismatches: 0;
 - canonical JSON mismatches: 0;
-- structure_incomplete: 0 nas duas passagens;
+- structure_incomplete: 0;
 - `not_ready`: 0;
-- fingerprint editorial antes/depois idêntico;
+- fingerprint editorial before/after idêntico;
 - changed posts: 0;
 - gate técnico: PASS.
 
-Readiness observado:
+Readiness:
 
 - candidate_ready: 387;
 - review_required: 233;
 - not_applicable: 2;
 - not_ready: 0.
 
-O resolver numérico permaneceu deliberadamente conservador. Foram observados 6 conflitos de numeração e 964 ocorrências agregadas de ambiguidade. Esses sinais permanecem `review_required`; nenhum mismatch explícito de relationship fidelity bloqueante foi detectado no corpus.
+## Evidência humana que fechou G-240
 
-O artefato bruto da execução é `bdc-kb-spec004-kd-v2-smoke-20260916-172538.json`, SHA-256 `4ae43163f2aeb96f8c8d2677b83bf236d5b3f7a505281f1058c57394efdcffa5`. O repositório mantém um resumo verificável com esse hash para rastreabilidade.
+Mesmo conjunto de oito slots:
 
-## Evidência humana que fecha T079O/T079P
-
-Mesmo conjunto de oito slots usado nas rodadas anteriores:
-
-- expected/reviewed: 8/8;
+- reviewed: 8/8;
 - human_passed: 8/8;
 - gate_passed: 8/8;
 - coverage: 8/8;
@@ -72,61 +78,58 @@ Mesmo conjunto de oito slots usado nas rodadas anteriores:
 - system not_ready: 0;
 - gate global: true.
 
-Os três casos que motivaram KD 2.1 foram resolvidos no aceite humano:
+Os casos 1290, 370 e 1307, que motivaram KD 2.1, fecharam com estrutura humana preservada.
 
-- post 1290: structure preserved = true;
-- post 370: structure preserved = true;
-- post 1307: structure preserved = true.
+## Estado de G-245
 
-O slot 36431 também fecha com order preserved = true e gate individual = true. A execução anterior 7/8 foi descartada como marcação humana incompleta, não como regressão técnica.
+Branch canônica de trabalho:
 
-Artefato final: `evidence/g240-kd21-acceptance-20260916T193359Z.json`.
+`spec004-g245-production-readiness`
 
-## Decisão formal — G-240
+PR:
 
-**G-240 PASS / CLOSED.**
+`#4` — DRAFT / NÃO MERGEAR até fechamento dos subgates aplicáveis.
 
-Critérios satisfeitos:
+T080 Production Preflight foi executado read-only em homologação e registrou:
 
-1. full-corpus determinístico em duas passagens;
-2. zero mutação editorial;
-3. zero structure_incomplete;
-4. zero `not_ready`;
-5. relationship fidelity sem mismatch bloqueante;
-6. mesmos oito A/B revisados;
-7. 8/8 estrutura humana preservada;
-8. 8/8 gate_pass;
-9. zero stale/repeatability/sample mismatch;
-10. limitações restantes refletidas explicitamente como `review_required`.
+- blockers: 0;
+- review items: shortcodes legados `faq_wd`/`wpt` sem handler e loopback não testado;
+- corpus 622 → 622;
+- fingerprint editorial preservado;
+- `writer_allowed=false`;
+- `migration_execution_allowed=false`;
+- zero execução de shortcodes;
+- zero rede externa;
+- zero persistência;
+- zero escrita editorial.
 
-## Próximo estágio — G-245
+Evidência G-245/T080 permanece na branch G-245 e não compõe a baseline runtime da `main`.
 
-G-245 deixa de estar bloqueado por G-240 e passa para **READY**, porém nenhuma escrita editorial está autorizada automaticamente.
+## Próximo passo exato
 
-Próxima sequência obrigatória:
+Continuar a partir do PR #4, revalidando o estado real do branch antes de qualquer mudança:
 
-1. estabelecer baseline de G-245 e inventário atual de compatibilidade Elementor/produção;
-2. executar **Production Preflight read-only**;
-3. construir matriz de compatibilidade por tipo de conteúdo/versão/widget;
-4. produzir **Projection Plan read-only** sem persistência;
-5. definir `Elementor_Gateway` version-gated com writer disabled-by-default;
-6. definir journal, rollback, stale-source guard e idempotência;
-7. executar dry-run sem escrita;
-8. só após subgates aprovados planejar canário controlado;
-9. migration/writer real exige autorização explícita posterior e rollback comprovado.
+1. conferir `AGENTS.md`;
+2. conferir `.specify/PROJECT_MANIFEST.md`;
+3. conferir `.specify/memory/constitution.md`;
+4. conferir esta SPEC e `docs/DEFINITION-OF-DONE.md`;
+5. confirmar `main`, branch G-245, head do PR #4 e divergências;
+6. fechar Projection Plan read-only de forma determinística e ambientalmente validada;
+7. manter writer disabled-by-default;
+8. somente depois avançar para journal/rollback, stale-source guard, dry-run e canário.
+
+## Critério objetivo do próximo passo
+
+Projection Plan só fecha quando houver contrato congelado, testes locais PASS, repetibilidade, zero-write comprovado e evidência ambiental full-corpus sem mutação editorial. A existência do plano não autoriza writer.
 
 ## Guardrails preservados
 
-- PR #3 continua DRAFT / NÃO MERGEAR por enquanto.
-- Content Extractor/KD continuam read-only.
-- nenhum writer Elementor está habilitado.
-- nenhuma migration Elementor está autorizada.
-- nenhuma persistência de KD/resultado foi introduzida.
-- produção não será usada como ambiente experimental.
-- toda futura mutação deve ser version-gated, auditável, retomável, idempotente e reversível.
-
-## Princípio de continuidade
+- WordPress/Elementor continuam fonte editorial;
+- Knowledge Document é derivado reconstruível;
+- nenhum writer Elementor está autorizado;
+- nenhuma migration Elementor está autorizada;
+- nenhuma persistência de KD foi autorizada;
+- produção não é ambiente experimental;
+- GO de homologação != GO de produção.
 
 > Quem não sabe onde está, não sabe para onde quer ir.
-
-Baseline agora conhecida: **KD 2.1.0 / acceptance.12 / G-240 PASS**. O próximo objetivo é abrir G-245 apenas por meio de preflight e projeção read-only, preservando essa baseline sem regressão.

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança, Content Extractor e Knowledge Document determinísticos.
- * Version: 0.4.0-acceptance.12
+ * Version: 0.4.0-ux002.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-acceptance.12' );
+define( 'BDC_KB_VERSION', '0.4.0-ux002.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -47,6 +47,7 @@ require_once BDC_KB_DIR . 'includes/class-canonical-json.php';
 require_once BDC_KB_DIR . 'includes/class-semantic-structure.php';
 require_once BDC_KB_DIR . 'includes/class-knowledge-document.php';
 require_once BDC_KB_DIR . 'includes/class-admin-page.php';
+require_once BDC_KB_DIR . 'includes/class-visual-foundation.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
 
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
@@ -72,6 +73,7 @@ if ( defined( 'BDC_KB_SPEC004_PIPELINE_DIAG_BUILD' ) && BDC_KB_SPEC004_PIPELINE_
 }
 
 \BDC\KnowledgeBase\Plugin::register();
+\BDC\KnowledgeBase\Visual_Foundation::register();
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
 	\BDC\KnowledgeBase\Content_Profile::register();
 }

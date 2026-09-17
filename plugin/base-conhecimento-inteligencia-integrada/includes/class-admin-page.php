@@ -164,6 +164,13 @@ final class Admin_Page {
 			return;
 		}
 
+		$context = Post_Management_Context::build( $post_id );
+		if ( is_wp_error( $context ) ) {
+			self::render_inline_error( 'Não foi possível carregar o contexto técnico deste artigo.' );
+			self::render_back_link();
+			return;
+		}
+
 		$tab = self::get_request_tab();
 
 		self::render_context_header( $post, $summary );
@@ -175,6 +182,11 @@ final class Admin_Page {
 		echo '<div class="bdc-kb-workspace-layout">';
 		echo '<main class="bdc-kb-workspace-main" id="bdc-kb-workspace-main">';
 		switch ( $tab ) {
+			case 'content':
+			case 'intelligence':
+			case 'core_blocks':
+				Post_Management_Activities::render( $tab, $post_id, $context );
+				break;
 			case 'summary':
 				self::render_summary_panel( $post_id, $summary );
 				break;
@@ -193,7 +205,7 @@ final class Admin_Page {
 				break;
 		}
 		echo '</main>';
-		self::render_context_sidebar( $post_id, $post, $summary );
+		self::render_context_sidebar( $post_id, $post, $summary, $context );
 		echo '</div>';
 	}
 
@@ -221,8 +233,8 @@ final class Admin_Page {
 		echo '</header>';
 	}
 
-	/** @param object $post WP_Post-like object. @param array<string,mixed> $summary */
-	private static function render_context_sidebar( int $post_id, object $post, array $summary ): void {
+	/** @param object $post WP_Post-like object. @param array<string,mixed> $summary @param array<string,mixed> $context */
+	private static function render_context_sidebar( int $post_id, object $post, array $summary, array $context ): void {
 		$status_object = get_post_status_object( (string) $post->post_status );
 		$status_label  = is_object( $status_object ) ? (string) $status_object->label : (string) $post->post_status;
 		$filled        = self::summary_filled_count( $summary );
@@ -235,7 +247,8 @@ final class Admin_Page {
 		echo '<div class="bdc-kb-domain-heading"><h3>' . esc_html__( 'Contexto do artigo', 'bdc-knowledge-base' ) . '</h3><p>' . esc_html__( 'Informação editorial e governança em leitura.', 'bdc-knowledge-base' ) . '</p></div>';
 		echo '<dl class="bdc-kb-context-list">';
 		echo '<div><dt>' . esc_html__( 'Status editorial', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-badge bdc-kb-badge--success">' . esc_html( $status_label ) . '</span></dd></div>';
-		echo '<div><dt>' . esc_html__( 'Fonte editorial', 'bdc-knowledge-base' ) . '</dt><dd><strong>WordPress / Elementor</strong></dd></div>';
+		$source_context = is_array( $context['source'] ?? null ) ? $context['source'] : array();
+		echo '<div><dt>' . esc_html__( 'Fonte editorial', 'bdc-knowledge-base' ) . '</dt><dd><strong>' . esc_html( (string) ( $source_context['label'] ?? 'Indisponível' ) ) . '</strong></dd></div>';
 		echo '<div><dt>' . esc_html__( 'Summary', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $filled . '/' . count( Meta_Contract::fields() ) . ' campos preenchidos' ) . '</dd></div>';
 		echo '<div><dt>' . esc_html__( 'Classificação', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $term_count > 0 ? $term_count . ' conceito(s)' : 'Sem termos canônicos' ) . '</dd></div>';
 		echo '<div><dt>' . esc_html__( 'Review', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-state-badge bdc-kb-state-' . esc_attr( $review_state ) . '">' . esc_html( $review_label ) . '</span></dd></div>';
@@ -246,13 +259,7 @@ final class Admin_Page {
 	}
 
 	private static function render_tabs( int $post_id, string $active_tab ): void {
-		$tabs = array(
-			'overview'       => array( 'label' => 'Visão geral', 'icon' => 'grid-view' ),
-			'summary'        => array( 'label' => 'Summary', 'icon' => 'media-text' ),
-			'classification' => array( 'label' => 'Classificação', 'icon' => 'tag' ),
-			'review'         => array( 'label' => 'Review & Governança', 'icon' => 'yes-alt' ),
-			'history'        => array( 'label' => 'Histórico', 'icon' => 'backup' ),
-		);
+		$tabs = Post_Activity_Registry::definitions();
 
 		echo '<nav class="bdc-kb-tabs" aria-label="' . esc_attr__( 'Domínios do Knowledge Workspace', 'bdc-knowledge-base' ) . '" data-bdc-workspace-tabs>';
 		foreach ( $tabs as $tab => $definition ) {
@@ -278,8 +285,11 @@ final class Admin_Page {
 		echo '<h3 id="bdc-kb-overview-title">' . esc_html__( 'Visão geral do conhecimento', 'bdc-knowledge-base' ) . '</h3>';
 		echo '<p>' . esc_html__( 'Use as abas para trabalhar em cada domínio sem perder o contexto do artigo.', 'bdc-knowledge-base' ) . '</p>';
 		echo '<div class="bdc-kb-overview-grid">';
+		self::render_overview_card( 'Conteúdo', 'Fonte editorial, estrutura e hashes técnicos deste artigo.', self::workspace_url( $post_id, 'content' ), 'Abrir Conteúdo', 'text-page' );
 		self::render_overview_card( 'Summary', 'Conteúdo narrativo canônico da SPEC-001.', self::workspace_url( $post_id, 'summary' ), 'Abrir Summary', 'media-text' );
 		self::render_overview_card( 'Classificação', 'Vocabulários canônicos e relações taxonômicas da SPEC-002.', self::workspace_url( $post_id, 'classification' ), 'Abrir Classificação', 'tag' );
+		self::render_overview_card( 'Inteligência', 'Análises e sugestões de IA centralizadas no contexto deste artigo.', self::workspace_url( $post_id, 'intelligence' ), 'Abrir Inteligência', 'lightbulb' );
+		self::render_overview_card( 'Core Blocks', 'Prontidão, auditoria e estado da migração editorial canônica.', self::workspace_url( $post_id, 'core_blocks' ), 'Abrir Core Blocks', 'block-default' );
 		self::render_overview_card( 'Review & Governança', 'Estado atual: ' . $state_label . '.', self::workspace_url( $post_id, 'review' ), 'Abrir Review', 'yes-alt' );
 		self::render_overview_card( 'Histórico', 'Linha do tempo read-only das decisões de governança registradas.', self::workspace_url( $post_id, 'history' ), 'Abrir Histórico', 'backup' );
 		echo '</div>';
@@ -498,10 +508,7 @@ final class Admin_Page {
 
 	private static function get_request_tab(): string {
 		if ( isset( $_GET['tab'] ) && is_scalar( $_GET['tab'] ) ) {
-			$tab = sanitize_key( wp_unslash( (string) $_GET['tab'] ) );
-			return in_array( $tab, array( 'overview', 'summary', 'classification', 'review', 'history' ), true )
-				? $tab
-				: self::DEFAULT_TAB;
+			return Post_Activity_Registry::normalize( wp_unslash( (string) $_GET['tab'] ) );
 		}
 
 		if ( isset( $_GET['bdc_summary_status'] ) ) {

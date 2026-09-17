@@ -107,9 +107,23 @@ Estado G-245:
 - T082–T086: gates defensivos concluídos local/contratualmente;
 - T083B Durable Journal Storage: PASS ambiental;
 - T087A/T087B-prep: readiness/lock concluídos sem writer;
-- **ADR-004-001 aceita:** WordPress Core Blocks passam a ser destino editorial canônico;
+- ADR-004-001 aceita: WordPress Core Blocks são o destino editorial canônico futuro;
 - Elementor writer/T087C antigo: SUPERSEDED antes de implementação;
-- próximo gate: **T090 Block Projection Contract / Plan read-only**.
+- T090 Block Projection v1.0: PASS LOCAL / READ-ONLY;
+- T091 Block Projection full-corpus: **PASS AMBIENTAL** sobre 623 posts;
+- T092 Block Projection v1.1: **PASS LOCAL / READ-ONLY**, 25/25 assertions + lint;
+- T093 full-corpus v1.1 + diagnóstico KD: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
+
+T091 comprovou duas passagens 623/623, zero errors/throwables/hash mismatches/safety violations, fingerprint editorial idêntico e `gate_result.t091_block_projection_pass=true`.
+
+Gaps observados no T091:
+
+- `KNOWLEDGE_DOCUMENT_REVIEW_REQUIRED`: 233;
+- `BLOCK_PROJECTION_UNSUPPORTED_KIND:image`: 40;
+- `BLOCK_PROJECTION_TABLE_SPAN_REVIEW`: 32;
+- `BLOCK_PROJECTION_UNSUPPORTED_KIND:quote`: 8.
+
+T092 resolveu apenas o gap comprovadamente seguro: `quote → core/quote`. Imagens continuam em review até existir proveniência de mídia suficiente; table spans continuam review.
 
 ## Fonte da verdade e fronteiras
 

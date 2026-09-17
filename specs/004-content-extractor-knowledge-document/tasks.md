@@ -6,69 +6,41 @@
 - R-210: PASS.
 - G-220: PASS.
 - G-230/v1: PASS de determinismo; v1 superseded for AI.
-- G-240: **PASS / CLOSED / PROMOVIDO PARA `main`** com KD 2.1.0.
-- G-245: **REBASELINED / IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT / NÃO MERGEAR.
-- ADR-004-001: **ACEITA** — WordPress Core Blocks como destino editorial canônico.
-- T083B Durable Journal Storage: **PASS AMBIENTAL**.
-- T087C writer Elementor: **CANCELADO / SUPERSEDED antes de implementação**.
-- T090 Block Projection v1.0: **PASS LOCAL / READ-ONLY**.
-- T091 Block Projection full-corpus: **PASS AMBIENTAL**.
-- T092 Block Projection v1.1: **PASS LOCAL / READ-ONLY**.
-- T093 full-corpus + diagnóstico KD: **PASS AMBIENTAL**.
-- T094 Editorial Fidelity Inventory: **PASS AMBIENTAL**.
-- T095 Migration Fidelity Source v1: **PASS LOCAL / READ-ONLY**.
-- T096 Lossless Core Block Serialization + round-trip: **PASS AMBIENTAL**.
-- T097 Static Editorial Parity + generic stale-source: **PASS AMBIENTAL**.
-- T098 Block Migration Protection: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**, 24/24 assertions + lint.
+- G-240: PASS/CLOSED/main com KD 2.1.0.
+- G-245: REBASELINED / IN PROGRESS; PR #4 DRAFT / NÃO MERGEAR.
+- ADR-004-001: ACEITA — WordPress Core Blocks como destino editorial canônico.
+- T083B Durable Journal Storage: PASS AMBIENTAL.
+- T087C writer Elementor: CANCELADO / SUPERSEDED antes de implementação.
+- T090: PASS LOCAL / READ-ONLY.
+- T091: PASS AMBIENTAL.
+- T092: PASS LOCAL / READ-ONLY.
+- T093: PASS AMBIENTAL.
+- T094: PASS AMBIENTAL.
+- T095 Migration Fidelity Source v1: PASS LOCAL / READ-ONLY.
+- T096 Lossless Core Block Serialization: PASS AMBIENTAL.
+- T097 Static Editorial Parity + stale-source: PASS AMBIENTAL.
+- T098 Block Migration Protection: PASS LOCAL / HOMOLOGAÇÃO PENDENTE, 24/24 assertions.
 - G-250: NOT_RUN.
 
-## Baseline visual obrigatória
+## Baseline visual
 
-UX-002 `0.4.0-ux002.3` permanece contrato visual obrigatório. G-245 não altera arquivos visuais canônicos sem UX-SPEC/aceite.
+UX-002 `0.4.0-ux002.3` permanece contrato visual obrigatório.
 
-## Arquitetura editorial vigente
+## Arquitetura
 
-- `WP_Post.post_content` + WordPress Core Blocks = destino editorial futuro;
-- plugin Gutenberg = não dependência;
-- Elementor = source adapter legado temporário;
-- nenhum novo writer em `_elementor_data`;
-- KD 2.1 = modelo semântico/IA, não representação editorial lossless;
-- Migration Fidelity Source + Lossless Core Serializer = trilha de migração fiel.
+- `WP_Post.post_content` + WordPress Core Blocks = destino editorial canônico futuro.
+- plugin Gutenberg = não dependência.
+- Elementor = source adapter legado temporário.
+- nenhum writer `_elementor_data` como destino.
+- KD = modelo semântico/IA/guardrail.
+- Migration Fidelity Source + Lossless Serializer = trilha editorial lossless.
 
-## Baseline ambiental — T096/T097
+## T097 — PASS AMBIENTAL
 
-Corpus: **623 posts**.
+Evidência: `evidence/g245-editorial-parity-t097-20260917T184418Z.json`.
+SHA-256 bruto: `6466fb0830d9ba65e79da9dc69b90da6a08fb4286391517eb0663849b10babec`.
 
-Source kinds: legacy_html 536; plain_text 41; elementor 34; mixed 5; gutenberg 4; empty 3.
-
-T096:
-
-- source `ready`: 615;
-- `review_required`: 5;
-- `not_applicable`: 3;
-- `serialized_in_memory`: 611;
-- `native_noop`: 4;
-- zero errors/throwables/safety violations;
-- zero raw round-trip / parse-serialize / hash mismatches;
-- `t096_lossless_roundtrip_pass=true`.
-
-T097:
-
-- Core registry: `core/freeform` e `core/shortcode` presentes;
-- parity `pass`: 611;
-- `native_noop`: 4;
-- `not_applicable`: 3;
-- `review_required`: 5;
-- stale `fresh`: 623;
-- zero parity mismatch, zero stale source, zero manifest hash mismatch;
-- fingerprint editorial before/after idêntico;
-- `t097_static_editorial_parity_pass=true`.
-
-Evidência:
-`evidence/g245-editorial-parity-t097-20260917T184418Z.json`.
-
-SHA-256 do JSON bruto recebido:
-`6466fb0830d9ba65e79da9dc69b90da6a08fb4286391517eb0663849b10babec`.
+Resultado: 623/623 em duas passagens; Core registry PASS; errors/throwables/safety/parity/stale/manifest mismatches 0; parity pass 611; native_noop 4; not_applicable 3; review_required 5; stale fresh 623; fingerprint editorial unchanged; `t097_static_editorial_parity_pass=true`.
 
 ## T098 — Block Migration Protection
 
@@ -83,51 +55,46 @@ Runtime:
 - `class-block-migration-lock.php`;
 - `class-block-migration-readiness-smoke.php`.
 
-Validação local: **24/24 assertions PASS** + lint das novas classes.
+Local: 24/24 assertions PASS + lint.
 
-### Invariantes
+Invariantes:
 
-- nenhum writer foi implementado;
-- `execution_allowed=false`;
-- `writer_allowed=false`;
-- `migration_execution_allowed=false`;
-- source `mixed` continua review;
-- journal deve preceder write futuro;
-- stale recheck deve ocorrer imediatamente antes de write futuro;
+- writer/execution/migration allowed = false;
+- journal obrigatório antes de write futuro;
+- stale recheck imediatamente antes de write futuro;
 - lock exclusivo obrigatório;
-- rollback bloqueia alvo alterado;
-- batch planner usa cursor versionado, cohort hash, sem duplicidade;
+- rollback stale bloqueado;
+- source mixed permanece review;
+- batch cursor versionado, cohort hash e zero duplicidade;
 - T098 smoke não persiste journal e não adquire lock.
 
-Pacote de homologação:
+Pacote:
 
 - `0.4.0-g245-readiness-t098.1`;
 - SHA-256 `df08c57d9c7b7c6df8a66b026ebec1bd6c3d16e993c92ea65afac122e6d63ddf`;
-- 50 PHP files lint PASS pré/pós ZIP;
+- 50 PHP lint PASS pré/pós ZIP;
 - UX-002 byte parity PASS;
-- T097 smoke OFF;
-- T098 smoke ON;
 - writers OFF.
 
 ## Próximos subgates
 
 - [ ] executar T098 e versionar evidência.
-- [ ] T099A: smoke mutável apenas do novo journal store + lock em 1 artigo de homologação, com cleanup imediato e sem write editorial.
-- [ ] T099B: selecionar automaticamente 1 `legacy_html` de baixo risco e gerar Authorization Pack completo.
-- [ ] T099C: canário real de 1 artigo + verificação + rollback comprovado.
+- [ ] T099A: journal store + lock smoke com cleanup, sem write editorial.
+- [ ] T099B: selecionar 1 `legacy_html` de baixo risco e gerar Authorization Pack.
+- [ ] T099C: canário real de 1 artigo + rollback, somente com autorização específica.
 - [ ] T100: batches homologados.
-- [ ] T101: inventário de dependência residual Elementor e gate de retirada futura.
+- [ ] T101: dependência residual Elementor / gate de retirada.
 - [ ] G-250 Lifecycle/RC.
 
-## Regras constitucionais
+## Regras
 
-1. WordPress Core Blocks são o destino canônico futuro.
-2. Plugin Gutenberg não é dependência de produção.
-3. Elementor permanece até dependência zero; nunca é removido automaticamente.
+1. Core Blocks são o destino canônico.
+2. Plugin Gutenberg não é requisito.
+3. Elementor permanece até dependência zero.
 4. Nenhum writer `_elementor_data` será implementado como destino.
-5. Qualquer write em `post_content` exige gates e autorização explícitos.
-6. KD não pode ser tratado como representação editorial lossless.
-7. Payload editorial lossless não pode sair em runners.
-8. Mixed source não pode ser decidido automaticamente.
+5. Write em `post_content` exige gates e autorização explícitos.
+6. KD não é representação editorial lossless.
+7. Raw payload não sai em runners.
+8. Mixed não é decidido automaticamente.
 9. UX-002 não pode regredir.
-10. Trabalho incompleto permanece fora da `main`.
+10. Trabalho incompleto permanece fora de `main`.

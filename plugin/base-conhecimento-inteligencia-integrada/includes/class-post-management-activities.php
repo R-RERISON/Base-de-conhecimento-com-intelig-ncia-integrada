@@ -43,8 +43,8 @@ final class Post_Management_Activities {
 		unset( $post_id );
 		$knowledge = is_array( $context['knowledge'] ?? null ) ? $context['knowledge'] : array();
 		echo '<section class="bdc-kb-domain-panel" aria-labelledby="bdc-kb-intelligence-title">';
-		echo '<div class="bdc-kb-domain-heading"><h3 id="bdc-kb-intelligence-title">' . esc_html__( 'Inteligência', 'bdc-knowledge-base' ) . '</h3><p>' . esc_html__( 'Camada central para análises e sugestões de IA deste artigo. T100A registra a atividade, mas não executa modelo nem rede externa.', 'bdc-knowledge-base' ) . '</p></div>';
-		echo '<div class="notice notice-info inline"><p><strong>' . esc_html__( 'T100A — somente leitura.', 'bdc-knowledge-base' ) . '</strong> ' . esc_html__( 'A integração de IA será adicionada como atividade deste mesmo Workspace, nunca como tela paralela.', 'bdc-knowledge-base' ) . '</p></div>';
+		echo '<div class="bdc-kb-domain-heading"><h3 id="bdc-kb-intelligence-title">' . esc_html__( 'Inteligência', 'bdc-knowledge-base' ) . '</h3><p>' . esc_html__( 'Camada central para análises e sugestões de IA deste artigo. A execução de modelo e rede externa permanece desabilitada neste gate.', 'bdc-knowledge-base' ) . '</p></div>';
+		echo '<div class="notice notice-info inline"><p><strong>' . esc_html__( 'Inteligência — somente leitura.', 'bdc-knowledge-base' ) . '</strong> ' . esc_html__( 'A integração de IA será adicionada como atividade deste mesmo Workspace, nunca como tela paralela.', 'bdc-knowledge-base' ) . '</p></div>';
 		self::table( array(
 			'Summary disponível' => ! empty( $knowledge['summary_available'] ) ? 'Sim' : 'Não',
 			'Conceitos classificados' => (string) ( $knowledge['classification_term_count'] ?? 0 ),
@@ -56,21 +56,52 @@ final class Post_Management_Activities {
 
 	/** @param array<string,mixed> $context */
 	private static function render_core_blocks( int $post_id, array $context ): void {
-		unset( $post_id );
 		$core = is_array( $context['core_blocks'] ?? null ) ? $context['core_blocks'] : array();
 		$source = is_array( $context['source'] ?? null ) ? $context['source'] : array();
+		$status = (string) ( $core['operational_status'] ?? 'blocked' );
+		$reasons = array_values( array_map( 'strval', (array) ( $core['operational_reasons'] ?? array() ) ) );
+		$authorization_ready = true === ( $core['authorization_ready'] ?? false );
+		$authorization_id = (string) ( $core['authorization_id'] ?? '' );
+		$block_names = array_values( array_map( 'strval', (array) ( $core['expected_block_names'] ?? array() ) ) );
+
 		echo '<section class="bdc-kb-domain-panel" aria-labelledby="bdc-kb-core-blocks-title">';
-		echo '<div class="bdc-kb-domain-heading"><h3 id="bdc-kb-core-blocks-title">' . esc_html__( 'Core Blocks / Migração', 'bdc-knowledge-base' ) . '</h3><p>' . esc_html__( 'Estado de prontidão e auditoria do artigo para o destino editorial canônico. Nenhuma migração é executada por esta aba.', 'bdc-knowledge-base' ) . '</p></div>';
+		echo '<div class="bdc-kb-domain-heading"><h3 id="bdc-kb-core-blocks-title">' . esc_html__( 'Core Blocks / Migração', 'bdc-knowledge-base' ) . '</h3><p>' . esc_html__( 'Diagnóstico operacional e preparação de autorização deste artigo para o destino editorial canônico.', 'bdc-knowledge-base' ) . '</p></div>';
+
 		self::table( array(
+			'Post' => '#' . $post_id,
 			'Fonte atual' => (string) ( $source['label'] ?? 'Indisponível' ),
 			'Dry-run' => (string) ( $core['dry_run_status'] ?? 'unavailable' ),
+			'Estado operacional' => $status,
+			'Blocos esperados' => ! empty( $block_names ) ? implode( ', ', $block_names ) : 'n/a',
 			'Eventos de journal' => (string) ( $core['journal_event_count'] ?? 0 ),
 			'Último estado de journal' => '' !== (string) ( $core['latest_journal_state'] ?? '' ) ? (string) $core['latest_journal_state'] : 'Sem journal',
 			'Lock' => (string) ( $core['lock_status'] ?? 'unavailable' ),
+			'Authorization ID' => '' !== $authorization_id ? $authorization_id : 'Ainda não disponível',
 			'Writer desta aba' => ! empty( $core['writer_enabled'] ) ? 'Habilitado' : 'Desabilitado',
 			'Execução de migração' => ! empty( $core['migration_execution_enabled'] ) ? 'Habilitada' : 'Desabilitada',
 		) );
-		echo '<p class="bdc-kb-context-note">' . esc_html__( 'Ações de write permanecem protegidas pelos gates de engenharia e por autorização específica. A UX final ficará centralizada aqui somente após novos testes ambientais.', 'bdc-knowledge-base' ) . '</p>';
+
+		if ( ! empty( $reasons ) ) {
+			echo '<div class="notice notice-warning inline"><p><strong>' . esc_html__( 'Motivos / observações:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( implode( ' · ', $reasons ) ) . '</p></div>';
+		}
+
+		echo '<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px">';
+		if ( $authorization_ready && '' !== $authorization_id ) {
+			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+			echo '<input type="hidden" name="action" value="' . esc_attr( Post_Core_Blocks_Activity::ACTION ) . '">';
+			echo '<input type="hidden" name="post_id" value="' . esc_attr( (string) $post_id ) . '">';
+			wp_nonce_field( Post_Core_Blocks_Activity::nonce_action( $post_id ), Post_Core_Blocks_Activity::NONCE_FIELD );
+			submit_button( __( 'Baixar Authorization Pack deste post', 'bdc-knowledge-base' ), 'secondary', 'submit', false );
+			echo '</form>';
+		}
+		echo '<button type="button" class="button button-primary" disabled aria-disabled="true">' . esc_html__( 'Migrar para Core Blocks — bloqueado neste gate', 'bdc-knowledge-base' ) . '</button>';
+		echo '</div>';
+
+		if ( $authorization_ready ) {
+			echo '<p class="bdc-kb-context-note">' . esc_html__( 'O Authorization Pack congela a identidade atual deste único artigo. Qualquer drift posterior invalida a autorização. T100C não executa write.', 'bdc-knowledge-base' ) . '</p>';
+		} else {
+			echo '<p class="bdc-kb-context-note">' . esc_html__( 'Este artigo ainda não está elegível para autorização de migração. O estado acima indica a causa sem executar qualquer write.', 'bdc-knowledge-base' ) . '</p>';
+		}
 		echo '</section>';
 	}
 

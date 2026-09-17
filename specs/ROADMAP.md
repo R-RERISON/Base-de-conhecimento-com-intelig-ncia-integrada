@@ -2,31 +2,62 @@
 
 > **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
-## Rebaseline após T097
+## Estado canônico
 
-A versão inicial deste roadmap previa uma SPEC-001 de shell separada e uma SPEC-002 com oito campos de Resumo Executivo. O fechamento T095/T096 e a decisão formal T097 simplificaram essa sequência.
+1. **SPEC-000 — Inventário Profundo e Contratos** — CONCLUÍDA.
+2. **SPEC-001 — Core mínimo + Summary narrativo** — CONCLUÍDA.
+3. **SPEC-002 — Classificação de Conhecimento** — CONCLUÍDA.
+4. **UX-001 — Product Experience & Knowledge Workspace** — CONCLUÍDA.
+5. **SPEC-003 — Review & Governança** — CONCLUÍDA; baseline `0.3.0-rc.1`.
+6. **SPEC-004 — Content Extractor e Knowledge Document** — ATIVA.
+   - R-200: PASS.
+   - R-210: PASS.
+   - G-220: PASS.
+   - G-230: PASS.
+   - G-240: PASS / CLOSED; KD `2.1.0` / `0.4.0-acceptance.12` promovido para `main`.
+   - G-245: IN PROGRESS em `spec004-g245-production-readiness`; PR #4 DRAFT.
+   - G-250: NOT_RUN.
+7. **SPEC-005 — Search lexical + Golden Queries** — planejada; não autorizada enquanto a fronteira atual da SPEC-004 não estiver formalmente fechada para o avanço correspondente.
+8. **SPEC-006 — Telemetria / Inteligência de Busca** — planejada.
+9. **SPEC-007 — Operações / Jobs / Indexação / Migrações** — planejada.
+10. **Semantic Search / Vetores / Hybrid Retrieval** — futuro, condicionado a Golden Queries e métricas.
+11. **IA / Foundry / RAG** — futuro, assistivo, governado por custo e evidência.
 
-### Estado canônico
+## Baseline atual da SPEC-004
 
-1. **SPEC-000 — Inventário profundo e contratos** — CONCLUÍDA.
-2. **SPEC-001 — Core mínimo + Summary narrativo** — PRONTA após Definition of Ready documental; runtime ainda não iniciado.
+O Knowledge Document `2.1.0` foi aceito após evolução explícita dos gaps de hierarchy fidelity.
 
-A nova SPEC-001 entrega o Core mínimo somente na medida necessária para a jornada real do Analista de Conhecimento e limita Summary aos três campos narrativos `objective`, `escalation` e `important`.
+Fechamento G-240:
 
-### Próxima ordem conceitual recomendada por T096
+- corpus 622 → 622;
+- duas passagens 622/622;
+- zero errors e throwables;
+- zero hash/canonical JSON mismatches;
+- zero `structure_incomplete`;
+- zero `not_ready`;
+- fingerprint editorial preservado;
+- aceite humano fixo 8/8 para cobertura, ordem, ausência de invenção, estrutura e gate.
 
-A numeração/título de futuras SPECs será fixada apenas quando formalmente abertas. A ordem conceitual atual é:
+A promoção para `main` ocorreu no merge `32a696386bf2ab5574d4d7725db78636fa51f36c`.
 
-1. Summary narrativo (SPEC-001 atual);
-2. Classificação mínima, com eixo inicial candidato `knowledge_type`;
-3. Review mínimo;
-4. Content Extractor + Search post-level + Golden mínimo;
-5. classificação adicional/item/deep-link/Search Knowledge;
-6. Analytics/IA e demais capacidades apenas por evidência.
+## Fronteira G-245
 
-## Placeholders anteriores
+G-245 existe para separar claramente o **knowledge plane read-only** de qualquer futura **migration editorial Elementor**.
 
-Os diretórios `001-core-shell-design-system` e `002-resumo-executivo-integrado` são preservados como histórico e marcados como supersedidos. Diretórios `003`–`012` também são planejamento anterior/provisório e não constituem autorização de implementação.
+A sequência obrigatória é incremental:
+
+1. Production Preflight read-only;
+2. matriz de compatibilidade;
+3. Projection Plan read-only;
+4. gateway Elementor version-gated e disabled-by-default;
+5. journal/rollback;
+6. stale-source guard;
+7. dry-run;
+8. batches retomáveis;
+9. canário controlado;
+10. autorização explícita para qualquer writer real.
+
+T080/Production Preflight já possui evidência em homologação com zero blockers para continuidade read-only. Itens `review_required` permanecem bloqueantes para writer até tratamento explícito.
 
 ## Invariantes do roadmap
 
@@ -37,8 +68,11 @@ Os diretórios `001-core-shell-design-system` e `002-resumo-executivo-integrado`
 - testes/gates antes de substituição;
 - rollback e preservação de dados;
 - nenhum runtime fora de SPEC ativa;
-- nenhuma capacidade postergada implementada silenciosamente.
+- nenhuma capacidade postergada implementada silenciosamente;
+- `WP_Post` + Elementor permanecem fonte editorial;
+- Knowledge Document, índices, chunks e vetores são derivados reconstruíveis;
+- GO de homologação não equivale a GO de produção.
 
 ## Regra de alteração
 
-O roadmap pode evoluir por decisão formal, mas nunca por conveniência de implementação. Constituição, Manifesto, decisões da SPEC-000 e a SPEC ativa prevalecem sobre planejamento histórico.
+O roadmap pode evoluir por decisão formal, mas nunca por conveniência de implementação. Constituição, Manifesto, decisões das SPECs concluídas e a SPEC ativa prevalecem sobre planejamento histórico.

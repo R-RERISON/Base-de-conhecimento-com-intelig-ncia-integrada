@@ -5,7 +5,7 @@
 **Produto:** Base de Conhecimento com Inteligência Integrada  
 **Tipo:** Plugin WordPress único, modular internamente  
 **Idioma:** Português do Brasil  
-**Estado:** SPEC-000 concluída / SPEC-001 concluída / SPEC-002 concluída / UX-001 concluída / SPEC-003 planejamento ativo  
+**Estado:** SPEC-000/001/002/003 concluídas; SPEC-004 ativa; G-240 PASS/CLOSED; G-245 em andamento em branch dedicada  
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
 ## Missão
@@ -32,19 +32,18 @@ Baseline histórica:
 
 **CONCLUÍDA para desenvolvimento/homologação.**
 
-Baseline funcional atual:
+Baseline funcional:
 
 - package `0.2.0-rc.1`;
 - SHA-256 `a5120299ea907d271bc39b318857ba033cf0cf340fe1836289f42a4c717b8fb5`;
 - C-001/C-010/G-001/G-030/B-006/G-070/G-110/G-130 PASS;
-- regressão essencial da SPEC-001 PASS;
 - quatro taxonomias canônicas WordPress;
-- legado apenas read-only/advisory;
+- legado read-only/advisory;
 - sem migração automática ou dual-write.
 
 ### UX-001 — Product Experience & Knowledge Workspace
 
-**CONCLUÍDA para baseline de produto.**
+**CONCLUÍDA como baseline de produto.**
 
 Resultado:
 
@@ -52,44 +51,61 @@ Resultado:
 - Design System v1;
 - Knowledge List + Knowledge Workspace;
 - Summary/Classificação integrados ao Workspace;
-- Review/Governança acomodado apenas como conceito futuro;
 - responsive/accessibility validados no protótipo;
 - Heritage Pack KB2Ops;
-- UI as Code v0.2 como artefato visual canônico;
-- Figma não é dependência operacional.
-
-Gates UX-001/UX-005/UX-010/UX-030/UX-050: PASS.
+- UI as Code v0.2 como artefato visual canônico.
 
 ### SPEC-003 — Review & Governança
 
-**PLANEJAMENTO ATIVO / RUNTIME BLOQUEADO ATÉ R-001 + R-010.**
+**CONCLUÍDA.**
 
-Caminho canônico:
+Baseline funcional congelada:
 
-`specs/003-review-governanca/`
+- package `0.3.0-rc.1`;
+- SHA-256 `7f681a3f62d792d30ccb016ae64b03e83d5cc46c4b2b1e2c2d96d41e3dfd0db5`;
+- R-001/R-010/G-001/G-030/DS-010/G-070/G-110/G-130 PASS;
+- Review baseado em WordPress Comments API append-only;
+- Histórico como projeção read-only do event log;
+- `post_status` independente da governança.
 
-Primeiro objetivo: inventariar stores, writers, consumers, capabilities e semântica histórica antes de definir estado canônico, reviewer, histórico ou qualquer score.
+### SPEC-004 — Content Extractor e Knowledge Document
+
+**ATIVA.**
+
+Baseline promovida para `main` em 2026-09-16:
+
+- merge G-240: `32a696386bf2ab5574d4d7725db78636fa51f36c`;
+- build de aceite: `0.4.0-acceptance.12`;
+- Knowledge Document: schema `2.1.0`;
+- R-200/R-210/G-220/G-230/G-240: PASS;
+- G-240 full-corpus: duas passagens 622/622, zero errors/throwables/hash mismatches/canonical mismatches, zero `structure_incomplete`, zero `not_ready`, zero mutação editorial;
+- aceite humano G-240: 8/8 coverage, order, no invented text, structure preserved e gate PASS.
+
+**G-245 está em andamento apenas na branch `spec004-g245-production-readiness` / PR #4, ainda DRAFT e não promovida para `main`.**
+
+Production Preflight T080 já produziu baseline read-only com zero blockers e itens `review_required`, mantendo writer/migration desabilitados. Isso não autoriza persistência editorial.
 
 ## Fonte da verdade e fronteiras
 
 - Editorial: `WP_Post` + Elementor.
 - Summary: Post Metadata API do WordPress.
-- Classificação: WordPress Taxonomy API, quatro conceitos canônicos do slice atual.
-- UX/UI: baseline UX-001 + protótipo UI as Code versionado.
-- Review/Governança: sem owner canônico até R-010 da SPEC-003.
-- O plugin não escreve `_elementor_data`.
+- Classificação: WordPress Taxonomy API.
+- Review/Governança: Comments API append-only conforme SPEC-003.
+- Knowledge Document: projeção derivada, determinística e reconstruível; nunca fonte editorial.
+- UX/UI: baseline UX-001 + UI as Code versionado.
+- O plugin não escreve `_elementor_data` como parte do knowledge plane.
 - O plugin não reescreve silenciosamente `post_content`.
 - Projeções/cache/índices nunca são fonte editorial.
-- IA é assistiva e permanece fora das SPECs 001/002/003 enquanto não houver SPEC própria.
+- IA permanece assistiva e fora da autoridade editorial.
 
 ## Estratégia de produto
 
 1. Core + Summary — concluído;
 2. Classificação de Conhecimento — concluído;
 3. UX-001 Product Experience & Knowledge Workspace — concluído;
-4. **Review & Governança — planejamento ativo**;
-5. Content Extractor;
-6. Search lexical + qualidade/Golden Queries;
+4. Review & Governança — concluído;
+5. Content Extractor + Knowledge Document — **em execução; G-240 fechado, G-245 em andamento**;
+6. Search lexical + Golden Queries;
 7. Telemetria/Inteligência de Busca;
 8. Operações/Indexação;
 9. Semantic Search/Vetores;
@@ -102,3 +118,5 @@ Compilar, passar unitário ou ter protótipo aprovado isoladamente não basta. `
 Nenhum mockup/protótipo transforma hipótese em contrato de domínio. Nenhuma implementação de nova feature pode ignorar o baseline UX congelado sem decisão explícita de mudança.
 
 **GO de desenvolvimento/homologação != GO de produção.**
+
+**G-240 em `main` não autoriza writer/migration Elementor. G-245 deve fechar seus subgates, rollback e autorização explícita antes de qualquer mutação editorial.**

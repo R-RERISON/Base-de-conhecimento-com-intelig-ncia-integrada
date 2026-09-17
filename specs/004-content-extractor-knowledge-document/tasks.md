@@ -7,10 +7,11 @@
 - G-220: PASS.
 - G-230/v1: PASS de determinismo; v1 superseded for AI.
 - G-240/v1: FAIL CONTROLADO — perda estrutural.
-- G-240/v2/KD 2.0.1: full-corpus técnico PASS, porém aceite humano A/B **FAIL CONTROLADO — HIERARCHY FIDELITY**.
+- G-240/v2/KD 2.0.1: full-corpus técnico PASS, porém aceite humano A/B FAIL CONTROLADO — HIERARCHY FIDELITY.
 - KD 2.1.0 / build `0.4.0-acceptance.12`: full-corpus técnico PASS + aceite humano 8/8 PASS.
-- **G-240: PASS / CLOSED.**
-- **G-245: READY — não iniciado.**
+- **G-240: PASS / CLOSED / PROMOVIDO PARA `main`.**
+- merge G-240: `32a696386bf2ab5574d4d7725db78636fa51f36c`.
+- **G-245: IN PROGRESS somente em `spec004-g245-production-readiness`; PR #4 DRAFT.**
 - G-250: NOT_RUN.
 
 ## S005 — G-240 / Real Content Acceptance
@@ -22,72 +23,92 @@
 - [x] Preservar structural anchors de listas.
 - [x] Introduzir expectativa semântica DOM independente.
 - [x] Corrigir materialização de listas/tabelas no Legacy adapter.
-- [x] Atingir full-corpus PASS no `0.4.0-acceptance.11` / KD `2.0.1`.
+- [x] Atingir full-corpus PASS no KD `2.0.1`.
 - [x] Executar A/B humano nos mesmos oito posts do G-240 v1.
-- [x] Versionar `evidence/g240-v2-acceptance-20260916T153610Z.json`.
-- [x] Registrar `g240-v2-hierarchy-gap-analysis-20260916.md`.
-
-### Baseline humana que motivou KD 2.1
-
-- 8/8 revisados;
-- cobertura completa 8/8;
-- ordem preservada 8/8;
-- nenhum texto inventado 8/8;
-- estrutura preservada 5/8;
-- estrutura perdida 3/8: 1290, 370, 1307;
-- stale 0;
-- repeatability failure 0;
-- sample mismatch 0;
-- gate=false.
-
-### Evolução — KD `2.1.0`
-
-- [x] T079F Congelar contrato `knowledge-document-contract-v2.1.0.md` para hierarchy fidelity.
-- [x] T079G Implementar expected/actual relationship fidelity independente de contagens: parent edges, max depth, sibling order e tree signature.
-- [x] T079H Implementar `Numbered_Hierarchy_Resolver` conservador para `1`, `1.1`, `1.2`, `1.2.1`, sem cruzar source + `heading_path`.
-- [x] T079I Adicionar proveniência/confiança de hierarquia: `explicit_dom|numbering_inferred|heading_inferred|flat` e `authoritative|deterministic|ambiguous`.
-- [x] T079J Fazer DOM explícito vencer numeração; conflito → `HIERARCHY_NUMBERING_CONFLICT` + `review_required`.
-- [x] T079K Sinal hierárquico forte não resolvido → `HIERARCHY_AMBIGUOUS`; nunca `candidate_ready`.
-- [x] T079L Corrigir acceptance gate: `review_required` humanamente aprovado não falha automaticamente; `not_ready` continua bloqueante.
-- [x] T079M Testes sintéticos de árvore explícita, numeração resolvível, conflito DOM×numeração, ambiguidade, token isolado e IPv4 não confundido com outline.
-- [x] T079N Reexecutar full-corpus com KD 2.1.0 / `0.4.0-acceptance.12`; 622/622 em duas passagens, zero errors/throwables/hash/canonical mismatch, zero structure_incomplete, zero not_ready e gate técnico PASS.
-- [x] T079O Reexecutar os mesmos oito casos A/B; 8/8 human_pass e 8/8 gate_pass.
-- [x] T079P Fechar G-240 com 8/8 estrutura humana preservada, `gate_pass=true`, zero stale/repeatability/sample mismatch, zero `not_ready` e zero mutação editorial.
+- [x] Registrar análise de hierarchy fidelity.
+- [x] Congelar contrato `knowledge-document-contract-v2.1.0.md`.
+- [x] Implementar relationship fidelity independente de contagens.
+- [x] Implementar `Numbered_Hierarchy_Resolver` conservador.
+- [x] Adicionar proveniência/confiança de hierarquia.
+- [x] Fazer DOM explícito vencer inferência textual.
+- [x] Tratar ambiguidade/conflito como `review_required`.
+- [x] Corrigir acceptance gate para não confundir `review_required` com `not_ready`.
+- [x] Executar testes sintéticos de árvore, numeração, conflito e ambiguidade.
+- [x] Reexecutar full-corpus KD 2.1.0 / `0.4.0-acceptance.12`.
+- [x] Reexecutar os mesmos oito casos A/B.
+- [x] Fechar G-240 com zero mutação editorial.
+- [x] Promover PR #3 para `main`.
 
 ### Evidências finais KD 2.1
 
-- `evidence/kd-v21-smoke-summary-20260916T172538Z.json` — resumo verificável do full-corpus; SHA-256 do artefato bruto registrado no arquivo.
-- `evidence/g240-kd21-acceptance-20260916T193359Z.json` — aceite humano final 8/8 PASS.
-- full-corpus: corpus 622→622, duas passagens 622/622, zero erros, zero throwables, zero hash mismatch, zero canonical JSON mismatch, zero structure_incomplete, zero `not_ready`.
+- `evidence/kd-v21-smoke-summary-20260916T172538Z.json`.
+- `evidence/g240-kd21-acceptance-20260916T193359Z.json`.
+- full-corpus: 622→622, duas passagens 622/622, zero errors/throwables/hash/canonical mismatch, zero structure_incomplete, zero `not_ready`.
 - A/B: 8/8 coverage, 8/8 order, 8/8 no invented text, 8/8 structure preserved, 8/8 gate_pass.
-- posts 1290, 370 e 1307, que motivaram KD 2.1, passaram `structure_preserved=true`.
-- `review_required` permanece explícito em casos conservadores; não é tratado como `not_ready`.
 
 ## S006 — G-245 / Elementor Normalization & Production Readiness
 
-**Status: READY — execução ainda não iniciada.**
+**Status: IN PROGRESS — somente subgates governados; nenhuma escrita editorial autorizada.**
 
-- [x] Contratos de Elementor/produção congelados.
-- [ ] Production Preflight read-only.
-- [ ] Matriz de compatibilidade.
-- [ ] Projection Plan read-only.
-- [ ] Elementor_Gateway version-gated com writer disabled-by-default.
+Branch:
+
+`spec004-g245-production-readiness`
+
+PR:
+
+`#4` — DRAFT.
+
+### T080 — Production Preflight — PASS WITH REVIEW ITEMS
+
+- [x] Criar branch dedicada baseada no head aprovado de G-240.
+- [x] Implementar `Production_Preflight` read-only.
+- [x] Avaliar WordPress/PHP/DOM/Elementor/backup/shortcodes/cron/loopback.
+- [x] Inventariar plugins ativos e dependências observáveis de shortcodes sem exportar corpo editorial.
+- [x] Forçar `writer_allowed=false` e `migration_execution_allowed=false`.
+- [x] Validar localmente política/lint/package.
+- [x] Executar preflight em homologação.
+- [x] Registrar evidência e matriz inicial de compatibilidade.
+
+Evidência na branch G-245:
+
+- `evidence/g245-preflight-summary-20260916T215612Z.json`;
+- blockers: 0;
+- review items: `faq_wd`, `wpt` e loopback não testado;
+- corpus 622→622;
+- fingerprint editorial preservado.
+
+### T081 — Projection Plan read-only
+
+**Status: implementação iniciada na branch G-245; aceite/gate ainda não fechado.**
+
+- [ ] Congelar contrato final do Projection Plan.
+- [ ] Confirmar projeção determinística por `source_kind` sem persistência.
+- [ ] Confirmar `source_hash_before`, schema, strategy, projection hash, warnings e `requires_review`.
+- [ ] Preservar shortcodes como dependências opacas; nunca executar `do_shortcode()` genericamente.
+- [ ] Forçar revisão para dependências/compatibilidade não resolvidas.
+- [ ] Comprovar canonicalização e repetibilidade.
+- [ ] Fechar testes locais de estratégias e zero-write.
+- [ ] Executar full-corpus ambiental em duas passagens e versionar evidência.
+
+### Próximos subgates
+
+- [ ] Elementor Gateway version-gated com writer disabled-by-default.
 - [ ] Journal/rollback.
-- [ ] Dry-run.
 - [ ] Stale-source guard.
+- [ ] Dry-run.
 - [ ] Batches retomáveis.
-- [ ] Canário e rollback.
-- [ ] Runbook produção.
-
-A abertura de G-245 autoriza apenas o planejamento e os subgates previstos. **Nenhum writer/migration deve ser habilitado antes de preflight, projection plan, dry-run, stale-source guard e critérios de rollback estarem aprovados.**
+- [ ] Canário controlado e rollback comprovado.
+- [ ] Runbook de produção.
+- [ ] Autorização explícita posterior para qualquer writer real.
 
 ## Regras constitucionais
 
 1. Content Extractor/KD são read-only.
-2. Determinismo sem fidelidade hierárquica não é aceite.
-3. Contagem estrutural não substitui validação de relações pai/filho.
-4. Inferência textual só pode ser determinística, conservadora e auditável.
-5. DOM explícito vence inferência.
-6. `review_required` é limitação explícita, não sinônimo automático de `not_ready`.
-7. G-240 PASS habilita a preparação de G-245, mas não autoriza persistência editorial automaticamente.
-8. Writer/migration Elementor permanecem disabled-by-default até aprovação explícita dos subgates de G-245.
+2. Determinismo sem fidelidade estrutural/hierárquica não é aceite.
+3. DOM explícito vence inferência.
+4. Inferência textual deve ser conservadora e auditável.
+5. `review_required` é limitação explícita, não `not_ready` automático.
+6. G-240 PASS não autoriza persistência editorial.
+7. Preflight e Projection Plan nunca autorizam escrita por efeito colateral.
+8. Writer/migration Elementor permanecem disabled-by-default até subgates, rollback e autorização explícita.
+9. `main` deve permanecer um baseline conhecido; trabalho incompleto fica em branch dedicada.

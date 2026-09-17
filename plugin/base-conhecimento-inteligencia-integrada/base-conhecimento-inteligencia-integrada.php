@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança, Content Extractor e Knowledge Document determinísticos.
- * Version: 0.4.0-g245-block-projection.2
+ * Version: 0.4.0-g245-lossless.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-g245-block-projection.2' );
+define( 'BDC_KB_VERSION', '0.4.0-g245-lossless.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -25,6 +25,8 @@ define( 'BDC_KB_SPEC004_G245_PREFLIGHT_BUILD', true );
 define( 'BDC_KB_SPEC004_G245_PROJECTION_SMOKE_BUILD', false ); // Elementor-target smoke: superseded by ADR-004-001.
 define( 'BDC_KB_SPEC004_G245_JOURNAL_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_BLOCK_PROJECTION_SMOKE_BUILD', false );
+define( 'BDC_KB_SPEC004_G245_EDITORIAL_FIDELITY_SMOKE_BUILD', false );
+define( 'BDC_KB_SPEC004_G245_LOSSLESS_ROUNDTRIP_SMOKE_BUILD', false );
 if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
 	define( 'BDC_KB_ELEMENTOR_WRITER_ENABLED', false );
 }
@@ -54,6 +56,8 @@ require_once BDC_KB_DIR . 'includes/class-canonical-json.php';
 require_once BDC_KB_DIR . 'includes/class-semantic-structure.php';
 require_once BDC_KB_DIR . 'includes/class-knowledge-document.php';
 require_once BDC_KB_DIR . 'includes/class-block-projection-plan.php';
+require_once BDC_KB_DIR . 'includes/class-migration-fidelity-source.php';
+require_once BDC_KB_DIR . 'includes/class-core-block-lossless-serializer.php';
 // Elementor-target planning/gateway remain loaded only as historical/diagnostic contracts; no writer target.
 require_once BDC_KB_DIR . 'includes/class-elementor-projection-plan.php';
 require_once BDC_KB_DIR . 'includes/class-elementor-gateway.php';
@@ -102,6 +106,12 @@ if ( defined( 'BDC_KB_SPEC004_G245_JOURNAL_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245
 if ( defined( 'BDC_KB_SPEC004_G245_BLOCK_PROJECTION_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_BLOCK_PROJECTION_SMOKE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-block-projection-plan-smoke.php';
 }
+if ( defined( 'BDC_KB_SPEC004_G245_EDITORIAL_FIDELITY_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_EDITORIAL_FIDELITY_SMOKE_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-editorial-fidelity-inventory-smoke.php';
+}
+if ( defined( 'BDC_KB_SPEC004_G245_LOSSLESS_ROUNDTRIP_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_LOSSLESS_ROUNDTRIP_SMOKE_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-core-block-lossless-roundtrip-smoke.php';
+}
 
 \BDC\KnowledgeBase\Plugin::register();
 \BDC\KnowledgeBase\Visual_Foundation::register();
@@ -137,4 +147,10 @@ if ( defined( 'BDC_KB_SPEC004_G245_JOURNAL_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245
 }
 if ( defined( 'BDC_KB_SPEC004_G245_BLOCK_PROJECTION_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_BLOCK_PROJECTION_SMOKE_BUILD ) {
 	\BDC\KnowledgeBase\Block_Projection_Plan_Smoke::register();
+}
+if ( defined( 'BDC_KB_SPEC004_G245_EDITORIAL_FIDELITY_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_EDITORIAL_FIDELITY_SMOKE_BUILD ) {
+	\BDC\KnowledgeBase\Editorial_Fidelity_Inventory_Smoke::register();
+}
+if ( defined( 'BDC_KB_SPEC004_G245_LOSSLESS_ROUNDTRIP_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_LOSSLESS_ROUNDTRIP_SMOKE_BUILD ) {
+	\BDC\KnowledgeBase\Core_Block_Lossless_Roundtrip_Smoke::register();
 }

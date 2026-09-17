@@ -10,49 +10,49 @@
 - UX-002 `0.4.0-ux002.3`: PASS/CLOSED, contrato visual obrigatório.
 - G-240: PASS/CLOSED/main.
 - ADR-004-001: Core Blocks como destino editorial canônico.
-- T091/T093/T094/T096/T097: PASS AMBIENTAL.
+- T091/T093/T094/T096/T097/T098.2/T099A: PASS AMBIENTAL.
 - T095: PASS LOCAL / READ-ONLY.
 - T098.1: FAIL CONTROLADO / SEM MUTAÇÃO.
-- T098.2: **PASS AMBIENTAL**.
-- T099A: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
-- Nenhum writer editorial autorizado.
+- T099B: IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE / READ-ONLY.
+- T099C: BLOCKED até autorização específica.
 
-## Evidência T098.2
-Arquivo: `evidence/g245-t098-readiness-pass-20260917T191436Z.json`.
-SHA-256 bruto: `f7bf589858db6c6629cb937ba28dad4ef658d1e265225185dad77e55dd342ff0`.
+## Evidência T099A
+Arquivo: `evidence/g245-t099a-storage-lock-20260917T193102Z.json`.
+SHA-256 bruto: `671e6f26de0d232569a7728651e7d42348677607b7ac5bcfc194012031d21ba8`.
 
-Resultado:
-- 623/623 em duas passagens;
-- errors/throwables/safety violations 0;
-- dry/journal hash mismatches 0;
-- ready 611, noop 7, review_required 5;
-- batch planner: 611 elegíveis, 25 batches, cobertura 611, zero duplicidade, zero cursor failure;
-- fingerprint editorial unchanged;
-- `t098_block_migration_readiness_pass=true`.
+Target: post 358, `legacy_html`, dry-run ready.
 
-## T099A — próximo gate exato
-O smoke ambiental usa apenas postmeta privado temporário:
+Comprovado no ambiente:
+- journal privado persistido/readback/cleanup PASS, 0→0;
+- lock exclusivo acquire/readback/release PASS, ausente antes/depois;
+- hashes de `post_content` e `_elementor_data` inalterados;
+- zero errors;
+- nenhum write editorial;
+- `t099a_storage_lock_pass=true`.
 
-- `_bdc_kb_block_migration_journal`;
-- `_bdc_kb_block_migration_lock`.
+## T099B — próximo gate exato
+Contrato: `t099b-authorization-pack-contract-v1.md`.
+Runtime: `includes/class-block-migration-authorization-pack-smoke.php`.
 
-Fluxo:
-1. selecionar automaticamente um `legacy_html`/`plain_text` com dry-run ready e sem resíduos de journal/lock;
-2. capturar hashes editoriais before;
-3. persistir journal preparado e validar readback;
-4. adquirir lock exclusivo e validar readback;
-5. liberar lock;
-6. remover o journal criado pelo smoke;
-7. validar cleanup completo;
-8. confirmar hashes `post_content` e `_elementor_data` idênticos antes/depois.
+O runner é read-only e:
+1. avalia os posts com dry-run;
+2. restringe a `legacy_html` low-risk;
+3. exige zero journal/lock residual e `_elementor_data` vazio;
+4. rejeita shortcodes registrados, scripts/iframes/forms/embeds/styles e block comments;
+5. limita tamanho/links/imagens/tabelas;
+6. prefere o post 358 apenas se continuar low-risk;
+7. gera `authorization_id` determinístico ligado aos hashes atuais;
+8. descreve exatamente o futuro apply + verify + rollback do T099C.
 
-Nenhum `wp_update_post`, nenhum writer `_elementor_data`, nenhum render/shortcode e nenhuma chamada externa.
+O pack não exporta corpo editorial/URLs, não persiste journal, não adquire lock e não escreve conteúdo.
 
-## Depois do T099A
-- T099B: Authorization Pack de um único `legacy_html` de baixo risco.
-- T099C: canário real + rollback, somente com autorização específica.
-- T100: batch controlado.
-- T101: dependência residual Elementor / gate de retirada.
+## Depois do T099B
+- versionar o Authorization Pack ambiental;
+- apresentar `post_id`, título, risco e `authorization_id` ao usuário;
+- obter autorização explícita para esse escopo exato;
+- T099C: aplicar serialização Core Blocks, verificar e fazer rollback imediato;
+- T100: batch controlado;
+- T101: dependência residual Elementor / gate de retirada;
 - G-250 Lifecycle/RC.
 
 ## Guardrails absolutos

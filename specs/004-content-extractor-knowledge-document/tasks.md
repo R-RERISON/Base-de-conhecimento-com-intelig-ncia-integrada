@@ -8,16 +8,13 @@
 - G-230/v1: PASS de determinismo; v1 superseded for AI.
 - G-240: **PASS / CLOSED / PROMOVIDO PARA `main`** com KD 2.1.0.
 - G-245: **REBASELINED / IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT / NÃO MERGEAR.
-- T080: PASS WITH REVIEW ITEMS.
-- T081 Elementor Projection: PASS AMBIENTAL histórico/read-only; destino Elementor agora SUPERSEDED.
-- T082–T086: PASS local/contratual; gates defensivos preservados para generalização.
-- T083B Durable Journal Storage: **PASS AMBIENTAL**.
-- T087A Readiness / T087B-prep Lock: PASS local/read-only.
-- T087C writer Elementor: **CANCELADO / SUPERSEDED antes de implementação**.
-- T088 Runbook: FROZEN; deve ser generalizado para Block Migration.
 - ADR-004-001: **ACEITA** — WordPress Core Blocks como destino editorial canônico.
-- T090 Block Projection Contract/Plan: **PASS LOCAL / READ-ONLY**, 23/23 assertions + lint.
-- T091 Block Projection full-corpus smoke: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
+- T083B Durable Journal Storage: **PASS AMBIENTAL**.
+- T087C writer Elementor: **CANCELADO / SUPERSEDED antes de implementação**.
+- T090 Block Projection v1.0: **PASS LOCAL / READ-ONLY**.
+- T091 Block Projection full-corpus: **PASS AMBIENTAL**.
+- T092 Block Projection v1.1: **PASS LOCAL / READ-ONLY**, 25/25 assertions + lint.
+- T093 full-corpus v1.1 + diagnóstico KD: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
 - G-250: NOT_RUN.
 
 ## Baseline visual obrigatória
@@ -35,93 +32,87 @@ UX-002 `0.4.0-ux002.3` permanece contrato visual obrigatório. G-245 não deve a
 - nenhum novo writer em `_elementor_data`;
 - remoção do Elementor somente após dependência zero comprovada.
 
-## Gates históricos preservados
+## Baseline ambiental atual
 
-### T080/T081
+T091 foi executado em 2026-09-17 sobre **623 posts**. O baseline anterior de 622 permanece evidência histórica; o corpus ganhou 1 post antes do T091. Durante o T091 o corpus e o fingerprint editorial permaneceram estáveis.
 
-- Preflight e Projection Elementor forneceram diagnóstico real do corpus.
-- T081: 622/622 em duas passagens, zero mutação, hashes/canonical JSON estáveis.
-- Distribuição consolidada: 536 legacy_html, 41 plain_text, 34 elementor, 5 mixed, 4 gutenberg, 2 empty.
+Distribuição T091:
 
-### T083B — Journal Durable Storage
+- 536 `legacy_html`;
+- 41 `plain_text`;
+- 34 `elementor`;
+- 5 `mixed`;
+- 4 `gutenberg`;
+- 3 `empty`.
 
-- postmeta privado append-only `_bdc_kb_migration_journal`;
-- round-trip byte-exato;
-- integrity/readback/cleanup;
-- smoke ambiental PASS;
-- `gate.t083b_storage_pass=true`;
-- `post_content` e `_elementor_data` inalterados.
+Plan status:
 
-### Gates reutilizáveis
+- 347 `projectable`;
+- 269 `review_required`;
+- 4 `native_noop`;
+- 3 `not_applicable`.
 
-Journal, stale-source, dry-run, batches, lock, readiness e runbook permanecem conceitos válidos. Nomes/classes Elementor-specific existentes são dívida nominal de transição e não autorizam writer Elementor.
+Warnings observados:
 
-## T090 — Block Projection Contract / Plan — PASS LOCAL
+- `KNOWLEDGE_DOCUMENT_REVIEW_REQUIRED`: 233;
+- `BLOCK_PROJECTION_UNSUPPORTED_KIND:image`: 40;
+- `BLOCK_PROJECTION_TABLE_SPAN_REVIEW`: 32;
+- `BLOCK_PROJECTION_UNSUPPORTED_KIND:quote`: 8.
 
-Artefatos:
+Evidência: `evidence/g245-block-projection-t091-20260917T172515Z.json`.
+SHA-256 do JSON recebido: `1fa9fc1439634cb9ecca6a1caa0aac63e9f37366bc9c5656d2ea1b18eb3c6b93`.
 
-- `block-projection-contract-v1.md`;
-- `includes/class-block-projection-plan.php`;
-- `tests/unit/spec004-block-projection-plan.php`.
+## T091 — PASS AMBIENTAL
 
-Allowlist v1:
-
-- heading → `core/heading`;
-- paragraph → `core/paragraph`;
-- code → `core/code`;
-- list → `core/list` + `core/list-item`;
-- table simples → `core/table`.
-
-Regras:
-
-- source `gutenberg` pronto → `native_noop`;
-- tipos não suportados → `review_required`;
-- table rowspan/colspan → `review_required`;
-- KD `not_ready` → `blocked`;
-- empty → `not_applicable`;
-- `block_projection_hash` determinístico;
-- `serialized_post_content=null`;
-- writer/migration/persistence/network/shortcode/dynamic render = false;
-- não depende do plugin Gutenberg.
-
-Validação local: **23/23 assertions PASS + lint PASS**.
-
-## T091 — Block Projection full-corpus smoke
-
-Runner implementado em `includes/class-block-projection-plan-smoke.php`.
-
-Build de homologação:
-
-- `0.4.0-g245-block-projection-smoke.1`;
-- SHA-256 `d70b518bc20825a5d64984aef555f67a270ec065587c00bfefa3caad3e67028c`;
-- 37 PHP files lint PASS antes e após reextração;
-- UX-002 byte parity PASS;
-- antigo Elementor Projection smoke disabled;
-- Journal smoke disabled;
-- Block Projection smoke enabled apenas no pacote de homologação;
-- writer Elementor false.
-
-T091 deve executar duas passagens e provar:
-
-- corpus completo nas duas passagens;
-- zero errors/throwables;
-- zero `block_projection_hash` mismatch;
-- zero canonical hash mismatch;
-- zero safety violations;
-- distribuição por source/status/warnings/block names;
+- duas passagens 623/623;
+- errors 0;
+- throwables 0;
+- `block_projection_hash_mismatches=0`;
+- `canonical_hash_mismatches=0`;
+- safety violations 0;
 - fingerprint editorial before/after idêntico;
-- zero dependência do plugin Gutenberg;
-- `gate_result.t091_block_projection_pass=true`.
+- `gate_result.t091_block_projection_pass=true`;
+- plugin Gutenberg dependency false.
+
+## T092 — Block Projection v1.1 — PASS LOCAL
+
+Contrato: `block-projection-contract-v1.1.md`.
+
+Mudança baseada no corpus:
+
+- `quote` → `core/quote`;
+- `image` **não** foi liberado: KD 2.1 preserva alt text, mas não referência canônica de mídia suficiente para gerar `core/image` sem invenção;
+- tabelas com `rowspan/colspan` continuam `review_required`;
+- schema de Block Projection evolui para `1.1.0`.
+
+Validação: **25/25 assertions PASS + PHP lint PASS**.
+
+## T093 — Full-corpus v1.1 + diagnóstico KD
+
+Runner atualizado em `includes/class-block-projection-plan-smoke.php`.
+
+Além dos checks T091, T093 exporta somente métricas agregadas de:
+
+- `knowledge_document_readiness`;
+- `knowledge_document_reasons` para review/not_ready;
+- `source_plan_matrix` por source kind × plan status;
+- warnings e block names.
+
+Safety permanece read-only: sem `serialize_blocks()`, sem persistência, sem IDs/conteúdo editorial exportados e sem dependência do plugin Gutenberg.
+
+## Gates históricos reutilizáveis
+
+Journal, stale-source, dry-run, batches, lock, readiness e rollback permanecem conceitos válidos. Nomes/classes Elementor-specific existentes são dívida nominal de transição e não autorizam writer Elementor.
 
 ## Próximos subgates
 
-- [ ] executar T091 em homologação e versionar a evidência.
-- [ ] T092: análise de gaps/allowlist a partir da evidência real; sem ampliar allowlist por hipótese.
-- [ ] T093: contrato de serialização Core Blocks + round-trip `serialize_blocks`/`parse_blocks`, ainda sem persistência.
-- [ ] T094: generalizar dry-run/journal/stale/lock/batches para Block Migration e remover acoplamento nominal Elementor quando seguro.
-- [ ] T095: canário Block Migration em 1 artigo de homologação + rollback real, somente após Authorization Pack específico.
-- [ ] T096: batches de migração homologados.
-- [ ] T097: inventário de dependência residual Elementor e gate de retirada futura.
+- [ ] executar T093 em homologação e versionar a evidência.
+- [ ] T094: definir contrato de serialização Core Blocks a partir do diagnóstico T093; `serialize_blocks()` apenas in-memory.
+- [ ] T095: round-trip `projection → serialize → parse → projeção semântica`, ainda sem persistência.
+- [ ] T096: generalizar dry-run/journal/stale/lock/batches para Block Migration.
+- [ ] T097: canário Block Migration em 1 artigo de homologação + rollback real, somente após Authorization Pack específico.
+- [ ] T098: batches de migração homologados.
+- [ ] T099: inventário de dependência residual Elementor e gate de retirada futura.
 - [ ] G-250 Lifecycle/RC.
 
 ## Regras constitucionais
@@ -131,5 +122,6 @@ T091 deve executar duas passagens e provar:
 3. Elementor permanece até dependência zero; nunca é removido automaticamente.
 4. Nenhum writer `_elementor_data` será implementado como destino.
 5. Qualquer write em `post_content` exige gates e autorização explícitos.
-6. UX-002 não pode regredir.
-7. Trabalho incompleto permanece fora da `main`.
+6. Imagem sem proveniência de mídia não pode ser convertida silenciosamente.
+7. UX-002 não pode regredir.
+8. Trabalho incompleto permanece fora da `main`.

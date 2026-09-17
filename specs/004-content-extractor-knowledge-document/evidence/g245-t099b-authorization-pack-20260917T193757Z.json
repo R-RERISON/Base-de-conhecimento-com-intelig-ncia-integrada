@@ -1,0 +1,95 @@
+{
+    "schema_version": "1.0.0",
+    "gate": "T099B",
+    "mode": "single_canary_authorization_pack_read_only",
+    "generated_at": "2026-09-17T19:37:57+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-g245-authpack-t099b.1",
+        "gutenberg_plugin_dependency": false
+    },
+    "selection": {
+        "policy": "legacy_html + dry_run ready + zero block-migration residue + no active Elementor payload + conservative static risk profile; prefer T099A target if still low-risk",
+        "preferred_post_id": 358,
+        "preferred_target_reused": true,
+        "evaluated_candidates": 623,
+        "low_risk_candidates": 116
+    },
+    "target": {
+        "post_id": 358,
+        "post_title": "LIA | Laboratório de Inteligência Analítica",
+        "post_status": "publish",
+        "source_kind": "legacy_html",
+        "risk_tier": "low",
+        "risk_profile": {
+            "low_risk": true,
+            "risk_score": 358,
+            "content_bytes": 1764,
+            "links": 2,
+            "images": 0,
+            "tables": 1,
+            "registered_shortcode_occurrences": 0,
+            "dangerous_embed_or_script_tags": 0,
+            "core_block_comments": 0,
+            "elementor_data_bytes": 0
+        }
+    },
+    "identity": {
+        "fidelity_hash_before": "5e4695f159494ad3a1715741bdf485da43d77a991f9f39ecdab02901d6b2bd2e",
+        "serialization_hash": "9e96a95d451c9463fa6bf37d7eec31c005df39da1774bd8de7ae110ee72f91cf",
+        "dry_run_hash": "b533eb953b705b85fd48c3ab26c9bc5d6b61ee4223449370662f6e606123fab3",
+        "post_content_sha256_before": "eb7f1c9c4e5426c9c5c473ade6c6b02312f526cad9a375b3bbe30ef0221479d0",
+        "elementor_data_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "serialized_post_content_sha256_expected": "af4101dda487e6f6239b8bb0546439a75e1691062fd27f9322cbb0d9c2f84050",
+        "expected_block_names": [
+            "core/freeform"
+        ],
+        "authorization_id": "1557c1ee50e1a7a46df7d7952032cb1dd0cb374c7222de8656bb9c055f561bc9"
+    },
+    "planned_operation": {
+        "scope": "one post only",
+        "write_target": "WP_Post.post_content",
+        "write_action": "replace current post_content with deterministic lossless WordPress Core Block serialization",
+        "elementor_data_action": "preserve unchanged",
+        "journal_required_before_write": true,
+        "exclusive_lock_required": true,
+        "stale_source_recheck_immediately_before_write": true,
+        "verify_after_write": true,
+        "immediate_rollback_required": true,
+        "rollback_action": "restore exact pre-write post_content snapshot from durable journal",
+        "verify_after_rollback": true
+    },
+    "preconditions": {
+        "dry_run_status": "ready",
+        "journal_count_now": 0,
+        "lock_status_now": "free",
+        "source_kind_allowed": true,
+        "explicit_human_authorization_required": true,
+        "authorization_must_match_id": "1557c1ee50e1a7a46df7d7952032cb1dd0cb374c7222de8656bb9c055f561bc9"
+    },
+    "authorization": {
+        "authorized": false,
+        "authorization_id": "1557c1ee50e1a7a46df7d7952032cb1dd0cb374c7222de8656bb9c055f561bc9",
+        "required_exact_scope": "T099C apply + verify + immediate rollback for post_id=358 only",
+        "suggested_approval_text": "Autorizo o T099C para post_id=358 authorization_id=1557c1ee50e1a7a46df7d7952032cb1dd0cb374c7222de8656bb9c055f561bc9, com apply, verificação e rollback imediato."
+    },
+    "safety": {
+        "read_only_design": true,
+        "persists_journal": false,
+        "acquires_lock": false,
+        "writes_post_content": false,
+        "writes_elementor_data": false,
+        "writer_allowed": false,
+        "migration_execution_allowed": false,
+        "executes_shortcodes": false,
+        "renders_blocks": false,
+        "calls_external_network": false,
+        "exports_editorial_body": false,
+        "exports_urls": false
+    },
+    "gate_result": {
+        "t099b_authorization_pack_pass": true
+    },
+    "duration_ms": 3976
+}

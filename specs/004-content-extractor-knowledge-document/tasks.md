@@ -16,7 +16,7 @@
 - T100A Batch Authorization Pack: **SUPERSEDED BEFORE EXECUTION**; ZIP não instalado/executado.
 - T100A Post Management Workspace: **PASS LOCAL**.
 - T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
-- T100C Core Blocks Post Activity: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE / READ-ONLY**.
+- T100C Core Blocks Post Activity: **PASS AMBIENTAL / READ-ONLY**.
 - G-250: NOT_RUN.
 
 ## T099C — PASS AMBIENTAL
@@ -71,8 +71,8 @@ Entregas:
 - [x] T100A implementação local + lint + invariantes anti-regressão.
 - [x] T100B: aceite ambiental/visual da Workspace em homologação — confirmado pelo usuário.
 - [x] T100C: implementação local da Core Blocks Activity post-scoped + Authorization Pack read-only.
-- [ ] validar T100C ambientalmente em um post real da Workspace.
-- [ ] T100D: executor unitário Core Blocks, somente após Authorization Pack + autorização explícita específica.
+- [x] T100C ambiental: post 358 ready_for_authorization, journal rolled_back, lock free, Authorization Pack válido.
+- [ ] T100D: executor unitário Core Blocks — BLOCKED até autorização explícita de `post_id=358 + authorization_id=17c002d3...a41af0`.
 - [ ] T100E: integrar atividade de Inteligência sob regra IA sugere → humano revisa → humano decide.
 - [ ] T101: dependência residual Elementor / gate de retirada.
 - [ ] G-250 Lifecycle/RC.

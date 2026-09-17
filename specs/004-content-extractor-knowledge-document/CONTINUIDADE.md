@@ -4,145 +4,145 @@
 
 - Repositório: `R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada`.
 - Branch ativa: `spec004-g245-production-readiness`.
-- PR: #4 — DRAFT / NÃO MERGEAR.
+- PR #4: DRAFT / NÃO MERGEAR.
 - SPEC ativa: SPEC-004.
 
-Antes de qualquer alteração, reler `AGENTS.md`, `.specify/PROJECT_MANIFEST.md`, `.specify/memory/constitution.md`, esta SPEC, ADRs vigentes e `docs/DEFINITION-OF-DONE.md`.
+Antes de qualquer alteração, reler `AGENTS.md`, `.specify/PROJECT_MANIFEST.md`, `.specify/memory/constitution.md`, SPEC-004, ADRs vigentes e `docs/DEFINITION-OF-DONE.md`.
 
 ## Estado atual
 
-- SPEC-001/002/003: concluídas.
-- UX-002 `0.4.0-ux002.3`: PASS/CLOSED e contrato visual obrigatório.
-- G-240: PASS/CLOSED/promovido para `main`.
-- KD 2.1.0: PASS técnico full-corpus + PASS humano 8/8.
-- G-245: **REBASELINED / IN PROGRESS**.
+- UX-002 `0.4.0-ux002.3`: PASS/CLOSED, contrato visual obrigatório.
+- G-240: PASS/CLOSED/main.
+- KD 2.1.0: PASS técnico + humano 8/8.
+- ADR-004-001: ACEITA — Core Blocks como destino editorial canônico.
 - T083B Durable Journal Storage: PASS AMBIENTAL.
-- ADR-004-001: **ACEITA**.
-- T090 Block Projection v1.0: PASS LOCAL / READ-ONLY.
-- T091 Block Projection full-corpus: **PASS AMBIENTAL**.
-- T092 Block Projection v1.1: **PASS LOCAL / READ-ONLY**, 25/25 assertions + lint.
-- T093 full-corpus v1.1 + diagnóstico KD: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
+- T091: PASS AMBIENTAL.
+- T092 Block Projection 1.1: PASS LOCAL, 25/25.
+- T093: **PASS AMBIENTAL**.
+- T094 Editorial Fidelity: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**, 11/11 local.
 - Nenhum writer/migration está autorizado.
 
-## Decisão arquitetural vigente
+## T093 comprovado
 
-`WP_Post.post_content` + WordPress Core Blocks são o destino editorial canônico futuro.
+Evidência resumida:
+`evidence/g245-block-projection-t093-summary-20260917T174835Z.json`.
 
-- plugin Gutenberg NÃO é dependência de produção;
-- usar somente APIs estáveis presentes no WordPress Core homologado;
-- Elementor é fonte legada temporária/read-only até dependência zero;
-- `_elementor_data` deve ser preservado durante a transição;
-- nenhum novo writer deve usar `_elementor_data` como destino;
-- T087C writer Elementor foi CANCELADO/SUPERSEDED antes de implementação.
-
-Constituição nesta branch: **v1.3.0**.
-
-## Baseline ambiental T091
-
-Evidência: `evidence/g245-block-projection-t091-20260917T172515Z.json`.
-
-Ambiente:
-
-- WordPress 6.9.4;
-- PHP 8.5.10;
-- Elementor 4.1.0;
-- Block Projection schema 1.0.0;
-- plugin Gutenberg dependency false.
-
-Corpus observado: **623 posts**. O baseline T081 tinha 622; houve +1 post antes do T091. Durante o gate, corpus/fingerprint permaneceram estáveis.
+SHA-256 do JSON bruto recebido:
+`db04ba6ac564c9471e00491987ae2a8d8125a2c9b7462aca9dc55e6259e8da43`.
 
 Resultado:
 
+- corpus 623;
 - duas passagens 623/623;
 - errors 0;
 - throwables 0;
-- block projection hash mismatches 0;
-- canonical hash mismatches 0;
+- projection hash mismatches 0;
+- canonical mismatches 0;
 - safety violations 0;
-- fingerprint editorial igual;
-- `gate_result.t091_block_projection_pass=true`.
+- fingerprint editorial before/after igual;
+- `gate_result.t093_block_projection_pass=true`.
 
-Distribuição:
+Plan status:
 
 - projectable 347;
 - review_required 269;
 - native_noop 4;
 - not_applicable 3.
 
-Warnings:
+KD readiness:
 
-- KD review required 233;
-- image unsupported 40;
-- table span review 32;
-- quote unsupported 8.
+- candidate_ready 387;
+- review_required 233;
+- not_applicable 3.
 
-SHA-256 do JSON recebido: `1fa9fc1439634cb9ecca6a1caa0aac63e9f37366bc9c5656d2ea1b18eb3c6b93`.
+Razões agregadas dos reviews:
 
-## T092 — Block Projection v1.1
+- HIERARCHY_AMBIGUOUS 964 ocorrências;
+- SHORTCODE_NOT_EXPANDED 55;
+- HTML_LOCAL_HEADING_FLATTENED 19;
+- HIERARCHY_NUMBERING_CONFLICT 6;
+- HTML_NESTED_LIST_IN_TABLE_FLATTENED 2.
 
-Contrato: `block-projection-contract-v1.1.md`.
-Build de desenvolvimento: `0.4.0-g245-block-projection.2`.
+## Descoberta que bloqueia serializer direto
 
-Mudança deliberada:
+O KD é semântico, não editorial lossless.
 
-- `quote` → `core/quote`;
-- schema → `1.1.0`;
-- imagem continua review porque o KD 2.1 não preserva referência canônica de mídia suficiente;
-- table spans continuam review para evitar flattening silenciosa.
+No legado, o adapter materializa muitos blocos como texto visível. Portanto não preserva no KD toda a informação necessária para migração sem perda, especialmente:
 
-Validação local: **25/25 PASS + PHP lint PASS**.
+- href de links;
+- src/attachment de imagens;
+- rich inline formatting;
+- alguns detalhes estruturais/editoriais de HTML e Elementor.
 
-## T093 — próximo gate ambiental
+**Não implementar `KD -> serialize_blocks()` como writer.**
 
-Runner: `plugin/base-conhecimento-inteligencia-integrada/includes/class-block-projection-plan-smoke.php`.
+Arquitetura correta:
 
-Além do determinismo/safety de T091, T093 exporta somente dados agregados:
+`fonte original -> Migration Fidelity Source -> Core Block Serializer`
 
-- `knowledge_document_readiness`;
-- `knowledge_document_reasons` para review/not_ready;
-- `source_plan_matrix`;
-- warnings;
-- projected block names.
+com KD em paralelo como guardrail semântico/estrutural:
 
-Sem conteúdo editorial, sem post IDs, sem `serialize_blocks()`, sem persistência.
+`fonte original -> Content Extractor -> Knowledge Document`.
+
+## T094 — Editorial Fidelity
+
+Contrato: `editorial-fidelity-contract-v1.md`.
+Runner: `includes/class-editorial-fidelity-inventory-smoke.php`.
+
+O runner conta/agrega sem exportar conteúdo, URLs ou IDs:
+
+- links;
+- imagens e resolução de attachment por contagem;
+- inline formatting;
+- styled spans;
+- figures/captions/br;
+- tables/spans;
+- shortcodes;
+- Elementor widgets/media refs;
+- source × fidelity class.
+
+Classes:
+
+- native_core_blocks;
+- not_applicable;
+- elementor_source_adapter_required;
+- shortcode_resolution_required;
+- rich_html_source_required;
+- complex_table_source_required;
+- kd_structure_sufficient_candidate.
+
+Validação local: 11/11 PASS + lint.
+
+Pacote de homologação:
+
+- `0.4.0-g245-editorial-fidelity-t094.1`;
+- SHA-256 `e25494a8c7be9bc2103e421ab7698d4a2f1114aea85fa2efdb0811a5a48f2caf`;
+- 38 PHP files lint PASS pré/pós ZIP;
+- UX-002 byte parity PASS;
+- T093 smoke OFF;
+- T094 smoke ON;
+- writer OFF.
 
 ## Próximo passo exato
 
-1. instalar o pacote T093 em homologação;
-2. abrir `Base de Conhecimento > Block Projection G-245`;
-3. executar `Executar T093 e baixar JSON`;
+1. instalar pacote T094 em homologação;
+2. abrir `Base de Conhecimento > Editorial Fidelity G-245`;
+3. executar `Executar T094 e baixar JSON`;
 4. devolver o JSON;
-5. versionar evidência;
-6. definir T094 com base nos motivos reais dos KD reviews e nos gaps restantes.
-
-Critério esperado:
-
-- duas passagens cobrindo todo o corpus atual;
-- errors/throwables 0;
-- hash mismatches 0;
-- safety violations 0;
-- corpus/fingerprint estáveis;
-- `gate_result.t093_block_projection_pass=true`.
-
-## Próxima sequência planejada
-
-- T094: contrato de serialização Core Blocks in-memory;
-- T095: semantic round-trip `projection → serialize → parse` sem persistência;
-- T096: generalizar dry-run/journal/stale/lock/batches para Block Migration;
-- T097: canário de 1 artigo + rollback real com Authorization Pack;
-- T098: batches homologados;
-- T099: dependência residual Elementor e gate de retirada.
+5. versionar a evidência;
+6. definir `Migration Fidelity Source v1` estritamente conforme a distribuição real;
+7. somente depois iniciar serializer Core Blocks in-memory.
 
 ## Guardrails absolutos
 
 - não mexer na UX-002 sem UX-SPEC;
 - não instalar/declarar plugin Gutenberg como requisito;
-- não usar APIs Gutenberg experimentais/plugin-only;
 - não remover Elementor agora;
-- não escrever em `_elementor_data`;
-- não escrever em `post_content` antes dos novos gates de Blocks;
-- não converter imagem sem proveniência de mídia;
-- não interpretar autorização genérica como GO para canário mutável;
+- não escrever `_elementor_data`;
+- não escrever `post_content`;
+- não tratar KD como representação editorial lossless;
+- não executar shortcodes para migrar;
+- não baixar mídia remota;
 - PR #4 permanece DRAFT.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

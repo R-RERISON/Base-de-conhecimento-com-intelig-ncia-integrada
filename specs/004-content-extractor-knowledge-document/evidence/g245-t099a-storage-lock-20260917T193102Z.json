@@ -1,0 +1,55 @@
+{
+    "schema_version": "1.0.0",
+    "gate": "T099A",
+    "mode": "durable_journal_and_lock_environmental_smoke",
+    "generated_at": "2026-09-17T19:31:02+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-g245-storage-lock-t099a.1",
+        "journal_meta_key": "_bdc_kb_block_migration_journal",
+        "lock_meta_key": "_bdc_kb_block_migration_lock",
+        "gutenberg_plugin_dependency": false
+    },
+    "target": {
+        "post_id": 358,
+        "source_kind": "legacy_html",
+        "dry_run_status": "ready"
+    },
+    "journal": {
+        "before_count": 0,
+        "persisted": true,
+        "readback_pass": true,
+        "cleanup_pass": true,
+        "after_count": 0
+    },
+    "lock": {
+        "present_before": false,
+        "acquired": true,
+        "readback_pass": true,
+        "cleanup_pass": true,
+        "present_after": false
+    },
+    "editorial_integrity": {
+        "post_content_before_sha256": "eb7f1c9c4e5426c9c5c473ade6c6b02312f526cad9a375b3bbe30ef0221479d0",
+        "post_content_after_sha256": "eb7f1c9c4e5426c9c5c473ade6c6b02312f526cad9a375b3bbe30ef0221479d0",
+        "elementor_data_before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "elementor_data_after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "equal": true
+    },
+    "errors": [],
+    "safety": {
+        "temporary_private_postmeta_only": true,
+        "writes_post_content": false,
+        "writes_elementor_data": false,
+        "writer_allowed": false,
+        "migration_execution_allowed": false,
+        "executes_shortcodes": false,
+        "renders_blocks": false,
+        "calls_external_network": false
+    },
+    "gate_result": {
+        "t099a_storage_lock_pass": true
+    },
+    "duration_ms": 30
+}

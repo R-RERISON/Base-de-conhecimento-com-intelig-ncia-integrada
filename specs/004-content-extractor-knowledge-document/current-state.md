@@ -15,7 +15,7 @@
 - antigo T100A Batch Authorization Pack: **SUPERSEDED BEFORE EXECUTION**.
 - novo T100A Post Management Workspace: **PASS LOCAL**.
 - T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
-- T100C Core Blocks Post Activity: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+- T100C Core Blocks Post Activity: **PASS AMBIENTAL / READ-ONLY**.
 
 ## T099C — último write comprovado
 
@@ -60,7 +60,7 @@ Integração deliberada em `class-admin-page.php`:
 
 As três atividades novas são read-only. Nenhum novo writer, persistência, execução IA ou rede externa foi habilitado.
 
-## T100C — estado atual
+## T100C — PASS ambiental
 
 A aba Core Blocks agora possui preparação operacional por artigo, ainda sem writer:
 - estado operacional por `post_id`;
@@ -70,7 +70,7 @@ A aba Core Blocks agora possui preparação operacional por artigo, ainda sem wr
 - download de Authorization Pack individual, `authorized=false`;
 - botão futuro de migração visível, porém desabilitado.
 
-Evidência local: `evidence/g245-t100c-core-blocks-activity-local-validation-20260917.json`.
+Evidência ambiental: `evidence/g245-t100c-core-blocks-auth-post-358-20260917T235220Z.json`.\n\nPost 358: `ready_for_authorization`, dry-run `ready`, journal `rolled_back`, lock `free`, `core/freeform`, authorization_id `17c002d3ccc770c6ef154fdbed28cbd0c8d198411c84e168fe9aadb1b7a41af0`.
 
 ## Próximos passos
 

@@ -13,50 +13,47 @@
 - T091/T093/T094/T096/T097/T098.2/T099A/T099B: PASS AMBIENTAL.
 - T095: PASS LOCAL / READ-ONLY.
 - T098.1: FAIL CONTROLADO / SEM MUTAÇÃO.
-- T099C: **BLOCKED até autorização específica para a identidade congelada**.
+- T099C: **AUTHORIZED / EXECUTION PENDING**.
 
 ## Evidência T099B
 Arquivo: `evidence/g245-t099b-authorization-pack-20260917T193757Z.json`.
 SHA-256 bruto: `04d47e7839d67b34af6abf8b4ace87238f934f7ca751bc222e427206d813d8ce`.
 
-Authorization Pack ambiental:
-- post_id: 358;
-- título: `LIA | Laboratório de Inteligência Analítica`;
-- source: legacy_html;
-- status: publish;
-- risk: low;
-- content: 1764 bytes;
-- links 2 / images 0 / tables 1;
-- shortcodes 0 / dangerous tags 0 / Core block comments 0;
-- `_elementor_data` vazio;
-- expected block: `core/freeform`.
+Canário congelado:
+- post_id 358;
+- `LIA | Laboratório de Inteligência Analítica`;
+- legacy_html / low risk;
+- expected block `core/freeform`;
+- authorization_id `1557c1ee50e1a7a46df7d7952032cb1dd0cb374c7222de8656bb9c055f561bc9`.
 
-Hashes congelados:
-- fidelity `5e4695f159494ad3a1715741bdf485da43d77a991f9f39ecdab02901d6b2bd2e`;
-- serialization `9e96a95d451c9463fa6bf37d7eec31c005df39da1774bd8de7ae110ee72f91cf`;
-- dry-run `b533eb953b705b85fd48c3ab26c9bc5d6b61ee4223449370662f6e606123fab3`;
-- current post_content `eb7f1c9c4e5426c9c5c473ade6c6b02312f526cad9a375b3bbe30ef0221479d0`;
-- expected serialized post_content `af4101dda487e6f6239b8bb0546439a75e1691062fd27f9322cbb0d9c2f84050`.
+## Autorização T099C
+Registro: `t099c-authorization-20260917.md`.
+Autorização humana recebida para o escopo exato acima, com apply, verificação e rollback imediato.
 
-`authorization_id`: `1557c1ee50e1a7a46df7d7952032cb1dd0cb374c7222de8656bb9c055f561bc9`.
+Build executável: `0.4.0-g245-canary-t099c.1`.
 
-## T099C — boundary atual
-Escopo permitido somente após autorização explícita correspondente ao ID acima:
-1. post 358 somente;
-2. stale-source/hash recheck imediatamente antes da mutação;
-3. durable journal persistido antes do write;
+Fluxo obrigatório:
+1. capabilities `manage_options` + `edit_post` + `unfiltered_html`;
+2. journal/lock preexistentes = zero/free;
+3. authorization_id revalidado;
 4. lock exclusivo;
-5. write somente em `WP_Post.post_content`;
-6. `_elementor_data` preservado;
-7. verificação do hash esperado após apply;
-8. rollback imediato obrigatório;
-9. verificação byte-exata da restauração;
-10. lock liberado e trilha durável mantida.
+5. source/dry-run/stale recheck sob lock;
+6. journal durável persistido;
+7. stale/auth recheck imediatamente antes do write;
+8. `wp_update_post()` de um único `post_content`;
+9. verificar serialized SHA-256, `core/freeform` e payload original;
+10. persistir applied/partial_failure;
+11. rollback imediato via `wp_update_post()` para o conteúdo original;
+12. verificar post_content e `_elementor_data` originais;
+13. persistir rolled_back;
+14. liberar lock;
+15. journal permanece como audit trail.
 
-Qualquer mudança no artigo/hashes antes do T099C invalida a autorização e exige novo T099B.
+Observação: `wp_update_post()` pode produzir os efeitos normais do WordPress em `post_modified` e revisões. O conteúdo editorial do post deve terminar byte-exatamente igual ao snapshot anterior.
 
 ## Depois do T099C
-- se apply + verify + rollback PASS: T100 batch controlado;
+- se PASS ambiental: versionar evidência e desenhar T100 batch controlado;
+- se FAIL: nenhum batch, analisar estágio e journal durável;
 - T101: dependência residual Elementor / gate de retirada;
 - G-250 Lifecycle/RC.
 
@@ -65,7 +62,8 @@ Qualquer mudança no artigo/hashes antes do T099C invalida a autorização e exi
 - plugin Gutenberg não é dependência.
 - Elementor não é removido agora.
 - mixed exige humano.
-- nenhum write editorial sem gate + autorização específica.
+- nenhum batch autorizado ainda.
+- qualquer drift invalida a autorização antes do write.
 - PR #4 permanece DRAFT.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

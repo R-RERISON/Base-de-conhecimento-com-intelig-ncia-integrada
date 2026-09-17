@@ -4,107 +4,140 @@
 
 - SPEC-001/002/003: concluídas.
 - UX-001/UX-002: concluídas; UX-002 `0.4.0-ux002.3` é contrato visual obrigatório.
-- G-240: **PASS / CLOSED / promovido para `main`**.
+- G-240: PASS / CLOSED / promovido para `main`.
 - KD 2.1.0: PASS técnico full-corpus + PASS humano 8/8.
-- G-245: **IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT / NÃO MERGEAR.
-- T080: **PASS WITH REVIEW ITEMS**.
-- T081: **PASS AMBIENTAL**.
-- T082–T086: **PASS LOCAL / CONTRATUAL**.
-- T083B Durable Journal Storage: **PASS AMBIENTAL**.
-- T087A Canary Readiness: **PASS LOCAL / READ-ONLY**.
-- T087B-prep Migration Lock: **PASS LOCAL**.
-- T087 mutável: **BLOCKED / NÃO EXECUTADO**.
-- T088 Runbook: **FROZEN PROCEDURE / EXECUTION BLOCKED**.
+- G-245: **REBASELINED / IN PROGRESS** em `spec004-g245-production-readiness`; PR #4 DRAFT / NÃO MERGEAR.
+- ADR-004-001: **ACEITA**.
+- T090 Block Projection: **PASS LOCAL / READ-ONLY**.
+- T091: NEXT.
 - G-250: NOT_RUN.
 
-## Baseline `main` e UX
+## Mudança arquitetural de 2026-09-17
 
-`main`: `6d0fc8e33f826ee957038483d22fa1b804bae056`.
-Sincronização G-245 + UX-002: `145e16bf31f7afe2d3f08d087b79b69f3f40b885`.
+A arquitetura editorial futura foi alterada antes do primeiro writer mutável.
 
-A UX-002 homologada permanece inviolável. Os arquivos visuais canônicos não devem aparecer no diff G-245 vs `main`.
+**Antes:** Elementor como destino editorial futuro.  
+**Agora:** `WP_Post.post_content` + WordPress Core Blocks.
 
-## Ambiente homologado
+Razões:
 
-- WordPress `6.9.4`;
-- PHP `8.5.10`;
-- Elementor `4.1.0`;
-- MariaDB `12.2.2`;
-- corpus: 622 posts;
-- DOMDocument ativo;
-- WP-Cron habilitado.
+- WordPress-first;
+- Elementor Free é dependência externa desnecessária como fundação canônica;
+- corpus real mostra somente 34/622 posts Elementor puro;
+- legado predominante é HTML, portanto convergir todos os sources para Blocks é mais coerente;
+- Blocks fornecem estrutura nativa para IA, busca e automação governada;
+- nenhum writer Elementor ou canário mutável havia sido executado, tornando o pivot barato.
 
-## Gates já comprovados
+ADR: `adr/ADR-004-001-wordpress-core-blocks-canonical-editorial-target.md`.
 
-T080 PASS WITH REVIEW ITEMS, blockers 0. T081 PASS ambiental: 622/622 em duas passagens, zero erros/mismatches/violações, fingerprint editorial idêntico, changed posts 0 e `gate.t081_pass=true`.
+## Fonte editorial
 
-T082 Gateway: PASS local/contratual, 45 assertions. T083/T084 Journal contract + stale guard: PASS, 38 assertions. T085 Dry-run: PASS, 38 assertions. T086 Batches retomáveis: PASS, 37 assertions. Todos mantêm writer/migration/execution false conforme aplicável.
+- Canônica futura: `WP_Post.post_content` + Core Blocks.
+- Plugin Gutenberg: não é dependência; somente APIs estáveis do WordPress Core.
+- Elementor: source adapter legado, read-only durante a transição.
+- `_elementor_data`: preservar enquanto houver dependência; nunca usar como novo destino.
 
-## T083B — Durable Journal Storage — PASS AMBIENTAL
+## Evidência do corpus
 
-Storage WordPress-first comprovado em homologação com **postmeta privado append-only** na chave `_bdc_kb_migration_journal`.
+T081 sobre 622 posts:
 
-Decisões e prova:
+- 536 legacy_html;
+- 41 plain_text;
+- 34 elementor;
+- 5 mixed;
+- 4 gutenberg;
+- 2 empty.
 
-- sem custom table, Options API, Comments API ou file storage;
-- rollback capsule persistida com Base64 somente como envelope de storage;
-- hashes permanecem calculados sobre payload editorial original;
-- cadeia linear por parent event;
-- fork/retry stale fail-closed;
-- `manage_options` obrigatório;
-- readback obrigatório e cleanup fail-safe;
-- limite v1 de 16 MiB por evento;
-- smoke executado com build `0.4.0-g245-journal-smoke.1`;
-- evento temporário criado com sucesso;
-- `roundtrip_exact=true`;
-- `record_integrity_ok=true`;
-- cleanup OK;
-- contagem de eventos `0 → 0` restaurada;
-- `post_content_unchanged=true`;
-- `elementor_data_unchanged=true`;
-- `editorial_unchanged=true`;
+T081 continua evidência válida de diagnóstico/determinismo, mas o Elementor Projection Plan não é mais destino arquitetural.
+
+## Investimentos preservados
+
+Permanecem válidos:
+
+- Content Extractor;
+- Knowledge Document 2.1;
+- Legacy HTML Adapter;
+- Gutenberg Adapter;
+- Elementor Adapter como reader legado;
+- Canonical JSON/hashes;
+- journal durable;
+- stale-source guard;
+- dry-run;
+- batch plan;
+- exclusive lock;
+- canary/rollback methodology;
+- production runbook, a ser generalizado.
+
+T083B Journal Durable Storage possui PASS ambiental com `gate.t083b_storage_pass=true` e zero mutação de `post_content`/`_elementor_data`.
+
+## Itens SUPERSEDED
+
+- Elementor como destino editorial futuro;
+- T087C writer Elementor;
+- writer em `_elementor_data`;
+- Elementor Gateway como gate do destino final;
+- Elementor Projection Plan como plano de migração final.
+
+Esses artefatos permanecem versionados como memória institucional/diagnóstico.
+
+## T090 — Block Projection Plan v1
+
+Build de desenvolvimento: `0.4.0-g245-block-projection.1`.
+
+Implementado:
+
+- `block-projection-contract-v1.md`;
+- `class-block-projection-plan.php`;
+- `tests/unit/spec004-block-projection-plan.php`.
+
+Allowlist v1:
+
+- `heading` → `core/heading`;
+- `paragraph` → `core/paragraph`;
+- `code` → `core/code`;
+- `list` → `core/list`/`core/list-item`;
+- `table` simples → `core/table`.
+
+Fail-closed/review:
+
+- kind não suportado → review_required;
+- table span → review_required;
+- KD not_ready → blocked;
+- empty → not_applicable;
+- Gutenberg/Core Blocks prontos → native_noop.
+
+Safety:
+
+- sem `serialize_blocks()`;
+- sem persistência;
+- `serialized_post_content=null`;
 - writer/migration false;
-- `gate.t083b_storage_pass=true`.
+- sem network/shortcode/dynamic block render;
+- sem dependência do plugin Gutenberg.
 
-Evidência: `evidence/g245-journal-storage-smoke-20260917T155150Z.json`. SHA-256 do arquivo recebido: `a05918e28e206766cb2b28e37c8ec64e9d18a39f44ecd28d02a7bbd6ffb2c118`.
-
-## T087A — Canary Readiness
-
-PASS LOCAL / READ-ONLY, 25 assertions. Mesmo quando todas as pré-condições técnicas e autorização simulada estão presentes, o readiness mantém `execution_allowed=false`, `writer_allowed=false` e `migration_execution_allowed=false`; exige executor mutável separado.
-
-## T087B-prep — Exclusive Migration Lock
-
-Implementado com `_bdc_kb_migration_lock` usando `add_post_meta(..., true)` para exclusividade por artigo.
-
-- TTL padrão 300s; limites 30–900s;
-- token exato obrigatório para release;
-- release repetido é idempotent noop;
-- lock expirado não sofre takeover automático;
-- `manage_options` obrigatório;
-- lock não concede writer/migration;
-- **18/18 assertions PASS + lint PASS**.
-
-## T088 — Runbook
-
-`t088-production-runbook-v1.md` está congelado como procedimento. Define freeze, lock, journal write-ahead, stale check final, write controlado, verificação pós-write, rollback obrigatório do primeiro canário, abort conditions, batches e requisitos adicionais de produção.
+Validação local: **23/23 assertions PASS + PHP lint PASS**.
 
 ## Próximo passo técnico
 
-1. implementar o menor executor mutável possível, version-gated e disabled-by-default, sem habilitá-lo;
-2. selecionar 1 candidato `projectable`, sem review/shortcode legado desconhecido;
-3. gerar Authorization Pack específico com hashes, Projection Plan, dry-run, journal/rollback e operação prevista;
-4. obter autorização específica para esse candidato/run;
-5. executar canário + rollback real;
-6. somente após evidências decidir T089 e eventual escalada para batches.
+T091 — **Block Projection full-corpus smoke read-only**:
+
+1. executar duas passagens sobre os 622 posts;
+2. construir KD + Block Projection em cada passagem;
+3. comparar `block_projection_hash` e canonical representation;
+4. medir distribuição `native_noop/projectable/review_required/blocked/not_applicable` por source kind;
+5. agregar warnings/gaps sem exportar conteúdo editorial;
+6. provar fingerprint editorial unchanged;
+7. manter writer/migration false.
+
+Somente a evidência T091 deve determinar expansão de allowlist. Não inventar suporte antes do corpus demonstrar necessidade.
 
 ## Guardrails
 
-- WordPress/Elementor continuam fonte editorial;
 - UX-002 não pode regredir;
-- journal durável + stale recheck + lock são pré-condições já fechadas tecnicamente;
-- produção não é ambiente experimental;
-- GO homologação != GO produção;
-- nenhum writer está autorizado neste estado;
+- plugin Gutenberg não pode virar dependência silenciosa;
+- Elementor não pode ser removido antes de dependência zero;
+- nenhuma migração automática em activation/update;
+- nenhum writer está autorizado;
 - PR #4 permanece DRAFT.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

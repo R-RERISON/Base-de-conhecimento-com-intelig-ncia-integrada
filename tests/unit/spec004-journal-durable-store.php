@@ -18,11 +18,34 @@ namespace {
 }
 
 namespace BDC\KnowledgeBase {
-	$GLOBALS['spec004_comments'] = array();
-	$GLOBALS['spec004_next_comment_id'] = 1;
+	$GLOBALS['spec004_meta'] = array();
+	$GLOBALS['spec004_next_meta_id'] = 1;
 	$GLOBALS['spec004_posts'] = array( 123 => (object) array( 'ID' => 123 ) );
 	$GLOBALS['spec004_user_id'] = 7;
 	$GLOBALS['spec004_manage_options'] = true;
+
+	final class Spec004_Wpdb_Stub {
+		public string $postmeta = 'wp_postmeta';
+		private int $last_post_id = 0;
+		private string $last_meta_key = '';
+
+		public function prepare( string $query, mixed ...$args ): string {
+			$this->last_post_id = (int) ( $args[0] ?? 0 );
+			$this->last_meta_key = (string) ( $args[1] ?? '' );
+			return $query;
+		}
+
+		public function get_var( string $query ): int {
+			$ids = array();
+			foreach ( $GLOBALS['spec004_meta'] as $id => $row ) {
+				if ( (int) $row->post_id === $this->last_post_id && (string) $row->meta_key === $this->last_meta_key ) {
+					$ids[] = (int) $id;
+				}
+			}
+			return empty( $ids ) ? 0 : max( $ids );
+		}
+	}
+	$GLOBALS['wpdb'] = new Spec004_Wpdb_Stub();
 
 	function is_wp_error( mixed $value ): bool {
 		return $value instanceof \WP_Error;
@@ -42,38 +65,22 @@ namespace BDC\KnowledgeBase {
 	function error_log( string $message ): bool {
 		return true;
 	}
-	function wp_insert_comment( array $data ): int {
-		$id = $GLOBALS['spec004_next_comment_id']++;
-		$GLOBALS['spec004_comments'][ $id ] = (object) array(
-			'comment_ID' => $id,
-			'comment_post_ID' => (int) $data['comment_post_ID'],
-			'comment_content' => (string) $data['comment_content'],
-			'comment_type' => (string) $data['comment_type'],
-			'comment_approved' => (int) $data['comment_approved'],
-			'user_id' => (int) $data['user_id'],
-			'comment_date_gmt' => '2026-09-17 15:00:00',
+	function add_post_meta( int $post_id, string $key, mixed $value, bool $unique = false ): int|false {
+		$id = $GLOBALS['spec004_next_meta_id']++;
+		$GLOBALS['spec004_meta'][ $id ] = (object) array(
+			'meta_id' => $id,
+			'post_id' => $post_id,
+			'meta_key' => $key,
+			'meta_value' => $value,
 		);
 		return $id;
 	}
-	function get_comment( int $id ): mixed {
-		return $GLOBALS['spec004_comments'][ $id ] ?? null;
+	function get_metadata_by_mid( string $type, int $id ): mixed {
+		return $GLOBALS['spec004_meta'][ $id ] ?? false;
 	}
-	function wp_delete_comment( int $id, bool $force = false ): bool {
-		unset( $GLOBALS['spec004_comments'][ $id ] );
+	function delete_metadata_by_mid( string $type, int $id ): bool {
+		unset( $GLOBALS['spec004_meta'][ $id ] );
 		return true;
-	}
-	function get_comments( array $args ): array {
-		$rows = array_values(
-			array_filter(
-				$GLOBALS['spec004_comments'],
-				static function ( object $comment ) use ( $args ): bool {
-					return (int) $comment->comment_post_ID === (int) $args['post_id']
-						&& (string) $comment->comment_type === (string) $args['type'];
-				}
-			)
-		);
-		usort( $rows, static fn( object $a, object $b ): int => (int) $b->comment_ID <=> (int) $a->comment_ID );
-		return array_slice( $rows, 0, (int) ( $args['number'] ?? 1 ) );
 	}
 
 	function spec004_sort_recursive( array &$array ): void {

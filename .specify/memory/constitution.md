@@ -1,6 +1,6 @@
 # Constituição — Base de Conhecimento com Inteligência Integrada
 
-**Versão:** 1.2.0  
+**Versão:** 1.3.0  
 **Ratificação:** 2026-09-17  
 **Idioma oficial:** Português do Brasil  
 **Mantra constitucional:** **“Quem não sabe onde está, não sabe para onde quer ir”.**
@@ -25,6 +25,7 @@ A ordem preferencial de decisão é:
 Devem ser avaliados primeiro:
 
 - `WP_Post`;
+- WordPress Core Block APIs;
 - Post Metadata API;
 - Taxonomy API;
 - Options / Settings API;
@@ -45,22 +46,39 @@ Devem ser avaliados primeiro:
 
 ---
 
-## Artigo II — O conteúdo editorial pertence ao WordPress/Elementor
+## Artigo II — O conteúdo editorial pertence ao WordPress Core
 
 ### II.1 — Fonte editorial canônica
-O conteúdo oficial da Base de Conhecimento permanece no `WP_Post` e na estrutura editorial produzida pelo Elementor.
+A arquitetura editorial canônica futura da Base de Conhecimento é o `WP_Post`, com conteúdo estruturado em `post_content` por **WordPress Core Blocks**.
 
-### II.2 — Proibição absoluta
+O Block Editor é tratado como capacidade do WordPress Core. O projeto deve preferir Core Blocks e APIs estáveis do Core antes de criar blocos próprios ou depender de terceiros.
+
+### II.2 — Plugin Gutenberg não é dependência
+O plugin Gutenberg não é requisito de produção do BDC. APIs experimentais, plugin-only ou sem compromisso de compatibilidade não podem se tornar dependência do produto sem ADR específica, justificativa e rollback.
+
+### II.3 — Elementor é legado durante a transição
+Elementor pode permanecer instalado enquanto houver conteúdo ou dependência comprovada. Durante a transição:
+
+- `Elementor_Adapter` pode ler conteúdo de forma read-only;
+- `_elementor_data` deve ser preservado;
+- nenhuma remoção/desativação automática do Elementor é permitida;
+- Elementor não é destino editorial futuro;
+- nenhum novo writer deve usar `_elementor_data` como destino canônico.
+
+A retirada futura do Elementor exige inventário com dependência zero, paridade comprovada, rollback e gate explícito.
+
+### II.4 — Proibições editoriais
 O plugin não deve:
 
-- substituir Elementor;
-- tornar-se editor de posts;
-- escrever em `_elementor_data` sem gate e autorização explícita aplicável;
+- tornar-se editor paralelo de posts;
 - reescrever silenciosamente `post_content`;
-- publicar posts em nome do autor;
+- escrever em `_elementor_data` como arquitetura-alvo;
+- publicar posts em nome do autor sem fluxo autorizado;
 - alterar conteúdo editorial a partir de IA sem ação editorial explícita no fluxo oficial.
 
-### II.3 — O que o plugin pode gerenciar
+Migrações administrativas governadas para Core Blocks podem existir somente sob SPEC, dry-run, stale-source guard, journal, lock, canário, rollback e autorização explícitos.
+
+### II.5 — O que o plugin pode gerenciar
 O plugin pode gerenciar a camada sistêmica ao redor do post:
 
 - Resumo Executivo;
@@ -80,7 +98,7 @@ O plugin pode gerenciar a camada sistêmica ao redor do post:
 - operações;
 - migrações governadas.
 
-### II.4 — Projeções não são fonte da verdade
+### II.6 — Projeções não são fonte da verdade
 Índices, chunks, embeddings, Knowledge Documents/Records e Projection Plans são projeções reconstruíveis. Nunca substituem o post oficial.
 
 ---
@@ -106,7 +124,7 @@ Antes de aprovar uma solução, questionar:
 - precisamos de IA?
 - precisamos de embedding?
 - precisamos de vetor?
-- podemos usar Metadata, Taxonomy, Settings, Hooks ou APIs nativas?
+- podemos usar Core Blocks, Metadata, Taxonomy, Settings, Hooks ou APIs nativas?
 
 ### III.3 — Complexidade precisa ser comprada
 Toda complexidade adicional deve demonstrar benefício mensurável em confiabilidade, desempenho, escala, segurança ou produto.
@@ -275,7 +293,7 @@ Semantic search complementa, não elimina automaticamente, busca lexical determi
 Combinação lexical + semântica deve ser validada por Golden Queries e métricas antes de produção.
 
 ### XI.4 — Nunca vetorizar fonte bruta inadequada
-Elementor bruto, JSON estrutural, shortcodes e marcação de apresentação devem passar por Content Extractor antes de chunking/embedding.
+HTML legado bruto, `_elementor_data`, JSON estrutural de terceiros, shortcodes e marcação de apresentação devem passar por Content Extractor antes de chunking/embedding. Core Blocks também devem ser consumidos semanticamente, não como comentário serializado bruto.
 
 ---
 
@@ -314,7 +332,7 @@ Nonce não substitui capability.
 Ativação não deve executar trabalho pesado nem destrutivo.
 
 ### XIV.2 — Dados antigos são preservados
-Durante transição, meta keys e tabelas comprovadamente utilizadas devem ser preservadas até gate explícito de migração.
+Durante transição, meta keys e tabelas comprovadamente utilizadas devem ser preservadas até gate explícito de migração. Isso inclui `_elementor_data` enquanto houver conteúdo/dependência Elementor ativa.
 
 ### XIV.3 — Limpeza explícita
 Exclusões definitivas exigem confirmação administrativa, nonce, capability, evidência e plano de rollback quando aplicável.
@@ -378,6 +396,17 @@ Alternativa mais simples adotada: preservar WordPress como shell/plataforma e pr
 
 Risco de regressão: visual/responsivo/acessibilidade e eventual leitura equivocada de IA como writer autônomo. Mitigação: UX-SPEC dedicada, validação responsiva, sem mudança de contratos de persistência e manutenção explícita da autoridade humana.
 
+### XVII.2 — Emenda 1.3.0
+Problema tratado: Elementor havia sido assumido como destino editorial futuro, apesar de o projeto ser WordPress-first e de o corpus demonstrar predominância de HTML legado, com pequena parcela de conteúdo Elementor puro.
+
+Princípios afetados: Artigos I, II, III, XI, XIV e XVI.
+
+Alternativa mais simples adotada: tornar `WP_Post.post_content` + WordPress Core Blocks o destino editorial canônico; manter Elementor apenas como fonte legada temporária; não depender do plugin Gutenberg; usar apenas APIs estáveis do Core homologado.
+
+Risco de regressão: perda estrutural/visual durante migração do legado, incompatibilidade de blocos e retirada prematura do Elementor. Mitigação: Content Extractor/KD, Block Projection read-only, dry-run, stale-source, journal, lock, canário, rollback, batches e retirada do Elementor somente após dependência zero comprovada.
+
+ADR normativa: `specs/004-content-extractor-knowledge-document/adr/ADR-004-001-wordpress-core-blocks-canonical-editorial-target.md`.
+
 ---
 
 ## Artigo XVIII — Continuidade entre chats e preservação de contexto
@@ -422,7 +451,7 @@ O Prompt de Continuidade deve instruir explicitamente o novo chat a:
 1. ler `AGENTS.md`;
 2. ler `.specify/PROJECT_MANIFEST.md`;
 3. ler esta Constituição;
-4. ler a SPEC ativa e seus artefatos;
+4. ler a SPEC ativa e ADRs vigentes;
 5. ler `docs/DEFINITION-OF-DONE.md`;
 6. confirmar branch/commit/estado atual no GitHub;
 7. somente então continuar a implementação.

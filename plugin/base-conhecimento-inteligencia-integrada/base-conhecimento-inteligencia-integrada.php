@@ -14,9 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'BDC_KB_VERSION', '0.4.0-smoke.2' );
-define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
-define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
-define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', true );
+define( 'BDC_KB_SPEC004_G245_PROJECTION_PLAN_BUILD', true );
+define( 'BDC_KB_SPEC004_G245_ELEMENTOR_GATEWAY_BUILD', true );
+define( 'BDC_KB_SPEC004_G245_DRY_RUN_BUILD', true );
+define( 'BDC_KB_SPEC004_G245_STALE_GUARD_BUILD', true );
 define( 'BDC_KB_FILE', __FILE__ );
 define( 'BDC_KB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
@@ -41,23 +42,20 @@ require_once BDC_KB_DIR . 'includes/class-knowledge-document.php';
 require_once BDC_KB_DIR . 'includes/class-admin-page.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
 
-if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
-	require_once BDC_KB_DIR . 'includes/class-content-profile.php';
+if ( defined( 'BDC_KB_SPEC004_G245_PROJECTION_PLAN_BUILD' ) && BDC_KB_SPEC004_G245_PROJECTION_PLAN_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-projection-plan.php';
 }
-if ( defined( 'BDC_KB_SPEC004_G220_SMOKE_BUILD' ) && BDC_KB_SPEC004_G220_SMOKE_BUILD ) {
-	require_once BDC_KB_DIR . 'includes/class-content-extractor-smoke.php';
+if ( defined( 'BDC_KB_SPEC004_G245_ELEMENTOR_GATEWAY_BUILD' ) && BDC_KB_SPEC004_G245_ELEMENTOR_GATEWAY_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-elementor-gateway.php';
 }
-if ( defined( 'BDC_KB_SPEC004_G230_SMOKE_BUILD' ) && BDC_KB_SPEC004_G230_SMOKE_BUILD ) {
-	require_once BDC_KB_DIR . 'includes/class-knowledge-document-smoke.php';
+if ( defined( 'BDC_KB_SPEC004_G245_DRY_RUN_BUILD' ) && BDC_KB_SPEC004_G245_DRY_RUN_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-migration-dry-run.php';
 }
+if ( defined( 'BDC_KB_SPEC004_G245_STALE_GUARD_BUILD' ) && BDC_KB_SPEC004_G245_STALE_GUARD_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-stale-source-guard.php';
+}
+	if ( defined( 'BDC_KB_SPEC004_G245_ELEMENTOR_GATEWAY_BUILD' ) && BDC_KB_SPEC004_G245_ELEMENTOR_GATEWAY_BUILD ) {
+		require_once BDC_KB_DIR . 'includes/class-elementor-projection-builder.php';
+	}
 
 \BDC\KnowledgeBase\Plugin::register();
-if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
-	\BDC\KnowledgeBase\Content_Profile::register();
-}
-if ( defined( 'BDC_KB_SPEC004_G220_SMOKE_BUILD' ) && BDC_KB_SPEC004_G220_SMOKE_BUILD ) {
-	\BDC\KnowledgeBase\Content_Extractor_Smoke::register();
-}
-if ( defined( 'BDC_KB_SPEC004_G230_SMOKE_BUILD' ) && BDC_KB_SPEC004_G230_SMOKE_BUILD ) {
-	\BDC\KnowledgeBase\Knowledge_Document_Smoke::register();
-}

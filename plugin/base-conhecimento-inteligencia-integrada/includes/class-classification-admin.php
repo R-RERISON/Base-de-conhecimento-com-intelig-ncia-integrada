@@ -116,10 +116,11 @@ final class Classification_Admin {
 			return;
 		}
 
-		echo '<hr class="bdc-kb-section-separator">';
-		echo '<section class="bdc-kb-classification" aria-labelledby="bdc-kb-classification-title">';
-		echo '<h2 id="bdc-kb-classification-title">' . esc_html__( 'Classificação de Conhecimento', 'bdc-knowledge-base' ) . '</h2>';
+		echo '<section class="bdc-kb-domain-panel bdc-kb-classification" aria-labelledby="bdc-kb-classification-title">';
+		echo '<div class="bdc-kb-domain-heading">';
+		echo '<h3 id="bdc-kb-classification-title">' . esc_html__( 'Classificação de Conhecimento', 'bdc-knowledge-base' ) . '</h3>';
 		echo '<p>' . esc_html__( 'Selecione somente termos canônicos existentes. Valores legados aparecem apenas como referência e nunca são migrados automaticamente.', 'bdc-knowledge-base' ) . '</p>';
+		echo '</div>';
 
 		self::render_vocabulary_links();
 

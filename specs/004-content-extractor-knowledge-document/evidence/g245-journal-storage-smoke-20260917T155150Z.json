@@ -1,0 +1,42 @@
+{
+    "schema_version": "1.0.0",
+    "mode": "spec004_g245_journal_storage_smoke",
+    "generated_at": "2026-09-17T15:51:50+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-g245-journal-smoke.1"
+    },
+    "target": {
+        "post_id_sha256": "62bfa285013f08807d394266cdf8261dd060a704959ae9c20e4ad262b65da12a"
+    },
+    "journal": {
+        "storage": "private_postmeta_append_only",
+        "meta_key": "_bdc_kb_migration_journal",
+        "event_created": true,
+        "roundtrip_exact": true,
+        "record_integrity_ok": true,
+        "cleanup_ok": true,
+        "count_before": 0,
+        "count_after": 0,
+        "count_restored": true
+    },
+    "editorial": {
+        "post_content_unchanged": true,
+        "elementor_data_unchanged": true,
+        "editorial_unchanged": true
+    },
+    "safety": {
+        "writes_post_content": false,
+        "writes_elementor_data": false,
+        "calls_external_network": false,
+        "executes_shortcodes": false,
+        "writer_allowed": false,
+        "migration_execution_allowed": false
+    },
+    "error_code": null,
+    "gate": {
+        "t083b_storage_pass": true
+    },
+    "duration_ms": 44
+}

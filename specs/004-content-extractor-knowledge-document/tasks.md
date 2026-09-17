@@ -11,145 +11,110 @@
 - ADR-004-001: **ACEITA** — WordPress Core Blocks como destino editorial canônico.
 - T083B Durable Journal Storage: **PASS AMBIENTAL**.
 - T087C writer Elementor: **CANCELADO / SUPERSEDED antes de implementação**.
-- T090 Block Projection v1.0: PASS LOCAL / READ-ONLY.
-- T091 Block Projection full-corpus: PASS AMBIENTAL.
-- T092 Block Projection v1.1: PASS LOCAL / READ-ONLY.
-- T093 Block Projection v1.1 full-corpus: PASS AMBIENTAL.
+- T090 Block Projection v1.0: **PASS LOCAL / READ-ONLY**.
+- T091 Block Projection full-corpus: **PASS AMBIENTAL**.
+- T092 Block Projection v1.1: **PASS LOCAL / READ-ONLY**.
+- T093 full-corpus + diagnóstico KD: **PASS AMBIENTAL**.
 - T094 Editorial Fidelity Inventory: **PASS AMBIENTAL**.
 - T095 Migration Fidelity Source v1: **PASS LOCAL / READ-ONLY**.
 - T096 Lossless Core Block Serialization + round-trip: **PASS AMBIENTAL**.
-- T097 Static Editorial Parity + generic stale-source: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**, 20/20 assertions + lint.
+- T097 Static Editorial Parity + generic stale-source: **PASS AMBIENTAL**.
+- T098 Block Migration Protection: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**, 24/24 assertions + lint.
 - G-250: NOT_RUN.
 
 ## Baseline visual obrigatória
 
-UX-002 `0.4.0-ux002.3` permanece contrato visual obrigatório. G-245 não altera os arquivos visuais canônicos sem UX-SPEC/aceite humano.
+UX-002 `0.4.0-ux002.3` permanece contrato visual obrigatório. G-245 não altera arquivos visuais canônicos sem UX-SPEC/aceite.
 
 ## Arquitetura editorial vigente
 
 - `WP_Post.post_content` + WordPress Core Blocks = destino editorial futuro;
 - plugin Gutenberg = não dependência;
-- somente APIs estáveis do WordPress Core homologado;
 - Elementor = source adapter legado temporário;
-- nenhum writer `_elementor_data` como destino;
-- remoção do Elementor somente após dependência zero comprovada.
+- nenhum novo writer em `_elementor_data`;
+- KD 2.1 = modelo semântico/IA, não representação editorial lossless;
+- Migration Fidelity Source + Lossless Core Serializer = trilha de migração fiel.
 
-## Baseline ambiental atual
+## Baseline ambiental — T096/T097
 
 Corpus: **623 posts**.
 
-Source kinds:
+Source kinds: legacy_html 536; plain_text 41; elementor 34; mixed 5; gutenberg 4; empty 3.
 
-- legacy_html 536;
-- plain_text 41;
-- elementor 34;
-- mixed 5;
-- gutenberg 4;
-- empty 3.
+T096:
 
-## T094 — Editorial Fidelity — PASS AMBIENTAL
+- source `ready`: 615;
+- `review_required`: 5;
+- `not_applicable`: 3;
+- `serialized_in_memory`: 611;
+- `native_noop`: 4;
+- zero errors/throwables/safety violations;
+- zero raw round-trip / parse-serialize / hash mismatches;
+- `t096_lossless_roundtrip_pass=true`.
 
-O inventário comprovou que o KD 2.1 é modelo semântico, não representação editorial lossless.
+T097:
 
-Material observado:
+- Core registry: `core/freeform` e `core/shortcode` presentes;
+- parity `pass`: 611;
+- `native_noop`: 4;
+- `not_applicable`: 3;
+- `review_required`: 5;
+- stale `fresh`: 623;
+- zero parity mismatch, zero stale source, zero manifest hash mismatch;
+- fingerprint editorial before/after idêntico;
+- `t097_static_editorial_parity_pass=true`.
 
-- 6.874 links;
-- 4.595 imagens;
-- 25.764 ocorrências de inline formatting;
-- 1.394 styled spans;
-- 1.319 line breaks;
-- 513 tabelas;
-- 53 posts com shortcodes;
-- 80 posts com meta Elementor.
-
-Todas as 4.595 URLs de imagem do `post_content` ficaram sem attachment ID resolvido; não relinkar mídia por inferência.
-
-## T095/T096 — canonicalização lossless
-
-Duas projeções complementares:
-
-1. `fonte -> Content Extractor -> Knowledge Document` para busca/IA/hierarquia/guardrail;
-2. `fonte -> Migration Fidelity Source -> Lossless Core Block Serializer` para migração fiel.
-
-Primeira canonicalização:
-
-- Gutenberg existente -> `native_noop`;
-- legacy HTML/plain text -> `core/freeform` preservando payload exato;
-- Elementor `text-editor` -> `core/freeform` preservando `settings.editor`;
-- Elementor `shortcode` -> `core/shortcode` preservando texto exato;
-- mixed/unsupported -> fail-closed / review.
-
-Refinamento posterior de `core/freeform` para blocos semânticos fica fora da primeira migração.
-
-## T096 — PASS AMBIENTAL
-
-Evidência resumida:
-`evidence/g245-lossless-t096-summary-20260917T182930Z.json`.
+Evidência:
+`evidence/g245-editorial-parity-t097-20260917T184418Z.json`.
 
 SHA-256 do JSON bruto recebido:
-`7c71a436db3393fbf9be8f0add11fd32590d3a9804452e57173090e425925192`.
+`6466fb0830d9ba65e79da9dc69b90da6a08fb4286391517eb0663849b10babec`.
 
-Resultado:
+## T098 — Block Migration Protection
 
-- duas passagens 623/623;
-- errors 0;
-- throwables 0;
-- safety violations 0;
-- raw round-trip mismatches 0;
-- parse/serialize mismatches 0;
-- fidelity hash mismatches 0;
-- serialization hash mismatches 0;
-- source ready 615;
-- review_required 5;
-- not_applicable 3;
-- serialized_in_memory 611;
-- native_noop 4;
-- `core/freeform` 611;
-- `core/shortcode` 1;
-- 5 mixed sources permanecem review_required;
-- corpus unchanged;
-- fingerprint editorial igual;
-- `gate_result.t096_lossless_roundtrip_pass=true`.
-
-## T097 — Static Editorial Parity + stale-source
-
-Contrato:
-`core-block-editorial-parity-contract-v1.md`.
+Contrato: `block-migration-protection-contract-v1.md`.
 
 Runtime:
 
-- `includes/class-block-migration-stale-source-guard.php`;
-- `includes/class-core-block-editorial-parity.php`;
-- `includes/class-core-block-editorial-parity-smoke.php`.
+- `class-block-migration-journal.php`;
+- `class-block-migration-journal-store.php`;
+- `class-block-migration-dry-run.php`;
+- `class-block-migration-batch-plan.php`;
+- `class-block-migration-lock.php`;
+- `class-block-migration-readiness-smoke.php`.
 
-Validação local: **20/20 assertions PASS + PHP lint PASS**.
+Validação local: **24/24 assertions PASS** + lint das novas classes.
 
-T097 valida, sem renderizar:
+### Invariantes
 
-- `core/freeform` e `core/shortcode` registrados no Block Registry do Core;
-- block name esperado por unidade editorial;
-- SHA-256 do `innerHTML` parseado igual ao raw original;
-- Gutenberg `native_noop` byte-equivalent;
-- stale-source por `fidelity_hash`, `source_kind`, `post_content_sha256` e `elementor_data_sha256`;
-- duas passagens determinísticas;
-- fingerprint editorial unchanged;
-- zero export de conteúdo/URLs/post IDs.
+- nenhum writer foi implementado;
+- `execution_allowed=false`;
+- `writer_allowed=false`;
+- `migration_execution_allowed=false`;
+- source `mixed` continua review;
+- journal deve preceder write futuro;
+- stale recheck deve ocorrer imediatamente antes de write futuro;
+- lock exclusivo obrigatório;
+- rollback bloqueia alvo alterado;
+- batch planner usa cursor versionado, cohort hash, sem duplicidade;
+- T098 smoke não persiste journal e não adquire lock.
 
 Pacote de homologação:
 
-- `0.4.0-g245-parity-t097.1`;
-- SHA-256 `79d82b6e8f7929247a4121c9ccbc2f94972902eab3039b12770b0714f99f11e0`;
-- 44 PHP files lint PASS antes/depois do ZIP;
+- `0.4.0-g245-readiness-t098.1`;
+- SHA-256 `df08c57d9c7b7c6df8a66b026ebec1bd6c3d16e993c92ea65afac122e6d63ddf`;
+- 50 PHP files lint PASS pré/pós ZIP;
 - UX-002 byte parity PASS;
-- T096 smoke OFF;
-- T097 smoke ON;
-- writer/migration OFF.
+- T097 smoke OFF;
+- T098 smoke ON;
+- writers OFF.
 
 ## Próximos subgates
 
-- [ ] executar T097 em homologação e versionar a evidência.
-- [ ] T098: generalizar journal/dry-run/lock/batch para Block Migration, removendo acoplamento nominal Elementor sem mudar comportamento defensivo.
-- [ ] T099: montar Authorization Pack de um único canário e executar write + rollback real somente com autorização específica.
+- [ ] executar T098 e versionar evidência.
+- [ ] T099A: smoke mutável apenas do novo journal store + lock em 1 artigo de homologação, com cleanup imediato e sem write editorial.
+- [ ] T099B: selecionar automaticamente 1 `legacy_html` de baixo risco e gerar Authorization Pack completo.
+- [ ] T099C: canário real de 1 artigo + verificação + rollback comprovado.
 - [ ] T100: batches homologados.
 - [ ] T101: inventário de dependência residual Elementor e gate de retirada futura.
 - [ ] G-250 Lifecycle/RC.
@@ -162,8 +127,7 @@ Pacote de homologação:
 4. Nenhum writer `_elementor_data` será implementado como destino.
 5. Qualquer write em `post_content` exige gates e autorização explícitos.
 6. KD não pode ser tratado como representação editorial lossless.
-7. Payload editorial lossless não pode ser exportado por runners.
+7. Payload editorial lossless não pode sair em runners.
 8. Mixed source não pode ser decidido automaticamente.
-9. Shortcode não pode ser executado por gates de migração.
-10. UX-002 não pode regredir.
-11. Trabalho incompleto permanece fora da `main`.
+9. UX-002 não pode regredir.
+10. Trabalho incompleto permanece fora da `main`.

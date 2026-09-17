@@ -54,7 +54,8 @@ Quando aplicável, novas telas devem reutilizar:
 - empty state;
 - activity/history item;
 - legacy reference disclosure;
-- pagination.
+- pagination;
+- iconografia discreta com Dashicons nativos quando melhorar reconhecimento e navegação.
 
 ## Regras de aparência
 
@@ -74,6 +75,29 @@ Quando aplicável, novas telas devem reutilizar:
 - CSS do runtime deve usar tokens canônicos;
 - novas variantes exigem razão real; não criar micro-design por feature;
 - alterações funcionais e visuais permanecem separáveis em revisão.
+
+## Regra permanente de desenvolvimento
+
+A partir do fechamento da UX-002, **toda e qualquer nova superfície do produto, formulário, tabela, estado, componente ou alteração material de UI deve seguir este contrato visual**.
+
+Isso é requisito de arquitetura de produto, não acabamento opcional.
+
+Toda implementação com UI deve, antes de ser considerada Done:
+
+1. identificar o mockup em `scr/` aplicável ou declarar explicitamente que não existe referência direta;
+2. reutilizar tokens e componentes canônicos antes de criar qualquer variante;
+3. manter WordPress como shell/plataforma sem aceitar aparência genérica do wp-admin como resultado final da superfície BDC;
+4. validar desktop e os breakpoints aplicáveis de 782px e 520px;
+5. validar foco, teclado, contraste, estados, feedback e legibilidade;
+6. registrar evidência humana quando a mudança visual for material.
+
+Divergência intencional só é permitida com justificativa explícita, impacto de regressão, evidência e decisão registrada na SPEC/UX-SPEC correspondente.
+
+## Baseline homologada
+
+A fundação visual `0.4.0-ux002.3` foi **APROVADA em homologação humana em 2026-09-17** e passa a ser a baseline mínima para evolução visual do produto.
+
+Foram aprovados como conjunto coerente: Knowledge List, Knowledge Workspace, Summary, Classificação, Review & Governança, Histórico, telas dos quatro vocabulários, navegação contextual e iconografia discreta.
 
 ## Definition of Visual Done
 

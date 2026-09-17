@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança, Content Extractor e Knowledge Document determinísticos.
- * Version: 0.4.0-ux002.1
+ * Version: 0.4.0-ux002.3
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-ux002.1' );
+define( 'BDC_KB_VERSION', '0.4.0-ux002.3' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );

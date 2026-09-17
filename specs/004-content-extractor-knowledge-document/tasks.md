@@ -17,7 +17,7 @@
 - T088 Runbook: FROZEN; deve ser generalizado para Block Migration.
 - ADR-004-001: **ACEITA** — WordPress Core Blocks como destino editorial canônico.
 - T090 Block Projection Contract/Plan: **PASS LOCAL / READ-ONLY**, 23/23 assertions + lint.
-- T091 Block Projection full-corpus smoke: **NEXT**.
+- T091 Block Projection full-corpus smoke: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
 - G-250: NOT_RUN.
 
 ## Baseline visual obrigatória
@@ -86,9 +86,36 @@ Regras:
 
 Validação local: **23/23 assertions PASS + lint PASS**.
 
+## T091 — Block Projection full-corpus smoke
+
+Runner implementado em `includes/class-block-projection-plan-smoke.php`.
+
+Build de homologação:
+
+- `0.4.0-g245-block-projection-smoke.1`;
+- SHA-256 `d70b518bc20825a5d64984aef555f67a270ec065587c00bfefa3caad3e67028c`;
+- 37 PHP files lint PASS antes e após reextração;
+- UX-002 byte parity PASS;
+- antigo Elementor Projection smoke disabled;
+- Journal smoke disabled;
+- Block Projection smoke enabled apenas no pacote de homologação;
+- writer Elementor false.
+
+T091 deve executar duas passagens e provar:
+
+- corpus completo nas duas passagens;
+- zero errors/throwables;
+- zero `block_projection_hash` mismatch;
+- zero canonical hash mismatch;
+- zero safety violations;
+- distribuição por source/status/warnings/block names;
+- fingerprint editorial before/after idêntico;
+- zero dependência do plugin Gutenberg;
+- `gate_result.t091_block_projection_pass=true`.
+
 ## Próximos subgates
 
-- [ ] T091: runner full-corpus Block Projection read-only, duas passagens, determinismo e distribuição.
+- [ ] executar T091 em homologação e versionar a evidência.
 - [ ] T092: análise de gaps/allowlist a partir da evidência real; sem ampliar allowlist por hipótese.
 - [ ] T093: contrato de serialização Core Blocks + round-trip `serialize_blocks`/`parse_blocks`, ainda sem persistência.
 - [ ] T094: generalizar dry-run/journal/stale/lock/batches para Block Migration e remover acoplamento nominal Elementor quando seguro.

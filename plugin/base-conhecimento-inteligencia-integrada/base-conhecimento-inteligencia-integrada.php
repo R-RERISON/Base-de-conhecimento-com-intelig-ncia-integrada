@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança, Content Extractor e Knowledge Document determinísticos.
- * Version: 0.4.0-g245-block-migration.2
+ * Version: 0.4.0-g245-batch-auth.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-g245-block-migration.2' );
+define( 'BDC_KB_VERSION', '0.4.0-g245-batch-auth.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -30,6 +30,9 @@ define( 'BDC_KB_SPEC004_G245_LOSSLESS_ROUNDTRIP_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_EDITORIAL_PARITY_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_BLOCK_MIGRATION_READINESS_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_STORAGE_LOCK_SMOKE_BUILD', false );
+define( 'BDC_KB_SPEC004_G245_AUTHORIZATION_PACK_SMOKE_BUILD', false );
+define( 'BDC_KB_SPEC004_G245_T099C_CANARY_BUILD', false );
+define( 'BDC_KB_SPEC004_G245_T100A_BATCH_AUTHORIZATION_PACK_BUILD', false );
 if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
 	define( 'BDC_KB_ELEMENTOR_WRITER_ENABLED', false );
 }
@@ -130,6 +133,15 @@ if ( defined( 'BDC_KB_SPEC004_G245_BLOCK_MIGRATION_READINESS_SMOKE_BUILD' ) && B
 if ( defined( 'BDC_KB_SPEC004_G245_STORAGE_LOCK_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_STORAGE_LOCK_SMOKE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-block-migration-storage-lock-smoke.php';
 }
+if ( defined( 'BDC_KB_SPEC004_G245_AUTHORIZATION_PACK_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_AUTHORIZATION_PACK_SMOKE_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-block-migration-authorization-pack-smoke.php';
+}
+if ( defined( 'BDC_KB_SPEC004_G245_T099C_CANARY_BUILD' ) && BDC_KB_SPEC004_G245_T099C_CANARY_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-block-migration-canary-t099c.php';
+}
+if ( defined( 'BDC_KB_SPEC004_G245_T100A_BATCH_AUTHORIZATION_PACK_BUILD' ) && BDC_KB_SPEC004_G245_T100A_BATCH_AUTHORIZATION_PACK_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-block-migration-batch-authorization-pack-smoke.php';
+}
 
 \BDC\KnowledgeBase\Plugin::register();
 \BDC\KnowledgeBase\Visual_Foundation::register();
@@ -180,4 +192,13 @@ if ( defined( 'BDC_KB_SPEC004_G245_BLOCK_MIGRATION_READINESS_SMOKE_BUILD' ) && B
 }
 if ( defined( 'BDC_KB_SPEC004_G245_STORAGE_LOCK_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_STORAGE_LOCK_SMOKE_BUILD ) {
 	\BDC\KnowledgeBase\Block_Migration_Storage_Lock_Smoke::register();
+}
+if ( defined( 'BDC_KB_SPEC004_G245_AUTHORIZATION_PACK_SMOKE_BUILD' ) && BDC_KB_SPEC004_G245_AUTHORIZATION_PACK_SMOKE_BUILD ) {
+	\BDC\KnowledgeBase\Block_Migration_Authorization_Pack_Smoke::register();
+}
+if ( defined( 'BDC_KB_SPEC004_G245_T099C_CANARY_BUILD' ) && BDC_KB_SPEC004_G245_T099C_CANARY_BUILD ) {
+	\BDC\KnowledgeBase\Block_Migration_Canary_T099C::register();
+}
+if ( defined( 'BDC_KB_SPEC004_G245_T100A_BATCH_AUTHORIZATION_PACK_BUILD' ) && BDC_KB_SPEC004_G245_T100A_BATCH_AUTHORIZATION_PACK_BUILD ) {
+	\BDC\KnowledgeBase\Block_Migration_Batch_Authorization_Pack_Smoke::register();
 }

@@ -19,12 +19,12 @@ Antes de qualquer alteração, reler `AGENTS.md`, `.specify/PROJECT_MANIFEST.md`
 - T083B Durable Journal Storage: PASS AMBIENTAL.
 - ADR-004-001: **ACEITA**.
 - T090 Block Projection Contract/Plan: **PASS LOCAL / READ-ONLY**, 23/23 assertions + lint.
-- T091 full-corpus Block Projection smoke: **NEXT**.
+- T091 Block Projection full-corpus smoke: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
 - Nenhum writer/migration está autorizado.
 
 ## Decisão arquitetural vigente
 
-Em 2026-09-17 foi aceita a ADR:
+Em 2026-09-17 foi aceita:
 
 `adr/ADR-004-001-wordpress-core-blocks-canonical-editorial-target.md`
 
@@ -38,7 +38,7 @@ Decisão:
 - nenhum novo writer deve usar `_elementor_data` como destino;
 - T087C writer Elementor foi CANCELADO/SUPERSEDED antes de implementação.
 
-A Constituição foi elevada para **v1.3.0** com essa decisão.
+A Constituição está em **v1.3.0** nesta branch.
 
 ## Por que o pivot foi barato
 
@@ -117,34 +117,43 @@ Comportamento:
 
 Validação: **23/23 PASS + PHP lint PASS**.
 
-## Estado do bootstrap
+## T091 — pacote pronto
 
-`0.4.0-g245-block-projection.1`:
+Runner:
+`plugin/base-conhecimento-inteligencia-integrada/includes/class-block-projection-plan-smoke.php`.
 
-- carrega `Block_Projection_Plan`;
-- antigo Elementor Projection smoke fica `false` e é tratado como histórico;
-- journal smoke fica `false` após PASS ambiental;
-- futuro Block Projection smoke existe como flag `false` até T091;
+Pacote de homologação:
+
+- `0.4.0-g245-block-projection-smoke.1`;
+- SHA-256 `d70b518bc20825a5d64984aef555f67a270ec065587c00bfefa3caad3e67028c`;
+- 37 PHP files lint PASS antes e depois da reextração;
+- UX-002 byte parity PASS;
+- Elementor Projection smoke OFF;
+- Journal Storage smoke OFF;
+- T091 Block Projection smoke ON somente no pacote;
 - `BDC_KB_ELEMENTOR_WRITER_ENABLED=false`.
 
-## Próximo passo exato — T091
+## Próximo passo exato
 
-Implementar runner full-corpus read-only de Block Projection.
+1. instalar o pacote T091 em homologação;
+2. abrir `Base de Conhecimento > Block Projection G-245`;
+3. executar `Executar T091 e baixar JSON`;
+4. devolver o JSON;
+5. versionar a evidência;
+6. analisar a distribuição real para T092.
 
-Critérios:
+Critério de PASS esperado:
 
-1. duas passagens 622/622;
-2. zero errors/throwables;
-3. zero `block_projection_hash` mismatch;
-4. zero canonical representation mismatch;
-5. distribuição por source/status;
-6. warnings agregados sem conteúdo editorial no JSON;
-7. fingerprint editorial before/after idêntico;
-8. changed posts = 0;
-9. writer/migration false;
-10. runner desabilitado por padrão após uso.
+- duas passagens cobrindo todo o corpus;
+- errors/throwables 0;
+- block projection hash mismatches 0;
+- canonical hash mismatches 0;
+- safety violations 0;
+- corpus unchanged;
+- fingerprint editorial equal;
+- `gate_result.t091_block_projection_pass=true`.
 
-A evidência T091 deve orientar T092. Não ampliar allowlist por hipótese.
+T092 não pode ampliar allowlist por hipótese; deve responder aos gaps observados no T091.
 
 ## Guardrails absolutos
 

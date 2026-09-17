@@ -1,0 +1,133 @@
+{
+    "schema_version": "1.0.0",
+    "mode": "temporary_spec004_pipeline_structure_diagnostic",
+    "generated_at": "2026-09-16T14:39:48+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-acceptance.10",
+        "elementor": "4.1.0",
+        "knowledge_document_schema": "2.0.1",
+        "domdocument": true
+    },
+    "safety": {
+        "read_only_design": true,
+        "exports_editorial_content": false,
+        "exports_post_ids": false,
+        "exports_titles_or_urls": false,
+        "fingerprint_before": "93f1068a6439adf8cbe83930fe5e22ac962c14a3ec26dae4815f8fcb7aaf559e",
+        "fingerprint_after": "93f1068a6439adf8cbe83930fe5e22ac962c14a3ec26dae4815f8fcb7aaf559e",
+        "fingerprint_equal": true,
+        "changed_posts_during_run": 0
+    },
+    "diagnostic": {
+        "not_ready_documents": 5,
+        "errors": 0,
+        "throwables": 0,
+        "by_signature": {
+            "elementor|STRUCTURE_COUNT_MISMATCH:lists:80:74": {
+                "documents": 1,
+                "metrics": {
+                    "segments": 1,
+                    "unwrap_changed_segments": 1,
+                    "raw_expected_lists": 80,
+                    "unwrapped_expected_lists": 80,
+                    "fragment_list_containers": 74,
+                    "block_lists": 74,
+                    "raw_expected_tables": 2,
+                    "unwrapped_expected_tables": 2,
+                    "fragment_table_containers": 2,
+                    "block_tables": 2
+                },
+                "shortcode_tags": {
+                    "table": 1
+                }
+            },
+            "legacy_html|STRUCTURE_COUNT_MISMATCH:lists:17:15": {
+                "documents": 1,
+                "metrics": {
+                    "segments": 1,
+                    "unwrap_changed_segments": 0,
+                    "raw_expected_lists": 17,
+                    "unwrapped_expected_lists": 17,
+                    "fragment_list_containers": 15,
+                    "block_lists": 15,
+                    "raw_expected_tables": 4,
+                    "unwrapped_expected_tables": 4,
+                    "fragment_table_containers": 4,
+                    "block_tables": 4
+                },
+                "shortcode_tags": []
+            },
+            "legacy_html|STRUCTURE_COUNT_MISMATCH:lists:8:1": {
+                "documents": 1,
+                "metrics": {
+                    "segments": 1,
+                    "unwrap_changed_segments": 0,
+                    "raw_expected_lists": 8,
+                    "unwrapped_expected_lists": 8,
+                    "fragment_list_containers": 1,
+                    "block_lists": 1,
+                    "raw_expected_tables": 1,
+                    "unwrapped_expected_tables": 1,
+                    "fragment_table_containers": 1,
+                    "block_tables": 1
+                },
+                "shortcode_tags": []
+            },
+            "legacy_html|STRUCTURE_COUNT_MISMATCH:tables:2:1": {
+                "documents": 1,
+                "metrics": {
+                    "segments": 1,
+                    "unwrap_changed_segments": 0,
+                    "raw_expected_lists": 54,
+                    "unwrapped_expected_lists": 54,
+                    "fragment_list_containers": 54,
+                    "block_lists": 54,
+                    "raw_expected_tables": 2,
+                    "unwrapped_expected_tables": 2,
+                    "fragment_table_containers": 1,
+                    "block_tables": 1
+                },
+                "shortcode_tags": []
+            },
+            "legacy_html|STRUCTURE_COUNT_MISMATCH:tables:4:3": {
+                "documents": 1,
+                "metrics": {
+                    "segments": 1,
+                    "unwrap_changed_segments": 1,
+                    "raw_expected_lists": 40,
+                    "unwrapped_expected_lists": 40,
+                    "fragment_list_containers": 40,
+                    "block_lists": 40,
+                    "raw_expected_tables": 4,
+                    "unwrapped_expected_tables": 4,
+                    "fragment_table_containers": 3,
+                    "block_tables": 3
+                },
+                "shortcode_tags": {
+                    "table": 1
+                }
+            }
+        },
+        "totals": {
+            "segments": 5,
+            "unwrap_changed_segments": 2,
+            "raw_expected_lists": 199,
+            "unwrapped_expected_lists": 199,
+            "fragment_list_containers": 184,
+            "block_lists": 184,
+            "raw_expected_tables": 13,
+            "unwrapped_expected_tables": 13,
+            "fragment_table_containers": 11,
+            "block_tables": 11
+        },
+        "shortcode_tags": {
+            "table": 2
+        }
+    },
+    "performance": {
+        "runtime_ms": 3117,
+        "peak_memory_bytes": 35651584
+    }
+}

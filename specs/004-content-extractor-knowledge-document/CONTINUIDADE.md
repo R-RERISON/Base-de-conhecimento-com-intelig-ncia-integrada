@@ -3,155 +3,130 @@
 ## Estado atual
 
 - SPEC-003: concluída.
-- baseline de entrada: `0.3.0-rc.1`.
-- SPEC-004: **ATIVA**.
-- R-200 — Current State: **PASS**.
-- R-210 — Extraction Contract: **PASS**.
-- G-220 — Content Extractor: **PASS ambiental**.
-- G-230 — Knowledge Document: **PASS ambiental — 2026-09-15**.
-- próximo gate: **G-240 — Real Content Acceptance**.
-- contrato de extração: `Extraction Contract v1.1.0`.
-- contrato Knowledge Document: `Knowledge Document Contract v1.0.0`.
-- G-245 — normalização Elementor/produção: planejado; writer ainda proibido.
+- R-200: PASS.
+- R-210: PASS.
+- G-220: PASS ambiental.
+- G-230/v1: PASS de determinismo; v1 superseded for AI.
+- G-240/v1: FAIL CONTROLADO — perda estrutural.
+- G-240/v2/KD 2.0.1: full-corpus técnico PASS, porém aceite humano A/B **FAIL CONTROLADO — HIERARCHY FIDELITY**.
+- KD 2.1.0 / build `0.4.0-acceptance.12`: **PASS técnico full-corpus + PASS humano 8/8**.
+- **G-240: CLOSED / PASS.**
+- evidência técnica resumida: `evidence/kd-v21-smoke-summary-20260916T172538Z.json`.
+- evidência humana final: `evidence/g240-kd21-acceptance-20260916T193359Z.json`.
+- contrato KD 2.1.0 congelado: `knowledge-document-contract-v2.1.0.md`.
+- PR #3 permanece DRAFT/NÃO MERGEAR até revisão do fechamento e preparação segura do próximo gate.
+- **G-245: READY — ainda não iniciado.**
+- writer/migration Elementor permanecem disabled-by-default.
 
-## Evidência ambiental G-220
+## Evidência técnica que fecha T079N
 
-- `evidence/g220-smoke-20260915T221710Z.json`;
-- WordPress `6.9.4` / PHP `8.5.10` / Elementor `4.1.0`;
+Ambiente de homologação:
+
+- WordPress 6.9.4;
+- PHP 8.5.10;
+- Elementor 4.1.0;
+- plugin `0.4.0-acceptance.12`;
+- Knowledge Document schema `2.1.0`;
+- DOMDocument ativo.
+
+Full-corpus:
+
 - corpus 622 → 622;
-- fingerprint editorial idêntico;
-- zero changed posts;
-- zero extractor errors/throwables;
-- 21.969 fragments;
-- readiness Elementor: 39 native / 505 projectable / 78 review_required / 0 blocked.
+- primeira passagem: 622/622;
+- segunda passagem: 622/622;
+- errors: 0;
+- throwables: 0;
+- hash mismatches: 0;
+- canonical JSON mismatches: 0;
+- structure_incomplete: 0 nas duas passagens;
+- `not_ready`: 0;
+- fingerprint editorial antes/depois idêntico;
+- changed posts: 0;
+- gate técnico: PASS.
 
-**G-220: PASS.**
+Readiness observado:
 
-## Evidência ambiental G-230
+- candidate_ready: 387;
+- review_required: 233;
+- not_applicable: 2;
+- not_ready: 0.
 
-Arquivos:
+O resolver numérico permaneceu deliberadamente conservador. Foram observados 6 conflitos de numeração e 964 ocorrências agregadas de ambiguidade. Esses sinais permanecem `review_required`; nenhum mismatch explícito de relationship fidelity bloqueante foi detectado no corpus.
 
-- `evidence/g230-smoke-20260915T233450Z.json`;
-- `g230-smoke-analysis.md`.
+O artefato bruto da execução é `bdc-kb-spec004-kd-v2-smoke-20260916-172538.json`, SHA-256 `4ae43163f2aeb96f8c8d2677b83bf236d5b3f7a505281f1058c57394efdcffa5`. O repositório mantém um resumo verificável com esse hash para rastreabilidade.
 
-Ambiente:
+## Evidência humana que fecha T079O/T079P
 
-- WordPress `6.9.4`;
-- PHP `8.5.10`;
-- plugin `0.4.0-smoke.2`;
-- Elementor `4.1.0`;
-- Knowledge Document schema `1.0.0`;
-- corpus: 622 posts.
+Mesmo conjunto de oito slots usado nas rodadas anteriores:
 
-Segurança:
+- expected/reviewed: 8/8;
+- human_passed: 8/8;
+- gate_passed: 8/8;
+- coverage: 8/8;
+- order: 8/8;
+- no invented text: 8/8;
+- structure preserved: 8/8;
+- stale: 0;
+- repeatability failures: 0;
+- sample ID mismatches: 0;
+- system not_ready: 0;
+- gate global: true.
 
-- `read_only_design=true`;
-- fingerprint editorial before/after idêntico;
-- `changed_posts_during_run=0`;
-- corpus `622 -> 622`;
-- nenhum Knowledge Document/hash persistido;
-- nenhum conteúdo, post ID, título ou URL exportado.
+Os três casos que motivaram KD 2.1 foram resolvidos no aceite humano:
 
-Determinismo real:
+- post 1290: structure preserved = true;
+- post 370: structure preserved = true;
+- post 1307: structure preserved = true.
 
-- first pass documents: `622`;
-- second pass documents: `622`;
-- errors: `0/0`;
-- throwables: `0/0`;
-- `hash_mismatches=0`;
-- `canonical_json_mismatches=0`;
-- `unique_source_hashes=601`;
-- `unique_document_hashes=622`;
-- sections total: `21.969`.
+O slot 36431 também fecha com order preserved = true e gate individual = true. A execução anterior 7/8 foi descartada como marcação humana incompleta, não como regressão técnica.
 
-Performance das duas passagens:
+Artefato final: `evidence/g240-kd21-acceptance-20260916T193359Z.json`.
 
-- `3096 ms`;
-- peak memory `31.457.280 bytes` (~30 MiB).
+## Decisão formal — G-240
 
-Hashes agregados da evidência:
+**G-240 PASS / CLOSED.**
 
-- source: `53bac368abb9bbcf9d55b59db457aa6044e371ee7ab96e88b0374638a1cfc415`;
-- document: `839012c3336a3c6323be1b5bd2abc18146cac67254c376dc0c8a966426d7c0dd`.
+Critérios satisfeitos:
 
-**G-230: PASS.**
+1. full-corpus determinístico em duas passagens;
+2. zero mutação editorial;
+3. zero structure_incomplete;
+4. zero `not_ready`;
+5. relationship fidelity sem mismatch bloqueante;
+6. mesmos oito A/B revisados;
+7. 8/8 estrutura humana preservada;
+8. 8/8 gate_pass;
+9. zero stale/repeatability/sample mismatch;
+10. limitações restantes refletidas explicitamente como `review_required`.
 
-## Direção editorial consolidada
+## Próximo estágio — G-245
 
-- Elementor é o editor operacional padrão futuro.
-- Legacy/Gutenberg/plain continuam suportados pelo knowledge plane por representarem o histórico real.
-- Knowledge Document é editor-independent.
-- normalização para Elementor é migration editorial explícita, separada da leitura e da instalação/update.
+G-245 deixa de estar bloqueado por G-240 e passa para **READY**, porém nenhuma escrita editorial está autorizada automaticamente.
 
-## Runtime permanente validado
+Próxima sequência obrigatória:
 
-### G-220
+1. estabelecer baseline de G-245 e inventário atual de compatibilidade Elementor/produção;
+2. executar **Production Preflight read-only**;
+3. construir matriz de compatibilidade por tipo de conteúdo/versão/widget;
+4. produzir **Projection Plan read-only** sem persistência;
+5. definir `Elementor_Gateway` version-gated com writer disabled-by-default;
+6. definir journal, rollback, stale-source guard e idempotência;
+7. executar dry-run sem escrita;
+8. só após subgates aprovados planejar canário controlado;
+9. migration/writer real exige autorização explícita posterior e rollback comprovado.
 
-- `Content_Normalizer`;
-- `Shortcode_Inspector`;
-- `Legacy_HTML_Adapter`;
-- `Content_Source`;
-- `Elementor_Adapter`;
-- `Gutenberg_Adapter`;
-- `Content_Extractor`.
+## Guardrails preservados
 
-### G-230
+- PR #3 continua DRAFT / NÃO MERGEAR por enquanto.
+- Content Extractor/KD continuam read-only.
+- nenhum writer Elementor está habilitado.
+- nenhuma migration Elementor está autorizada.
+- nenhuma persistência de KD/resultado foi introduzida.
+- produção não será usada como ambiente experimental.
+- toda futura mutação deve ser version-gated, auditável, retomável, idempotente e reversível.
 
-- `Canonical_JSON`;
-- `Knowledge_Document`;
-- schema `1.0.0`;
-- `source_hash` semântico;
-- `document_hash` canônico;
-- sections e facts estruturais ordenados;
-- warnings/proveniência/readiness;
-- zero storage durável.
+## Princípio de continuidade
 
-## Política de hashes
+> Quem não sabe onde está, não sabe para onde quer ir.
 
-- `source_hash` representa o conhecimento semanticamente extraído; não é identificador de post.
-- conteúdos semanticamente equivalentes podem compartilhar `source_hash` — no corpus atual são 601 hashes para 622 posts.
-- `document_hash` representa a projeção canônica do documento; na evidência atual são 622 hashes distintos.
-- URL/data operacional não invalidam o hash semântico.
-- fingerprint bruto continua reservado ao futuro `STALE_SOURCE` do plano de migration Elementor.
-
-## Produção / normalização Elementor
-
-Contratos ativos:
-
-- `elementor-normalization-contract-v1.md`;
-- `production-rollout-contract-v1.md`.
-
-Regras permanentes:
-
-- activation/update não migra posts;
-- Production Preflight antes de promoção;
-- writer futuro atrás de `Elementor_Gateway` version-gated;
-- dry-run, journal/rollback, stale-source guard, canário e batches retomáveis;
-- plugin rollback e editorial rollback independentes.
-
-## Próximo passo exato — G-240
-
-1. consolidar G-220/G-230 em `main`;
-2. abrir branch dedicada G-240;
-3. selecionar amostra representativa a partir do corpus real, cobrindo:
-   - Elementor native;
-   - Elementor/mixed;
-   - legacy HTML típico e complexo;
-   - Gutenberg;
-   - shortcode/tabela;
-   - `review_required`;
-   - vazio/corrompido quando aplicável;
-4. criar runner read-only de aceitação que permita inspeção controlada sem persistir conteúdo;
-5. comparar fonte editorial e Knowledge Document com critérios objetivos de cobertura e ordem;
-6. repetir hashes e provar zero mutação na amostra;
-7. somente após G-240 avaliar avanço do plano de normalização Elementor G-245.
-
-## Gates
-
-- R-200: **PASS**.
-- R-210: **PASS**.
-- G-220: **PASS**.
-- G-230: **PASS**.
-- G-240: **READY — próximo gate**.
-- G-245: **PLANNED — writer não autorizado**.
-- G-250: **NOT_RUN**.
+Baseline agora conhecida: **KD 2.1.0 / acceptance.12 / G-240 PASS**. O próximo objetivo é abrir G-245 apenas por meio de preflight e projeção read-only, preservando essa baseline sem regressão.

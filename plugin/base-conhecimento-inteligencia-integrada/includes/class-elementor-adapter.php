@@ -68,6 +68,7 @@ final class Elementor_Adapter {
 			$editor = isset( $settings['editor'] ) && is_scalar( $settings['editor'] ) ? (string) $settings['editor'] : '';
 			if ( '' !== trim( $editor ) ) {
 				$partial = Legacy_HTML_Adapter::extract( $editor, 'elementor:text-editor' );
+				$partial = Semantic_DOM_Expectation::apply( $editor, $partial );
 				self::merge_result( $result, $partial );
 			}
 			return;
@@ -85,6 +86,7 @@ final class Elementor_Adapter {
 					continue;
 				}
 				$partial = Legacy_HTML_Adapter::extract( $inner, 'elementor:shortcode:' . (string) $match['tag'] );
+				$partial = Semantic_DOM_Expectation::apply( $inner, $partial );
 				self::merge_result( $result, $partial );
 			}
 			return;
@@ -100,6 +102,8 @@ final class Elementor_Adapter {
 	 * @param array{fragments:array<int,array<string,mixed>>,structure:array<string,int>,warnings:array<int,string>} $source
 	 */
 	private static function merge_result( array &$target, array $source ): void {
+		$namespace = 'elementor-merge-' . count( $target['fragments'] );
+		$source['fragments'] = Content_Normalizer::namespace_structural_ids( $source['fragments'], $namespace );
 		foreach ( $source['fragments'] as $fragment ) {
 			$fragment['ordinal'] = count( $target['fragments'] );
 			$target['fragments'][] = $fragment;

@@ -81,6 +81,7 @@ namespace BDC\KnowledgeBase {
 				),
 			),
 			array( 'kind' => 'code', 'text' => 'echo 1;' ),
+			array( 'kind' => 'quote', 'text' => 'Citação' ),
 		),
 	);
 
@@ -88,7 +89,8 @@ namespace BDC\KnowledgeBase {
 	assert_block_projection( is_array( $plan ), 'plan created' );
 	assert_block_projection( 'projectable' === $plan['plan_status'], 'legacy ready is projectable' );
 	assert_block_projection( 'wordpress_core_blocks' === $plan['target'], 'target core blocks' );
-	assert_block_projection( 5 === count( $plan['blocks'] ), 'five blocks mapped' );
+	assert_block_projection( '1.1.0' === $plan['schema_version'], 'projection schema v1.1.0' );
+	assert_block_projection( 6 === count( $plan['blocks'] ), 'six blocks mapped' );
 	assert_block_projection( 'core/heading' === $plan['blocks'][0]['block_name'], 'heading mapped' );
 	assert_block_projection( 2 === $plan['blocks'][0]['attrs']['level'], 'heading level kept' );
 	assert_block_projection( 'core/paragraph' === $plan['blocks'][1]['block_name'], 'paragraph mapped' );
@@ -96,8 +98,9 @@ namespace BDC\KnowledgeBase {
 	assert_block_projection( 'core/list-item' === $plan['blocks'][2]['inner_blocks'][0]['block_name'], 'list item mapped' );
 	assert_block_projection( 'core/table' === $plan['blocks'][3]['block_name'], 'table mapped' );
 	assert_block_projection( 'core/code' === $plan['blocks'][4]['block_name'], 'code mapped' );
+	assert_block_projection( 'core/quote' === $plan['blocks'][5]['block_name'], 'quote mapped' );
 	assert_block_projection( false === $plan['writer_allowed'] && false === $plan['migration_execution_allowed'], 'writer disabled' );
-	assert_block_projection( null === $plan['serialized_post_content'], 'no serialization in T090' );
+	assert_block_projection( null === $plan['serialized_post_content'], 'no serialization in T092' );
 	assert_block_projection( false === $plan['safety']['depends_on_gutenberg_plugin'], 'no Gutenberg plugin dependency' );
 	assert_block_projection( 64 === strlen( $plan['block_projection_hash'] ), 'projection hash present' );
 
@@ -110,10 +113,10 @@ namespace BDC\KnowledgeBase {
 	assert_block_projection( is_array( $native_plan ) && 'native_noop' === $native_plan['plan_status'], 'native blocks noop' );
 
 	$unsupported = $document;
-	$unsupported['blocks'][] = array( 'kind' => 'image', 'text' => '' );
+	$unsupported['blocks'][] = array( 'kind' => 'image', 'text' => 'Imagem sem referência canônica de mídia' );
 	$unsupported_plan = Block_Projection_Plan::from_document( $unsupported );
-	assert_block_projection( is_array( $unsupported_plan ) && 'review_required' === $unsupported_plan['plan_status'], 'unsupported kind requires review' );
-	assert_block_projection( in_array( 'BLOCK_PROJECTION_UNSUPPORTED_KIND:image', $unsupported_plan['warnings'], true ), 'unsupported reason emitted' );
+	assert_block_projection( is_array( $unsupported_plan ) && 'review_required' === $unsupported_plan['plan_status'], 'image without media provenance requires review' );
+	assert_block_projection( in_array( 'BLOCK_PROJECTION_UNSUPPORTED_KIND:image', $unsupported_plan['warnings'], true ), 'image review reason emitted' );
 
 	$table_span = $document;
 	$table_span['blocks'] = array(

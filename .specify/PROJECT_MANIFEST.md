@@ -65,11 +65,9 @@ Baseline visual homologada: `0.4.0-ux002.3`.
 
 Resultado:
 
-- `scr/` + Visual Contract v2 + Design System passam a ser autoridade visual operacional;
+- `scr/` + Visual Contract v2 + Design System são autoridade visual operacional;
 - WordPress permanece shell/plataforma, sem obrigar aparência genérica do wp-admin nas superfícies BDC;
 - Knowledge List, Workspace, Summary, Classificação, Review, Histórico e vocabulários convergidos para a mesma identidade visual;
-- navegação contextual e iconografia discreta homologadas;
-- contrato visual incorporado a AGENTS, DoD e instruções globais;
 - toda nova UI ou alteração material deve seguir `ux/002-mockup-visual-foundation/visual-contract-v2.md` e mockups aplicáveis.
 
 ### SPEC-003 — Review & Governança
@@ -80,88 +78,163 @@ Baseline funcional congelada:
 
 - package `0.3.0-rc.1`;
 - SHA-256 `7f681a3f62d792d30ccb016ae64b03e83d5cc46c4b2b1e2c2d96d41e3dfd0db5`;
-- R-001/R-010/G-001/G-030/DS-010/G-070/G-110/G-130 PASS;
 - Review baseado em WordPress Comments API append-only;
 - Histórico como projeção read-only do event log;
 - `post_status` independente da governança.
 
-### SPEC-004 — Content Extractor e Knowledge Document
+### SPEC-004 — Content Extractor, Knowledge Document e Canonical Block Normalization
 
 **ATIVA.**
 
-Baseline promovida para `main` em 2026-09-16:
+G-240 foi promovido para `main` com KD 2.1.0 e aceite técnico/humano. G-245 permanece somente na branch `spec004-g245-production-readiness` / PR #4 DRAFT.
 
-- merge G-240: `32a696386bf2ab5574d4d7725db78636fa51f36c`;
-- build de aceite: `0.4.0-acceptance.12`;
-- Knowledge Document: schema `2.1.0`;
-- R-200/R-210/G-220/G-230/G-240: PASS;
-- G-240 full-corpus: duas passagens 622/622, zero errors/throwables/hash mismatches/canonical mismatches, zero `structure_incomplete`, zero `not_ready`, zero mutação editorial;
-- aceite humano G-240: 8/8 coverage, order, no invented text, structure preserved e gate PASS.
+#### Decisão arquitetural vigente
 
-**G-245 está em andamento apenas na branch `spec004-g245-production-readiness` / PR #4, ainda DRAFT e não promovida para `main`.**
+ADR-004-001 aceita em 2026-09-17:
 
-Estado G-245:
+- `WP_Post.post_content` + WordPress Core Blocks são o destino editorial canônico futuro;
+- plugin Gutenberg não é dependência de produção;
+- usar somente APIs estáveis do WordPress Core homologado;
+- Elementor permanece source adapter legado temporário;
+- `_elementor_data` é preservado até dependência zero e gate explícito de retirada;
+- nenhum novo writer usa `_elementor_data` como destino;
+- antigo T087C writer Elementor foi cancelado/superseded antes de implementação.
+
+Constituição vigente nesta branch: **v1.3.0**.
+
+#### Gates G-245 preservados
 
 - T080: PASS WITH REVIEW ITEMS;
-- T081: Projection Plan Elementor PASS ambiental como diagnóstico histórico/read-only;
+- T081 Elementor Projection: PASS ambiental histórico/read-only;
 - T082–T086: gates defensivos concluídos local/contratualmente;
 - T083B Durable Journal Storage: PASS ambiental;
-- T087A/T087B-prep: readiness/lock concluídos sem writer;
-- ADR-004-001 aceita: WordPress Core Blocks são o destino editorial canônico futuro;
-- Elementor writer/T087C antigo: SUPERSEDED antes de implementação;
-- T090 Block Projection v1.0: PASS LOCAL / READ-ONLY;
-- T091 Block Projection full-corpus: **PASS AMBIENTAL** sobre 623 posts;
-- T092 Block Projection v1.1: **PASS LOCAL / READ-ONLY**, 25/25 assertions + lint;
-- T093 full-corpus v1.1 + diagnóstico KD: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
+- T087A/T087B-prep: readiness/lock PASS local/read-only;
+- journal, stale-source, dry-run, batches, lock, canary/rollback permanecem investimentos válidos e serão generalizados para Block Migration.
 
-T091 comprovou duas passagens 623/623, zero errors/throwables/hash mismatches/safety violations, fingerprint editorial idêntico e `gate_result.t091_block_projection_pass=true`.
+#### Block Projection / diagnóstico
 
-Gaps observados no T091:
+- T090 Block Projection v1.0: PASS LOCAL;
+- T091 full-corpus: PASS AMBIENTAL;
+- T092 Block Projection v1.1: PASS LOCAL, 25/25 assertions;
+- T093 full-corpus v1.1 + diagnóstico KD: PASS AMBIENTAL.
 
-- `KNOWLEDGE_DOCUMENT_REVIEW_REQUIRED`: 233;
-- `BLOCK_PROJECTION_UNSUPPORTED_KIND:image`: 40;
-- `BLOCK_PROJECTION_TABLE_SPAN_REVIEW`: 32;
-- `BLOCK_PROJECTION_UNSUPPORTED_KIND:quote`: 8.
+Baseline ambiental atual: **623 posts**.
 
-T092 resolveu apenas o gap comprovadamente seguro: `quote → core/quote`. Imagens continuam em review até existir proveniência de mídia suficiente; table spans continuam review.
+T093: 623/623 em duas passagens, zero errors/throwables/hash mismatches/safety violations e fingerprint editorial inalterado.
+
+#### T094 — Editorial Fidelity — PASS AMBIENTAL
+
+Evidência: `specs/004-content-extractor-knowledge-document/evidence/g245-editorial-fidelity-t094-20260917T180802Z.json`.
+
+Resultado principal:
+
+- `rich_html_source_required`: 467;
+- `elementor_source_adapter_required`: 79 na classificação conservadora do inventário;
+- `shortcode_resolution_required`: 37;
+- `kd_structure_sufficient_candidate`: 33;
+- `native_core_blocks`: 4;
+- `not_applicable`: 3;
+- errors/throwables: 0;
+- `gate_result.t094_editorial_fidelity_pass=true`.
+
+O corpus contém 6.874 links, 4.595 imagens, 25.764 ocorrências de inline formatting, 513 tabelas e 53 posts com shortcodes. Isso provou que o KD 2.1 não deve ser tratado como representação editorial lossless.
+
+#### Arquitetura de duas projeções
+
+**Conhecimento:**
+
+`fonte editorial -> Content Extractor -> Knowledge Document`
+
+Uso: busca, IA, hierarquia, qualidade e guardrail semântico.
+
+**Migração:**
+
+`fonte editorial -> Migration Fidelity Source -> Lossless Core Block Serializer`
+
+Uso: preservar fielmente o material editorial durante a normalização.
+
+#### T095 — Migration Fidelity Source v1
+
+**PASS LOCAL / READ-ONLY.**
+
+- legacy HTML/plain text preservados exatamente;
+- Gutenberg existente preservado como `native_core_blocks`;
+- Elementor `text-editor`/`shortcode` preservados em unidades lossless;
+- mixed source sempre exige revisão humana;
+- raw payload permanece somente em memória;
+- `fidelity_hash` determinístico;
+- zero writer/network/render.
+
+Contrato: `migration-fidelity-source-contract-v1.md`.
+
+#### T096 — Lossless Core Block Serialization
+
+**PASS LOCAL / HOMOLOGAÇÃO PENDENTE.**
+
+Primeira canonicalização lossless:
+
+- legacy HTML/plain text -> `core/freeform`;
+- Elementor text-editor -> `core/freeform`;
+- Elementor shortcode -> `core/shortcode`;
+- Gutenberg existente -> `native_noop`;
+- mixed/unsupported -> fail-closed.
+
+O objetivo é convergir para primitives do WordPress Core sem tentar reconstruir prematuramente milhares de links, imagens, spans e tabelas. O refinamento de `core/freeform` em blocos semânticos é uma etapa posterior, orientada pelo KD e por novos gates.
+
+Validação local combinada T095/T096: **34/34 assertions PASS + PHP lint PASS**.
+
+Pacote T096:
+
+- `0.4.0-g245-lossless-t096.1`;
+- SHA-256 `5a2fc4ac31bfbe2b68cfe5f06d07057310760f54c9f5ecfc9fbc55b3b07ad961`;
+- 41 PHP files lint PASS pré/pós ZIP;
+- UX-002 byte parity PASS;
+- smoke T096 habilitado somente no pacote de homologação;
+- writers continuam desabilitados.
+
+T096 deve comprovar, usando `serialize_blocks()`/`parse_blocks()` reais do Core em duas passagens, zero mismatch de payload, zero mismatch parse/serialize, determinismo dos hashes e zero mutação editorial.
 
 ## Fonte da verdade e fronteiras
 
 - Editorial canônico futuro: `WP_Post.post_content` + WordPress Core Blocks.
-- Plugin Gutenberg: **não é dependência de produção**; usar somente APIs estáveis do Core homologado.
-- Elementor: source adapter legado durante transição; `_elementor_data` preservado até dependência zero e gate explícito de retirada.
-- Summary: Post Metadata API do WordPress.
-- Classificação: WordPress Taxonomy API.
-- Review/Governança: Comments API append-only conforme SPEC-003.
-- Knowledge Document: projeção derivada, determinística e reconstruível; nunca fonte editorial.
-- UX/UI: UX-001 + UX-002, com `scr/` e `visual-contract-v2.md` como contrato vigente.
-- WordPress Admin: shell e primitives; a aparência interna do produto pertence ao Design System BDC.
-- O plugin não reescreve silenciosamente `post_content`.
-- Migração administrativa para Blocks só pode ocorrer sob SPEC/gates/autorização/rollback explícitos.
-- Nenhum novo writer deve usar `_elementor_data` como destino.
-- Projeções/cache/índices nunca são fonte editorial.
-- IA permanece assistiva e fora da autoridade editorial, orientada a reduzir esforço de leitura e tempo até resposta confiável.
+- Plugin Gutenberg: **não é dependência de produção**.
+- Elementor: source adapter legado durante transição.
+- Summary: Post Metadata API.
+- Classificação: Taxonomy API.
+- Review/Governança: Comments API append-only.
+- Knowledge Document: projeção semântica derivada; nunca fonte editorial lossless.
+- Migration Fidelity Source: projeção efêmera lossless; não fonte persistida.
+- UX/UI: UX-001 + UX-002, `scr/` e Visual Contract v2.
+- Nenhum write editorial está autorizado neste estágio.
 
 ## Estratégia de produto
 
 1. Core + Summary — concluído;
-2. Classificação de Conhecimento — concluído;
-3. UX-001 Product Experience & Knowledge Workspace — concluído;
+2. Classificação — concluído;
+3. UX-001 — concluído;
 4. Review & Governança — concluído;
-5. UX-002 Mockup Visual Foundation — concluído e contrato permanente;
-6. Content Extractor + Knowledge Document + Canonical Block Normalization — **em execução; G-240 fechado, G-245 rebaselined**;
+5. UX-002 — concluído / contrato permanente;
+6. Content Extractor + KD + Canonical Block Normalization — **em execução**;
 7. Search lexical + Golden Queries;
 8. Telemetria/Inteligência de Busca;
 9. Operações/Indexação;
 10. Semantic Search/Vetores;
 11. IA/Foundry/RAG.
 
+## Próximos gates
+
+1. T096 full-corpus lossless round-trip em homologação;
+2. T097 paridade renderizada/editorial em cohort controlado;
+3. T098 generalização dos gates defensivos para Block Migration;
+4. T099 canário de 1 artigo + rollback real, somente com Authorization Pack específico;
+5. T100 batches homologados;
+6. T101 dependência residual Elementor / gate de retirada futura;
+7. G-250 Lifecycle/RC.
+
 ## Regra de liberação
 
-Compilar, passar unitário ou ter protótipo aprovado isoladamente não basta. `FAIL`, `NOT_RUN`, `NOT_CONFIGURED` ou `STALE` em gate MUST bloqueia o avanço correspondente.
-
-Nenhum mockup/protótipo transforma hipótese em contrato de domínio. Toda UI implementada deve respeitar o Visual Contract vigente; divergência exige decisão explícita.
+`FAIL`, `NOT_RUN`, `NOT_CONFIGURED` ou `STALE` em gate MUST bloqueia o avanço correspondente.
 
 **GO de desenvolvimento/homologação != GO de produção.**
 
-**ADR-004-001 não autoriza writer. O novo destino Blocks deve repetir os gates de projection/dry-run/stale/journal/lock/canário antes de qualquer mutação editorial.**
+A ADR-004-001 e os PASS read-only não autorizam writer. Qualquer write em `post_content` exige stale guard, journal, dry-run, lock, rollback, canário e autorização específica.

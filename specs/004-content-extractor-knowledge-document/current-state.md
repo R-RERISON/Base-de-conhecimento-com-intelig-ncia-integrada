@@ -13,7 +13,9 @@
 - T095: PASS LOCAL / READ-ONLY.
 - T098.1: FAIL CONTROLADO / SEM MUTAÇÃO.
 - antigo T100A Batch Authorization Pack: **SUPERSEDED BEFORE EXECUTION**.
-- novo T100A Post Management Workspace: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+- novo T100A Post Management Workspace: **PASS LOCAL**.
+- T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
+- T100C Core Blocks Post Activity: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
 
 ## T099C — último write comprovado
 
@@ -58,13 +60,25 @@ Integração deliberada em `class-admin-page.php`:
 
 As três atividades novas são read-only. Nenhum novo writer, persistência, execução IA ou rede externa foi habilitado.
 
+## T100C — estado atual
+
+A aba Core Blocks agora possui preparação operacional por artigo, ainda sem writer:
+- estado operacional por `post_id`;
+- blocos esperados;
+- journal/lock;
+- `authorization_id` determinístico sob `core_blocks_migrate_v1`;
+- download de Authorization Pack individual, `authorized=false`;
+- botão futuro de migração visível, porém desabilitado.
+
+Evidência local: `evidence/g245-t100c-core-blocks-activity-local-validation-20260917.json`.
+
 ## Próximos passos
 
-1. instalar T100A na homologação;
-2. revisar lista → Gerenciar em artigos representativos, incluindo post 358;
-3. validar visual e navegação sem regressão;
-4. confirmar na aba Core Blocks do post 358: journal `rolled_back` e lock `free`;
-5. somente após T100B PASS evoluir ações post-scoped.
+1. instalar T100C na homologação;
+2. abrir um artigo elegível em `Gerenciar → Core Blocks`;
+3. confirmar `ready_for_authorization`, lock livre e Authorization ID;
+4. baixar o Authorization Pack individual e validar `authorized=false`;
+5. após PASS ambiental, T100D poderá implementar executor unitário, exigindo autorização explícita do `post_id + authorization_id`.
 
 ## Guardrails
 

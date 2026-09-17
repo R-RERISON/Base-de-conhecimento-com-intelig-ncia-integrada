@@ -101,7 +101,7 @@ final class Elementor_Migration_Dry_Run {
 		}
 
 		$reasons = array_values( array_unique( $reasons ) );
-		$would_prepare_journal = in_array( $status, array( 'ready', 'review_required' ), true ) && 'no_migration_needed' !== $simulated_action;
+		$would_prepare_journal = 'ready' === $status && 'no_migration_needed' !== $simulated_action;
 		$would_recheck_stale = $would_prepare_journal;
 		$would_apply_projection = 'ready' === $status && 'no_migration_needed' !== $simulated_action;
 

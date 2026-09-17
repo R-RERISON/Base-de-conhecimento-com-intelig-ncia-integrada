@@ -37,7 +37,9 @@ Preparar a execução ambiental do T081 no WordPress de homologação sem habili
 - `tests/unit/spec004-projection-plan-v1.php`: **58 assertions PASS**;
 - PHP lint do Projection Plan: PASS;
 - PHP lint do Projection Plan Smoke: PASS;
-- PHP lint do teste: PASS.
+- PHP lint do teste: PASS;
+- `tools/homologation/spec004/validate-g245-projection-evidence.php`: lint PASS;
+- validator sintético: relatório íntegro retorna exit `0`; violação de safety retorna exit `1`.
 
 ## Execução em homologação
 
@@ -46,7 +48,14 @@ Preparar a execução ambiental do T081 no WordPress de homologação sem habili
 3. No WP Admin, abrir **Projection Plan G-245**.
 4. Executar **Projection Plan full-corpus e baixar JSON** uma única vez; o runner realiza internamente duas passagens sobre o corpus.
 5. Preservar o JSON bruto sem edição.
-6. Versionar um resumo verificável e o SHA-256 do bruto no diretório `evidence/` antes de fechar T081.
+6. Validar a evidência com:
+
+```bash
+php tools/homologation/spec004/validate-g245-projection-evidence.php /caminho/para/bdc-kb-spec004-g245-projection-smoke-*.json 622
+```
+
+7. O validator deve retornar `gate_pass=true`, `checks_failed=0` e exit code `0`.
+8. Versionar um resumo verificável e o `evidence_sha256` calculado pelo validator no diretório `evidence/` antes de fechar T081.
 
 ## Critério de PASS ambiental
 

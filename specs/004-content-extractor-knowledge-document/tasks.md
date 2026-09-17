@@ -14,7 +14,9 @@
 - T095: PASS LOCAL / READ-ONLY.
 - T098.1: FAIL CONTROLADO / SEM MUTAÇÃO.
 - T100A Batch Authorization Pack: **SUPERSEDED BEFORE EXECUTION**; ZIP não instalado/executado.
-- T100A Post Management Workspace: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+- T100A Post Management Workspace: **PASS LOCAL**.
+- T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
+- T100C Core Blocks Post Activity: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE / READ-ONLY**.
 - G-250: NOT_RUN.
 
 ## T099C — PASS AMBIENTAL
@@ -67,9 +69,11 @@ Entregas:
 - [x] T099C canário real + rollback.
 - [x] ADR-004-002 Post-Centric Management Workspace.
 - [x] T100A implementação local + lint + invariantes anti-regressão.
-- [ ] T100B: aceite ambiental/visual da Workspace em homologação.
-- [ ] T100C: integrar ações Core Blocks post-scoped somente após T100B PASS.
-- [ ] T100D: integrar atividade de Inteligência sob regra IA sugere → humano revisa → humano decide.
+- [x] T100B: aceite ambiental/visual da Workspace em homologação — confirmado pelo usuário.
+- [x] T100C: implementação local da Core Blocks Activity post-scoped + Authorization Pack read-only.
+- [ ] validar T100C ambientalmente em um post real da Workspace.
+- [ ] T100D: executor unitário Core Blocks, somente após Authorization Pack + autorização explícita específica.
+- [ ] T100E: integrar atividade de Inteligência sob regra IA sugere → humano revisa → humano decide.
 - [ ] T101: dependência residual Elementor / gate de retirada.
 - [ ] G-250 Lifecycle/RC.
 

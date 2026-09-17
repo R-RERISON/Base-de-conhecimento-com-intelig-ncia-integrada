@@ -1,6 +1,6 @@
 <?php
 /**
- * Full-corpus, read-only Block Projection smoke for SPEC-004 / G-245 / T091.
+ * Full-corpus, read-only Block Projection smoke for SPEC-004 / G-245 / T093.
  *
  * @package BDC_Knowledge_Base
  */
@@ -41,14 +41,14 @@ final class Block_Projection_Plan_Smoke {
 		}
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'SPEC-004 — T091 Block Projection full-corpus', 'bdc-knowledge-base' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'SPEC-004 — T093 Block Projection full-corpus', 'bdc-knowledge-base' ) . '</h1>';
 		echo '<div class="notice notice-warning inline"><p><strong>' . esc_html__( 'Read-only.', 'bdc-knowledge-base' ) . '</strong> ';
-		echo esc_html__( 'Executa duas passagens sobre o corpus, sem serialize_blocks e sem persistência editorial. O JSON exporta apenas contagens, hashes agregados, warnings e métricas.', 'bdc-knowledge-base' );
+		echo esc_html__( 'Executa duas passagens sobre o corpus, sem serialize_blocks e sem persistência editorial. Exporta métricas agregadas, motivos do Knowledge Document e matriz source/status.', 'bdc-knowledge-base' );
 		echo '</p></div>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '">';
 		wp_nonce_field( self::NONCE_ACTION, self::NONCE_FIELD );
-		submit_button( __( 'Executar T091 e baixar JSON', 'bdc-knowledge-base' ), 'primary' );
+		submit_button( __( 'Executar T093 e baixar JSON', 'bdc-knowledge-base' ), 'primary' );
 		echo '</form></div>';
 	}
 
@@ -74,7 +74,7 @@ final class Block_Projection_Plan_Smoke {
 
 		nocache_headers();
 		header( 'Content-Type: application/json; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename="bdc-kb-spec004-t091-block-projection-' . gmdate( 'Ymd-His' ) . '.json"' );
+		header( 'Content-Disposition: attachment; filename="bdc-kb-spec004-t093-block-projection-' . gmdate( 'Ymd-His' ) . '.json"' );
 		echo $json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON download.
 		exit;
 	}
@@ -122,8 +122,8 @@ final class Block_Projection_Plan_Smoke {
 			&& 0 === $second['safety_violations'];
 
 		return array(
-			'schema_version' => '1.0.0',
-			'gate' => 'T091',
+			'schema_version' => '1.1.0',
+			'gate' => 'T093',
 			'mode' => 'block_projection_full_corpus_read_only',
 			'generated_at' => gmdate( 'c' ),
 			'environment' => array(
@@ -151,6 +151,9 @@ final class Block_Projection_Plan_Smoke {
 			'distribution' => array(
 				'plan_status' => $first['plan_status'],
 				'source_kind' => $first['source_kind'],
+				'knowledge_document_readiness' => $first['kd_readiness_status'],
+				'knowledge_document_reasons' => $first['kd_reasons'],
+				'source_plan_matrix' => $first['source_plan_matrix'],
 				'warnings' => $first['warnings'],
 				'projected_block_names' => $first['block_names'],
 			),
@@ -169,7 +172,7 @@ final class Block_Projection_Plan_Smoke {
 				'editorial_fingerprint_after' => $fingerprint_after,
 				'editorial_fingerprint_equal' => $fingerprint_equal,
 			),
-			'gate_result' => array( 't091_block_projection_pass' => $gate ),
+			'gate_result' => array( 't093_block_projection_pass' => $gate ),
 			'duration_ms' => (int) round( ( microtime( true ) - $started ) * 1000 ),
 		);
 	}
@@ -183,6 +186,9 @@ final class Block_Projection_Plan_Smoke {
 			'safety_violations' => 0,
 			'plan_status' => array(),
 			'source_kind' => array(),
+			'kd_readiness_status' => array(),
+			'kd_reasons' => array(),
+			'source_plan_matrix' => array(),
 			'warnings' => array(),
 			'block_names' => array(),
 		);
@@ -205,6 +211,23 @@ final class Block_Projection_Plan_Smoke {
 				);
 				self::inc( $out['plan_status'], (string) ( $plan['plan_status'] ?? 'unknown' ) );
 				self::inc( $out['source_kind'], (string) ( $plan['source_kind'] ?? 'unknown' ) );
+
+				$kd_readiness = is_array( $document['ai_readiness'] ?? null ) ? $document['ai_readiness'] : array();
+				$kd_status = (string) ( $kd_readiness['status'] ?? 'unknown' );
+				self::inc( $out['kd_readiness_status'], $kd_status );
+				if ( in_array( $kd_status, array( 'review_required', 'not_ready' ), true ) ) {
+					foreach ( (array) ( $kd_readiness['reasons'] ?? array() ) as $reason ) {
+						self::inc( $out['kd_reasons'], (string) $reason );
+					}
+				}
+
+				$source_key = (string) ( $plan['source_kind'] ?? 'unknown' );
+				$plan_key = (string) ( $plan['plan_status'] ?? 'unknown' );
+				if ( ! isset( $out['source_plan_matrix'][ $source_key ] ) || ! is_array( $out['source_plan_matrix'][ $source_key ] ) ) {
+					$out['source_plan_matrix'][ $source_key ] = array();
+				}
+				self::inc( $out['source_plan_matrix'][ $source_key ], $plan_key );
+
 				foreach ( (array) ( $plan['warnings'] ?? array() ) as $warning ) {
 					self::inc( $out['warnings'], (string) $warning );
 				}
@@ -228,6 +251,15 @@ final class Block_Projection_Plan_Smoke {
 		}
 		ksort( $out['plan_status'] );
 		ksort( $out['source_kind'] );
+		ksort( $out['kd_readiness_status'] );
+		ksort( $out['kd_reasons'] );
+		ksort( $out['source_plan_matrix'] );
+		foreach ( $out['source_plan_matrix'] as &$matrix ) {
+			if ( is_array( $matrix ) ) {
+				ksort( $matrix );
+			}
+		}
+		unset( $matrix );
 		ksort( $out['warnings'] );
 		ksort( $out['block_names'] );
 		return $out;

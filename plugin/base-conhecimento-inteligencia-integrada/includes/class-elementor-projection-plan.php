@@ -64,9 +64,17 @@ final class Elementor_Projection_Plan {
 		$extraction_warnings = is_array( $extraction['warnings'] ?? null ) ? array_values( array_map( 'strval', $extraction['warnings'] ) ) : array();
 
 		$normalized_dependencies = self::normalize_dependencies( $dependencies );
-		$warnings = self::unique_preserve_order( array_merge( $compat_reasons, self::migration_relevant_warnings( $extraction_warnings ) ) );
+		$migration_warnings = self::migration_relevant_warnings( $extraction_warnings );
+		$warnings = self::unique_preserve_order( array_merge( $compat_reasons, $migration_warnings ) );
 
 		$requires_review = false;
+		foreach ( $migration_warnings as $warning ) {
+			if ( self::warning_requires_review( $warning ) ) {
+				$requires_review = true;
+				break;
+			}
+		}
+
 		foreach ( $normalized_dependencies as $dependency ) {
 			$tag = (string) ( $dependency['tag'] ?? '' );
 			$registered = true === ( $dependency['registered'] ?? false );
@@ -308,9 +316,25 @@ final class Elementor_Projection_Plan {
 					$out[] = $warning;
 					break;
 				}
-			}
+		}
 		}
 		return self::unique_preserve_order( $out );
+	}
+
+	private static function warning_requires_review( string $warning ): bool {
+		$prefixes = array(
+			'ELEMENTOR_JSON_INVALID',
+			'GUTENBERG_DYNAMIC_NOT_RENDERED:',
+			'GUTENBERG_BLOCK_UNSUPPORTED:',
+			'ELEMENTOR_WIDGET_UNSUPPORTED:',
+			'SOURCE_OVERSIZE_HARD:',
+		);
+		foreach ( $prefixes as $prefix ) {
+			if ( str_starts_with( $warning, $prefix ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** @param array<int,string> $values @return array<int,string> */

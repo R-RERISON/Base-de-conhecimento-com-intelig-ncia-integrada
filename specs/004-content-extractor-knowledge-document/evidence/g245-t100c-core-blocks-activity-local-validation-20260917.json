@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T100C",
+  "mode": "post_scoped_core_blocks_activity_local_validation",
+  "generated_at": "2026-09-17T23:58:00Z",
+  "build": "0.4.0-g245-workspace-t100c.1",
+  "package_sha256": "77c6b13a3b1efabbe96c81be2d6179c171c3a6f94ea5ba3df14b38e3c92000c2",
+  "t100b": {
+    "result": "PASS_CONFIRMED_BY_USER",
+    "evidence": "evidence/g245-t100b-workspace-human-acceptance-20260917.json"
+  },
+  "validation": {
+    "pure_assertions_passed": 12,
+    "pure_assertions_total": 12,
+    "php_files_linted_pre_zip": 64,
+    "php_files_linted_post_extract": 64,
+    "php_lint_failures": 0,
+    "unconditional_requires_present": 47,
+    "unconditional_requires_total": 47,
+    "preserved_t100a_files_byte_parity_passed": 9,
+    "preserved_t100a_files_byte_parity_total": 9,
+    "single_plugin_root": true
+  },
+  "capability": {
+    "post_scoped": true,
+    "action_contract": "core_blocks_migrate_v1",
+    "authorization_id_deterministic": true,
+    "authorization_pack_download": true,
+    "migration_button_visible_but_disabled": true
+  },
+  "safety": {
+    "t099c_canary_enabled": false,
+    "old_t100_batch_enabled": false,
+    "elementor_writer_enabled": false,
+    "writes_post_content": false,
+    "writes_elementor_data": false,
+    "persists_state": false,
+    "acquires_lock": false,
+    "calls_external_network": false,
+    "executes_shortcodes": false,
+    "renders_blocks": false,
+    "authorization_pack_authorized": false,
+    "explicit_human_authorization_required": true
+  },
+  "gate_result": {
+    "t100c_local_pass": true,
+    "environmental_validation_pending": true
+  }
+}

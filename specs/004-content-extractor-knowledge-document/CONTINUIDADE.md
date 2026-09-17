@@ -18,142 +18,120 @@ Antes de qualquer alteração, reler `AGENTS.md`, `.specify/PROJECT_MANIFEST.md`
 - G-245: **REBASELINED / IN PROGRESS**.
 - T083B Durable Journal Storage: PASS AMBIENTAL.
 - ADR-004-001: **ACEITA**.
-- T090 Block Projection Contract/Plan: **PASS LOCAL / READ-ONLY**, 23/23 assertions + lint.
-- T091 Block Projection full-corpus smoke: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
+- T090 Block Projection v1.0: PASS LOCAL / READ-ONLY.
+- T091 Block Projection full-corpus: **PASS AMBIENTAL**.
+- T092 Block Projection v1.1: **PASS LOCAL / READ-ONLY**, 25/25 assertions + lint.
+- T093 full-corpus v1.1 + diagnóstico KD: **IMPLEMENTADO / HOMOLOGAÇÃO PENDENTE**.
 - Nenhum writer/migration está autorizado.
 
 ## Decisão arquitetural vigente
 
-Em 2026-09-17 foi aceita:
+`WP_Post.post_content` + WordPress Core Blocks são o destino editorial canônico futuro.
 
-`adr/ADR-004-001-wordpress-core-blocks-canonical-editorial-target.md`
-
-Decisão:
-
-- `WP_Post.post_content` + WordPress Core Blocks são o destino editorial canônico futuro;
-- o plugin Gutenberg NÃO é dependência de produção;
+- plugin Gutenberg NÃO é dependência de produção;
 - usar somente APIs estáveis presentes no WordPress Core homologado;
 - Elementor é fonte legada temporária/read-only até dependência zero;
 - `_elementor_data` deve ser preservado durante a transição;
 - nenhum novo writer deve usar `_elementor_data` como destino;
 - T087C writer Elementor foi CANCELADO/SUPERSEDED antes de implementação.
 
-A Constituição está em **v1.3.0** nesta branch.
+Constituição nesta branch: **v1.3.0**.
 
-## Por que o pivot foi barato
+## Baseline ambiental T091
 
-O primeiro writer mutável ainda não existia e nenhum canário editorial havia sido executado. O que foi construído em G-245 é majoritariamente defensivo e reutilizável.
+Evidência: `evidence/g245-block-projection-t091-20260917T172515Z.json`.
 
-T081 diagnosticou 622 posts:
+Ambiente:
 
-- 536 legacy_html;
-- 41 plain_text;
-- 34 elementor;
-- 5 mixed;
-- 4 gutenberg;
-- 2 empty.
+- WordPress 6.9.4;
+- PHP 8.5.10;
+- Elementor 4.1.0;
+- Block Projection schema 1.0.0;
+- plugin Gutenberg dependency false.
 
-Elementor puro é minoritário. O problema real é normalizar legado heterogêneo.
-
-## Componentes preservados
-
-- Content Extractor;
-- Knowledge Document 2.1;
-- Legacy_HTML_Adapter;
-- Gutenberg_Adapter;
-- Elementor_Adapter como source adapter legado;
-- Canonical JSON/hashes;
-- journal + durable store;
-- stale-source guard;
-- dry-run;
-- batch planning;
-- lock exclusivo;
-- canary/rollback methodology;
-- runbook, a ser generalizado de Elementor para Blocks.
-
-## T083B comprovado
-
-Evidência:
-`evidence/g245-journal-storage-smoke-20260917T155150Z.json`.
+Corpus observado: **623 posts**. O baseline T081 tinha 622; houve +1 post antes do T091. Durante o gate, corpus/fingerprint permaneceram estáveis.
 
 Resultado:
 
-- `gate.t083b_storage_pass=true`;
-- round-trip exato;
-- integrity OK;
-- cleanup OK;
-- contagem restaurada;
-- `post_content` unchanged;
-- `_elementor_data` unchanged;
-- writer/migration false.
-
-## T090 — implementação atual
-
-Build: `0.4.0-g245-block-projection.1`.
-
-Arquivos:
-
-- `specs/004-content-extractor-knowledge-document/block-projection-contract-v1.md`;
-- `plugin/base-conhecimento-inteligencia-integrada/includes/class-block-projection-plan.php`;
-- `tests/unit/spec004-block-projection-plan.php`.
-
-Allowlist v1:
-
-- heading → core/heading;
-- paragraph → core/paragraph;
-- code → core/code;
-- list → core/list + core/list-item;
-- table simples → core/table.
-
-Comportamento:
-
-- Gutenberg/Core Blocks pronto → `native_noop`;
-- legado seguro → `projectable`;
-- kind sem mapping/table spans/KD review → `review_required`;
-- KD not_ready → `blocked`;
-- empty → `not_applicable`;
-- hash determinístico;
-- sem serialize/persist/write.
-
-Validação: **23/23 PASS + PHP lint PASS**.
-
-## T091 — pacote pronto
-
-Runner:
-`plugin/base-conhecimento-inteligencia-integrada/includes/class-block-projection-plan-smoke.php`.
-
-Pacote de homologação:
-
-- `0.4.0-g245-block-projection-smoke.1`;
-- SHA-256 `d70b518bc20825a5d64984aef555f67a270ec065587c00bfefa3caad3e67028c`;
-- 37 PHP files lint PASS antes e depois da reextração;
-- UX-002 byte parity PASS;
-- Elementor Projection smoke OFF;
-- Journal Storage smoke OFF;
-- T091 Block Projection smoke ON somente no pacote;
-- `BDC_KB_ELEMENTOR_WRITER_ENABLED=false`.
-
-## Próximo passo exato
-
-1. instalar o pacote T091 em homologação;
-2. abrir `Base de Conhecimento > Block Projection G-245`;
-3. executar `Executar T091 e baixar JSON`;
-4. devolver o JSON;
-5. versionar a evidência;
-6. analisar a distribuição real para T092.
-
-Critério de PASS esperado:
-
-- duas passagens cobrindo todo o corpus;
-- errors/throwables 0;
+- duas passagens 623/623;
+- errors 0;
+- throwables 0;
 - block projection hash mismatches 0;
 - canonical hash mismatches 0;
 - safety violations 0;
-- corpus unchanged;
-- fingerprint editorial equal;
+- fingerprint editorial igual;
 - `gate_result.t091_block_projection_pass=true`.
 
-T092 não pode ampliar allowlist por hipótese; deve responder aos gaps observados no T091.
+Distribuição:
+
+- projectable 347;
+- review_required 269;
+- native_noop 4;
+- not_applicable 3.
+
+Warnings:
+
+- KD review required 233;
+- image unsupported 40;
+- table span review 32;
+- quote unsupported 8.
+
+SHA-256 do JSON recebido: `1fa9fc1439634cb9ecca6a1caa0aac63e9f37366bc9c5656d2ea1b18eb3c6b93`.
+
+## T092 — Block Projection v1.1
+
+Contrato: `block-projection-contract-v1.1.md`.
+Build de desenvolvimento: `0.4.0-g245-block-projection.2`.
+
+Mudança deliberada:
+
+- `quote` → `core/quote`;
+- schema → `1.1.0`;
+- imagem continua review porque o KD 2.1 não preserva referência canônica de mídia suficiente;
+- table spans continuam review para evitar flattening silenciosa.
+
+Validação local: **25/25 PASS + PHP lint PASS**.
+
+## T093 — próximo gate ambiental
+
+Runner: `plugin/base-conhecimento-inteligencia-integrada/includes/class-block-projection-plan-smoke.php`.
+
+Além do determinismo/safety de T091, T093 exporta somente dados agregados:
+
+- `knowledge_document_readiness`;
+- `knowledge_document_reasons` para review/not_ready;
+- `source_plan_matrix`;
+- warnings;
+- projected block names.
+
+Sem conteúdo editorial, sem post IDs, sem `serialize_blocks()`, sem persistência.
+
+## Próximo passo exato
+
+1. instalar o pacote T093 em homologação;
+2. abrir `Base de Conhecimento > Block Projection G-245`;
+3. executar `Executar T093 e baixar JSON`;
+4. devolver o JSON;
+5. versionar evidência;
+6. definir T094 com base nos motivos reais dos KD reviews e nos gaps restantes.
+
+Critério esperado:
+
+- duas passagens cobrindo todo o corpus atual;
+- errors/throwables 0;
+- hash mismatches 0;
+- safety violations 0;
+- corpus/fingerprint estáveis;
+- `gate_result.t093_block_projection_pass=true`.
+
+## Próxima sequência planejada
+
+- T094: contrato de serialização Core Blocks in-memory;
+- T095: semantic round-trip `projection → serialize → parse` sem persistência;
+- T096: generalizar dry-run/journal/stale/lock/batches para Block Migration;
+- T097: canário de 1 artigo + rollback real com Authorization Pack;
+- T098: batches homologados;
+- T099: dependência residual Elementor e gate de retirada.
 
 ## Guardrails absolutos
 
@@ -163,6 +141,7 @@ T092 não pode ampliar allowlist por hipótese; deve responder aos gaps observad
 - não remover Elementor agora;
 - não escrever em `_elementor_data`;
 - não escrever em `post_content` antes dos novos gates de Blocks;
+- não converter imagem sem proveniência de mídia;
 - não interpretar autorização genérica como GO para canário mutável;
 - PR #4 permanece DRAFT.
 

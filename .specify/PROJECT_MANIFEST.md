@@ -5,12 +5,14 @@
 **Produto:** Base de Conhecimento com Inteligência Integrada  
 **Tipo:** Plugin WordPress único, modular internamente  
 **Idioma:** Português do Brasil  
-**Estado:** SPEC-000/001/002/003 concluídas; UX-001/UX-002 concluídas; SPEC-004 ativa; G-240 PASS/CLOSED; G-245 em andamento em branch dedicada  
+**Estado:** SPEC-000/001/002/003 concluídas; UX-001/UX-002 concluídas; SPEC-004 ativa; G-240 PASS/CLOSED; G-245 rebaselined para Canonical Block Normalization  
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
 ## Missão
 
-Construir uma plataforma única para governar a Base de Conhecimento sem substituir WordPress/Elementor como fonte editorial, evoluindo por vertical slices, com experiência coerente, encontrabilidade orientada à resposta confiável e dados derivados reconstruíveis.
+Construir uma plataforma única para governar a Base de Conhecimento sobre WordPress Core, com conteúdo editorial canônico em `WP_Post.post_content`/Core Blocks, evoluindo por vertical slices, com experiência coerente, encontrabilidade orientada à resposta confiável e dados derivados reconstruíveis.
+
+Elementor é tratado como fonte legada durante a transição; não como arquitetura editorial futura.
 
 ## Estado consolidado
 
@@ -98,14 +100,22 @@ Baseline promovida para `main` em 2026-09-16:
 
 **G-245 está em andamento apenas na branch `spec004-g245-production-readiness` / PR #4, ainda DRAFT e não promovida para `main`.**
 
+Estado G-245:
+
 - T080: PASS WITH REVIEW ITEMS;
-- T081 Projection Plan: PASS ambiental, duas passagens 622/622, zero mutação editorial;
-- T082: próximo subgate após sincronização com a baseline visual promovida;
-- writer/migration permanecem disabled-by-default e não autorizados.
+- T081: Projection Plan Elementor PASS ambiental como diagnóstico histórico/read-only;
+- T082–T086: gates defensivos concluídos local/contratualmente;
+- T083B Durable Journal Storage: PASS ambiental;
+- T087A/T087B-prep: readiness/lock concluídos sem writer;
+- **ADR-004-001 aceita:** WordPress Core Blocks passam a ser destino editorial canônico;
+- Elementor writer/T087C antigo: SUPERSEDED antes de implementação;
+- próximo gate: **T090 Block Projection Contract / Plan read-only**.
 
 ## Fonte da verdade e fronteiras
 
-- Editorial: `WP_Post` + Elementor.
+- Editorial canônico futuro: `WP_Post.post_content` + WordPress Core Blocks.
+- Plugin Gutenberg: **não é dependência de produção**; usar somente APIs estáveis do Core homologado.
+- Elementor: source adapter legado durante transição; `_elementor_data` preservado até dependência zero e gate explícito de retirada.
 - Summary: Post Metadata API do WordPress.
 - Classificação: WordPress Taxonomy API.
 - Review/Governança: Comments API append-only conforme SPEC-003.
@@ -113,6 +123,8 @@ Baseline promovida para `main` em 2026-09-16:
 - UX/UI: UX-001 + UX-002, com `scr/` e `visual-contract-v2.md` como contrato vigente.
 - WordPress Admin: shell e primitives; a aparência interna do produto pertence ao Design System BDC.
 - O plugin não reescreve silenciosamente `post_content`.
+- Migração administrativa para Blocks só pode ocorrer sob SPEC/gates/autorização/rollback explícitos.
+- Nenhum novo writer deve usar `_elementor_data` como destino.
 - Projeções/cache/índices nunca são fonte editorial.
 - IA permanece assistiva e fora da autoridade editorial, orientada a reduzir esforço de leitura e tempo até resposta confiável.
 
@@ -123,7 +135,7 @@ Baseline promovida para `main` em 2026-09-16:
 3. UX-001 Product Experience & Knowledge Workspace — concluído;
 4. Review & Governança — concluído;
 5. UX-002 Mockup Visual Foundation — concluído e contrato permanente;
-6. Content Extractor + Knowledge Document — **em execução; G-240 fechado, G-245 em andamento**;
+6. Content Extractor + Knowledge Document + Canonical Block Normalization — **em execução; G-240 fechado, G-245 rebaselined**;
 7. Search lexical + Golden Queries;
 8. Telemetria/Inteligência de Busca;
 9. Operações/Indexação;
@@ -138,4 +150,4 @@ Nenhum mockup/protótipo transforma hipótese em contrato de domínio. Toda UI i
 
 **GO de desenvolvimento/homologação != GO de produção.**
 
-**UX-002 não autoriza writer/migration Elementor. G-245 deve fechar seus subgates, rollback e autorização explícita antes de qualquer mutação editorial.**
+**ADR-004-001 não autoriza writer. O novo destino Blocks deve repetir os gates de projection/dry-run/stale/journal/lock/canário antes de qualquer mutação editorial.**

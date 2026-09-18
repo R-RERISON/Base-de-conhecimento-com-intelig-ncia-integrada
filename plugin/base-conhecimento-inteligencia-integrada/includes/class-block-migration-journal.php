@@ -100,7 +100,13 @@ final class Block_Migration_Journal {
 	}
 
 	public static function mark_rolled_back( array $record, string $restored_post_content_sha256, string $restored_elementor_data_sha256 ): array|\WP_Error {
-		if ( self::STATE_ROLLED_BACK === (string) ( $record['state'] ?? '' ) ) { return $record; }
+		$state = (string) ( $record['state'] ?? '' );
+		if ( self::STATE_ROLLED_BACK === $state ) { return $record; }
+		if ( ! in_array( $state, array( self::STATE_APPLIED, self::STATE_PARTIAL_FAILURE ), true ) ) {
+			return new \WP_Error( 'bdc_kb_block_journal_rollback_state', 'Rollback exige estado applied ou partial_failure.' );
+		}
+		$valid = self::validate_record( $record, true );
+		if ( $valid instanceof \WP_Error ) { return $valid; }
 		$payload = is_array( $record['rollback_payload'] ?? null ) ? $record['rollback_payload'] : array();
 		$expected_content = hash( 'sha256', (string) ( $payload['post_content'] ?? '' ) );
 		$expected_elementor = hash( 'sha256', (string) ( $payload['elementor_data'] ?? '' ) );
@@ -118,12 +124,36 @@ final class Block_Migration_Journal {
 		if ( self::SCHEMA_VERSION !== (string) ( $record['schema_version'] ?? '' ) || self::FAMILY !== (string) ( $record['family'] ?? '' ) ) {
 			return new \WP_Error( 'bdc_kb_block_journal_schema', 'Schema/family inválido.' );
 		}
+		$run_id = (string) ( $record['run_id'] ?? '' );
+		$post_id = (int) ( $record['post_id'] ?? 0 );
+		$state = (string) ( $record['state'] ?? '' );
+		$recorded_at = (string) ( $record['recorded_at'] ?? '' );
+		$source_kind = (string) ( $record['source_kind'] ?? '' );
+		if ( 1 !== preg_match( '/^[A-Za-z0-9._:-]{8,128}$/', $run_id ) || $post_id <= 0 || '' === $recorded_at || '' === $source_kind ) {
+			return new \WP_Error( 'bdc_kb_block_journal_identity', 'Identidade do journal inválida.' );
+		}
+		if ( ! in_array( $state, array( self::STATE_PREPARED, self::STATE_APPLIED, self::STATE_PARTIAL_FAILURE, self::STATE_ROLLED_BACK ), true ) ) {
+			return new \WP_Error( 'bdc_kb_block_journal_state', 'Estado do journal inválido.' );
+		}
 		if ( ! self::is_sha256( (string) ( $record['journal_id'] ?? '' ) )
 			|| ! self::is_sha256( (string) ( $record['fidelity_hash_before'] ?? '' ) )
 			|| ! self::is_sha256( (string) ( $record['serialization_hash'] ?? '' ) )
 			|| ! self::is_sha256( (string) ( $record['rollback_payload_hash'] ?? '' ) )
 			|| ! self::is_sha256( (string) ( $record['journal_hash'] ?? '' ) ) ) {
 			return new \WP_Error( 'bdc_kb_block_journal_hash', 'Hash inválido.' );
+		}
+		$expected_journal_id = hash(
+			'sha256',
+			$run_id . '|' . $post_id . '|' . strtolower( (string) $record['fidelity_hash_before'] ) . '|' . strtolower( (string) $record['serialization_hash'] )
+		);
+		if ( ! hash_equals( $expected_journal_id, strtolower( (string) $record['journal_id'] ) ) ) {
+			return new \WP_Error( 'bdc_kb_block_journal_id_mismatch', 'journal_id diverge da identidade do record.' );
+		}
+		if ( in_array( $state, array( self::STATE_APPLIED, self::STATE_PARTIAL_FAILURE, self::STATE_ROLLED_BACK ), true ) ) {
+			if ( ! self::is_sha256( (string) ( $record['post_content_sha256_after'] ?? '' ) )
+				|| ! self::is_sha256( (string) ( $record['elementor_data_sha256_after'] ?? '' ) ) ) {
+				return new \WP_Error( 'bdc_kb_block_journal_after_hash', 'Hashes after obrigatórios para estado pós-write.' );
+			}
 		}
 		if ( $require_persisted && true !== ( $record['journal_persisted'] ?? false ) ) {
 			return new \WP_Error( 'bdc_kb_block_journal_not_persisted', 'Journal durável obrigatório.' );

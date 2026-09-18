@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T100D",
+  "mode": "explicit_single_post_persistent_migration_authorization",
+  "authorized_at": "2026-09-17T23:55:00Z",
+  "authorization_source": "explicit_user_message",
+  "action_contract": "core_blocks_migrate_v1",
+  "post_id": 358,
+  "authorization_id": "17c002d3ccc770c6ef154fdbed28cbd0c8d198411c84e168fe9aadb1b7a41af0",
+  "scope": {
+    "persistent_on_success": true,
+    "automatic_rollback_on_failure": true,
+    "single_post_only": true,
+    "batch_authorized": false,
+    "elementor_data_write_authorized": false
+  },
+  "statement": "Autorizo o T100D para post_id=358 authorization_id=17c002d3ccc770c6ef154fdbed28cbd0c8d198411c84e168fe9aadb1b7a41af0, com migração persistente para Core Blocks se todas as verificações passarem e rollback automático em caso de falha.",
+  "status": "AUTHORIZED_BUILD_AND_EXECUTION_SCOPE"
+}

@@ -94,11 +94,28 @@ final class Post_Management_Activities {
 			submit_button( __( 'Baixar Authorization Pack deste post', 'bdc-knowledge-base' ), 'secondary', 'submit', false );
 			echo '</form>';
 		}
-		echo '<button type="button" class="button button-primary" disabled aria-disabled="true">' . esc_html__( 'Migrar para Core Blocks — bloqueado neste gate', 'bdc-knowledge-base' ) . '</button>';
+		$t100d_enabled = defined( 'BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD' )
+			&& BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD
+			&& class_exists( Post_Core_Blocks_Executor_T100D::class )
+			&& Post_Core_Blocks_Executor_T100D::can_render( $post_id, $authorization_id );
+
+		if ( $authorization_ready && $t100d_enabled ) {
+			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+			echo '<input type="hidden" name="action" value="' . esc_attr( Post_Core_Blocks_Executor_T100D::ACTION ) . '">';
+			echo '<input type="hidden" name="post_id" value="' . esc_attr( (string) $post_id ) . '">';
+			echo '<input type="hidden" name="' . esc_attr( Post_Core_Blocks_Executor_T100D::AUTH_FIELD ) . '" value="' . esc_attr( $authorization_id ) . '">';
+			wp_nonce_field( Post_Core_Blocks_Executor_T100D::nonce_action(), Post_Core_Blocks_Executor_T100D::NONCE_FIELD );
+			submit_button( __( 'Migrar este post para Core Blocks — persistente', 'bdc-knowledge-base' ), 'primary', 'submit', false );
+			echo '</form>';
+		} else {
+			echo '<button type="button" class="button button-primary" disabled aria-disabled="true">' . esc_html__( 'Migrar para Core Blocks — sem autorização executável', 'bdc-knowledge-base' ) . '</button>';
+		}
 		echo '</div>';
 
-		if ( $authorization_ready ) {
-			echo '<p class="bdc-kb-context-note">' . esc_html__( 'O Authorization Pack congela a identidade atual deste único artigo. Qualquer drift posterior invalida a autorização. T100C não executa write.', 'bdc-knowledge-base' ) . '</p>';
+		if ( $authorization_ready && $t100d_enabled ) {
+			echo '<div class="notice notice-warning inline"><p><strong>' . esc_html__( 'T100D autorizado para este artigo.', 'bdc-knowledge-base' ) . '</strong> ' . esc_html__( 'Se todas as verificações passarem, a migração será persistente. Qualquer falha pós-write aciona rollback automático para o snapshot anterior.', 'bdc-knowledge-base' ) . '</p></div>';
+		} elseif ( $authorization_ready ) {
+			echo '<p class="bdc-kb-context-note">' . esc_html__( 'O Authorization Pack congela a identidade atual deste único artigo. Qualquer drift posterior invalida a autorização.', 'bdc-knowledge-base' ) . '</p>';
 		} else {
 			echo '<p class="bdc-kb-context-note">' . esc_html__( 'Este artigo ainda não está elegível para autorização de migração. O estado acima indica a causa sem executar qualquer write.', 'bdc-knowledge-base' ) . '</p>';
 		}

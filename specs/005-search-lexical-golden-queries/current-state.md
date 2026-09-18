@@ -2,7 +2,7 @@
 
 **ATIVA / DISCOVERY — R-500 PASS/CLOSED; R-510 OPEN.**
 
-**Gate atual:** T513 revisão humana, seguido de T514 diversidade.
+**Gate atual:** T513/T514 Automated Golden Validation — execução ambiental pendente.
 
 **Branch:** `spec005-search-lexical-golden-queries`.
 
@@ -14,7 +14,7 @@
 
 Existem Content Extractor/KD 2.1.0, Workspace, Knowledge List e pesquisa administrativa por `WP_Query s`. SPEC-004 permanece CLOSED/main e Visual Contract v2 permanece obrigatório.
 
-A SPEC-005 possui diagnóstico temporário T511.2 com seed próprio. Isso não é uma Golden Suite aprovada nem Search Retrieval canônico. Não há índice/tabela Search, Golden management produtivo, query logging, IA/vetor ou superfície pública do novo Search.
+A SPEC-005 possui seed próprio e agora um Auto Validator temporário T513/T514. Isso ainda não é uma Golden Suite congelada nem Search Retrieval canônico. Não há índice/tabela Search, Golden management produtivo, query logging, IA/vetor ou superfície pública do novo Search.
 
 **Engine bloqueada até R-500 + R-510 + G-520.** Trabalho permitido nesta fase: evidências, benchmark, dataset, contratos e diagnóstico read-only.
 
@@ -66,11 +66,39 @@ ASI é referência histórica, não dependência. O runner independente consome 
 
 O JSON não atesta ASI desativado: o flag é declarativo e `WP_Query` executa com filtros do ambiente. G-585 continua NOT_RUN; antes do RC são obrigatórios ASI ausente/desativado, Search/Golden PASS, scan produtivo completo e rebuild próprio.
 
+## T513/T514 — Automated Golden Validation
+
+Contrato: `r510-automated-golden-validation-contract-v1.md`.
+
+Build: `0.5.0-r510-t513.1`.  
+SHA-256: `e5c10eba2f831584536e0f3e0c2ab50102c87c504424117530c1eafd64cbe0bc`.
+
+Validação local:
+- 9/9 testes unitários PASS;
+- um defeito real foi encontrado e corrigido antes da homologação: `MSTeams` não era reconhecido como `product_token`;
+- 43/43 PHP lint pré-ZIP e pós-ZIP;
+- 42/42 active requires;
+- Git blob parity 5/5;
+- deterministic rebuild PASS;
+- ASI technical dependency scan = 0;
+- forbidden write/network calls no auto-runner = 0;
+- T502/T510/T511 OFF; Auto Validator ON; Elementor writer OFF.
+
+Política:
+- `AUTO_PASS`: confirma continuidade de expectativa já originada de curadoria humana/histórica quando a evidência objetiva é inequívoca;
+- `REVIEW_REQUIRED`: somente ambiguidade/inconclusão vai para humano;
+- `AUTO_FAIL`: quebra objetiva, NO-GO;
+- o validator nunca cria ou troca `expected_post_id`;
+- synthetic robustness nunca é tratado como consulta real.
+
 ## Próximo passo e blockers
 
-1. T513: revisar [as seis expectativas](r510-golden-candidate-review-v1.md), com post oficial, max_rank, severity e justificativa. “Estrutura” exige atenção ao expected 36620 versus primeiro resultado 516.
-2. T514: complementar consultas reais de linguagem natural, variação/erro quando real e lacunas Summary/Elementor; registrar aliases se existentes.
-3. T515: congelar dataset aceito com versão/hash próprios.
-4. T516: fechar R-510; depois fechar G-520 antes de engine.
+1. instalar/executar somente o build `0.5.0-r510-t513.1`;
+2. baixar o JSON do `Golden Auto Validator`;
+3. registrar T513 AUTO_PASS/REVIEW_REQUIRED/AUTO_FAIL por candidate;
+4. registrar cobertura T514 e synthetic robustness;
+5. revisar manualmente **somente** itens `REVIEW_REQUIRED`, se existirem;
+6. classes reais ainda ausentes permanecem lacunas explícitas; não inventar consultas;
+7. somente depois T515 congela dataset/version/set_hash e T516 fecha R-510.
 
-T513/T514 seguem sem aceite humano. Nenhum candidate foi aprovado automaticamente e a fixture permanece inalterada. Não houve modificação de PHP, build, ranking, dados editoriais, schema ou UI nesta etapa.
+R-510 permanece OPEN. Nenhum resultado ambiental do Auto Validator foi presumido.

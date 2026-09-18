@@ -89,3 +89,16 @@ Só afirmar que a nova busca é melhor quando houver evidência de pelo menos um
 - melhor segurança/privacidade.
 
 “Menos código” isoladamente não é melhoria de Search.
+
+
+## Independence Amendment — ADR-005-001
+
+Paridade funcional não significa dependência técnica.
+
+ASI pode informar expectativas e critérios históricos, porém:
+- runtime novo não consulta ASI;
+- dados históricos necessários devem ser copiados/versionados;
+- nenhuma infraestrutura ASI será requisito de execução;
+- quando o novo Search estiver pronto, remover/desativar ASI não pode alterar resultados além do que a nova Golden Suite explicitamente governa.
+
+A meta é **substituição completa**, não coexistência permanente.

@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T100D",
+  "mode": "single_post_persistent_core_blocks_migration",
+  "generated_at": "2026-09-18T10:07:55+00:00",
+  "raw_file_sha256": "0d8072056fe6653bc6595c8b41c28c1445d3d5bea8b637e182d7a1d5871aa94f",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.4.0-g245-workspace-t100d.1"
+  },
+  "authorization": {
+    "authorized": true,
+    "action_contract": "core_blocks_migrate_v1",
+    "post_id": 358,
+    "authorization_id": "17c002d3ccc770c6ef154fdbed28cbd0c8d198411c84e168fe9aadb1b7a41af0"
+  },
+  "target": {
+    "post_id": 358,
+    "post_title": "LIA | Laboratório de Inteligência Analítica",
+    "source_kind_before": "legacy_html",
+    "expected_block_name": "core/freeform"
+  },
+  "journal": {
+    "prepared_event_id": 351291,
+    "applied_event_id": 351293,
+    "rolled_back_event_id": 0,
+    "prepared_cleaned_prewrite": false,
+    "latest_state": "applied"
+  },
+  "apply": {
+    "attempted": true,
+    "verified": true,
+    "persistent": true,
+    "expected_post_content_sha256": "af4101dda487e6f6239b8bb0546439a75e1691062fd27f9322cbb0d9c2f84050",
+    "final_post_content_sha256": "af4101dda487e6f6239b8bb0546439a75e1691062fd27f9322cbb0d9c2f84050",
+    "elementor_data_unchanged": true
+  },
+  "rollback": {
+    "attempted": false,
+    "verified": false,
+    "policy": "automatic_on_post_write_failure_only"
+  },
+  "errors": [],
+  "safety": {
+    "scope_one_post_only": true,
+    "writes_post_content": true,
+    "writes_elementor_data_as_destination": false,
+    "rollback_on_failure": true,
+    "executes_shortcodes": false,
+    "renders_blocks": false,
+    "calls_external_network": false,
+    "exports_editorial_body": false,
+    "exports_urls": false
+  },
+  "gate_result": {
+    "t100d_persistent_migration_pass": true
+  },
+  "duration_ms": 141
+}

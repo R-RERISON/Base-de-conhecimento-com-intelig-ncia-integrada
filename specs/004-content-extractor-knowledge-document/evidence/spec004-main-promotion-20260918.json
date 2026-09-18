@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "event": "SPEC-004-MAIN-PROMOTION",
+  "date": "2026-09-18",
+  "pull_request": 4,
+  "merge_commit_sha": "e08871557b2233bf1294b1e57752265d3fe68c0f",
+  "merged": true,
+  "base": "main",
+  "source_branch": "spec004-g245-production-readiness",
+  "source_head_sha": "fea5fec0f93e8d1a35ef95df2fa31165ad219ca7",
+  "release": "0.4.0-spec004-rc2",
+  "artifact_sha256": "ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b",
+  "status": {
+    "spec004": "CLOSED/main",
+    "g245": "CLOSED",
+    "g250": "CLOSED",
+    "rc2_final_smoke": "PASS"
+  }
+}

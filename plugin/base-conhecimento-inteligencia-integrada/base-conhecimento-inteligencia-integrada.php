@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.4.0-g245-ux003.1
+ * Version: 0.4.0-g245-e6.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-g245-ux003.1' );
+define( 'BDC_KB_VERSION', '0.4.0-g245-e6.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -36,6 +36,7 @@ define( 'BDC_KB_SPEC004_G245_T100A_BATCH_AUTHORIZATION_PACK_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_T100A_POST_WORKSPACE_BUILD', true );
 define( 'BDC_KB_SPEC004_G245_T100C_CORE_BLOCKS_ACTIVITY_BUILD', true );
 define( 'BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD', false );
+define( 'BDC_KB_SPEC004_T100E_E6_REGRESSION_BUILD', true );
 if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
 	define( 'BDC_KB_ELEMENTOR_WRITER_ENABLED', false );
 }
@@ -145,6 +146,9 @@ if ( defined( 'BDC_KB_SPEC004_G245_T100A_BATCH_AUTHORIZATION_PACK_BUILD' ) && BD
 if ( defined( 'BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD' ) && BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-post-core-blocks-executor-t100d.php';
 }
+if ( defined( 'BDC_KB_SPEC004_T100E_E6_REGRESSION_BUILD' ) && BDC_KB_SPEC004_T100E_E6_REGRESSION_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-workspace-regression-matrix-t100e.php';
+}
 
 \BDC\KnowledgeBase\Plugin::register();
 \BDC\KnowledgeBase\Visual_Foundation::register();
@@ -204,4 +208,7 @@ if ( defined( 'BDC_KB_SPEC004_G245_T099C_CANARY_BUILD' ) && BDC_KB_SPEC004_G245_
 }
 if ( defined( 'BDC_KB_SPEC004_G245_T100A_BATCH_AUTHORIZATION_PACK_BUILD' ) && BDC_KB_SPEC004_G245_T100A_BATCH_AUTHORIZATION_PACK_BUILD ) {
 	\BDC\KnowledgeBase\Block_Migration_Batch_Authorization_Pack_Smoke::register();
+}
+if ( defined( 'BDC_KB_SPEC004_T100E_E6_REGRESSION_BUILD' ) && BDC_KB_SPEC004_T100E_E6_REGRESSION_BUILD ) {
+	\BDC\KnowledgeBase\Workspace_Regression_Matrix_T100E::register();
 }

@@ -98,7 +98,7 @@ final class Classification_Admin {
 			'forbidden'        => array( 'error', 'Você não tem permissão para classificar o artigo solicitado.' ),
 			'invalid_nonce'    => array( 'error', 'A validação de segurança expirou ou é inválida. Reabra o formulário.' ),
 			'invalid_payload'  => array( 'error', 'O formulário de classificação recebido é inválido.' ),
-			'validation_error' => array( 'error', 'A classificação não foi salva porque o payload violou o contrato.' ),
+			'validation_error' => array( 'error', 'A classificação não foi salva porque os dados informados são inválidos.' ),
 		);
 
 		if ( ! isset( $messages[ $status ] ) ) {
@@ -112,14 +112,14 @@ final class Classification_Admin {
 	public static function render_panel( int $post_id ): void {
 		$snapshot = Classification_Store::read( $post_id );
 		if ( is_wp_error( $snapshot ) ) {
-			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar a classificação canônica deste artigo.', 'bdc-knowledge-base' ) . '</p></div>';
+			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar a classificação deste artigo.', 'bdc-knowledge-base' ) . '</p></div>';
 			return;
 		}
 
 		echo '<hr class="bdc-kb-section-separator">';
 		echo '<section class="bdc-kb-classification" aria-labelledby="bdc-kb-classification-title">';
 		echo '<h2 id="bdc-kb-classification-title">' . esc_html__( 'Classificação de Conhecimento', 'bdc-knowledge-base' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Selecione somente termos canônicos existentes. Valores legados aparecem apenas como referência e nunca são migrados automaticamente.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p>' . esc_html__( 'Selecione os termos padronizados que representam este artigo. Informações antigas aparecem apenas como referência e não são alteradas automaticamente.', 'bdc-knowledge-base' ) . '</p>';
 
 		self::render_vocabulary_links( $post_id );
 
@@ -158,7 +158,7 @@ final class Classification_Admin {
 		echo '<input type="hidden" name="classification_present[' . esc_attr( $field ) . ']" value="1">';
 
 		if ( is_wp_error( $terms ) ) {
-			echo '<p class="notice notice-error inline"><span>' . esc_html__( 'Não foi possível carregar o vocabulário canônico.', 'bdc-knowledge-base' ) . '</span></p>';
+			echo '<p class="notice notice-error inline"><span>' . esc_html__( 'Não foi possível carregar o vocabulário.', 'bdc-knowledge-base' ) . '</span></p>';
 		} else {
 			$multiple = (bool) $definition['multiple'];
 			$name     = 'classification[' . $field . '][]';
@@ -177,9 +177,9 @@ final class Classification_Admin {
 			echo '</select>';
 
 			if ( array() === $terms ) {
-				echo '<p class="description">' . esc_html__( 'Nenhum termo canônico cadastrado ainda. Um administrador de vocabulário deve criar termos antes do assignment.', 'bdc-knowledge-base' ) . '</p>';
+				echo '<p class="description">' . esc_html__( 'Nenhum termo foi cadastrado neste vocabulário. Cadastre os termos antes de associá-los ao artigo.', 'bdc-knowledge-base' ) . '</p>';
 			} elseif ( $multiple ) {
-				echo '<p class="description">' . esc_html__( 'Use Ctrl/Cmd para selecionar ou remover múltiplos termos.', 'bdc-knowledge-base' ) . '</p>';
+				echo '<p class="description">' . esc_html__( 'Use Ctrl (Windows/Linux) ou Command (macOS) para selecionar ou remover vários termos.', 'bdc-knowledge-base' ) . '</p>';
 			}
 		}
 
@@ -213,7 +213,7 @@ final class Classification_Admin {
 		}
 
 		echo '<details class="bdc-kb-legacy-reference">';
-		echo '<summary>' . esc_html__( 'Referência legada — não canônica', 'bdc-knowledge-base' ) . '</summary>';
+		echo '<summary>' . esc_html__( 'Referência do conteúdo anterior', 'bdc-knowledge-base' ) . '</summary>';
 		echo '<pre>' . esc_html( implode( "\n", $lines ) ) . '</pre>';
 		echo '</details>';
 	}

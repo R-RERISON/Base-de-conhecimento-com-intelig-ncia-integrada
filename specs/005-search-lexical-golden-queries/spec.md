@@ -10,7 +10,7 @@
 
 **Idioma:** pt-BR.
 
-**Gate atual:** R-500 PASS/CLOSED; T511.2 PASS AMBIENTAL; R-510 OPEN (T513/T514 pendentes).
+**Gate atual:** R-500 PASS/CLOSED; T511.2 PASS AMBIENTAL; T513.1 evidência ambiental analisada; T514.2 PASS LOCAL / ambiental pendente; R-510 OPEN.
 
 > **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
@@ -259,7 +259,7 @@ Metas numéricas finais só serão congeladas após R-500; inventar SLA antes de
 - conjunto real não vazio;
 - expectativas com origem humana/curada;
 - continuidade objetiva validável automaticamente;
-- revisão humana somente para ambiguidade `REVIEW_REQUIRED`;
+- ambiguidade não resolvível objetivamente entra em `AMBIGUOUS_QUARANTINED`, sem escolha manual obrigatória;
 - blocking/warning;
 - hash/version;
 - cobertura de classes: termo simples, composto, sigla, linguagem natural, variação/erro quando real.
@@ -267,9 +267,9 @@ Metas numéricas finais só serão congeladas após R-500; inventar SLA antes de
 ### Automação T513/T514
 Contrato: `r510-automated-golden-validation-contract-v1.md`.
 
-O Auto Validator pode confirmar uma expectativa existente, mas não pode criar ou substituir `expected_post_id`. Estados: `AUTO_PASS | REVIEW_REQUIRED | AUTO_FAIL`.
+O Auto Validator pode confirmar uma expectativa existente, mas não pode criar ou substituir `expected_post_id`. Estados: `AUTO_PASS | AMBIGUOUS_QUARANTINED | AUTO_FAIL`.
 
-Synthetic robustness é regressão técnica e nunca é apresentado como uso real.
+ADR-005-002 separa Golden Relevance, Technical Challenge e Real-world Query Enrichment. Synthetic/corpus-derived nunca é apresentado como uso real.
 
 ### G-520 — Search Contract v1
 - normalizer/ranker/result contract fechado;
@@ -385,3 +385,12 @@ Regras:
 - antes do RC haverá G-585 ASI Independence / Decommission Readiness.
 
 O ASI poderá ser removido materialmente sem afetar o novo plugin.
+
+
+## 23. Golden/Challenge separation
+
+ADR-005-002 é canônico para R-510:
+- Golden humana/histórica protege relevância;
+- Technical Challenge prova cobertura técnica de linguagem natural, Summary e Elementor/Content Extractor;
+- typo/alias reais são `PENDING_TELEMETRY` até a futura camada de Telemetria;
+- ambiguidade objetiva é quarentenada, não resolvida por ranking nem por escolha manual obrigatória.

@@ -99,3 +99,22 @@ Decisão:
 - runtime continua bloqueado por R-510 + G-520.
 
 Gate atual: **R-510 — Golden Dataset v1**.
+
+
+## R-510/T510 — Legacy Golden Discovery
+
+Status: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+
+Build: `0.5.0-r510-t510.1`  
+SHA-256: `3b4b4e0ec308c5914ce155e740228ff4b0f735fd76fd1b30b930bce384ce77d3`
+
+- T502 OFF;
+- T510 ON;
+- 40/40 PHP lint;
+- 39/39 active requires;
+- deterministic rebuild PASS;
+- zero write/network proibido;
+- lê apenas `asi_golden_queries` se existente;
+- nenhum auto-import;
+- nenhum rank execution;
+- human review continua obrigatório.

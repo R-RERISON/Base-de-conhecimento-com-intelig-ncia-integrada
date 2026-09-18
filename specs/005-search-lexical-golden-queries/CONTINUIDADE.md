@@ -85,3 +85,29 @@ Próximo passo:
 4. validar safety;
 5. revisar candidates do ASI;
 6. avançar T511–T516.
+
+
+## T510 ambiental
+
+PASS ambiental em 2026-09-18.
+
+Conjunto legado:
+- 6 Golden ativas;
+- todas post-level;
+- todas expected posts existentes/publicados;
+- todas severity legacy = warning;
+- legacy last run PASS 6/6 em algorithm 4.5.0;
+- nenhum erro/safety violation.
+
+Fixture candidate:
+`fixtures/golden-candidates-legacy-v1.json`.
+
+## Próximo passo atual
+
+Executar T511 build `0.5.0-r510-t511.1`:
+- `Base de Conhecimento -> Golden Baseline R-510`;
+- baixar JSON;
+- comparar as 6 Golden nos 3 modos;
+- somente depois fazer T513 human review de expected/max_rank/severity;
+- T514 precisa complementar diversidade se necessário;
+- R-510 permanece OPEN.

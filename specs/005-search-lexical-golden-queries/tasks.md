@@ -12,7 +12,7 @@
 - [x] T508 fechar R-500 — PASS/CLOSED.
 
 ## R-510 — Golden Dataset
-- [ ] T510 recuperar expectativas úteis do legado sem copiar runtime.
+- [x] T510 implementar recuperação read-only de expectativas legadas — PASS LOCAL; homologação pendente.
 - [ ] T511 coletar/selecionar consultas reais do ambiente.
 - [ ] T512 definir schema Golden v1.
 - [ ] T513 revisão humana expected_post/max_rank/severity.

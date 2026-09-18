@@ -343,3 +343,12 @@ Até G-590:
 Implementação de runtime começa somente quando R-500 e R-510 estiverem PASS e G-520 estiver fechado.
 
 Até lá, trabalho autorizado é inventário, benchmark, contrato, dataset, testes/fixtures e diagnóstico read-only.
+
+
+## 21. Relação com ASI
+
+O ASI 4.6.8 é tratado como baseline funcional forte. A SPEC-005 deve preservar ou superar os comportamentos comprovados de query understanding, retrieval lexical, ranking explicável, fallback e Golden Queries.
+
+Contrato: `asi-quality-parity-contract-v1.md`.
+
+Simplificação arquitetural não é autorização para regressão funcional. “Melhor” exige evidência de qualidade, cobertura, performance, explicabilidade, segurança ou operação — não apenas menos código.

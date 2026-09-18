@@ -20,6 +20,7 @@
 - T100A Workspace: **PASS LOCAL**.
 - T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
 - T100C Core Blocks Post Activity: **PASS AMBIENTAL / READ-ONLY**.
+- T100D Persistent Single-Post Migration: **PASS AMBIENTAL**.
 
 ## Evidência T099C
 
@@ -70,20 +71,13 @@ Conteúdo, Inteligência e Core Blocks começam read-only.
 
 No post 358 a aba Core Blocks deve refletir o audit trail já comprovado: journal `rolled_back`, lock `free`.
 
-## Próximo gate exato — validação ambiental T100C
+## T100D — PASS ambiental
 
-Na Workspace de um post elegível, validar:
-- `Core Blocks` permanece no mesmo `post_id`;
-- `Estado operacional = ready_for_authorization` quando aplicável;
-- blocos esperados corretos;
-- journal/lock coerentes;
-- `authorization_id` presente e estável sem drift;
-- botão **Baixar Authorization Pack deste post** funciona;
-- pack retorna `authorized=false` e exige autorização humana explícita;
-- botão **Migrar para Core Blocks** permanece desabilitado;
-- nenhuma mutação editorial ocorre.
+Post 358 foi migrado persistentemente para `core/freeform` com hash final esperado, `_elementor_data` intacto, journal `applied`, rollback não executado e errors=[]. Evidência: `evidence/g245-t100d-persistent-migration-pass-post-358-20260918T100755Z.json`.
 
-Após PASS, o próximo gate é **T100D — executor unitário Core Blocks**, nunca em lote e nunca sem `post_id + authorization_id` específicos.
+## Próximo gate exato — T100E Engineering Consolidation
+
+Sem novas features neste gate. Inventariar runtime, consolidar runner anti-regressão, separar produto de engenharia, formalizar build/release reproduzível e avaliar consolidação de journal/lock/stale/auth/snapshot/rollback antes de escalar IA ou migração.
 
 ## Guardrails absolutos
 

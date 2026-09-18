@@ -84,7 +84,7 @@ Entregas:
 - [x] T100E-E5 defensive service equivalence/consolidation map.
 - [x] T100E-HE5-001 Block Journal/Store hardening local: 15/15 PASS.
 - [x] T100E-HE5-001 environmental compatibility: PASS no post 358.
-- [x] T100E-E6 Workspace regression matrix: implementação + PASS local 9/9; homologação ambiental pendente.
+- [x] T100E-E6 Workspace regression matrix: PASS AMBIENTAL; 623/623 ×2, 0 erros, 0 throwables, 0 safety violations, 9/9 casos puros.
 - [ ] T100E-E7 production-readiness exit.
 - [ ] T101/T102: próximos gates funcionais somente após T100E.
 - [ ] T101: dependência residual Elementor / gate de retirada.

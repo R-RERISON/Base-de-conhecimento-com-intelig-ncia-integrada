@@ -1,6 +1,6 @@
 # SPEC-004 — Content Extractor e Knowledge Document
 
-**Status:** ATIVA — R-200 PASS / R-210 PASS / G-220 PASS / G-230 PASS / G-240 PASS-CLOSED / G-245 REBASELINED-IN-PROGRESS  
+**Status:** CONCLUÍDA — R-200 PASS / R-210 PASS / G-220 PASS / G-230 PASS / G-240 PASS-CLOSED / G-245 PASS-CLOSED / G-250 PASS-CLOSED  
 **Baseline de entrada:** `0.3.0-rc.1`  
 **Baseline consolidada em `main`:** `0.4.0-acceptance.12` / Knowledge Document `2.1.0`  
 **Pré-requisito:** SPEC-003 concluída — PASS.
@@ -211,3 +211,12 @@ Pacote: `0.4.0-g245-block-projection-t093.1`.
 ## 14. Definition of Done
 
 A SPEC-004 termina somente quando Content Extractor/KD permanecerem confiáveis, a normalização para Core Blocks estiver governada por projection/serialization/round-trip/dry-run/journal/stale/lock/canary/rollback, a dependência residual Elementor estiver conhecida e os requisitos aplicáveis de `docs/DEFINITION-OF-DONE.md` forem satisfeitos.
+
+
+## 15. Fechamento da SPEC-004 — 2026-09-18
+
+A SPEC-004 foi encerrada após T100D PASS ambiental, T100E-E6 PASS ambiental, T100E-E7 PASS/CLOSED e G-250 Lifecycle/RC1 PASS ambiental.
+
+RC final limpo: `0.4.0-spec004-rc2`, SHA-256 `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`.
+
+O fechamento não autoriza migração em massa nem writer autônomo. O controle de autorização editorial permanece explícito e post-scoped. O download de Authorization Pack é uma implementação transitória; uma futura execução integrada à Workspace deve manter confirmação humana explícita, capability, nonce, dry-run, stale-source guard, journal, lock e rollback.

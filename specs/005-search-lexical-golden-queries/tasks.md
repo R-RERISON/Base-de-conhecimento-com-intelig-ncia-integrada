@@ -15,8 +15,8 @@
 - [x] T510 recuperar expectativas úteis do legado sem copiar runtime — PASS AMBIENTAL; 6 candidates limpos.
 - [x] T511 preservar seed histórico e implementar baseline runner independente — v1 SUPERSEDED; v2 PASS LOCAL + PASS AMBIENTAL (2026-09-18 21:45:45 UTC); ver análise/evidência T511.2.
 - [x] T512 definir schema Golden v1 — contrato/fixture candidate versionados; freeze final depende T513/T514.
-- [ ] T513 revisão humana expected_post/max_rank/severity/rationale — pacote de revisão preparado; aceite pendente.
-- [ ] T514 garantir suíte não vazia e diversidade — gaps e roteiro de coleta real documentados; pendente.
+- [ ] T513 Automated Golden Validator — implementação + 9/9 unit tests + pacote local PASS; execução ambiental pendente; humano somente para `REVIEW_REQUIRED`.
+- [ ] T514 Diversity/Robustness Validator — implementação local PASS; execução ambiental definirá cobertura e gaps reais remanescentes.
 - [ ] T515 gerar set_hash/version.
 - [ ] T516 fechar R-510.
 

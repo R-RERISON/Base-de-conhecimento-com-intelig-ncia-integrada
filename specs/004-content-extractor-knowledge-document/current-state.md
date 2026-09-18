@@ -232,3 +232,14 @@ SHA-256: `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`.
 ### Autorização de migração
 
 A autorização permanece como controle explícito e post-scoped. O download de Authorization Pack é uma superfície transitória; a futura execução integrada deve ocorrer na Workspace com confirmação humana explícita e os mesmos guardrails. Nenhuma migração global implícita é autorizada.
+
+
+## RC2 Final Smoke — PASS AMBIENTAL
+
+Em 2026-09-18 o usuário confirmou a instalação e teste do `0.4.0-spec004-rc2` em homologação.
+
+Resultado registrado como **PASS AMBIENTAL / HUMAN ACCEPTANCE**. Nenhuma regressão foi reportada na confirmação.
+
+Evidência: `evidence/spec004-rc2-final-smoke-user-acceptance-20260918.json`.
+
+O PR #4 permanece DRAFT até autorização explícita para merge.

@@ -3,7 +3,7 @@
 ## R-500 — Baseline / DoR
 - [x] T500 congelar baseline `main`, versão/plugin e corpus conhecido.
 - [x] T501 inventariar comportamento atual `WP_Query s`.
-- [ ] T502 criar diagnóstico read-only de busca nativa.
+- [x] T502 criar diagnóstico read-only de busca nativa — PASS LOCAL; homologação pendente.
 - [ ] T503 medir corpus/scope/status/permissions.
 - [ ] T504 comparar conteúdo pesquisável nativo vs Content Extractor.
 - [ ] T505 classificar gaps: missing-content, ranking, normalization, permission, latency.

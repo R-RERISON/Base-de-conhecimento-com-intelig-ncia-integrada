@@ -119,7 +119,7 @@ Sem novas features neste gate. Inventariar runtime, consolidar runner anti-regre
 
 ### Próximo passo exato
 
-**HE5-001 environmental compatibility**: instalar T100E.3 em homologação e abrir `post 358 → Gerenciar → Core Blocks`. O journal T100D existente deve continuar legível com latest state `applied`, lock `free`, sem nova autorização executável e sem qualquer write.
+**HE5-001 environmental compatibility: PASS**. Post 358 permaneceu `applied`, `noop/no_action_required`, lock livre e sem novo write.
 
 
 ## UX-003 — próximo checkpoint visual
@@ -133,4 +133,8 @@ Instalar `0.4.0-g245-ux003.1` em homologação e validar:
 - Blocos do WordPress com estados humanizados;
 - ausência de regressão funcional.
 
-Após o aceite visual, retomar T100E-E6 Workspace Regression Matrix.
+UX-003: **PASS AMBIENTAL**.
+
+### Próximo passo exato
+
+**T100E-E6 — Workspace Regression Matrix**, seguido por **E7 Production Readiness Exit** e **G-250 Lifecycle/RC**.

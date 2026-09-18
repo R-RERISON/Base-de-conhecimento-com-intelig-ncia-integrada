@@ -64,3 +64,10 @@ Menu temporário:
 
 PASS esperado:
 `gate_result.t502_read_only_safety_pass=true`.
+
+
+## Fechamento R-500
+
+R-500: **PASS/CLOSED**.
+
+A busca atual da lista (`s + modified DESC`) não pode ser promovida como Search engine. A busca nativa sem esse override é muito superior nos probes, mas ainda não cobre integralmente o Content Extractor/Summary. Por isso a nova arquitetura seguirá com Search Document semântico + Golden, preservando WordPress como autoridade/fallback.

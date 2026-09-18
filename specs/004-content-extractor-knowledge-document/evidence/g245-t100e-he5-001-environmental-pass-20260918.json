@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T100E-HE5-001",
+  "mode": "hardened_block_journal_environmental_compatibility",
+  "accepted_at": "2026-09-18T08:19:00-03:00",
+  "acceptance_source": "environmental_screen_validation_plus_explicit_user_approval",
+  "post_id": 358,
+  "observed": {
+    "source": "WordPress Core Blocks",
+    "dry_run": "noop",
+    "operational_status": "no_action_required",
+    "latest_journal_state": "applied",
+    "lock_status": "free",
+    "authorization_unavailable": true,
+    "t100d_executor_authorized": false,
+    "new_write_observed": false
+  },
+  "gate_result": {
+    "he5_001_environmental_compatibility_pass": true
+  }
+}

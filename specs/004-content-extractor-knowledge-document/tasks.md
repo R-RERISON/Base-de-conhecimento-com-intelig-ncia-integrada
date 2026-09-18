@@ -80,7 +80,9 @@ Entregas:
 - [x] T100E-E2 Static Regression Runner v1.1.
 - [x] T100E-E3 Runtime classification product/defensive/legacy/engineering.
 - [x] T100E-E4 deterministic release builder candidate.
-- [ ] T100E-E5 defensive service equivalence/consolidation map.
+- [x] T100E-E5 defensive service equivalence/consolidation map.
+- [x] T100E-HE5-001 Block Journal/Store hardening local: 15/15 PASS.
+- [ ] T100E-HE5-001 environmental compatibility: validar journal `applied` existente do post 358 em homologação.
 - [ ] T100E-E6 Workspace regression matrix.
 - [ ] T100E-E7 production-readiness exit.
 - [ ] T101/T102: próximos gates funcionais somente após T100E.

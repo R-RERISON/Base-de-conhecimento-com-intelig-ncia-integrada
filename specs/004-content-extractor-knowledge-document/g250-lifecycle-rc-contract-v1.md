@@ -1,87 +1,39 @@
 # G-250 — Lifecycle / RC Contract v1
 
-**Status:** RC1 BUILD / HOMOLOGAÇÃO PENDENTE  
-**Build:** `0.4.0-spec004-rc1`
+**Status:** PASS / CLOSED  
+**RC validado:** `0.4.0-spec004-rc1`  
+**Fechado em:** 2026-09-18
 
-## Objetivo
+## Resultado ambiental
 
-Comprovar o ciclo de vida do plugin e os principais read paths antes do artefato final da SPEC-004.
+A sequência obrigatória foi executada em homologação: upgrade para RC1; Workspace smoke; deactivate/activate; novo smoke; downgrade controlado para `0.4.0-g245-ux003.1`; smoke do post 358; reinstall RC1; execução do runner oculto.
 
-## RC1
-
-O RC1:
-- desliga o runner temporário T100E-E6;
-- mantém T100D OFF;
-- mantém Elementor writer OFF;
-- mantém Production Preflight oculto;
-- habilita somente o runner oculto G-250.
-
-Rota oculta:
-`/wp-admin/admin.php?page=bdc-kb-g250-lifecycle`
-
-## Sequência ambiental obrigatória
-
-1. instalar RC1 sobre o build atual — comprova upgrade;
-2. abrir a Workspace e confirmar carregamento normal;
-3. desativar o plugin;
-4. reativar o plugin;
-5. confirmar que a Workspace continua carregando;
-6. instalar o build anteriormente validado `0.4.0-g245-ux003.1` — rollback/downgrade controlado;
-7. confirmar que a Workspace continua carregando e o post 358 permanece em Blocos do WordPress;
-8. reinstalar RC1;
-9. abrir a rota oculta G-250;
-10. marcar as duas confirmações humanas;
-11. executar e baixar o JSON.
-
-## Checks automatizados G-250
-
-No post 358:
-- SPEC-001 Summary read;
-- SPEC-002 Classification read;
-- SPEC-003 Review read;
-- SPEC-004 Content Extractor read;
-- SPEC-004 Knowledge Document 2.1.0 read;
-- Workspace Context read;
-- source kind = gutenberg;
-- operational = no_action_required;
-- journal latest = applied;
-- lock = free;
-- Activity Registry íntegro;
-- Preflight ausente do menu visível;
-- T100D OFF;
-- Elementor writer OFF;
-- E6 runner OFF;
-- fingerprint antes/depois inalterado.
+PASS comprovado:
+- lifecycle reactivated confirmation;
+- rollback cycle confirmation;
+- SPEC-001 Summary;
+- SPEC-002 Classification;
+- SPEC-003 Review;
+- Content Extractor;
+- Knowledge Document 2.1.0;
+- Workspace Context;
+- source kind `gutenberg`;
+- operational `no_action_required`;
+- journal `applied`;
+- lock `free`;
+- Activity Registry 8/8;
+- fingerprint antes/depois idêntico;
+- `gate_result.g250_lifecycle_rc_pass=true`.
 
 ## Segurança
 
-O runner G-250 não:
-- escreve post_content;
-- escreve _elementor_data;
-- escreve Summary/Classificação/Review;
-- escreve journal;
-- adquire lock;
-- chama rede;
-- executa shortcodes;
-- renderiza blocks dinâmicos.
+Runner read-only: sem persistência, writes editoriais/metadata/journal, lock, rede, shortcode ou render dinâmico.
 
-## PASS
+## Evidência
 
-PASS exige:
-- confirmações humanas de lifecycle e rollback/downgrade;
-- todos os checks automatizados PASS;
-- fingerprint do post 358 inalterado;
-- `gate_result.g250_lifecycle_rc_pass=true`.
+`evidence/g250-lifecycle-rc-pass-20260918T123514Z.json`  
+SHA-256 bruto: `c7fa462b7a0e5e0e1307cd63d62a6d98e12ebe44620e9208d9d08dcbecab7c76`.
 
-## Depois do PASS
+## Artefato final
 
-Gerar RC final limpo:
-- G-250 runner OFF;
-- E6 runner OFF;
-- sem runners temporários no artefato;
-- manifest + checksum;
-- static regression runner PASS;
-- build reproduzível;
-- E7 CLOSED;
-- G-245 CLOSED;
-- SPEC-004 pronta para encerramento.
+`0.4.0-spec004-rc2`: G-250 OFF; E6 OFF; Production Preflight OFF; T100D OFF; Elementor writer OFF. O source tree pode preservar ferramentas históricas, que não entram no artefato instalável quando seus flags estão OFF.

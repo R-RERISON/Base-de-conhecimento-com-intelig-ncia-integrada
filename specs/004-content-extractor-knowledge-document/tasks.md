@@ -18,7 +18,8 @@
 - T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
 - T100C Core Blocks Post Activity: **PASS AMBIENTAL / READ-ONLY**.
 - T100D Persistent Single-Post Migration: **PASS AMBIENTAL**.
-- T100E Engineering Consolidation: **IN PROGRESS / ZERO EDITORIAL WRITE**.\n- UX-003 Workspace Visual Consolidation: **PASS AMBIENTAL**.
+- T100E Engineering Consolidation: **IN PROGRESS / ZERO EDITORIAL WRITE**.
+- UX-003 Workspace Visual Consolidation: **PASS AMBIENTAL**.
 - G-250: NOT_RUN.
 
 ## T099C — PASS AMBIENTAL
@@ -83,7 +84,7 @@ Entregas:
 - [x] T100E-E5 defensive service equivalence/consolidation map.
 - [x] T100E-HE5-001 Block Journal/Store hardening local: 15/15 PASS.
 - [x] T100E-HE5-001 environmental compatibility: PASS no post 358.
-- [ ] T100E-E6 Workspace regression matrix.
+- [x] T100E-E6 Workspace regression matrix: implementação + PASS local 9/9; homologação ambiental pendente.
 - [ ] T100E-E7 production-readiness exit.
 - [ ] T101/T102: próximos gates funcionais somente após T100E.
 - [ ] T101: dependência residual Elementor / gate de retirada.

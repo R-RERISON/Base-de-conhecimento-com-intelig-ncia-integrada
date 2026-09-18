@@ -90,3 +90,19 @@ Sem novas features neste gate. Inventariar runtime, consolidar runner anti-regre
 - PR #4 permanece DRAFT.
 
 > Quem não sabe onde está, não sabe para onde quer ir.
+
+## T100E — progresso
+
+- E1 runtime inventory: concluído;
+- E2 static regression runner v1.1: concluído;
+- E3 runtime classification: concluído;
+- E4 deterministic release builder candidate: concluído;
+- T100D executor consumido: flag OFF / require condicional;
+- candidate build: `0.4.0-g245-consolidation-t100e.1`;
+- candidate SHA-256: `34ed3902e4514054b6db75b0a44951dab2b6ccbf358f902108155b81ef8c701b`;
+- 49 PHP no candidate, 0 lint failures;
+- nenhuma mutação editorial em T100E.
+
+### Próximo passo exato
+
+**T100E-E5 — Defensive Service Equivalence Map.** Comparar journal/store, lock, stale guard, dry-run e batch-plan entre as famílias Block e Elementor, provando equivalência/diferenças antes de consolidar qualquer classe.

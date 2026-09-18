@@ -3,13 +3,13 @@
 ## R-500 — Baseline / DoR
 - [x] T500 congelar baseline `main`, versão/plugin e corpus conhecido.
 - [x] T501 inventariar comportamento atual `WP_Query s`.
-- [x] T502 criar diagnóstico read-only de busca nativa — PASS LOCAL; homologação pendente.
-- [ ] T503 medir corpus/scope/status/permissions.
-- [ ] T504 comparar conteúdo pesquisável nativo vs Content Extractor.
-- [ ] T505 classificar gaps: missing-content, ranking, normalization, permission, latency.
-- [ ] T506 decidir superfície inicial: admin, pública ou ambas.
-- [ ] T507 registrar benchmark p50/p95 e limites.
-- [ ] T508 fechar R-500.
+- [x] T502 criar diagnóstico read-only de busca nativa — PASS AMBIENTAL.
+- [x] T503 medir corpus/scope/status/permissions — PASS ambiental para baseline admin.
+- [x] T504 comparar conteúdo pesquisável nativo vs Content Extractor — PASS; gap semântico comprovado.
+- [x] T505 classificar gaps — PASS; ranking/coverage/Summary comprovados; normalization real segue para Golden.
+- [x] T506 decidir superfície inicial — ADMIN-FIRST; pública postergada.
+- [x] T507 registrar benchmark p50/p95 e limites — PASS ambiental.
+- [x] T508 fechar R-500 — PASS/CLOSED.
 
 ## R-510 — Golden Dataset
 - [ ] T510 recuperar expectativas úteis do legado sem copiar runtime.

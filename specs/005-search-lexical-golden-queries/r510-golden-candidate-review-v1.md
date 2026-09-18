@@ -1,57 +1,64 @@
-# R-510 — Golden Candidate Automated Review v2
+# R-510 — Golden Candidate Automated Review v3
 
-**Estado:** T513/T514 PASS LOCAL / execução ambiental pendente; R-510 OPEN.
+**Estado:** T513.1 ambiental analisado; T514.2 PASS LOCAL / ambiental pendente; R-510 OPEN.
 
-O processo de revisão manual generalizada foi **superseded** pelo contrato:
-`r510-automated-golden-validation-contract-v1.md`.
+## Evidência T513.1
 
-## Regra atual
+Build `0.5.0-r510-t513.1`.
 
-Os seis candidates já possuem origem manual/histórica governada. Portanto o sistema deve validar automaticamente tudo que for objetivo.
+Resultado ambiental:
+- 5 AUTO_PASS;
+- 1 REVIEW_REQUIRED;
+- 0 AUTO_FAIL;
+- synthetic robustness 16/16 PASS;
+- safety/fingerprint PASS;
+- corpus 623 -> 623;
+- errors=[].
 
-### AUTO_PASS
-Fecha a revisão objetiva do candidate quando:
-- expected existe e está publicado;
-- Content Extractor funciona;
-- expected está dentro de max_rank;
-- expected é Top-1;
-- query possui 100% de cobertura semântica;
-- não há concorrente material à frente;
-- existe sinal suficiente.
+Única ambiguidade:
+- query `Estrutura`;
+- expected 36620 rank 2;
+- concorrente 516 rank 1;
+- ambos validation_score=100.
 
-AUTO_PASS preserva expected/max_rank e recomenda `blocking`.
+O relatório também revelou D-513-01 e D-513-02 no validator. Portanto não se fecha R-510 usando a classificação T513.1.
 
-### REVIEW_REQUIRED
-Somente este estado pede decisão humana. O relatório já entrega expected, concorrente, ranks, sinais e reason codes.
+## Política v2
 
-### AUTO_FAIL
-Quebra objetiva; não pedir “aprovação” humana para mascarar falha.
+ADR-005-002 elimina decisão manual obrigatória sem evidência suficiente.
+
+Estados:
+- `AUTO_PASS`: ativo/blocking;
+- `AMBIGUOUS_QUARANTINED`: preservado, warning, fora do blocking;
+- `AUTO_FAIL`: NO-GO.
+
+O sistema nunca troca expected automaticamente.
+
+Para `Estrutura`, a expectativa é que v2 preserve 36620 em quarantine se a ambiguidade continuar. Isso não é presumido como resultado ambiental antes da execução.
 
 ## T514
 
-O Diversity Validator classifica automaticamente:
-- termo simples;
-- product token;
-- composto/versão;
-- frase;
-- sigla;
-- linguagem natural;
-- Summary dependent;
-- Elementor/mixed semantic gap.
+Três estratos:
+1. Golden Relevance: origem humana/histórica;
+2. Technical Challenge: corpus-derived/synthetic para natural language, Summary e Elementor gap;
+3. Real-world enrichment: typo/alias reais via Telemetria futura.
 
-Typo/variation e alias/synonym só contam como uso real com provenance real/curada.
+`PENDING_TELEMETRY` não é equivalente a dado real inventado.
 
-Synthetic robustness testa lowercase/uppercase/whitespace e permanece rotulado `origin=synthetic`.
+## Build atual
 
-## Build de homologação
+`0.5.0-r510-t514.2`  
+SHA-256 `9fb9e20828b1e5162db5fa924ed3b2a3b76d85531d1c61f2847205ebdd00ae2c`.
 
-`0.5.0-r510-t513.1`  
-SHA-256 `e5c10eba2f831584536e0f3e0c2ab50102c87c504424117530c1eafd64cbe0bc`.
-
-Validação local: 9/9 unit, 43/43 PHP lint pré/pós ZIP, 42/42 active requires, Git parity 5/5, deterministic rebuild PASS, zero dependência técnica ASI.
+Local:
+- 14/14 unit PASS;
+- 44/44 PHP lint;
+- 43/43 active requires;
+- Git parity 7/7;
+- deterministic rebuild PASS;
+- ASI dependency hits 0;
+- writer/network hits 0.
 
 ## Próximo passo
 
-Executar `Base de Conhecimento -> Golden Auto Validator`.
-
-Não abrir artigos manualmente antes do relatório. Se o relatório retornar `REVIEW_REQUIRED`, revisar exclusivamente esses casos.
+Executar somente T514.2 e fornecer o JSON. Se `r510_ready=true`, seguir para T515/T516.

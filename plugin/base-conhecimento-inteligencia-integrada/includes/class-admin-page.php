@@ -223,8 +223,8 @@ final class Admin_Page {
 		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Base de Conhecimento / Artigo', 'bdc-knowledge-base' ) . '</p>';
 		echo '<h1>' . esc_html( (string) $summary['title'] ) . '</h1>';
 		echo '<div class="bdc-kb-context-meta">';
-		echo '<span><strong>' . esc_html__( 'ID:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( (string) $post->ID ) . '</span>';
-		echo '<span><strong>' . esc_html__( 'Status:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( $status_label ) . '</span>';
+		echo '<span><strong>' . esc_html__( 'Artigo:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( (string) $post->ID ) . '</span>';
+		echo '<span><strong>' . esc_html__( 'Situação:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( $status_label ) . '</span>';
 		echo '</div>';
 		echo '</div>';
 		echo '<div class="bdc-kb-hero-actions">';
@@ -249,7 +249,7 @@ final class Admin_Page {
 		echo '<aside class="bdc-kb-context-panel" aria-label="' . esc_attr__( 'Contexto do artigo', 'bdc-knowledge-base' ) . '">';
 		echo '<div class="bdc-kb-domain-heading"><h3>' . esc_html__( 'Contexto do artigo', 'bdc-knowledge-base' ) . '</h3><p>' . esc_html__( 'Informação editorial e governança em leitura.', 'bdc-knowledge-base' ) . '</p></div>';
 		echo '<dl class="bdc-kb-context-list">';
-		echo '<div><dt>' . esc_html__( 'Status editorial', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-badge bdc-kb-badge--success">' . esc_html( $status_label ) . '</span></dd></div>';
+		echo '<div><dt>' . esc_html__( 'Situação editorial', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-badge bdc-kb-badge--success">' . esc_html( $status_label ) . '</span></dd></div>';
 		$source_context = is_array( $context['source'] ?? null ) ? $context['source'] : array();
 		echo '<div><dt>' . esc_html__( 'Fonte editorial', 'bdc-knowledge-base' ) . '</dt><dd><strong>' . esc_html( (string) ( $source_context['label'] ?? 'Indisponível' ) ) . '</strong></dd></div>';
 		echo '<div><dt>' . esc_html__( 'Sumário', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $filled . '/' . count( Meta_Contract::fields() ) . ' campos preenchidos' ) . '</dd></div>';

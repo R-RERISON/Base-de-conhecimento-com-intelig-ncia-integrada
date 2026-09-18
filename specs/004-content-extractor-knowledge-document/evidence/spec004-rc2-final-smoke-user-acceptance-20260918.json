@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-004-RC2-FINAL-SMOKE",
+  "mode": "human_environmental_acceptance",
+  "date": "2026-09-18",
+  "build": "0.4.0-spec004-rc2",
+  "artifact_sha256": "ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b",
+  "confirmation": {
+    "installed": true,
+    "tested": true,
+    "source": "user_confirmation",
+    "user_statement": "Instalado e testado.",
+    "regressions_reported": false
+  },
+  "gate_result": {
+    "spec004_rc2_final_smoke_pass": true
+  },
+  "note": "Human acceptance records only what was explicitly confirmed in conversation; automated RC2 static validation remains in spec004-final-release-validation-20260918.json."
+}

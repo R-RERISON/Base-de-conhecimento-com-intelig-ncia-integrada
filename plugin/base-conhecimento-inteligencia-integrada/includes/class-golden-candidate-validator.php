@@ -15,14 +15,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Golden_Candidate_Validator {
 
-	public const CONTRACT_VERSION = '1.0.0';
+	public const CONTRACT_VERSION = '1.1.0';
 	public const STATUS_AUTO_PASS = 'AUTO_PASS';
-	public const STATUS_REVIEW_REQUIRED = 'REVIEW_REQUIRED';
+	public const STATUS_QUARANTINED = 'AMBIGUOUS_QUARANTINED';
 	public const STATUS_AUTO_FAIL = 'AUTO_FAIL';
 
+	/**
+	 * Confirma, quarentena ou falha uma expectativa já existente.
+	 *
+	 * A quarentena é deliberadamente fail-safe: preserva query/expected/proveniência,
+	 * mas remove o caso do conjunto blocking enquanto a intenção permanecer ambígua.
+	 *
+	 * @param array<string,mixed> $evidence
+	 * @return array<string,mixed>
+	 */
 	public static function assess( array $evidence ): array {
 		$reasons = array();
-		$status = self::STATUS_AUTO_PASS;
+
 		$exists = true === ( $evidence['expected_exists'] ?? false );
 		$published = true === ( $evidence['expected_published'] ?? false );
 		$expected_rank = max( 0, (int) ( $evidence['expected_rank'] ?? 0 ) );
@@ -42,56 +51,86 @@ final class Golden_Candidate_Validator {
 		$extractor_error = true === ( $evidence['extractor_error'] ?? false );
 
 		if ( ! $exists ) {
-			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_MISSING' ), $evidence, false );
+			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_MISSING' ), $evidence );
 		}
 		if ( ! $published ) {
-			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_NOT_PUBLISHED' ), $evidence, false );
+			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_NOT_PUBLISHED' ), $evidence );
 		}
 		if ( $extractor_error ) {
-			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_CONTENT_EXTRACTION_FAILED' ), $evidence, false );
+			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_CONTENT_EXTRACTION_FAILED' ), $evidence );
 		}
 		if ( 0 === $expected_rank ) {
-			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_NOT_RETRIEVED' ), $evidence, false );
+			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_NOT_RETRIEVED' ), $evidence );
 		}
 		if ( $expected_rank > $max_rank ) {
-			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_OUTSIDE_MAX_RANK' ), $evidence, false );
+			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_OUTSIDE_MAX_RANK' ), $evidence );
 		}
-		if ( $semantic_coverage < 100.0 ) {
-			$status = self::STATUS_REVIEW_REQUIRED;
-			$reasons[] = 'EXPECTED_SEMANTIC_QUERY_COVERAGE_INCOMPLETE';
-		}
-		if ( $expected_rank > 1 ) {
-			$status = self::STATUS_REVIEW_REQUIRED;
-			$reasons[] = 'EXPECTED_NOT_TOP1';
-		}
+
 		$competitor_material = $competitor_ahead
 			&& $competitor_semantic >= $semantic_coverage
 			&& $competitor_score >= ( $expected_score - 0.001 );
+
+		// Cobertura semântica incompleta não autoriza inventar correção: quarentena.
+		if ( $semantic_coverage < 100.0 ) {
+			$reasons[] = 'EXPECTED_SEMANTIC_QUERY_COVERAGE_INCOMPLETE';
+		}
+
+		// Concorrente material à frente prova ambiguidade objetiva.
 		if ( $competitor_material ) {
-			$status = self::STATUS_REVIEW_REQUIRED;
 			$reasons[] = 'STRONG_COMPETITOR_AHEAD';
 		}
-		if ( 1 === $query_token_count && $competitor_ahead && $competitor_semantic >= 100.0 && $competitor_title >= $title_coverage ) {
-			$status = self::STATUS_REVIEW_REQUIRED;
+
+		if (
+			1 === $query_token_count
+			&& $competitor_ahead
+			&& $competitor_semantic >= 100.0
+			&& $competitor_title >= $title_coverage
+		) {
 			$reasons[] = 'SINGLE_TOKEN_AMBIGUITY';
 		}
-		if ( self::STATUS_AUTO_PASS === $status && ! $exact_title_phrase && $title_coverage <= 0.0 && $summary_coverage <= 0.0 && $native_coverage <= 0.0 ) {
-			$status = self::STATUS_REVIEW_REQUIRED;
+
+		if (
+			! $exact_title_phrase
+			&& $title_coverage <= 0.0
+			&& $summary_coverage <= 0.0
+			&& $native_coverage <= 0.0
+		) {
 			$reasons[] = 'NO_DIRECT_NATIVE_SIGNAL';
 		}
-		if ( empty( $reasons ) ) {
-			$reasons[] = 'OBJECTIVE_CONTINUITY_VALIDATED';
+
+		if ( ! empty( $reasons ) ) {
+			return self::result(
+				self::STATUS_QUARANTINED,
+				array_values( array_unique( $reasons ) ),
+				$evidence
+			);
 		}
-		return self::result( $status, array_values( array_unique( $reasons ) ), $evidence, self::STATUS_AUTO_PASS === $status );
+
+		return self::result(
+			self::STATUS_AUTO_PASS,
+			array( 'OBJECTIVE_CONTINUITY_VALIDATED' ),
+			$evidence
+		);
 	}
 
+	/**
+	 * Heurística auxiliar de ambiguidade. Não é Search ranker.
+	 *
+	 * @param array<string,mixed> $signals
+	 */
 	public static function validation_score( array $signals ): float {
 		$title = self::bounded_percent( $signals['title_coverage_percent'] ?? 0.0 );
 		$summary = self::bounded_percent( $signals['summary_coverage_percent'] ?? 0.0 );
 		$semantic = self::bounded_percent( $signals['semantic_coverage_percent'] ?? 0.0 );
 		$native = self::bounded_percent( $signals['native_coverage_percent'] ?? 0.0 );
 		$exact = true === ( $signals['exact_title_phrase'] ?? false );
-		$score = ( 0.45 * $semantic ) + ( 0.30 * $title ) + ( 0.15 * $summary ) + ( 0.10 * $native ) + ( $exact ? 15.0 : 0.0 );
+
+		$score = ( 0.45 * $semantic )
+			+ ( 0.30 * $title )
+			+ ( 0.15 * $summary )
+			+ ( 0.10 * $native )
+			+ ( $exact ? 15.0 : 0.0 );
+
 		return round( $score, 4 );
 	}
 
@@ -103,39 +142,64 @@ final class Golden_Candidate_Validator {
 		return trim( preg_replace( '/\s+/', ' ', $value ) ?? '' );
 	}
 
+	/** @return array<int,string> */
 	public static function tokens( string $value ): array {
 		$normalized = self::normalize( $value );
-		if ( '' === $normalized ) return array();
+		if ( '' === $normalized ) {
+			return array();
+		}
 		$tokens = preg_split( '/\s+/', $normalized ) ?: array();
 		$out = array();
 		foreach ( $tokens as $token ) {
-			if ( '' !== $token && ! in_array( $token, $out, true ) ) $out[] = $token;
+			if ( '' !== $token && ! in_array( $token, $out, true ) ) {
+				$out[] = $token;
+			}
 		}
 		return $out;
 	}
 
 	public static function coverage_percent( string $query, string $text ): float {
 		$query_tokens = self::tokens( $query );
-		if ( empty( $query_tokens ) ) return 0.0;
+		if ( empty( $query_tokens ) ) {
+			return 0.0;
+		}
 		$text_tokens = array_flip( self::tokens( $text ) );
 		$matched = 0;
-		foreach ( $query_tokens as $token ) if ( isset( $text_tokens[ $token ] ) ) ++$matched;
+		foreach ( $query_tokens as $token ) {
+			if ( isset( $text_tokens[ $token ] ) ) {
+				++$matched;
+			}
+		}
 		return round( 100.0 * $matched / count( $query_tokens ), 4 );
 	}
 
+	/**
+	 * Exact phrase com fronteiras lexicais.
+	 *
+	 * "estrutura" casa "estrutura ctc", mas NÃO casa "infraestrutura".
+	 */
 	public static function exact_phrase( string $query, string $text ): bool {
 		$q = self::normalize( $query );
 		$t = self::normalize( $text );
-		return '' !== $q && '' !== $t && str_contains( $t, $q );
+		if ( '' === $q || '' === $t ) {
+			return false;
+		}
+		return str_contains( ' ' . $t . ' ', ' ' . $q . ' ' );
 	}
 
-	private static function result( string $status, array $reasons, array $evidence, bool $auto_accept ): array {
+	/** @param array<string,mixed> $evidence @return array<string,mixed> */
+	private static function result( string $status, array $reasons, array $evidence ): array {
+		$auto_accept = self::STATUS_AUTO_PASS === $status;
+		$quarantined = self::STATUS_QUARANTINED === $status;
+
 		return array(
 			'validator_contract_version' => self::CONTRACT_VERSION,
 			'status' => $status,
 			'auto_accept_existing_expectation' => $auto_accept,
+			'active_for_blocking' => $auto_accept,
+			'quarantined' => $quarantined,
 			'reasons' => $reasons,
-			'recommended_severity' => $auto_accept ? 'blocking' : 'pending_review',
+			'recommended_severity' => $auto_accept ? 'blocking' : ( $quarantined ? 'warning' : 'blocking' ),
 			'expected_post_id' => max( 0, (int) ( $evidence['expected_post_id'] ?? 0 ) ),
 			'max_rank' => max( 1, (int) ( $evidence['max_rank'] ?? 3 ) ),
 			'expected_rank' => max( 0, (int) ( $evidence['expected_rank'] ?? 0 ) ),

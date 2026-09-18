@@ -13,7 +13,7 @@
 
 ## R-510 — Golden Dataset
 - [x] T510 recuperar expectativas úteis do legado sem copiar runtime — PASS AMBIENTAL; 6 candidates limpos.
-- [x] T511 preservar seed histórico e implementar baseline runner independente — v1 SUPERSEDED; v2 sem ASI preparada.
+- [x] T511 preservar seed histórico e implementar baseline runner independente — v1 SUPERSEDED; v2 PASS LOCAL / homologação pendente.
 - [x] T512 definir schema Golden v1 — contrato/fixture candidate versionados; freeze final depende T513/T514.
 - [ ] T513 revisão humana expected_post/max_rank/severity.
 - [ ] T514 garantir suíte não vazia e diversidade.

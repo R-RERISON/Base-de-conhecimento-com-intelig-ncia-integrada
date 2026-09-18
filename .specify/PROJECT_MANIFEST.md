@@ -229,8 +229,8 @@ T096 deve comprovar, usando `serialize_blocks()`/`parse_blocks()` reais do Core 
 
 A sequência T096–G-250 descrita historicamente acima foi superada pelo fechamento da SPEC-004 registrado adiante. A frente atual é SPEC-005:
 
-1. T513 — revisar expected posts, max_rank, severity e rationale;
-2. T514 — completar diversidade de consultas reais;
+1. T513 — executar Automated Golden Validator; humano somente para REVIEW_REQUIRED;
+2. T514 — executar Diversity/Robustness Validator e registrar lacunas reais;
 3. T515/T516 — congelar versão/hash e fechar R-510;
 4. G-520 — contratos/storage/security/rollback antes de runtime;
 5. G-585 — comprovar independência operacional do ASI antes do RC.
@@ -285,9 +285,9 @@ Base: `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
 
 Objetivo: estabelecer retrieval lexical determinístico e Golden Queries antes de semantic search, vetores ou IA.
 
-Gate atual: **R-510 — Golden Dataset v1 / T513 revisão humana + T514 diversidade**.
+Gate atual: **R-510 — Golden Dataset v1 / T513-T514 Automated Golden Validation**.
 
-R-500 está PASS/CLOSED. T510 e T511.2 estão PASS AMBIENTAL; o T511.2 mediu seis candidates nos três modos (admin atual 2/6, relevância 6/6, publish 6/6). R-510 permanece OPEN; T515/T516 e G-520 ainda não foram concluídos. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
+R-500 está PASS/CLOSED. T510 e T511.2 estão PASS AMBIENTAL. T513/T514 Auto Validator está PASS LOCAL (9/9 unit, build 0.5.0-r510-t513.1), com execução ambiental pendente. R-510 permanece OPEN; T515/T516 e G-520 ainda não foram concluídos. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
 
 Regras de abertura:
 - runtime de engine bloqueado até R-500 + R-510 + G-520;

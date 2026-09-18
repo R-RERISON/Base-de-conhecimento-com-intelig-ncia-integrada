@@ -12,9 +12,9 @@
 - [x] T508 fechar R-500 — PASS/CLOSED.
 
 ## R-510 — Golden Dataset
-- [x] T510 implementar recuperação read-only de expectativas legadas — PASS LOCAL; homologação pendente.
-- [ ] T511 coletar/selecionar consultas reais do ambiente.
-- [ ] T512 definir schema Golden v1.
+- [x] T510 recuperar expectativas úteis do legado sem copiar runtime — PASS AMBIENTAL; 6 candidates limpos.
+- [x] T511 preservar conjunto inicial de consultas reais do ASI e implementar baseline runner — PASS LOCAL; homologação do runner pendente.
+- [x] T512 definir schema Golden v1 — contrato/fixture candidate versionados; freeze final depende T513/T514.
 - [ ] T513 revisão humana expected_post/max_rank/severity.
 - [ ] T514 garantir suíte não vazia e diversidade.
 - [ ] T515 gerar set_hash/version.

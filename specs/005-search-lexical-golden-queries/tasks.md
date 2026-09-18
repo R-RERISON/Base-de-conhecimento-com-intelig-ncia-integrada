@@ -13,7 +13,7 @@
 
 ## R-510 — Golden Dataset
 - [x] T510 recuperar expectativas úteis do legado sem copiar runtime — PASS AMBIENTAL; 6 candidates limpos.
-- [x] T511 preservar conjunto inicial de consultas reais do ASI e implementar baseline runner — PASS LOCAL; homologação do runner pendente.
+- [x] T511 preservar seed histórico e implementar baseline runner independente — v1 SUPERSEDED; v2 sem ASI preparada.
 - [x] T512 definir schema Golden v1 — contrato/fixture candidate versionados; freeze final depende T513/T514.
 - [ ] T513 revisão humana expected_post/max_rank/severity.
 - [ ] T514 garantir suíte não vazia e diversidade.
@@ -86,3 +86,13 @@
 - [ ] T593 environmental RC smoke.
 - [ ] T594 final report.
 - [ ] T595 merge only after human approval.
+
+
+## G-585 — ASI Independence / Decommission Readiness
+- [ ] T585 static scan runtime: zero `asi_*`, `asi4_*`, classes/functions/hooks ASI.
+- [ ] T586 desativar ASI em homologação.
+- [ ] T587 executar Search + Golden Suite com ASI ausente.
+- [ ] T588 rebuild do índice/projection própria com ASI ausente.
+- [ ] T589 comprovar rollback/lifecycle sem ASI.
+- [ ] T589.1 registrar evidência de dependency-zero.
+- [ ] T589.2 G-585 PASS antes de RC.

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.5.0-r510-t511.2
+ * Version: 0.5.0-r510-t513.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.5.0-r510-t511.2' );
+define( 'BDC_KB_VERSION', '0.5.0-r510-t513.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -40,7 +40,8 @@ define( 'BDC_KB_SPEC004_T100E_E6_REGRESSION_BUILD', false );
 define( 'BDC_KB_SPEC004_G250_LIFECYCLE_BUILD', false );
 define( 'BDC_KB_SPEC005_R500_DIAGNOSTIC_BUILD', false );
 define( 'BDC_KB_SPEC005_R510_LEGACY_GOLDEN_BUILD', false );
-define( 'BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD', true );
+define( 'BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD', false );
+define( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD', true );
 if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
 	define( 'BDC_KB_ELEMENTOR_WRITER_ENABLED', false );
 }
@@ -166,6 +167,12 @@ if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD' ) && BDC_KB_SPEC005_R5
 	require_once BDC_KB_DIR . 'includes/class-golden-candidate-seed.php';
 	require_once BDC_KB_DIR . 'includes/class-golden-baseline-runner.php';
 }
+if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD' ) && BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-golden-candidate-seed.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-candidate-validator.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-diversity-validator.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-auto-validation-runner.php';
+}
 
 \BDC\KnowledgeBase\Plugin::register();
 \BDC\KnowledgeBase\Visual_Foundation::register();
@@ -240,4 +247,7 @@ if ( defined( 'BDC_KB_SPEC005_R510_LEGACY_GOLDEN_BUILD' ) && BDC_KB_SPEC005_R510
 }
 if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD' ) && BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD ) {
 	\BDC\KnowledgeBase\Golden_Baseline_Runner::register();
+}
+if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD' ) && BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD ) {
+	\BDC\KnowledgeBase\Golden_Auto_Validation_Runner::register();
 }

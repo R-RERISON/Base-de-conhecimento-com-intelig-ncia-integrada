@@ -17,6 +17,7 @@
 - T100A Post Management Workspace: **PASS LOCAL**.
 - T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
 - T100C Core Blocks Post Activity: **PASS AMBIENTAL / READ-ONLY**.
+- T100D Persistent Single-Post Migration: **PASS AMBIENTAL**.
 - G-250: NOT_RUN.
 
 ## T099C — PASS AMBIENTAL
@@ -72,8 +73,10 @@ Entregas:
 - [x] T100B: aceite ambiental/visual da Workspace em homologação — confirmado pelo usuário.
 - [x] T100C: implementação local da Core Blocks Activity post-scoped + Authorization Pack read-only.
 - [x] T100C ambiental: post 358 ready_for_authorization, journal rolled_back, lock free, Authorization Pack válido.
-- [x] T100D autorizado explicitamente para `post_id=358 + authorization_id=17c002d3...a41af0`; build local PASS.\n- [ ] T100D execução ambiental persistente no post 358; aguarda instalação/click e JSON de resultado.
-- [ ] T100E: integrar atividade de Inteligência sob regra IA sugere → humano revisa → humano decide.
+- [x] T100D autorizado explicitamente para `post_id=358 + authorization_id=17c002d3...a41af0`; build local PASS.
+- [x] T100D execução ambiental persistente no post 358: PASS; journal `applied`, rollback não executado, `_elementor_data` intacto.
+- [ ] T100E Engineering Consolidation: inventário runtime, runner único, boundary product/engineering, build reprodutível e matriz de regressão.
+- [ ] T101/T102: próximos gates funcionais somente após T100E.
 - [ ] T101: dependência residual Elementor / gate de retirada.
 - [ ] G-250 Lifecycle/RC.
 

@@ -98,12 +98,22 @@ Não reativar T100D one-shot como produto e não criar migração em massa impl�
 - AUTH-UX-001 fora do escopo da SPEC-004;
 - busca lexical/Golden Queries é a próxima evolução de produto prevista no roadmap, sem misturar com migração.
 
+## RC2 Final Smoke
+
+**PASS AMBIENTAL confirmado pelo usuário em 2026-09-18.**
+
+- RC2 instalado em homologação;
+- smoke final executado pelo usuário;
+- nenhuma regressão foi reportada na confirmação;
+- evidência humana: `evidence/spec004-rc2-final-smoke-user-acceptance-20260918.json`.
+
 ## Próximo passo exato
 
-1. revisar o diff final do PR #4;
-2. confirmar que o PR permanece mergeable/clean;
-3. revisar RC2/manifest/checksum;
-4. somente após revisão humana explícita, retirar DRAFT e promover para `main`.
+1. revisão final do diff do PR #4;
+2. confirmar mergeable/clean contra `main`;
+3. após autorização explícita do usuário, retirar DRAFT;
+4. merge do PR #4 para `main`;
+5. registrar SPEC-004 como CLOSED/main.
 
 Não iniciar IA, embeddings, busca vetorial, migração em massa ou remoção do Elementor antes dessa revisão.
 

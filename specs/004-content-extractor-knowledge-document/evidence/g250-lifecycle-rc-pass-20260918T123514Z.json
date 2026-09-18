@@ -1,0 +1,102 @@
+{
+    "schema_version": "1.0.0",
+    "gate": "G-250",
+    "mode": "lifecycle_rc_read_only_validation",
+    "generated_at": "2026-09-18T12:35:14+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-spec004-rc1"
+    },
+    "target": {
+        "post_id": 358,
+        "expected_source_kind": "gutenberg"
+    },
+    "checks": {
+        "plugin_version": {
+            "pass": true,
+            "observed": "0.4.0-spec004-rc1"
+        },
+        "t100d_off": {
+            "pass": true
+        },
+        "elementor_writer_off": {
+            "pass": true
+        },
+        "e6_runner_off": {
+            "pass": true
+        },
+        "g250_runner_on": {
+            "pass": true
+        },
+        "spec001_summary_read": {
+            "pass": true,
+            "error_code": ""
+        },
+        "spec002_classification_read": {
+            "pass": true,
+            "error_code": ""
+        },
+        "spec003_review_read": {
+            "pass": true,
+            "error_code": ""
+        },
+        "spec004_extractor_read": {
+            "pass": true,
+            "source_kind": "gutenberg",
+            "error_code": ""
+        },
+        "spec004_knowledge_document_read": {
+            "pass": true,
+            "schema_version": "2.1.0",
+            "source_kind": "gutenberg",
+            "error_code": ""
+        },
+        "workspace_context": {
+            "pass": true,
+            "source_kind": "gutenberg",
+            "core_status": "no_action_required",
+            "journal_state": "applied",
+            "lock_status": "free",
+            "error_code": ""
+        },
+        "workspace_activity_registry": {
+            "pass": true,
+            "activity_count": 8
+        },
+        "preflight_not_visible_in_product_menu": {
+            "pass": true
+        },
+        "lifecycle_reactivated_confirmation": {
+            "pass": true
+        },
+        "rollback_cycle_confirmation": {
+            "pass": true
+        },
+        "target_integrity_unchanged": {
+            "pass": true,
+            "fingerprint_before": "33a87a0d2d35f2f78654b2261914e29af9685b04849806eba962d9d0f9558a19",
+            "fingerprint_after": "33a87a0d2d35f2f78654b2261914e29af9685b04849806eba962d9d0f9558a19"
+        }
+    },
+    "safety": {
+        "read_only_design": true,
+        "persists_state": false,
+        "writes_post_content": false,
+        "writes_elementor_data": false,
+        "writes_summary": false,
+        "writes_classification": false,
+        "writes_review": false,
+        "writes_journal": false,
+        "acquires_lock": false,
+        "calls_external_network": false,
+        "executes_shortcodes": false,
+        "renders_blocks": false,
+        "exports_editorial_body": false,
+        "exports_urls": false
+    },
+    "gate_result": {
+        "g250_lifecycle_rc_pass": true
+    },
+    "duration_ms": 16
+}

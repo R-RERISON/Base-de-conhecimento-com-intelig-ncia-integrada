@@ -494,13 +494,13 @@ final class Admin_Page {
 
 		$messages = array(
 			'saved'            => array( 'success', 'Sumário salvo e confirmado.' ),
-			'fail_safe'        => array( 'error', 'A gravação falhou, mas o estado anterior foi restaurado com sucesso.' ),
-			'critical'         => array( 'error', 'Falha crítica: o estado anterior não foi restaurado integralmente. Releia o artigo e consulte o diagnóstico administrativo antes de nova alteração.' ),
+			'fail_safe'        => array( 'error', 'Não foi possível concluir a gravação. As informações anteriores foram preservadas.' ),
+			'critical'         => array( 'error', 'Não foi possível restaurar integralmente as informações anteriores. Evite novas alterações e solicite uma verificação técnica.' ),
 			'invalid_post'     => array( 'error', 'Artigo inválido ou fora do escopo da Base de Conhecimento.' ),
 			'forbidden'        => array( 'error', 'Você não tem permissão para editar o artigo solicitado.' ),
 			'invalid_nonce'    => array( 'error', 'A validação de segurança expirou ou é inválida. Reabra o formulário e tente novamente.' ),
 			'invalid_payload'  => array( 'error', 'O formulário recebido é inválido.' ),
-			'validation_error' => array( 'error', 'O Summary não foi salvo porque o payload violou o contrato de validação.' ),
+			'validation_error' => array( 'error', 'O sumário não foi salvo porque os dados informados são inválidos.' ),
 		);
 
 		if ( ! isset( $messages[ $status ] ) ) {

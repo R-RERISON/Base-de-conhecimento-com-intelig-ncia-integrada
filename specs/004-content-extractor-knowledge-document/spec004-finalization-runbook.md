@@ -1,6 +1,6 @@
 # SPEC-004 — Finalization Runbook
 
-**Estado:** aguarda PASS ambiental do G-250 RC1.
+**Estado:** EXECUTADO / FECHADO em 2026-09-18.
 
 ## Entrada obrigatória
 
@@ -114,3 +114,16 @@ Não iniciar antes do encerramento:
 - migração em massa;
 - remoção de Elementor;
 - novas features editoriais.
+
+
+## Resultado da execução
+
+- G-250 RC1: PASS ambiental;
+- evidence: `evidence/g250-lifecycle-rc-pass-20260918T123514Z.json`;
+- T100E-E7: CLOSED/PASS;
+- G-245: CLOSED/PASS;
+- G-250: CLOSED/PASS;
+- RC final: `0.4.0-spec004-rc2`;
+- SHA-256: `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`;
+- final static validation: PASS;
+- PR #4 continua DRAFT até revisão final.

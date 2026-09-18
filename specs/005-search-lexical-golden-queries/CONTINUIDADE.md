@@ -41,14 +41,26 @@ Preservar contratos, não copiar arquitetura histórica.
 ## Próximo passo exato
 
 R-500:
-1. criar diagnóstico read-only de baseline;
-2. recontar corpus atual;
-3. executar conjunto inicial de consultas contra `WP_Query s`;
-4. comparar cobertura com Content Extractor;
-5. medir p50/p95;
-6. classificar gaps;
-7. decidir superfície inicial e necessidade de Projection.
+1. instalar e executar o build T502 `0.5.0-r500-t502.1`;
+2. baixar o JSON `bdc-kb-spec005-r500-baseline-*.json`;
+3. validar `t502_read_only_safety_pass=true`;
+4. interpretar corpus, coverage, ranking e p50/p95;
+5. registrar evidência ambiental T502;
+6. classificar gaps e avançar T503–T508;
+7. em paralelo, continuar R-510 Golden Dataset.
 
 Em paralelo, R-510 deve montar Golden Dataset v1 com consultas reais e expected posts revisados por humano.
 
 > Quem não sabe onde está, não sabe para onde quer ir.
+
+
+## Build ambiental atual
+
+`0.5.0-r500-t502.1`  
+SHA-256 `0b92d355be79c23e6837fa4b11cd6982674b643795f3e8de4f4949b9c47f5b86`.
+
+Menu temporário:
+`Base de Conhecimento -> Diagnóstico Search R-500`.
+
+PASS esperado:
+`gate_result.t502_read_only_safety_pass=true`.

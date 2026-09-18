@@ -1,6 +1,6 @@
 # Data Model — SPEC-005
 
-**Estado:** PROVISÓRIO / nenhum schema autorizado.
+**Estado:** PROVISÓRIO / schema BDC próprio permitido mediante G-520.
 
 ## Entidades lógicas
 
@@ -73,3 +73,19 @@ Não criar nesta SPEC-005 v1:
 - embeddings;
 - vectors;
 - migrations registry genérico.
+
+
+## Ownership de storage
+
+Qualquer persistência aprovada deve pertencer ao novo plugin.
+
+Candidatos de namespace:
+- `{prefix}bdc_kb_search_documents`;
+- `{prefix}bdc_kb_golden_queries`;
+- demais tabelas somente quando uma SPEC/gate provar necessidade.
+
+Os nomes finais serão congelados em G-520.
+
+É proibido usar `asi_*` como storage de produção, fallback ou dependência transitiva.
+
+Embeddings/vetores são de SPEC futura, mas já ficam sob a mesma regra de ownership e lifecycle próprios.

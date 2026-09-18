@@ -85,10 +85,10 @@ Entregas:
 - [x] T100E-HE5-001 Block Journal/Store hardening local: 15/15 PASS.
 - [x] T100E-HE5-001 environmental compatibility: PASS no post 358.
 - [x] T100E-E6 Workspace regression matrix: PASS AMBIENTAL; 623/623 ×2, 0 erros, 0 throwables, 0 safety violations, 9/9 casos puros.
-- [ ] T100E-E7 production-readiness exit — EXIT CANDIDATE; aguarda G-250 lifecycle.
+- [x] T100E-E7 production-readiness exit — PASS/CLOSED após G-250.
 - [ ] T101/T102: próximos gates funcionais somente após T100E.
 - [ ] T101: dependência residual Elementor / gate de retirada.
-- [ ] G-250 Lifecycle/RC — RC1 preparado; homologação pendente.
+- [x] G-250 Lifecycle/RC — PASS AMBIENTAL / CLOSED; RC1 lifecycle comprovado.
 
 ## Regras
 
@@ -105,3 +105,5 @@ Entregas:
 11. Trabalho incompleto permanece fora de `main`.
 12. O antigo T100 batch não deve ser instalado nem executado.
 \n- [x] UX-003 implementação visual local + lint + anti-regressão.\n- [x] UX-003 homologação visual no WordPress: PASS confirmado pelo usuário.\n
+- [x] RC final limpo `0.4.0-spec004-rc2`: G250/E6/Preflight/T100D/Elementor writer OFF; 39/39 PHP lint; 38/38 active requires; deterministic rebuild PASS.
+- [ ] AUTH-UX-001 (futuro, fora da SPEC-004): integrar autorização de migração à Workspace sem remover confirmação humana explícita/post-scoped.

@@ -1,6 +1,6 @@
 # T100D — Single Post Core Blocks Executor Contract v1
 
-**Status:** FROZEN / BLOCKED BY EXPLICIT AUTHORIZATION  
+**Status:** AUTHORIZED / BUILD READY / ENVIRONMENTAL EXECUTION PENDING  
 **ADR:** ADR-004-002  
 **Action contract:** `core_blocks_migrate_v1`
 
@@ -72,4 +72,4 @@ T100C PASS ambiental congelou:
 
 A autorização deve declarar explicitamente que a migração será **persistente em caso de PASS** e que ocorrerá rollback automático apenas em falha de verificação.
 
-Nenhum executável T100D deve ser habilitado antes dessa autorização.
+Autorização explícita recebida para o alvo congelado acima. O executável `0.4.0-g245-workspace-t100d.1` está liberado somente para esse escopo.

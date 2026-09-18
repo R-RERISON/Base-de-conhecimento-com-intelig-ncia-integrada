@@ -23,14 +23,15 @@ final class Production_Preflight {
 	private const HOMOLOGATED_ELEMENTOR_VERSIONS = array( '4.1.0' );
 
 	public static function register(): void {
-		add_action( 'admin_menu', array( self::class, 'register_page' ), 34 );
+		// Ferramenta de engenharia: permanece disponível programaticamente,
+		// sem ocupar a navegação principal do produto.
 		add_action( 'admin_post_' . self::ACTION, array( self::class, 'handle_run' ) );
 	}
 
 	public static function register_page(): void {
 		add_submenu_page(
 			Admin_Page::PAGE_SLUG,
-			'Preflight G-245',
+			'Verificação técnica do ambiente',
 			'Preflight G-245',
 			'manage_options',
 			self::PAGE_SLUG,
@@ -44,8 +45,8 @@ final class Production_Preflight {
 		}
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'SPEC-004 — G-245 Production Preflight', 'bdc-knowledge-base' ) . '</h1>';
-		echo '<div class="notice notice-warning inline"><p><strong>' . esc_html__( 'Read-only / writer desabilitado.', 'bdc-knowledge-base' ) . '</strong> ';
+		echo '<h1>' . esc_html__( 'Verificação técnica do ambiente', 'bdc-knowledge-base' ) . '</h1>';
+		echo '<div class="notice notice-warning inline"><p><strong>' . esc_html__( 'Somente leitura.', 'bdc-knowledge-base' ) . '</strong> ';
 		echo esc_html__( 'Coleta somente fatos do ambiente e dependências observáveis. Não executa shortcodes, não chama rede externa e não altera conteúdo.', 'bdc-knowledge-base' );
 		echo '</p></div>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
@@ -57,9 +58,9 @@ final class Production_Preflight {
 		echo '<option value="production">' . esc_html__( 'Produção', 'bdc-knowledge-base' ) . '</option>';
 		echo '</select></p>';
 		echo '<p><label><input type="checkbox" name="backup_confirmed" value="1"> ';
-		echo esc_html__( 'Existe backup externo recente e validado do ambiente alvo (obrigatório antes de migration em produção).', 'bdc-knowledge-base' );
+		echo esc_html__( 'Existe cópia de segurança externa, recente e validada do ambiente de destino.', 'bdc-knowledge-base' );
 		echo '</label></p>';
-		submit_button( __( 'Executar preflight read-only e baixar JSON', 'bdc-knowledge-base' ), 'primary' );
+		submit_button( __( 'Executar verificação e baixar relatório', 'bdc-knowledge-base' ), 'primary' );
 		echo '</form></div>';
 	}
 

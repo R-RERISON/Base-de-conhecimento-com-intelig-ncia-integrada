@@ -15,7 +15,7 @@ final class Post_Management_Context {
 	public static function build( int $post_id ) {
 		$post = get_post( $post_id );
 		if ( ! is_object( $post ) || Meta_Contract::POST_TYPE !== (string) ( $post->post_type ?? '' ) ) {
-			return new \WP_Error( 'bdc_kb_workspace_invalid_post', 'Post inválido para o Workspace.' );
+			return new \WP_Error( 'bdc_kb_workspace_invalid_post', 'Artigo inválido para a área de gerenciamento.' );
 		}
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return new \WP_Error( 'bdc_kb_workspace_forbidden', 'Sem permissão para o post.' );
@@ -95,11 +95,11 @@ final class Post_Management_Context {
 
 	public static function source_label( string $source_kind ): string {
 		$labels = array(
-			'gutenberg' => 'WordPress Core Blocks',
+			'gutenberg' => 'Blocos do WordPress',
 			'legacy_html' => 'HTML legado',
 			'plain_text' => 'Texto simples',
-			'elementor' => 'Elementor legado',
-			'mixed' => 'Fonte mista — revisão humana',
+			'elementor' => 'Conteúdo legado do Elementor',
+			'mixed' => 'Conteúdo misto — requer revisão',
 			'empty' => 'Sem conteúdo editorial',
 			'unavailable' => 'Indisponível',
 		);

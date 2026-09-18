@@ -6,7 +6,7 @@
 - UX-001/UX-002: concluídas; UX-002 `0.4.0-ux002.3` é contrato visual obrigatório.
 - G-240: PASS / CLOSED / promovido para `main`.
 - KD 2.1.0: PASS técnico full-corpus + PASS humano 8/8.
-- G-245: REBASELINED / IN PROGRESS; PR #4 DRAFT / NÃO MERGEAR.
+- G-245: PASS / CLOSED na branch; PR #4 permanece DRAFT até revisão final/merge.
 - ADR-004-001: Core Blocks como destino editorial canônico.
 - ADR-004-002: Post-Centric Management Workspace.
 - T091/T093/T094/T096/T097/T098.2/T099A/T099B/T099C: PASS AMBIENTAL.
@@ -81,7 +81,7 @@ SHA-256 bruto: `0d8072056fe6653bc6595c8b41c28c1445d3d5bea8b637e182d7a1d5871aa94f
 
 Post 358 terminou persistido em Core Blocks: apply verificado, hash final igual ao esperado, `_elementor_data` inalterado, journal final `applied`, rollback não executado e zero erros.
 
-## Gate atual — T100E Engineering Consolidation
+## T100E Engineering Consolidation — CLOSED
 
 Antes de ampliar IA ou migração para outros artigos, consolidar runtime, testes, boundary produto/engenharia, build/release e serviços defensivos. Contrato: `t100e-engineering-consolidation-contract-v1.md`.
 
@@ -99,7 +99,7 @@ Antes de ampliar IA ou migração para outros artigos, consolidar runtime, teste
 
 ## T100E — Engineering Consolidation
 
-Status: **IN PROGRESS / ZERO EDITORIAL WRITE**.
+Status: **PASS / CLOSED**.
 
 Concluído nesta rodada:
 - runtime baseline congelado;
@@ -213,3 +213,22 @@ Validação local:
 - Elementor writer OFF.
 
 Próximo passo: executar upgrade + deactivate/activate + rollback/downgrade controlado + reinstall RC1, então gerar JSON G-250.
+
+
+## Fechamento — 2026-09-18
+
+G-250: **PASS AMBIENTAL / CLOSED**. Evidência: `evidence/g250-lifecycle-rc-pass-20260918T123514Z.json`.
+
+O post 358 permaneceu em Gutenberg/Core Blocks com `no_action_required`, journal `applied`, lock `free` e fingerprint inalterado após upgrade, deactivate/activate, downgrade controlado e reinstall do RC1.
+
+T100E-E7: **PASS/CLOSED**.  
+T100E: **CLOSED**.  
+G-245: **PASS/CLOSED**.  
+SPEC-004: **CONCLUÍDA na branch, aguardando revisão/merge do PR #4**.
+
+RC final limpo: `0.4.0-spec004-rc2`.  
+SHA-256: `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`.
+
+### Autorização de migração
+
+A autorização permanece como controle explícito e post-scoped. O download de Authorization Pack é uma superfície transitória; a futura execução integrada deve ocorrer na Workspace com confirmação humana explícita e os mesmos guardrails. Nenhuma migração global implícita é autorizada.

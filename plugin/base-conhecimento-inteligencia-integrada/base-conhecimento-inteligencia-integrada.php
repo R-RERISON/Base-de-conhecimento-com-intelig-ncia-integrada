@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.4.0-spec004-rc1
+ * Version: 0.4.0-spec004-rc2
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-spec004-rc1' );
+define( 'BDC_KB_VERSION', '0.4.0-spec004-rc2' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -21,7 +21,7 @@ define( 'BDC_KB_SPEC004_G240_ACCEPTANCE_BUILD', false );
 define( 'BDC_KB_SPEC004_KD_V2_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_FINAL_DIAG_BUILD', false );
 define( 'BDC_KB_SPEC004_PIPELINE_DIAG_BUILD', false );
-define( 'BDC_KB_SPEC004_G245_PREFLIGHT_BUILD', true );
+define( 'BDC_KB_SPEC004_G245_PREFLIGHT_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_PROJECTION_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_JOURNAL_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G245_BLOCK_PROJECTION_SMOKE_BUILD', false );
@@ -37,7 +37,7 @@ define( 'BDC_KB_SPEC004_G245_T100A_POST_WORKSPACE_BUILD', true );
 define( 'BDC_KB_SPEC004_G245_T100C_CORE_BLOCKS_ACTIVITY_BUILD', true );
 define( 'BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD', false );
 define( 'BDC_KB_SPEC004_T100E_E6_REGRESSION_BUILD', false );
-define( 'BDC_KB_SPEC004_G250_LIFECYCLE_BUILD', true );
+define( 'BDC_KB_SPEC004_G250_LIFECYCLE_BUILD', false );
 if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
 	define( 'BDC_KB_ELEMENTOR_WRITER_ENABLED', false );
 }

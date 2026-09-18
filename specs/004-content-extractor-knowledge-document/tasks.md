@@ -18,7 +18,7 @@
 - T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
 - T100C Core Blocks Post Activity: **PASS AMBIENTAL / READ-ONLY**.
 - T100D Persistent Single-Post Migration: **PASS AMBIENTAL**.
-- T100E Engineering Consolidation: **IN PROGRESS / ZERO EDITORIAL WRITE**.\n- UX-003 Workspace Visual Consolidation: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+- T100E Engineering Consolidation: **IN PROGRESS / ZERO EDITORIAL WRITE**.\n- UX-003 Workspace Visual Consolidation: **PASS AMBIENTAL**.
 - G-250: NOT_RUN.
 
 ## T099C — PASS AMBIENTAL
@@ -82,7 +82,7 @@ Entregas:
 - [x] T100E-E4 deterministic release builder candidate.
 - [x] T100E-E5 defensive service equivalence/consolidation map.
 - [x] T100E-HE5-001 Block Journal/Store hardening local: 15/15 PASS.
-- [ ] T100E-HE5-001 environmental compatibility: validar journal `applied` existente do post 358 em homologação.
+- [x] T100E-HE5-001 environmental compatibility: PASS no post 358.
 - [ ] T100E-E6 Workspace regression matrix.
 - [ ] T100E-E7 production-readiness exit.
 - [ ] T101/T102: próximos gates funcionais somente após T100E.
@@ -103,4 +103,4 @@ Entregas:
 10. UX-002 é baseline visual e não pode regredir sem evidência.
 11. Trabalho incompleto permanece fora de `main`.
 12. O antigo T100 batch não deve ser instalado nem executado.
-\n- [x] UX-003 implementação visual local + lint + anti-regressão.\n- [ ] UX-003 homologação visual no WordPress.\n
+\n- [x] UX-003 implementação visual local + lint + anti-regressão.\n- [x] UX-003 homologação visual no WordPress: PASS confirmado pelo usuário.\n

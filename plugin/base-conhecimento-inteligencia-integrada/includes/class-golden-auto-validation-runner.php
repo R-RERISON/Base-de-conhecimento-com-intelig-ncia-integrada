@@ -221,6 +221,7 @@ final class Golden_Auto_Validation_Runner {
 		$expected = self::post_evidence( $expected_id, $query );
 
 		$strongest = array();
+		$strongest_ahead = array();
 		$competitors = array();
 		foreach ( array_slice( $query_result, 0, self::COMPETITOR_LIMIT ) as $index => $post_id ) {
 			if ( $post_id === $expected_id ) {
@@ -236,6 +237,12 @@ final class Golden_Auto_Validation_Runner {
 			) {
 				$strongest = $evidence;
 			}
+			if (
+				! empty( $evidence['ahead_of_expected'] )
+				&& ( empty( $strongest_ahead ) || (float) ( $evidence['validation_score'] ?? 0.0 ) > (float) ( $strongest_ahead['validation_score'] ?? 0.0 ) )
+			) {
+				$strongest_ahead = $evidence;
+			}
 		}
 
 		$assessment_input = array_merge(
@@ -246,7 +253,7 @@ final class Golden_Auto_Validation_Runner {
 				'max_rank' => $max_rank,
 				'query_token_count' => count( Golden_Candidate_Validator::tokens( $query ) ),
 				'expected_validation_score' => (float) ( $expected['validation_score'] ?? 0.0 ),
-				'strongest_competitor' => $strongest,
+				'strongest_competitor' => ! empty( $strongest_ahead ) ? $strongest_ahead : $strongest,
 			)
 		);
 
@@ -263,7 +270,7 @@ final class Golden_Auto_Validation_Runner {
 			'strongest_competitor' => $strongest,
 			'top_competitors' => $competitors,
 			'decision' => $decision,
-			'automated_rationale' => self::rationale( $decision, $expected, $strongest ),
+			'automated_rationale' => self::rationale( $decision, $expected, ! empty( $strongest_ahead ) ? $strongest_ahead : $strongest ),
 		);
 	}
 
@@ -328,7 +335,7 @@ final class Golden_Auto_Validation_Runner {
 				'extractor_error' => $extractor_error,
 				'summary_signal_present' => '' !== trim( $summary ),
 				'summary_dependent' => $signals['summary_coverage_percent'] > $signals['native_coverage_percent'],
-				'elementor_semantic_gap' => 'elementor' === $source_kind
+				'elementor_semantic_gap' => in_array( $source_kind, array( 'elementor', 'mixed' ), true )
 					&& $signals['semantic_coverage_percent'] > $signals['native_coverage_percent'],
 				'validation_score' => $score,
 			),

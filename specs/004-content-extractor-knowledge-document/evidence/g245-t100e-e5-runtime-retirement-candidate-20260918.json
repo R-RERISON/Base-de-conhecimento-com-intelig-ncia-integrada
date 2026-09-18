@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T100E-E5.1",
+  "mode": "retire_historical_elementor_migration_island_from_active_runtime",
+  "generated_at": "2026-09-18T10:50:00Z",
+  "source_build": "0.4.0-g245-consolidation-t100e.2",
+  "equivalence_map": "t100e-defensive-service-equivalence-map-v1.md",
+  "decision": {
+    "elementor_adapter_retained": true,
+    "historical_elementor_migration_files_removed_from_active_runtime": 9,
+    "source_files_deleted": 0,
+    "editorial_write": false
+  },
+  "candidate": {
+    "filename": "base-conhecimento-inteligencia-integrada-0.4.0-g245-consolidation-t100e.2-candidate.zip",
+    "sha256": "5b300d50536fbd198de0013bc3e4c07e3ee1cbacdd48e1b8d04ca6698b79f389",
+    "reproducible_rebuild_sha256": "5b300d50536fbd198de0013bc3e4c07e3ee1cbacdd48e1b8d04ca6698b79f389",
+    "reproducible": true,
+    "total_files": 45,
+    "php_files": 40,
+    "php_lint_failures": 0,
+    "unconditional_requires": 38,
+    "unconditional_require_missing": [],
+    "production_preflight_included": true,
+    "t100d_executor_included": false,
+    "elementor_adapter_included": true
+  },
+  "before_after": {
+    "t100e1_php_files": 49,
+    "t100e2_php_files": 40,
+    "php_reduction": 9,
+    "t100e1_unconditional_requires": 47,
+    "t100e2_unconditional_requires": 38,
+    "require_reduction": 9
+  },
+  "safety": {
+    "no_editorial_write": true,
+    "no_metadata_write": true,
+    "no_database_access": true,
+    "no_wordpress_bootstrap": true,
+    "source_history_preserved": true
+  },
+  "hardening_gap": {
+    "id": "HE5-001",
+    "status": "OPEN",
+    "finding": "Block Journal/Store should absorb explicit identity/state/transition/readback validation that exists in the historical Elementor family before any new persistent writer."
+  },
+  "gate_result": {
+    "t100e_e5_runtime_retirement_pass": true,
+    "deterministic_rebuild_pass": true,
+    "he5_001_pending": true
+  }
+}

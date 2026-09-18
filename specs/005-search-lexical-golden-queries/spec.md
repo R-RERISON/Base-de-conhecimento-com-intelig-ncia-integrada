@@ -257,10 +257,19 @@ Metas numéricas finais só serão congeladas após R-500; inventar SLA antes de
 
 ### R-510 — Golden Dataset v1
 - conjunto real não vazio;
-- expectativas humanas;
+- expectativas com origem humana/curada;
+- continuidade objetiva validável automaticamente;
+- revisão humana somente para ambiguidade `REVIEW_REQUIRED`;
 - blocking/warning;
 - hash/version;
 - cobertura de classes: termo simples, composto, sigla, linguagem natural, variação/erro quando real.
+
+### Automação T513/T514
+Contrato: `r510-automated-golden-validation-contract-v1.md`.
+
+O Auto Validator pode confirmar uma expectativa existente, mas não pode criar ou substituir `expected_post_id`. Estados: `AUTO_PASS | REVIEW_REQUIRED | AUTO_FAIL`.
+
+Synthetic robustness é regressão técnica e nunca é apresentado como uso real.
 
 ### G-520 — Search Contract v1
 - normalizer/ranker/result contract fechado;

@@ -21,15 +21,15 @@ A SPEC-005 deve recontar o corpus em R-500 e não assumir que 623 permanece atua
 ## DoR obrigatório
 
 Runtime Search só pode começar se:
-- [ ] corpus atual medido;
-- [ ] scope de status/visibilidade definido;
-- [ ] superfície inicial decidida;
-- [ ] baseline `WP_Query` medida;
-- [ ] gaps contra Content Extractor medidos;
+- [x] corpus atual medido;
+- [x] scope inicial admin/status baseline definido;
+- [x] superfície inicial decidida: admin-first;
+- [x] baseline `WP_Query` medida;
+- [x] gaps contra Content Extractor medidos;
 - [ ] pelo menos uma Golden Query ativa e validada;
 - [ ] schema Golden v1 fechado;
 - [ ] WordPress-first decision registrada;
 - [ ] segurança/rollback definidos;
 - [ ] nenhuma dependência de IA/vetor.
 
-Estado inicial: **NOT_READY para implementação de engine; READY para discovery/diagnóstico read-only**.
+Estado atual: **R-500 PASS, porém NOT_READY para implementação de engine** até R-510 Golden Dataset + G-520 contracts/storage/security.

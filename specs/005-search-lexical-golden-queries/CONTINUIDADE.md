@@ -22,11 +22,11 @@ REPOSITÓRIO E ESTADO
 - A consolidação ambiental/documental T511.2 sucede esse commit; confirmar HEAD remoto.
 - SPEC-004 CLOSED/main; SPEC-005 ATIVA/DISCOVERY.
 - R-500 PASS/CLOSED; T510 PASS AMBIENTAL; T511.2 PASS LOCAL + PASS AMBIENTAL.
-- R-510 OPEN; T513/T514 pendentes; T515/T516 e G-520 NOT_RUN.
+- R-510 OPEN; T513/T514 Auto Validator PASS LOCAL, execução ambiental pendente; T515/T516 e G-520 NOT_RUN.
 - Engine bloqueada até R-500 + R-510 + G-520.
 
 OBJETIVO EXATO
-Concluir revisão humana T513 e diversidade real T514 antes de congelar dataset/hash T515 e fechar R-510/T516. Não pedir nova instalação do T511 nem repetir discovery ASI.
+Executar o T513/T514 Automated Golden Validator antes de congelar dataset/hash T515 e fechar R-510/T516. Não repetir T511 nem discovery ASI. Revisão humana passa a ocorrer somente para casos `REVIEW_REQUIRED`.
 
 BASELINE COMPROVADA
 - A única pesquisa funcional atual é a Knowledge List com WP_Query s + modified DESC.
@@ -95,13 +95,17 @@ INDEPENDÊNCIA ASI E LIMITES
 - SHA-256 histórico ZIP T511.2: f34cb1bdffb369efdfbdd886d86cd2798835b41829466da278436b002df7ffcb.
 
 PRÓXIMO PASSO EXATO
-1. Receber aceite/correções humanos da tabela T513: consulta, expected post, max_rank, severity e rationale. Proposta pendente: manter seis IDs/max_rank=3 e considerar blocking. Revisar intenção de Estrutura/36620 versus 516.
-2. Em T514, coletar consultas realmente usadas: linguagem natural, variação/erro quando real, aliases se existentes, casos Summary e Elementor. Cada uma exige post/expectativa/justificativa humanos; não inventar casos.
-3. Somente após revisão/diversidade, congelar dataset final e set_hash/version T515.
-4. Fechar R-510/T516 explicitamente; depois concluir contratos G-520 antes de runtime.
+1. Instalar `0.5.0-r510-t513.1` (SHA-256 `e5c10eba2f831584536e0f3e0c2ab50102c87c504424117530c1eafd64cbe0bc`).
+2. Executar `Base de Conhecimento -> Golden Auto Validator` e baixar o JSON.
+3. Registrar AUTO_PASS/REVIEW_REQUIRED/AUTO_FAIL dos seis candidates.
+4. Registrar T514 diversity + synthetic robustness.
+5. Revisar humanamente somente `REVIEW_REQUIRED`, se houver; nunca trocar expected automaticamente.
+6. Lacunas de linguagem natural/Summary/Elementor/typo/alias continuam explícitas se o validator não encontrar evidência real.
+7. Somente após T513/T514, congelar dataset final + set_hash/version T515 e fechar R-510/T516.
+8. G-520 continua obrigatório antes de runtime Search.
 
 CRITÉRIO DE CONCLUSÃO DO PRÓXIMO PASSO
-Todas as seis expectativas têm decisão humana rastreável; casos de diversidade são reais e revisados; lacunas não são mascaradas; nenhuma expectativa é inferida do próprio ranking. T513/T514 continuam pendentes enquanto isso não ocorrer.
+O JSON ambiental deve comprovar safety, classificar todos os candidates e expor diversidade/lacunas. AUTO_PASS resolve verificações objetivas de continuidade; somente REVIEW_REQUIRED exige humano. AUTO_FAIL bloqueia. Nenhuma expectativa nova pode ser inferida do próprio ranking.
 
 ROLLBACK
 Reverter a consolidação documental se necessário. Não há alteração editorial ou de runtime para desfazer. Não promover SPEC/branch a main nem fechar gates posteriores por inferência.
@@ -115,3 +119,16 @@ Reverter a consolidação documental se necessário. Não há alteração editor
 - Blockers: aceite humano, diversidade e versão/hash finais; G-520 continua aberto.
 - Evidências e análise: [T511.2](r510-t5112-environmental-findings-v1.md).
 - Revisão pronta: [T513/T514](r510-golden-candidate-review-v1.md).
+
+
+T513/T514 AUTO VALIDATOR — PASS LOCAL
+- build: `0.5.0-r510-t513.1`;
+- SHA-256: `e5c10eba2f831584536e0f3e0c2ab50102c87c504424117530c1eafd64cbe0bc`;
+- 9/9 unit tests;
+- 43/43 PHP lint pré/pós ZIP;
+- 42/42 active requires;
+- Git blob parity 5/5;
+- deterministic rebuild PASS;
+- zero dependência técnica ASI;
+- zero writer/network no runner;
+- execução ambiental: NOT_RUN.

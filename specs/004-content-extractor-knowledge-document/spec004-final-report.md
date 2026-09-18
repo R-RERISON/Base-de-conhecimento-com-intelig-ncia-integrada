@@ -1,8 +1,8 @@
 # SPEC-004 — Relatório Final
 
 **Data:** 2026-09-18  
-**Status:** PASS / CLOSED na branch de fechamento  
-**PR:** #4 permanece DRAFT até revisão final
+**Status:** PASS / CLOSED / main  
+**PR:** #4 MERGED
 
 ## Resultado
 
@@ -54,4 +54,12 @@ O download de Authorization Pack não é a UX definitiva. Ele comprovou o contra
 
 O usuário confirmou a instalação e teste do `0.4.0-spec004-rc2` em homologação. Nenhuma regressão foi reportada na confirmação.
 
-Com este aceite, os gates técnicos e o smoke final de homologação da SPEC-004 estão completos. O único passo restante é a revisão/autorizaçao humana do merge do PR #4 para `main`.
+Com este aceite, os gates técnicos e o smoke final de homologação da SPEC-004 foram concluídos. O PR #4 foi posteriormente promovido para `main`.
+
+
+## Promoção final
+
+PR #4: **MERGED** em 2026-09-18.  
+Merge commit: `e08871557b2233bf1294b1e57752265d3fe68c0f`.
+
+A SPEC-004 está **CLOSED / main**. Não há gate pendente desta SPEC.

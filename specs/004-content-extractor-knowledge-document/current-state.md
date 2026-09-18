@@ -16,8 +16,9 @@
 - novo T100A Post Management Workspace: **PASS LOCAL**.
 - T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
 - T100C Core Blocks Post Activity: **PASS AMBIENTAL / READ-ONLY**.
+- T100D Persistent Single-Post Migration: **PASS AMBIENTAL**.
 
-## T099C — último write comprovado
+## T099C — canário com rollback comprovado
 
 Evidência: `evidence/g245-t099c-canary-pass-20260917T212107Z.json`.  
 SHA-256 bruto: `3ddb5f55053675699c9269acfdcb81a03e440be03236389777ddb4144b04ba3a`.
@@ -72,13 +73,17 @@ A aba Core Blocks agora possui preparação operacional por artigo, ainda sem wr
 
 Evidência ambiental: `evidence/g245-t100c-core-blocks-auth-post-358-20260917T235220Z.json`.\n\nPost 358: `ready_for_authorization`, dry-run `ready`, journal `rolled_back`, lock `free`, `core/freeform`, authorization_id `17c002d3ccc770c6ef154fdbed28cbd0c8d198411c84e168fe9aadb1b7a41af0`.
 
-## Próximos passos
+## T100D — PASS ambiental
 
-1. instalar T100C na homologação;
-2. abrir um artigo elegível em `Gerenciar → Core Blocks`;
-3. confirmar `ready_for_authorization`, lock livre e Authorization ID;
-4. baixar o Authorization Pack individual e validar `authorized=false`;
-5. após PASS ambiental, T100D poderá implementar executor unitário, exigindo autorização explícita do `post_id + authorization_id`.
+Evidência: `evidence/g245-t100d-persistent-migration-pass-post-358-20260918T100755Z.json`.
+
+SHA-256 bruto: `0d8072056fe6653bc6595c8b41c28c1445d3d5bea8b637e182d7a1d5871aa94f`.
+
+Post 358 terminou persistido em Core Blocks: apply verificado, hash final igual ao esperado, `_elementor_data` inalterado, journal final `applied`, rollback não executado e zero erros.
+
+## Gate atual — T100E Engineering Consolidation
+
+Antes de ampliar IA ou migração para outros artigos, consolidar runtime, testes, boundary produto/engenharia, build/release e serviços defensivos. Contrato: `t100e-engineering-consolidation-contract-v1.md`.
 
 ## Guardrails
 

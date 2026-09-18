@@ -229,8 +229,8 @@ T096 deve comprovar, usando `serialize_blocks()`/`parse_blocks()` reais do Core 
 
 A sequência T096–G-250 descrita historicamente acima foi superada pelo fechamento da SPEC-004 registrado adiante. A frente atual é SPEC-005:
 
-1. T513 — executar Automated Golden Validator; humano somente para REVIEW_REQUIRED;
-2. T514 — executar Diversity/Robustness Validator e registrar lacunas reais;
+1. T513 — Auto Validator v2: AUTO_PASS / AMBIGUOUS_QUARANTINED / AUTO_FAIL;
+2. T514 — Technical Challenge + Diversity/Robustness; typo/alias reais ficam PENDING_TELEMETRY;
 3. T515/T516 — congelar versão/hash e fechar R-510;
 4. G-520 — contratos/storage/security/rollback antes de runtime;
 5. G-585 — comprovar independência operacional do ASI antes do RC.
@@ -287,7 +287,7 @@ Objetivo: estabelecer retrieval lexical determinístico e Golden Queries antes d
 
 Gate atual: **R-510 — Golden Dataset v1 / T513-T514 Automated Golden Validation**.
 
-R-500 está PASS/CLOSED. T510 e T511.2 estão PASS AMBIENTAL. T513/T514 Auto Validator está PASS LOCAL (9/9 unit, build 0.5.0-r510-t513.1), com execução ambiental pendente. R-510 permanece OPEN; T515/T516 e G-520 ainda não foram concluídos. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
+R-500 está PASS/CLOSED. T510 e T511.2 estão PASS AMBIENTAL. T513.1 foi executado ambientalmente (5 AUTO_PASS / 1 ambiguidade / 0 AUTO_FAIL) e revelou dois defects do validator. T514.2 corrige ambos e está PASS LOCAL (14/14 unit, build 0.5.0-r510-t514.2, SHA-256 9fb9e20828b1e5162db5fa924ed3b2a3b76d85531d1c61f2847205ebdd00ae2c), com execução ambiental pendente. R-510 permanece OPEN; T515/T516 e G-520 ainda não foram concluídos. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
 
 Regras de abertura:
 - runtime de engine bloqueado até R-500 + R-510 + G-520;
@@ -299,3 +299,13 @@ Regras de abertura:
 - nenhuma tabela criada apenas por herança do ASI.
 
 Referência histórica: ASI 4.6.8 @ `c0ddff89caad529ce1bcdc645eb795e4a9b187a1`, preservando contratos e não o runtime legado.
+
+
+#### ADR-005-002 — Golden/Challenge/Quarantine
+
+Aceita em 2026-09-18:
+- Golden Relevance Set mantém apenas origem humana/curada/histórica;
+- ambiguidade objetiva vira `AMBIGUOUS_QUARANTINED`, preservada mas fora do blocking set;
+- Technical Challenge Set pode ser corpus-derived/synthetic e prova capacidade, não intenção de usuário;
+- typo/alias reais são `PENDING_TELEMETRY` até a camada futura de Telemetria;
+- nenhum algoritmo pode trocar expected_post_id automaticamente.

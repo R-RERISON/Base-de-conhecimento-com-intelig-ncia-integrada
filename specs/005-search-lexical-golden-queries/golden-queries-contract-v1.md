@@ -69,3 +69,14 @@ Release com Search afetando ranking exige:
 - suite não vazia;
 - evidence current;
 - blocking_failed = 0.
+
+
+## Candidate seed recuperado do ASI — 2026-09-18
+
+O T510 recuperou 6 expectativas post-level manuais, todas ativas e com expected post existente.
+
+Essas linhas constituem **seed de paridade**, não Golden Suite v1 aceita automaticamente.
+
+O fato de o legado classificá-las como `warning` não obriga a nova severidade. T513 decidirá humanamente se cada caso será `blocking` ou `warning`, considerando o contrato de paridade ASI.
+
+A suite v1 final deve registrar novo `set_hash` pelo contrato da SPEC-005; hashes históricos do ASI são metadados de proveniência e não devem ser comparados diretamente com o hash candidate do novo schema.

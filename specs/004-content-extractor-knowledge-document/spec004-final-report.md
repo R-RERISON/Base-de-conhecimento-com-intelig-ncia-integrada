@@ -46,3 +46,12 @@ Validação:
 ## Autorização e UX
 
 O download de Authorization Pack não é a UX definitiva. Ele comprovou o contrato de autorização durante engenharia/homologação. Uma futura migração integrada deve ocorrer dentro da Workspace, com confirmação humana explícita e todos os guardrails defensivos. Essa integração não foi introduzida no fechamento para evitar regressão após G-250.
+
+
+## RC2 Final Smoke
+
+**PASS AMBIENTAL / HUMAN ACCEPTANCE — 2026-09-18.**
+
+O usuário confirmou a instalação e teste do `0.4.0-spec004-rc2` em homologação. Nenhuma regressão foi reportada na confirmação.
+
+Com este aceite, os gates técnicos e o smoke final de homologação da SPEC-004 estão completos. O único passo restante é a revisão/autorizaçao humana do merge do PR #4 para `main`.

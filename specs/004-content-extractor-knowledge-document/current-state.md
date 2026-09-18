@@ -192,3 +192,24 @@ Após T100D:
 
 Dependência residual diretamente relacionada a Elementor: **39 artigos** (34 Elementor + 5 mixed).  
 A SPEC-004 não remove Elementor; `Elementor_Adapter` permanece até dependência zero.
+
+
+## G-250 — Lifecycle RC1
+
+Status: **PASS LOCAL / HOMOLOGAÇÃO AMBIENTAL PENDENTE**.
+
+Build: `0.4.0-spec004-rc1`.  
+SHA-256: `5fe09645dea21787bcbc01a6fd5e11fc671cdb31157b07accd8212c78bb94cc5`.
+
+Validação local:
+- 41/41 PHP lint pré-ZIP;
+- 41/41 PHP lint pós-extração;
+- 40/40 active requires;
+- UX-003 parity 6/6;
+- deterministic rebuild PASS;
+- G-250 hidden runner only;
+- E6 OFF;
+- T100D OFF;
+- Elementor writer OFF.
+
+Próximo passo: executar upgrade + deactivate/activate + rollback/downgrade controlado + reinstall RC1, então gerar JSON G-250.

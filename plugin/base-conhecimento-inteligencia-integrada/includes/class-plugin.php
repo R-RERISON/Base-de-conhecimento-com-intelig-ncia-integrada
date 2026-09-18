@@ -27,5 +27,8 @@ final class Plugin {
 		if ( defined( 'BDC_KB_SPEC004_G245_T100C_CORE_BLOCKS_ACTIVITY_BUILD' ) && BDC_KB_SPEC004_G245_T100C_CORE_BLOCKS_ACTIVITY_BUILD ) {
 			add_action( 'admin_post_' . Post_Core_Blocks_Activity::ACTION, array( Post_Core_Blocks_Activity::class, 'handle_download' ) );
 		}
+		if ( defined( 'BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD' ) && BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD ) {
+			add_action( 'admin_post_' . Post_Core_Blocks_Executor_T100D::ACTION, array( Post_Core_Blocks_Executor_T100D::class, 'handle_execute' ) );
+		}
 	}
 }

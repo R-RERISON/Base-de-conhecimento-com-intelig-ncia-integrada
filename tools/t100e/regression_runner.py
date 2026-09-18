@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""T100E static regression runner.
+"""T100E static regression runner v1.1.
 
-No WordPress bootstrap, database, network or editorial write is performed.
-Run from repository root:
+No WordPress bootstrap, database, network, or editorial write is performed.
+
+Examples:
     python tools/t100e/regression_runner.py
     python tools/t100e/regression_runner.py --json evidence.json
+    python tools/t100e/regression_runner.py --artifact-zip /path/plugin.zip
 """
 
 from __future__ import annotations
@@ -16,6 +18,7 @@ import re
 import shutil
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 
 PLUGIN_REL = Path("plugin/base-conhecimento-inteligencia-integrada")
@@ -24,16 +27,17 @@ BOOTSTRAP = "base-conhecimento-inteligencia-integrada.php"
 REQUIRED_FALSE_FLAGS = (
     "BDC_KB_SPEC004_G245_T099C_CANARY_BUILD",
     "BDC_KB_SPEC004_G245_T100A_BATCH_AUTHORIZATION_PACK_BUILD",
-)
-
-WARN_IF_TRUE_FLAGS = (
-    "BDC_KB_SPEC004_G245_PREFLIGHT_BUILD",
     "BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD",
+    "BDC_KB_ELEMENTOR_WRITER_ENABLED",
 )
 
 EXPECTED_TRUE_FLAGS = (
     "BDC_KB_SPEC004_G245_T100A_POST_WORKSPACE_BUILD",
     "BDC_KB_SPEC004_G245_T100C_CORE_BLOCKS_ACTIVITY_BUILD",
+)
+
+WARN_IF_TRUE_FLAGS = (
+    "BDC_KB_SPEC004_G245_PREFLIGHT_BUILD",
 )
 
 FORBIDDEN_IN_READ_ONLY_CORE_ACTIVITY = (
@@ -55,13 +59,17 @@ WRITE_PATTERNS = (
     "wp_set_object_terms(",
 )
 
-KNOWN_WRITE_SURFACES = {
+KNOWN_PRODUCT_WRITE_SURFACES = {
     "class-summary-store.php",
     "class-classification-store.php",
     "class-review-store.php",
     "class-block-migration-journal-store.php",
     "class-block-migration-lock.php",
+}
+
+KNOWN_ENGINEERING_WRITE_SURFACES = {
     "class-post-core-blocks-executor-t100d.php",
+    "class-block-migration-canary-t099c.php",
     "class-elementor-migration-journal-store.php",
     "class-elementor-migration-lock.php",
 }
@@ -72,7 +80,36 @@ ENGINEERING_NAME_MARKERS = (
     "acceptance",
     "content-profile.php",
     "production-preflight.php",
+    "executor-t100d.php",
+    "canary-t099c.php",
 )
+
+DEFENSIVE_PAIRS = {
+    "journal": (
+        "class-block-migration-journal.php",
+        "class-elementor-migration-journal.php",
+    ),
+    "journal_store": (
+        "class-block-migration-journal-store.php",
+        "class-elementor-migration-journal-store.php",
+    ),
+    "stale_guard": (
+        "class-block-migration-stale-source-guard.php",
+        "class-elementor-stale-source-guard.php",
+    ),
+    "dry_run": (
+        "class-block-migration-dry-run.php",
+        "class-elementor-migration-dry-run.php",
+    ),
+    "batch_plan": (
+        "class-block-migration-batch-plan.php",
+        "class-elementor-migration-batch-plan.php",
+    ),
+    "lock": (
+        "class-block-migration-lock.php",
+        "class-elementor-migration-lock.php",
+    ),
+}
 
 
 def sha256(path: Path) -> str:
@@ -92,10 +129,68 @@ def classify_engineering(filename: str) -> bool:
     return any(marker in filename for marker in ENGINEERING_NAME_MARKERS)
 
 
+def all_requires(source: str) -> list[str]:
+    return re.findall(r"require_once BDC_KB_DIR \. '([^']+)'", source)
+
+
+def unconditional_requires(source: str) -> list[str]:
+    prefix = source.split("if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' )", 1)[0]
+    return all_requires(prefix)
+
+
+def conditional_requires(source: str) -> dict[str, list[str]]:
+    out: dict[str, list[str]] = {}
+    pattern = re.compile(
+        r"if\s*\(\s*defined\(\s*'([^']+)'\s*\)\s*&&\s*\1\s*\)\s*\{"
+        r"(.*?)\}",
+        re.S,
+    )
+    for match in pattern.finditer(source):
+        flag = match.group(1)
+        paths = all_requires(match.group(2))
+        if paths:
+            out.setdefault(flag, []).extend(paths)
+    return out
+
+
+def inspect_artifact(path: Path, source_files: set[str], active_required: set[str]) -> dict[str, object]:
+    result: dict[str, object] = {
+        "path": str(path),
+        "exists": path.is_file(),
+        "sha256": "",
+        "plugin_roots": [],
+        "source_only": [],
+        "artifact_only": [],
+        "active_required_missing": [],
+    }
+    if not path.is_file():
+        return result
+
+    result["sha256"] = sha256(path)
+    with zipfile.ZipFile(path) as zf:
+        names = [n for n in zf.namelist() if n and not n.endswith("/")]
+    roots = sorted({n.split("/", 1)[0] for n in names})
+    result["plugin_roots"] = roots
+    if len(roots) != 1:
+        return result
+
+    root = roots[0]
+    artifact_rel = {
+        n[len(root) + 1 :]
+        for n in names
+        if n.startswith(root + "/")
+    }
+    result["source_only"] = sorted(source_files - artifact_rel)
+    result["artifact_only"] = sorted(artifact_rel - source_files)
+    result["active_required_missing"] = sorted(active_required - artifact_rel)
+    return result
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=".", help="repository root")
     ap.add_argument("--json", dest="json_path", help="write full JSON report")
+    ap.add_argument("--artifact-zip", help="optional installable ZIP to compare")
     args = ap.parse_args()
 
     repo = Path(args.root).resolve()
@@ -115,45 +210,55 @@ def main() -> int:
     php_files = sorted(plugin.rglob("*.php"))
     css_files = sorted((plugin / "assets" / "css").glob("*.css"))
     js_files = sorted((plugin / "assets" / "js").glob("*.js"))
+    source_rel_files = {
+        str(path.relative_to(plugin)).replace("\\", "/")
+        for path in plugin.rglob("*")
+        if path.is_file()
+    }
 
     checks["counts"] = {
         "php": len(php_files),
         "css": len(css_files),
         "js": len(js_files),
         "includes": len(list(includes.glob("*.php"))),
+        "all_files": len(source_rel_files),
     }
 
-    # Unconditional require integrity.
-    prefix = source.split("if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' )", 1)[0]
-    requires = re.findall(r"require_once BDC_KB_DIR \. '([^']+)'", prefix)
-    missing = [rel for rel in requires if not (plugin / rel).is_file()]
-    checks["unconditional_requires"] = {
-        "count": len(requires),
-        "missing": missing,
+    # Require integrity.
+    uncond = unconditional_requires(source)
+    cond = conditional_requires(source)
+    all_req = sorted(set(all_requires(source)))
+    missing_source = [rel for rel in all_req if not (plugin / rel).is_file()]
+    checks["requires"] = {
+        "unconditional_count": len(uncond),
+        "conditional_flags": cond,
+        "all_required_count": len(all_req),
+        "missing_source": missing_source,
     }
-    if missing:
-        failures.append("missing unconditional require(s): " + ", ".join(missing))
+    if missing_source:
+        failures.append("missing source require(s): " + ", ".join(missing_source))
 
     # Build flags.
-    flags = {}
-    for name in REQUIRED_FALSE_FLAGS + WARN_IF_TRUE_FLAGS + EXPECTED_TRUE_FLAGS:
-        flags[name] = flag_value(source, name)
-    flags["BDC_KB_ELEMENTOR_WRITER_ENABLED"] = flag_value(source, "BDC_KB_ELEMENTOR_WRITER_ENABLED")
+    all_flag_names = set(REQUIRED_FALSE_FLAGS + EXPECTED_TRUE_FLAGS + WARN_IF_TRUE_FLAGS + tuple(cond))
+    flags = {name: flag_value(source, name) for name in sorted(all_flag_names)}
     checks["flags"] = flags
 
     for name in REQUIRED_FALSE_FLAGS:
-        if flags[name] is not False:
+        if flags.get(name) is not False:
             failures.append(f"{name} must be false")
     for name in EXPECTED_TRUE_FLAGS:
-        if flags[name] is not True:
+        if flags.get(name) is not True:
             failures.append(f"{name} must be true")
-    if flags["BDC_KB_ELEMENTOR_WRITER_ENABLED"] is not False:
-        failures.append("BDC_KB_ELEMENTOR_WRITER_ENABLED must be false")
     for name in WARN_IF_TRUE_FLAGS:
-        if flags[name] is True:
-            warnings.append(f"{name} still enabled; candidate for T100E cleanup")
+        if flags.get(name) is True:
+            warnings.append(f"{name} still enabled; not yet replaced by consolidated tooling")
 
-    # Read-only Core Blocks activity safety.
+    active_required = set(uncond)
+    for flag, paths in cond.items():
+        if flags.get(flag) is True:
+            active_required.update(paths)
+
+    # Core Blocks read-only preparation contract.
     core_activity = includes / "class-post-core-blocks-activity.php"
     core_text = core_activity.read_text(encoding="utf-8")
     forbidden_found = [p for p in FORBIDDEN_IN_READ_ONLY_CORE_ACTIVITY if p in core_text]
@@ -180,31 +285,39 @@ def main() -> int:
     if not all(workspace_invariants.values()):
         failures.append("Post Management Workspace invariant failed")
 
-    # Engineering/test-only material still shipped.
+    # Engineering material inventory.
     engineering_files = sorted(
         p.name for p in includes.glob("*.php") if classify_engineering(p.name)
     )
-    checks["engineering_files_in_installable_tree"] = engineering_files
+    checks["engineering_files_in_source_tree"] = engineering_files
     if engineering_files:
-        warnings.append(
-            f"{len(engineering_files)} engineering/test files still ship in plugin tree"
-        )
+        warnings.append(f"{len(engineering_files)} engineering/test files remain in source plugin tree")
 
     # Writer inventory.
-    writer_inventory = {}
-    unknown_writer_files = []
+    writer_inventory: dict[str, list[str]] = {}
+    unknown_writer_files: list[str] = []
+    engineering_writer_files: list[str] = []
     for path in includes.glob("*.php"):
         text = path.read_text(encoding="utf-8")
         hits = sorted({p for p in WRITE_PATTERNS if p in text})
-        if hits:
-            writer_inventory[path.name] = hits
-            if path.name not in KNOWN_WRITE_SURFACES:
-                unknown_writer_files.append(path.name)
+        if not hits:
+            continue
+        writer_inventory[path.name] = hits
+        if path.name in KNOWN_ENGINEERING_WRITE_SURFACES:
+            engineering_writer_files.append(path.name)
+        elif path.name not in KNOWN_PRODUCT_WRITE_SURFACES:
+            unknown_writer_files.append(path.name)
+
     checks["writer_inventory"] = writer_inventory
+    checks["engineering_writer_files"] = sorted(engineering_writer_files)
     checks["unknown_writer_files"] = sorted(unknown_writer_files)
     if unknown_writer_files:
+        failures.append(
+            "writer-like calls outside allowlist: " + ", ".join(sorted(unknown_writer_files))
+        )
+    if engineering_writer_files:
         warnings.append(
-            "writer-like calls outside current allowlist: " + ", ".join(sorted(unknown_writer_files))
+            "engineering writer source remains in tree: " + ", ".join(sorted(engineering_writer_files))
         )
 
     # Network / shortcode / dynamic rendering inventory.
@@ -224,19 +337,15 @@ def main() -> int:
         inventories[label] = found
     checks["capability_inventory"] = inventories
 
-    # Duplicate defensive-family signal.
+    # Parallel defensive family inventory.
     paired = {}
-    for suffix in (
-        "migration-journal.php",
-        "migration-journal-store.php",
-        "stale-source-guard.php",
-        "migration-dry-run.php",
-        "migration-batch-plan.php",
-        "migration-lock.php",
-    ):
-        block = includes / ("class-block-" + suffix)
-        elem = includes / ("class-elementor-" + suffix)
-        paired[suffix] = {"block": block.exists(), "elementor": elem.exists()}
+    for label, (block_name, elementor_name) in DEFENSIVE_PAIRS.items():
+        paired[label] = {
+            "block": (includes / block_name).exists(),
+            "elementor": (includes / elementor_name).exists(),
+            "block_file": block_name,
+            "elementor_file": elementor_name,
+        }
     checks["parallel_defensive_families"] = paired
     if any(v["block"] and v["elementor"] for v in paired.values()):
         warnings.append("parallel Block/Elementor defensive families remain")
@@ -263,13 +372,30 @@ def main() -> int:
         warnings.append("php executable unavailable; lint skipped")
     checks["php_lint"] = lint
 
+    # Optional source/artifact comparison.
+    if args.artifact_zip:
+        artifact = inspect_artifact(Path(args.artifact_zip).resolve(), source_rel_files, active_required)
+        checks["artifact"] = artifact
+        if not artifact["exists"]:
+            failures.append("artifact ZIP not found")
+        elif len(artifact["plugin_roots"]) != 1:
+            failures.append("artifact must contain exactly one plugin root")
+        elif artifact["active_required_missing"]:
+            failures.append(
+                "artifact missing active runtime file(s): "
+                + ", ".join(artifact["active_required_missing"])
+            )
+        if artifact["source_only"] or artifact["artifact_only"]:
+            warnings.append("source tree and artifact file manifests differ")
+
+    version_match = re.search(
+        r"define\(\s*'BDC_KB_VERSION'\s*,\s*'([^']+)'\s*\)", source
+    )
     report = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "gate": "T100E",
         "mode": "static_regression_runner",
-        "plugin_version": re.search(
-            r"define\(\s*'BDC_KB_VERSION'\s*,\s*'([^']+)'\s*\)", source
-        ).group(1),
+        "plugin_version": version_match.group(1) if version_match else "",
         "checks": checks,
         "warnings": warnings,
         "failures": failures,

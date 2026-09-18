@@ -123,3 +123,23 @@ HE5-001 concluído localmente: Block Journal/Store recebeu validação de identi
 Candidate: `0.4.0-g245-consolidation-t100e.3`, SHA-256 `8cdb59c46fa80a8a642fd555e7d87b896ae757358149a11e71978e9df9b717f3`, 40 PHP, 38 requires, 0 lint failures, build determinístico reproduzido.
 
 Próximo passo: validar em homologação que o journal `applied` já existente do post 358 continua legível sob o hardening, sem write.
+
+
+## UX-003 — Consolidação visual
+
+Status: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+
+Build: `0.4.0-g245-ux003.1`.  
+SHA-256: `758118f5bf9f0a06f05b05a73992cb47ab4c03ea8c32f18fa26f0e2c3ba88e2f`.
+
+Mudanças:
+- Preflight removido do menu visível;
+- navegação superior única;
+- Visão geral sem menu duplicado;
+- interface principal padronizada em pt-BR;
+- jargão de desenvolvimento removido da superfície de produto;
+- Workspace full-width;
+- estados Core Blocks traduzidos para linguagem de produto;
+- nenhum novo write.
+
+Contrato: `ux003-workspace-visual-contract-v1.md`.

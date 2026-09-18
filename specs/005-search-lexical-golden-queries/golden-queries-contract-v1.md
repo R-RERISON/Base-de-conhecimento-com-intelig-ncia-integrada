@@ -61,7 +61,7 @@ A origem de uma expectativa Golden deve ser humana/curada ou possuir provenance 
 
 Após a expectativa existir, verificações objetivas de continuidade podem ser automatizadas pelo contrato `r510-automated-golden-validation-contract-v1.md`:
 - AUTO_PASS confirma expected/max_rank existente quando evidência é inequívoca;
-- REVIEW_REQUIRED exige humano somente na exceção ambígua;
+- AMBIGUOUS_QUARANTINED preserva a expectativa, mas a remove do blocking set sem escolher vencedor;
 - AUTO_FAIL bloqueia;
 - automação não cria nem substitui expected_post_id.
 
@@ -83,6 +83,16 @@ O T510 recuperou 6 expectativas post-level manuais, todas ativas e com expected 
 
 Essas linhas constituem **seed de paridade**, não Golden Suite v1 aceita automaticamente.
 
-O fato de o legado classificá-las como `warning` não obriga a nova severidade. Em T513, AUTO_PASS recomenda `blocking` para proteger paridade; casos REVIEW_REQUIRED permanecem sem promoção automática de severity.
+O fato de o legado classificá-las como `warning` não obriga a nova severidade. Em T513, AUTO_PASS recomenda `blocking`; ambiguidades vão para `AMBIGUOUS_QUARANTINED`/warning e ficam fora do blocking set.
 
 A suite v1 final deve registrar novo `set_hash` pelo contrato da SPEC-005; hashes históricos do ASI são metadados de proveniência e não devem ser comparados diretamente com o hash candidate do novo schema.
+
+
+## Golden vs Technical Challenge
+
+ADR-005-002 separa:
+- **Golden Relevance Set**: origem humana/curada/histórica; pode bloquear release;
+- **Technical Challenge Set**: corpus-derived/synthetic; prova capacidade técnica, nunca intenção real;
+- **Real-world Query Enrichment**: typo/alias reais, enriquecidos pela futura Telemetria.
+
+Technical Challenge não entra no `set_hash` da Golden real como se fosse consulta de usuário. Se T515 congelar ambos, deve manter hashes/versionamento separados ou namespaces explícitos.

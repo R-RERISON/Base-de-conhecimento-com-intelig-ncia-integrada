@@ -5,7 +5,7 @@
 **Produto:** Base de Conhecimento com Inteligência Integrada  
 **Tipo:** Plugin WordPress único, modular internamente  
 **Idioma:** Português do Brasil  
-**Estado:** SPEC-000/001/002/003 concluídas; UX-001/UX-002 concluídas; SPEC-004 ativa; G-240 PASS/CLOSED; G-245 rebaselined para Canonical Block Normalization  
+**Estado:** SPEC-000/001/002/003/004 concluídas; UX-001/UX-002/UX-003 concluídas; G-240/G-245/G-250 PASS/CLOSED  
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
 ## Missão
@@ -84,7 +84,7 @@ Baseline funcional congelada:
 
 ### SPEC-004 — Content Extractor, Knowledge Document e Canonical Block Normalization
 
-**ATIVA.**
+**CONCLUÍDA na branch de fechamento; aguardando revisão/merge do PR #4.**
 
 G-240 foi promovido para `main` com KD 2.1.0 e aceite técnico/humano. G-245 permanece somente na branch `spec004-g245-production-readiness` / PR #4 DRAFT.
 
@@ -238,3 +238,21 @@ T096 deve comprovar, usando `serialize_blocks()`/`parse_blocks()` reais do Core 
 **GO de desenvolvimento/homologação != GO de produção.**
 
 A ADR-004-001 e os PASS read-only não autorizam writer. Qualquer write em `post_content` exige stale guard, journal, dry-run, lock, rollback, canário e autorização específica.
+
+
+## Fechamento SPEC-004 — 2026-09-18
+
+- T100E-E6: PASS ambiental;
+- T100E-E7: PASS/CLOSED;
+- G-245: PASS/CLOSED;
+- G-250 Lifecycle/RC1: PASS ambiental/CLOSED;
+- RC final limpo: `0.4.0-spec004-rc2`;
+- SHA-256 RC2: `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`;
+- 39/39 PHP lint;
+- 38/38 active requires;
+- deterministic rebuild PASS;
+- G250/E6/Preflight/T100D/Elementor writer OFF.
+
+Dívida residual: 39 artigos relacionados a Elementor (34 Elementor + 5 mixed). `Elementor_Adapter` permanece.
+
+Direção de produto: autorização continua obrigatória como decisão humana explícita/post-scoped, mas o download manual do Authorization Pack não é a UX-alvo definitiva. A integração futura deve ocorrer dentro da Workspace, sob novo gate/SPEC, sem migração global implícita.

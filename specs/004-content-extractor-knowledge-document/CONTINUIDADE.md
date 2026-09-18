@@ -103,6 +103,20 @@ Sem novas features neste gate. Inventariar runtime, consolidar runner anti-regre
 - 49 PHP no candidate, 0 lint failures;
 - nenhuma mutação editorial em T100E.
 
+### T100E-E5 — concluído localmente
+
+- mapa de equivalência congelado;
+- família histórica de migração Elementor retirada do runtime ativo;
+- `Elementor_Adapter` preservado;
+- Block Journal/Store endurecido (HE5-001);
+- teste HE5-001: 15/15 PASS;
+- candidate `0.4.0-g245-consolidation-t100e.3`;
+- SHA-256 `8cdb59c46fa80a8a642fd555e7d87b896ae757358149a11e71978e9df9b717f3`;
+- 40 PHP / 38 requires / 0 lint failures;
+- T100D OFF;
+- Elementor writer OFF;
+- zero write editorial durante T100E.
+
 ### Próximo passo exato
 
-**T100E-E5 — Defensive Service Equivalence Map.** Comparar journal/store, lock, stale guard, dry-run e batch-plan entre as famílias Block e Elementor, provando equivalência/diferenças antes de consolidar qualquer classe.
+**HE5-001 environmental compatibility**: instalar T100E.3 em homologação e abrir `post 358 → Gerenciar → Core Blocks`. O journal T100D existente deve continuar legível com latest state `applied`, lock `free`, sem nova autorização executável e sem qualquer write.

@@ -96,3 +96,24 @@ Antes de ampliar IA ou migração para outros artigos, consolidar runtime, teste
 - PR #4 permanece DRAFT.
 
 > Quem não sabe onde está, não sabe para onde quer ir.
+
+## T100E — Engineering Consolidation
+
+Status: **IN PROGRESS / ZERO EDITORIAL WRITE**.
+
+Concluído nesta rodada:
+- runtime baseline congelado;
+- runner estático único v1.1;
+- T100D one-shot retirado do runtime ativo e mantido somente como fonte histórica;
+- classificação `product / defensive_product / legacy_compat / engineering_test_only`;
+- builder determinístico de ZIP por dependências ativas;
+- candidate build `0.4.0-g245-consolidation-t100e.1` com 54 arquivos totais / 49 PHP / 0 lint failures;
+- `Production_Preflight` mantido ativo até existir substituto ambiental equivalente.
+
+Achados ainda abertos:
+- famílias defensivas Block/Elementor paralelas;
+- ferramentas de engenharia permanecem no source tree;
+- boundary source/artifact precisa ser formalizado por manifesto de release;
+- matriz ambiental da Workspace ainda precisa ser consolidada.
+
+Próximo passo: T100E-E5 — mapa de equivalência dos serviços defensivos antes de qualquer refactor/removal.

@@ -84,9 +84,9 @@ Baseline funcional congelada:
 
 ### SPEC-004 — Content Extractor, Knowledge Document e Canonical Block Normalization
 
-**CONCLUÍDA na branch de fechamento; aguardando revisão/merge do PR #4.**
+**CONCLUÍDA / CLOSED / main.**
 
-G-240 foi promovido para `main` com KD 2.1.0 e aceite técnico/humano. G-245 permanece somente na branch `spec004-g245-production-readiness` / PR #4 DRAFT.
+G-240 foi promovido para `main` com KD 2.1.0 e aceite técnico/humano. G-245 foi promovido para `main` via PR #4 após G-250 e RC2 Final Smoke PASS.
 
 #### Decisão arquitetural vigente
 
@@ -214,7 +214,7 @@ T096 deve comprovar, usando `serialize_blocks()`/`parse_blocks()` reais do Core 
 3. UX-001 — concluído;
 4. Review & Governança — concluído;
 5. UX-002 — concluído / contrato permanente;
-6. Content Extractor + KD + Canonical Block Normalization — **em execução**;
+6. Content Extractor + KD + Canonical Block Normalization — **concluído / SPEC-004 CLOSED**;
 7. Search lexical + Golden Queries;
 8. Telemetria/Inteligência de Busca;
 9. Operações/Indexação;
@@ -256,3 +256,13 @@ A ADR-004-001 e os PASS read-only não autorizam writer. Qualquer write em `post
 Dívida residual: 39 artigos relacionados a Elementor (34 Elementor + 5 mixed). `Elementor_Adapter` permanece.
 
 Direção de produto: autorização continua obrigatória como decisão humana explícita/post-scoped, mas o download manual do Authorization Pack não é a UX-alvo definitiva. A integração futura deve ocorrer dentro da Workspace, sob novo gate/SPEC, sem migração global implícita.
+
+
+## Promoção SPEC-004 para main
+
+PR #4: **MERGED** em 2026-09-18.  
+Merge commit: `e08871557b2233bf1294b1e57752265d3fe68c0f`.  
+Release validada: `0.4.0-spec004-rc2`.  
+SHA-256: `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`.
+
+Estado definitivo: **SPEC-004 CLOSED / main**.

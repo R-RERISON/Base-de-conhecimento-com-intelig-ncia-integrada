@@ -71,3 +71,17 @@ PASS esperado:
 R-500: **PASS/CLOSED**.
 
 A busca atual da lista (`s + modified DESC`) não pode ser promovida como Search engine. A busca nativa sem esse override é muito superior nos probes, mas ainda não cobre integralmente o Content Extractor/Summary. Por isso a nova arquitetura seguirá com Search Document semântico + Golden, preservando WordPress como autoridade/fallback.
+
+
+## Build atual — R-510/T510
+
+`0.5.0-r510-t510.1`  
+SHA-256 `3b4b4e0ec308c5914ce155e740228ff4b0f735fd76fd1b30b930bce384ce77d3`.
+
+Próximo passo:
+1. instalar sobre T502;
+2. abrir `Golden Discovery R-510`;
+3. executar e baixar JSON;
+4. validar safety;
+5. revisar candidates do ASI;
+6. avançar T511–T516.

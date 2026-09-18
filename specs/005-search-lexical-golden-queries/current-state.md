@@ -118,3 +118,37 @@ SHA-256: `3b4b4e0ec308c5914ce155e740228ff4b0f735fd76fd1b30b930bce384ce77d3`
 - nenhum auto-import;
 - nenhum rank execution;
 - human review continua obrigatório.
+
+
+## R-510/T510 — PASS AMBIENTAL
+
+Evidência: `evidence/r510-t510-environmental-20260918T211840Z.json`.
+
+- tabela legada `asi_golden_queries`: presente;
+- 6 rows ativas;
+- 6/6 clean post-level candidates;
+- expected posts ausentes: 0;
+- unsupported post type: 0;
+- item-level: 0;
+- errors: 0;
+- fingerprint editorial preservado;
+- corpus 623 -> 623;
+- legacy last run: PASS 6/6, zero blocking/warning failure, algorithm 4.5.0.
+
+Candidates preservados em:
+`fixtures/golden-candidates-legacy-v1.json`.
+
+**Nota de hash:** `legacy.last_run_metadata.set_hash` e `candidates.set_hash` usam contratos diferentes; não são comparáveis byte-a-byte e a divergência não representa drift.
+
+## R-510/T511 — Golden Baseline Runner
+
+Status: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+
+Build: `0.5.0-r510-t511.1`.
+
+O runner mede os 6 candidates em:
+1. admin atual — `s + modified DESC`;
+2. admin relevance — mesmo scope, sem override de modified;
+3. publish native — referência publish-only.
+
+Nenhuma expectativa é aceita ou alterada pelo runner.

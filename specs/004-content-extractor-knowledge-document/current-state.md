@@ -145,3 +145,22 @@ Mudanças:
 - nenhum novo write.
 
 Contrato: `ux003-workspace-visual-contract-v1.md`.
+
+
+## T100E-E6 — Workspace Regression Matrix
+
+Status: **PASS LOCAL / HOMOLOGAÇÃO AMBIENTAL PENDENTE**.
+
+Build: `0.4.0-g245-e6.1`.  
+SHA-256: `2a208ecfa1f65092f793c033e55a21bb0117434e2f8468a9cb3cbb998b6fa376`.
+
+Validação local:
+- 9/9 casos contratuais puros PASS;
+- 41/41 PHP lint pré-ZIP;
+- 41/41 PHP lint pós-extração;
+- 38/38 requires;
+- T100D OFF;
+- Elementor writer OFF;
+- zero write.
+
+A homologação executará duas passagens completas sobre o corpus, verificará cobertura de source kinds/estados, determinismo e fingerprint editorial antes/depois.

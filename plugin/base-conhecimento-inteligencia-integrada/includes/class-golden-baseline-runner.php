@@ -84,11 +84,10 @@ final class Golden_Baseline_Runner {
 		nocache_headers();
 		header( 'Content-Type: application/json; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="bdc-kb-spec005-r510-golden-baseline-independent-' . gmdate( 'Ymd-His' ) . '.json"' );
-		echo $json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON download.
+		echo $json;
 		exit;
 	}
 
-	/** @return array<string,mixed> */
 	private static function run(): array {
 		$started = microtime( true );
 		$ids_before = self::post_ids();
@@ -217,7 +216,6 @@ final class Golden_Baseline_Runner {
 		);
 	}
 
-	/** @return array<string,mixed> */
 	private static function probe( string $query_text, int $expected_post_id, int $max_rank, string $mode ): array {
 		$args = array(
 			'post_type' => Meta_Contract::POST_TYPE,
@@ -265,26 +263,17 @@ final class Golden_Baseline_Runner {
 		);
 	}
 
-	/** @param array<string,array<string,mixed>> $modes */
 	private static function classify( array $modes ): string {
-		if ( ! empty( $modes['admin_current']['pass_legacy_max_rank'] ) ) {
-			return 'already_passes_current_admin';
-		}
-		if ( ! empty( $modes['admin_relevance']['pass_legacy_max_rank'] ) ) {
-			return 'ordering_ranking_gap';
-		}
-		if ( ! empty( $modes['publish_native']['pass_legacy_max_rank'] ) ) {
-			return 'admin_scope_or_ordering_gap';
-		}
+		if ( ! empty( $modes['admin_current']['pass_legacy_max_rank'] ) ) return 'already_passes_current_admin';
+		if ( ! empty( $modes['admin_relevance']['pass_legacy_max_rank'] ) ) return 'ordering_ranking_gap';
+		if ( ! empty( $modes['publish_native']['pass_legacy_max_rank'] ) ) return 'admin_scope_or_ordering_gap';
 		return 'retrieval_coverage_or_normalization_gap';
 	}
 
-	/** @return array<string,mixed> */
 	private static function empty_totals(): array {
 		return array( 'count' => 0, 'pass' => 0, 'fail' => 0, 'found_top20' => 0, 'missed_top20' => 0, 'latencies' => array() );
 	}
 
-	/** @param array<string,mixed> $totals @param array<string,mixed> $probe */
 	private static function accumulate( array &$totals, array $probe ): void {
 		$totals['count']++;
 		! empty( $probe['pass_legacy_max_rank'] ) ? $totals['pass']++ : $totals['fail']++;
@@ -292,7 +281,6 @@ final class Golden_Baseline_Runner {
 		$totals['latencies'][] = (float) ( $probe['latency_ms'] ?? 0.0 );
 	}
 
-	/** @param array<string,mixed> $totals @return array<string,mixed> */
 	private static function finalize_totals( array $totals ): array {
 		$latencies = (array) $totals['latencies'];
 		unset( $totals['latencies'] );
@@ -302,7 +290,6 @@ final class Golden_Baseline_Runner {
 		return $totals;
 	}
 
-	/** @param array<int,float> $values @return array<string,float|int> */
 	private static function timing_summary( array $values ): array {
 		sort( $values, SORT_NUMERIC );
 		return array(
@@ -314,18 +301,14 @@ final class Golden_Baseline_Runner {
 		);
 	}
 
-	/** @param array<int,float> $values */
 	private static function percentile( array $values, float $p ): float {
-		if ( empty( $values ) ) {
-			return 0.0;
-		}
+		if ( empty( $values ) ) return 0.0;
 		sort( $values, SORT_NUMERIC );
 		$index = (int) ceil( $p * count( $values ) ) - 1;
 		$index = max( 0, min( count( $values ) - 1, $index ) );
 		return round( (float) $values[ $index ], 4 );
 	}
 
-	/** @return array<int,int> */
 	private static function post_ids(): array {
 		$ids = get_posts(
 			array(
@@ -342,7 +325,6 @@ final class Golden_Baseline_Runner {
 		return array_values( array_map( 'intval', is_array( $ids ) ? $ids : array() ) );
 	}
 
-	/** @param array<int,int> $post_ids @return array<int,string> */
 	private static function editorial_snapshot( array $post_ids ): array {
 		$out = array();
 		foreach ( $post_ids as $post_id ) {
@@ -370,17 +352,12 @@ final class Golden_Baseline_Runner {
 	}
 
 	private static function stable_value( mixed $value ): string {
-		if ( is_string( $value ) ) {
-			return $value;
-		}
-		if ( is_scalar( $value ) || null === $value ) {
-			return (string) $value;
-		}
+		if ( is_string( $value ) ) return $value;
+		if ( is_scalar( $value ) || null === $value ) return (string) $value;
 		$json = wp_json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 		return is_string( $json ) ? $json : maybe_serialize( $value );
 	}
 
-	/** @param array<int,string> $snapshot */
 	private static function aggregate_fingerprint( array $snapshot ): string {
 		$ctx = hash_init( 'sha256' );
 		foreach ( $snapshot as $post_id => $signature ) {
@@ -389,13 +366,10 @@ final class Golden_Baseline_Runner {
 		return hash_final( $ctx );
 	}
 
-	/** @param array<int,string> $before @param array<int,string> $after */
 	private static function changed_snapshot_count( array $before, array $after ): int {
 		$count = 0;
 		foreach ( array_unique( array_merge( array_keys( $before ), array_keys( $after ) ) ) as $post_id ) {
-			if ( ! isset( $before[ $post_id ], $after[ $post_id ] ) || $before[ $post_id ] !== $after[ $post_id ] ) {
-				++$count;
-			}
+			if ( ! isset( $before[ $post_id ], $after[ $post_id ] ) || $before[ $post_id ] !== $after[ $post_id ] ) ++$count;
 		}
 		return $count;
 	}

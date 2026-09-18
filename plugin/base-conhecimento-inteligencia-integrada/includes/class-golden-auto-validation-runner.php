@@ -45,13 +45,13 @@ final class Golden_Auto_Validation_Runner {
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'SPEC-005 — Golden Auto Validator T513/T514', 'bdc-knowledge-base' ) . '</h1>';
 		echo '<div class="notice notice-info inline"><p>';
-		echo esc_html__( 'Validação automática read-only. Confirma expectativas existentes quando evidências objetivas são inequívocas e envia apenas ambiguidades para revisão humana.', 'bdc-knowledge-base' );
+		echo esc_html__( 'Validação read-only. Expectativas inequívocas viram AUTO_PASS; ambiguidades são quarentenadas sem trocar expected automaticamente.', 'bdc-knowledge-base' );
 		echo '</p></div>';
-		echo '<p>' . esc_html__( 'Também mede diversidade e variantes sintéticas de robustez. Casos sintéticos são marcados explicitamente e não são tratados como consulta real de usuário.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p>' . esc_html__( 'T514 também descobre Technical Challenge cases no corpus para linguagem natural, Summary e gaps Elementor/Content Extractor. Esses casos nunca são apresentados como consulta real de usuário.', 'bdc-knowledge-base' ) . '</p>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '">';
 		wp_nonce_field( self::NONCE_ACTION, self::NONCE_FIELD );
-		submit_button( __( 'Executar validadores automáticos e baixar JSON', 'bdc-knowledge-base' ), 'primary' );
+		submit_button( __( 'Executar validação automática completa e baixar JSON', 'bdc-knowledge-base' ), 'primary' );
 		echo '</form>';
 		echo '</div>';
 	}
@@ -95,16 +95,16 @@ final class Golden_Auto_Validation_Runner {
 		$results = array();
 		$diversity_cases = array();
 		$counts = array(
-			'AUTO_PASS' => 0,
-			'REVIEW_REQUIRED' => 0,
-			'AUTO_FAIL' => 0,
+			Golden_Candidate_Validator::STATUS_AUTO_PASS => 0,
+			Golden_Candidate_Validator::STATUS_QUARANTINED => 0,
+			Golden_Candidate_Validator::STATUS_AUTO_FAIL => 0,
 		);
 		$errors = array();
 
 		foreach ( $cases as $case ) {
 			$validated = self::validate_case( $case );
 			$results[] = $validated;
-			$status = (string) ( $validated['decision']['status'] ?? 'AUTO_FAIL' );
+			$status = (string) ( $validated['decision']['status'] ?? Golden_Candidate_Validator::STATUS_AUTO_FAIL );
 			if ( isset( $counts[ $status ] ) ) {
 				$counts[ $status ]++;
 			}
@@ -112,11 +112,18 @@ final class Golden_Auto_Validation_Runner {
 			$diversity_cases[] = array(
 				'id' => (string) ( $case['id'] ?? '' ),
 				'query' => (string) ( $case['query'] ?? '' ),
-				'origin' => 'real',
+				'origin' => 'legacy_validated',
 				'declared_classes' => array(),
 				'summary_dependent' => (bool) ( $validated['expected']['summary_dependent'] ?? false ),
 				'elementor_semantic_gap' => (bool) ( $validated['expected']['elementor_semantic_gap'] ?? false ),
 			);
+		}
+
+		$challenge = Golden_Challenge_Discovery::discover();
+		foreach ( (array) ( $challenge['cases'] ?? array() ) as $challenge_case ) {
+			if ( is_array( $challenge_case ) ) {
+				$diversity_cases[] = $challenge_case;
+			}
 		}
 
 		$diversity = Golden_Diversity_Validator::assess( $diversity_cases );
@@ -131,14 +138,20 @@ final class Golden_Auto_Validation_Runner {
 			&& count( $ids_before ) === count( $ids_after )
 			&& empty( $errors );
 
-		$t513_status = 0 === $counts['AUTO_FAIL']
-			? ( 0 === $counts['REVIEW_REQUIRED'] ? 'PASS_AUTOMATED' : 'PASS_WITH_REVIEW_ITEMS' )
+		$auto_fail_count = (int) $counts[ Golden_Candidate_Validator::STATUS_AUTO_FAIL ];
+		$quarantine_count = (int) $counts[ Golden_Candidate_Validator::STATUS_QUARANTINED ];
+		$t513_status = 0 === $auto_fail_count
+			? ( 0 === $quarantine_count ? 'PASS_AUTOMATED' : 'PASS_AUTOMATED_WITH_QUARANTINE' )
 			: 'FAIL';
 
+		$challenge_complete = true === ( $challenge['complete'] ?? false );
+		$synthetic_pass = 0 === (int) ( $synthetic['failed'] ?? 0 );
+		$diversity_pass = 'PASS' === (string) ( $diversity['status'] ?? '' );
+
 		return array(
-			'schema_version' => '1.0.0',
+			'schema_version' => '1.1.0',
 			'gate' => 'R-510/T513-T514',
-			'mode' => 'spec005_automated_golden_validation',
+			'mode' => 'spec005_automated_golden_validation_v2',
 			'generated_at' => gmdate( 'c' ),
 			'environment' => array(
 				'wordpress' => get_bloginfo( 'version' ),
@@ -174,13 +187,17 @@ final class Golden_Auto_Validation_Runner {
 					'can_create_new_expected_post' => false,
 					'can_replace_expected_post' => false,
 					'can_auto_accept_ambiguous_case' => false,
+					'can_quarantine_ambiguous_case' => true,
+					'quarantine_active_for_blocking' => false,
 					'auto_pass_recommended_severity' => 'blocking',
+					'quarantine_recommended_severity' => 'warning',
 				),
 				'counts' => $counts,
 				'status' => $t513_status,
 				'results' => $results,
 			),
 			't514' => array(
+				'challenge_discovery' => $challenge,
 				'diversity' => $diversity,
 				'synthetic_robustness' => $synthetic,
 			),
@@ -190,22 +207,27 @@ final class Golden_Auto_Validation_Runner {
 				'peak_memory_bytes' => memory_get_peak_usage( true ),
 			),
 			'gate_result' => array(
-				't513_automated_validation_pass' => $safety_pass && 0 === $counts['AUTO_FAIL'],
-				't513_requires_human_review' => $counts['REVIEW_REQUIRED'] > 0,
-				't513_review_required_count' => $counts['REVIEW_REQUIRED'],
+				't513_automated_validation_pass' => $safety_pass && 0 === $auto_fail_count,
+				't513_quarantined_count' => $quarantine_count,
+				't513_requires_human_review' => false,
+				't514_challenge_discovery_complete' => $challenge_complete,
 				't514_diversity_status' => (string) ( $diversity['status'] ?? 'INCOMPLETE' ),
-				't514_synthetic_robustness_pass' => 0 === (int) ( $synthetic['failed'] ?? 0 ),
+				't514_real_world_enrichment_status' => (string) ( $diversity['real_world_enrichment_status'] ?? 'PENDING_TELEMETRY' ),
+				't514_synthetic_robustness_pass' => $synthetic_pass,
 				'r510_ready' => $safety_pass
-					&& 0 === $counts['AUTO_FAIL']
-					&& 0 === $counts['REVIEW_REQUIRED']
-					&& 'PASS' === (string) ( $diversity['status'] ?? '' ),
+					&& 0 === $auto_fail_count
+					&& $challenge_complete
+					&& $diversity_pass
+					&& $synthetic_pass,
 			),
 			'interpretation_rules' => array(
-				'AUTO_PASS confirma continuidade de expected/max_rank já originados de curadoria humana histórica; não inventa nova verdade Golden.',
-				'REVIEW_REQUIRED é obrigatório quando expected não é Top-1, existe concorrente material ou a cobertura é inconclusiva.',
+				'AUTO_PASS confirma continuidade de expected/max_rank já originados de curadoria humana histórica.',
+				'AMBIGUOUS_QUARANTINED preserva query/expected/provenance, mas remove o caso do conjunto blocking sem escolher um vencedor.',
 				'AUTO_FAIL indica quebra objetiva: post ausente/não publicado, extração falhou, resultado não recuperado ou fora de max_rank.',
-				'validation_score serve somente para detectar ambiguidade; não é Search ranking e não pode ser promovido como ranker.',
-				'Synthetic robustness mede normalização; não é consulta real e não fecha classes real-world de typo/alias.',
+				'validation_score serve somente para detectar ambiguidade; não é Search ranking.',
+				'Technical Challenge cases são corpus-derived e nunca são apresentados como consultas reais de usuário.',
+				'Typo/alias reais permanecem PENDING_TELEMETRY e não são fabricados para fechar R-510.',
+				'Synthetic robustness mede normalização e permanece separado da Golden relevance suite.',
 			),
 		);
 	}
@@ -223,6 +245,7 @@ final class Golden_Auto_Validation_Runner {
 		$strongest = array();
 		$strongest_ahead = array();
 		$competitors = array();
+
 		foreach ( array_slice( $query_result, 0, self::COMPETITOR_LIMIT ) as $index => $post_id ) {
 			if ( $post_id === $expected_id ) {
 				continue;
@@ -231,6 +254,7 @@ final class Golden_Auto_Validation_Runner {
 			$evidence['rank'] = $index + 1;
 			$evidence['ahead_of_expected'] = $rank > 0 && ( $index + 1 ) < $rank;
 			$competitors[] = $evidence;
+
 			if (
 				empty( $strongest )
 				|| (float) ( $evidence['validation_score'] ?? 0.0 ) > (float) ( $strongest['validation_score'] ?? 0.0 )
@@ -239,7 +263,10 @@ final class Golden_Auto_Validation_Runner {
 			}
 			if (
 				! empty( $evidence['ahead_of_expected'] )
-				&& ( empty( $strongest_ahead ) || (float) ( $evidence['validation_score'] ?? 0.0 ) > (float) ( $strongest_ahead['validation_score'] ?? 0.0 ) )
+				&& (
+					empty( $strongest_ahead )
+					|| (float) ( $evidence['validation_score'] ?? 0.0 ) > (float) ( $strongest_ahead['validation_score'] ?? 0.0 )
+				)
 			) {
 				$strongest_ahead = $evidence;
 			}
@@ -270,7 +297,11 @@ final class Golden_Auto_Validation_Runner {
 			'strongest_competitor' => $strongest,
 			'top_competitors' => $competitors,
 			'decision' => $decision,
-			'automated_rationale' => self::rationale( $decision, $expected, ! empty( $strongest_ahead ) ? $strongest_ahead : $strongest ),
+			'automated_rationale' => self::rationale(
+				$decision,
+				$expected,
+				! empty( $strongest_ahead ) ? $strongest_ahead : $strongest
+			),
 		);
 	}
 
@@ -291,12 +322,14 @@ final class Golden_Auto_Validation_Runner {
 		$excerpt = (string) ( $post->post_excerpt ?? '' );
 		$content = (string) ( $post->post_content ?? '' );
 		$summary_parts = array();
+
 		foreach ( Meta_Contract::fields() as $definition ) {
 			$value = get_post_meta( $post_id, (string) $definition['key'], true );
 			if ( is_scalar( $value ) && '' !== trim( (string) $value ) ) {
 				$summary_parts[] = (string) $value;
 			}
 		}
+
 		$summary = implode( ' ', $summary_parts );
 		$native = implode( ' ', array( $title, $excerpt, wp_strip_all_tags( strip_shortcodes( $content ) ) ) );
 
@@ -304,6 +337,7 @@ final class Golden_Auto_Validation_Runner {
 		$extractor_error = $extraction instanceof \WP_Error;
 		$semantic = '';
 		$source_kind = 'unknown';
+
 		if ( is_array( $extraction ) ) {
 			$source_kind = sanitize_key( (string) ( $extraction['source_kind'] ?? 'unknown' ) );
 			$parts = array();
@@ -322,7 +356,6 @@ final class Golden_Auto_Validation_Runner {
 			'native_coverage_percent' => Golden_Candidate_Validator::coverage_percent( $query, $native ),
 			'exact_title_phrase' => Golden_Candidate_Validator::exact_phrase( $query, $title ),
 		);
-		$score = Golden_Candidate_Validator::validation_score( $signals );
 
 		return array_merge(
 			array(
@@ -337,7 +370,7 @@ final class Golden_Auto_Validation_Runner {
 				'summary_dependent' => $signals['summary_coverage_percent'] > $signals['native_coverage_percent'],
 				'elementor_semantic_gap' => in_array( $source_kind, array( 'elementor', 'mixed' ), true )
 					&& $signals['semantic_coverage_percent'] > $signals['native_coverage_percent'],
-				'validation_score' => $score,
+				'validation_score' => Golden_Candidate_Validator::validation_score( $signals ),
 			),
 			$signals
 		);
@@ -359,6 +392,7 @@ final class Golden_Auto_Validation_Runner {
 				$rank = self::rank_of( $expected, $ids );
 				$pass = $rank > 0 && $rank <= $max_rank;
 				$pass ? ++$passed : ++$failed;
+
 				$results[] = array(
 					'base_id' => (string) ( $case['id'] ?? '' ),
 					'kind' => (string) $variant['kind'],
@@ -413,21 +447,24 @@ final class Golden_Auto_Validation_Runner {
 
 	/** @param array<string,mixed> $decision @param array<string,mixed> $expected @param array<string,mixed> $competitor */
 	private static function rationale( array $decision, array $expected, array $competitor ): string {
-		$status = (string) ( $decision['status'] ?? 'AUTO_FAIL' );
-		if ( 'AUTO_PASS' === $status ) {
+		$status = (string) ( $decision['status'] ?? Golden_Candidate_Validator::STATUS_AUTO_FAIL );
+
+		if ( Golden_Candidate_Validator::STATUS_AUTO_PASS === $status ) {
 			return sprintf(
-				'Expectativa histórica confirmada objetivamente: post publicado, dentro do max_rank, cobertura semântica %.2f%% e sem concorrente material à frente.',
+				'Expectativa histórica confirmada objetivamente: dentro do max_rank, cobertura semântica %.2f%% e sem concorrente material à frente.',
 				(float) ( $expected['semantic_coverage_percent'] ?? 0.0 )
 			);
 		}
-		if ( 'REVIEW_REQUIRED' === $status ) {
+
+		if ( Golden_Candidate_Validator::STATUS_QUARANTINED === $status ) {
 			return sprintf(
-				'Revisão necessária por ambiguidade objetiva. Expected score %.4f; concorrente %d score %.4f.',
+				'Ambiguidade preservada em quarentena: expected score %.4f; concorrente %d score %.4f. Nenhum expected foi trocado.',
 				(float) ( $expected['validation_score'] ?? 0.0 ),
 				(int) ( $competitor['post_id'] ?? 0 ),
 				(float) ( $competitor['validation_score'] ?? 0.0 )
 			);
 		}
+
 		return 'Falha objetiva na expectativa existente; consultar reasons antes de qualquer alteração de Golden.';
 	}
 
@@ -451,12 +488,14 @@ final class Golden_Auto_Validation_Runner {
 	/** @param array<int,int> $post_ids @return array<int,string> */
 	private static function editorial_snapshot( array $post_ids ): array {
 		$out = array();
+
 		foreach ( $post_ids as $post_id ) {
 			$post = get_post( $post_id );
 			if ( ! is_object( $post ) ) {
 				$out[ $post_id ] = 'missing';
 				continue;
 			}
+
 			$parts = array(
 				(string) $post_id,
 				(string) $post->post_status,
@@ -466,11 +505,17 @@ final class Golden_Auto_Validation_Runner {
 				hash( 'sha256', (string) $post->post_content ),
 				hash( 'sha256', self::stable_value( get_post_meta( $post_id, '_elementor_data', true ) ) ),
 			);
+
 			foreach ( Meta_Contract::fields() as $definition ) {
-				$parts[] = hash( 'sha256', self::stable_value( get_post_meta( $post_id, (string) $definition['key'], true ) ) );
+				$parts[] = hash(
+					'sha256',
+					self::stable_value( get_post_meta( $post_id, (string) $definition['key'], true ) )
+				);
 			}
+
 			$out[ $post_id ] = hash( 'sha256', implode( '|', $parts ) );
 		}
+
 		ksort( $out, SORT_NUMERIC );
 		return $out;
 	}

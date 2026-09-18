@@ -48,7 +48,7 @@ Baseline E6 da SPEC-004: 623 artigos:
 - 3 `empty`.
 
 ### Referência ASI
-ASI 4.6.8 @ `c0ddff89caad529ce1bcdc645eb795e4a9b187a1` é referência de comportamento, não fonte de código.
+ASI 4.6.8 @ `c0ddff89caad529ce1bcdc645eb795e4a9b187a1` é referência histórica/funcional, **não dependência de runtime** e não fonte de código.
 
 Contratos preservados:
 - lexical antes de semantic;
@@ -217,7 +217,7 @@ Primeiro slice de homologação deve possuir:
 
 ## 14. Dados e persistência
 
-Nenhuma tabela está aprovada no momento.
+Tabelas próprias são permitidas quando necessárias e aprovadas por gate. O requisito é ownership BDC, lifecycle próprio e independência total do ASI.
 
 Candidatos, em ordem:
 1. zero schema próprio;
@@ -352,3 +352,21 @@ O ASI 4.6.8 é tratado como baseline funcional forte. A SPEC-005 deve preservar 
 Contrato: `asi-quality-parity-contract-v1.md`.
 
 Simplificação arquitetural não é autorização para regressão funcional. “Melhor” exige evidência de qualidade, cobertura, performance, explicabilidade, segurança ou operação — não apenas menos código.
+
+
+## 22. Independência total do ASI
+
+ADR canônico: `adr-005-001-zero-runtime-dependency-asi.md`.
+
+Regras:
+- nenhuma dependência runtime do plugin ASI;
+- nenhuma leitura `asi_*` após discovery;
+- nenhuma option `asi4_*`;
+- nenhuma classe/função/hook ASI;
+- nenhuma tabela, índice, ranking, embedding ou vector store do ASI será reutilizado como dependência;
+- fixtures históricas podem preservar provenance `legacy_asi`, mas são cópias versionadas do novo projeto;
+- tabelas próprias são autorizáveis em G-520 quando justificadas por retrieval/performance/governança;
+- futuras camadas de embeddings/vector/hybrid deverão ter storage/lifecycle próprios;
+- antes do RC haverá G-585 ASI Independence / Decommission Readiness.
+
+O ASI poderá ser removido materialmente sem afetar o novo plugin.

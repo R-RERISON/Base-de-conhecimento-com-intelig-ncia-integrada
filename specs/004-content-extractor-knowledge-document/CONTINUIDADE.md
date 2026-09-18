@@ -150,4 +150,4 @@ Executar a matriz e baixar o JSON. PASS esperado:
 
 `gate_result.t100e_e6_workspace_regression_pass=true`.
 
-Após PASS: T100E-E7 Production Readiness Exit.
+T100E-E6: **PASS AMBIENTAL**. Próximo: T100E-E7 exit candidate + G-250 Lifecycle/RC.

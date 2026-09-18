@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "plugin_version": "0.4.0-spec004-rc2",
+  "zip_root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b",
+  "included_file_count": 44,
+  "php_file_count": 39,
+  "active_require_count": 38,
+  "active_required_missing": [],
+  "php_lint_failures": [],
+  "deterministic_rebuild": true,
+  "flags": {
+    "BDC_KB_SPEC004_G245_PREFLIGHT_BUILD": false,
+    "BDC_KB_SPEC004_G250_LIFECYCLE_BUILD": false,
+    "BDC_KB_SPEC004_T100E_E6_REGRESSION_BUILD": false,
+    "BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD": false,
+    "BDC_KB_ELEMENTOR_WRITER_ENABLED": false,
+    "BDC_KB_SPEC004_G245_T100A_POST_WORKSPACE_BUILD": true,
+    "BDC_KB_SPEC004_G245_T100C_CORE_BLOCKS_ACTIVITY_BUILD": true
+  },
+  "workspace_invariants": {
+    "manage_action": true,
+    "post_context": true,
+    "activity_registry": true,
+    "content_activity": true,
+    "intelligence_activity": true,
+    "core_blocks_activity": true,
+    "history_activity": true
+  },
+  "core_blocks_activity_forbidden_found": []
+}

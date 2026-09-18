@@ -109,15 +109,15 @@ final class Review_Admin {
 			: '';
 
 		$messages = array(
-			'saved'            => array( 'success', 'Decisão de governança salva e confirmada por releitura.' ),
+			'saved'            => array( 'success', 'Decisão de governança salva com sucesso.' ),
 			'no_change'        => array( 'info', 'O artigo já estava no estado solicitado; nenhum novo evento foi criado.' ),
 			'fail_safe'        => array( 'error', 'A decisão não foi confirmada, mas o estado anterior foi restaurado.' ),
-			'critical'         => array( 'error', 'Falha crítica de consistência em Revisão e governança.' ),
-			'invalid_post'     => array( 'error', 'Artigo inválido ou fora do escopo de Revisão e governança.' ),
+			'critical'         => array( 'error', 'Não foi possível preservar a consistência da revisão e governança. Evite novas alterações e solicite uma verificação técnica.' ),
+			'invalid_post'     => array( 'error', 'Artigo inválido ou indisponível para revisão e governança.' ),
 			'forbidden'        => array( 'error', 'Você não possui permissão para executar esta decisão.' ),
 			'invalid_nonce'    => array( 'error', 'A validação de segurança expirou ou é inválida. Reabra a área de gerenciamento.' ),
 			'invalid_payload'  => array( 'error', 'O formulário de revisão recebido é inválido.' ),
-			'validation_error' => array( 'error', 'A decisão não foi salva porque viola o contrato de Revisão e governança.' ),
+			'validation_error' => array( 'error', 'A decisão não foi salva porque os dados informados são inválidos.' ),
 		);
 
 		if ( ! isset( $messages[ $status ] ) ) {
@@ -131,7 +131,7 @@ final class Review_Admin {
 	public static function render_panel( int $post_id ): void {
 		$snapshot = Review_Store::read( $post_id );
 		if ( is_wp_error( $snapshot ) ) {
-			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar o estado canônico de Revisão e governança.', 'bdc-knowledge-base' ) . '</p></div>';
+			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar o estado de revisão e governança.', 'bdc-knowledge-base' ) . '</p></div>';
 			return;
 		}
 
@@ -206,7 +206,7 @@ final class Review_Admin {
 	public static function render_history_panel( int $post_id ): void {
 		$history = Review_Store::history( $post_id, 50, 0 );
 		if ( is_wp_error( $history ) ) {
-			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar o histórico canônico de Revisão e governança.', 'bdc-knowledge-base' ) . '</p></div>';
+			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar o histórico de revisão e governança.', 'bdc-knowledge-base' ) . '</p></div>';
 			return;
 		}
 
@@ -249,7 +249,7 @@ final class Review_Admin {
 			echo '</li>';
 		}
 		echo '</ol>';
-		echo '<p class="description">' . esc_html__( 'Exibindo até 50 eventos mais recentes. O registro de eventos preserva o histórico completo das decisões.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'São exibidas até 50 decisões recentes. O histórico completo permanece preservado.', 'bdc-knowledge-base' ) . '</p>';
 		echo '</section>';
 	}
 

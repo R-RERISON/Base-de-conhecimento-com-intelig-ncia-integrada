@@ -1,6 +1,6 @@
 # T100D — Single Post Core Blocks Executor Contract v1
 
-**Status:** AUTHORIZED / BUILD READY / ENVIRONMENTAL EXECUTION PENDING  
+**Status:** PASS AMBIENTAL / PERSISTENT  
 **ADR:** ADR-004-002  
 **Action contract:** `core_blocks_migrate_v1`
 
@@ -73,3 +73,19 @@ T100C PASS ambiental congelou:
 A autorização deve declarar explicitamente que a migração será **persistente em caso de PASS** e que ocorrerá rollback automático apenas em falha de verificação.
 
 Autorização explícita recebida para o alvo congelado acima. O executável `0.4.0-g245-workspace-t100d.1` está liberado somente para esse escopo.
+
+## Resultado ambiental
+
+Post 358 migrou persistentemente para `core/freeform` em 2026-09-18T10:07:55Z.
+
+- apply attempted=true;
+- apply verified=true;
+- persistent=true;
+- expected SHA-256 = final SHA-256;
+- `_elementor_data` unchanged=true;
+- journal latest=`applied`;
+- rollback attempted=false;
+- errors=[];
+- `t100d_persistent_migration_pass=true`.
+
+Evidência: `evidence/g245-t100d-persistent-migration-pass-post-358-20260918T100755Z.json`.

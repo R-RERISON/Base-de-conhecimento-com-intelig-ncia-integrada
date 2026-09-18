@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com Summary narrativo, Classificação, Review & Governança, Content Extractor e Knowledge Document determinísticos.
- * Version: 0.4.0-g245-consolidation-t100e.1
+ * Version: 0.4.0-g245-consolidation-t100e.2
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-g245-consolidation-t100e.1' );
+define( 'BDC_KB_VERSION', '0.4.0-g245-consolidation-t100e.2' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -78,16 +78,9 @@ require_once BDC_KB_DIR . 'includes/class-post-activity-registry.php';
 require_once BDC_KB_DIR . 'includes/class-post-management-context.php';
 require_once BDC_KB_DIR . 'includes/class-post-management-activities.php';
 require_once BDC_KB_DIR . 'includes/class-post-core-blocks-activity.php';
-// Elementor-target planning/gateway remain loaded only as historical/diagnostic contracts; no writer target.
-require_once BDC_KB_DIR . 'includes/class-elementor-projection-plan.php';
-require_once BDC_KB_DIR . 'includes/class-elementor-gateway.php';
-require_once BDC_KB_DIR . 'includes/class-elementor-migration-journal.php';
-require_once BDC_KB_DIR . 'includes/class-elementor-migration-journal-store.php';
-require_once BDC_KB_DIR . 'includes/class-elementor-stale-source-guard.php';
-require_once BDC_KB_DIR . 'includes/class-elementor-migration-dry-run.php';
-require_once BDC_KB_DIR . 'includes/class-elementor-migration-batch-plan.php';
-require_once BDC_KB_DIR . 'includes/class-elementor-canary-readiness.php';
-require_once BDC_KB_DIR . 'includes/class-elementor-migration-lock.php';
+// Historical Elementor migration contracts remain in source/evidence only.
+// The product runtime keeps Elementor_Adapter for legacy reads, but no longer
+// loads the obsolete Elementor-target migration family.
 require_once BDC_KB_DIR . 'includes/class-admin-page.php';
 require_once BDC_KB_DIR . 'includes/class-visual-foundation.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';

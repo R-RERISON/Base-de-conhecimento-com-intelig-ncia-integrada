@@ -151,3 +151,16 @@ Executar a matriz e baixar o JSON. PASS esperado:
 `gate_result.t100e_e6_workspace_regression_pass=true`.
 
 T100E-E6: **PASS AMBIENTAL**. Próximo: T100E-E7 exit candidate + G-250 Lifecycle/RC.
+
+
+## G-250 — próximo passo exato
+
+Build: `0.4.0-spec004-rc1`.
+
+Executar sequência de lifecycle/rollback conforme `g250-lifecycle-rc-contract-v1.md`, depois acessar:
+
+`/wp-admin/admin.php?page=bdc-kb-g250-lifecycle`
+
+PASS esperado:
+
+`gate_result.g250_lifecycle_rc_pass=true`.

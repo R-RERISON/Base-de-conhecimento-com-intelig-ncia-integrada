@@ -1,7 +1,7 @@
 # R-500 — Baseline Analysis v1
 
 **Data:** 2026-09-18  
-**Estado:** T500/T501 PASS DOCUMENTAL; T502+ NOT_RUN.
+**Estado:** R-500 PASS/CLOSED.
 
 ## T500 — Baseline congelada
 
@@ -68,3 +68,13 @@ T502 — diagnóstico read-only ambiental para:
 - medir busca nativa;
 - exportar JSON;
 - zero write editorial/schema.
+
+
+## Fechamento R-500
+
+Ver:
+- `r500-t502-environmental-findings-v1.md`;
+- `r500-search-baseline-decision.md`;
+- `evidence/r500-t502-environmental-20260918T200421Z.json`.
+
+R-500 foi fechado em 2026-09-18. Próximo gate: R-510.

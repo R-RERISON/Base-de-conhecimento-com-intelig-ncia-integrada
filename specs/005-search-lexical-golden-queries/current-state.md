@@ -144,7 +144,7 @@ Candidates preservados em:
 
 Build `0.5.0-r510-t511.1`: **SUPERSEDED / NÃO INSTALAR** — lia tabela ASI em runtime de diagnóstico.
 
-Build atual: **`0.5.0-r510-t511.2` — INDEPENDENTE / validação local em andamento**.
+Build atual: **`0.5.0-r510-t511.2` — INDEPENDENTE / PASS LOCAL / homologação pendente**.
 
 O runner mede os 6 candidates em:
 1. admin atual — `s + modified DESC`;
@@ -168,3 +168,18 @@ A partir do T511.2:
 - persistence Search/Golden futura será própria do plugin quando G-520 autorizar.
 
 G-585 foi criado como gate de independência/decommission readiness.
+
+
+### T511.2 local validation
+
+SHA-256: `f34cb1bdffb369efdfbdd886d86cd2798835b41829466da278436b002df7ffcb`.
+
+- 41/41 PHP lint;
+- 40/40 active requires;
+- deterministic rebuild PASS;
+- legacy discovery fora do ZIP;
+- static scan de dependência ASI: PASS / zero identificadores técnicos proibidos;
+- T502 OFF;
+- T510 OFF;
+- T511 ON;
+- Elementor writer OFF.

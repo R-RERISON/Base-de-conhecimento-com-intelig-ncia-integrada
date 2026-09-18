@@ -3,10 +3,10 @@
 ## Repositório / referência
 
 - Repositório: `R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada`.
-- Branch: `spec004-g245-production-readiness`.
-- Commit de referência do fechamento antes deste handoff: `ad1110198aea77a23d62951d025e9ebcdb76c3bc`.
-- PR #4: DRAFT / NÃO MERGEAR até revisão final.
-- SPEC-004: **CONCLUÍDA na branch de fechamento**.
+- Branch canônica: `main`.
+- Merge commit SPEC-004: `e08871557b2233bf1294b1e57752265d3fe68c0f`.
+- PR #4: **MERGED** em `main`.
+- SPEC-004: **CLOSED / main**.
 
 ## Estado comprovado
 
@@ -15,7 +15,7 @@
 - T100D Persistent Single-Post Migration: PASS ambiental.
 - T100E E1-E6: PASS/concluídos.
 - T100E-E7: PASS/CLOSED.
-- G-245: PASS/CLOSED na branch.
+- G-245: PASS/CLOSED/main.
 - G-250 Lifecycle/RC1: PASS ambiental/CLOSED.
 - RC final limpo: `0.4.0-spec004-rc2`.
 - SHA-256 RC2: `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`.
@@ -107,14 +107,14 @@ Não reativar T100D one-shot como produto e não criar migração em massa impl�
 - nenhuma regressão foi reportada na confirmação;
 - evidência humana: `evidence/spec004-rc2-final-smoke-user-acceptance-20260918.json`.
 
-## Próximo passo exato
+## Próximo passo
 
-1. revisão final do diff do PR #4;
-2. confirmar mergeable/clean contra `main`;
-3. após autorização explícita do usuário, retirar DRAFT;
-4. merge do PR #4 para `main`;
-5. registrar SPEC-004 como CLOSED/main.
+A SPEC-004 não possui gate pendente. O próximo trabalho deve começar em branch/SPEC nova, preservando:
+- AUTH-UX-001 como dívida planejada;
+- 39 artigos Elementor/mixed como dependência residual;
+- nenhuma migração em massa implícita;
+- busca lexical + Golden Queries como próxima evolução prevista do produto.
 
-Não iniciar IA, embeddings, busca vetorial, migração em massa ou remoção do Elementor antes dessa revisão.
+Evidência da promoção: `evidence/spec004-main-promotion-20260918.json`.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

@@ -149,7 +149,7 @@ Contrato: `ux003-workspace-visual-contract-v1.md`.
 
 ## T100E-E6 — Workspace Regression Matrix
 
-Status: **PASS LOCAL / HOMOLOGAÇÃO AMBIENTAL PENDENTE**.
+Status: **PASS AMBIENTAL**.
 
 Build: `0.4.0-g245-e6.1`.  
 SHA-256: `2a208ecfa1f65092f793c033e55a21bb0117434e2f8468a9cb3cbb998b6fa376`.
@@ -164,3 +164,31 @@ Validação local:
 - zero write.
 
 A homologação executará duas passagens completas sobre o corpus, verificará cobertura de source kinds/estados, determinismo e fingerprint editorial antes/depois.
+
+
+## T100E-E6 — resultado ambiental
+
+Evidência: `evidence/g245-t100e-e6-workspace-regression-pass-20260918T115128Z.json`.  
+SHA-256 bruto: `eda8a48400c2df488ff4dbbd74620f1b0f71d8a9a645f75645f74b4d5accbb57`.
+
+- 623/623 artigos em duas passagens;
+- errors=0;
+- throwables=0;
+- safety violations=0;
+- matriz determinística;
+- fingerprint editorial/journal/lock inalterado;
+- 9/9 casos contratuais PASS;
+- cobertura completa PASS.
+
+### Baseline residual Elementor
+
+Após T100D:
+- Gutenberg/Core Blocks: 5;
+- legacy_html: 535;
+- plain_text: 41;
+- Elementor: 34;
+- mixed: 5;
+- empty: 3.
+
+Dependência residual diretamente relacionada a Elementor: **39 artigos** (34 Elementor + 5 mixed).  
+A SPEC-004 não remove Elementor; `Elementor_Adapter` permanece até dependência zero.

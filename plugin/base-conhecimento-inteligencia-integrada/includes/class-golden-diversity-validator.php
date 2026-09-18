@@ -103,7 +103,12 @@ final class Golden_Diversity_Validator {
 		if ( preg_match( '/^[A-Z0-9]{2,10}$/', $query ) ) {
 			$classes[] = 'acronym';
 		}
-		if ( preg_match( '/[A-Z][a-z]+[A-Z]/', $query ) ) {
+		if (
+			1 === count( $tokens )
+			&& preg_match( '/[A-Z]/', $query )
+			&& preg_match( '/[a-z]/', $query )
+			&& preg_match( '/^[A-Za-z0-9._-]+$/', $query )
+		) {
 			$classes[] = 'product_token';
 		}
 		if ( preg_match( '/\d/', $query ) || count( $tokens ) === 2 ) {

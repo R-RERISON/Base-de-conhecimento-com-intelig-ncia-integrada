@@ -18,7 +18,7 @@ Limitações a medir:
 - cobertura de Elementor/mixed precisa ser comprovada;
 - explicabilidade limitada.
 
-**Status:** baseline obrigatória, não descartada.
+**Status:** baseline executada. Sozinha, insuficiente para o objetivo final.
 
 ## Opção B — WP_Query + hooks mínimos
 
@@ -61,3 +61,20 @@ A decisão G-520 deve registrar uma destas conclusões:
 - C + FULLTEXT necessário.
 
 Qualquer decisão deve anexar benchmark e Golden evidence.
+
+
+## Resultado R-500
+
+### A — WP_Query nativo
+Muito superior ao comportamento administrativo atual em title-token self-retrieval: 85% Top-1 / 100% Top-20. Deve ser preservado como baseline/fallback.
+
+### B — WP_Query + hooks
+Corrigir `modified DESC` é necessário, mas não resolve conteúdo semântico ausente.
+
+### C — Search Retrieval Projection
+**Justificada conceitualmente** por gap semântico 14,92%, Summary gap 77,78% e casos Elementor extremos.
+
+Isso ainda não autoriza uma tabela. G-520 decide a forma de persistência após R-510.
+
+### D — FULLTEXT
+Continua NOT_DECIDED. Precisa de Golden + benchmark do engine/projection.

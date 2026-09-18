@@ -6,7 +6,7 @@
 - UX-001/UX-002: concluídas; UX-002 `0.4.0-ux002.3` é contrato visual obrigatório.
 - G-240: PASS / CLOSED / promovido para `main`.
 - KD 2.1.0: PASS técnico full-corpus + PASS humano 8/8.
-- G-245: PASS / CLOSED na branch; PR #4 permanece DRAFT até revisão final/merge.
+- G-245: PASS / CLOSED / promovido para `main` via PR #4.
 - ADR-004-001: Core Blocks como destino editorial canônico.
 - ADR-004-002: Post-Centric Management Workspace.
 - T091/T093/T094/T096/T097/T098.2/T099A/T099B/T099C: PASS AMBIENTAL.
@@ -196,7 +196,7 @@ A SPEC-004 não remove Elementor; `Elementor_Adapter` permanece até dependênci
 
 ## G-250 — Lifecycle RC1
 
-Status: **PASS LOCAL / HOMOLOGAÇÃO AMBIENTAL PENDENTE**.
+Status: **PASS AMBIENTAL / CLOSED**.
 
 Build: `0.4.0-spec004-rc1`.  
 SHA-256: `5fe09645dea21787bcbc01a6fd5e11fc671cdb31157b07accd8212c78bb94cc5`.
@@ -212,7 +212,7 @@ Validação local:
 - T100D OFF;
 - Elementor writer OFF.
 
-Próximo passo: executar upgrade + deactivate/activate + rollback/downgrade controlado + reinstall RC1, então gerar JSON G-250.
+Evidência ambiental: `evidence/g250-lifecycle-rc-pass-20260918T123514Z.json`.
 
 
 ## Fechamento — 2026-09-18
@@ -224,7 +224,7 @@ O post 358 permaneceu em Gutenberg/Core Blocks com `no_action_required`, journal
 T100E-E7: **PASS/CLOSED**.  
 T100E: **CLOSED**.  
 G-245: **PASS/CLOSED**.  
-SPEC-004: **CONCLUÍDA na branch, aguardando revisão/merge do PR #4**.
+SPEC-004: **CLOSED / main** via PR #4.
 
 RC final limpo: `0.4.0-spec004-rc2`.  
 SHA-256: `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`.
@@ -242,4 +242,13 @@ Resultado registrado como **PASS AMBIENTAL / HUMAN ACCEPTANCE**. Nenhuma regress
 
 Evidência: `evidence/spec004-rc2-final-smoke-user-acceptance-20260918.json`.
 
-O PR #4 permanece DRAFT até autorização explícita para merge.
+PR #4 **MERGED** em `main` no commit `e08871557b2233bf1294b1e57752265d3fe68c0f`.
+
+
+## Promoção para main
+
+PR #4: **MERGED** em 2026-09-18.  
+Merge commit: `e08871557b2233bf1294b1e57752265d3fe68c0f`.  
+Evidência: `evidence/spec004-main-promotion-20260918.json`.
+
+Estado definitivo: **SPEC-004 CLOSED / main**.

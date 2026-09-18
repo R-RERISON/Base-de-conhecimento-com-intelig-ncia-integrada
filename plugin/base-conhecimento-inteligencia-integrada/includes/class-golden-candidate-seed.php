@@ -26,60 +26,12 @@ final class Golden_Candidate_Seed {
 	 */
 	public static function all(): array {
 		return array(
-			array(
-				'id' => 'GQ-LEGACY-001',
-				'legacy_id' => 1,
-				'query' => 'pendrive',
-				'expected_post_id' => 527,
-				'max_rank' => 3,
-				'legacy_severity' => 'warning',
-				'expected_item_key' => '',
-			),
-			array(
-				'id' => 'GQ-LEGACY-002',
-				'legacy_id' => 2,
-				'query' => 'MSTeams',
-				'expected_post_id' => 579,
-				'max_rank' => 3,
-				'legacy_severity' => 'warning',
-				'expected_item_key' => '',
-			),
-			array(
-				'id' => 'GQ-LEGACY-003',
-				'legacy_id' => 3,
-				'query' => 'Windows 11',
-				'expected_post_id' => 583,
-				'max_rank' => 3,
-				'legacy_severity' => 'warning',
-				'expected_item_key' => '',
-			),
-			array(
-				'id' => 'GQ-LEGACY-004',
-				'legacy_id' => 4,
-				'query' => 'Termo de assinatura',
-				'expected_post_id' => 45855,
-				'max_rank' => 3,
-				'legacy_severity' => 'warning',
-				'expected_item_key' => '',
-			),
-			array(
-				'id' => 'GQ-LEGACY-005',
-				'legacy_id' => 5,
-				'query' => 'Estrutura',
-				'expected_post_id' => 36620,
-				'max_rank' => 3,
-				'legacy_severity' => 'warning',
-				'expected_item_key' => '',
-			),
-			array(
-				'id' => 'GQ-LEGACY-006',
-				'legacy_id' => 6,
-				'query' => 'SCCM',
-				'expected_post_id' => 412,
-				'max_rank' => 3,
-				'legacy_severity' => 'warning',
-				'expected_item_key' => '',
-			),
+			array( 'id' => 'GQ-LEGACY-001', 'legacy_id' => 1, 'query' => 'pendrive', 'expected_post_id' => 527, 'max_rank' => 3, 'legacy_severity' => 'warning', 'expected_item_key' => '' ),
+			array( 'id' => 'GQ-LEGACY-002', 'legacy_id' => 2, 'query' => 'MSTeams', 'expected_post_id' => 579, 'max_rank' => 3, 'legacy_severity' => 'warning', 'expected_item_key' => '' ),
+			array( 'id' => 'GQ-LEGACY-003', 'legacy_id' => 3, 'query' => 'Windows 11', 'expected_post_id' => 583, 'max_rank' => 3, 'legacy_severity' => 'warning', 'expected_item_key' => '' ),
+			array( 'id' => 'GQ-LEGACY-004', 'legacy_id' => 4, 'query' => 'Termo de assinatura', 'expected_post_id' => 45855, 'max_rank' => 3, 'legacy_severity' => 'warning', 'expected_item_key' => '' ),
+			array( 'id' => 'GQ-LEGACY-005', 'legacy_id' => 5, 'query' => 'Estrutura', 'expected_post_id' => 36620, 'max_rank' => 3, 'legacy_severity' => 'warning', 'expected_item_key' => '' ),
+			array( 'id' => 'GQ-LEGACY-006', 'legacy_id' => 6, 'query' => 'SCCM', 'expected_post_id' => 412, 'max_rank' => 3, 'legacy_severity' => 'warning', 'expected_item_key' => '' ),
 		);
 	}
 }

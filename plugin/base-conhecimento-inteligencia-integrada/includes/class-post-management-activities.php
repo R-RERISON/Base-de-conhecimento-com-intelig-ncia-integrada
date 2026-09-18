@@ -63,6 +63,10 @@ final class Post_Management_Activities {
 		$authorization_ready = true === ( $core['authorization_ready'] ?? false );
 		$authorization_id = (string) ( $core['authorization_id'] ?? '' );
 		$block_names = array_values( array_map( 'strval', (array) ( $core['expected_block_names'] ?? array() ) ) );
+		$t100d_enabled = defined( 'BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD' )
+			&& BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD
+			&& class_exists( Post_Core_Blocks_Executor_T100D::class )
+			&& Post_Core_Blocks_Executor_T100D::can_render( $post_id, $authorization_id );
 
 		echo '<section class="bdc-kb-domain-panel" aria-labelledby="bdc-kb-core-blocks-title">';
 		echo '<div class="bdc-kb-domain-heading"><h3 id="bdc-kb-core-blocks-title">' . esc_html__( 'Core Blocks / Migração', 'bdc-knowledge-base' ) . '</h3><p>' . esc_html__( 'Diagnóstico operacional e preparação de autorização deste artigo para o destino editorial canônico.', 'bdc-knowledge-base' ) . '</p></div>';
@@ -77,8 +81,9 @@ final class Post_Management_Activities {
 			'Último estado de journal' => '' !== (string) ( $core['latest_journal_state'] ?? '' ) ? (string) $core['latest_journal_state'] : 'Sem journal',
 			'Lock' => (string) ( $core['lock_status'] ?? 'unavailable' ),
 			'Authorization ID' => '' !== $authorization_id ? $authorization_id : 'Ainda não disponível',
-			'Writer desta aba' => ! empty( $core['writer_enabled'] ) ? 'Habilitado' : 'Desabilitado',
-			'Execução de migração' => ! empty( $core['migration_execution_enabled'] ) ? 'Habilitada' : 'Desabilitada',
+			'Preparação T100C' => 'Somente leitura',
+			'Executor T100D' => $t100d_enabled ? 'Autorizado para este post' : 'Não autorizado',
+			'Persistência em sucesso' => $t100d_enabled ? 'Sim' : 'Não',
 		) );
 
 		if ( ! empty( $reasons ) ) {
@@ -94,11 +99,6 @@ final class Post_Management_Activities {
 			submit_button( __( 'Baixar Authorization Pack deste post', 'bdc-knowledge-base' ), 'secondary', 'submit', false );
 			echo '</form>';
 		}
-		$t100d_enabled = defined( 'BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD' )
-			&& BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD
-			&& class_exists( Post_Core_Blocks_Executor_T100D::class )
-			&& Post_Core_Blocks_Executor_T100D::can_render( $post_id, $authorization_id );
-
 		if ( $authorization_ready && $t100d_enabled ) {
 			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 			echo '<input type="hidden" name="action" value="' . esc_attr( Post_Core_Blocks_Executor_T100D::ACTION ) . '">';

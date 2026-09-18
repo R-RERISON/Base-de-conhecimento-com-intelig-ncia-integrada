@@ -209,7 +209,7 @@ final class Golden_Baseline_Runner {
 			),
 			'gate_result' => array(
 				't511_read_only_safety_pass' => $safety_pass,
-				'asi_independence_pass' => true,
+				'legacy_search_independence_pass' => true,
 				'golden_candidates_measured' => count( $rows ),
 				'r510_ready' => false,
 				'reason' => 'T511 measures candidate behavior only; human review/severity/diversity/set version remain required.',

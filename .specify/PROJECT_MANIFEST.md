@@ -5,7 +5,7 @@
 **Produto:** Base de Conhecimento com Inteligência Integrada  
 **Tipo:** Plugin WordPress único, modular internamente  
 **Idioma:** Português do Brasil  
-**Estado:** SPEC-000/001/002/003/004 concluídas; UX-001/UX-002/UX-003 concluídas; G-240/G-245/G-250 PASS/CLOSED  
+**Estado:** SPEC-000/001/002/003/004 concluídas; SPEC-005 ATIVA/DISCOVERY; UX-001/UX-002/UX-003 concluídas; G-240/G-245/G-250 PASS/CLOSED  
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
 ## Missão
@@ -266,3 +266,26 @@ Release validada: `0.4.0-spec004-rc2`.
 SHA-256: `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`.
 
 Estado definitivo: **SPEC-004 CLOSED / main**.
+
+
+### SPEC-005 — Search Lexical e Golden Queries
+
+**ATIVA / DISCOVERY.**
+
+Branch: `spec005-search-lexical-golden-queries`.  
+Base: `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
+
+Objetivo: estabelecer retrieval lexical determinístico e Golden Queries antes de semantic search, vetores ou IA.
+
+Gate atual: **R-500 — Search Baseline / Definition of Ready**.
+
+Regras de abertura:
+- runtime de engine bloqueado até R-500 + R-510 + G-520;
+- WordPress-first: medir `WP_Query` antes de projection/schema;
+- Content Extractor é a representação semântica comum para derivados;
+- Golden Suite vazia = NOT_CONFIGURED;
+- blocking Golden failure = NO-GO;
+- nenhuma telemetria detalhada, queue, vetor ou IA nesta fase;
+- nenhuma tabela criada apenas por herança do ASI.
+
+Referência histórica: ASI 4.6.8 @ `c0ddff89caad529ce1bcdc645eb795e4a9b187a1`, preservando contratos e não o runtime legado.

@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-004-FINAL",
+  "mode": "static_final_release_validation",
+  "generated_at": "2026-09-18T12:40:00Z",
+  "plugin_version": "0.4.0-spec004-rc2",
+  "artifact_sha256": "ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b",
+  "checks": {
+    "single_plugin_root": true,
+    "included_files": 44,
+    "php_lint": {
+      "passed": 39,
+      "total": 39,
+      "failures": []
+    },
+    "active_requires": {
+      "passed": 38,
+      "total": 38,
+      "missing": []
+    },
+    "workspace_invariants": true,
+    "core_blocks_activity_read_only": true,
+    "deterministic_rebuild": true,
+    "g250_off": true,
+    "e6_off": true,
+    "preflight_off": true,
+    "t100d_off": true,
+    "elementor_writer_off": true
+  },
+  "failures": [],
+  "pass": true
+}

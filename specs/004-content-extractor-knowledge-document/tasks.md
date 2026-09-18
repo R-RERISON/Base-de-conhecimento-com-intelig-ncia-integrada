@@ -85,10 +85,10 @@ Entregas:
 - [x] T100E-HE5-001 Block Journal/Store hardening local: 15/15 PASS.
 - [x] T100E-HE5-001 environmental compatibility: PASS no post 358.
 - [x] T100E-E6 Workspace regression matrix: PASS AMBIENTAL; 623/623 ×2, 0 erros, 0 throwables, 0 safety violations, 9/9 casos puros.
-- [ ] T100E-E7 production-readiness exit.
+- [ ] T100E-E7 production-readiness exit — EXIT CANDIDATE; aguarda G-250 lifecycle.
 - [ ] T101/T102: próximos gates funcionais somente após T100E.
 - [ ] T101: dependência residual Elementor / gate de retirada.
-- [ ] G-250 Lifecycle/RC.
+- [ ] G-250 Lifecycle/RC — RC1 preparado; homologação pendente.
 
 ## Regras
 

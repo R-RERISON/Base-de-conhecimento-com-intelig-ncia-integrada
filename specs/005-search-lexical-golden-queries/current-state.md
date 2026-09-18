@@ -2,7 +2,7 @@
 
 **ATIVA / DISCOVERY — R-500 PASS/CLOSED; R-510 OPEN.**
 
-**Gate atual:** T513/T514 Automated Golden Validation — execução ambiental pendente.
+**Gate atual:** T513/T514 v2 — build `0.5.0-r510-t514.2` PASS LOCAL / execução ambiental pendente.
 
 **Branch:** `spec005-search-lexical-golden-queries`.
 
@@ -102,3 +102,63 @@ Política:
 7. somente depois T515 congela dataset/version/set_hash e T516 fecha R-510.
 
 R-510 permanece OPEN. Nenhum resultado ambiental do Auto Validator foi presumido.
+
+## T513.1 — evidência ambiental recebida
+
+Arquivo preservado: `evidence/r510-t513-t514-environmental-20260918T223654Z.json`.
+
+SHA-256 do arquivo recebido: `9faf205aed1c4024e2105128728444c7735bb12e301b80a643311c7735afd908`.
+
+Resultado:
+- WordPress 6.9.4 / PHP 8.5.10;
+- safety read-only PASS;
+- fingerprint equal;
+- corpus 623 -> 623;
+- errors=[];
+- AUTO_PASS=5;
+- REVIEW_REQUIRED=1;
+- AUTO_FAIL=0;
+- synthetic robustness 16/16 PASS;
+- `Estrutura`: expected 36620 rank 2; concorrente 516 rank 1; ambos score 100;
+- T514 INCOMPLETE;
+- `r510_ready=false`.
+
+A análise ambiental identificou dois defeitos do validator:
+- D-513-01: `Estrutura` classificada indevidamente como product_token;
+- D-513-02: exact phrase por substring fazia `estrutura` casar `infraestrutura`.
+
+T513.1 permanece evidência histórica, mas sua classificação T514 foi superseded para fechamento do gate.
+
+## T513/T514 v2 — PASS LOCAL
+
+ADR: `adr-005-002-golden-challenge-quarantine.md`.
+
+Build: `0.5.0-r510-t514.2`.  
+SHA-256: `9fb9e20828b1e5162db5fa924ed3b2a3b76d85531d1c61f2847205ebdd00ae2c`.
+
+Mudanças:
+- exact phrase com fronteira lexical;
+- product_token bounded;
+- `AMBIGUOUS_QUARANTINED` para casos semanticamente irresolvíveis;
+- quarantine preserva expected/provenance e não fica ativa para blocking;
+- Technical Challenge Discovery read-only;
+- Golden Relevance, Technical Challenge e Real-world Enrichment separados;
+- typo/alias reais = `PENDING_TELEMETRY`, sem fabricação.
+
+Validação local:
+- 14/14 unit tests PASS;
+- 44/44 PHP lint pré/pós ZIP;
+- 43/43 active requires;
+- missing requires=0;
+- Git blob parity 7/7;
+- deterministic rebuild PASS;
+- zero identificador técnico ASI proibido;
+- zero legacy diagnostic file no ZIP;
+- zero writer/network call nos runners;
+- Elementor writer OFF.
+
+## Próximo passo
+
+Executar somente `0.5.0-r510-t514.2` em homologação e devolver o JSON.
+
+O JSON v2 pode marcar `r510_ready=true` se safety + T513 + Challenge Discovery + Diversity + synthetic robustness passarem. Mesmo assim, T515/T516 continuam necessários antes de fechar R-510.

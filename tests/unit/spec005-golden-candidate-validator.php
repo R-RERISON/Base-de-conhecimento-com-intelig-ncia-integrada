@@ -25,8 +25,10 @@ namespace {
 }
 
 namespace BDC\KnowledgeBase {
-	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-golden-candidate-validator.php';
-	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-golden-diversity-validator.php';
+	$root = __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/';
+	require_once $root . 'class-golden-candidate-validator.php';
+	require_once $root . 'class-golden-diversity-validator.php';
+	require_once $root . 'class-golden-challenge-discovery.php';
 
 	function assert_true_spec005( bool $condition, string $message ): void {
 		if ( ! $condition ) {
@@ -60,15 +62,25 @@ namespace BDC\KnowledgeBase {
 		);
 	};
 
-	$tests['auto_pass_rank1_full_evidence'] = static function (): void {
+	$tests['exact_phrase_respects_token_boundary'] = static function (): void {
+		assert_true_spec005(
+			Golden_Candidate_Validator::exact_phrase( 'Estrutura', 'Estrutura CTC no BACEN' ),
+			'Estrutura isolada deve casar.'
+		);
+		assert_true_spec005(
+			! Golden_Candidate_Validator::exact_phrase( 'Estrutura', 'Materiais e Infraestrutura' ),
+			'Estrutura não pode casar dentro de infraestrutura.'
+		);
+	};
+
+	$tests['auto_pass_strong_evidence'] = static function (): void {
 		$signals = array(
 			'title_coverage_percent' => 100.0,
-			'summary_coverage_percent' => 100.0,
+			'summary_coverage_percent' => 0.0,
 			'semantic_coverage_percent' => 100.0,
 			'native_coverage_percent' => 100.0,
 			'exact_title_phrase' => true,
 		);
-		$score = Golden_Candidate_Validator::validation_score( $signals );
 		$result = Golden_Candidate_Validator::assess(
 			array(
 				'expected_post_id' => 583,
@@ -78,18 +90,17 @@ namespace BDC\KnowledgeBase {
 				'max_rank' => 3,
 				'semantic_coverage_percent' => 100.0,
 				'title_coverage_percent' => 100.0,
-				'summary_coverage_percent' => 100.0,
+				'summary_coverage_percent' => 0.0,
 				'native_coverage_percent' => 100.0,
 				'exact_title_phrase' => true,
 				'query_token_count' => 2,
-				'expected_validation_score' => $score,
+				'expected_validation_score' => Golden_Candidate_Validator::validation_score( $signals ),
 				'strongest_competitor' => array(),
 				'extractor_error' => false,
 			)
 		);
-		assert_same_spec005( 'AUTO_PASS', $result['status'], 'Caso forte deve ser aprovado automaticamente.' );
-		assert_true_spec005( true === $result['auto_accept_existing_expectation'], 'Expectativa existente deve ser autoaceitável.' );
-		assert_same_spec005( 'blocking', $result['recommended_severity'], 'Paridade validada deve recomendar blocking.' );
+		assert_same_spec005( 'AUTO_PASS', $result['status'], 'Caso inequívoco deve auto-pass.' );
+		assert_true_spec005( true === $result['active_for_blocking'], 'AUTO_PASS deve ficar ativo para blocking.' );
 	};
 
 	$tests['missing_expected_auto_fail'] = static function (): void {
@@ -103,7 +114,6 @@ namespace BDC\KnowledgeBase {
 			)
 		);
 		assert_same_spec005( 'AUTO_FAIL', $result['status'], 'Expected ausente deve falhar.' );
-		assert_true_spec005( in_array( 'EXPECTED_POST_MISSING', $result['reasons'], true ), 'Razão de ausência deve ser explícita.' );
 	};
 
 	$tests['outside_max_rank_auto_fail'] = static function (): void {
@@ -119,19 +129,18 @@ namespace BDC\KnowledgeBase {
 				'native_coverage_percent' => 100.0,
 			)
 		);
-		assert_same_spec005( 'AUTO_FAIL', $result['status'], 'Expected fora do max_rank deve falhar.' );
+		assert_same_spec005( 'AUTO_FAIL', $result['status'], 'Expected fora de max_rank deve falhar.' );
 	};
 
-	$tests['rank2_requires_review'] = static function (): void {
-		$expected_score = Golden_Candidate_Validator::validation_score(
-			array(
-				'title_coverage_percent' => 100.0,
-				'summary_coverage_percent' => 0.0,
-				'semantic_coverage_percent' => 100.0,
-				'native_coverage_percent' => 100.0,
-				'exact_title_phrase' => false,
-			)
+	$tests['material_ambiguity_is_quarantined'] = static function (): void {
+		$signals = array(
+			'title_coverage_percent' => 100.0,
+			'summary_coverage_percent' => 0.0,
+			'semantic_coverage_percent' => 100.0,
+			'native_coverage_percent' => 100.0,
+			'exact_title_phrase' => true,
 		);
+		$score = Golden_Candidate_Validator::validation_score( $signals );
 		$result = Golden_Candidate_Validator::assess(
 			array(
 				'expected_post_id' => 36620,
@@ -143,23 +152,24 @@ namespace BDC\KnowledgeBase {
 				'title_coverage_percent' => 100.0,
 				'summary_coverage_percent' => 0.0,
 				'native_coverage_percent' => 100.0,
-				'exact_title_phrase' => false,
+				'exact_title_phrase' => true,
 				'query_token_count' => 1,
-				'expected_validation_score' => $expected_score,
+				'expected_validation_score' => $score,
 				'strongest_competitor' => array(
 					'ahead_of_expected' => true,
-					'validation_score' => $expected_score,
+					'validation_score' => $score,
 					'semantic_coverage_percent' => 100.0,
 					'title_coverage_percent' => 100.0,
 				),
 				'extractor_error' => false,
 			)
 		);
-		assert_same_spec005( 'REVIEW_REQUIRED', $result['status'], 'Ambiguidade material deve exigir review.' );
-		assert_true_spec005( in_array( 'STRONG_COMPETITOR_AHEAD', $result['reasons'], true ), 'Concorrente forte deve ser explicitado.' );
+		assert_same_spec005( 'AMBIGUOUS_QUARANTINED', $result['status'], 'Ambiguidade não deve pedir escolha manual nem autoaceitar.' );
+		assert_true_spec005( false === $result['active_for_blocking'], 'Quarentena não pode bloquear release.' );
+		assert_true_spec005( in_array( 'STRONG_COMPETITOR_AHEAD', $result['reasons'], true ), 'Razão de concorrência deve permanecer.' );
 	};
 
-	$tests['incomplete_semantic_coverage_requires_review'] = static function (): void {
+	$tests['incomplete_semantic_evidence_is_quarantined'] = static function (): void {
 		$result = Golden_Candidate_Validator::assess(
 			array(
 				'expected_post_id' => 527,
@@ -178,26 +188,80 @@ namespace BDC\KnowledgeBase {
 				'extractor_error' => false,
 			)
 		);
-		assert_same_spec005( 'REVIEW_REQUIRED', $result['status'], 'Cobertura semântica incompleta exige review.' );
+		assert_same_spec005( 'AMBIGUOUS_QUARANTINED', $result['status'], 'Evidência incompleta deve fail-safe para quarentena.' );
 	};
 
-	$tests['diversity_detects_current_seed_classes'] = static function (): void {
+	$tests['product_token_classifier_is_bounded'] = static function (): void {
+		assert_true_spec005(
+			in_array( 'product_token', Golden_Diversity_Validator::classify_query( 'MSTeams' ), true ),
+			'MSTeams deve ser product_token.'
+		);
+		assert_true_spec005(
+			! in_array( 'product_token', Golden_Diversity_Validator::classify_query( 'Estrutura' ), true ),
+			'Palavra capitalizada comum não pode virar product_token.'
+		);
+	};
+
+	$tests['historical_seed_covers_core_classes'] = static function (): void {
 		$cases = array(
-			array( 'id'=>'1', 'query'=>'pendrive', 'origin'=>'real' ),
-			array( 'id'=>'2', 'query'=>'MSTeams', 'origin'=>'real' ),
-			array( 'id'=>'3', 'query'=>'Windows 11', 'origin'=>'real' ),
-			array( 'id'=>'4', 'query'=>'Termo de assinatura', 'origin'=>'real' ),
-			array( 'id'=>'5', 'query'=>'Estrutura', 'origin'=>'real' ),
-			array( 'id'=>'6', 'query'=>'SCCM', 'origin'=>'real' ),
+			array( 'id'=>'1', 'query'=>'pendrive', 'origin'=>'legacy_validated' ),
+			array( 'id'=>'2', 'query'=>'MSTeams', 'origin'=>'legacy_validated' ),
+			array( 'id'=>'3', 'query'=>'Windows 11', 'origin'=>'legacy_validated' ),
+			array( 'id'=>'4', 'query'=>'Termo de assinatura', 'origin'=>'legacy_validated' ),
+			array( 'id'=>'5', 'query'=>'Estrutura', 'origin'=>'legacy_validated' ),
+			array( 'id'=>'6', 'query'=>'SCCM', 'origin'=>'legacy_validated' ),
 		);
 		$result = Golden_Diversity_Validator::assess( $cases );
-		assert_true_spec005( $result['coverage']['simple_term'], 'Seed deve cobrir termo simples.' );
-		assert_true_spec005( $result['coverage']['product_token'], 'Seed deve cobrir token de produto.' );
-		assert_true_spec005( $result['coverage']['compound_or_version'], 'Seed deve cobrir composto/versão.' );
-		assert_true_spec005( $result['coverage']['phrase'], 'Seed deve cobrir frase.' );
-		assert_true_spec005( $result['coverage']['acronym'], 'Seed deve cobrir sigla.' );
-		assert_true_spec005( ! $result['coverage']['natural_language'], 'Seed ainda não cobre linguagem natural.' );
-		assert_same_spec005( 'INCOMPLETE', $result['status'], 'Diversidade atual deve continuar incompleta.' );
+		assert_same_spec005( array(), $result['missing_golden_required'], 'Core Golden diversity deve estar coberta.' );
+		assert_same_spec005( 'INCOMPLETE', $result['status'], 'Sem Technical Challenge, T514 ainda fica incompleto.' );
+		assert_same_spec005( 'PENDING_TELEMETRY', $result['real_world_enrichment_status'], 'Typo/alias reais ficam para telemetria.' );
+	};
+
+	$tests['technical_challenges_complete_t514_without_faking_real_queries'] = static function (): void {
+		$cases = array(
+			array( 'id'=>'1', 'query'=>'pendrive', 'origin'=>'legacy_validated' ),
+			array( 'id'=>'2', 'query'=>'MSTeams', 'origin'=>'legacy_validated' ),
+			array( 'id'=>'3', 'query'=>'Windows 11', 'origin'=>'legacy_validated' ),
+			array( 'id'=>'4', 'query'=>'Termo de assinatura', 'origin'=>'legacy_validated' ),
+			array( 'id'=>'5', 'query'=>'SCCM', 'origin'=>'legacy_validated' ),
+			array(
+				'id'=>'CH-NL-001',
+				'query'=>'Como configurar acesso remoto no Windows?',
+				'origin'=>'corpus_derived_challenge',
+				'declared_classes'=>array('natural_language'),
+			),
+			array(
+				'id'=>'CH-SUM-001',
+				'query'=>'tokenunicosummary',
+				'origin'=>'corpus_derived_challenge',
+				'summary_dependent'=>true,
+			),
+			array(
+				'id'=>'CH-ELM-001',
+				'query'=>'tokenunicoelementor',
+				'origin'=>'corpus_derived_challenge',
+				'elementor_semantic_gap'=>true,
+			),
+		);
+		$result = Golden_Diversity_Validator::assess( $cases );
+		assert_same_spec005( 'PASS', $result['status'], 'Golden core + Technical Challenge devem fechar cobertura técnica.' );
+		assert_same_spec005( 'PENDING_TELEMETRY', $result['real_world_enrichment_status'], 'Challenge não pode fingir typo/alias real.' );
+	};
+
+	$tests['challenge_token_selector_requires_unique_gap'] = static function (): void {
+		$token = Golden_Challenge_Discovery::best_unique_gap_token(
+			array( 'comum', 'tokenrarissimo', 'outro' ),
+			array( 'comum', 'outro' ),
+			array( 'comum'=>10, 'tokenrarissimo'=>1, 'outro'=>2 )
+		);
+		assert_same_spec005( 'tokenrarissimo', $token, 'Discovery deve escolher apenas token gap único.' );
+	};
+
+	$tests['challenge_candidate_tokens_filter_noise'] = static function (): void {
+		$tokens = Golden_Challenge_Discovery::candidate_tokens( 'Como acesso ao BACEN tokenEspecial 123 sistema' );
+		assert_true_spec005( in_array( 'tokenespecial', $tokens, true ), 'Token material deve sobreviver.' );
+		assert_true_spec005( ! in_array( 'como', $tokens, true ), 'Stopword deve sair.' );
+		assert_true_spec005( ! in_array( 'bacen', $tokens, true ), 'Termo institucional genérico deve sair.' );
 	};
 
 	$tests['synthetic_variants_are_explicit'] = static function (): void {

@@ -6,109 +6,104 @@
 - R-210: PASS.
 - G-220: PASS.
 - G-230/v1: PASS de determinismo; v1 superseded for AI.
-- G-240/v1: FAIL CONTROLADO — perda estrutural.
-- G-240/v2/KD 2.0.1: full-corpus técnico PASS, porém aceite humano A/B FAIL CONTROLADO — HIERARCHY FIDELITY.
-- KD 2.1.0 / build `0.4.0-acceptance.12`: full-corpus técnico PASS + aceite humano 8/8 PASS.
-- **G-240: PASS / CLOSED / PROMOVIDO PARA `main`.**
-- merge G-240: `32a696386bf2ab5574d4d7725db78636fa51f36c`.
-- **G-245: IN PROGRESS somente em `spec004-g245-production-readiness`; PR #4 DRAFT.**
+- G-240: PASS/CLOSED/main com KD 2.1.0.
+- G-245: REBASELINED / IN PROGRESS; PR #4 DRAFT / NÃO MERGEAR.
+- ADR-004-001: ACEITA — WordPress Core Blocks como destino editorial canônico.
+- ADR-004-002: ACEITA — Post-Centric Management Workspace.
+- T091/T093/T094/T096/T097/T098.2/T099A/T099B/T099C: PASS AMBIENTAL.
+- T095: PASS LOCAL / READ-ONLY.
+- T098.1: FAIL CONTROLADO / SEM MUTAÇÃO.
+- T100A Batch Authorization Pack: **SUPERSEDED BEFORE EXECUTION**; ZIP não instalado/executado.
+- T100A Post Management Workspace: **PASS LOCAL**.
+- T100B Workspace Human/Environmental Acceptance: **PASS CONFIRMADO PELO USUÁRIO**.
+- T100C Core Blocks Post Activity: **PASS AMBIENTAL / READ-ONLY**.
+- T100D Persistent Single-Post Migration: **PASS AMBIENTAL**.
+- T100E Engineering Consolidation: **IN PROGRESS / ZERO EDITORIAL WRITE**.
+- UX-003 Workspace Visual Consolidation: **PASS AMBIENTAL**.
 - G-250: NOT_RUN.
 
-## S005 — G-240 / Real Content Acceptance
+## T099C — PASS AMBIENTAL
 
-### Concluído
+Evidência: `evidence/g245-t099c-canary-pass-20260917T212107Z.json`.  
+SHA-256 bruto: `3ddb5f55053675699c9269acfdcb81a03e440be03236389777ddb4144b04ba3a`.
 
-- [x] Implementar e validar Content Extractor/KD v2 read-only.
-- [x] Corrigir colisões de IDs estruturais.
-- [x] Preservar structural anchors de listas.
-- [x] Introduzir expectativa semântica DOM independente.
-- [x] Corrigir materialização de listas/tabelas no Legacy adapter.
-- [x] Atingir full-corpus PASS no KD `2.0.1`.
-- [x] Executar A/B humano nos mesmos oito posts do G-240 v1.
-- [x] Registrar análise de hierarchy fidelity.
-- [x] Congelar contrato `knowledge-document-contract-v2.1.0.md`.
-- [x] Implementar relationship fidelity independente de contagens.
-- [x] Implementar `Numbered_Hierarchy_Resolver` conservador.
-- [x] Adicionar proveniência/confiança de hierarquia.
-- [x] Fazer DOM explícito vencer inferência textual.
-- [x] Tratar ambiguidade/conflito como `review_required`.
-- [x] Corrigir acceptance gate para não confundir `review_required` com `not_ready`.
-- [x] Executar testes sintéticos de árvore, numeração, conflito e ambiguidade.
-- [x] Reexecutar full-corpus KD 2.1.0 / `0.4.0-acceptance.12`.
-- [x] Reexecutar os mesmos oito casos A/B.
-- [x] Fechar G-240 com zero mutação editorial.
-- [x] Promover PR #3 para `main`.
+Comprovado no post 358:
+- authorization_id revalidado;
+- journal durável + lock exclusivo;
+- `legacy_html -> core/freeform` temporário;
+- apply SHA-256 esperado = observado;
+- `_elementor_data` preservado;
+- rollback imediato verificado;
+- `post_content` final igual ao original byte-a-byte;
+- latest journal `rolled_back`;
+- lock livre;
+- errors=[];
+- `t099c_canary_pass=true`.
 
-### Evidências finais KD 2.1
+## Rebaseline T100
 
-- `evidence/kd-v21-smoke-summary-20260916T172538Z.json`.
-- `evidence/g240-kd21-acceptance-20260916T193359Z.json`.
-- full-corpus: 622→622, duas passagens 622/622, zero errors/throwables/hash/canonical mismatch, zero structure_incomplete, zero `not_ready`.
-- A/B: 8/8 coverage, 8/8 order, 8/8 no invented text, 8/8 structure preserved, 8/8 gate_pass.
+A expansão por batch foi interrompida antes de qualquer execução. A arquitetura passa a tratar o **post como unidade primária de gerenciamento**.
 
-## S006 — G-245 / Elementor Normalization & Production Readiness
+A superfície canônica já existente é preservada:
 
-**Status: IN PROGRESS — somente subgates governados; nenhuma escrita editorial autorizada.**
+`Base de Conhecimento → lista de artigos → Gerenciar → Workspace do post`
 
-Branch:
+Telas/gates T09x continuam como ferramentas de engenharia e homologação; não são a UX final.
 
-`spec004-g245-production-readiness`
+## T100A — Post Management Workspace
 
-PR:
+Contrato: `t100-post-management-workspace-contract-v1.md`.  
+ADR: `ADR-004-002-post-centric-management-workspace.md`.
 
-`#4` — DRAFT.
+Entregas:
+- `Post_Activity_Registry`;
+- `Post_Management_Context`;
+- `Post_Management_Activities`;
+- atividade **Conteúdo** read-only;
+- atividade **Inteligência** read-only;
+- atividade **Core Blocks** read-only;
+- Summary/Classificação/Review/Histórico preservados;
+- botão **Gerenciar** e rota por `post_id` preservados;
+- Core Blocks mostra readiness/journal/lock sem writer;
+- IA registrada sem execução/modelo/rede externa.
 
-### T080 — Production Preflight — PASS WITH REVIEW ITEMS
+## Próximos subgates
 
-- [x] Criar branch dedicada baseada no head aprovado de G-240.
-- [x] Implementar `Production_Preflight` read-only.
-- [x] Avaliar WordPress/PHP/DOM/Elementor/backup/shortcodes/cron/loopback.
-- [x] Inventariar plugins ativos e dependências observáveis de shortcodes sem exportar corpo editorial.
-- [x] Forçar `writer_allowed=false` e `migration_execution_allowed=false`.
-- [x] Validar localmente política/lint/package.
-- [x] Executar preflight em homologação.
-- [x] Registrar evidência e matriz inicial de compatibilidade.
+- [x] T099C canário real + rollback.
+- [x] ADR-004-002 Post-Centric Management Workspace.
+- [x] T100A implementação local + lint + invariantes anti-regressão.
+- [x] T100B: aceite ambiental/visual da Workspace em homologação — confirmado pelo usuário.
+- [x] T100C: implementação local da Core Blocks Activity post-scoped + Authorization Pack read-only.
+- [x] T100C ambiental: post 358 ready_for_authorization, journal rolled_back, lock free, Authorization Pack válido.
+- [x] T100D autorizado explicitamente para `post_id=358 + authorization_id=17c002d3...a41af0`; build local PASS.
+- [x] T100D execução ambiental persistente no post 358: PASS; journal `applied`, rollback não executado, `_elementor_data` intacto.
+- [x] T100E-E1 Runtime Inventory baseline.
+- [x] T100E-E2 Static Regression Runner v1.1.
+- [x] T100E-E3 Runtime classification product/defensive/legacy/engineering.
+- [x] T100E-E4 deterministic release builder candidate.
+- [x] T100E-E5 defensive service equivalence/consolidation map.
+- [x] T100E-HE5-001 Block Journal/Store hardening local: 15/15 PASS.
+- [x] T100E-HE5-001 environmental compatibility: PASS no post 358.
+- [x] T100E-E6 Workspace regression matrix: PASS AMBIENTAL; 623/623 ×2, 0 erros, 0 throwables, 0 safety violations, 9/9 casos puros.
+- [x] T100E-E7 production-readiness exit — PASS/CLOSED após G-250.
+- [ ] T101/T102: próximos gates funcionais somente após T100E.
+- [ ] T101: dependência residual Elementor / gate de retirada.
+- [x] G-250 Lifecycle/RC — PASS AMBIENTAL / CLOSED; RC1 lifecycle comprovado.
 
-Evidência na branch G-245:
+## Regras
 
-- `evidence/g245-preflight-summary-20260916T215612Z.json`;
-- blockers: 0;
-- review items: `faq_wd`, `wpt` e loopback não testado;
-- corpus 622→622;
-- fingerprint editorial preservado.
-
-### T081 — Projection Plan read-only
-
-**Status: implementação iniciada na branch G-245; aceite/gate ainda não fechado.**
-
-- [ ] Congelar contrato final do Projection Plan.
-- [ ] Confirmar projeção determinística por `source_kind` sem persistência.
-- [ ] Confirmar `source_hash_before`, schema, strategy, projection hash, warnings e `requires_review`.
-- [ ] Preservar shortcodes como dependências opacas; nunca executar `do_shortcode()` genericamente.
-- [ ] Forçar revisão para dependências/compatibilidade não resolvidas.
-- [ ] Comprovar canonicalização e repetibilidade.
-- [ ] Fechar testes locais de estratégias e zero-write.
-- [ ] Executar full-corpus ambiental em duas passagens e versionar evidência.
-
-### Próximos subgates
-
-- [ ] Elementor Gateway version-gated com writer disabled-by-default.
-- [ ] Journal/rollback.
-- [ ] Stale-source guard.
-- [ ] Dry-run.
-- [ ] Batches retomáveis.
-- [ ] Canário controlado e rollback comprovado.
-- [ ] Runbook de produção.
-- [ ] Autorização explícita posterior para qualquer writer real.
-
-## Regras constitucionais
-
-1. Content Extractor/KD são read-only.
-2. Determinismo sem fidelidade estrutural/hierárquica não é aceite.
-3. DOM explícito vence inferência.
-4. Inferência textual deve ser conservadora e auditável.
-5. `review_required` é limitação explícita, não `not_ready` automático.
-6. G-240 PASS não autoriza persistência editorial.
-7. Preflight e Projection Plan nunca autorizam escrita por efeito colateral.
-8. Writer/migration Elementor permanecem disabled-by-default até subgates, rollback e autorização explícita.
-9. `main` deve permanecer um baseline conhecido; trabalho incompleto fica em branch dedicada.
+1. Post é a unidade primária de gerenciamento.
+2. Leitura/análise global pode ser massiva; resultados convergem para a Workspace individual.
+3. Write editorial permanece post-scoped.
+4. Core Blocks são o destino canônico.
+5. Plugin Gutenberg não é requisito.
+6. Elementor permanece até dependência zero.
+7. Nenhum writer `_elementor_data` será implementado como destino.
+8. KD não é representação editorial lossless.
+9. Mixed exige humano.
+10. UX-002 é baseline visual e não pode regredir sem evidência.
+11. Trabalho incompleto permanece fora de `main`.
+12. O antigo T100 batch não deve ser instalado nem executado.
+\n- [x] UX-003 implementação visual local + lint + anti-regressão.\n- [x] UX-003 homologação visual no WordPress: PASS confirmado pelo usuário.\n
+- [x] RC final limpo `0.4.0-spec004-rc2`: G250/E6/Preflight/T100D/Elementor writer OFF; 39/39 PHP lint; 38/38 active requires; deterministic rebuild PASS.
+- [ ] AUTH-UX-001 (futuro, fora da SPEC-004): integrar autorização de migração à Workspace sem remover confirmação humana explícita/post-scoped.

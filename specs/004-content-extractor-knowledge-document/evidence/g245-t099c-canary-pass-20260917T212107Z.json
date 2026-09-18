@@ -1,0 +1,78 @@
+{
+    "schema_version": "1.0.0",
+    "gate": "T099C",
+    "mode": "single_authorized_apply_verify_immediate_rollback",
+    "generated_at": "2026-09-17T21:21:07+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-g245-canary-t099c.1",
+        "gutenberg_plugin_dependency": false
+    },
+    "authorization": {
+        "authorized": true,
+        "post_id": 358,
+        "authorization_id": "1557c1ee50e1a7a46df7d7952032cb1dd0cb374c7222de8656bb9c055f561bc9",
+        "computed_authorization_id": "1557c1ee50e1a7a46df7d7952032cb1dd0cb374c7222de8656bb9c055f561bc9",
+        "authorization_matches": true
+    },
+    "target": {
+        "post_id": 358,
+        "post_title": "LIA | Laboratório de Inteligência Analítica",
+        "source_kind": "legacy_html"
+    },
+    "preflight": {
+        "manage_options": true,
+        "edit_post": true,
+        "unfiltered_html": true,
+        "preexisting_journal_count": 0,
+        "initial_lock_status": "free"
+    },
+    "journal": {
+        "prepared_event_id": 351280,
+        "applied_event_id": 351282,
+        "rolled_back_event_id": 351283,
+        "event_count_after": 3,
+        "latest_state": "rolled_back",
+        "audit_preserved": true
+    },
+    "apply": {
+        "attempted": true,
+        "verified": true,
+        "expected_serialized_sha256": "af4101dda487e6f6239b8bb0546439a75e1691062fd27f9322cbb0d9c2f84050",
+        "actual_post_content_sha256": "af4101dda487e6f6239b8bb0546439a75e1691062fd27f9322cbb0d9c2f84050",
+        "expected_block_name": "core/freeform",
+        "original_payload_sha256": "eb7f1c9c4e5426c9c5c473ade6c6b02312f526cad9a375b3bbe30ef0221479d0",
+        "elementor_data_unchanged_at_apply": true
+    },
+    "rollback": {
+        "attempted": true,
+        "verified": true,
+        "final_post_content_equals_original": true,
+        "final_elementor_data_equals_original": true,
+        "lock_free_after": true,
+        "journal_latest_state_rolled_back": true
+    },
+    "wordpress_side_effects": {
+        "uses_wp_update_post": true,
+        "normal_post_modified_timestamp_change_possible": true,
+        "normal_wordpress_revision_creation_possible": true,
+        "journal_audit_intentionally_persisted": true
+    },
+    "errors": [],
+    "safety": {
+        "scope_one_post_only": true,
+        "writes_post_content_temporarily": true,
+        "writes_elementor_data_as_destination": false,
+        "immediate_rollback_required": true,
+        "executes_shortcodes": false,
+        "renders_blocks": false,
+        "calls_external_network": false,
+        "exports_editorial_body": false,
+        "exports_urls": false
+    },
+    "gate_result": {
+        "t099c_canary_pass": true
+    },
+    "duration_ms": 211
+}

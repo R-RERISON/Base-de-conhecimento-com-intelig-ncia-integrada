@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T100E-E4",
+  "mode": "deterministic_release_builder_candidate_validation",
+  "generated_at": "2026-09-18T10:35:00Z",
+  "source_build": "0.4.0-g245-consolidation-t100e.1",
+  "builder": "tools/t100e/build_release.py",
+  "candidate": {
+    "filename": "base-conhecimento-inteligencia-integrada-0.4.0-g245-consolidation-t100e.1-candidate.zip",
+    "sha256": "34ed3902e4514054b6db75b0a44951dab2b6ccbf358f902108155b81ef8c701b",
+    "included_file_count": 54,
+    "php_file_count": 49,
+    "php_lint_failures": 0,
+    "unconditional_requires": 47,
+    "active_conditional_flags": [
+      "BDC_KB_SPEC004_G245_PREFLIGHT_BUILD"
+    ],
+    "t100d_executor_included": false,
+    "production_preflight_included": true,
+    "single_plugin_root": true
+  },
+  "comparison": {
+    "previous_t100d_php_files": 65,
+    "candidate_php_files": 49,
+    "php_file_reduction": 16,
+    "note": "Full source tree retains disabled engineering evidence; deterministic artifact includes active runtime only."
+  },
+  "safety": {
+    "editorial_write_performed": false,
+    "wordpress_bootstrap_performed": false,
+    "database_accessed": false,
+    "network_accessed": false
+  },
+  "gate_result": {
+    "deterministic_builder_candidate_pass": true,
+    "release_installation_requested": false,
+    "production_preflight_replacement_pending": true
+  }
+}

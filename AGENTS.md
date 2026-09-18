@@ -25,37 +25,68 @@ Para cada solução proposta, perguntar obrigatoriamente:
 
 - O WordPress já faz isso nativamente?
 - Podemos remover uma camada?
+- Podemos evitar uma dependência externa?
 - Podemos evitar uma tabela?
 - Podemos evitar uma API?
 - Podemos evitar JavaScript?
 - Podemos evitar um job assíncrono?
 - Podemos evitar IA?
 - Podemos evitar vetor?
-- Podemos resolver com metadata, taxonomy, options, capabilities, hooks ou HTTP API?
+- Podemos resolver com Blocks, metadata, taxonomy, options, capabilities, hooks ou HTTP API?
 - Qual é a solução mais simples que atende o requisito sem comprometer o futuro?
 
 Se a resposta mais simples for suficiente, a solução mais complexa deve ser rejeitada.
 
 ## Fonte editorial e fronteira do plugin
 
-Invariante absoluta:
+A fonte editorial canônica futura é:
 
-> **O plugin não cria, edita, reescreve ou publica o conteúdo editorial do post.**
+> **`WP_Post.post_content` + WordPress Core Blocks.**
 
-O conteúdo oficial continua sendo produzido em WordPress/Elementor.
+O produto usa APIs estáveis do WordPress Core. O plugin Gutenberg não é dependência de produção. APIs experimentais/plugin-only exigem ADR própria.
+
+Elementor é tratado como **fonte legada temporária**, não destino editorial futuro. Enquanto houver dependência comprovada:
+
+- `Elementor_Adapter` pode ler a fonte de forma read-only;
+- `_elementor_data` deve ser preservado;
+- o plugin Elementor não deve ser removido automaticamente;
+- nenhum novo writer deve usar `_elementor_data` como destino.
 
 O plugin pode:
 
-- ler o post e sua estrutura;
+- ler o post e suas estruturas legadas/nativas;
 - gerenciar metadados e taxonomias próprias;
 - classificar, revisar e governar conhecimento;
 - criar projeções e índices derivados;
 - gerar sugestões de IA;
 - indexar chunks e embeddings;
 - medir uso, qualidade e lacunas;
-- oferecer busca e resolução operacional.
+- oferecer busca e resolução operacional;
+- executar migrações administrativas governadas para Core Blocks quando houver SPEC/gate/autorização explícitos.
 
-O plugin não pode escrever em `_elementor_data`, substituir Elementor nem se tornar editor de posts.
+O plugin não pode:
+
+- tornar-se editor paralelo;
+- reescrever silenciosamente `post_content`;
+- escrever em `_elementor_data` como arquitetura-alvo;
+- publicar posts em nome do autor sem fluxo autorizado;
+- permitir que IA exerça autoridade editorial autônoma.
+
+Fluxo editorial de IA:
+
+`IA sugere → humano revisa → humano decide → WordPress persiste`.
+
+## Regra específica de Blocks
+
+Antes de criar abstração própria para conteúdo estruturado, avaliar primeiro:
+
+- `parse_blocks()`;
+- `serialize_blocks()`;
+- Block API estável;
+- `block.json`/registro nativo quando um bloco `bdc/*` for realmente necessário;
+- Block Patterns/templates/locking quando padronização editorial exigir.
+
+Core Blocks devem ser preferidos a blocos customizados. Bloco `bdc/*` só é permitido quando nenhum Core Block representa adequadamente o domínio sem perda relevante.
 
 ## Idioma
 
@@ -79,16 +110,17 @@ Antes de alterar runtime:
 1. Ler a Constituição.
 2. Ler o Manifesto.
 3. Ler a SPEC ativa completa.
-4. Ler os artefatos dos projetos de referência relacionados.
-5. Registrar baseline atual.
-6. Definir comportamento esperado.
-7. Definir testes/gates antes de implementar.
-8. Aplicar princípio de negação.
-9. Implementar o menor vertical slice funcional.
-10. Executar regressão e validar visualmente.
-11. Atualizar documentação e estado da SPEC.
-12. Criar/atualizar `CONTINUIDADE.md` da SPEC com prompt autossuficiente para novo chat.
-13. Conferir o handoff contra `docs/DEFINITION-OF-DONE.md`.
+4. Ler ADRs vigentes da SPEC.
+5. Ler os artefatos dos projetos de referência relacionados.
+6. Registrar baseline atual.
+7. Definir comportamento esperado.
+8. Definir testes/gates antes de implementar.
+9. Aplicar princípio de negação.
+10. Implementar o menor vertical slice funcional.
+11. Executar regressão e validar visualmente.
+12. Atualizar documentação e estado da SPEC.
+13. Criar/atualizar `CONTINUIDADE.md` da SPEC com prompt autossuficiente para novo chat.
+14. Conferir o handoff contra `docs/DEFINITION-OF-DONE.md`.
 
 ## Contrato visual obrigatório
 
@@ -159,7 +191,7 @@ O Prompt de Continuidade deve permitir que um novo chat retome o trabalho sem co
 - próximo passo exato;
 - critério de conclusão do próximo passo.
 
-O novo chat deve ser instruído a reler AGENTS, Manifesto, Constituição, SPEC, DoD e confirmar o estado do GitHub antes de modificar qualquer coisa.
+O novo chat deve ser instruído a reler AGENTS, Manifesto, Constituição, SPEC, ADRs vigentes, DoD e confirmar o estado do GitHub antes de modificar qualquer coisa.
 
 Frases vagas como “continue de onde paramos” não são handoff aceitável.
 
@@ -186,6 +218,7 @@ Uma SPEC só termina quando:
 - testes passam;
 - segurança passa;
 - compatibilidade WordPress passa;
+- dependências editoriais externas foram justificadas ou eliminadas;
 - UI segue o Visual Contract vigente e os mockups aplicáveis;
 - acessibilidade básica passa;
 - documentação está atualizada;

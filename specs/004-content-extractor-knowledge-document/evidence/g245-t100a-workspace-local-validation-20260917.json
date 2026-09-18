@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T100A",
+  "mode": "post_management_workspace_local_validation",
+  "generated_at": "2026-09-17T23:30:00Z",
+  "build": "0.4.0-g245-workspace-t100a.2",
+  "architecture": {
+    "adr": "ADR-004-002",
+    "post_is_primary_management_unit": true,
+    "canonical_route": "Base de Conhecimento -> Gerenciar -> post_id",
+    "batch_authorization_pack": "SUPERSEDED_BEFORE_EXECUTION"
+  },
+  "validation": {
+    "assertions_passed": 33,
+    "assertions_total": 33,
+    "php_files_linted": 63,
+    "php_lint_failures": 0,
+    "unconditional_require_paths": 46,
+    "unconditional_missing_paths": 0,
+    "legacy_writers_preserved": true,
+    "new_workspace_writers_added": false,
+    "new_workspace_network_calls": false,
+    "new_workspace_shortcode_execution": false,
+    "new_workspace_block_rendering": false
+  },
+  "workspace": {
+    "existing_activities": [
+      "overview",
+      "summary",
+      "classification",
+      "review",
+      "history"
+    ],
+    "new_read_only_activities": [
+      "content",
+      "intelligence",
+      "core_blocks"
+    ],
+    "manage_action_preserved": true,
+    "post_id_scope_preserved": true,
+    "intelligence_execution_enabled": false,
+    "core_blocks_writer_enabled": false,
+    "core_blocks_migration_execution_enabled": false
+  },
+  "anti_regression": {
+    "summary_store_unchanged": true,
+    "classification_store_unchanged": true,
+    "review_store_unchanged": true,
+    "plugin_orchestrator_unchanged": true,
+    "workspace_css_unchanged": true,
+    "workspace_js_unchanged": true,
+    "visual_foundation_css_ux0023_parity": true,
+    "classification_admin_ux0023_parity": true,
+    "visual_foundation_class_ux0023_parity": true,
+    "admin_page_delta": "deliberate workspace integration only"
+  },
+  "runtime_flags": {
+    "t099c_canary": false,
+    "t100_batch_authorization_pack": false,
+    "t100_post_workspace": true,
+    "elementor_writer": false
+  },
+  "gate_result": {
+    "t100a_local_pass": true,
+    "t100b_environmental_acceptance_pending": true
+  }
+}

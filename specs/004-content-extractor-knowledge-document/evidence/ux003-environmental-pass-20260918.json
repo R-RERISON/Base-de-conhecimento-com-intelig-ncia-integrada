@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "UX-003",
+  "mode": "workspace_visual_environmental_acceptance",
+  "accepted_at": "2026-09-18T08:19:00-03:00",
+  "acceptance_source": "explicit_user_confirmation",
+  "build": "0.4.0-g245-ux003.1",
+  "package_sha256": "758118f5bf9f0a06f05b05a73992cb47ab4c03ea8c32f18fa26f0e2c3ba88e2f",
+  "validated": {
+    "preflight_hidden_from_product_menu": true,
+    "single_top_navigation": true,
+    "overview_without_duplicate_navigation": true,
+    "pt_br_consistent": true,
+    "development_jargon_removed_from_primary_ui": true,
+    "full_width_layout": true,
+    "core_blocks_states_humanized": true,
+    "functional_regression_observed": false
+  },
+  "gate_result": {
+    "ux003_environmental_pass": true
+  }
+}

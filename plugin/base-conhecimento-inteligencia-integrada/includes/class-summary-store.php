@@ -98,7 +98,7 @@ final class Summary_Store {
 		if ( $restored === $snapshot ) {
 			return self::error(
 				'bdc_kb_persistence_failed',
-				'Não foi possível salvar o Summary. O estado anterior foi restaurado.',
+				'Não foi possível salvar o sumário. O estado anterior foi restaurado.',
 				array(
 					'status'         => self::STATUS_FAIL_SAFE,
 					'final_state'    => $restored,
@@ -145,11 +145,11 @@ final class Summary_Store {
 			}
 
 			if ( ! is_string( $value ) ) {
-				return self::error( 'bdc_kb_invalid_value', 'Os campos do Summary devem ser strings.' );
+				return self::error( 'bdc_kb_invalid_value', 'Os campos do sumário devem ser strings.' );
 			}
 
 			if ( strlen( $value ) > Meta_Contract::MAX_BYTES ) {
-				return self::error( 'bdc_kb_value_too_large', 'Um campo do Summary excede o limite permitido.' );
+				return self::error( 'bdc_kb_value_too_large', 'Um campo do sumário excede o limite permitido.' );
 			}
 
 			$prepared[ $field ] = Meta_Contract::sanitize_text( $value );
@@ -232,7 +232,7 @@ final class Summary_Store {
 		}
 
 		if ( Meta_Contract::POST_TYPE !== $post->post_type ) {
-			return self::error( 'bdc_kb_unsupported_post_type', 'A SPEC-001 suporta somente artigos do tipo post.' );
+			return self::error( 'bdc_kb_unsupported_post_type', 'Esta funcionalidade está disponível apenas para artigos.' );
 		}
 
 		return $post;

@@ -1,0 +1,88 @@
+{
+    "schema_version": "1.0.0",
+    "gate": "T098",
+    "mode": "block_migration_defensive_readiness_read_only",
+    "generated_at": "2026-09-17T19:14:36+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.4.0-g245-readiness-t098.2",
+        "journal_schema": "1.0.0",
+        "dry_run_schema": "1.0.0",
+        "batch_schema": "1.0.0",
+        "stale_guard_schema": "1.0.0",
+        "gutenberg_plugin_dependency": false
+    },
+    "corpus": {
+        "total_posts": 623,
+        "first_pass": 623,
+        "second_pass": 623,
+        "first_errors": 0,
+        "second_errors": 0,
+        "first_throwables": 0,
+        "second_throwables": 0,
+        "first_safety_violations": 0,
+        "second_safety_violations": 0,
+        "first_throwable_signatures": [],
+        "second_throwable_signatures": [],
+        "dry_run_hash_mismatches": 0,
+        "journal_hash_mismatches": 0
+    },
+    "distribution": {
+        "dry_run_status": {
+            "noop": 7,
+            "ready": 611,
+            "review_required": 5
+        },
+        "source_kind": {
+            "elementor": 34,
+            "empty": 3,
+            "gutenberg": 4,
+            "legacy_html": 536,
+            "mixed": 5,
+            "plain_text": 41
+        },
+        "journals_prepared_in_memory": 611
+    },
+    "batch": {
+        "eligible_total": 611,
+        "excluded_total": 12,
+        "batch_size": 25,
+        "batch_count": 25,
+        "covered_total": 611,
+        "duplicate_items": 0,
+        "cursor_failures": 0,
+        "pass": true
+    },
+    "contracts": {
+        "journal_store_meta_key": "_bdc_kb_block_migration_journal",
+        "lock_meta_key": "_bdc_kb_block_migration_lock",
+        "journal_store_invoked": false,
+        "lock_acquire_invoked": false,
+        "writer_invoked": false
+    },
+    "safety": {
+        "read_only_design": true,
+        "persists_journal": false,
+        "acquires_lock": false,
+        "writes_post_content": false,
+        "writes_elementor_data": false,
+        "writer_allowed": false,
+        "migration_execution_allowed": false,
+        "executes_shortcodes": false,
+        "renders_blocks": false,
+        "calls_external_network": false,
+        "depends_on_gutenberg_plugin": false,
+        "exports_editorial_content": false,
+        "exports_urls": false,
+        "exports_post_ids": false,
+        "corpus_unchanged": true,
+        "editorial_fingerprint_before": "c45e6f8762b7de06465c460e868740994ef9277e1bf398162f6c849203e773e2",
+        "editorial_fingerprint_after": "c45e6f8762b7de06465c460e868740994ef9277e1bf398162f6c849203e773e2",
+        "editorial_fingerprint_equal": true
+    },
+    "gate_result": {
+        "t098_block_migration_readiness_pass": true
+    },
+    "duration_ms": 7267
+}

@@ -164,6 +164,13 @@ final class Admin_Page {
 			return;
 		}
 
+		$context = Post_Management_Context::build( $post_id );
+		if ( is_wp_error( $context ) ) {
+			self::render_inline_error( 'Não foi possível carregar as informações deste artigo.' );
+			self::render_back_link();
+			return;
+		}
+
 		$tab = self::get_request_tab();
 
 		self::render_context_header( $post, $summary );
@@ -172,9 +179,15 @@ final class Admin_Page {
 		Review_Admin::render_feedback();
 		self::render_tabs( $post_id, $tab );
 
-		echo '<div class="bdc-kb-workspace-layout">';
+		$layout_class = 'bdc-kb-workspace-layout' . ( 'overview' === $tab ? ' bdc-kb-workspace-layout--full' : '' );
+		echo '<div class="' . esc_attr( $layout_class ) . '">';
 		echo '<main class="bdc-kb-workspace-main" id="bdc-kb-workspace-main">';
 		switch ( $tab ) {
+			case 'content':
+			case 'intelligence':
+			case 'core_blocks':
+				Post_Management_Activities::render( $tab, $post_id, $context );
+				break;
 			case 'summary':
 				self::render_summary_panel( $post_id, $summary );
 				break;
@@ -189,11 +202,13 @@ final class Admin_Page {
 				break;
 			case 'overview':
 			default:
-				self::render_overview( $post_id );
+				self::render_overview( $post_id, $post, $summary, $context );
 				break;
 		}
 		echo '</main>';
-		self::render_context_sidebar( $post_id, $post, $summary );
+		if ( 'overview' !== $tab ) {
+			self::render_context_sidebar( $post_id, $post, $summary, $context );
+		}
 		echo '</div>';
 	}
 
@@ -208,8 +223,8 @@ final class Admin_Page {
 		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Base de Conhecimento / Artigo', 'bdc-knowledge-base' ) . '</p>';
 		echo '<h1>' . esc_html( (string) $summary['title'] ) . '</h1>';
 		echo '<div class="bdc-kb-context-meta">';
-		echo '<span><strong>' . esc_html__( 'ID:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( (string) $post->ID ) . '</span>';
-		echo '<span><strong>' . esc_html__( 'Editorial:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( $status_label ) . '</span>';
+		echo '<span><strong>' . esc_html__( 'Artigo:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( (string) $post->ID ) . '</span>';
+		echo '<span><strong>' . esc_html__( 'Situação:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( $status_label ) . '</span>';
 		echo '</div>';
 		echo '</div>';
 		echo '<div class="bdc-kb-hero-actions">';
@@ -221,8 +236,8 @@ final class Admin_Page {
 		echo '</header>';
 	}
 
-	/** @param object $post WP_Post-like object. @param array<string,mixed> $summary */
-	private static function render_context_sidebar( int $post_id, object $post, array $summary ): void {
+	/** @param object $post WP_Post-like object. @param array<string,mixed> $summary @param array<string,mixed> $context */
+	private static function render_context_sidebar( int $post_id, object $post, array $summary, array $context ): void {
 		$status_object = get_post_status_object( (string) $post->post_status );
 		$status_label  = is_object( $status_object ) ? (string) $status_object->label : (string) $post->post_status;
 		$filled        = self::summary_filled_count( $summary );
@@ -234,27 +249,22 @@ final class Admin_Page {
 		echo '<aside class="bdc-kb-context-panel" aria-label="' . esc_attr__( 'Contexto do artigo', 'bdc-knowledge-base' ) . '">';
 		echo '<div class="bdc-kb-domain-heading"><h3>' . esc_html__( 'Contexto do artigo', 'bdc-knowledge-base' ) . '</h3><p>' . esc_html__( 'Informação editorial e governança em leitura.', 'bdc-knowledge-base' ) . '</p></div>';
 		echo '<dl class="bdc-kb-context-list">';
-		echo '<div><dt>' . esc_html__( 'Status editorial', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-badge bdc-kb-badge--success">' . esc_html( $status_label ) . '</span></dd></div>';
-		echo '<div><dt>' . esc_html__( 'Fonte editorial', 'bdc-knowledge-base' ) . '</dt><dd><strong>WordPress / Elementor</strong></dd></div>';
-		echo '<div><dt>' . esc_html__( 'Summary', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $filled . '/' . count( Meta_Contract::fields() ) . ' campos preenchidos' ) . '</dd></div>';
+		echo '<div><dt>' . esc_html__( 'Situação editorial', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-badge bdc-kb-badge--success">' . esc_html( $status_label ) . '</span></dd></div>';
+		$source_context = is_array( $context['source'] ?? null ) ? $context['source'] : array();
+		echo '<div><dt>' . esc_html__( 'Fonte editorial', 'bdc-knowledge-base' ) . '</dt><dd><strong>' . esc_html( (string) ( $source_context['label'] ?? 'Indisponível' ) ) . '</strong></dd></div>';
+		echo '<div><dt>' . esc_html__( 'Sumário', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $filled . '/' . count( Meta_Contract::fields() ) . ' campos preenchidos' ) . '</dd></div>';
 		echo '<div><dt>' . esc_html__( 'Classificação', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $term_count > 0 ? $term_count . ' conceito(s)' : 'Sem termos canônicos' ) . '</dd></div>';
-		echo '<div><dt>' . esc_html__( 'Review', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-state-badge bdc-kb-state-' . esc_attr( $review_state ) . '">' . esc_html( $review_label ) . '</span></dd></div>';
+		echo '<div><dt>' . esc_html__( 'Revisão', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-state-badge bdc-kb-state-' . esc_attr( $review_state ) . '">' . esc_html( $review_label ) . '</span></dd></div>';
 		echo '<div><dt>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( get_the_modified_date( '', $post ) ) . '</dd></div>';
 		echo '</dl>';
-		echo '<p class="bdc-kb-context-note">' . esc_html__( 'O Workspace gerencia conhecimento ao redor do artigo; a edição editorial continua no WordPress/Elementor.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="bdc-kb-context-note">' . esc_html__( 'Esta área reúne as informações de conhecimento e governança do artigo. A edição do conteúdo permanece no WordPress.', 'bdc-knowledge-base' ) . '</p>';
 		echo '</aside>';
 	}
 
 	private static function render_tabs( int $post_id, string $active_tab ): void {
-		$tabs = array(
-			'overview'       => array( 'label' => 'Visão geral', 'icon' => 'grid-view' ),
-			'summary'        => array( 'label' => 'Summary', 'icon' => 'media-text' ),
-			'classification' => array( 'label' => 'Classificação', 'icon' => 'tag' ),
-			'review'         => array( 'label' => 'Review & Governança', 'icon' => 'yes-alt' ),
-			'history'        => array( 'label' => 'Histórico', 'icon' => 'backup' ),
-		);
+		$tabs = Post_Activity_Registry::definitions();
 
-		echo '<nav class="bdc-kb-tabs" aria-label="' . esc_attr__( 'Domínios do Knowledge Workspace', 'bdc-knowledge-base' ) . '" data-bdc-workspace-tabs>';
+		echo '<nav class="bdc-kb-tabs" aria-label="' . esc_attr__( 'Áreas do artigo', 'bdc-knowledge-base' ) . '" data-bdc-workspace-tabs>';
 		foreach ( $tabs as $tab => $definition ) {
 			$url = self::workspace_url( $post_id, $tab );
 			$class = 'bdc-kb-tab' . ( $tab === $active_tab ? ' is-active' : '' );
@@ -264,43 +274,65 @@ final class Admin_Page {
 		echo '</nav>';
 	}
 
-	private static function render_overview( int $post_id ): void {
+	private static function render_overview( int $post_id, object $post, array $summary, array $context ): void {
 		$review = Review_Store::read( $post_id );
 		if ( is_wp_error( $review ) ) {
-			self::render_inline_error( 'Não foi possível carregar o estado de Review & Governança.' );
+			self::render_inline_error( 'Não foi possível carregar o estado de revisão e governança.' );
 			return;
 		}
 
-		$state       = (string) ( $review['state'] ?? Review_Contract::STATE_UNREVIEWED );
-		$state_label = Review_Contract::states()[ $state ] ?? $state;
+		$status_object = get_post_status_object( (string) $post->post_status );
+		$status_label  = is_object( $status_object ) ? (string) $status_object->label : (string) $post->post_status;
+		$filled        = self::summary_filled_count( $summary );
+		$total_fields  = count( Meta_Contract::fields() );
+		$term_count    = self::classification_term_count( $post_id );
+		$review_state  = (string) ( $review['state'] ?? Review_Contract::STATE_UNREVIEWED );
+		$review_label  = Review_Contract::states()[ $review_state ] ?? $review_state;
+		$source        = is_array( $context['source'] ?? null ) ? $context['source'] : array();
+		$core          = is_array( $context['core_blocks'] ?? null ) ? $context['core_blocks'] : array();
 
 		echo '<section class="bdc-kb-overview" aria-labelledby="bdc-kb-overview-title">';
-		echo '<h3 id="bdc-kb-overview-title">' . esc_html__( 'Visão geral do conhecimento', 'bdc-knowledge-base' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Use as abas para trabalhar em cada domínio sem perder o contexto do artigo.', 'bdc-knowledge-base' ) . '</p>';
-		echo '<div class="bdc-kb-overview-grid">';
-		self::render_overview_card( 'Summary', 'Conteúdo narrativo canônico da SPEC-001.', self::workspace_url( $post_id, 'summary' ), 'Abrir Summary', 'media-text' );
-		self::render_overview_card( 'Classificação', 'Vocabulários canônicos e relações taxonômicas da SPEC-002.', self::workspace_url( $post_id, 'classification' ), 'Abrir Classificação', 'tag' );
-		self::render_overview_card( 'Review & Governança', 'Estado atual: ' . $state_label . '.', self::workspace_url( $post_id, 'review' ), 'Abrir Review', 'yes-alt' );
-		self::render_overview_card( 'Histórico', 'Linha do tempo read-only das decisões de governança registradas.', self::workspace_url( $post_id, 'history' ), 'Abrir Histórico', 'backup' );
+		echo '<div class="bdc-kb-domain-heading">';
+		echo '<h3 id="bdc-kb-overview-title">' . esc_html__( 'Visão geral', 'bdc-knowledge-base' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Acompanhe a situação atual do artigo sem repetir a navegação disponível acima.', 'bdc-knowledge-base' ) . '</p>';
+		echo '</div>';
+
+		echo '<div class="bdc-kb-overview-status-grid">';
+		self::render_overview_status( 'Situação editorial', $status_label, 'Estado atual do artigo no WordPress.', 'yes-alt' );
+		self::render_overview_status( 'Conteúdo', (string) ( $source['label'] ?? 'Indisponível' ), 'Origem editorial identificada.', 'text-page' );
+		self::render_overview_status( 'Sumário', $filled . ' de ' . $total_fields . ' campos preenchidos', 'Completude das informações resumidas.', 'media-text' );
+		self::render_overview_status( 'Classificação', $term_count > 0 ? $term_count . ' conceito(s)' : 'Ainda não classificado', 'Organização por conceitos padronizados.', 'tag' );
+		self::render_overview_status( 'Revisão', $review_label, 'Estado atual de revisão e governança.', 'yes' );
+		self::render_overview_status( 'Blocos do WordPress', self::overview_core_status( (string) ( $core['operational_status'] ?? '' ) ), 'Situação da estrutura editorial.', 'block-default' );
 		echo '</div>';
 		echo '</section>';
 	}
 
-	private static function render_overview_card( string $title, string $description, string $url, string $action, string $icon ): void {
-		echo '<article class="bdc-kb-overview-card">';
+	private static function render_overview_status( string $label, string $value, string $description, string $icon ): void {
+		echo '<article class="bdc-kb-overview-status">';
 		echo '<div class="bdc-kb-card-icon" aria-hidden="true"><span class="dashicons dashicons-' . esc_attr( $icon ) . '"></span></div>';
-		echo '<h4>' . esc_html( $title ) . '</h4>';
+		echo '<span class="bdc-kb-overview-status__label">' . esc_html( $label ) . '</span>';
+		echo '<strong class="bdc-kb-overview-status__value">' . esc_html( $value ) . '</strong>';
 		echo '<p>' . esc_html( $description ) . '</p>';
-		echo '<a class="button bdc-kb-button-with-icon" href="' . esc_url( $url ) . '"><span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span><span>' . esc_html( $action ) . '</span></a>';
 		echo '</article>';
+	}
+
+	private static function overview_core_status( string $status ): string {
+		$labels = array(
+			'no_action_required'      => 'Atualizado',
+			'ready_for_authorization' => 'Preparação disponível',
+			'human_review_required'   => 'Revisão manual necessária',
+			'blocked'                 => 'Ação indisponível',
+		);
+		return $labels[ $status ] ?? 'Em avaliação';
 	}
 
 	/** @param array<string,mixed> $snapshot */
 	private static function render_summary_panel( int $post_id, array $snapshot ): void {
 		echo '<section class="bdc-kb-domain-panel" aria-labelledby="bdc-kb-summary-title">';
 		echo '<div class="bdc-kb-domain-heading">';
-		echo '<h3 id="bdc-kb-summary-title">' . esc_html__( 'Summary', 'bdc-knowledge-base' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Conteúdo narrativo canônico. O writer e a persistência permanecem os mesmos da SPEC-001.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h3 id="bdc-kb-summary-title">' . esc_html__( 'Sumário', 'bdc-knowledge-base' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Informações resumidas que ajudam a compreender rapidamente o objetivo e os pontos essenciais do artigo.', 'bdc-knowledge-base' ) . '</p>';
 		echo '</div>';
 
 		echo '<form class="bdc-kb-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
@@ -313,11 +345,11 @@ final class Admin_Page {
 			echo '<div class="bdc-kb-field">';
 			echo '<label for="' . esc_attr( $field_id ) . '"><strong>' . esc_html( $definition['label'] ) . '</strong></label>';
 			echo '<textarea class="large-text" rows="5" id="' . esc_attr( $field_id ) . '" name="summary[' . esc_attr( $field ) . ']" maxlength="32768">' . esc_textarea( (string) $snapshot[ $field ] ) . '</textarea>';
-			echo '<p class="description">' . esc_html__( 'Texto narrativo. Valor vazio remove a metadata correspondente.', 'bdc-knowledge-base' ) . '</p>';
+			echo '<p class="description">' . esc_html__( 'Preencha com texto objetivo. Deixe em branco para remover o conteúdo deste campo.', 'bdc-knowledge-base' ) . '</p>';
 			echo '</div>';
 		}
 
-		submit_button( __( 'Salvar Summary', 'bdc-knowledge-base' ) );
+		submit_button( __( 'Salvar sumário', 'bdc-knowledge-base' ) );
 		echo '</form>';
 		echo '</section>';
 	}
@@ -325,9 +357,9 @@ final class Admin_Page {
 	private static function render_list_header(): void {
 		echo '<header class="bdc-kb-list-hero">';
 		echo '<div class="bdc-kb-hero-copy">';
-		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Knowledge Studio', 'bdc-knowledge-base' ) . '</p>';
-		echo '<h1>' . esc_html__( 'Posts da Base de Conhecimento', 'bdc-knowledge-base' ) . '</h1>';
-		echo '<p>' . esc_html__( 'Localize artigos e gerencie Summary, Classificação e Governança sem substituir a edição editorial do WordPress.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Base de Conhecimento', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h1>' . esc_html__( 'Artigos da Base de Conhecimento', 'bdc-knowledge-base' ) . '</h1>';
+		echo '<p>' . esc_html__( 'Localize artigos e acompanhe conteúdo, sumário, classificação, inteligência e governança em um único lugar.', 'bdc-knowledge-base' ) . '</p>';
 		echo '</div>';
 		echo '<div class="bdc-kb-hero-actions"><a class="button button-primary bdc-kb-button-with-icon" href="' . esc_url( admin_url( 'post-new.php' ) ) . '"><span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><span>' . esc_html__( 'Abrir novo artigo no WordPress', 'bdc-knowledge-base' ) . '</span></a></div>';
 		echo '</header>';
@@ -369,12 +401,12 @@ final class Admin_Page {
 		}
 		echo '<div class="bdc-kb-metrics" aria-label="' . esc_attr__( 'Resumo da Base de Conhecimento', 'bdc-knowledge-base' ) . '">';
 		self::render_metric( (string) $total, 'artigos no escopo editorial' );
-		self::render_metric( (string) count( Meta_Contract::fields() ), 'campos Summary canônicos' );
-		self::render_metric( (string) count( Classification_Contract::fields() ), 'conceitos de Classificação' );
+		self::render_metric( (string) count( Meta_Contract::fields() ), 'campos do sumário' );
+		self::render_metric( (string) count( Classification_Contract::fields() ), 'conceitos de classificação' );
 		echo '</div>';
 
 		echo '<table class="widefat fixed bdc-kb-table">';
-		echo '<thead><tr><th>' . esc_html__( 'Artigo', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Summary', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Classificação', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Ações', 'bdc-knowledge-base' ) . '</th></tr></thead><tbody>';
+		echo '<thead><tr><th>' . esc_html__( 'Artigo', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Sumário', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Classificação', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Ações', 'bdc-knowledge-base' ) . '</th></tr></thead><tbody>';
 
 		$rendered = 0;
 		foreach ( $query->posts as $post ) {
@@ -461,14 +493,14 @@ final class Admin_Page {
 			: '';
 
 		$messages = array(
-			'saved'            => array( 'success', 'Summary salvo e confirmado por releitura.' ),
-			'fail_safe'        => array( 'error', 'A gravação falhou, mas o estado anterior foi restaurado com sucesso.' ),
-			'critical'         => array( 'error', 'Falha crítica: o estado anterior não foi restaurado integralmente. Releia o artigo e consulte o diagnóstico administrativo antes de nova alteração.' ),
-			'invalid_post'     => array( 'error', 'Artigo inválido ou fora do escopo da SPEC-001.' ),
+			'saved'            => array( 'success', 'Sumário salvo e confirmado.' ),
+			'fail_safe'        => array( 'error', 'Não foi possível concluir a gravação. As informações anteriores foram preservadas.' ),
+			'critical'         => array( 'error', 'Não foi possível restaurar integralmente as informações anteriores. Evite novas alterações e solicite uma verificação técnica.' ),
+			'invalid_post'     => array( 'error', 'Artigo inválido ou fora do escopo da Base de Conhecimento.' ),
 			'forbidden'        => array( 'error', 'Você não tem permissão para editar o artigo solicitado.' ),
 			'invalid_nonce'    => array( 'error', 'A validação de segurança expirou ou é inválida. Reabra o formulário e tente novamente.' ),
 			'invalid_payload'  => array( 'error', 'O formulário recebido é inválido.' ),
-			'validation_error' => array( 'error', 'O Summary não foi salvo porque o payload violou o contrato de validação.' ),
+			'validation_error' => array( 'error', 'O sumário não foi salvo porque os dados informados são inválidos.' ),
 		);
 
 		if ( ! isset( $messages[ $status ] ) ) {
@@ -498,10 +530,7 @@ final class Admin_Page {
 
 	private static function get_request_tab(): string {
 		if ( isset( $_GET['tab'] ) && is_scalar( $_GET['tab'] ) ) {
-			$tab = sanitize_key( wp_unslash( (string) $_GET['tab'] ) );
-			return in_array( $tab, array( 'overview', 'summary', 'classification', 'review', 'history' ), true )
-				? $tab
-				: self::DEFAULT_TAB;
+			return Post_Activity_Registry::normalize( wp_unslash( (string) $_GET['tab'] ) );
 		}
 
 		if ( isset( $_GET['bdc_summary_status'] ) ) {

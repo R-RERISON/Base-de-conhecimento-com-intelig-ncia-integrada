@@ -30,8 +30,8 @@
   --bdc-shadow: 0 8px 28px rgba(11, 31, 77, .06);
   --bdc-focus: 0 0 0 3px rgba(22, 119, 255, .24);
   width: auto;
-  max-width: 1320px;
-  margin: 0 auto 40px 0;
+  max-width: none;
+  margin: 0 20px 40px 0;
   color: var(--bdc-text);
   font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
 }
@@ -56,7 +56,7 @@
 }
 
 .bdc-kb-admin > h1::before {
-  content: "KNOWLEDGE STUDIO";
+  content: "BASE DE CONHECIMENTO";
   display: block;
   margin-bottom: 8px;
   color: var(--bdc-blue-600);
@@ -477,6 +477,10 @@
 
 .bdc-kb-workspace-main { min-width: 0; }
 
+.bdc-kb-workspace-layout--full {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .bdc-kb-context-panel {
   position: sticky;
   top: 46px;
@@ -645,7 +649,7 @@ body.bdc-kb-vocabulary-screen #wpbody-content { background: var(--bdc-bg); }
   align-items: flex-start;
   justify-content: space-between;
   gap: 22px;
-  max-width: 1400px;
+  max-width: none;
   margin: 20px 20px 0;
   padding: 24px 26px;
   border: 1px solid #d8e9ff;
@@ -689,7 +693,7 @@ body.bdc-kb-vocabulary-screen #wpbody-content { background: var(--bdc-bg); }
 }
 
 body.bdc-kb-vocabulary-screen .wrap.nosubsub {
-  max-width: 1400px;
+  max-width: none;
   margin: 18px 20px 40px;
   color: var(--bdc-text);
 }

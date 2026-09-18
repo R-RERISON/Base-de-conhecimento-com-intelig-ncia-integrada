@@ -65,9 +65,9 @@ final class Visual_Foundation {
 
 		echo '<div class="bdc-kb-vocabulary-hero">';
 		echo '<div class="bdc-kb-vocabulary-hero__copy">';
-		echo '<p class="bdc-kb-vocabulary-eyebrow">' . esc_html__( 'Knowledge Studio / Vocabulários', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="bdc-kb-vocabulary-eyebrow">' . esc_html__( 'Base de Conhecimento / Vocabulários', 'bdc-knowledge-base' ) . '</p>';
 		echo '<h1>' . esc_html( (string) $definition['label'] ) . '</h1>';
-		echo '<p>' . esc_html__( 'Gerencie termos canônicos usando a Taxonomy API nativa do WordPress. Alterações afetam somente este vocabulário.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p>' . esc_html__( 'Gerencie os termos padronizados usando os recursos nativos de taxonomia do WordPress. As alterações afetam somente este vocabulário.', 'bdc-knowledge-base' ) . '</p>';
 		echo '</div>';
 		$return_post_id = self::return_post_id();
 		$return_url     = $return_post_id > 0

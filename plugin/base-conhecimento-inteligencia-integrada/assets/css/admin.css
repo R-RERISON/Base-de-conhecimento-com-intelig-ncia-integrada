@@ -21,7 +21,9 @@
 	--bdc-radius-md: 16px;
 	--bdc-radius-lg: 22px;
 	--bdc-shadow: 0 8px 28px rgba(11, 31, 77, 0.06);
-	max-width: 1240px;
+	width: auto;
+	max-width: none;
+	margin-right: 20px;
 	color: var(--bdc-text);
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
@@ -90,7 +92,7 @@
 }
 
 .bdc-kb-classification .bdc-kb-form {
-	max-width: 980px;
+	max-width: none;
 	padding: 0;
 	border: 0;
 	background: transparent;
@@ -256,7 +258,7 @@
 
 .bdc-kb-legacy-reference {
 	margin-top: 10px;
-	max-width: 900px;
+	max-width: none;
 	padding: 8px 10px;
 	border: 1px dashed #cdd7e4;
 	border-radius: var(--bdc-radius-sm);

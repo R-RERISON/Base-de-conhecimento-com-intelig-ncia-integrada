@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T100C",
+  "mode": "workspace_single_post_core_blocks_authorization_pack_read_only",
+  "generated_at": "2026-09-17T23:52:20+00:00",
+  "raw_file_sha256": "fae9016aa5846fa22de5ba79b01a31bfcd86906c827f3dbec809d0198beb21c6",
+  "action_contract": "core_blocks_migrate_v1",
+  "target": {
+    "post_id": 358,
+    "post_title": "LIA | Laboratório de Inteligência Analítica",
+    "post_status": "publish",
+    "source_kind": "legacy_html"
+  },
+  "readiness": {
+    "operational_status": "ready_for_authorization",
+    "operational_reasons": [
+      "TERMINAL_ROLLBACK_HISTORY_PRESENT"
+    ],
+    "dry_run_status": "ready",
+    "journal_event_count": 3,
+    "latest_journal_state": "rolled_back",
+    "lock_status": "free"
+  },
+  "identity": {
+    "fidelity_hash_before": "5e4695f159494ad3a1715741bdf485da43d77a991f9f39ecdab02901d6b2bd2e",
+    "serialization_hash": "9e96a95d451c9463fa6bf37d7eec31c005df39da1774bd8de7ae110ee72f91cf",
+    "dry_run_hash": "b533eb953b705b85fd48c3ab26c9bc5d6b61ee4223449370662f6e606123fab3",
+    "serialized_post_content_sha256_expected": "af4101dda487e6f6239b8bb0546439a75e1691062fd27f9322cbb0d9c2f84050",
+    "expected_block_names": [
+      "core/freeform"
+    ],
+    "authorization_id": "17c002d3ccc770c6ef154fdbed28cbd0c8d198411c84e168fe9aadb1b7a41af0"
+  },
+  "authorization": {
+    "authorized": false,
+    "authorization_ready": true,
+    "explicit_human_authorization_required": true,
+    "authorization_id": "17c002d3ccc770c6ef154fdbed28cbd0c8d198411c84e168fe9aadb1b7a41af0"
+  },
+  "safety": {
+    "read_only_design": true,
+    "persists_state": false,
+    "acquires_lock": false,
+    "writes_post_content": false,
+    "writes_elementor_data": false,
+    "calls_external_network": false,
+    "executes_shortcodes": false,
+    "renders_blocks": false,
+    "exports_editorial_body": false,
+    "exports_urls": false
+  },
+  "gate_result": {
+    "t100c_environmental_authorization_pack_pass": true
+  }
+}

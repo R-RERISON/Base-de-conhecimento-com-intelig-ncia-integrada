@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T100E-E6",
+  "mode": "workspace_regression_matrix_local_validation",
+  "generated_at": "2026-09-18T11:45:00Z",
+  "build": "0.4.0-g245-e6.1",
+  "package_sha256": "2a208ecfa1f65092f793c033e55a21bb0117434e2f8468a9cb3cbb998b6fa376",
+  "validation": {
+    "pure_contract_cases_passed": 9,
+    "pure_contract_cases_total": 9,
+    "php_lint_pre_zip_passed": 41,
+    "php_lint_pre_zip_total": 41,
+    "php_lint_post_extract_passed": 41,
+    "php_lint_post_extract_total": 41,
+    "unconditional_requires_present": 38,
+    "unconditional_requires_total": 38,
+    "single_plugin_root": true
+  },
+  "safety": {
+    "hidden_engineering_route": true,
+    "product_menu_added": false,
+    "editorial_write_performed": false,
+    "metadata_write_performed": false,
+    "lock_acquire_release_present": false,
+    "network_present": false,
+    "shortcode_execution_present": false,
+    "dynamic_block_render_present": false,
+    "t100d_executor_enabled": false,
+    "elementor_writer_enabled": false
+  },
+  "gate_result": {
+    "t100e_e6_local_pass": true,
+    "t100e_e6_environmental_pending": true
+  }
+}

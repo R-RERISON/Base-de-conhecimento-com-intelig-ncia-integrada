@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T098",
+  "result": "FAIL_CONTROLADO",
+  "build": "0.4.0-g245-readiness-t098.1",
+  "generated_at": "2026-09-17T19:06:20+00:00",
+  "raw_evidence_sha256": "b85e22c338d72f52dc11b3d113058618108b9dd20778b67a3062839c8eaba44d",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10"
+  },
+  "corpus": {
+    "total_posts": 623,
+    "first_pass": 0,
+    "second_pass": 0,
+    "first_throwables": 623,
+    "second_throwables": 623,
+    "safety_violations": 0
+  },
+  "safety": {
+    "read_only_design": true,
+    "writes_post_content": false,
+    "writes_elementor_data": false,
+    "writer_allowed": false,
+    "migration_execution_allowed": false,
+    "corpus_unchanged": true,
+    "editorial_fingerprint_equal": true
+  },
+  "root_cause": {
+    "classification": "integration_contract_mismatch",
+    "details": [
+      "Block_Migration_Dry_Run chamou Core_Block_Editorial_Parity::validate(), mas o contrato T097 expõe assess(source, serialization, parsed_blocks).",
+      "Block_Migration_Dry_Run chamou Block_Migration_Stale_Source_Guard::inspect_post(), mas o contrato T097 expõe assess(planned, current) e assert_fresh(post_id, planned).",
+      "T098.1 esperava stale.is_fresh, campo não definido pelo contrato; o estado canônico é stale.status=fresh|stale."
+    ],
+    "architectural_failure": false,
+    "editorial_regression": false
+  },
+  "remediation": {
+    "target_build": "0.4.0-g245-readiness-t098.2",
+    "actions": [
+      "usar parse_blocks() antes de Core_Block_Editorial_Parity::assess()",
+      "reconstruir Migration Fidelity Source atual e usar Block_Migration_Stale_Source_Guard::assess()",
+      "avaliar freshness exclusivamente por status=fresh",
+      "adicionar assinatura agregada de throwable sem exportar conteúdo editorial"
+    ]
+  }
+}

@@ -1,135 +1,120 @@
 # Continuidade — SPEC-004 Content Extractor e Knowledge Document
 
-## Estado atual
+## Repositório / referência
 
-- SPEC-001/002/003: concluídas.
-- R-200: PASS.
-- R-210: PASS.
-- G-220: PASS ambiental.
-- G-230/v1: PASS de determinismo; v1 superseded for AI.
-- G-240/v1: FAIL CONTROLADO — perda estrutural.
-- G-240/v2/KD 2.0.1: full-corpus técnico PASS, porém aceite humano A/B FAIL CONTROLADO — HIERARCHY FIDELITY.
-- KD 2.1.0 / build `0.4.0-acceptance.12`: PASS técnico full-corpus + PASS humano 8/8.
-- **G-240: CLOSED / PASS e promovido para `main`.**
-- merge de referência G-240: `32a696386bf2ab5574d4d7725db78636fa51f36c`.
-- evidência técnica: `evidence/kd-v21-smoke-summary-20260916T172538Z.json`.
-- evidência humana: `evidence/g240-kd21-acceptance-20260916T193359Z.json`.
-- contrato KD 2.1.0 congelado: `knowledge-document-contract-v2.1.0.md`.
-- **G-245: IN PROGRESS somente em `spec004-g245-production-readiness`; PR #4 DRAFT.**
-- writer/migration Elementor permanecem não autorizados.
+- Repositório: `R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada`.
+- Branch: `spec004-g245-production-readiness`.
+- Commit de referência do fechamento antes deste handoff: `ad1110198aea77a23d62951d025e9ebcdb76c3bc`.
+- PR #4: DRAFT / NÃO MERGEAR até revisão final.
+- SPEC-004: **CONCLUÍDA na branch de fechamento**.
 
-## Baseline comprovada em `main`
+## Estado comprovado
 
-A `main` contém o fechamento G-240 e permanece separada do trabalho G-245.
+- G-240: PASS/CLOSED/main.
+- UX-003: PASS ambiental.
+- T100D Persistent Single-Post Migration: PASS ambiental.
+- T100E E1-E6: PASS/concluídos.
+- T100E-E7: PASS/CLOSED.
+- G-245: PASS/CLOSED na branch.
+- G-250 Lifecycle/RC1: PASS ambiental/CLOSED.
+- RC final limpo: `0.4.0-spec004-rc2`.
+- SHA-256 RC2: `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`.
 
-Knowledge Document:
+## Evidência G-250
 
-- schema `2.1.0`;
-- Content Extractor/KD read-only;
-- relações hierárquicas conservadoras e auditáveis;
-- `review_required` preserva limitações conhecidas sem ser confundido com `not_ready`.
+Arquivo: `evidence/g250-lifecycle-rc-pass-20260918T123514Z.json`.  
+SHA-256 bruto: `c7fa462b7a0e5e0e1307cd63d62a6d98e12ebe44620e9208d9d08dcbecab7c76`.
 
-## Evidência técnica que fechou G-240
+Comprovado:
+- upgrade para RC1;
+- Workspace íntegra;
+- deactivate/activate;
+- downgrade controlado para `0.4.0-g245-ux003.1`;
+- reinstall RC1;
+- SPEC-001/002/003 read paths PASS;
+- Content Extractor PASS;
+- Knowledge Document 2.1.0 PASS;
+- post 358 source_kind `gutenberg`;
+- operational `no_action_required`;
+- journal `applied`;
+- lock `free`;
+- fingerprint before == after;
+- `gate_result.g250_lifecycle_rc_pass=true`.
 
-Ambiente de homologação:
+## RC2 final
 
-- WordPress 6.9.4;
-- PHP 8.5.10;
-- Elementor 4.1.0;
-- plugin `0.4.0-acceptance.12`;
-- DOMDocument ativo.
+Runtime final:
+- G-250 OFF;
+- T100E-E6 OFF;
+- Production Preflight OFF;
+- T100D executor OFF;
+- Elementor writer OFF;
+- Workspace ON;
+- Core Blocks preparation read-only ON.
 
-Full-corpus:
+Validação:
+- 44 arquivos no ZIP;
+- 39 PHP / 39 lint PASS;
+- 38/38 active requires;
+- single plugin root;
+- deterministic rebuild PASS;
+- Core Blocks activity sem operação proibida;
+- Workspace invariants PASS.
 
-- corpus 622 → 622;
-- primeira passagem: 622/622;
-- segunda passagem: 622/622;
-- errors: 0;
-- throwables: 0;
-- hash mismatches: 0;
-- canonical JSON mismatches: 0;
-- structure_incomplete: 0;
-- `not_ready`: 0;
-- fingerprint editorial before/after idêntico;
-- changed posts: 0;
-- gate técnico: PASS.
+Manifest/checksum:
+- `evidence/spec004-rc2-manifest.json`;
+- `evidence/spec004-rc2.sha256`;
+- `evidence/spec004-final-release-validation-20260918.json`.
 
-Readiness:
+## Arquitetura vigente
 
-- candidate_ready: 387;
-- review_required: 233;
-- not_applicable: 2;
-- not_ready: 0.
+- WordPress Core Blocks são o destino editorial canônico.
+- Elementor é fonte legada temporária.
+- `Elementor_Adapter` permanece.
+- Dependência residual: 39 artigos (34 Elementor + 5 mixed).
+- Mixed exige humano.
+- Nenhuma ação global pode alterar múltiplos posts implicitamente.
+- Writes futuros são post-scoped.
 
-## Evidência humana que fechou G-240
+## Autorização de migração
 
-Mesmo conjunto de oito slots:
+O controle de autorização **permanece obrigatório**. O mecanismo atual de baixar Authorization Pack é transitório e não é a UX final desejada.
 
-- reviewed: 8/8;
-- human_passed: 8/8;
-- gate_passed: 8/8;
-- coverage: 8/8;
-- order: 8/8;
-- no invented text: 8/8;
-- structure preserved: 8/8;
-- stale: 0;
-- repeatability failures: 0;
-- sample ID mismatches: 0;
-- system not_ready: 0;
-- gate global: true.
+Direção futura `AUTH-UX-001`:
+- integrar autorização à própria Workspace;
+- mostrar dry-run/impacto;
+- confirmação humana explícita por post;
+- capability + nonce;
+- stale-source recheck;
+- journal + lock + rollback;
+- auditoria do autorizador/fingerprint.
 
-Os casos 1290, 370 e 1307, que motivaram KD 2.1, fecharam com estrutura humana preservada.
+Não reativar T100D one-shot como produto e não criar migração em massa implícita.
 
-## Estado de G-245
+## Dívida residual
 
-Branch canônica de trabalho:
+- 39 artigos relacionados a Elementor;
+- retirada física do Elementor somente com dependência zero;
+- AUTH-UX-001 fora do escopo da SPEC-004;
+- busca lexical/Golden Queries é a próxima evolução de produto prevista no roadmap, sem misturar com migração.
 
-`spec004-g245-production-readiness`
+## RC2 Final Smoke
 
-PR:
+**PASS AMBIENTAL confirmado pelo usuário em 2026-09-18.**
 
-`#4` — DRAFT / NÃO MERGEAR até fechamento dos subgates aplicáveis.
-
-T080 Production Preflight foi executado read-only em homologação e registrou:
-
-- blockers: 0;
-- review items: shortcodes legados `faq_wd`/`wpt` sem handler e loopback não testado;
-- corpus 622 → 622;
-- fingerprint editorial preservado;
-- `writer_allowed=false`;
-- `migration_execution_allowed=false`;
-- zero execução de shortcodes;
-- zero rede externa;
-- zero persistência;
-- zero escrita editorial.
-
-Evidência G-245/T080 permanece na branch G-245 e não compõe a baseline runtime da `main`.
+- RC2 instalado em homologação;
+- smoke final executado pelo usuário;
+- nenhuma regressão foi reportada na confirmação;
+- evidência humana: `evidence/spec004-rc2-final-smoke-user-acceptance-20260918.json`.
 
 ## Próximo passo exato
 
-Continuar a partir do PR #4, revalidando o estado real do branch antes de qualquer mudança:
+1. revisão final do diff do PR #4;
+2. confirmar mergeable/clean contra `main`;
+3. após autorização explícita do usuário, retirar DRAFT;
+4. merge do PR #4 para `main`;
+5. registrar SPEC-004 como CLOSED/main.
 
-1. conferir `AGENTS.md`;
-2. conferir `.specify/PROJECT_MANIFEST.md`;
-3. conferir `.specify/memory/constitution.md`;
-4. conferir esta SPEC e `docs/DEFINITION-OF-DONE.md`;
-5. confirmar `main`, branch G-245, head do PR #4 e divergências;
-6. fechar Projection Plan read-only de forma determinística e ambientalmente validada;
-7. manter writer disabled-by-default;
-8. somente depois avançar para journal/rollback, stale-source guard, dry-run e canário.
-
-## Critério objetivo do próximo passo
-
-Projection Plan só fecha quando houver contrato congelado, testes locais PASS, repetibilidade, zero-write comprovado e evidência ambiental full-corpus sem mutação editorial. A existência do plano não autoriza writer.
-
-## Guardrails preservados
-
-- WordPress/Elementor continuam fonte editorial;
-- Knowledge Document é derivado reconstruível;
-- nenhum writer Elementor está autorizado;
-- nenhuma migration Elementor está autorizada;
-- nenhuma persistência de KD foi autorizada;
-- produção não é ambiente experimental;
-- GO de homologação != GO de produção.
+Não iniciar IA, embeddings, busca vetorial, migração em massa ou remoção do Elementor antes dessa revisão.
 
 > Quem não sabe onde está, não sabe para onde quer ir.

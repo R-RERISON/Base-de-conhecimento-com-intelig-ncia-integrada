@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T100E-E2",
+  "mode": "static_regression_baseline_on_t100d_installable_artifact",
+  "generated_at": "2026-09-18T10:20:00Z",
+  "artifact": {
+    "build": "0.4.0-g245-workspace-t100d.1",
+    "package_sha256": "84f7f4c5ed15a8fa80241124c5156c9939db0057ba3f38ce1b17317e95f96734",
+    "php_files": 65,
+    "includes_php_files": 64,
+    "css_files": 4,
+    "js_files": 1
+  },
+  "source_tree": {
+    "includes_php_files": 68,
+    "source_only_vs_artifact": [
+      "class-content-extractor-smoke.php",
+      "class-content-profile.php",
+      "class-knowledge-document-smoke.php",
+      "class-real-content-acceptance.php"
+    ],
+    "artifact_only_vs_source": []
+  },
+  "runner": {
+    "pass": true,
+    "failures": [],
+    "php_lint_checked": 65,
+    "php_lint_failures": 0,
+    "unconditional_requires": 48,
+    "unconditional_require_missing": [],
+    "workspace_invariants_pass": true,
+    "core_blocks_activity_read_only": true
+  },
+  "warnings": [
+    "BDC_KB_SPEC004_G245_PREFLIGHT_BUILD still enabled",
+    "BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD still enabled after successful one-shot execution",
+    "engineering/test files still ship in installable tree",
+    "historical T099C writer source still ships although build flag is false",
+    "parallel Block/Elementor defensive families remain",
+    "source tree and installable artifact are not produced from an explicit reproducible manifest"
+  ],
+  "capability_inventory": {
+    "external_network_calls": [],
+    "shortcode_execution": [],
+    "dynamic_block_rendering": []
+  },
+  "gate_result": {
+    "t100e_static_regression_baseline_pass": true,
+    "consolidation_required": true
+  }
+}

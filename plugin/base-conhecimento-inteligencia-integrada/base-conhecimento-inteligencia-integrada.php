@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.5.0-r510-t513.1
+ * Version: 0.5.0-r510-t514.2
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.5.0-r510-t513.1' );
+define( 'BDC_KB_VERSION', '0.5.0-r510-t514.2' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -171,6 +171,7 @@ if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD' ) && BDC_KB_SPEC
 	require_once BDC_KB_DIR . 'includes/class-golden-candidate-seed.php';
 	require_once BDC_KB_DIR . 'includes/class-golden-candidate-validator.php';
 	require_once BDC_KB_DIR . 'includes/class-golden-diversity-validator.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-challenge-discovery.php';
 	require_once BDC_KB_DIR . 'includes/class-golden-auto-validation-runner.php';
 }
 

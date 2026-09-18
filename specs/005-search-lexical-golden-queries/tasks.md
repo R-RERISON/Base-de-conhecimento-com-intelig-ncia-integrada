@@ -1,8 +1,8 @@
 # Tasks — SPEC-005
 
 ## R-500 — Baseline / DoR
-- [ ] T500 congelar baseline `main`, versão/plugin e corpus.
-- [ ] T501 inventariar comportamento atual `WP_Query s`.
+- [x] T500 congelar baseline `main`, versão/plugin e corpus conhecido.
+- [x] T501 inventariar comportamento atual `WP_Query s`.
 - [ ] T502 criar diagnóstico read-only de busca nativa.
 - [ ] T503 medir corpus/scope/status/permissions.
 - [ ] T504 comparar conteúdo pesquisável nativo vs Content Extractor.

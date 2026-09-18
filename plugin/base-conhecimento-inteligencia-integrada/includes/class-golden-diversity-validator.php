@@ -172,8 +172,7 @@ final class Golden_Diversity_Validator {
 
 		$normalized = Golden_Candidate_Validator::normalize( $query );
 		if (
-			count( $tokens ) >= 4
-			|| preg_match( '/^(como|qual|quais|onde|quando|porque|por que|o que|como faco|como fazer)\b/', $normalized )
+			preg_match( '/^(como|qual|quais|onde|quando|porque|por que|o que|como faco|como fazer)\b/', $normalized )
 			|| str_contains( $query, '?' )
 		) {
 			$classes[] = 'natural_language';

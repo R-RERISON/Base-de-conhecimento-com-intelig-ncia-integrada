@@ -22,7 +22,7 @@ final class Post_Activity_Registry {
 				'label' => 'Conteúdo', 'icon' => 'text-page', 'renderer' => 'post_management', 'mode' => 'read_only',
 			),
 			'summary' => array(
-				'label' => 'Summary', 'icon' => 'media-text', 'renderer' => 'legacy', 'mode' => 'existing_writer',
+				'label' => 'Sumário', 'icon' => 'media-text', 'renderer' => 'legacy', 'mode' => 'existing_writer',
 			),
 			'classification' => array(
 				'label' => 'Classificação', 'icon' => 'tag', 'renderer' => 'legacy', 'mode' => 'existing_writer',
@@ -31,10 +31,10 @@ final class Post_Activity_Registry {
 				'label' => 'Inteligência', 'icon' => 'lightbulb', 'renderer' => 'post_management', 'mode' => 'read_only',
 			),
 			'core_blocks' => array(
-				'label' => 'Core Blocks', 'icon' => 'block-default', 'renderer' => 'post_management', 'mode' => 'read_only',
+				'label' => 'Blocos do WordPress', 'icon' => 'block-default', 'renderer' => 'post_management', 'mode' => 'read_only',
 			),
 			'review' => array(
-				'label' => 'Review & Governança', 'icon' => 'yes-alt', 'renderer' => 'legacy', 'mode' => 'existing_writer',
+				'label' => 'Revisão e governança', 'icon' => 'yes-alt', 'renderer' => 'legacy', 'mode' => 'existing_writer',
 			),
 			'history' => array(
 				'label' => 'Histórico', 'icon' => 'backup', 'renderer' => 'legacy', 'mode' => 'read_only',

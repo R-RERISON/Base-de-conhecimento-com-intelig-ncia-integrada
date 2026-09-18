@@ -277,3 +277,88 @@
 		flex-direction: column;
 	}
 }
+
+
+/* UX-003 — visão geral informativa, sem navegação duplicada. */
+.bdc-kb-workspace-layout--full {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.bdc-kb-overview-status-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 14px;
+	margin-top: 18px;
+}
+
+.bdc-kb-overview-status {
+	min-width: 0;
+	padding: 18px;
+	border: 1px solid #e2e8f0;
+	border-radius: var(--bdc-radius-sm);
+	background: var(--bdc-surface-soft);
+}
+
+.bdc-kb-overview-status__label {
+	display: block;
+	margin-bottom: 6px;
+	color: var(--bdc-text-muted);
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: .02em;
+}
+
+.bdc-kb-overview-status__value {
+	display: block;
+	color: var(--bdc-brand-navy);
+	font-size: 17px;
+	line-height: 1.35;
+}
+
+.bdc-kb-overview-status p {
+	margin: 8px 0 0;
+	color: var(--bdc-text-secondary);
+	line-height: 1.5;
+}
+
+.bdc-kb-detail-table {
+	margin-top: 18px;
+}
+
+.bdc-kb-detail-table th {
+	width: 240px;
+	color: var(--bdc-text-secondary);
+	font-weight: 650;
+}
+
+.bdc-kb-detail-table td {
+	color: var(--bdc-text);
+}
+
+.bdc-kb-domain-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	margin-top: 18px;
+}
+
+.bdc-kb-domain-actions form {
+	margin: 0;
+}
+
+@media (max-width: 1280px) {
+	.bdc-kb-overview-status-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 782px) {
+	.bdc-kb-overview-status-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.bdc-kb-detail-table th {
+		width: 180px;
+	}
+}

@@ -122,12 +122,14 @@ HE5-001 concluído localmente: Block Journal/Store recebeu validação de identi
 
 Candidate: `0.4.0-g245-consolidation-t100e.3`, SHA-256 `8cdb59c46fa80a8a642fd555e7d87b896ae757358149a11e71978e9df9b717f3`, 40 PHP, 38 requires, 0 lint failures, build determinístico reproduzido.
 
-Próximo passo: validar em homologação que o journal `applied` já existente do post 358 continua legível sob o hardening, sem write.
+HE5-001: **PASS AMBIENTAL**. O journal `applied` do post 358 permaneceu legível sob o hardening, com `noop`, `no_action_required`, lock livre e sem novo write.
+
+Próximo passo: **T100E-E6 — Workspace Regression Matrix**.
 
 
 ## UX-003 — Consolidação visual
 
-Status: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+Status: **PASS AMBIENTAL**.
 
 Build: `0.4.0-g245-ux003.1`.  
 SHA-256: `758118f5bf9f0a06f05b05a73992cb47ab4c03ea8c32f18fa26f0e2c3ba88e2f`.

@@ -20,19 +20,9 @@ final class Golden_Candidate_Validator {
 	public const STATUS_REVIEW_REQUIRED = 'REVIEW_REQUIRED';
 	public const STATUS_AUTO_FAIL = 'AUTO_FAIL';
 
-	/**
-	 * Avalia evidências objetivas de uma expectativa Golden já existente.
-	 *
-	 * O validador pode confirmar continuidade de uma expectativa humana/histórica,
-	 * mas nunca cria/troca expected_post_id por conta própria.
-	 *
-	 * @param array<string,mixed> $evidence
-	 * @return array<string,mixed>
-	 */
 	public static function assess( array $evidence ): array {
 		$reasons = array();
 		$status = self::STATUS_AUTO_PASS;
-
 		$exists = true === ( $evidence['expected_exists'] ?? false );
 		$published = true === ( $evidence['expected_published'] ?? false );
 		$expected_rank = max( 0, (int) ( $evidence['expected_rank'] ?? 0 ) );
@@ -52,121 +42,56 @@ final class Golden_Candidate_Validator {
 		$extractor_error = true === ( $evidence['extractor_error'] ?? false );
 
 		if ( ! $exists ) {
-			return self::result(
-				self::STATUS_AUTO_FAIL,
-				array( 'EXPECTED_POST_MISSING' ),
-				$evidence,
-				false
-			);
+			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_MISSING' ), $evidence, false );
 		}
-
 		if ( ! $published ) {
-			return self::result(
-				self::STATUS_AUTO_FAIL,
-				array( 'EXPECTED_POST_NOT_PUBLISHED' ),
-				$evidence,
-				false
-			);
+			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_NOT_PUBLISHED' ), $evidence, false );
 		}
-
 		if ( $extractor_error ) {
-			return self::result(
-				self::STATUS_AUTO_FAIL,
-				array( 'EXPECTED_CONTENT_EXTRACTION_FAILED' ),
-				$evidence,
-				false
-			);
+			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_CONTENT_EXTRACTION_FAILED' ), $evidence, false );
 		}
-
 		if ( 0 === $expected_rank ) {
-			return self::result(
-				self::STATUS_AUTO_FAIL,
-				array( 'EXPECTED_POST_NOT_RETRIEVED' ),
-				$evidence,
-				false
-			);
+			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_NOT_RETRIEVED' ), $evidence, false );
 		}
-
 		if ( $expected_rank > $max_rank ) {
-			return self::result(
-				self::STATUS_AUTO_FAIL,
-				array( 'EXPECTED_POST_OUTSIDE_MAX_RANK' ),
-				$evidence,
-				false
-			);
+			return self::result( self::STATUS_AUTO_FAIL, array( 'EXPECTED_POST_OUTSIDE_MAX_RANK' ), $evidence, false );
 		}
-
 		if ( $semantic_coverage < 100.0 ) {
 			$status = self::STATUS_REVIEW_REQUIRED;
 			$reasons[] = 'EXPECTED_SEMANTIC_QUERY_COVERAGE_INCOMPLETE';
 		}
-
 		if ( $expected_rank > 1 ) {
 			$status = self::STATUS_REVIEW_REQUIRED;
 			$reasons[] = 'EXPECTED_NOT_TOP1';
 		}
-
 		$competitor_material = $competitor_ahead
 			&& $competitor_semantic >= $semantic_coverage
 			&& $competitor_score >= ( $expected_score - 0.001 );
-
 		if ( $competitor_material ) {
 			$status = self::STATUS_REVIEW_REQUIRED;
 			$reasons[] = 'STRONG_COMPETITOR_AHEAD';
 		}
-
-		if (
-			1 === $query_token_count
-			&& $competitor_ahead
-			&& $competitor_semantic >= 100.0
-			&& $competitor_title >= $title_coverage
-		) {
+		if ( 1 === $query_token_count && $competitor_ahead && $competitor_semantic >= 100.0 && $competitor_title >= $title_coverage ) {
 			$status = self::STATUS_REVIEW_REQUIRED;
 			$reasons[] = 'SINGLE_TOKEN_AMBIGUITY';
 		}
-
-		if (
-			self::STATUS_AUTO_PASS === $status
-			&& ! $exact_title_phrase
-			&& $title_coverage <= 0.0
-			&& $summary_coverage <= 0.0
-			&& $native_coverage <= 0.0
-		) {
+		if ( self::STATUS_AUTO_PASS === $status && ! $exact_title_phrase && $title_coverage <= 0.0 && $summary_coverage <= 0.0 && $native_coverage <= 0.0 ) {
 			$status = self::STATUS_REVIEW_REQUIRED;
 			$reasons[] = 'NO_DIRECT_NATIVE_SIGNAL';
 		}
-
 		if ( empty( $reasons ) ) {
 			$reasons[] = 'OBJECTIVE_CONTINUITY_VALIDATED';
 		}
-
-		return self::result(
-			$status,
-			array_values( array_unique( $reasons ) ),
-			$evidence,
-			self::STATUS_AUTO_PASS === $status
-		);
+		return self::result( $status, array_values( array_unique( $reasons ) ), $evidence, self::STATUS_AUTO_PASS === $status );
 	}
 
-	/**
-	 * Score auxiliar apenas para detectar ambiguidade entre expected e concorrentes.
-	 * NÃO é o ranker Search da SPEC-005.
-	 *
-	 * @param array<string,mixed> $signals
-	 */
 	public static function validation_score( array $signals ): float {
 		$title = self::bounded_percent( $signals['title_coverage_percent'] ?? 0.0 );
 		$summary = self::bounded_percent( $signals['summary_coverage_percent'] ?? 0.0 );
 		$semantic = self::bounded_percent( $signals['semantic_coverage_percent'] ?? 0.0 );
 		$native = self::bounded_percent( $signals['native_coverage_percent'] ?? 0.0 );
 		$exact = true === ( $signals['exact_title_phrase'] ?? false );
-
-		$score = ( 0.45 * $semantic )
-			+ ( 0.30 * $title )
-			+ ( 0.15 * $summary )
-			+ ( 0.10 * $native )
-			+ ( $exact ? 15.0 : 0.0 );
-
+		$score = ( 0.45 * $semantic ) + ( 0.30 * $title ) + ( 0.15 * $summary ) + ( 0.10 * $native ) + ( $exact ? 15.0 : 0.0 );
 		return round( $score, 4 );
 	}
 
@@ -178,34 +103,23 @@ final class Golden_Candidate_Validator {
 		return trim( preg_replace( '/\s+/', ' ', $value ) ?? '' );
 	}
 
-	/** @return array<int,string> */
 	public static function tokens( string $value ): array {
 		$normalized = self::normalize( $value );
-		if ( '' === $normalized ) {
-			return array();
-		}
+		if ( '' === $normalized ) return array();
 		$tokens = preg_split( '/\s+/', $normalized ) ?: array();
 		$out = array();
 		foreach ( $tokens as $token ) {
-			if ( '' !== $token && ! in_array( $token, $out, true ) ) {
-				$out[] = $token;
-			}
+			if ( '' !== $token && ! in_array( $token, $out, true ) ) $out[] = $token;
 		}
 		return $out;
 	}
 
 	public static function coverage_percent( string $query, string $text ): float {
 		$query_tokens = self::tokens( $query );
-		if ( empty( $query_tokens ) ) {
-			return 0.0;
-		}
+		if ( empty( $query_tokens ) ) return 0.0;
 		$text_tokens = array_flip( self::tokens( $text ) );
 		$matched = 0;
-		foreach ( $query_tokens as $token ) {
-			if ( isset( $text_tokens[ $token ] ) ) {
-				++$matched;
-			}
-		}
+		foreach ( $query_tokens as $token ) if ( isset( $text_tokens[ $token ] ) ) ++$matched;
 		return round( 100.0 * $matched / count( $query_tokens ), 4 );
 	}
 
@@ -215,7 +129,6 @@ final class Golden_Candidate_Validator {
 		return '' !== $q && '' !== $t && str_contains( $t, $q );
 	}
 
-	/** @param array<string,mixed> $evidence @return array<string,mixed> */
 	private static function result( string $status, array $reasons, array $evidence, bool $auto_accept ): array {
 		return array(
 			'validator_contract_version' => self::CONTRACT_VERSION,

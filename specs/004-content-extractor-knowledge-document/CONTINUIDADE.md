@@ -138,3 +138,16 @@ UX-003: **PASS AMBIENTAL**.
 ### Próximo passo exato
 
 **T100E-E6 — Workspace Regression Matrix**, seguido por **E7 Production Readiness Exit** e **G-250 Lifecycle/RC**.
+
+
+### T100E-E6 — ação ambiental
+
+Instalar `0.4.0-g245-e6.1` e acessar diretamente:
+
+`/wp-admin/admin.php?page=bdc-kb-t100e-e6`
+
+Executar a matriz e baixar o JSON. PASS esperado:
+
+`gate_result.t100e_e6_workspace_regression_pass=true`.
+
+Após PASS: T100E-E7 Production Readiness Exit.

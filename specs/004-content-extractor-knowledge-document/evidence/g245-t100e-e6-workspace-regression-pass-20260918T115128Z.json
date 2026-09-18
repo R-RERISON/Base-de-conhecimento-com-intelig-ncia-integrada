@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "T100E-E6",
+  "mode": "workspace_regression_matrix_read_only",
+  "generated_at": "2026-09-18T11:51:28+00:00",
+  "raw_file_sha256": "eda8a48400c2df488ff4dbbd74620f1b0f71d8a9a645f75645f74b4d5accbb57",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.4.0-g245-e6.1"
+  },
+  "corpus": {
+    "total_posts": 623,
+    "first_pass_processed": 623,
+    "second_pass_processed": 623
+  },
+  "results": {
+    "first_pass_errors": 0,
+    "first_pass_throwables": 0,
+    "first_pass_safety_violations": 0,
+    "second_pass_errors": 0,
+    "second_pass_throwables": 0,
+    "second_pass_safety_violations": 0,
+    "matrix_hash_equal": true,
+    "editorial_fingerprint_equal": true,
+    "pure_contract_cases_passed": 9,
+    "pure_contract_cases_total": 9,
+    "coverage_pass": true
+  },
+  "source_kinds": {
+    "elementor": 34,
+    "empty": 3,
+    "gutenberg": 5,
+    "legacy_html": 535,
+    "mixed": 5,
+    "plain_text": 41
+  },
+  "operational": {
+    "human_review_required": 5,
+    "no_action_required": 8,
+    "ready_for_authorization": 610,
+    "free_locks": 623,
+    "journal_applied": 1,
+    "journal_none": 622
+  },
+  "safety": {
+    "read_only_design": true,
+    "persists_state": false,
+    "acquires_lock": false,
+    "writes_post_content": false,
+    "writes_elementor_data": false,
+    "writes_journal": false,
+    "calls_external_network": false,
+    "executes_shortcodes": false,
+    "renders_blocks": false,
+    "exports_editorial_body": false,
+    "exports_post_ids": false,
+    "exports_urls": false
+  },
+  "gate_result": {
+    "t100e_e6_workspace_regression_pass": true
+  }
+}

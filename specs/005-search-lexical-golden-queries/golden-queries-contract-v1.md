@@ -57,7 +57,13 @@ Deve registrar:
 
 ## Governança
 
-Expectativa deve ser revisada por humano. Engine não pode gerar a própria verdade de ranking.
+A origem de uma expectativa Golden deve ser humana/curada ou possuir provenance equivalente explicitamente governada. O engine nunca pode gerar a própria verdade de ranking.
+
+Após a expectativa existir, verificações objetivas de continuidade podem ser automatizadas pelo contrato `r510-automated-golden-validation-contract-v1.md`:
+- AUTO_PASS confirma expected/max_rank existente quando evidência é inequívoca;
+- REVIEW_REQUIRED exige humano somente na exceção ambígua;
+- AUTO_FAIL bloqueia;
+- automação não cria nem substitui expected_post_id.
 
 ## Privacidade
 
@@ -77,6 +83,6 @@ O T510 recuperou 6 expectativas post-level manuais, todas ativas e com expected 
 
 Essas linhas constituem **seed de paridade**, não Golden Suite v1 aceita automaticamente.
 
-O fato de o legado classificá-las como `warning` não obriga a nova severidade. T513 decidirá humanamente se cada caso será `blocking` ou `warning`, considerando o contrato de paridade ASI.
+O fato de o legado classificá-las como `warning` não obriga a nova severidade. Em T513, AUTO_PASS recomenda `blocking` para proteger paridade; casos REVIEW_REQUIRED permanecem sem promoção automática de severity.
 
 A suite v1 final deve registrar novo `set_hash` pelo contrato da SPEC-005; hashes históricos do ASI são metadados de proveniência e não devem ser comparados diretamente com o hash candidate do novo schema.

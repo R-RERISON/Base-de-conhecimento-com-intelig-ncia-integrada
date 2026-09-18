@@ -142,9 +142,9 @@ Candidates preservados em:
 
 ## R-510/T511 — Golden Baseline Runner
 
-Status: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+Build `0.5.0-r510-t511.1`: **SUPERSEDED / NÃO INSTALAR** — lia tabela ASI em runtime de diagnóstico.
 
-Build: `0.5.0-r510-t511.1`.
+Build atual: **`0.5.0-r510-t511.2` — INDEPENDENTE / validação local em andamento**.
 
 O runner mede os 6 candidates em:
 1. admin atual — `s + modified DESC`;
@@ -152,3 +152,19 @@ O runner mede os 6 candidates em:
 3. publish native — referência publish-only.
 
 Nenhuma expectativa é aceita ou alterada pelo runner.
+
+
+## ADR-005-001 — Zero Runtime Dependency on ASI
+
+**ACCEPTED.**
+
+O ASI será removido após a transição. A nova solução deve funcionar integralmente com o ASI ausente/desativado.
+
+A partir do T511.2:
+- Golden candidates vêm de fixture própria;
+- runtime não lê `asi_golden_queries`;
+- runtime não lê `asi4_golden_last_run`;
+- nenhum hook/classe/função ASI;
+- persistence Search/Golden futura será própria do plugin quando G-520 autorizar.
+
+G-585 foi criado como gate de independência/decommission readiness.

@@ -183,6 +183,31 @@ final class Golden_Challenge_Discovery {
 			}
 		}
 
+		$natural_fallback = false;
+		if ( empty( $natural ) ) {
+			foreach ( $records as $record ) {
+				$title = trim( (string) ( $record['title'] ?? '' ) );
+				if ( '' === $title || count( Golden_Candidate_Validator::tokens( $title ) ) > 8 ) {
+					continue;
+				}
+				$natural[] = array(
+					'id' => 'CH-NL-SYN-001',
+					'query' => 'Como consultar ' . $title . '?',
+					'expected_post_id' => (int) $record['post_id'],
+					'origin' => 'synthetic',
+					'declared_classes' => array( 'natural_language' ),
+					'source_field' => 'title_synthetic_wrapper',
+					'source_kind' => (string) $record['source_kind'],
+					'summary_dependent' => false,
+					'elementor_semantic_gap' => false,
+					'document_frequency' => 0,
+					'active_for_golden_blocking' => false,
+				);
+				$natural_fallback = true;
+				break;
+			}
+		}
+
 		$cases = array_merge( $natural, $summary, $elementor );
 
 		return array(
@@ -197,12 +222,14 @@ final class Golden_Challenge_Discovery {
 				'total' => count( $cases ),
 			),
 			'cases' => $cases,
+			'natural_language_fallback_synthetic' => $natural_fallback,
 			'complete' => ! empty( $natural ) && ! empty( $summary ) && ! empty( $elementor ),
 			'rules' => array(
 				'origin is always corpus_derived_challenge',
 				'cases are technical coverage, never represented as real user queries',
 				'summary/elementor gap token must be absent from native text and unique across the analyzed projection corpus',
-				'natural-language case comes from an existing published title already written in natural-language form',
+				'natural-language prefers an existing published title already written in natural-language form',
+				'if none exists, a synthetic wrapper is allowed only as Technical Challenge and remains origin=synthetic',
 			),
 		);
 	}

@@ -104,10 +104,27 @@ Fixture candidate:
 
 ## Próximo passo atual
 
-Executar T511 build `0.5.0-r510-t511.1`:
+**NÃO instalar `0.5.0-r510-t511.1` — SUPERSEDED.**
+
+Executar somente T511 independente `0.5.0-r510-t511.2`:
 - `Base de Conhecimento -> Golden Baseline R-510`;
 - baixar JSON;
 - comparar as 6 Golden nos 3 modos;
 - somente depois fazer T513 human review de expected/max_rank/severity;
 - T514 precisa complementar diversidade se necessário;
 - R-510 permanece OPEN.
+
+
+## Independência ASI — decisão canônica
+
+ASI é benchmark/fonte histórica, não dependência.
+
+T510 foi a última leitura deliberada do storage ASI para capturar as 6 Golden. A partir daí os dados pertencem à SPEC-005 em fixture própria.
+
+Todo runtime posterior deve passar sem ASI instalado/ativo. Antes do RC:
+- static scan zero referências ASI;
+- ASI desativado em homologação;
+- Golden PASS;
+- rebuild do índice próprio PASS.
+
+ADR: `adr-005-001-zero-runtime-dependency-asi.md`.

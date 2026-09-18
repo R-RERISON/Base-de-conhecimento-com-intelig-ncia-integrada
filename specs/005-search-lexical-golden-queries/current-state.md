@@ -45,3 +45,28 @@ Trabalho autorizado agora:
 - contratos.
 
 Runtime de engine permanece bloqueado até R-500 + R-510 + G-520.
+
+
+## T502 — Search Baseline Diagnostic
+
+Status: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+
+Build: `0.5.0-r500-t502.1`.  
+SHA-256: `0b92d355be79c23e6837fa4b11cd6982674b643795f3e8de4f4949b9c47f5b86`.
+
+Validação local:
+- 40/40 PHP lint pré/pós ZIP;
+- 39/39 active requires;
+- deterministic rebuild PASS;
+- forbidden write/network calls: 0;
+- source/package Git blob parity PASS.
+
+O diagnóstico compara:
+1. Knowledge List atual: `WP_Query s + modified DESC`;
+2. WordPress native search sem essa ordenação explícita;
+3. Content Extractor semantic coverage;
+4. Summary e taxonomias como sinais não nativamente pesquisáveis;
+5. p50/p95 de probes;
+6. fingerprint editorial before/after.
+
+Guardrail adicional: `asi-quality-parity-contract-v1.md` formaliza que simplificação arquitetural não pode regredir a qualidade funcional comprovada do ASI.

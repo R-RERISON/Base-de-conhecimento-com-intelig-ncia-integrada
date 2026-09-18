@@ -22,11 +22,11 @@ REPOSITÓRIO E ESTADO
 - A consolidação ambiental/documental T511.2 sucede esse commit; confirmar HEAD remoto.
 - SPEC-004 CLOSED/main; SPEC-005 ATIVA/DISCOVERY.
 - R-500 PASS/CLOSED; T510 PASS AMBIENTAL; T511.2 PASS LOCAL + PASS AMBIENTAL.
-- R-510 OPEN; T513/T514 Auto Validator PASS LOCAL, execução ambiental pendente; T515/T516 e G-520 NOT_RUN.
+- R-510 OPEN; T513.1 ambiental analisado; T514.2 PASS LOCAL / ambiental pendente; T515/T516 e G-520 NOT_RUN.
 - Engine bloqueada até R-500 + R-510 + G-520.
 
 OBJETIVO EXATO
-Executar o T513/T514 Automated Golden Validator antes de congelar dataset/hash T515 e fechar R-510/T516. Não repetir T511 nem discovery ASI. Revisão humana passa a ocorrer somente para casos `REVIEW_REQUIRED`.
+Executar o T514.2 Automated Golden Validator v2 antes de congelar dataset/hash T515 e fechar R-510/T516. Não repetir T511/T513.1 nem discovery ASI. Ambiguidades passam para `AMBIGUOUS_QUARANTINED`; não há escolha manual obrigatória no gate bootstrap.
 
 BASELINE COMPROVADA
 - A única pesquisa funcional atual é a Knowledge List com WP_Query s + modified DESC.
@@ -95,17 +95,17 @@ INDEPENDÊNCIA ASI E LIMITES
 - SHA-256 histórico ZIP T511.2: f34cb1bdffb369efdfbdd886d86cd2798835b41829466da278436b002df7ffcb.
 
 PRÓXIMO PASSO EXATO
-1. Instalar `0.5.0-r510-t513.1` (SHA-256 `e5c10eba2f831584536e0f3e0c2ab50102c87c504424117530c1eafd64cbe0bc`).
-2. Executar `Base de Conhecimento -> Golden Auto Validator` e baixar o JSON.
-3. Registrar AUTO_PASS/REVIEW_REQUIRED/AUTO_FAIL dos seis candidates.
-4. Registrar T514 diversity + synthetic robustness.
-5. Revisar humanamente somente `REVIEW_REQUIRED`, se houver; nunca trocar expected automaticamente.
-6. Lacunas de linguagem natural/Summary/Elementor/typo/alias continuam explícitas se o validator não encontrar evidência real.
-7. Somente após T513/T514, congelar dataset final + set_hash/version T515 e fechar R-510/T516.
+1. Instalar `0.5.0-r510-t514.2` (SHA-256 `9fb9e20828b1e5162db5fa924ed3b2a3b76d85531d1c61f2847205ebdd00ae2c`).
+2. Executar `Base de Conhecimento -> Golden Auto Validator -> Executar validação automática completa e baixar JSON`.
+3. Confirmar AUTO_PASS / AMBIGUOUS_QUARANTINED / AUTO_FAIL.
+4. Confirmar Technical Challenge Discovery para natural_language, Summary e Elementor gap.
+5. Confirmar Diversity PASS e synthetic robustness PASS; typo/alias reais podem permanecer PENDING_TELEMETRY.
+6. Se `r510_ready=true`, executar T515: congelar Golden Relevance Set e Technical Challenge Set com hashes/versionamento separados.
+7. T516 fecha R-510 explicitamente.
 8. G-520 continua obrigatório antes de runtime Search.
 
 CRITÉRIO DE CONCLUSÃO DO PRÓXIMO PASSO
-O JSON ambiental deve comprovar safety, classificar todos os candidates e expor diversidade/lacunas. AUTO_PASS resolve verificações objetivas de continuidade; somente REVIEW_REQUIRED exige humano. AUTO_FAIL bloqueia. Nenhuma expectativa nova pode ser inferida do próprio ranking.
+O JSON v2 deve comprovar safety, classificar todos os candidates, produzir/avaliar Technical Challenge e expor real-world enrichment. AUTO_PASS entra no blocking set; AMBIGUOUS_QUARANTINED fica preservado fora do blocking; AUTO_FAIL bloqueia. Nenhuma expectativa é trocada pelo próprio ranking.
 
 ROLLBACK
 Reverter a consolidação documental se necessário. Não há alteração editorial ou de runtime para desfazer. Não promover SPEC/branch a main nem fechar gates posteriores por inferência.
@@ -132,3 +132,29 @@ T513/T514 AUTO VALIDATOR — PASS LOCAL
 - zero dependência técnica ASI;
 - zero writer/network no runner;
 - execução ambiental: NOT_RUN.
+
+
+T513.1 AMBIENTAL — 2026-09-18 22:36:54 UTC
+- source JSON SHA-256: `9faf205aed1c4024e2105128728444c7735bb12e301b80a643311c7735afd908`;
+- safety PASS; 623 -> 623; errors=[];
+- 5 AUTO_PASS / 1 REVIEW_REQUIRED / 0 AUTO_FAIL;
+- Estrutura: 36620 rank2 vs 516 rank1, ambos score100;
+- T514 INCOMPLETE;
+- synthetic 16/16 PASS;
+- dois defects no validator identificados: D-513-01 product_token overmatch e D-513-02 exact phrase substring overmatch;
+- evidence preservada byte-a-byte no repo.
+
+T514.2 — PASS LOCAL
+- build `0.5.0-r510-t514.2`;
+- SHA-256 `9fb9e20828b1e5162db5fa924ed3b2a3b76d85531d1c61f2847205ebdd00ae2c`;
+- ADR-005-002 ativo;
+- D-513-01/D-513-02 corrigidos;
+- ambiguity quarantine fail-safe;
+- Technical Challenge Discovery;
+- 14/14 unit;
+- 44/44 PHP lint pré/pós ZIP;
+- 43/43 active requires;
+- Git parity 7/7;
+- deterministic rebuild PASS;
+- zero ASI runtime identifier / zero writer-network;
+- ambiental NOT_RUN.

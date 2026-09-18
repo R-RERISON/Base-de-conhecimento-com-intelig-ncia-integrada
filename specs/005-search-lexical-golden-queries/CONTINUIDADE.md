@@ -106,7 +106,7 @@ Fixture candidate:
 
 **NÃO instalar `0.5.0-r510-t511.1` — SUPERSEDED.**
 
-Executar somente T511 independente `0.5.0-r510-t511.2`:
+Executar somente T511 independente `0.5.0-r510-t511.2` — PASS LOCAL:
 - `Base de Conhecimento -> Golden Baseline R-510`;
 - baixar JSON;
 - comparar as 6 Golden nos 3 modos;

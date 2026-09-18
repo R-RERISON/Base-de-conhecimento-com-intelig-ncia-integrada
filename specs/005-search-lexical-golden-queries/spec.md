@@ -1,10 +1,16 @@
 # SPEC-005 — Search Lexical e Golden Queries
 
-**Status:** ATIVA — DISCOVERY / IMPLEMENTAÇÃO DE RUNTIME BLOQUEADA ATÉ DoR  
-**Branch:** `spec005-search-lexical-golden-queries`  
-**Baseline:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`  
-**Pré-requisito:** SPEC-004 CLOSED/main — satisfeito.  
+**Status:** ATIVA — DISCOVERY / IMPLEMENTAÇÃO DE RUNTIME BLOQUEADA ATÉ DoR
+
+**Branch:** `spec005-search-lexical-golden-queries`
+
+**Baseline:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`
+
+**Pré-requisito:** SPEC-004 CLOSED/main — satisfeito.
+
 **Idioma:** pt-BR.
+
+**Gate atual:** R-500 PASS/CLOSED; T511.2 PASS AMBIENTAL; R-510 OPEN (T513/T514 pendentes).
 
 > **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
@@ -213,7 +219,7 @@ Primeiro slice de homologação deve possuir:
 - teclado/focus;
 - responsividade 782px/520px.
 
-**Decisão de superfície pública vs administrativa permanece gate de DoR.** Até essa decisão, nenhuma busca global do tema/WordPress será interceptada.
+**Superfície inicial decidida em R-500: ADMIN-FIRST / Knowledge List.** Superfície pública permanece postergada; nenhuma busca global do tema/WordPress será interceptada.
 
 ## 14. Dados e persistência
 

@@ -24,17 +24,17 @@
 
 A SPEC-005 começa sem engine própria.
 
-Gate atual: **R-500 — Search Baseline / Definition of Ready**.
+Gate atual: **R-510 — Golden Dataset v1 / T513 + T514**.
+
+Concluídos: R-500 PASS/CLOSED; T510 PASS AMBIENTAL; T511.2 PASS AMBIENTAL. A superfície inicial é ADMIN-FIRST / Knowledge List. O baseline independente mediu 2/6 no admin atual e 6/6 nos dois modos com relevância; isso não aprova expectativas automaticamente.
 
 Antes de runtime:
-- medir `WP_Query s`;
-- comparar cobertura com Content Extractor;
-- recontar corpus;
-- selecionar consultas reais;
-- montar Golden Dataset v1;
-- decidir superfície inicial;
-- decidir WordPress-first storage;
-- fechar contratos G-520.
+- revisar os seis expected posts/max_rank/severity/rationale em T513;
+- completar diversidade real em T514;
+- congelar dataset/hash/version em T515 e fechar R-510/T516;
+- decidir WordPress-first storage e fechar contratos G-520.
+
+Referências: [estado atual](005-search-lexical-golden-queries/current-state.md) e [continuidade](005-search-lexical-golden-queries/CONTINUIDADE.md).
 
 Runtime lexical permanece bloqueado até **R-500 + R-510 + G-520**.
 

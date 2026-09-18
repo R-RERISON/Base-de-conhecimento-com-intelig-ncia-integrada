@@ -2,10 +2,14 @@
 
 ## Identidade
 
-**Produto:** Base de Conhecimento com Inteligência Integrada  
-**Tipo:** Plugin WordPress único, modular internamente  
-**Idioma:** Português do Brasil  
-**Estado:** SPEC-000/001/002/003/004 concluídas; SPEC-005 ATIVA/DISCOVERY; UX-001/UX-002/UX-003 concluídas; G-240/G-245/G-250 PASS/CLOSED  
+**Produto:** Base de Conhecimento com Inteligência Integrada
+
+**Tipo:** Plugin WordPress único, modular internamente
+
+**Idioma:** Português do Brasil
+
+**Estado:** SPEC-000/001/002/003/004 concluídas; SPEC-005 ATIVA/DISCOVERY; UX-001/UX-002/UX-003 concluídas; G-240/G-245/G-250 PASS/CLOSED
+
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
 ## Missão
@@ -223,13 +227,13 @@ T096 deve comprovar, usando `serialize_blocks()`/`parse_blocks()` reais do Core 
 
 ## Próximos gates
 
-1. T096 full-corpus lossless round-trip em homologação;
-2. T097 paridade renderizada/editorial em cohort controlado;
-3. T098 generalização dos gates defensivos para Block Migration;
-4. T099 canário de 1 artigo + rollback real, somente com Authorization Pack específico;
-5. T100 batches homologados;
-6. T101 dependência residual Elementor / gate de retirada futura;
-7. G-250 Lifecycle/RC.
+A sequência T096–G-250 descrita historicamente acima foi superada pelo fechamento da SPEC-004 registrado adiante. A frente atual é SPEC-005:
+
+1. T513 — revisar expected posts, max_rank, severity e rationale;
+2. T514 — completar diversidade de consultas reais;
+3. T515/T516 — congelar versão/hash e fechar R-510;
+4. G-520 — contratos/storage/security/rollback antes de runtime;
+5. G-585 — comprovar independência operacional do ASI antes do RC.
 
 ## Regra de liberação
 
@@ -260,9 +264,12 @@ Direção de produto: autorização continua obrigatória como decisão humana e
 
 ## Promoção SPEC-004 para main
 
-PR #4: **MERGED** em 2026-09-18.  
-Merge commit: `e08871557b2233bf1294b1e57752265d3fe68c0f`.  
-Release validada: `0.4.0-spec004-rc2`.  
+PR #4: **MERGED** em 2026-09-18.
+
+Merge commit: `e08871557b2233bf1294b1e57752265d3fe68c0f`.
+
+Release validada: `0.4.0-spec004-rc2`.
+
 SHA-256: `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`.
 
 Estado definitivo: **SPEC-004 CLOSED / main**.
@@ -272,12 +279,15 @@ Estado definitivo: **SPEC-004 CLOSED / main**.
 
 **ATIVA / DISCOVERY.**
 
-Branch: `spec005-search-lexical-golden-queries`.  
+Branch: `spec005-search-lexical-golden-queries`.
+
 Base: `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
 
 Objetivo: estabelecer retrieval lexical determinístico e Golden Queries antes de semantic search, vetores ou IA.
 
-Gate atual: **R-500 — Search Baseline / Definition of Ready**.
+Gate atual: **R-510 — Golden Dataset v1 / T513 revisão humana + T514 diversidade**.
+
+R-500 está PASS/CLOSED. T510 e T511.2 estão PASS AMBIENTAL; o T511.2 mediu seis candidates nos três modos (admin atual 2/6, relevância 6/6, publish 6/6). R-510 permanece OPEN; T515/T516 e G-520 ainda não foram concluídos. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
 
 Regras de abertura:
 - runtime de engine bloqueado até R-500 + R-510 + G-520;

@@ -14,9 +14,7 @@
 
 ## Baseline ambiental disponível
 
-Última matriz E6 conhecida: 623 artigos.
-
-A SPEC-005 deve recontar o corpus em R-500 e não assumir que 623 permanece atual.
+R-500 recontou 623 artigos (606 publicados). T511.2 registrou 623 antes/depois em 2026-09-18 21:45:45 UTC. Essas contagens são snapshots ambientais, não promessa de corpus imutável.
 
 ## DoR obrigatório
 
@@ -33,3 +31,6 @@ Runtime Search só pode começar se:
 - [ ] nenhuma dependência de IA/vetor.
 
 Estado atual: **R-500 PASS, porém NOT_READY para implementação de engine** até R-510 Golden Dataset + G-520 contracts/storage/security.
+
+
+T511.2: PASS AMBIENTAL para medição dos seis candidates; isso não fecha R-510. Próximo passo: [revisão humana T513 e diversidade T514](r510-golden-candidate-review-v1.md), antes de versão/hash T515 e fechamento T516.

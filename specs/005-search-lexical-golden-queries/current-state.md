@@ -1,185 +1,76 @@
-# Current State — SPEC-005
+# Estado atual — SPEC-005
 
-## Estado
+**ATIVA / DISCOVERY — R-500 PASS/CLOSED; R-510 OPEN.**
 
-**ATIVA — DISCOVERY / DoR.**
+**Gate atual:** T513 revisão humana, seguido de T514 diversidade.
 
-Branch: `spec005-search-lexical-golden-queries`.
+**Branch:** `spec005-search-lexical-golden-queries`.
 
-Base: `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
+**Base:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
 
-## O que existe
+**Código revisado nesta consolidação:** `78d4bbce5135abdedea7c86deb380cb04a569f78`.
 
-- SPEC-004 CLOSED/main;
-- Content Extractor + KD 2.1.0;
-- Workspace e Knowledge List;
-- pesquisa simples na Knowledge List por `WP_Query s`;
-- post type `post`;
-- Visual Contract v2;
-- agente/skill especializados de Search/Golden.
+## Runtime e fronteiras
 
-## O que NÃO existe
+Existem Content Extractor/KD 2.1.0, Workspace, Knowledge List e pesquisa administrativa por `WP_Query s`. SPEC-004 permanece CLOSED/main e Visual Contract v2 permanece obrigatório.
 
-- Search engine próprio;
-- Search Retrieval Projection no novo plugin;
-- FULLTEXT próprio;
-- Golden runtime;
-- query logging;
-- semantic/vector;
-- IA no retrieval;
-- public search surface do novo plugin.
+A SPEC-005 possui diagnóstico temporário T511.2 com seed próprio. Isso não é uma Golden Suite aprovada nem Search Retrieval canônico. Não há índice/tabela Search, Golden management produtivo, query logging, IA/vetor ou superfície pública do novo Search.
 
-## Baseline ASI
+**Engine bloqueada até R-500 + R-510 + G-520.** Trabalho permitido nesta fase: evidências, benchmark, dataset, contratos e diagnóstico read-only.
 
-ASI 4.6.8 serve como referência comportamental. Nenhum código ou schema é copiado automaticamente.
+## R-500 — PASS/CLOSED
 
-## Gate atual
+Evidência: [r500-t502-environmental-20260918T200421Z.json](evidence/r500-t502-environmental-20260918T200421Z.json).
 
-**R-500 — Search Baseline / Definition of Ready.**
+- Corpus: 623; publish: 606.
+- Gap semântico: 91/610 (14,92%); gap Summary: 14/18 (77,78%).
+- Top-1 admin atual: 33,33%; nativo sem override: 85%.
+- Ausências Top-20: admin 8/60; nativo 0/60.
+- Fingerprint editorial preservado; erros: 0.
 
-Trabalho autorizado agora:
-- diagnóstico read-only;
-- benchmark;
-- inventário;
-- Golden dataset;
-- contratos.
+Decisões: **ADMIN-FIRST / Knowledge List**; `modified DESC` rejeitado como ranking de Search; `WP_Query` permanece referência/fallback; Search Document semântico post-level é requisito conceitual. Schema/FULLTEXT dependem de G-520.
 
-Runtime de engine permanece bloqueado até R-500 + R-510 + G-520.
+## R-510/T510 — PASS AMBIENTAL / histórico encerrado
 
+Evidência: [r510-t510-environmental-20260918T211840Z.json](evidence/r510-t510-environmental-20260918T211840Z.json).
 
-## T502 — Search Baseline Diagnostic
+Seis candidates manuais, ativos, post-level, com expected posts existentes/publicados no T510; todos `warning` no legado. Último run legado: PASS 6/6, algorithm 4.5.0. Sem erros e sem mudança de fingerprint.
 
-Status: **PASS AMBIENTAL**.
+Fixture própria: [golden-candidates-legacy-v1.json](fixtures/golden-candidates-legacy-v1.json). T510 foi a última leitura deliberada do storage ASI; não repetir discovery.
 
-Build: `0.5.0-r500-t502.1`.  
-SHA-256: `0b92d355be79c23e6837fa4b11cd6982674b643795f3e8de4f4949b9c47f5b86`.
+## R-510/T511.2 — PASS LOCAL + PASS AMBIENTAL
 
-Validação local:
-- 40/40 PHP lint pré/pós ZIP;
-- 39/39 active requires;
-- deterministic rebuild PASS;
-- forbidden write/network calls: 0;
-- source/package Git blob parity PASS.
+Build: `0.5.0-r510-t511.2`.
 
-O diagnóstico compara:
-1. Knowledge List atual: `WP_Query s + modified DESC`;
-2. WordPress native search sem essa ordenação explícita;
-3. Content Extractor semantic coverage;
-4. Summary e taxonomias como sinais não nativamente pesquisáveis;
-5. p50/p95 de probes;
-6. fingerprint editorial before/after.
+SHA-256 histórico do ZIP: `f34cb1bdffb369efdfbdd886d86cd2798835b41829466da278436b002df7ffcb`.
 
-Guardrail adicional: `asi-quality-parity-contract-v1.md` formaliza que simplificação arquitetural não pode regredir a qualidade funcional comprovada do ASI.
+Evidência local anterior: 41/41 PHP lint, 40/40 active requires, rebuild determinístico PASS; legacy discovery fora do ZIP; scan técnico ASI sem hits; T502/T510/Elementor writer OFF e T511 ON. Esses testes não foram reexecutados na consolidação documental.
 
+Execução ambiental fornecida em 2026-09-18 21:45:45 UTC:
 
-## R-500 — PASS / CLOSED
+- `t511_read_only_safety_pass=true`;
+- `legacy_search_independence_pass=true` declarado pelo runner;
+- 623 -> 623 posts, zero alterações detectadas no snapshot, zero erros;
+- seis candidates medidos em três modos, todos consistentes com a fixture/seed;
+- admin atual: 2/6 até max_rank; admin relevance: 6/6; publish native: 6/6;
+- quatro gaps de ordenação; dois casos já atendidos;
+- `r510_ready=false` preservado.
 
-Evidência ambiental: `evidence/r500-t502-environmental-20260918T200421Z.json`.
+Análise, percentis e limites: [r510-t5112-environmental-findings-v1.md](r510-t5112-environmental-findings-v1.md). JSON original e revisão offline de 41/41 verificações estão em `evidence/`.
 
-Conclusões:
-- corpus: 623 / publish 606;
-- semantic gap: 91/610 = 14,92%;
-- Summary gap: 14/18 = 77,78%;
-- admin-current Top-1: 33,33%;
-- native-default Top-1: 85%;
-- admin-current missed Top-20: 8/60;
-- native-default missed Top-20: 0/60;
-- delta p95: apenas +6,434 ms para native-default;
-- Elementor coverage mínimo: 1,6975%;
-- extractor p95: 7,4911 ms/post;
-- fingerprint editorial preservado;
-- errors = 0.
+**Não instalar `0.5.0-r510-t511.1`: SUPERSEDED.** T511.2 já foi executado; não há novo ZIP nem necessidade de repetir o baseline para iniciar T513.
 
-Decisão:
-- superfície inicial: **ADMIN-FIRST / Knowledge List**;
-- `modified DESC` rejeitado como ranking de Search;
-- `WP_Query` permanece baseline/fallback;
-- Search Document semântico post-level é requisito conceitual;
-- persistência/FULLTEXT permanecem decisão G-520;
-- runtime continua bloqueado por R-510 + G-520.
+## Independência ASI — ADR-005-001
 
-Gate atual: **R-510 — Golden Dataset v1**.
+ASI é referência histórica, não dependência. O runner independente consome seed próprio e não consulta diretamente storage/classe/função ASI. Hashes de proveniência não são o futuro set_hash T515.
 
+O JSON não atesta ASI desativado: o flag é declarativo e `WP_Query` executa com filtros do ambiente. G-585 continua NOT_RUN; antes do RC são obrigatórios ASI ausente/desativado, Search/Golden PASS, scan produtivo completo e rebuild próprio.
 
-## R-510/T510 — Legacy Golden Discovery
+## Próximo passo e blockers
 
-Status: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+1. T513: revisar [as seis expectativas](r510-golden-candidate-review-v1.md), com post oficial, max_rank, severity e justificativa. “Estrutura” exige atenção ao expected 36620 versus primeiro resultado 516.
+2. T514: complementar consultas reais de linguagem natural, variação/erro quando real e lacunas Summary/Elementor; registrar aliases se existentes.
+3. T515: congelar dataset aceito com versão/hash próprios.
+4. T516: fechar R-510; depois fechar G-520 antes de engine.
 
-Build: `0.5.0-r510-t510.1`  
-SHA-256: `3b4b4e0ec308c5914ce155e740228ff4b0f735fd76fd1b30b930bce384ce77d3`
-
-- T502 OFF;
-- T510 ON;
-- 40/40 PHP lint;
-- 39/39 active requires;
-- deterministic rebuild PASS;
-- zero write/network proibido;
-- lê apenas `asi_golden_queries` se existente;
-- nenhum auto-import;
-- nenhum rank execution;
-- human review continua obrigatório.
-
-
-## R-510/T510 — PASS AMBIENTAL
-
-Evidência: `evidence/r510-t510-environmental-20260918T211840Z.json`.
-
-- tabela legada `asi_golden_queries`: presente;
-- 6 rows ativas;
-- 6/6 clean post-level candidates;
-- expected posts ausentes: 0;
-- unsupported post type: 0;
-- item-level: 0;
-- errors: 0;
-- fingerprint editorial preservado;
-- corpus 623 -> 623;
-- legacy last run: PASS 6/6, zero blocking/warning failure, algorithm 4.5.0.
-
-Candidates preservados em:
-`fixtures/golden-candidates-legacy-v1.json`.
-
-**Nota de hash:** `legacy.last_run_metadata.set_hash` e `candidates.set_hash` usam contratos diferentes; não são comparáveis byte-a-byte e a divergência não representa drift.
-
-## R-510/T511 — Golden Baseline Runner
-
-Build `0.5.0-r510-t511.1`: **SUPERSEDED / NÃO INSTALAR** — lia tabela ASI em runtime de diagnóstico.
-
-Build atual: **`0.5.0-r510-t511.2` — INDEPENDENTE / PASS LOCAL / homologação pendente**.
-
-O runner mede os 6 candidates em:
-1. admin atual — `s + modified DESC`;
-2. admin relevance — mesmo scope, sem override de modified;
-3. publish native — referência publish-only.
-
-Nenhuma expectativa é aceita ou alterada pelo runner.
-
-
-## ADR-005-001 — Zero Runtime Dependency on ASI
-
-**ACCEPTED.**
-
-O ASI será removido após a transição. A nova solução deve funcionar integralmente com o ASI ausente/desativado.
-
-A partir do T511.2:
-- Golden candidates vêm de fixture própria;
-- runtime não lê `asi_golden_queries`;
-- runtime não lê `asi4_golden_last_run`;
-- nenhum hook/classe/função ASI;
-- persistence Search/Golden futura será própria do plugin quando G-520 autorizar.
-
-G-585 foi criado como gate de independência/decommission readiness.
-
-
-### T511.2 local validation
-
-SHA-256: `f34cb1bdffb369efdfbdd886d86cd2798835b41829466da278436b002df7ffcb`.
-
-- 41/41 PHP lint;
-- 40/40 active requires;
-- deterministic rebuild PASS;
-- legacy discovery fora do ZIP;
-- static scan de dependência ASI: PASS / zero identificadores técnicos proibidos;
-- T502 OFF;
-- T510 OFF;
-- T511 ON;
-- Elementor writer OFF.
+T513/T514 seguem sem aceite humano. Nenhum candidate foi aprovado automaticamente e a fixture permanece inalterada. Não houve modificação de PHP, build, ranking, dados editoriais, schema ou UI nesta etapa.

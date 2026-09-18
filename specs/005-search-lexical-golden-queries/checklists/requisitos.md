@@ -7,7 +7,7 @@
 - [x] ASI usado como referência de contrato, não código.
 - [x] WordPress-first decision gate definido.
 - [x] projection classificada como derivada/reconstruível.
-- [ ] R-500 PASS.
+- [x] R-500 PASS/CLOSED.
 - [ ] R-510 PASS.
 - [ ] G-520 PASS antes de runtime.
 
@@ -28,7 +28,7 @@
 
 ## UX
 - [x] Visual Contract v2 obrigatório.
-- [ ] superfície inicial decidida em R-500.
+- [x] superfície inicial decidida em R-500: ADMIN-FIRST / Knowledge List.
 - [ ] zero-result separado de erro.
 - [ ] degraded/fallback visível.
 - [ ] desktop/782/520.

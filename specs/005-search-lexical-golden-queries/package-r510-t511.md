@@ -44,3 +44,12 @@ Validação:
 - Elementor writer OFF.
 
 **Este é o único pacote T511 autorizado para homologação.**
+
+
+## T511.2 — PASS AMBIENTAL em 2026-09-18
+
+Execução fornecida em 21:45:45 UTC, versão declarada `0.5.0-r510-t511.2`. JSON original: [evidence/r510-t5112-independent-environmental-20260918T214545Z.json](evidence/r510-t5112-independent-environmental-20260918T214545Z.json).
+
+Safety PASS; 623 -> 623 posts; zero alterações detectadas/erros; seis candidates nos três modos. Admin atual 2/6; admin relevância e publish nativo 6/6. [Análise e limites](r510-t5112-environmental-findings-v1.md).
+
+O JSON não atesta ASI desativado nem checksum do ZIP instalado. G-585 permanece NOT_RUN. T511.2 já foi executado; o próximo passo é T513/T514, sem novo build. R-510 continua OPEN.

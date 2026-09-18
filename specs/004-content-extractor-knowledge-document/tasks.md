@@ -72,7 +72,7 @@ Entregas:
 - [x] T100B: aceite ambiental/visual da Workspace em homologação — confirmado pelo usuário.
 - [x] T100C: implementação local da Core Blocks Activity post-scoped + Authorization Pack read-only.
 - [x] T100C ambiental: post 358 ready_for_authorization, journal rolled_back, lock free, Authorization Pack válido.
-- [ ] T100D: executor unitário Core Blocks — BLOCKED até autorização explícita de `post_id=358 + authorization_id=17c002d3...a41af0`.
+- [x] T100D autorizado explicitamente para `post_id=358 + authorization_id=17c002d3...a41af0`; build local PASS.\n- [ ] T100D execução ambiental persistente no post 358; aguarda instalação/click e JSON de resultado.
 - [ ] T100E: integrar atividade de Inteligência sob regra IA sugere → humano revisa → humano decide.
 - [ ] T101: dependência residual Elementor / gate de retirada.
 - [ ] G-250 Lifecycle/RC.

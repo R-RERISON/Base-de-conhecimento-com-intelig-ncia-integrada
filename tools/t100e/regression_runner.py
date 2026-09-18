@@ -84,6 +84,18 @@ ENGINEERING_NAME_MARKERS = (
     "canary-t099c.php",
 )
 
+LEGACY_ELEMENTOR_MIGRATION_FILES = (
+    "includes/class-elementor-projection-plan.php",
+    "includes/class-elementor-gateway.php",
+    "includes/class-elementor-migration-journal.php",
+    "includes/class-elementor-migration-journal-store.php",
+    "includes/class-elementor-stale-source-guard.php",
+    "includes/class-elementor-migration-dry-run.php",
+    "includes/class-elementor-migration-batch-plan.php",
+    "includes/class-elementor-canary-readiness.php",
+    "includes/class-elementor-migration-lock.php",
+)
+
 DEFENSIVE_PAIRS = {
     "journal": (
         "class-block-migration-journal.php",
@@ -258,6 +270,14 @@ def main() -> int:
         if flags.get(flag) is True:
             active_required.update(paths)
 
+    legacy_active = sorted(set(LEGACY_ELEMENTOR_MIGRATION_FILES) & active_required)
+    checks["legacy_elementor_migration_active"] = legacy_active
+    if legacy_active:
+        failures.append(
+            "historical Elementor migration contract(s) returned to active runtime: "
+            + ", ".join(legacy_active)
+        )
+
     # Core Blocks read-only preparation contract.
     core_activity = includes / "class-post-core-blocks-activity.php"
     core_text = core_activity.read_text(encoding="utf-8")
@@ -290,6 +310,9 @@ def main() -> int:
         p.name for p in includes.glob("*.php") if classify_engineering(p.name)
     )
     checks["engineering_files_in_source_tree"] = engineering_files
+    checks["legacy_elementor_migration_files_in_source_tree"] = [
+        rel for rel in LEGACY_ELEMENTOR_MIGRATION_FILES if (plugin / rel).is_file()
+    ]
     if engineering_files:
         warnings.append(f"{len(engineering_files)} engineering/test files remain in source plugin tree")
 

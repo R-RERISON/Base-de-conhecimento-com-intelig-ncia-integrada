@@ -116,4 +116,10 @@ Achados ainda abertos:
 - boundary source/artifact precisa ser formalizado por manifesto de release;
 - matriz ambiental da Workspace ainda precisa ser consolidada.
 
-Próximo passo: T100E-E5 — mapa de equivalência dos serviços defensivos antes de qualquer refactor/removal.
+T100E-E5 concluído: a família histórica de migração Elementor foi classificada como ilha sem consumidor de produto e saiu do runtime ativo; `Elementor_Adapter` permanece para leitura legada.
+
+HE5-001 concluído localmente: Block Journal/Store recebeu validação de identidade/estado, transição durável, envelope e readback. Teste local 15/15 PASS.
+
+Candidate: `0.4.0-g245-consolidation-t100e.3`, SHA-256 `8cdb59c46fa80a8a642fd555e7d87b896ae757358149a11e71978e9df9b717f3`, 40 PHP, 38 requires, 0 lint failures, build determinístico reproduzido.
+
+Próximo passo: validar em homologação que o journal `applied` já existente do post 358 continua legível sob o hardening, sem write.

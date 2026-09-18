@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "R-500/T502-LOCAL",
+  "date": "2026-09-18",
+  "branch": "spec005-search-lexical-golden-queries",
+  "build": "0.5.0-r500-t502.1",
+  "artifact_sha256": "0b92d355be79c23e6837fa4b11cd6982674b643795f3e8de4f4949b9c47f5b86",
+  "source_identity": {
+    "diagnostic_git_blob_sha": "ef743891bfcd7fd85384a7869dbd9ee59a316904",
+    "bootstrap_git_blob_sha": "c238fad703dc6cab66026dede8fce601666c8885",
+    "local_git_blob_match": true
+  },
+  "package": {
+    "included_files": 45,
+    "php_files": 40,
+    "active_requires": 39,
+    "missing_active_requires": [],
+    "zip_integrity": true,
+    "php_lint_pre_zip": {
+      "passed": 40,
+      "total": 40,
+      "failures": []
+    },
+    "php_lint_post_zip": {
+      "passed": 40,
+      "total": 40,
+      "failures": []
+    },
+    "deterministic_rebuild": true
+  },
+  "safety_static": {
+    "forbidden_write_or_network_calls_found": [],
+    "manage_options": true,
+    "post_method": true,
+    "nonce": true,
+    "editorial_fingerprint": true,
+    "exports_generated_probe_queries": false,
+    "creates_schema_or_table": false,
+    "persists_index": false,
+    "persists_golden_queries": false,
+    "persists_query_log": false
+  },
+  "active_flags": {
+    "BDC_KB_SPEC004_G245_T100A_POST_WORKSPACE_BUILD": true,
+    "BDC_KB_SPEC004_G245_T100C_CORE_BLOCKS_ACTIVITY_BUILD": true,
+    "BDC_KB_SPEC005_R500_DIAGNOSTIC_BUILD": true
+  },
+  "result": {
+    "t502_local_validation_pass": true,
+    "environmental_validation": "NOT_RUN"
+  }
+}

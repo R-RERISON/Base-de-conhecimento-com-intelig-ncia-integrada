@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-250",
+  "mode": "lifecycle_rc1_local_validation",
+  "generated_at": "2026-09-18T12:05:00Z",
+  "build": "0.4.0-spec004-rc1",
+  "package_sha256": "5fe09645dea21787bcbc01a6fd5e11fc671cdb31157b07accd8212c78bb94cc5",
+  "entry_state": {
+    "t100e_e6_environmental_pass": true,
+    "ux003_environmental_pass": true,
+    "he5_001_environmental_pass": true,
+    "t100d_executor_enabled": false,
+    "elementor_writer_enabled": false
+  },
+  "validation": {
+    "php_lint_pre_zip": {"passed":41,"total":41},
+    "php_lint_post_extract": {"passed":41,"total":41},
+    "active_requires": {"passed":40,"total":40},
+    "ux003_visual_parity": {"passed":6,"total":6},
+    "deterministic_rebuild": true,
+    "single_plugin_root": true,
+    "g250_forbidden_write_network_render_calls_absent": true
+  },
+  "runtime": {
+    "g250_hidden_runner": true,
+    "e6_runner": false,
+    "t100d_executor": false,
+    "production_preflight_hidden_retained": true,
+    "elementor_adapter_retained": true
+  },
+  "gate_result": {
+    "g250_rc1_local_pass": true,
+    "g250_environmental_lifecycle_pending": true
+  }
+}

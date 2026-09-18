@@ -49,7 +49,7 @@ Runtime de engine permanece bloqueado até R-500 + R-510 + G-520.
 
 ## T502 — Search Baseline Diagnostic
 
-Status: **PASS LOCAL / HOMOLOGAÇÃO PENDENTE**.
+Status: **PASS AMBIENTAL**.
 
 Build: `0.5.0-r500-t502.1`.  
 SHA-256: `0b92d355be79c23e6837fa4b11cd6982674b643795f3e8de4f4949b9c47f5b86`.
@@ -70,3 +70,32 @@ O diagnóstico compara:
 6. fingerprint editorial before/after.
 
 Guardrail adicional: `asi-quality-parity-contract-v1.md` formaliza que simplificação arquitetural não pode regredir a qualidade funcional comprovada do ASI.
+
+
+## R-500 — PASS / CLOSED
+
+Evidência ambiental: `evidence/r500-t502-environmental-20260918T200421Z.json`.
+
+Conclusões:
+- corpus: 623 / publish 606;
+- semantic gap: 91/610 = 14,92%;
+- Summary gap: 14/18 = 77,78%;
+- admin-current Top-1: 33,33%;
+- native-default Top-1: 85%;
+- admin-current missed Top-20: 8/60;
+- native-default missed Top-20: 0/60;
+- delta p95: apenas +6,434 ms para native-default;
+- Elementor coverage mínimo: 1,6975%;
+- extractor p95: 7,4911 ms/post;
+- fingerprint editorial preservado;
+- errors = 0.
+
+Decisão:
+- superfície inicial: **ADMIN-FIRST / Knowledge List**;
+- `modified DESC` rejeitado como ranking de Search;
+- `WP_Query` permanece baseline/fallback;
+- Search Document semântico post-level é requisito conceitual;
+- persistência/FULLTEXT permanecem decisão G-520;
+- runtime continua bloqueado por R-510 + G-520.
+
+Gate atual: **R-510 — Golden Dataset v1**.

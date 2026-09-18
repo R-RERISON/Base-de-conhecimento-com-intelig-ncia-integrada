@@ -78,3 +78,17 @@ Isso ainda não autoriza uma tabela. G-520 decide a forma de persistência após
 
 ### D — FULLTEXT
 Continua NOT_DECIDED. Precisa de Golden + benchmark do engine/projection.
+
+
+## Ownership / independência
+
+WordPress-first **não proíbe schema próprio**.
+
+A decisão final deve escolher o menor mecanismo correto, porém:
+- se a Projection precisar persistência, a tabela será do novo plugin;
+- nenhuma tabela ASI será reutilizada;
+- FULLTEXT, índices e migrations serão próprios;
+- WordPress continua autoridade editorial e de acesso;
+- ASI pode ser removido sem degradar Search.
+
+R-500 já forneceu evidência material suficiente para considerar uma Projection própria em G-520.

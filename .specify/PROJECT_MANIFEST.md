@@ -408,3 +408,22 @@ Aceita em 2026-09-18:
 - status PASS;
 - privacy/ASI independence fields all PASS;
 - próximo gate: G-560.
+
+
+#### G-560 Search UX — pacote técnico pronto — 2026-09-19
+
+- build: `0.5.0-g560.1`;
+- Search_Service integrado à Knowledge List somente quando há consulta;
+- listagem padrão modified DESC preservada;
+- Visual Contract v2 / UX-002.3 reutilizados;
+- estados success/zero_results/degraded/invalid_query/technical_error distintos;
+- label/helper/ARIA/focus/breakpoints 782/520;
+- fingerprint editorial completo;
+- 26/26 contract checks PASS;
+- 53/53 PHP lint;
+- 44/44 active requires;
+- deterministic build 2/2;
+- SHA-256 `9f4f14c775aaad4e7d2360ed11dd3b036587556b1497e210eccaf787c89b8297`;
+- ambiental NOT_RUN;
+- human visual acceptance NOT_RUN;
+- G-560 permanece OPEN.

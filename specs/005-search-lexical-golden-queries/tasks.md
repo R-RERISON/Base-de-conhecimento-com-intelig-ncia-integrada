@@ -129,3 +129,16 @@
 - [x] G560-PKG-07 build determinístico 2/2 — SHA-256 `9f4f14c775aaad4e7d2360ed11dd3b036587556b1497e210eccaf787c89b8297`.
 - [x] G560-ENV PASS — 21/21 checks; evidence `g560-environmental-review-20260919T134816Z.json`; upload SHA-256 `9906bbecbd1d2c056a2a1e87d2b50d8d4885adc904621a8b1120ff49c40b1527`.
 - [x] G560-HUMAN PASS — desktop aprovado; evidência `g560-human-visual-acceptance-20260919.md`; revisão visual mobile deferred.
+
+
+### G-570 — pacote de homologação
+- [x] G570-PKG-01 contrato Security/Performance v1 congelado.
+- [x] G570-PKG-02 runner ambiental read-only implementado.
+- [x] G570-PKG-03 capability negative tests usam filtros temporários e removem em finally.
+- [x] G570-PKG-04 SQL/bounds/abuse checks automatizados.
+- [x] G570-PKG-05 benchmark: 6 queries × 5 medições + warm-up; 30 amostras esperadas.
+- [x] G570-PKG-06 budget de homologação: p95 <=750 ms / max <=1500 ms; não é SLA de produção.
+- [x] G570-PKG-07 37/37 checks locais PASS; PHP lint 54/54; active requires 44/44.
+- [x] G570-PKG-08 zero write editorial/Projection no runner; zero rede/ASI/FULLTEXT/query logging.
+- [x] G570-PKG-09 build determinístico 2/2 — SHA-256 `4cd915fc3be58166a354434bf9688f0a1509ca36d570697540dff9eace82ab62`.
+- [ ] G570-ENV executar runner no WordPress e anexar JSON; T570–T574 permanecem abertos até essa evidência.

@@ -50,12 +50,12 @@
 - [x] T545 G-540 PASS — CLOSED em 2026-09-19; próximo gate G-550.
 
 ## G-550 — Golden Gate
-- [ ] T550 runner explícito.
-- [ ] T551 relatório JSON.
-- [ ] T552 blocking failures = 0.
-- [ ] T553 warnings documentados.
-- [ ] T554 evidence current vs algorithm_version/set_hash.
-- [ ] T555 G-550 PASS.
+- [x] T550 runner explícito — PASS AMBIENTAL.
+- [x] T551 relatório JSON — PASS; 13 resultados.
+- [x] T552 blocking failures = 0 — PASS.
+- [x] T553 warnings documentados — PASS; quarantine executada sem warning failure.
+- [x] T554 evidence current vs algorithm_version/set_hash — PASS; hashes recalculados e versões current.
+- [x] T555 G-550 PASS — CLOSED em 2026-09-19; próximo gate G-560.
 
 ## G-560 — UX/Humano
 - [ ] T560 UI conforme Visual Contract v2.
@@ -116,4 +116,4 @@
 - [x] G550-PKG-06 PHP lint 52/52 PASS.
 - [x] G550-PKG-07 active requires 45/45.
 - [x] G550-PKG-08 build determinístico 2/2 — SHA-256 `5c0fb99476aab84149341c1f069f64bfb9d8bdb57daaeca2636fe518164739b5`.
-- [ ] G550-ENV executar runner no WordPress e anexar JSON; T550–T555 permanecem abertos até essa evidência.
+- [x] G550-ENV PASS — evidence `g550-environmental-20260919T121422Z.json`; upload SHA-256 `e6f83104d330129cd0bd1835f4c1fd21f8d7117b461dbb646527f408d56cd07b`.

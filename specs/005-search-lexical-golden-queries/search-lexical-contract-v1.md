@@ -1,82 +1,89 @@
-# Search Lexical Contract v1 — DRAFT
+# Search Lexical Contract v1
 
-**Estado:** DRAFT / não autoriza implementação antes de G-520.
+**Status:** FROZEN EM G-520  
+**Runtime autorizado somente após T528/G-520 PASS.**
 
-## Input
+## Versões
 
-- query string;
-- caller context;
-- limit bounded;
-- opcionalmente filtros explicitamente autorizados.
+- normalizer: `search-normalizer-v1.0.0`;
+- document: `search-document-v1.0.0`;
+- ranking: `lexical-ranker-v1.0.0`;
+- result: `search-result-v1.0.0`;
+- Golden runner: `golden-runner-v1.0.0`.
 
-## Normalized Query
+## Contratos canônicos
 
-Campos mínimos:
-- `original`;
-- `normalized`;
-- `tokens[]`;
-- `detected_type`;
-- `normalizer_version`.
+- T520: `g520-query-normalization-contract-v1.md`;
+- T521: `g520-search-document-contract-v1.md`;
+- T522: `g520-ranking-contract-v1.md`;
+- T523: `g520-search-result-contract-v1.md`;
+- T524: `g520-golden-runner-contract-v1.md`;
+- T525: `adr-005-003-search-storage-wordpress-first.md`;
+- T526: `security-matrix.md`;
+- T527: `g520-rollback-rebuild-contract-v1.md`.
 
-Invariantes:
-- determinístico;
-- bounded;
-- sem rede;
-- sem IA;
-- sem persistência;
-- original não é perdido.
+## Pipeline v1
 
-## Search Document post-level
+`query -> normalize -> projection candidate retrieval -> WordPress authorization revalidation -> lexical rank -> SearchResponse`
 
-Campos candidatos mínimos:
-- post_id;
-- title;
-- title_norm;
-- summary/objective_norm quando disponível;
-- headings_norm derivados do Content Extractor;
-- body_norm derivado do Content Extractor;
-- taxonomy_norm quando autorizada;
-- source_hash/content_hash;
-- post_modified_gmt;
-- index_version.
+Fallback:
+`query -> normalize -> bounded WP_Query native relevance -> authorization -> SearchResponse(degraded)`
 
-É projeção reconstruível.
+## Storage
 
-## Search Result
+- uma tabela: `{$wpdb->prefix}bdc_kb_search_documents`;
+- uma Option de estado: `bdc_kb_search_projection_state`;
+- sem Golden table;
+- sem FULLTEXT;
+- sem query log.
 
-- post_id;
-- title;
-- official_url;
-- rank;
-- score;
-- matched_signals[];
-- retrieval_state: `ready|degraded|fallback`;
-- algorithm_version.
+## Search Document
 
-WordPress revalida status/visibilidade antes da entrega.
+Fontes:
+- title: WordPress;
+- Summary: Meta_Contract;
+- headings/body: Content Extractor;
+- taxonomy: Classification_Contract.
+
+Projection é descartável/reconstruível.
+
+## Resultado
+
+Estados:
+`success|zero_results|invalid_query|degraded|technical_error`.
+
+Retrieval:
+`projection_like|wordpress_fallback`.
+
+Zero-result != erro técnico.
 
 ## Ranking
 
-Pesos não estão congelados neste draft. Ordem qualitativa inicial:
-`exact_title > partial_title > objective/summary > heading > taxonomy > body`.
+Determinístico, explicável, sem recência, usuário, telemetria, IA ou vetor.
 
-Cobertura de tokens é sinal explícito. Empate deve ser determinístico.
+Qualquer mudança material exige nova algorithm_version e invalida Golden evidence anterior.
 
-## Erros/estados
+## Golden
 
-- `success`;
-- `zero_results`;
-- `invalid_query`;
-- `degraded`;
-- `technical_error`.
+Golden e Technical Challenge possuem versions/hashes separados.
 
-Zero-result nunca é technical error.
+- Golden blocking failure => NO-GO;
+- Technical Challenge failure => gate técnico FAIL;
+- quarantine não escolhe vencedor;
+- STALE se versões/hashes/runtime divergem.
 
-## Proibições
+## Segurança
 
-- writer editorial;
+WordPress é autoridade de status/capability. Projection nunca concede acesso.
+
+## Proibições v1
+
+- FULLTEXT;
 - semantic/vector;
-- model rerank;
-- hardcode de equivalências do domínio;
-- retornar conteúdo privado sem autorização;
-- projection como autoridade de permissão.
+- embeddings;
+- IA/model rerank;
+- hardcoded equivalences;
+- analytics/query logging;
+- item/deep-link;
+- queue;
+- ASI runtime/storage.

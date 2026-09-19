@@ -32,17 +32,17 @@
 - [x] T528 G-520 PASS — 25/25 contract checks; CLOSED em 2026-09-19.
 
 ## G-530 — Engine lexical
-- [ ] T530 implementar normalizer mínimo.
-- [ ] T531 implementar retrieval mínimo.
-- [ ] T532 implementar ranker versionado.
-- [ ] T533 implementar resultado explicável.
-- [ ] T534 fallback/degraded.
-- [ ] T535 testes locais.
-- [ ] T536 zero write editorial.
-- [ ] T537 G-530 PASS.
+- [x] T530 implementar normalizer mínimo — `search-normalizer-v1.0.0`.
+- [x] T531 implementar retrieval mínimo — Search Document + Projection Repository próprios.
+- [x] T532 implementar ranker versionado — `lexical-ranker-v1.0.0`.
+- [x] T533 implementar resultado explicável — Search Service + matched_signals.
+- [x] T534 fallback/degraded — WP_Query native relevance, score=null.
+- [x] T535 testes locais — 17/17 PASS + 7/7 PHP lint.
+- [x] T536 zero write editorial — scan PASS; writes somente Projection/Option derivadas.
+- [x] T537 G-530 PASS — CLOSED em 2026-09-19; próximo gate G-540.
 
 ## G-540 — Corpus
-- [ ] T540 executar full-corpus.
+- [ ] T540 executar full-corpus — próximo passo ambiental automatizado.
 - [ ] T541 duas passagens/determinismo.
 - [ ] T542 coverage.
 - [ ] T543 rebuild/idempotência se aplicável.

@@ -14,6 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Golden_Suite_Loader {
 
 	public const RUNNER_VERSION = 'golden-runner-v1.0.0';
+	public const EXPECTED_NORMALIZER_VERSION = 'search-normalizer-v1.0.0';
+	public const EXPECTED_DOCUMENT_VERSION = 'search-document-v1.0.0';
+	public const EXPECTED_ALGORITHM_VERSION = 'lexical-ranker-v1.0.0';
+	public const EXPECTED_RESULT_VERSION = 'search-result-v1.0.0';
 
 	public const GOLDEN_VERSION = 'golden-relevance-v1.0.0';
 	public const GOLDEN_HASH = 'e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4';

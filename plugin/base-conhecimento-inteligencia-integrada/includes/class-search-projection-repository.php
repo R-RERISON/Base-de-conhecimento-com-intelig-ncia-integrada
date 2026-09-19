@@ -254,6 +254,98 @@ final class Search_Projection_Repository {
 		return is_array( $rows ) ? $rows : array();
 	}
 
+	public static function schema_exists(): bool {
+		global $wpdb;
+
+		$table = self::table_name();
+		$sql = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) );
+		$found = $wpdb->get_var( $sql );
+
+		return is_string( $found ) && $table === $found;
+	}
+
+	/**
+	 * @return int|\WP_Error
+	 */
+	public static function count_rows(): int|\WP_Error {
+		global $wpdb;
+
+		$count = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::table_name() );
+		if ( '' !== (string) $wpdb->last_error ) {
+			return new \WP_Error( 'search_projection_count_failed', 'Falha ao contar Search Documents.' );
+		}
+
+		return max( 0, (int) $count );
+	}
+
+	/**
+	 * @return array<int,array{post_id:int,source_hash:string,document_hash:string,document_state:string,source_kind:string}>|\WP_Error
+	 */
+	public static function hash_snapshot(): array|\WP_Error {
+		global $wpdb;
+
+		$rows = $wpdb->get_results(
+			'SELECT post_id, source_hash, document_hash, document_state, source_kind FROM ' . self::table_name() . ' ORDER BY post_id ASC',
+			ARRAY_A
+		);
+
+		if ( '' !== (string) $wpdb->last_error ) {
+			return new \WP_Error( 'search_projection_snapshot_failed', 'Falha ao ler snapshot da Search Projection.' );
+		}
+
+		$out = array();
+		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+			$out[] = array(
+				'post_id' => (int) ( $row['post_id'] ?? 0 ),
+				'source_hash' => (string) ( $row['source_hash'] ?? '' ),
+				'document_hash' => (string) ( $row['document_hash'] ?? '' ),
+				'document_state' => (string) ( $row['document_state'] ?? '' ),
+				'source_kind' => (string) ( $row['source_kind'] ?? '' ),
+			);
+		}
+		return $out;
+	}
+
+	/**
+	 * Remove somente rows que não pertencem ao corpus canônico atual.
+	 * Chamada autorizada apenas após uma passagem completa bem-sucedida.
+	 *
+	 * @param array<int,int> $valid_post_ids
+	 * @return int|\WP_Error
+	 */
+	public static function delete_stale_rows( array $valid_post_ids ): int|\WP_Error {
+		global $wpdb;
+
+		$valid_post_ids = array_values(
+			array_unique(
+				array_filter(
+					array_map( 'intval', $valid_post_ids ),
+					static fn ( int $post_id ): bool => $post_id > 0
+				)
+			)
+		);
+
+		if ( empty( $valid_post_ids ) ) {
+			return new \WP_Error(
+				'search_projection_empty_corpus_cleanup_blocked',
+				'Limpeza stale bloqueada para corpus vazio.'
+			);
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $valid_post_ids ), '%d' ) );
+		$sql = $wpdb->prepare(
+			'DELETE FROM ' . self::table_name() . " WHERE post_id NOT IN ({$placeholders})",
+			...$valid_post_ids
+		);
+		$result = $wpdb->query( $sql );
+
+		if ( false === $result || '' !== (string) $wpdb->last_error ) {
+			return new \WP_Error( 'search_projection_stale_cleanup_failed', 'Falha ao remover Search Documents stale.' );
+		}
+
+		return max( 0, (int) $result );
+	}
+
 	private static function nullable_datetime( string $value ): ?string {
 		$value = trim( $value );
 		return '' === $value || '0000-00-00 00:00:00' === $value ? null : $value;

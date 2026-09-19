@@ -427,3 +427,17 @@ Aceita em 2026-09-18:
 - ambiental NOT_RUN;
 - human visual acceptance NOT_RUN;
 - G-560 permanece OPEN.
+
+
+#### G-560 Search UX — technical/environmental PASS — 2026-09-19
+
+- evidence: `evidence/g560-environmental-review-20260919T134816Z.json`;
+- upload SHA-256: `9906bbecbd1d2c056a2a1e87d2b50d8d4885adc904621a8b1120ff49c40b1527`;
+- automated checks: 21/21 PASS;
+- live Search cases: 4/4 PASS;
+- accessibility/responsive source contracts: PASS;
+- editorial fingerprint equal;
+- errors: 0;
+- g560_technical_ready=true;
+- T564 human visual acceptance: NOT_RUN;
+- G-560-HUMAN é o gate ativo.

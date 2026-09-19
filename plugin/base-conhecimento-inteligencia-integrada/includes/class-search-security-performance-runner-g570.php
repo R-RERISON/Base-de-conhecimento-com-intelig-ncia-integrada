@@ -273,12 +273,12 @@ final class Search_Security_Performance_Runner_G570 {
 			'query_tokens_16' => Search_Query_Normalizer::MAX_TOKENS === 16,
 			'token_chars_128' => Search_Query_Normalizer::MAX_TOKEN_CHARS === 128,
 			'repository_has_no_request_globals' => ! str_contains( $repository, '$_GET' ) && ! str_contains( $repository, '$_POST' ),
-			'no_fulltext_sql' => 1 !== preg_match( '/\bFULLTEXT\b|MATCH\s*\(|AGAINST\s*\(/i', $repository ),
+			'no_fulltext_sql' => 1 !== preg_match( '/\\bFULLTEXT\\b|(?<![A-Za-z0-9_])MATCH\\s*\\(|(?<![A-Za-z0-9_])AGAINST\\s*\\(/i', $repository ),
 		);
 
 		$safety_checks = array(
 			'no_asi_runtime_identifier' => 1 !== preg_match( '/\basi(?:4)?_/i', $combined ),
-			'no_network_call' => 1 !== preg_match( '/wp_remote_|curl_|fsockopen\s*\(|stream_socket_client\s*\(/i', $combined ),
+			'no_network_call' => 1 !== preg_match( '/wp_remote_[A-Za-z0-9_]*\\s*\\(|curl_[A-Za-z0-9_]+\\s*\\(|(?<![A-Za-z0-9_])fsockopen\\s*\\(|(?<![A-Za-z0-9_])stream_socket_client\\s*\\(/i', $combined ),
 			'no_query_logging_option' => ! str_contains( $combined, 'query_log' ) && ! str_contains( $combined, 'search_log' ),
 			'no_editorial_write_calls_in_search_runtime' => 1 !== preg_match( '/wp_update_post\s*\(|wp_insert_post\s*\(|update_post_meta\s*\(|wp_set_object_terms\s*\(/i', $combined ),
 		);

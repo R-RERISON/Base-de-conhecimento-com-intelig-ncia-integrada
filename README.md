@@ -8,30 +8,27 @@ Plataforma WordPress de **gestão, curadoria, governança, busca e inteligência
 
 O projeto já possui runtime funcional e evolui por vertical slices governados por SPECs.
 
-Baseline consolidada em `main` após o fechamento de G-240 da SPEC-004:
+Baseline consolidada em `main`: SPEC-000/001/002/003/004 concluídas; UX-001/002/003 concluídas; SPEC-004 CLOSED/main após G-240/G-245/G-250. Release homologada: `0.4.0-spec004-rc2`; Knowledge Document schema `2.1.0`.
 
-- SPEC-000 — Inventário Profundo e Contratos: concluída;
-- SPEC-001 — Core mínimo + Summary narrativo: concluída;
-- SPEC-002 — Classificação de Conhecimento: concluída;
-- UX-001 — Product Experience & Knowledge Workspace: concluída;
-- SPEC-003 — Review & Governança: concluída (`0.3.0-rc.1`);
-- SPEC-004 — Content Extractor e Knowledge Document: ativa;
-- R-200/R-210/G-220/G-230/G-240: PASS;
-- Knowledge Document atual: schema `2.1.0`;
-- build de aceite G-240: `0.4.0-acceptance.12`;
-- G-245 — Elementor Normalization & Production Readiness: em andamento em branch dedicada e ainda não promovida.
+Frente atual: **SPEC-005 — Search Lexical e Golden Queries / ATIVA / DISCOVERY**, na branch `spec005-search-lexical-golden-queries`.
 
-O merge que promoveu G-240 para `main` é `32a696386bf2ab5574d4d7725db78636fa51f36c`.
+- R-500: PASS/CLOSED; superfície inicial ADMIN-FIRST.
+- T510 e T511.2: PASS AMBIENTAL.
+- T511.2: seis candidates; admin atual atende 2/6; admin relevância e publish nativo atendem 6/6 até max_rank histórico.
+- R-510: OPEN; próxima etapa é revisão humana T513 e diversidade T514.
+- Engine bloqueada até R-500 + R-510 + G-520.
+
+[Estado detalhado](specs/005-search-lexical-golden-queries/current-state.md) · [Prompt de continuidade](specs/005-search-lexical-golden-queries/CONTINUIDADE.md).
 
 ## Regra de produto mais importante
 
-O plugin **não substitui o WordPress/Elementor como fonte editorial**.
+O WordPress é a autoridade editorial e de acesso. `WP_Post.post_content` + WordPress Core Blocks são o destino editorial canônico, conforme Constituição v1.3.0.
 
-- O post continua sendo criado, editado e publicado no WordPress/Elementor.
-- Elementor continua sendo a superfície editorial oficial.
-- O knowledge plane não reescreve `_elementor_data` nem `post_content`.
-- Projeções como Knowledge Document, índices, chunks e embeddings são derivados reconstruíveis.
-- IA é assistiva: sugere, mas não recebe autoridade editorial automática.
+- Elementor permanece adapter legado temporário, com `_elementor_data` preservado.
+- O plugin Gutenberg não é dependência de produção.
+- Search e demais projeções não reescrevem conteúdo editorial.
+- Knowledge Document, índices, chunks e embeddings são derivados reconstruíveis.
+- IA é assistiva: sugere; humano decide; WordPress persiste.
 
 ## Runtime atual
 
@@ -49,47 +46,35 @@ A plataforma já consolida:
 
 No fechamento de G-240, o corpus de homologação com 622 posts foi processado em duas passagens completas sem errors, throwables, mismatches de hash/JSON, `structure_incomplete` ou `not_ready`. O aceite humano dos oito casos fixos fechou 8/8 para cobertura, ordem, ausência de texto inventado e preservação estrutural.
 
-## G-245 — fronteira atual
+## SPEC-005 — fronteira atual
 
-A próxima frente é preparar normalização Elementor e produção de forma explícita, auditável e reversível.
+O baseline de busca foi medido antes de qualquer engine própria. A ordenação administrativa por `modified DESC` não será promovida como ranking de Search. Gaps de Summary/Content Extractor justificam avaliar Search Document semântico; persistência depende de G-520.
 
-A branch ativa é:
+O próximo passo é [revisar as seis expectativas e completar diversidade](specs/005-search-lexical-golden-queries/r510-golden-candidate-review-v1.md). O baseline T511.2 já foi executado; não há novo pacote nesta consolidação. `0.5.0-r510-t511.1` está SUPERSEDED e não deve ser instalado.
 
-`spec004-g245-production-readiness`
-
-O PR #4 permanece **DRAFT**.
-
-O Production Preflight T080 já foi executado read-only em homologação e não encontrou blocker para continuar o planejamento/projeção read-only. Isso **não autoriza writer ou migration editorial**.
-
-Antes de qualquer escrita continuam obrigatórios, entre outros:
-
-- matriz de compatibilidade;
-- Projection Plan read-only;
-- gateway Elementor version-gated;
-- stale-source guard;
-- journal/rollback;
-- dry-run;
-- canário controlado;
-- autorização explícita posterior.
+ASI é referência histórica, não dependência: T511.2 consome seed próprio. A comprovação operacional com ASI desativado permanece no gate G-585 antes do RC.
 
 ## Projetos de referência
 
 Os três repositórios abaixo permanecem fontes obrigatórias de aprendizado e comportamento comprovado, nunca dependências de runtime:
 
-1. **KB2Ops — Operational Knowledge Engine**  
+1. **KB2Ops — Operational Knowledge Engine**
+
    https://github.com/R-RERISON/KB2Ops-Operational-Knowledge-Engine
 
-2. **Advanced Search Intelligence (ASI)**  
+2. **Advanced Search Intelligence (ASI)**
+
    https://github.com/R-RERISON/Advanced-search-Intelligence
 
-3. **Gerenciador de Resumo Executivo da Base de Conhecimento**  
+3. **Gerenciador de Resumo Executivo da Base de Conhecimento**
+
    https://github.com/R-RERISON/Gerenciador-de-Resumo-Executivo-da-Base-de-Conhecimento
 
 ## Princípios fundamentais
 
 1. **WordPress-first.** Avaliar Core, hooks e APIs nativas antes de infraestrutura própria.
 2. **Princípio de negação.** Toda complexidade precisa justificar sua existência.
-3. **Fonte editorial única.** `WP_Post` + Elementor permanecem canônicos.
+3. **Fonte editorial única.** WordPress/Core Blocks como destino; Elementor como adapter legado temporário.
 4. **Vertical slices.** Mudanças pequenas, homologáveis, reversíveis e com gate explícito.
 5. **Sem regressão silenciosa.** Paridade e evidência antes de substituição.
 6. **Humano como autoridade editorial.** IA sugere; humano decide.
@@ -110,6 +95,6 @@ Os três repositórios abaixo permanecem fontes obrigatórias de aprendizado e c
 
 ## Status
 
-🟡 **DESENVOLVIMENTO / HOMOLOGAÇÃO CONTROLADA** — SPEC-004 ativa, G-240 consolidado em `main`, G-245 ainda isolado em branch/PR draft.
+🟡 **DESENVOLVIMENTO / HOMOLOGAÇÃO CONTROLADA** — SPEC-004 CLOSED/main; SPEC-005 ATIVA/DISCOVERY, com R-510 OPEN e engine ainda bloqueada.
 
 **GO de desenvolvimento/homologação não equivale a GO de produção.**

@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-520",
+  "date": "2026-09-19",
+  "base_commit": "ba880eab8df80de8c30052644c1214963b28ecea",
+  "scope": "Search Contract v1 / WordPress-first storage decision",
+  "source_evidence": {
+    "r500": "evidence/r500-t502-environmental-20260918T200421Z.json",
+    "r510": "evidence/r510-t5142-environmental-20260918T235252Z.json",
+    "r510_source_sha256": "b461ff671177128958f8729208d1dcdb6a9635f93307879869b0908b8f252d89"
+  },
+  "frozen_versions": {
+    "normalizer": "search-normalizer-v1.0.0",
+    "document": "search-document-v1.0.0",
+    "ranking": "lexical-ranker-v1.0.0",
+    "result": "search-result-v1.0.0",
+    "golden_runner": "golden-runner-v1.0.0"
+  },
+  "storage_decision": {
+    "option": "C_SEARCH_RETRIEVAL_PROJECTION",
+    "table": "{$wpdb->prefix}bdc_kb_search_documents",
+    "projection_state_option": "bdc_kb_search_projection_state",
+    "fulltext_authorized": false,
+    "golden_table_authorized": false,
+    "retrieval_v1": "bounded_like_then_php_rank",
+    "fallback": "WP_Query native relevance"
+  },
+  "checks": {
+    "total": 25,
+    "passed": 25,
+    "failed": 0,
+    "categories": [
+      "normalizer version/bounds/no hidden expansion",
+      "Search Document source mapping/corpus scope/authority boundary",
+      "ranking version/candidate determinism/no recency",
+      "Search Result states/fallback honesty",
+      "Golden hashes/technical max_rank/projection-ready requirement",
+      "single owned table/no FULLTEXT/no Golden table",
+      "capabilities/privacy",
+      "rollback/idempotence",
+      "R-510 freeze integrity",
+      "G-520 documentation-only change boundary"
+    ]
+  },
+  "runtime_changes_since_g520_base": [],
+  "result": {
+    "t520": true,
+    "t521": true,
+    "t522": true,
+    "t523": true,
+    "t524": true,
+    "t525": true,
+    "t526": true,
+    "t527": true,
+    "t528": true,
+    "g520_status": "PASS_CLOSED",
+    "runtime_authorized_next_gate": "G-530"
+  },
+  "limits": [
+    "G-520 PASS authorizes G-530 implementation, not production.",
+    "FULLTEXT remains unauthorized until performance evidence.",
+    "semantic/vector/AI remain out of scope.",
+    "G-585 ASI independence remains mandatory before RC."
+  ]
+}

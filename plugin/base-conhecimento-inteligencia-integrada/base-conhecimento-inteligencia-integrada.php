@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.4.0-spec004-rc2
+ * Version: 0.5.0-g570.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.4.0-spec004-rc2' );
+define( 'BDC_KB_VERSION', '0.5.0-g570.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -38,6 +38,15 @@ define( 'BDC_KB_SPEC004_G245_T100C_CORE_BLOCKS_ACTIVITY_BUILD', true );
 define( 'BDC_KB_SPEC004_G245_T100D_CORE_BLOCKS_EXECUTOR_BUILD', false );
 define( 'BDC_KB_SPEC004_T100E_E6_REGRESSION_BUILD', false );
 define( 'BDC_KB_SPEC004_G250_LIFECYCLE_BUILD', false );
+define( 'BDC_KB_SPEC005_R500_DIAGNOSTIC_BUILD', false );
+define( 'BDC_KB_SPEC005_R510_LEGACY_GOLDEN_BUILD', false );
+define( 'BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD', false );
+define( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD', false );
+define( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD', true );
+define( 'BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD', false );
+define( 'BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD', false );
+define( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD', false );
+define( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD', true );
 if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
 	define( 'BDC_KB_ELEMENTOR_WRITER_ENABLED', false );
 }
@@ -153,6 +162,43 @@ if ( defined( 'BDC_KB_SPEC004_T100E_E6_REGRESSION_BUILD' ) && BDC_KB_SPEC004_T10
 if ( defined( 'BDC_KB_SPEC004_G250_LIFECYCLE_BUILD' ) && BDC_KB_SPEC004_G250_LIFECYCLE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-lifecycle-rc-smoke-g250.php';
 }
+if ( defined( 'BDC_KB_SPEC005_R500_DIAGNOSTIC_BUILD' ) && BDC_KB_SPEC005_R500_DIAGNOSTIC_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-search-baseline-diagnostic.php';
+}
+if ( defined( 'BDC_KB_SPEC005_R510_LEGACY_GOLDEN_BUILD' ) && BDC_KB_SPEC005_R510_LEGACY_GOLDEN_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-legacy-golden-discovery.php';
+}
+if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD' ) && BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-golden-candidate-seed.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-baseline-runner.php';
+}
+if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD' ) && BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-golden-candidate-seed.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-candidate-validator.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-diversity-validator.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-challenge-discovery.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-auto-validation-runner.php';
+}
+if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-search-query-normalizer.php';
+	require_once BDC_KB_DIR . 'includes/class-search-document-builder.php';
+	require_once BDC_KB_DIR . 'includes/class-search-projection-repository.php';
+	require_once BDC_KB_DIR . 'includes/class-lexical-ranker.php';
+	require_once BDC_KB_DIR . 'includes/class-search-service.php';
+}
+if ( defined( 'BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD' ) && BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-search-corpus-runner-g540.php';
+}
+if ( defined( 'BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD' ) && BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-golden-suite-loader.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-gate-runner-g550.php';
+}
+if ( defined( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD' ) && BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-search-ux-runner-g560.php';
+}
+if ( defined( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD' ) && BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-search-security-performance-runner-g570.php';
+}
 
 \BDC\KnowledgeBase\Plugin::register();
 \BDC\KnowledgeBase\Visual_Foundation::register();
@@ -218,4 +264,28 @@ if ( defined( 'BDC_KB_SPEC004_T100E_E6_REGRESSION_BUILD' ) && BDC_KB_SPEC004_T10
 }
 if ( defined( 'BDC_KB_SPEC004_G250_LIFECYCLE_BUILD' ) && BDC_KB_SPEC004_G250_LIFECYCLE_BUILD ) {
 	\BDC\KnowledgeBase\Lifecycle_RC_Smoke_G250::register();
+}
+if ( defined( 'BDC_KB_SPEC005_R500_DIAGNOSTIC_BUILD' ) && BDC_KB_SPEC005_R500_DIAGNOSTIC_BUILD ) {
+	\BDC\KnowledgeBase\Search_Baseline_Diagnostic::register();
+}
+if ( defined( 'BDC_KB_SPEC005_R510_LEGACY_GOLDEN_BUILD' ) && BDC_KB_SPEC005_R510_LEGACY_GOLDEN_BUILD ) {
+	\BDC\KnowledgeBase\Legacy_Golden_Discovery::register();
+}
+if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD' ) && BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD ) {
+	\BDC\KnowledgeBase\Golden_Baseline_Runner::register();
+}
+if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD' ) && BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD ) {
+	\BDC\KnowledgeBase\Golden_Auto_Validation_Runner::register();
+}
+if ( defined( 'BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD' ) && BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD ) {
+	\BDC\KnowledgeBase\Search_Corpus_Runner_G540::register();
+}
+if ( defined( 'BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD' ) && BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD ) {
+	\BDC\KnowledgeBase\Golden_Gate_Runner_G550::register();
+}
+if ( defined( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD' ) && BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD ) {
+	\BDC\KnowledgeBase\Search_UX_Runner_G560::register();
+}
+if ( defined( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD' ) && BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD ) {
+	\BDC\KnowledgeBase\Search_Security_Performance_Runner_G570::register();
 }

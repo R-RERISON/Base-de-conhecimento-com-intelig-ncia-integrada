@@ -20,7 +20,7 @@ Evoluir em evidência crescente, sem criar infraestrutura antes do baseline.
 5. criar runner puramente determinístico.
 
 ### Fase C — Engine lexical
-Só após DoR:
+**AUTORIZADA após R-500 + R-510 + G-520 PASS:**
 1. Query Normalizer;
 2. Search Document;
 3. Retrieval;

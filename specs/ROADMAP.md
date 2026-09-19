@@ -24,15 +24,15 @@
 
 A SPEC-005 começa sem engine própria.
 
-Gate atual: **R-510 — Golden Dataset v1 / T513 + T514**.
+Gate atual: **G-520 — Search Contract v1**.
 
-Concluídos: R-500 PASS/CLOSED; T510 PASS AMBIENTAL; T511.2 PASS AMBIENTAL. A superfície inicial é ADMIN-FIRST / Knowledge List. O baseline independente mediu 2/6 no admin atual e 6/6 nos dois modos com relevância; isso não aprova expectativas automaticamente.
+Concluídos: R-500 PASS/CLOSED e R-510 PASS/CLOSED. Golden Relevance v1.0.0 e Technical Challenge v1.0.0 estão congelados com hashes separados. A superfície inicial continua ADMIN-FIRST / Knowledge List.
 
 Antes de runtime:
-- revisar os seis expected posts/max_rank/severity/rationale em T513;
-- completar diversidade real em T514;
-- congelar dataset/hash/version em T515 e fechar R-510/T516;
-- decidir WordPress-first storage e fechar contratos G-520.
+- fechar T520–T527;
+- decidir WordPress-first storage em T525;
+- fechar G-520/T528;
+- somente então iniciar G-530.
 
 Referências: [estado atual](005-search-lexical-golden-queries/current-state.md) e [continuidade](005-search-lexical-golden-queries/CONTINUIDADE.md).
 

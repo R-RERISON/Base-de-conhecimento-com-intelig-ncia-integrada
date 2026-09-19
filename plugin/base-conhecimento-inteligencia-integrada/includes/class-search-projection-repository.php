@@ -16,6 +16,8 @@ final class Search_Projection_Repository {
 	public const SCHEMA_VERSION = '1.0.0';
 	public const STATE_OPTION = 'bdc_kb_search_projection_state';
 	public const CANDIDATE_CAP = 200;
+	public const UPSERT_WRITTEN = 'WRITTEN';
+	public const UPSERT_NO_CHANGE = 'NO_CHANGE';
 
 	/** @var array<int,string> */
 	private const SEARCH_FIELDS = array(
@@ -87,9 +89,14 @@ final class Search_Projection_Repository {
 	 * @param array<string,mixed> $state
 	 */
 	public static function write_state( array $state ): bool {
+		$status = sanitize_key( (string) ( $state['status'] ?? 'not_built' ) );
+		if ( ! in_array( $status, array( 'not_built', 'building', 'ready', 'degraded', 'failed' ), true ) ) {
+			return false;
+		}
+
 		$payload = array(
 			'schema_version' => self::SCHEMA_VERSION,
-			'status' => sanitize_key( (string) ( $state['status'] ?? 'not_built' ) ),
+			'status' => $status,
 			'document_version' => Search_Document_Builder::VERSION,
 			'normalizer_version' => Search_Query_Normalizer::VERSION,
 			'corpus_count' => max( 0, (int) ( $state['corpus_count'] ?? 0 ) ),
@@ -103,9 +110,9 @@ final class Search_Projection_Repository {
 
 	/**
 	 * @param array<string,mixed> $document
-	 * @return bool|\WP_Error
+	 * @return string|\WP_Error WRITTEN|NO_CHANGE
 	 */
-	public static function upsert( array $document ): bool|\WP_Error {
+	public static function upsert( array $document ): string|\WP_Error {
 		global $wpdb;
 
 		$data = array(
@@ -129,6 +136,26 @@ final class Search_Projection_Repository {
 			return new \WP_Error( 'search_projection_invalid_document', 'Search Document inválido para persistência.' );
 		}
 
+		$existing_sql = $wpdb->prepare(
+			'SELECT source_hash, document_hash, document_version, normalizer_version FROM ' . self::table_name() . ' WHERE post_id = %d LIMIT 1',
+			$data['post_id']
+		);
+		$existing = $wpdb->get_row( $existing_sql, ARRAY_A );
+
+		if ( '' !== (string) $wpdb->last_error ) {
+			return new \WP_Error( 'search_projection_read_failed', 'Falha ao verificar Search Document existente.' );
+		}
+
+		if (
+			is_array( $existing )
+			&& $data['source_hash'] === (string) ( $existing['source_hash'] ?? '' )
+			&& $data['document_hash'] === (string) ( $existing['document_hash'] ?? '' )
+			&& $data['document_version'] === (string) ( $existing['document_version'] ?? '' )
+			&& $data['normalizer_version'] === (string) ( $existing['normalizer_version'] ?? '' )
+		) {
+			return self::UPSERT_NO_CHANGE;
+		}
+
 		$result = $wpdb->replace(
 			self::table_name(),
 			$data,
@@ -139,7 +166,7 @@ final class Search_Projection_Repository {
 			return new \WP_Error( 'search_projection_write_failed', 'Falha ao persistir Search Document.' );
 		}
 
-		return true;
+		return self::UPSERT_WRITTEN;
 	}
 
 	/**

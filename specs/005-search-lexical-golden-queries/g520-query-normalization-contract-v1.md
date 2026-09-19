@@ -19,8 +19,8 @@ Produzir uma representação lexical determinística, bounded e compatível com 
 
 1. aceitar somente string;
 2. remover controles NUL/C0 incompatíveis;
-3. `wp_strip_all_tags()`;
-4. decodificar entidades HTML;
+3. decodificar entidades HTML;
+4. `wp_strip_all_tags()`;
 5. normalizar CR/LF/whitespace para espaço;
 6. `trim`;
 7. preservar essa forma em `original`;

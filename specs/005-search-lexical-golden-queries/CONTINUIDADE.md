@@ -275,3 +275,30 @@ Aceite visual mínimo:
 - revisar desktop e pelo menos um narrow breakpoint crítico;
 - confirmar hierarquia visual, legibilidade, foco/feedback e ausência de overflow/regressão;
 - sem teste artigo-a-artigo.
+
+
+## G-560 humano — PASS/CLOSED — 2026-09-19
+
+Evidência:
+- `evidence/g560-human-visual-acceptance-20260919.md`;
+- captura desktop real 1726x412;
+- query observada: `windows 11`.
+
+Decisão:
+- desktop: PASS humano;
+- mobile visual: DEFERRED/NON-BLOCKING por decisão explícita do Product Owner;
+- source/runtime checks 782/520 permanecem PASS;
+- Visual Contract v2 não foi alterado;
+- dívida mobile fica para iniciativa futura em que mobile seja requisito de release.
+
+Gate:
+- T560–T565 PASS/CLOSED;
+- G-560 CLOSED;
+- gate atual G-570.
+
+G-570 OBJETIVO:
+1. scope/capability;
+2. SQL/bounds;
+3. abuso/queries longas;
+4. benchmark p50/p95 no ambiente real;
+5. fechar G-570 sem alterar ranking.

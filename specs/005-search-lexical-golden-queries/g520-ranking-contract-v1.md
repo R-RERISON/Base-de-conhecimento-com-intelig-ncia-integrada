@@ -14,10 +14,12 @@ Candidate retrieval não define relevância final.
 Modo v1:
 1. usar Projection pronta;
 2. strict pass: todos os tokens devem ocorrer em pelo menos um campo pesquisável;
-3. relaxed pass: se o strict pass não produzir candidatos suficientes, aceitar qualquer token;
-4. merge por post_id;
-5. revalidar WordPress status/capability;
-6. ranquear apenas candidatos autorizados.
+3. SQL strict ordena por `post_id ASC` e limita a 200;
+4. se strict retornar menos de 200, executar relaxed pass (qualquer token), também `post_id ASC`, apenas para preencher o pool até 200;
+5. merge por post_id preservando unicidade;
+6. revalidar WordPress status/capability;
+7. descartar não autorizados;
+8. ranquear somente candidatos autorizados.
 
 Bounds:
 - query tokens: máximo 16;

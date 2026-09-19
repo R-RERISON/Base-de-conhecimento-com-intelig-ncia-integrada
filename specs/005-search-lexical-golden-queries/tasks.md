@@ -117,3 +117,15 @@
 - [x] G550-PKG-07 active requires 45/45.
 - [x] G550-PKG-08 build determinístico 2/2 — SHA-256 `5c0fb99476aab84149341c1f069f64bfb9d8bdb57daaeca2636fe518164739b5`.
 - [x] G550-ENV PASS — evidence `g550-environmental-20260919T121422Z.json`; upload SHA-256 `e6f83104d330129cd0bd1835f4c1fd21f8d7117b461dbb646527f408d56cd07b`.
+
+
+### G-560 — pacote técnico de homologação
+- [x] G560-PKG-01 Knowledge List usa Search_Service para consulta não vazia; listagem sem consulta preserva modified DESC.
+- [x] G560-PKG-02 estados success/zero_results/degraded/invalid_query/technical_error possuem feedback distinto.
+- [x] G560-PKG-03 label visível + helper + aria-describedby + aria-live + focus-visible.
+- [x] G560-PKG-04 breakpoints 782/520 e ações mobile validados estaticamente.
+- [x] G560-PKG-05 fingerprint editorial cobre post_content, Summary, _elementor_data e taxonomias canônicas.
+- [x] G560-PKG-06 26/26 checks locais PASS; PHP lint 53/53; active requires 44/44.
+- [x] G560-PKG-07 build determinístico 2/2 — SHA-256 `9f4f14c775aaad4e7d2360ed11dd3b036587556b1497e210eccaf787c89b8297`.
+- [ ] G560-ENV executar runner no WordPress.
+- [ ] G560-HUMAN revisar uma evidência renderizada da Knowledge List Search; exigência do Visual Contract v2.

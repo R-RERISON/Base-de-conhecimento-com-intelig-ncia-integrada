@@ -25,7 +25,8 @@ ESTADO
 - R-500 PASS/CLOSED
 - R-510 PASS/CLOSED
 - G-520 PASS/CLOSED
-- G-530 OPEN / próximo gate
+- G-530 PASS/CLOSED
+- G-540 OPEN / próximo gate
 - G-585 obrigatório antes do RC
 
 R-510 FREEZE
@@ -63,18 +64,23 @@ STORAGE DECISION — ADR-005-003
 - no query logging
 - no ASI storage/runtime dependency
 
-G-530 OBJETIVO
-Implementar engine lexical local mínima conforme contratos, sem UI nova:
-1. Query Normalizer;
-2. Search Document Builder;
-3. Projection schema/repository mínimo;
-4. candidate retrieval strict+relaxed;
-5. WordPress authorization revalidation;
-6. Lexical Ranker;
-7. Search Result/Service;
-8. WP_Query fallback;
-9. testes unitários/integration locais;
-10. zero editorial write.
+G-530 FINAL
+- closeout: g530-closeout-20260919.md
+- evidence: evidence/g530-local-validation-20260919.json
+- build local: 0.5.0-g530.1
+- 17/17 tests PASS; 7/7 lint; zero editorial write/ASI/FULLTEXT/network
+
+G-540 OBJETIVO
+Executar full-corpus/projection rebuild automatizado em homologação:
+1. ensure schema explícito;
+2. full-corpus pass 1;
+3. stale cleanup somente após pass 1 completa;
+4. full-corpus pass 2;
+5. hashes determinísticos;
+6. pass 2 = NO_CHANGE;
+7. coverage/source kinds/states;
+8. fingerprint editorial before/after;
+9. JSON machine-readable.
 
 LIMITES
 - não implementar Golden runner ainda: G-550;
@@ -85,15 +91,14 @@ LIMITES
 - não usar ASI;
 - schema/rebuild deve seguir ADR-005-003 e rollback contract.
 
-CRITÉRIO G-530
-- normalizer determinístico;
-- projection/document deterministic;
-- ranker versioned;
-- result contract;
-- fallback honesto;
-- unit/integration PASS;
-- zero write editorial;
-- nenhum gate posterior marcado por inferência.
+CRITÉRIO G-540
+- corpus completo processado;
+- duas passagens sem fatal/throwable;
+- mesmos source/document hashes;
+- segunda passagem sem rewrite;
+- row count compatível com corpus;
+- fingerprint editorial inalterado;
+- somente então G-540 PASS.
 ```
 
 ## Estado humano

@@ -1,13 +1,13 @@
 # Estado atual — SPEC-005
 
-**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 PASS/CLOSED; G-550 PASS/CLOSED; G-560-HUMAN OPEN.**
+**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 PASS/CLOSED; G-550 PASS/CLOSED; G-560 PASS/CLOSED; G-570 OPEN.**
 
 **Branch:** `spec005-search-lexical-golden-queries`  
 **Base:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`
 
 ## Gate atual
 
-**G-560-HUMAN — aceite visual final.**
+**G-570 — Segurança/Performance.**
 
 G-520 fechou os contratos e autorizou implementação local da engine. Isso **não** autoriza produção nem merge.
 
@@ -369,3 +369,34 @@ Gate residual:
 - next_gate = G-560-HUMAN.
 
 Nenhum outro subgate técnico do G-560 permanece aberto.
+
+
+## G-560 — PASS/CLOSED
+
+Evidência humana:
+`evidence/g560-human-visual-acceptance-20260919.md`
+
+Resultado visual:
+- desktop Search: PASS humano;
+- superfície observada: Knowledge List / query `windows 11`;
+- Search toolbar, ações, feedback e hierarquia: PASS;
+- nenhum clipping/overlap/overflow visível;
+- identidade BDC/UX-002.3 preservada.
+
+Divergência registrada:
+- revisão visual humana 782/520: DEFERRED/NON-BLOCKING;
+- decisão explícita do Product Owner: mobile não é requisito bloqueante neste momento;
+- checks técnicos 782/520 continuam PASS;
+- Visual Contract v2 global permanece inalterado;
+- dívida visual mobile deve ser revisitada quando suporte mobile for requisito de release.
+
+Gate:
+- T560 PASS;
+- T561 PASS técnico com mobile visual deferred;
+- T562 PASS;
+- T563 PASS;
+- T564 PASS humano desktop;
+- T565 PASS;
+- G-560 CLOSED.
+
+Próximo gate: G-570 — Segurança/Performance.

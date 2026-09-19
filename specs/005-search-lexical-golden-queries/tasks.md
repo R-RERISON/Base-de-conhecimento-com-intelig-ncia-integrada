@@ -105,3 +105,15 @@
 - [x] G540-PKG-05 build determinístico 2/2 — SHA-256 `b08a7abdef9c6287571ec137c2623618077a8ea6426d964bfc9e858659270a7f`.
 - [x] G540-PKG-06 ZIP `0.5.0-g540.1` pronto para homologação.
 - [x] G540-ENV PASS — evidence `g540-environmental-20260919T115727Z.json`; SHA-256 `c2f1195c35917bc1863f262a7c0a930d622e93733aaccbfba3325becf1b789de`.
+
+
+### G-550 — pacote de homologação
+- [x] G550-PKG-01 runtime resources próprios Golden/Challenge empacotados.
+- [x] G550-PKG-02 set_hash/version validados em runtime.
+- [x] G550-PKG-03 stale guard de normalizer/document/ranker/result.
+- [x] G550-PKG-04 fallback WordPress não pode aprovar Golden.
+- [x] G550-PKG-05 local harness 6/6 PASS.
+- [x] G550-PKG-06 PHP lint 52/52 PASS.
+- [x] G550-PKG-07 active requires 45/45.
+- [x] G550-PKG-08 build determinístico 2/2 — SHA-256 `5c0fb99476aab84149341c1f069f64bfb9d8bdb57daaeca2636fe518164739b5`.
+- [ ] G550-ENV executar runner no WordPress e anexar JSON; T550–T555 permanecem abertos até essa evidência.

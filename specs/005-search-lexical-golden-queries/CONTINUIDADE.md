@@ -26,7 +26,8 @@ ESTADO
 - R-510 PASS/CLOSED
 - G-520 PASS/CLOSED
 - G-530 PASS/CLOSED
-- G-540 OPEN / próximo gate
+- G-540 PASS/CLOSED
+- G-550 OPEN / próximo gate
 - G-585 obrigatório antes do RC
 
 R-510 FREEZE
@@ -126,12 +127,28 @@ Correção obrigatória realizada antes do build:
 
 Estado:
 - G-530 CLOSED;
-- G-540 package/local PASS;
-- G-540 environmental NOT_RUN;
-- G-540 ainda OPEN.
+- G-540 PASS/CLOSED;
+- G-550 OPEN.
 
-Próxima ação humana:
-1. instalar o ZIP `0.5.0-g540.1` **por cima** da versão atual, sem excluir o plugin;
-2. acessar **Base de Conhecimento → Search Corpus G-540**;
-3. executar **Executar G-540 automaticamente e baixar JSON**;
-4. anexar o JSON resultante para fechamento T540–T545.
+G-540 AMBIENTAL
+- evidence: evidence/g540-environmental-20260919T115727Z.json
+- upload SHA-256: c2f1195c35917bc1863f262a7c0a930d622e93733aaccbfba3325becf1b789de
+- corpus 623/623;
+- pass1 623 WRITTEN;
+- pass2 623 NO_CHANGE / 0 WRITTEN;
+- determinism mismatch=0;
+- DB snapshot mismatch=0;
+- Projection ready;
+- editorial fingerprint equal;
+- errors/throwables=0;
+- G-540 CLOSED.
+
+PRÓXIMO PASSO — G-550
+1. empacotar Golden Relevance v1.0.0 e Technical Challenge v1.0.0 como recursos próprios;
+2. validar set_hash/version em runtime;
+3. executar somente com Projection ready;
+4. Golden blocking failure=0;
+5. Technical Challenge failure=0;
+6. quarantine permanece warning;
+7. JSON machine-readable;
+8. zero ASI/query logging.

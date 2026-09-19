@@ -1,6 +1,6 @@
 # Golden Queries Contract v1
 
-**Estado:** DRAFT — congelar em R-510/G-520.
+**Estado:** FROZEN PARA R-510 — integração/runtime do runner será fechada em G-520.
 
 ## Objetivo
 
@@ -85,7 +85,17 @@ Essas linhas constituem **seed de paridade**, não Golden Suite v1 aceita automa
 
 O fato de o legado classificá-las como `warning` não obriga a nova severidade. Em T513, AUTO_PASS recomenda `blocking`; ambiguidades vão para `AMBIGUOUS_QUARANTINED`/warning e ficam fora do blocking set.
 
-A suite v1 final deve registrar novo `set_hash` pelo contrato da SPEC-005; hashes históricos do ASI são metadados de proveniência e não devem ser comparados diretamente com o hash candidate do novo schema.
+A suite v1 foi congelada em T515:
+- version: `golden-relevance-v1.0.0`;
+- set_hash: `e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4`;
+- fixture: `fixtures/golden-relevance-v1.0.0.json`.
+
+Technical Challenge foi congelado separadamente:
+- version: `technical-challenge-v1.0.0`;
+- set_hash: `2928dcd85e242bb50e013d58c71388b3302db76f462570cb09f19db61fc6e807`;
+- fixture: `fixtures/technical-challenge-v1.0.0.json`.
+
+Hashes históricos do ASI continuam apenas como provenance.
 
 
 ## Golden vs Technical Challenge

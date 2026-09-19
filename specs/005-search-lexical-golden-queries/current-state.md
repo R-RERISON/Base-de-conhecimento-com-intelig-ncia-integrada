@@ -200,3 +200,30 @@ Implementar Golden Runner runtime próprio:
 - quarantine apenas warning;
 - nenhum query log;
 - nenhuma dependência ASI.
+
+
+## G-550 — candidato de homologação 0.5.0-g550.1
+
+Evidência local:
+`evidence/g550-local-package-validation-20260919.json`
+
+Validação:
+- runtime resources próprios: Golden + Technical Challenge;
+- set_hash recalculado em runtime;
+- stale guard de normalizer/document/ranker/result;
+- Projection obrigatoriamente ready;
+- wordpress_fallback não pode produzir PASS;
+- 6/6 local harness PASS;
+- 52/52 PHP lint PASS;
+- 45/45 active requires;
+- source/package parity preservada;
+- ZIP íntegro;
+- rebuild determinístico 2/2;
+- SHA-256 `5c0fb99476aab84149341c1f069f64bfb9d8bdb57daaeca2636fe518164739b5`.
+
+Estado:
+- G-550 package/local: PASS;
+- G-550 ambiental: NOT_RUN;
+- G-550 global: OPEN.
+
+Próxima ação: instalar `0.5.0-g550.1`, acessar **Base de Conhecimento → Golden Gate G-550**, executar o runner e anexar o JSON.

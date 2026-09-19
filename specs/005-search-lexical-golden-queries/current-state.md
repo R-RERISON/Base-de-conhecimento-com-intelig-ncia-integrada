@@ -1,13 +1,13 @@
 # Estado atual — SPEC-005
 
-**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 PASS/CLOSED; G-550 PASS/CLOSED; G-560 OPEN.**
+**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 PASS/CLOSED; G-550 PASS/CLOSED; G-560-HUMAN OPEN.**
 
 **Branch:** `spec005-search-lexical-golden-queries`  
 **Base:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`
 
 ## Gate atual
 
-**G-560 — UX/Humano.**
+**G-560-HUMAN — aceite visual final.**
 
 G-520 fechou os contratos e autorizou implementação local da engine. Isso **não** autoriza produção nem merge.
 
@@ -335,3 +335,37 @@ Estado do gate:
 - G-560 global: OPEN.
 
 O Visual Contract v2 exige revisão humana para mudança material de UI. O runner ambiental automatiza o restante; não haverá teste manual artigo-a-artigo.
+
+
+## G-560 — automated/environmental PASS
+
+Evidência:
+`evidence/g560-environmental-review-20260919T134816Z.json`
+
+SHA-256 do upload original:
+`9906bbecbd1d2c056a2a1e87d2b50d8d4885adc904621a8b1120ff49c40b1527`
+
+Resultado:
+- 21/21 checks PASS;
+- Projection ready;
+- Search_Service integration PASS;
+- Visual Contract source markers PASS;
+- responsive markers 782/520 PASS;
+- accessibility markers PASS;
+- Windows 11 -> success/projection_like/rank 1;
+- Summary semantic case -> success/projection_like/rank 1;
+- zero-results -> zero_results/projection_like;
+- invalid query -> invalid_query/none;
+- editorial fingerprint before/after idêntico;
+- query log=false;
+- external network=false;
+- ASI dependency=false;
+- errors=[];
+- g560_technical_ready=true.
+
+Gate residual:
+- T564 human visual acceptance = NOT_RUN;
+- T565 G-560 PASS = false;
+- next_gate = G-560-HUMAN.
+
+Nenhum outro subgate técnico do G-560 permanece aberto.

@@ -50,11 +50,14 @@ Item `AMBIGUOUS_QUARANTINED`:
 
 É gate técnico separado, não Golden blocking.
 
-Cada caso deve comprovar que o Search v1 recupera `expected_post_id` dentro de max_rank técnico a ser congelado em G-550 (default inicial 3, sujeito a evidência antes do primeiro run).
+Cada caso da `technical-challenge-v1.0.0` usa `max_rank=3`.
+
+Esse limite pertence ao `golden-runner-v1.0.0`; alterá-lo exige nova runner contract version e torna evidência anterior STALE.
 
 Falha incrementa `technical_failed`.
 
 G-550 exige:
+- Projection `ready`; execução em `wordpress_fallback` não pode gerar PASS;
 - `blocking_failed=0`;
 - `technical_failed=0`;
 - suite/hash/version current.

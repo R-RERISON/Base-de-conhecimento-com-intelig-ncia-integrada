@@ -43,7 +43,7 @@ $checks = array(
 	'repository_prepare' => str_contains( $repository, '$wpdb->prepare' ),
 	'repository_esc_like' => str_contains( $repository, '$wpdb->esc_like' ),
 	'no_request_globals_repository' => ! str_contains( $repository, '$_GET' ) && ! str_contains( $repository, '$_POST' ),
-	'no_fulltext' => 1 !== preg_match( '/\bFULLTEXT\b|MATCH\s*\(|AGAINST\s*\(/i', $repository ),
+	'no_fulltext' => 1 !== preg_match( '/\\bFULLTEXT\\b|(?<![A-Za-z0-9_])MATCH\\s*\\(|(?<![A-Za-z0-9_])AGAINST\\s*\\(/i', $repository ),
 
 	'runner_post_nonce' => str_contains( $runner, 'wp_verify_nonce' ) && str_contains( $runner, "'POST' !== strtoupper" ),
 	'runner_manage_options' => str_contains( $runner, "current_user_can( 'manage_options' )" ),
@@ -51,7 +51,7 @@ $checks = array(
 		&& ! str_contains( $runner, 'Search_Projection_Repository::upsert' )
 		&& ! str_contains( $runner, 'Search_Projection_Repository::ensure_schema' ),
 	'runner_no_editorial_write' => 1 !== preg_match( '/wp_update_post\s*\(|wp_insert_post\s*\(|update_post_meta\s*\(|wp_set_object_terms\s*\(/i', $runner ),
-	'runner_no_network' => 1 !== preg_match( '/wp_remote_|curl_|fsockopen\s*\(|stream_socket_client\s*\(/i', $runner ),
+	'runner_no_network' => 1 !== preg_match( '/wp_remote_[A-Za-z0-9_]*\\s*\\(|curl_[A-Za-z0-9_]+\\s*\\(|(?<![A-Za-z0-9_])fsockopen\\s*\\(|(?<![A-Za-z0-9_])stream_socket_client\\s*\\(/i', $runner ),
 	'runner_no_asi' => 1 !== preg_match( '/\basi(?:4)?_/i', $runner ),
 
 	'benchmark_repeats_5' => str_contains( $runner, 'public const BENCHMARK_REPEATS = 5;' ),

@@ -1,99 +1,75 @@
 # Estado atual — SPEC-005
 
-**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 OPEN.**
+**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 OPEN.**
 
 **Branch:** `spec005-search-lexical-golden-queries`  
 **Base:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`
 
 ## Gate atual
 
-**G-520 — Search Contract v1.**
+**G-530 — Lexical Engine Local.**
 
-A engine lexical continua **bloqueada** até G-520 PASS. R-500 e R-510 já estão satisfeitos.
+G-520 fechou os contratos e autorizou implementação local da engine. Isso **não** autoriza produção nem merge.
 
-## R-500 — PASS/CLOSED
+## Baselines fechadas
 
-- corpus total: 623;
-- publish: 606;
-- superfície inicial: ADMIN-FIRST / Knowledge List;
-- `modified DESC` rejeitado como ranking;
-- Content Extractor/KD é origem semântica dos derivados;
-- Search Document post-level é requisito conceitual;
-- schema/FULLTEXT continuam condicionados à decisão G-520.
+R-500:
+- corpus 623 / publish 606;
+- superfície ADMIN-FIRST;
+- WP_Query nativo preservado como fallback;
+- gap semântico 91/610;
+- Summary gap 14/18.
 
-## R-510 — PASS/CLOSED
+R-510:
+- Golden Relevance `golden-relevance-v1.0.0`;
+- set_hash `e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4`;
+- 5 blocking ativos + 1 quarantine;
+- Technical Challenge `technical-challenge-v1.0.0`;
+- set_hash `2928dcd85e242bb50e013d58c71388b3302db76f462570cb09f19db61fc6e807`;
+- 7 casos;
+- synthetic 16/16 PASS;
+- real-world enrichment `PENDING_TELEMETRY`.
 
-Closeout: `r510-closeout-20260918.md`.
+## G-520 — PASS/CLOSED
 
-Evidência ambiental final:
-`evidence/r510-t5142-environmental-20260918T235252Z.json`
+Closeout:
+`g520-closeout-20260919.md`
 
-SHA-256 do upload:
-`b461ff671177128958f8729208d1dcdb6a9635f93307879869b0908b8f252d89`
+Evidence:
+`evidence/g520-contract-validation-20260919.json`
 
-Resultado T513:
-- AUTO_PASS: 5;
-- AMBIGUOUS_QUARANTINED: 1;
-- AUTO_FAIL: 0;
-- human review required: false.
+Validação:
+- 25/25 checks PASS;
+- zero runtime file alterado durante G-520;
+- SHA-256 da evidência R-510 confirmado: `b461ff671177128958f8729208d1dcdb6a9635f93307879869b0908b8f252d89`.
 
-Caso quarentenado:
-- `GQ-LEGACY-005 / Estrutura`;
-- expected 36620 preservado;
-- concorrente 516 rank 1;
-- expected rank 2;
-- nenhum expected foi trocado;
-- fora do blocking set.
+Versões congeladas:
+- normalizer `search-normalizer-v1.0.0`;
+- Search Document `search-document-v1.0.0`;
+- ranker `lexical-ranker-v1.0.0`;
+- result `search-result-v1.0.0`;
+- Golden Runner `golden-runner-v1.0.0`.
 
-Resultado T514:
-- Technical Challenge Discovery: 7 casos;
-- natural_language: 1;
-- summary_dependent: 3;
-- elementor_semantic_gap: 3;
-- diversity: PASS;
-- synthetic robustness: 16/16 PASS;
-- real-world enrichment: `PENDING_TELEMETRY`;
-- `r510_ready=true`.
+T525 / ADR-005-003:
+- uma tabela BDC: `{$wpdb->prefix}bdc_kb_search_documents`;
+- uma Option: `bdc_kb_search_projection_state`, autoload=false;
+- retrieval v1: SQL LIKE bounded + ranking PHP;
+- FULLTEXT: NÃO AUTORIZADO no v1;
+- Golden table: NÃO AUTORIZADA;
+- ASI: zero runtime/storage dependency.
 
-## T515 — datasets congelados
+## Próximo passo — G-530
 
-Golden Relevance:
-- fixture: `fixtures/golden-relevance-v1.0.0.json`;
-- version: `golden-relevance-v1.0.0`;
-- set_hash: `e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4`;
-- 6 total / 5 active blocking / 1 quarantined.
+Implementar o menor vertical slice local:
+1. T530 Query Normalizer;
+2. T531 Search Document Builder + Projection Repository mínimo;
+3. T532 Lexical Ranker;
+4. T533 Search Result/Service explicável;
+5. T534 WP_Query fallback/degraded;
+6. T535 testes locais determinísticos;
+7. T536 prova de zero write editorial;
+8. T537 G-530 PASS.
 
-Technical Challenge:
-- fixture: `fixtures/technical-challenge-v1.0.0.json`;
-- version: `technical-challenge-v1.0.0`;
-- set_hash: `2928dcd85e242bb50e013d58c71388b3302db76f462570cb09f19db61fc6e807`;
-- 7 cases;
-- never Golden blocking;
-- never claimed as real user queries.
+Ainda não criar UI nova, Golden runtime, FULLTEXT, queue, telemetria, vetor ou IA.
 
-Hash contract:
-`r510-suite-hash-contract-v1.md`.
-
-## Independência ASI
-
-ASI permanece referência histórica, não dependência.
-
-- nenhuma leitura deliberada do storage ASI após T510;
-- Golden/Challenge são fixtures próprias;
-- nenhum futuro schema/ranking/vector/embedding pode depender do ASI;
-- G-585 continua obrigatório antes do RC com ASI ausente/desativado.
-
-## Próximo passo
-
-Executar G-520, na ordem:
-1. T520 Query Normalization Contract;
-2. T521 Search Document Contract;
-3. T522 Ranking Contract;
-4. T523 Search Result Contract;
-5. T524 Golden Runner Contract;
-6. T525 WordPress-first storage decision;
-7. T526 Security Matrix;
-8. T527 Rollback/Rebuild Contract;
-9. T528 G-520 PASS.
-
-Nenhuma tabela, FULLTEXT, Search Projection ou engine é criada antes da decisão T525/T528.
+G-585 continua obrigatório antes do RC com ASI ausente/desativado.

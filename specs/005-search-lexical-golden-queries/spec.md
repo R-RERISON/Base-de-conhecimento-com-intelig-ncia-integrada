@@ -10,7 +10,7 @@
 
 **Idioma:** pt-BR.
 
-**Gate atual:** R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 OPEN.
+**Gate atual:** R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 OPEN.
 
 > **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
@@ -279,12 +279,14 @@ ADR-005-002 separa Golden Relevance, Technical Challenge e Real-world Query Enri
 - hash contract: `r510-suite-hash-contract-v1.md`;
 - closeout: `r510-closeout-20260918.md`.
 
-### G-520 — Search Contract v1
+### G-520 — Search Contract v1 — **PASS/CLOSED em 2026-09-19**
 - normalizer/ranker/result contract fechado;
 - WordPress-first decision;
 - storage decision;
 - security matrix;
-- rollback.
+- rollback;
+- closeout: `g520-closeout-20260919.md`;
+- evidence: `evidence/g520-contract-validation-20260919.json`.
 
 ### G-530 — Lexical Engine Local
 - implementação mínima;
@@ -363,9 +365,7 @@ Até G-590:
 
 ## 20. Definition of Ready
 
-Implementação de runtime começa somente quando R-500 e R-510 estiverem PASS e G-520 estiver fechado.
-
-Até lá, trabalho autorizado é inventário, benchmark, contrato, dataset, testes/fixtures e diagnóstico read-only.
+R-500, R-510 e G-520 estão PASS/CLOSED. G-530 está autorizado para implementação local da engine lexical nos limites dos contratos congelados. Isso não autoriza produção ou gates posteriores.
 
 
 ## 21. Relação com ASI

@@ -285,9 +285,9 @@ Base: `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
 
 Objetivo: estabelecer retrieval lexical determinístico e Golden Queries antes de semantic search, vetores ou IA.
 
-Gate atual: **G-530 — Lexical Engine Local**.
+Gate atual: **G-540 — Corpus / Projection Rebuild**.
 
-R-500 e R-510 estão PASS/CLOSED. G-520 foi fechado em 2026-09-19 com 25/25 checks, uma Search Retrieval Projection BDC própria, sem FULLTEXT v1, e contratos versionados de normalização/documento/ranking/resultado/Golden runner. G-530 está OPEN para implementação local; produção continua bloqueada pelos gates posteriores. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
+R-500 e R-510 estão PASS/CLOSED. G-520 foi fechado em 2026-09-19 com 25/25 checks, uma Search Retrieval Projection BDC própria, sem FULLTEXT v1, e contratos versionados de normalização/documento/ranking/resultado/Golden runner. G-530 está PASS/CLOSED; G-540 está OPEN para full-corpus/determinismo/idempotência em homologação. Produção continua bloqueada pelos gates posteriores. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
 
 Regras de abertura:
 - runtime de engine bloqueado até R-500 + R-510 + G-520;
@@ -341,3 +341,19 @@ Aceita em 2026-09-18:
 - validation: 25/25 PASS;
 - runtime changes durante G-520: zero;
 - próximo gate: G-530.
+
+
+#### G-530 Lexical Engine Local — PASS/CLOSED — 2026-09-19
+
+- build: `0.5.0-g530.1`;
+- Query Normalizer / Search Document / Projection Repository / Ranker / Search Service implementados;
+- fallback WordPress degradado;
+- 17/17 testes PASS;
+- 7/7 PHP lint;
+- blob parity local/GitHub 7/7;
+- zero write editorial;
+- zero network;
+- zero ASI runtime/storage;
+- zero FULLTEXT;
+- dois defects prevenidos por regressão automatizada;
+- próximo gate: G-540.

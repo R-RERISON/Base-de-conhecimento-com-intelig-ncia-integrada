@@ -24,7 +24,7 @@
 
 A SPEC-005 começa sem engine própria.
 
-Gate atual: **G-540 — Corpus / Projection Rebuild**.
+Gate atual: **G-570 — Segurança/Performance**.
 
 Concluídos: R-500 PASS/CLOSED e R-510 PASS/CLOSED. Golden Relevance v1.0.0 e Technical Challenge v1.0.0 estão congelados com hashes separados. A superfície inicial continua ADMIN-FIRST / Knowledge List.
 
@@ -62,3 +62,13 @@ Runtime lexical permanece bloqueado até **R-500 + R-510 + G-520**.
 - nenhuma capacidade postergada implementada silenciosamente;
 - mesmo artefato testado deve ser o candidato de release;
 - GO de homologação != GO de produção.
+
+
+### SPEC-005 — avanço 2026-09-19
+
+- G-540 PASS/CLOSED;
+- G-550 PASS/CLOSED;
+- G-560 PASS/CLOSED;
+- desktop Search visual acceptance PASS;
+- mobile visual review explicitly deferred/non-blocking;
+- próximo gate: G-570 Security/Performance.

@@ -62,8 +62,8 @@
 - [x] T561 desktop/782/520 — source contract PASS; visual human review ainda pendente.
 - [x] T562 teclado/focus/ARIA — PASS ambiental.
 - [x] T563 zero-result != erro técnico — PASS live.
-- [ ] T564 human relevance acceptance.
-- [ ] T565 G-560 PASS.
+- [x] T564 human visual acceptance — PASS desktop; mobile visual review DEFERRED/NON-BLOCKING por decisão explícita do Product Owner.
+- [x] T565 G-560 PASS — CLOSED em 2026-09-19; próximo gate G-570.
 
 ## G-570 — Segurança/Performance
 - [ ] T570 scope/capability.
@@ -128,4 +128,4 @@
 - [x] G560-PKG-06 26/26 checks locais PASS; PHP lint 53/53; active requires 44/44.
 - [x] G560-PKG-07 build determinístico 2/2 — SHA-256 `9f4f14c775aaad4e7d2360ed11dd3b036587556b1497e210eccaf787c89b8297`.
 - [x] G560-ENV PASS — 21/21 checks; evidence `g560-environmental-review-20260919T134816Z.json`; upload SHA-256 `9906bbecbd1d2c056a2a1e87d2b50d8d4885adc904621a8b1120ff49c40b1527`.
-- [ ] G560-HUMAN revisar uma evidência renderizada da Knowledge List Search; exigência do Visual Contract v2.
+- [x] G560-HUMAN PASS — desktop aprovado; evidência `g560-human-visual-acceptance-20260919.md`; revisão visual mobile deferred.

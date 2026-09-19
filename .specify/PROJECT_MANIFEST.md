@@ -285,9 +285,9 @@ Base: `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
 
 Objetivo: estabelecer retrieval lexical determinístico e Golden Queries antes de semantic search, vetores ou IA.
 
-Gate atual: **G-520 — Search Contract v1**.
+Gate atual: **G-530 — Lexical Engine Local**.
 
-R-500 está PASS/CLOSED. R-510 está PASS/CLOSED após T514.2 ambiental e freeze T515/T516. Golden Relevance v1.0.0 possui 5 itens blocking ativos + 1 quarantine; Technical Challenge v1.0.0 possui 7 casos não-blocking. G-520 está OPEN; runtime Search permanece bloqueado até G-520 PASS. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
+R-500 e R-510 estão PASS/CLOSED. G-520 foi fechado em 2026-09-19 com 25/25 checks, uma Search Retrieval Projection BDC própria, sem FULLTEXT v1, e contratos versionados de normalização/documento/ranking/resultado/Golden runner. G-530 está OPEN para implementação local; produção continua bloqueada pelos gates posteriores. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
 
 Regras de abertura:
 - runtime de engine bloqueado até R-500 + R-510 + G-520;
@@ -324,3 +324,20 @@ Aceita em 2026-09-18:
 - source evidence SHA-256: `b461ff671177128958f8729208d1dcdb6a9635f93307879869b0908b8f252d89`;
 - real-world typo/alias: `PENDING_TELEMETRY`;
 - próximo gate: G-520.
+
+
+#### G-520 Search Contract v1 — PASS/CLOSED — 2026-09-19
+
+- normalizer: `search-normalizer-v1.0.0`;
+- document: `search-document-v1.0.0`;
+- ranker: `lexical-ranker-v1.0.0`;
+- result: `search-result-v1.0.0`;
+- Golden runner: `golden-runner-v1.0.0`;
+- storage: uma tabela `{$wpdb->prefix}bdc_kb_search_documents`;
+- state: Option `bdc_kb_search_projection_state`;
+- retrieval: bounded LIKE + ranker PHP;
+- fallback: WP_Query native relevance;
+- FULLTEXT v1: não autorizado;
+- validation: 25/25 PASS;
+- runtime changes durante G-520: zero;
+- próximo gate: G-530.

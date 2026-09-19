@@ -10,7 +10,7 @@
 
 **Idioma:** pt-BR.
 
-**Gate atual:** R-500 PASS/CLOSED; T511.2 PASS AMBIENTAL; T513.1 evidência ambiental analisada; T514.2 PASS LOCAL / ambiental pendente; R-510 OPEN.
+**Gate atual:** R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 OPEN.
 
 > **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
@@ -255,7 +255,7 @@ Metas numéricas finais só serão congeladas após R-500; inventar SLA antes de
 - decidir superfície inicial;
 - benchmark inicial.
 
-### R-510 — Golden Dataset v1
+### R-510 — Golden Dataset v1 — **PASS/CLOSED em 2026-09-18**
 - conjunto real não vazio;
 - expectativas com origem humana/curada;
 - continuidade objetiva validável automaticamente;
@@ -270,6 +270,14 @@ Contrato: `r510-automated-golden-validation-contract-v1.md`.
 O Auto Validator pode confirmar uma expectativa existente, mas não pode criar ou substituir `expected_post_id`. Estados: `AUTO_PASS | AMBIGUOUS_QUARANTINED | AUTO_FAIL`.
 
 ADR-005-002 separa Golden Relevance, Technical Challenge e Real-world Query Enrichment. Synthetic/corpus-derived nunca é apresentado como uso real.
+
+### Freeze T515
+- Golden Relevance `golden-relevance-v1.0.0`;
+- set_hash `e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4`;
+- Technical Challenge `technical-challenge-v1.0.0`;
+- set_hash `2928dcd85e242bb50e013d58c71388b3302db76f462570cb09f19db61fc6e807`;
+- hash contract: `r510-suite-hash-contract-v1.md`;
+- closeout: `r510-closeout-20260918.md`.
 
 ### G-520 — Search Contract v1
 - normalizer/ranker/result contract fechado;

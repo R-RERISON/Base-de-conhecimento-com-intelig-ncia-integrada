@@ -285,7 +285,7 @@ Base: `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
 
 Objetivo: estabelecer retrieval lexical determinístico e Golden Queries antes de semantic search, vetores ou IA.
 
-Gate atual: **G-540 — Corpus / Projection Rebuild**.
+Gate atual: **G-550 — Golden Gate**.
 
 R-500 e R-510 estão PASS/CLOSED. G-520 foi fechado em 2026-09-19 com 25/25 checks, uma Search Retrieval Projection BDC própria, sem FULLTEXT v1, e contratos versionados de normalização/documento/ranking/resultado/Golden runner. G-530 está PASS/CLOSED; G-540 está OPEN para full-corpus/determinismo/idempotência em homologação. Produção continua bloqueada pelos gates posteriores. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
 
@@ -357,3 +357,20 @@ Aceita em 2026-09-18:
 - zero FULLTEXT;
 - dois defects prevenidos por regressão automatizada;
 - próximo gate: G-540.
+
+
+#### G-540 Corpus / Projection Rebuild — PASS/CLOSED — 2026-09-19
+
+- evidence: `evidence/g540-environmental-20260919T115727Z.json`;
+- upload SHA-256: `c2f1195c35917bc1863f262a7c0a930d622e93733aaccbfba3325becf1b789de`;
+- corpus: 623;
+- Projection rows: 623;
+- pass1: 623 WRITTEN;
+- pass2: 623 NO_CHANGE / 0 WRITTEN;
+- determinism mismatch: 0;
+- DB snapshot mismatch: 0;
+- document_state ready: 623;
+- editorial changed posts: 0;
+- errors/throwables: 0;
+- Projection status: ready;
+- próximo gate: G-550.

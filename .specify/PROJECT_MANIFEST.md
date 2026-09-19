@@ -285,7 +285,7 @@ Base: `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
 
 Objetivo: estabelecer retrieval lexical determinístico e Golden Queries antes de semantic search, vetores ou IA.
 
-Gate atual: **G-560 — UX/Humano**.
+Gate atual: **G-570 — Segurança/Performance**.
 
 R-500 e R-510 estão PASS/CLOSED. G-520 foi fechado em 2026-09-19 com 25/25 checks, uma Search Retrieval Projection BDC própria, sem FULLTEXT v1, e contratos versionados de normalização/documento/ranking/resultado/Golden runner. G-530 está PASS/CLOSED; G-540 está OPEN para full-corpus/determinismo/idempotência em homologação. Produção continua bloqueada pelos gates posteriores. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
 
@@ -441,3 +441,15 @@ Aceita em 2026-09-18:
 - g560_technical_ready=true;
 - T564 human visual acceptance: NOT_RUN;
 - G-560-HUMAN é o gate ativo.
+
+
+#### G-560 Search UX — PASS/CLOSED — 2026-09-19
+
+- automated/environmental: PASS;
+- human desktop visual acceptance: PASS;
+- evidence: `evidence/g560-human-visual-acceptance-20260919.md`;
+- desktop Search hierarchy/toolbar/feedback: PASS;
+- mobile visual review: DEFERRED/NON-BLOCKING by explicit Product Owner decision;
+- 782/520 technical contracts remain PASS;
+- Visual Contract v2 unchanged;
+- next gate: G-570.

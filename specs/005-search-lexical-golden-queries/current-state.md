@@ -1,13 +1,13 @@
 # Estado atual — SPEC-005
 
-**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 OPEN.**
+**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 OPEN.**
 
 **Branch:** `spec005-search-lexical-golden-queries`  
 **Base:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`
 
 ## Gate atual
 
-**G-530 — Lexical Engine Local.**
+**G-540 — Corpus / Projection Rebuild.**
 
 G-520 fechou os contratos e autorizou implementação local da engine. Isso **não** autoriza produção nem merge.
 
@@ -73,3 +73,47 @@ Implementar o menor vertical slice local:
 Ainda não criar UI nova, Golden runtime, FULLTEXT, queue, telemetria, vetor ou IA.
 
 G-585 continua obrigatório antes do RC com ASI ausente/desativado.
+
+
+## G-530 — PASS/CLOSED
+
+Closeout: `g530-closeout-20260919.md`.  
+Evidence: `evidence/g530-local-validation-20260919.json`.
+
+Build local: `0.5.0-g530.1`.
+
+Implementado:
+- Query Normalizer;
+- Search Document Builder;
+- Projection Repository;
+- Lexical Ranker;
+- Search Service;
+- WP_Query degraded fallback.
+
+Validação:
+- 17/17 unit/integration PASS;
+- 7/7 PHP lint;
+- local/GitHub blob parity 7/7;
+- zero write editorial;
+- zero network;
+- zero ASI runtime identifier;
+- zero FULLTEXT;
+- zero schema/rebuild implícito no bootstrap.
+
+Regressões capturadas antes do closeout:
+- substring LIKE sem token lexical real;
+- rewrite de Projection sem mudança.
+
+## Próximo passo — G-540
+
+Executar ambiente real de homologação de forma automatizada:
+1. criação explícita do schema derivado;
+2. full-corpus build;
+3. segunda passagem;
+4. prova de hash determinístico;
+5. prova de NO_CHANGE/idempotência;
+6. coverage e estados;
+7. fingerprint editorial antes/depois;
+8. zero fatal/throwable.
+
+Nenhuma validação manual artigo-a-artigo será exigida.

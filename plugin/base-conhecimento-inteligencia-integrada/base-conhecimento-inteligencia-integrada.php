@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.5.0-g550.1
+ * Version: 0.5.0-g560.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.5.0-g550.1' );
+define( 'BDC_KB_VERSION', '0.5.0-g560.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -44,7 +44,7 @@ define( 'BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD', false );
 define( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD', false );
 define( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD', true );
 define( 'BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD', false );
-define( 'BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD', true );
+define( 'BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD', false );
 if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
 	define( 'BDC_KB_ELEMENTOR_WRITER_ENABLED', false );
 }

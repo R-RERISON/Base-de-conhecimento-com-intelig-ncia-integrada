@@ -96,3 +96,12 @@
 - [ ] T589 comprovar rollback/lifecycle sem ASI.
 - [ ] T589.1 registrar evidência de dependency-zero.
 - [ ] T589.2 G-585 PASS antes de RC.
+
+### G-540 — pacote de homologação
+- [x] G540-PKG-01 source/package parity 55/55.
+- [x] G540-PKG-02 PHP lint 50/50 PASS.
+- [x] G540-PKG-03 active requires 44/44 resolvidos.
+- [x] G540-PKG-04 zero write editorial no runtime Search; writes permitidos apenas na Projection derivada.
+- [x] G540-PKG-05 build determinístico 2/2 — SHA-256 `b08a7abdef9c6287571ec137c2623618077a8ea6426d964bfc9e858659270a7f`.
+- [x] G540-PKG-06 ZIP `0.5.0-g540.1` pronto para homologação.
+- [ ] G540-ENV executar runner no WordPress e anexar JSON; T540–T545 permanecem abertos até essa evidência.

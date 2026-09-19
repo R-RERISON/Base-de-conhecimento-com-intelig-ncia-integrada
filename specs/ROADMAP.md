@@ -24,7 +24,7 @@
 
 A SPEC-005 começa sem engine própria.
 
-Gate atual: **G-530 — Lexical Engine Local**.
+Gate atual: **G-540 — Corpus / Projection Rebuild**.
 
 Concluídos: R-500 PASS/CLOSED e R-510 PASS/CLOSED. Golden Relevance v1.0.0 e Technical Challenge v1.0.0 estão congelados com hashes separados. A superfície inicial continua ADMIN-FIRST / Knowledge List.
 
@@ -35,7 +35,7 @@ G-520 foi fechado em 2026-09-19:
 - security + rollback fechados;
 - 25/25 contract checks PASS.
 
-Agora G-530 implementa o runtime lexical local mínimo.
+G-530 foi fechado em 2026-09-19 com 17/17 testes, Projection/ranker/service próprios e zero write editorial. G-540 agora valida full-corpus, determinismo e idempotência em homologação.
 
 Referências: [estado atual](005-search-lexical-golden-queries/current-state.md) e [continuidade](005-search-lexical-golden-queries/CONTINUIDADE.md).
 

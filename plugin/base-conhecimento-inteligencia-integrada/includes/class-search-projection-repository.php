@@ -215,10 +215,12 @@ final class Search_Projection_Repository {
 		$args = array();
 
 		foreach ( $tokens as $token ) {
-			$like = '%' . $wpdb->esc_like( $token ) . '%';
+			// Campos da Projection já são normalizados para tokens separados por espaço.
+			// A borda artificial evita "estrutura" casar "infraestrutura" antes do ranker.
+			$like = '%' . $wpdb->esc_like( ' ' . $token . ' ' ) . '%';
 			$parts = array();
 			foreach ( self::SEARCH_FIELDS as $field ) {
-				$parts[] = "{$field} LIKE %s";
+				$parts[] = "CONCAT(' ', {$field}, ' ') LIKE %s";
 				$args[] = $like;
 			}
 			$token_groups[] = '(' . implode( ' OR ', $parts ) . ')';

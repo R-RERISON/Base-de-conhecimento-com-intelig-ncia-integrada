@@ -400,3 +400,60 @@ Gate:
 - G-560 CLOSED.
 
 Próximo gate: G-570 — Segurança/Performance.
+
+
+## G-570 — candidato de homologação 0.5.0-g570.1
+
+Contrato:
+`g570-security-performance-contract-v1.md`
+
+Evidência local:
+`evidence/g570-local-package-validation-20260919.json`
+
+Escopo:
+- nenhum peso/ranking/retrieval core foi alterado desde G-560;
+- runner é read-only para posts e Search Projection;
+- negative capability checks via filtros temporários WordPress;
+- SQL/bounds/abuse automatizados;
+- benchmark real será executado somente em homologação.
+
+Bounds congelados:
+- 256 caracteres;
+- 1024 bytes;
+- 16 tokens;
+- 128 caracteres/token;
+- candidate cap 200;
+- result default 20 / hard cap 50.
+
+Benchmark do gate:
+- 6 consultas curadas;
+- 1 warm-up por consulta;
+- 5 repetições medidas;
+- 30 amostras;
+- p95 <= 750 ms;
+- max <= 1500 ms;
+- zero fallback/technical_error/throwable;
+- budget é guardrail de homologação, não SLA de produção.
+
+Validação local:
+- 61 arquivos;
+- 54 PHP;
+- 54/54 lint PASS;
+- ZIP extraído 54/54 lint PASS;
+- 44/44 active requires;
+- 37/37 contract checks PASS;
+- zero write editorial;
+- zero write Projection;
+- zero network;
+- zero ASI;
+- zero FULLTEXT;
+- build determinístico 2/2;
+- SHA-256 `4cd915fc3be58166a354434bf9688f0a1509ca36d570697540dff9eace82ab62`.
+
+Estado:
+- G-570 package/local: PASS;
+- G-570 ambiental: NOT_RUN;
+- T570–T574: OPEN;
+- G-570 global: OPEN.
+
+Próxima ação: instalar `0.5.0-g570.1`, executar **Base de Conhecimento → Security & Performance G-570** e anexar o JSON.

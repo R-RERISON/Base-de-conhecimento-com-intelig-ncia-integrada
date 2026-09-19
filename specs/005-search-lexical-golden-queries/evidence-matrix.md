@@ -11,8 +11,8 @@
 | R-510/T516 | `r510-closeout-20260918.md` | PASS/CLOSED |
 | G-520 | `g520-closeout-20260919.md` + `evidence/g520-contract-validation-20260919.json` | PASS/CLOSED |
 | G-530 | `g530-closeout-20260919.md` + `evidence/g530-local-validation-20260919.json` | PASS/CLOSED |
-| G-540 | full-corpus + coverage + duas passagens | OPEN |
-| G-550 | Golden report current, blocking=0 | NOT_RUN |
+| G-540 | `evidence/g540-environmental-20260919T115727Z.json` | PASS/CLOSED |
+| G-550 | Golden report current, blocking=0 | OPEN |
 | G-560 | relevância humana + UX/accessibility | NOT_RUN |
 | G-570 | segurança + p50/p95 + bounds | NOT_RUN |
 | G-580 | lifecycle/rebuild/fallback | NOT_RUN |

@@ -1,13 +1,13 @@
 # Estado atual — SPEC-005
 
-**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 OPEN.**
+**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 PASS/CLOSED; G-550 OPEN.**
 
 **Branch:** `spec005-search-lexical-golden-queries`  
 **Base:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`
 
 ## Gate atual
 
-**G-540 — Corpus / Projection Rebuild.**
+**G-550 — Golden Gate.**
 
 G-520 fechou os contratos e autorizou implementação local da engine. Isso **não** autoriza produção nem merge.
 
@@ -142,3 +142,61 @@ Estado do gate:
 - G-540 global: OPEN.
 
 Próximo passo: instalar `0.5.0-g540.1` sobre o plugin atual em homologação, abrir **Base de Conhecimento → Search Corpus G-540**, executar o runner e anexar o JSON baixado. Não remover/desinstalar o plugin antes da atualização.
+
+
+## G-540 — PASS/CLOSED
+
+Evidência ambiental:
+`evidence/g540-environmental-20260919T115727Z.json`
+
+SHA-256 do upload:
+`c2f1195c35917bc1863f262a7c0a930d622e93733aaccbfba3325becf1b789de`
+
+Ambiente:
+- WordPress 6.9.4;
+- PHP 8.5.10;
+- plugin 0.5.0-g540.1;
+- MariaDB 12.2.2.
+
+Resultado:
+- corpus 623 -> 623;
+- Projection schema exists=true;
+- row_count=623;
+- DB snapshot mismatches=0;
+- state_after=ready;
+- pass1: 623 written;
+- pass2: 0 written / 623 NO_CHANGE;
+- determinism: 623 compared / 0 mismatch;
+- 623/623 document_state=ready;
+- errors=[];
+- throwables=[];
+- editorial fingerprint before/after idêntico;
+- changed_posts=0;
+- T540/T541/T542/T543/T544/T545=true;
+- next_gate=G-550.
+
+Coverage:
+- title 623;
+- summary 18;
+- headings 136;
+- taxonomy 0;
+- body 610;
+- extractor_warning_total 426, sem extractor_error_code;
+- source kinds permanecem coerentes com o corpus conhecido.
+
+Performance observada do rebuild, não SLA:
+- pass1 p50 4.0901 ms / p95 10.8771 ms;
+- pass2 p50 1.8780 ms / p95 7.7550 ms;
+- total 7958.915 ms.
+
+## Próximo passo — G-550
+
+Implementar Golden Runner runtime próprio:
+- fixtures Golden/Challenge empacotadas no plugin;
+- verificação de suite_version/set_hash em runtime;
+- Projection obrigatoriamente ready;
+- execução explícita POST + nonce + manage_options;
+- blocking_failed=0 e technical_failed=0 para PASS;
+- quarantine apenas warning;
+- nenhum query log;
+- nenhuma dependência ASI.

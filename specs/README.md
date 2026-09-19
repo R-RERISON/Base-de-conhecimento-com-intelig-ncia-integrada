@@ -26,14 +26,12 @@ Placeholders posteriores não ganham autorização por existir.
 
 ## SPEC ativa
 
-A SPEC-005 trabalha inicialmente em:
-- baseline;
-- benchmark;
-- Golden Dataset;
-- contratos;
-- decisão WordPress-first.
+A SPEC-005 está em **G-520**:
+- R-500 baseline: PASS/CLOSED;
+- R-510 Golden Dataset: PASS/CLOSED;
+- contratos Search e decisão WordPress-first: em andamento.
 
-Nenhuma engine lexical própria está autorizada antes do DoR.
+Nenhuma engine lexical própria está autorizada antes de G-520 PASS.
 
 ## Regra
 

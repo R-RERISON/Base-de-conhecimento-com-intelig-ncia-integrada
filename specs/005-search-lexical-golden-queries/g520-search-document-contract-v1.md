@@ -10,6 +10,23 @@ Search Document é projeção post-level reconstruível. Nunca é autoridade edi
 
 Um documento corresponde a um `WP_Post(ID)`.
 
+## Escopo do corpus v1
+
+Indexar somente `post_type=post` nos estados administrativos já comprovados no R-500:
+- `publish`;
+- `draft`;
+- `pending`;
+- `private`;
+- `future`.
+
+Excluir:
+- `trash`;
+- `auto-draft`;
+- revisions/`inherit`;
+- outros post types.
+
+O status não é autoridade da Projection; WordPress revalida no read path.
+
 ## Campos lógicos
 
 ```text
@@ -98,8 +115,8 @@ SHA-256 de entrada canônica contendo:
 - post_title;
 - três metas Summary;
 - termos canônicos (term_id/name/slug);
-- `post_content_sha256`;
-- `elementor_data_sha256`;
+- `post_content_sha256` calculado da fonte canônica;
+- `elementor_data_sha256` calculado da fonte canônica;
 - document_version;
 - normalizer_version.
 

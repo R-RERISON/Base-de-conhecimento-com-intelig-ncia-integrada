@@ -41,6 +41,15 @@ Zero results nunca é technical error.
 
 FULLTEXT não existe no v1.
 
+### Fallback
+
+Em `wordpress_fallback`:
+- usar relevância nativa do `WP_Query`, sem `modified DESC`;
+- `score=null`;
+- `matched_signals=["wordpress_native_relevance"]`;
+- response state obrigatoriamente `degraded`;
+- o fallback não pode ser usado para declarar Golden/G-550 PASS.
+
 ## SearchResult
 
 Campos mínimos:
@@ -48,7 +57,7 @@ Campos mínimos:
 - `title` canônico carregado do WordPress;
 - `official_url` canônica;
 - `rank`;
-- `score`;
+- `score` numérico em projection mode; `null` em wordpress_fallback;
 - `matched_signals[]`;
 - `source_kind`;
 - `document_state`;

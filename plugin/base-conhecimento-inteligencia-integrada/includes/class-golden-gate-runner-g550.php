@@ -122,7 +122,7 @@ final class Golden_Gate_Runner_G550 {
 				'message' => $suites->get_error_message(),
 				'data' => $suites->get_error_data(),
 			);
-			$base['gate_result'] = self::gate_result( false, 0, 0, 1, 'G-550' );
+			$base['gate_result'] = self::gate_result( false, 0, 0, 0, 1, 'G-550' );
 			$base['performance']['total_runtime_ms'] = round( ( microtime( true ) - $started ) * 1000, 4 );
 			return $base;
 		}

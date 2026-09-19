@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-540",
+  "phase": "LOCAL_PACKAGE_VALIDATION",
+  "date": "2026-09-19",
+  "plugin_version": "0.5.0-g540.1",
+  "branch": "spec005-search-lexical-golden-queries",
+  "source_head_before_docs": "3b1f1631c8b004ba0b6923310359389d1721c01b",
+  "artifact": "base-conhecimento-inteligencia-integrada-0.5.0-g540.1.zip",
+  "artifact_sha256": "b08a7abdef9c6287571ec137c2623618077a8ea6426d964bfc9e858659270a7f",
+  "source_parity": {
+    "checked": 55,
+    "matched": 55,
+    "pass": true
+  },
+  "php_lint": {
+    "checked": 50,
+    "failed": 0,
+    "pass": true
+  },
+  "active_requires": {
+    "count": 44,
+    "missing": 0,
+    "pass": true
+  },
+  "deterministic_build": {
+    "builds": 2,
+    "sha256_equal": true,
+    "byte_equal": true
+  },
+  "zip_integrity": true,
+  "extracted_validation": {
+    "files": 55,
+    "php_files": 50,
+    "php_lint_failed": 0,
+    "pass": true
+  },
+  "active_flags": [
+    "BDC_KB_SPEC004_G245_T100A_POST_WORKSPACE_BUILD",
+    "BDC_KB_SPEC004_G245_T100C_CORE_BLOCKS_ACTIVITY_BUILD",
+    "BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD",
+    "BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD"
+  ],
+  "safety": {
+    "editorial_write_design": false,
+    "derived_projection_write": true,
+    "external_network_calls": false,
+    "shortcode_execution": false,
+    "dynamic_block_rendering": false,
+    "allowed_derived_writes": [
+      "Search Projection schema/table",
+      "Search Projection rows",
+      "bdc_kb_search_projection_state option"
+    ]
+  },
+  "source_fix": {
+    "commit": "3b1f1631c8b004ba0b6923310359389d1721c01b",
+    "file": "plugin/base-conhecimento-inteligencia-integrada/includes/class-migration-fidelity-source.php",
+    "old_blob": "81a15b4a491d1d51a4350d6b819c84c004eb818c",
+    "new_blob": "d884b22fc2f8c755c45667e703351b03a86494f4",
+    "reason": "Full-package lint found missing closing brace in branch source; fixed before package generation."
+  },
+  "environmental_gate": "NOT_RUN",
+  "g540_pass": false,
+  "next_action": "Install package over current homologation plugin and execute Search Corpus G-540; upload downloaded JSON."
+}

@@ -493,6 +493,8 @@ namespace BDC\KnowledgeBase {
 		$first = $GLOBALS['wpdb']->queries[0];
 		$last_arg = $first['args'][ count( $first['args'] ) - 1 ];
 		assert_same_search( 200, $last_arg, 'Candidate cap deve ser 200.' );
+		assert_true_search( str_contains( $first['sql'], "CONCAT(' ', title_norm, ' ') LIKE %s" ), 'Retrieval deve aplicar fronteira lexical nos campos normalizados.' );
+		assert_same_search( '% windows %', $first['args'][0], 'Pattern SQL deve exigir token com fronteiras lexicais.' );
 		assert_true_search( str_contains( $first['sql'], 'ORDER BY post_id ASC' ), 'Candidate SQL deve ordenar determinísticamente.' );
 	};
 

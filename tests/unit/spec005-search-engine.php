@@ -34,6 +34,8 @@ namespace {
 		public string $last_error = '';
 		public array $queries = array();
 		public array $result_batches = array();
+		public array $row_batches = array();
+		public int $replace_calls = 0;
 		public function esc_like( string $value ): string { return addcslashes( $value, '_%\\' ); }
 		public function prepare( string $sql, mixed ...$args ): string {
 			$this->queries[] = array( 'sql' => $sql, 'args' => $args );
@@ -43,7 +45,13 @@ namespace {
 			unset( $sql, $format );
 			return array_shift( $this->result_batches ) ?? array();
 		}
+		public function get_row( string $sql, string $format ): ?array {
+			unset( $sql, $format );
+			$row = array_shift( $this->row_batches );
+			return is_array( $row ) ? $row : null;
+		}
 		public function replace( string $table, array $data, array $format ): int|false {
+			++$this->replace_calls;
 			$GLOBALS['spec005_last_replace'] = compact( 'table', 'data', 'format' );
 			return 1;
 		}
@@ -237,6 +245,24 @@ namespace BDC\KnowledgeBase {
 		assert_true_search( in_array( 'exact_title_phrase', $ranked[0]['matched_signals'], true ), 'Sinal exact title deve ser explicável.' );
 	};
 
+	$tests['ranker_rejects_substring_only_false_positive'] = static function (): void {
+		$query = Search_Query_Normalizer::normalize( 'estrutura' );
+		assert_true_search( is_array( $query ), 'Query válida esperada.' );
+
+		$ranked = Lexical_Ranker::rank(
+			$query,
+			array(
+				array(
+					'post_id'=>77,'document_state'=>'ready','source_kind'=>'legacy_html',
+					'title_norm'=>'materiais e infraestrutura','summary_norm'=>'','headings_norm'=>'',
+					'taxonomy_norm'=>'','body_norm'=>'infraestrutura corporativa',
+				),
+			)
+		);
+
+		assert_same_search( array(), $ranked, 'LIKE por substring não pode produzir resultado sem cobertura lexical real.' );
+	};
+
 	$tests['ranker_uses_deterministic_post_id_tie_break'] = static function (): void {
 		$query = Search_Query_Normalizer::normalize( 'sccm' );
 		$base = array(
@@ -373,6 +399,82 @@ namespace BDC\KnowledgeBase {
 		assert_same_search( null, $response['results'][0]['score'], 'Fallback não possui score próprio.' );
 		assert_same_search( array( 'wordpress_native_relevance' ), $response['results'][0]['matched_signals'], 'Sinal do fallback incorreto.' );
 		assert_true_search( ! array_key_exists( 'orderby', $GLOBALS['spec005_last_wp_query_args'] ), 'Fallback não pode forçar modified DESC.' );
+	};
+
+	$tests['repository_upsert_no_change_avoids_replace'] = static function (): void {
+		$document = array(
+			'post_id'=>99,
+			'document_state'=>'ready',
+			'source_kind'=>'gutenberg',
+			'title_norm'=>'windows 11',
+			'summary_norm'=>'',
+			'headings_norm'=>'',
+			'taxonomy_norm'=>'',
+			'body_norm'=>'guia',
+			'source_hash'=>str_repeat( 'a', 64 ),
+			'document_hash'=>str_repeat( 'b', 64 ),
+			'document_version'=>Search_Document_Builder::VERSION,
+			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'post_modified_gmt'=>'2026-09-18 10:00:00',
+			'indexed_at_gmt'=>'2026-09-19 09:30:00',
+		);
+
+		$GLOBALS['wpdb']->last_error = '';
+		$GLOBALS['wpdb']->queries = array();
+		$GLOBALS['wpdb']->replace_calls = 0;
+		$GLOBALS['wpdb']->row_batches = array(
+			array(
+				'source_hash'=>$document['source_hash'],
+				'document_hash'=>$document['document_hash'],
+				'document_version'=>$document['document_version'],
+				'normalizer_version'=>$document['normalizer_version'],
+			),
+		);
+
+		$result = Search_Projection_Repository::upsert( $document );
+		assert_same_search( Search_Projection_Repository::UPSERT_NO_CHANGE, $result, 'Documento idêntico deve ser NO_CHANGE.' );
+		assert_same_search( 0, $GLOBALS['wpdb']->replace_calls, 'NO_CHANGE não pode reescrever row.' );
+	};
+
+	$tests['repository_upsert_changed_document_writes'] = static function (): void {
+		$document = array(
+			'post_id'=>100,
+			'document_state'=>'ready',
+			'source_kind'=>'gutenberg',
+			'title_norm'=>'sccm',
+			'summary_norm'=>'',
+			'headings_norm'=>'',
+			'taxonomy_norm'=>'',
+			'body_norm'=>'guia',
+			'source_hash'=>str_repeat( 'c', 64 ),
+			'document_hash'=>str_repeat( 'd', 64 ),
+			'document_version'=>Search_Document_Builder::VERSION,
+			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'post_modified_gmt'=>'2026-09-18 10:00:00',
+			'indexed_at_gmt'=>'2026-09-19 09:30:00',
+		);
+
+		$GLOBALS['wpdb']->last_error = '';
+		$GLOBALS['wpdb']->replace_calls = 0;
+		$GLOBALS['wpdb']->row_batches = array(
+			array(
+				'source_hash'=>str_repeat( '0', 64 ),
+				'document_hash'=>str_repeat( '1', 64 ),
+				'document_version'=>$document['document_version'],
+				'normalizer_version'=>$document['normalizer_version'],
+			),
+		);
+
+		$result = Search_Projection_Repository::upsert( $document );
+		assert_same_search( Search_Projection_Repository::UPSERT_WRITTEN, $result, 'Documento alterado deve ser persistido.' );
+		assert_same_search( 1, $GLOBALS['wpdb']->replace_calls, 'Documento alterado deve fazer exatamente um replace.' );
+	};
+
+	$tests['repository_rejects_invalid_projection_state'] = static function (): void {
+		$before = $GLOBALS['spec005_projection_state'];
+		$result = Search_Projection_Repository::write_state( array( 'status'=>'ready_and_magic' ) );
+		assert_same_search( false, $result, 'Estado fora da allowlist deve falhar.' );
+		assert_same_search( $before, $GLOBALS['spec005_projection_state'], 'Estado inválido não pode ser persistido.' );
 	};
 
 	$tests['repository_candidate_sql_is_bounded'] = static function (): void {

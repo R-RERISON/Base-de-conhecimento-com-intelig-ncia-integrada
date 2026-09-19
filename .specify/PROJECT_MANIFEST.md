@@ -374,3 +374,21 @@ Aceita em 2026-09-18:
 - errors/throwables: 0;
 - Projection status: ready;
 - próximo gate: G-550.
+
+
+#### G-550 Golden Gate — pacote local pronto — 2026-09-19
+
+- build: `0.5.0-g550.1`;
+- Golden runtime resource próprio;
+- Technical Challenge runtime resource próprio;
+- runner: `golden-runner-v1.0.0`;
+- stale guard para normalizer/document/ranker/result;
+- Projection ready obrigatória;
+- fallback WordPress proibido para PASS;
+- 6/6 harness PASS;
+- 52/52 PHP lint;
+- 45/45 active requires;
+- deterministic build 2/2;
+- SHA-256 `5c0fb99476aab84149341c1f069f64bfb9d8bdb57daaeca2636fe518164739b5`;
+- ambiental NOT_RUN;
+- G-550 permanece OPEN.

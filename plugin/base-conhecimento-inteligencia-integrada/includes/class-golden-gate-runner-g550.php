@@ -89,13 +89,26 @@ final class Golden_Gate_Runner_G550 {
 
 		$base = self::base_report();
 
+		$version_mismatches = self::runtime_version_mismatches();
+		if ( ! empty( $version_mismatches ) ) {
+			$base['status'] = 'STALE';
+			$base['technical_errors'][] = array(
+				'code' => 'golden_runtime_version_stale',
+				'message' => 'Versões runtime divergem do contrato Golden congelado.',
+				'mismatches' => $version_mismatches,
+			);
+			$base['gate_result'] = self::gate_result( false, 0, 0, 0, 1, 'G-550' );
+			$base['performance']['total_runtime_ms'] = round( ( microtime( true ) - $started ) * 1000, 4 );
+			return $base;
+		}
+
 		if ( ! Search_Projection_Repository::is_ready() ) {
 			$base['status'] = 'TECHNICAL_ERROR';
 			$base['technical_errors'][] = array(
 				'code' => 'projection_not_ready',
 				'message' => 'Search Projection precisa estar ready para G-550.',
 			);
-			$base['gate_result'] = self::gate_result( false, 0, 0, 1, 'G-550' );
+			$base['gate_result'] = self::gate_result( false, 0, 0, 0, 1, 'G-550' );
 			$base['performance']['total_runtime_ms'] = round( ( microtime( true ) - $started ) * 1000, 4 );
 			return $base;
 		}
@@ -174,14 +187,12 @@ final class Golden_Gate_Runner_G550 {
 						'id' => (string) ( $item['id'] ?? '' ),
 						'code' => (string) $row['technical_error'],
 					);
-					++$technical_failed;
 				} elseif ( ! $row['pass'] ) {
 					++$technical_failed;
 				}
 
 				$results[] = $row;
 			} catch ( \Throwable $error ) {
-				++$technical_failed;
 				$technical_errors[] = array(
 					'id' => (string) ( $item['id'] ?? '' ),
 					'code' => 'throwable',
@@ -205,7 +216,8 @@ final class Golden_Gate_Runner_G550 {
 			$pass,
 			$blocking_failed,
 			$warning_failed,
-			$technical_failed + count( $technical_errors ),
+			$technical_failed,
+			count( $technical_errors ),
 			$pass ? 'G-560' : 'G-550'
 		);
 		$base['performance'] = array(
@@ -333,7 +345,7 @@ final class Golden_Gate_Runner_G550 {
 				'count' => 0,
 				'total_runtime_ms' => 0.0,
 			),
-			'gate_result' => self::gate_result( false, 0, 0, 0, 'G-550' ),
+			'gate_result' => self::gate_result( false, 0, 0, 0, 0, 'G-550' ),
 			'privacy' => array(
 				'persists_query_log' => false,
 				'exports_identity' => false,
@@ -368,20 +380,43 @@ final class Golden_Gate_Runner_G550 {
 		int $blocking_failed,
 		int $warning_failed,
 		int $technical_failed,
+		int $technical_error_count,
 		string $next_gate
 	): array {
 		return array(
-			't550_explicit_runner_pass' => $pass,
-			't551_json_report_pass' => $pass,
+			't550_explicit_runner_executed' => true,
+			't551_json_report_generated' => true,
 			't552_blocking_failures_zero' => 0 === $blocking_failed,
 			't553_warnings_documented' => true,
-			't554_evidence_current_pass' => $pass,
+			't554_evidence_current_pass' => 0 === $technical_error_count,
 			't555_g550_pass' => $pass,
 			'blocking_failed' => $blocking_failed,
 			'warning_failed' => $warning_failed,
 			'technical_failed' => $technical_failed,
+			'technical_error_count' => $technical_error_count,
 			'next_gate' => $next_gate,
 		);
+	}
+
+	/** @return array<int,array<string,string>> */
+	private static function runtime_version_mismatches(): array {
+		$checks = array(
+			'normalizer' => array( Golden_Suite_Loader::EXPECTED_NORMALIZER_VERSION, Search_Query_Normalizer::VERSION ),
+			'document' => array( Golden_Suite_Loader::EXPECTED_DOCUMENT_VERSION, Search_Document_Builder::VERSION ),
+			'algorithm' => array( Golden_Suite_Loader::EXPECTED_ALGORITHM_VERSION, Lexical_Ranker::VERSION ),
+			'result' => array( Golden_Suite_Loader::EXPECTED_RESULT_VERSION, Search_Service::RESULT_VERSION ),
+		);
+		$mismatches = array();
+		foreach ( $checks as $component => $versions ) {
+			if ( $versions[0] !== $versions[1] ) {
+				$mismatches[] = array(
+					'component' => $component,
+					'expected' => $versions[0],
+					'actual' => $versions[1],
+				);
+			}
+		}
+		return $mismatches;
 	}
 
 	private static function db_version(): string {

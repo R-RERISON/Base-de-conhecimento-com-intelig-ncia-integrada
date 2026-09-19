@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.5.0-g560.1
+ * Version: 0.5.0-g570.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.5.0-g560.1' );
+define( 'BDC_KB_VERSION', '0.5.0-g570.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -45,7 +45,8 @@ define( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD', false );
 define( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD', true );
 define( 'BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD', false );
 define( 'BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD', false );
-define( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD', true );
+define( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD', false );
+define( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD', true );
 if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
 	define( 'BDC_KB_ELEMENTOR_WRITER_ENABLED', false );
 }
@@ -195,6 +196,9 @@ if ( defined( 'BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD' ) && BDC_KB_SPEC005_G550
 if ( defined( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD' ) && BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-search-ux-runner-g560.php';
 }
+if ( defined( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD' ) && BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-search-security-performance-runner-g570.php';
+}
 
 \BDC\KnowledgeBase\Plugin::register();
 \BDC\KnowledgeBase\Visual_Foundation::register();
@@ -281,4 +285,7 @@ if ( defined( 'BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD' ) && BDC_KB_SPEC005_G550
 }
 if ( defined( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD' ) && BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD ) {
 	\BDC\KnowledgeBase\Search_UX_Runner_G560::register();
+}
+if ( defined( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD' ) && BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD ) {
+	\BDC\KnowledgeBase\Search_Security_Performance_Runner_G570::register();
 }

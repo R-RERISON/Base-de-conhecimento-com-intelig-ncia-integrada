@@ -26,12 +26,13 @@ Placeholders posteriores não ganham autorização por existir.
 
 ## SPEC ativa
 
-A SPEC-005 está em **G-520**:
+A SPEC-005 está em **G-530**:
 - R-500 baseline: PASS/CLOSED;
 - R-510 Golden Dataset: PASS/CLOSED;
-- contratos Search e decisão WordPress-first: em andamento.
+- G-520 Search Contract: PASS/CLOSED;
+- engine lexical local: OPEN.
 
-Nenhuma engine lexical própria está autorizada antes de G-520 PASS.
+A implementação deve obedecer aos contratos G-520; produção continua não autorizada.
 
 ## Regra
 

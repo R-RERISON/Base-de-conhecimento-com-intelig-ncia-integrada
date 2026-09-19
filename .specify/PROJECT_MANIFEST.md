@@ -285,9 +285,9 @@ Base: `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
 
 Objetivo: estabelecer retrieval lexical determinístico e Golden Queries antes de semantic search, vetores ou IA.
 
-Gate atual: **R-510 — Golden Dataset v1 / T513-T514 Automated Golden Validation**.
+Gate atual: **G-520 — Search Contract v1**.
 
-R-500 está PASS/CLOSED. T510 e T511.2 estão PASS AMBIENTAL. T513.1 foi executado ambientalmente (5 AUTO_PASS / 1 ambiguidade / 0 AUTO_FAIL) e revelou dois defects do validator. T514.2 corrige ambos e está PASS LOCAL (14/14 unit, build 0.5.0-r510-t514.2, SHA-256 9fb9e20828b1e5162db5fa924ed3b2a3b76d85531d1c61f2847205ebdd00ae2c), com execução ambiental pendente. R-510 permanece OPEN; T515/T516 e G-520 ainda não foram concluídos. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
+R-500 está PASS/CLOSED. R-510 está PASS/CLOSED após T514.2 ambiental e freeze T515/T516. Golden Relevance v1.0.0 possui 5 itens blocking ativos + 1 quarantine; Technical Challenge v1.0.0 possui 7 casos não-blocking. G-520 está OPEN; runtime Search permanece bloqueado até G-520 PASS. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
 
 Regras de abertura:
 - runtime de engine bloqueado até R-500 + R-510 + G-520;
@@ -309,3 +309,18 @@ Aceita em 2026-09-18:
 - Technical Challenge Set pode ser corpus-derived/synthetic e prova capacidade, não intenção de usuário;
 - typo/alias reais são `PENDING_TELEMETRY` até a camada futura de Telemetria;
 - nenhum algoritmo pode trocar expected_post_id automaticamente.
+
+
+#### Fechamento R-510 — 2026-09-18
+
+- T513: PASS AUTOMATED WITH QUARANTINE;
+- T514: PASS AMBIENTAL;
+- T515: PASS / datasets congelados;
+- T516: PASS/CLOSED;
+- Golden version: `golden-relevance-v1.0.0`;
+- Golden set_hash: `e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4`;
+- Challenge version: `technical-challenge-v1.0.0`;
+- Challenge set_hash: `2928dcd85e242bb50e013d58c71388b3302db76f462570cb09f19db61fc6e807`;
+- source evidence SHA-256: `b461ff671177128958f8729208d1dcdb6a9635f93307879869b0908b8f252d89`;
+- real-world typo/alias: `PENDING_TELEMETRY`;
+- próximo gate: G-520.

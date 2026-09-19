@@ -13,7 +13,7 @@
 | G-530 | `g530-closeout-20260919.md` + `evidence/g530-local-validation-20260919.json` | PASS/CLOSED |
 | G-540 | `evidence/g540-environmental-20260919T115727Z.json` | PASS/CLOSED |
 | G-550 | `evidence/g550-environmental-20260919T121422Z.json` | PASS/CLOSED |
-| G-560 | relevância humana + UX/accessibility | OPEN |
+| G-560 | `evidence/g560-local-package-validation-20260919.json` + ambiental/humano pendentes | PACKAGE/LOCAL PASS — ENV/HUMAN NOT_RUN |
 | G-570 | segurança + p50/p95 + bounds | NOT_RUN |
 | G-580 | lifecycle/rebuild/fallback | NOT_RUN |
 | G-585 | ASI ausente + Search/Golden + rebuild próprio | NOT_RUN |

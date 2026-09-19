@@ -1,50 +1,49 @@
 # Matriz de Evidência — SPEC-005
 
-Atualizada após a revisão do JSON T511.2 em 2026-09-18. O estado de um diagnóstico não promove automaticamente o gate de produto.
-
-| Gate | Evidência mínima / referência | Estado atual |
+| Gate | Evidência principal | Estado |
 |---|---|---|
-| R-500 | [Benchmark e decisão](r500-search-baseline-decision.md) | PASS/CLOSED |
-| R-510/T510 | [Discovery histórica](evidence/r510-t510-environmental-20260918T211840Z.json) | PASS AMBIENTAL |
-| R-510/T511.2 | [Baseline independente](r510-t5112-environmental-findings-v1.md) | PASS AMBIENTAL |
-| R-510/T513 | [Contrato v1.1](r510-automated-golden-validation-contract-v1.md) + [T513.1 ambiental](evidence/r510-t513-t514-environmental-20260918T223654Z.json) + [v2 local](evidence/r510-t513-t514-v2-local-validation-20260918.json) | T513.1 PASS WITH REVIEW; v2 PASS LOCAL / AMBIENTAL NOT_RUN |
-| R-510/T514 | Technical Challenge + Diversity/Robustness + ADR-005-002 | T513.1 INCOMPLETE; v2 PASS LOCAL / AMBIENTAL NOT_RUN |
-| R-510 | Suite aprovada não vazia + revisão + diversidade + versão/hash | OPEN; T515/T516 NOT_RUN |
-| G-520 | Contratos + decisão WordPress-first + security/rollback | NOT_RUN |
-| G-530 | Unit/integration lexical + determinismo | NOT_RUN |
-| G-540 | Full-corpus + coverage + duas passagens | NOT_RUN |
+| R-500 | `r500-search-baseline-decision.md` | PASS/CLOSED |
+| R-510/T510 | `evidence/r510-t510-environmental-20260918T211840Z.json` | PASS AMBIENTAL |
+| R-510/T511.2 | `r510-t5112-environmental-findings-v1.md` | PASS AMBIENTAL |
+| R-510/T513 | `evidence/r510-t5142-environmental-20260918T235252Z.json` | PASS AUTOMATED WITH QUARANTINE |
+| R-510/T514 | mesma evidência + ADR-005-002 | PASS AMBIENTAL |
+| R-510/T515 | frozen fixtures + `r510-suite-hash-contract-v1.md` | PASS |
+| R-510/T516 | `r510-closeout-20260918.md` | PASS/CLOSED |
+| G-520 | contratos + storage decision + security/rollback | OPEN |
+| G-530 | unit/integration lexical + determinismo | NOT_RUN |
+| G-540 | full-corpus + coverage + duas passagens | NOT_RUN |
 | G-550 | Golden report current, blocking=0 | NOT_RUN |
-| G-560 | Relevância humana + UX/accessibility | NOT_RUN |
-| G-570 | Segurança + p50/p95 + bounds | NOT_RUN |
-| G-580 | Lifecycle/rebuild/fallback | NOT_RUN |
-| G-585 | ASI ausente + scan produtivo + Search/Golden + rebuild próprio | NOT_RUN |
-| G-590 | Package + manifest + checksum + final smoke | NOT_RUN |
+| G-560 | relevância humana + UX/accessibility | NOT_RUN |
+| G-570 | segurança + p50/p95 + bounds | NOT_RUN |
+| G-580 | lifecycle/rebuild/fallback | NOT_RUN |
+| G-585 | ASI ausente + Search/Golden + rebuild próprio | NOT_RUN |
+| G-590 | package + manifest + checksum + final smoke | NOT_RUN |
 
-## Semântica de estado
+## Freeze R-510
+
+Golden Relevance:
+- `golden-relevance-v1.0.0`;
+- `e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4`;
+- 5 blocking ativos;
+- 1 quarantine.
+
+Technical Challenge:
+- `technical-challenge-v1.0.0`;
+- `2928dcd85e242bb50e013d58c71388b3302db76f462570cb09f19db61fc6e807`;
+- 7 casos;
+- não blocking.
+
+Fonte ambiental:
+- SHA-256 `b461ff671177128958f8729208d1dcdb6a9635f93307879869b0908b8f252d89`;
+- `r510_ready=true`.
+
+## Semântica
 
 `PASS | FAIL | NOT_RUN | NOT_CONFIGURED | STALE | N/A | POSTERGADO | WAIVED`
 
-`OPEN`/`PENDING` indicam fluxo ainda não concluído; não equivalem a PASS.
-
-- Suite Golden vazia = NOT_CONFIGURED.
-- Candidates medidos não são suite aprovada.
-- Evidence stale não conta como PASS.
-- Blocking Golden FAIL = NO-GO.
-- UI material exige evidência humana.
-- Release usa o mesmo artefato testado.
-- T511.2 não substitui G-550 nem prova G-585; o JSON não registra ASI desativado.
-
-
-## Automação T513/T514
-
-`AUTO_PASS` pode confirmar continuidade de expectativa já humana/histórica.  
-`REVIEW_REQUIRED` concentra revisão humana em ambiguidades reais.  
-`AUTO_FAIL` bloqueia.  
-Variantes `synthetic` testam robustez e não são contabilizadas como uso real.
-
-
-### T513.1 -> T514.2
-
-T513.1 detectou 5 AUTO_PASS, 1 ambiguidade e zero AUTO_FAIL, mas também revelou D-513-01/D-513-02.  
-T514.2 corrige ambos, elimina escolha manual obrigatória via quarantine fail-safe e cria Challenge Discovery.  
-Nenhum resultado ambiental v2 é presumido.
+- Golden vazia = NOT_CONFIGURED.
+- AUTO_FAIL = NO-GO.
+- AMBIGUOUS_QUARANTINED não é blocking PASS; é expectativa preservada fora do blocking set.
+- Technical Challenge não é consulta real.
+- real-world typo/alias=PENDING_TELEMETRY não bloqueia o bootstrap lexical.
+- G-585 continua separado de R-510.

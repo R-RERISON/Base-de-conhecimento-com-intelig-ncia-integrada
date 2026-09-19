@@ -42,12 +42,12 @@
 - [x] T537 G-530 PASS — CLOSED em 2026-09-19; próximo gate G-540.
 
 ## G-540 — Corpus
-- [ ] T540 executar full-corpus — próximo passo ambiental automatizado.
-- [ ] T541 duas passagens/determinismo.
-- [ ] T542 coverage.
-- [ ] T543 rebuild/idempotência se aplicável.
-- [ ] T544 zero fatal/throwable.
-- [ ] T545 G-540 PASS.
+- [x] T540 executar full-corpus — PASS AMBIENTAL: 623/623.
+- [x] T541 duas passagens/determinismo — 623 comparados / 0 mismatch.
+- [x] T542 coverage — 623 ready; source kinds e campos registrados.
+- [x] T543 rebuild/idempotência — pass2 0 written / 623 NO_CHANGE.
+- [x] T544 zero fatal/throwable — errors=[] / throwables=[].
+- [x] T545 G-540 PASS — CLOSED em 2026-09-19; próximo gate G-550.
 
 ## G-550 — Golden Gate
 - [ ] T550 runner explícito.
@@ -104,4 +104,4 @@
 - [x] G540-PKG-04 zero write editorial no runtime Search; writes permitidos apenas na Projection derivada.
 - [x] G540-PKG-05 build determinístico 2/2 — SHA-256 `b08a7abdef9c6287571ec137c2623618077a8ea6426d964bfc9e858659270a7f`.
 - [x] G540-PKG-06 ZIP `0.5.0-g540.1` pronto para homologação.
-- [ ] G540-ENV executar runner no WordPress e anexar JSON; T540–T545 permanecem abertos até essa evidência.
+- [x] G540-ENV PASS — evidence `g540-environmental-20260919T115727Z.json`; SHA-256 `c2f1195c35917bc1863f262a7c0a930d622e93733aaccbfba3325becf1b789de`.

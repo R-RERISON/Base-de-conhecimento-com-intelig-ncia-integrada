@@ -1,13 +1,13 @@
 # Estado atual — SPEC-005
 
-**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 PASS/CLOSED; G-550 OPEN.**
+**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 PASS/CLOSED; G-550 PASS/CLOSED; G-560 OPEN.**
 
 **Branch:** `spec005-search-lexical-golden-queries`  
 **Base:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`
 
 ## Gate atual
 
-**G-550 — Golden Gate.**
+**G-560 — UX/Humano.**
 
 G-520 fechou os contratos e autorizou implementação local da engine. Isso **não** autoriza produção nem merge.
 
@@ -227,3 +227,54 @@ Estado:
 - G-550 global: OPEN.
 
 Próxima ação: instalar `0.5.0-g550.1`, acessar **Base de Conhecimento → Golden Gate G-550**, executar o runner e anexar o JSON.
+
+
+## G-550 — PASS/CLOSED
+
+Evidência ambiental:
+`evidence/g550-environmental-20260919T121422Z.json`
+
+SHA-256 do upload:
+`e6f83104d330129cd0bd1835f4c1fd21f8d7117b461dbb646527f408d56cd07b`
+
+Resultado:
+- Projection ready=true;
+- Golden set_hash declarado = calculado;
+- Challenge set_hash declarado = calculado;
+- 13 resultados executados;
+- blocking_failed=0;
+- warning_failed=0;
+- technical_failed=0;
+- technical_error_count=0;
+- status=PASS;
+- T550/T551/T552/T553/T554/T555=true;
+- next_gate=G-560.
+
+Golden:
+- pendrive -> post 527 rank 1;
+- MSTeams -> 579 rank 1;
+- Windows 11 -> 583 rank 1;
+- Termo de assinatura -> 45855 rank 1;
+- Estrutura quarantine -> 36620 rank 2, PASS warning;
+- SCCM -> 412 rank 2.
+
+Technical Challenge:
+- 7/7 PASS;
+- Elementor semantic gaps 3/3;
+- natural language 1/1;
+- Summary-dependent 3/3.
+
+Privacidade/independência:
+- query log=false;
+- identity/IP/session export=false;
+- network=false;
+- depends_on_asi=false.
+
+## Próximo passo — G-560
+
+Ler Visual Contract v2 e UX baselines canônicas antes de alterar UI. O gate cobre:
+- interface Search conforme identidade BDC;
+- desktop/782/520;
+- teclado/focus/ARIA;
+- zero-result distinto de erro técnico;
+- human relevance acceptance assistida por evidência, sem regressão para teste artigo-a-artigo.

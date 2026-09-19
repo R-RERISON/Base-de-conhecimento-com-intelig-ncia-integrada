@@ -60,6 +60,12 @@ final class Lexical_Ranker {
 			$global_text = implode( ' ', $fields );
 			$global_coverage = self::coverage( $tokens, $global_text );
 
+			// LIKE é somente candidate retrieval e pode casar substrings.
+			// Sem token lexical real, o candidato não pode virar resultado.
+			if ( $global_coverage <= 0.0 ) {
+				continue;
+			}
+
 			$exact = array(
 				'title' => self::exact_phrase( $normalized_query, $fields['title'] ),
 				'summary' => self::exact_phrase( $normalized_query, $fields['summary'] ),

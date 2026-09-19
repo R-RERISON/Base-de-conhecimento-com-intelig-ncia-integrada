@@ -278,3 +278,60 @@ Ler Visual Contract v2 e UX baselines canônicas antes de alterar UI. O gate cob
 - teclado/focus/ARIA;
 - zero-result distinto de erro técnico;
 - human relevance acceptance assistida por evidência, sem regressão para teste artigo-a-artigo.
+
+
+## G-560 — candidato técnico de homologação 0.5.0-g560.1
+
+Evidência local:
+`evidence/g560-local-package-validation-20260919.json`
+
+Integração:
+- Knowledge List mantém a arquitetura visual UX-002.3;
+- consulta vazia continua usando WP_Query com modified DESC;
+- consulta não vazia usa Search_Service canônico;
+- resultados Search são apresentados em rank lexical, com metadado discreto `Relevância #N`;
+- nenhum novo shell/tela de resolvedor foi criado;
+- paginação permanece na listagem normal; Search v1 é bounded pelo contrato.
+
+Estados:
+- success;
+- zero_results;
+- degraded / WordPress compatibility fallback;
+- invalid_query;
+- technical_error.
+
+Acessibilidade/Visual Contract:
+- role=search;
+- label visível;
+- helper associado via aria-describedby;
+- feedback aria-live;
+- foco perceptível herdado da fundação;
+- breakpoints 782px/520px;
+- estado não depende apenas de cor;
+- nenhuma biblioteca visual externa.
+
+Segurança:
+- fingerprint editorial cobre post fields, Summary, `_elementor_data` e taxonomias canônicas;
+- zero write editorial;
+- zero network;
+- zero ASI runtime;
+- zero FULLTEXT;
+- zero query logging.
+
+Validação local:
+- 60 arquivos;
+- 53 PHP;
+- 53/53 lint PASS;
+- 44/44 active requires;
+- 26/26 checks de contrato PASS;
+- 4/4 blobs alterados = GitHub;
+- deterministic build 2/2;
+- SHA-256 `9f4f14c775aaad4e7d2360ed11dd3b036587556b1497e210eccaf787c89b8297`.
+
+Estado do gate:
+- implementação/package local: PASS;
+- G-560 ambiental: NOT_RUN;
+- T564 human visual acceptance: NOT_RUN;
+- G-560 global: OPEN.
+
+O Visual Contract v2 exige revisão humana para mudança material de UI. O runner ambiental automatiza o restante; não haverá teste manual artigo-a-artigo.

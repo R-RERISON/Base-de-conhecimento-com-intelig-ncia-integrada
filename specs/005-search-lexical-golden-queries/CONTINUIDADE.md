@@ -27,7 +27,8 @@ ESTADO
 - G-520 PASS/CLOSED
 - G-530 PASS/CLOSED
 - G-540 PASS/CLOSED
-- G-550 OPEN / próximo gate
+- G-550 PASS/CLOSED
+- G-560 OPEN / próximo gate
 - G-585 obrigatório antes do RC
 
 R-510 FREEZE
@@ -181,3 +182,28 @@ Próxima ação humana:
 2. acessar **Base de Conhecimento → Golden Gate G-550**;
 3. executar **Executar G-550 e baixar JSON**;
 4. anexar o JSON para fechamento T550–T555.
+
+
+## G-550 ambiental — PASS/CLOSED
+
+- evidence: `evidence/g550-environmental-20260919T121422Z.json`;
+- upload SHA-256: `e6f83104d330129cd0bd1835f4c1fd21f8d7117b461dbb646527f408d56cd07b`;
+- Projection ready;
+- Golden hash current;
+- Challenge hash current;
+- 13/13 result expectations PASS;
+- blocking_failed=0;
+- warning_failed=0;
+- technical_failed=0;
+- technical_error_count=0;
+- status PASS;
+- next gate G-560;
+- zero ASI/network/query log/identity export.
+
+G-560 agora é o gate ativo. Antes de implementar:
+1. ler Visual Contract v2;
+2. ler Design System/UI as Code canônicos;
+3. preservar WordPress como shell sem voltar a wp-admin genérico;
+4. Search deve distinguir success/zero_results/degraded/technical_error;
+5. acessibilidade e responsividade são critérios executáveis;
+6. nenhuma evolução de ranking durante G-560.

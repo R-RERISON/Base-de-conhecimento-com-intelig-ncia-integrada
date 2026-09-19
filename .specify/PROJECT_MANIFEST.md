@@ -285,7 +285,7 @@ Base: `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
 
 Objetivo: estabelecer retrieval lexical determinístico e Golden Queries antes de semantic search, vetores ou IA.
 
-Gate atual: **G-550 — Golden Gate**.
+Gate atual: **G-560 — UX/Humano**.
 
 R-500 e R-510 estão PASS/CLOSED. G-520 foi fechado em 2026-09-19 com 25/25 checks, uma Search Retrieval Projection BDC própria, sem FULLTEXT v1, e contratos versionados de normalização/documento/ranking/resultado/Golden runner. G-530 está PASS/CLOSED; G-540 está OPEN para full-corpus/determinismo/idempotência em homologação. Produção continua bloqueada pelos gates posteriores. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
 
@@ -392,3 +392,19 @@ Aceita em 2026-09-18:
 - SHA-256 `5c0fb99476aab84149341c1f069f64bfb9d8bdb57daaeca2636fe518164739b5`;
 - ambiental NOT_RUN;
 - G-550 permanece OPEN.
+
+
+#### G-550 Golden Gate — PASS/CLOSED — 2026-09-19
+
+- evidence: `evidence/g550-environmental-20260919T121422Z.json`;
+- upload SHA-256: `e6f83104d330129cd0bd1835f4c1fd21f8d7117b461dbb646527f408d56cd07b`;
+- Projection ready;
+- Golden/Challenge hashes current;
+- 13 executions;
+- blocking_failed=0;
+- warning_failed=0;
+- technical_failed=0;
+- technical_error_count=0;
+- status PASS;
+- privacy/ASI independence fields all PASS;
+- próximo gate: G-560.

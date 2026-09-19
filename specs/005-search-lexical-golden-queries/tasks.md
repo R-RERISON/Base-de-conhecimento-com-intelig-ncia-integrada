@@ -21,15 +21,15 @@
 - [x] T516 fechar R-510 — PASS/CLOSED; próximo gate G-520.
 
 ## G-520 — Contratos
-- [ ] T520 Query Normalization Contract.
-- [ ] T521 Search Document Contract.
-- [ ] T522 Ranking Contract.
-- [ ] T523 Search Result Contract.
-- [ ] T524 Golden Runner Contract.
-- [ ] T525 WordPress-first storage decision.
-- [ ] T526 Security matrix.
-- [ ] T527 rollback/rebuild contract.
-- [ ] T528 G-520 PASS.
+- [x] T520 Query Normalization Contract — FROZEN `search-normalizer-v1.0.0`.
+- [x] T521 Search Document Contract — FROZEN `search-document-v1.0.0`.
+- [x] T522 Ranking Contract — FROZEN `lexical-ranker-v1.0.0`.
+- [x] T523 Search Result Contract — FROZEN `search-result-v1.0.0`.
+- [x] T524 Golden Runner Contract — FROZEN `golden-runner-v1.0.0`.
+- [x] T525 WordPress-first storage decision — ADR-005-003: Projection BDC própria, uma tabela, sem FULLTEXT v1.
+- [x] T526 Security matrix — FROZEN.
+- [x] T527 rollback/rebuild contract — FROZEN.
+- [x] T528 G-520 PASS — 25/25 contract checks; CLOSED em 2026-09-19.
 
 ## G-530 — Engine lexical
 - [ ] T530 implementar normalizer mínimo.

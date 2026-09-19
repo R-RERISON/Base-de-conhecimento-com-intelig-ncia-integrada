@@ -15,10 +15,10 @@
 - [x] T510 recuperar expectativas úteis do legado sem copiar runtime — PASS AMBIENTAL; 6 candidates limpos.
 - [x] T511 preservar seed histórico e implementar baseline runner independente — v1 SUPERSEDED; v2 PASS LOCAL + PASS AMBIENTAL (2026-09-18 21:45:45 UTC); ver análise/evidência T511.2.
 - [x] T512 definir schema Golden v1 — contrato/fixture candidate versionados; freeze final depende T513/T514.
-- [ ] T513 Automated Golden Validator — T513.1 ambiental: 5 AUTO_PASS / 1 ambiguidade / 0 AUTO_FAIL; v2 local PASS com quarentena fail-safe; reexecução ambiental T514.2 pendente.
-- [ ] T514 Diversity/Robustness Validator — T513.1 mostrou gaps + dois bugs do validator; T514.2 corrige regressões, adiciona Technical Challenge Discovery; 14/14 unit + pacote local PASS; ambiental pendente.
-- [ ] T515 gerar set_hash/version.
-- [ ] T516 fechar R-510.
+- [x] T513 Automated Golden Validator — PASS AMBIENTAL: 5 AUTO_PASS / 1 AMBIGUOUS_QUARANTINED / 0 AUTO_FAIL; human review required=false.
+- [x] T514 Diversity/Robustness Validator — PASS AMBIENTAL: Challenge Discovery 7 casos, diversity PASS, synthetic 16/16 PASS; real-world enrichment=PENDING_TELEMETRY.
+- [x] T515 gerar set_hash/version — Golden `golden-relevance-v1.0.0` / `e449364d...`; Challenge `technical-challenge-v1.0.0` / `2928dcd8...`.
+- [x] T516 fechar R-510 — PASS/CLOSED; próximo gate G-520.
 
 ## G-520 — Contratos
 - [ ] T520 Query Normalization Contract.

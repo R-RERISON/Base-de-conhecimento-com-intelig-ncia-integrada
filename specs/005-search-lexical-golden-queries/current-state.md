@@ -117,3 +117,28 @@ Executar ambiente real de homologação de forma automatizada:
 8. zero fatal/throwable.
 
 Nenhuma validação manual artigo-a-artigo será exigida.
+
+## G-540 — candidato de homologação 0.5.0-g540.1
+
+Pacote local validado em 2026-09-19.
+
+Evidência: `evidence/g540-local-package-validation-20260919.json`.
+
+Validação do artefato:
+- source/package parity: 55/55;
+- PHP lint: 50/50 PASS;
+- active requires: 44/44;
+- zero write editorial no runtime Search;
+- writes autorizados apenas em Search Projection derivada + option de estado;
+- ZIP íntegro;
+- rebuild determinístico 2/2;
+- SHA-256: `b08a7abdef9c6287571ec137c2623618077a8ea6426d964bfc9e858659270a7f`.
+
+Durante o fechamento do pacote, o lint integral detectou um erro sintático preexistente em `class-migration-fidelity-source.php` (fechamento ausente no scan de warnings). O source do branch foi corrigido antes da geração do ZIP no commit `3b1f1631c8b004ba0b6923310359389d1721c01b`.
+
+Estado do gate:
+- pacote/local: PASS;
+- execução ambiental G-540: NOT_RUN;
+- G-540 global: OPEN.
+
+Próximo passo: instalar `0.5.0-g540.1` sobre o plugin atual em homologação, abrir **Base de Conhecimento → Search Corpus G-540**, executar o runner e anexar o JSON baixado. Não remover/desinstalar o plugin antes da atualização.

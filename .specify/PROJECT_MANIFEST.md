@@ -453,3 +453,22 @@ Aceita em 2026-09-18:
 - 782/520 technical contracts remain PASS;
 - Visual Contract v2 unchanged;
 - next gate: G-570.
+
+
+#### G-570 Security / Performance — pacote local pronto — 2026-09-19
+
+- build: `0.5.0-g570.1`;
+- contract: `g570-security-performance-contract-v1.md`;
+- runner ambiental read-only;
+- capability negative tests temporários;
+- SQL/bounds/abuse automated;
+- benchmark: 30 amostras esperadas;
+- p95 budget 750 ms / max 1500 ms, homologation guardrail only;
+- Search core/ranking unchanged from approved G-560 baseline;
+- 37/37 local checks PASS;
+- 54/54 PHP lint;
+- 44/44 active requires;
+- deterministic build 2/2;
+- SHA-256 `4cd915fc3be58166a354434bf9688f0a1509ca36d570697540dff9eace82ab62`;
+- environmental NOT_RUN;
+- G-570 remains OPEN.

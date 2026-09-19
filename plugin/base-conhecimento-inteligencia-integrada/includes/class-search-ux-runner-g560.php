@@ -329,13 +329,29 @@ final class Search_UX_Runner_G560 {
 				$key = (string) $definition['key'];
 				$meta[ $key ] = get_post_meta( $post_id, $key, true );
 			}
+
+			$taxonomies = array();
+			foreach ( Classification_Contract::fields() as $definition ) {
+				$taxonomy = (string) $definition['taxonomy'];
+				$term_ids = wp_get_object_terms( $post_id, $taxonomy, array( 'fields' => 'ids' ) );
+				if ( is_wp_error( $term_ids ) ) {
+					$taxonomies[ $taxonomy ] = array( 'error' => $term_ids->get_error_code() );
+					continue;
+				}
+				$term_ids = array_values( array_map( 'intval', is_array( $term_ids ) ? $term_ids : array() ) );
+				sort( $term_ids, SORT_NUMERIC );
+				$taxonomies[ $taxonomy ] = $term_ids;
+			}
+
 			$rows[ $post_id ] = array(
 				'post_title' => (string) $post->post_title,
 				'post_excerpt' => (string) $post->post_excerpt,
 				'post_content' => (string) $post->post_content,
 				'post_status' => (string) $post->post_status,
 				'post_modified_gmt' => (string) $post->post_modified_gmt,
+				'elementor_data' => get_post_meta( $post_id, '_elementor_data', true ),
 				'summary' => $meta,
+				'taxonomies' => $taxonomies,
 			);
 		}
 

@@ -111,11 +111,55 @@ namespace {
 }
 
 namespace BDC\KnowledgeBase {
-	$root = __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/';
+	final class Meta_Contract {
+		public const POST_TYPE = 'post';
+		public static function fields(): array {
+			return array(
+				'objective'=>array('key'=>'_bdc_es_objective'),
+				'escalation'=>array('key'=>'_bdc_es_escalation'),
+				'important'=>array('key'=>'_bdc_es_important'),
+			);
+		}
+	}
+	final class Classification_Contract {
+		public static function fields(): array {
+			return array(
+				'audience'=>array('taxonomy'=>'bdc_kb_audience'),
+				'responsible_team'=>array('taxonomy'=>'bdc_kb_responsible_team'),
+				'knowledge_type'=>array('taxonomy'=>'bdc_kb_knowledge_type'),
+				'catalog_item'=>array('taxonomy'=>'bdc_kb_catalog_item'),
+			);
+		}
+	}
+	final class Canonical_JSON {
+		public static function hash( mixed $value ): string {
+			return hash( 'sha256', self::encode( $value ) );
+		}
+		private static function encode( mixed $value ): string {
+			return json_encode(
+				self::normalize( $value ),
+				JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION | JSON_THROW_ON_ERROR
+			);
+		}
+		private static function normalize( mixed $value ): mixed {
+			if ( is_object( $value ) ) {
+				$value = get_object_vars( $value );
+			}
+			if ( ! is_array( $value ) ) {
+				return $value;
+			}
+			if ( array_is_list( $value ) ) {
+				return array_map( array( self::class, 'normalize' ), $value );
+			}
+			ksort( $value, SORT_STRING );
+			foreach ( $value as $key => $item ) {
+				$value[ $key ] = self::normalize( $item );
+			}
+			return $value;
+		}
+	}
 
-	require_once $root . 'class-meta-contract.php';
-	require_once $root . 'class-classification-contract.php';
-	require_once $root . 'class-canonical-json.php';
+	$root = __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/';
 	require_once $root . 'class-search-query-normalizer.php';
 	require_once $root . 'class-search-document-builder.php';
 	require_once $root . 'class-search-projection-repository.php';

@@ -302,3 +302,41 @@ G-570 OBJETIVO:
 3. abuso/queries longas;
 4. benchmark p50/p95 no ambiente real;
 5. fechar G-570 sem alterar ranking.
+
+
+## Continuidade G-570 — pacote 2026-09-19
+
+Build:
+- `0.5.0-g570.1`;
+- contrato: `g570-security-performance-contract-v1.md`;
+- evidence local: `evidence/g570-local-package-validation-20260919.json`;
+- ZIP SHA-256: `4cd915fc3be58166a354434bf9688f0a1509ca36d570697540dff9eace82ab62`;
+- 61 arquivos / 54 PHP;
+- lint 54/54;
+- extracted lint 54/54;
+- active requires 44/44;
+- local suite 37/37;
+- deterministic build 2/2.
+
+Garantias:
+- Search ranker/retrieval core não alterados;
+- G530 engine ON;
+- G560 runner OFF;
+- G570 runner ON;
+- runner G570 não escreve Projection nem editorial;
+- zero ASI/FULLTEXT/network/query logging.
+
+Teste ambiental esperado:
+1. scope/capability e negativas;
+2. candidate/result/query bounds;
+3. abuse/malformed input;
+4. 30 amostras benchmark;
+5. p95 <=750 ms e max <=1500 ms;
+6. zero fallback/error;
+7. fingerprint editorial igual.
+
+Estado:
+- G-560 CLOSED;
+- G-570 package/local PASS;
+- G-570 environmental NOT_RUN;
+- T570–T574 permanecem abertos.

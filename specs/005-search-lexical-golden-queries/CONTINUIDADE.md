@@ -106,3 +106,32 @@ CRITÉRIO G-540
 G-520 está **PASS/CLOSED**. Não há ZIP ou instalação necessária para esse gate.
 
 Próximo trabalho: **G-530 — implementação local da engine lexical**.
+
+## Continuidade G-540 — 2026-09-19
+
+Candidato de homologação:
+- versão: `0.5.0-g540.1`;
+- evidência local: `evidence/g540-local-package-validation-20260919.json`;
+- source/package parity 55/55;
+- PHP lint 50/50;
+- active requires 44/44;
+- deterministic build 2/2;
+- SHA-256 `b08a7abdef9c6287571ec137c2623618077a8ea6426d964bfc9e858659270a7f`.
+
+Correção obrigatória realizada antes do build:
+- `class-migration-fidelity-source.php`;
+- missing closing brace detectado pelo lint full-package;
+- commit `3b1f1631c8b004ba0b6923310359389d1721c01b`;
+- blob corrigido `d884b22fc2f8c755c45667e703351b03a86494f4`.
+
+Estado:
+- G-530 CLOSED;
+- G-540 package/local PASS;
+- G-540 environmental NOT_RUN;
+- G-540 ainda OPEN.
+
+Próxima ação humana:
+1. instalar o ZIP `0.5.0-g540.1` **por cima** da versão atual, sem excluir o plugin;
+2. acessar **Base de Conhecimento → Search Corpus G-540**;
+3. executar **Executar G-540 automaticamente e baixar JSON**;
+4. anexar o JSON resultante para fechamento T540–T545.

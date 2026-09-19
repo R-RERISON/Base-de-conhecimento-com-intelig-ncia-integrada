@@ -244,3 +244,34 @@ Estado:
 - G-560 environmental NOT_RUN;
 - T564 human visual acceptance NOT_RUN;
 - G-560 ainda OPEN.
+
+
+## G-560 ambiental — PASS técnico / 2026-09-19
+
+Evidência:
+- `evidence/g560-environmental-review-20260919T134816Z.json`;
+- upload SHA-256 `9906bbecbd1d2c056a2a1e87d2b50d8d4885adc904621a8b1120ff49c40b1527`.
+
+Resultados:
+- 21/21 automated checks PASS;
+- 4/4 live Search states PASS;
+- Projection ready;
+- fingerprint editorial equal;
+- errors=[];
+- runtime 3674.3619 ms;
+- g560_technical_ready=true.
+
+Estado:
+- T560 PASS;
+- T561 PASS técnico;
+- T562 PASS;
+- T563 PASS;
+- T564 NOT_RUN — único item restante;
+- T565 NOT_PASS por dependência explícita de T564;
+- gate atual: G-560-HUMAN.
+
+Aceite visual mínimo:
+- evidência renderizada da Knowledge List Search;
+- revisar desktop e pelo menos um narrow breakpoint crítico;
+- confirmar hierarquia visual, legibilidade, foco/feedback e ausência de overflow/regressão;
+- sem teste artigo-a-artigo.

@@ -93,6 +93,7 @@ final class Migration_Fidelity_Source {
 					$status = 'review_required';
 					break;
 				}
+			}
 		}
 
 		foreach ( $units as $index => &$unit ) {

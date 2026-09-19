@@ -207,3 +207,40 @@ G-560 agora é o gate ativo. Antes de implementar:
 4. Search deve distinguir success/zero_results/degraded/technical_error;
 5. acessibilidade e responsividade são critérios executáveis;
 6. nenhuma evolução de ranking durante G-560.
+
+
+## Continuidade G-560 — pacote técnico 2026-09-19
+
+Build:
+- `0.5.0-g560.1`;
+- evidence local: `evidence/g560-local-package-validation-20260919.json`;
+- ZIP SHA-256: `9f4f14c775aaad4e7d2360ed11dd3b036587556b1497e210eccaf787c89b8297`;
+- 60 arquivos / 53 PHP;
+- lint 53/53;
+- active requires 44/44;
+- 26/26 checks de contrato;
+- deterministic build 2/2.
+
+Decisão UI:
+- Search continua dentro da Knowledge List ADMIN-FIRST;
+- não existe mockup Search direto; herda Knowledge List/UX-002.3;
+- query não vazia usa Search_Service;
+- listagem vazia preserva WP_Query modified DESC;
+- estados Search são distintos e acessíveis;
+- 782/520 cobertos;
+- ranking/engine congelados durante G-560.
+
+Validador ambiental:
+- menu: **Base de Conhecimento → Search UX G-560**;
+- executa estados reais success, Summary-semantic, zero_results e invalid_query;
+- verifica Projection ready;
+- fingerprint editorial before/after completo;
+- gera JSON;
+- nunca marca T564 humano automaticamente.
+
+Estado:
+- G-550 CLOSED;
+- G-560 package/local PASS;
+- G-560 environmental NOT_RUN;
+- T564 human visual acceptance NOT_RUN;
+- G-560 ainda OPEN.

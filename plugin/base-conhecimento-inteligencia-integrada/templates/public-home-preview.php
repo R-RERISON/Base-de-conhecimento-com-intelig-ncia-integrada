@@ -58,8 +58,8 @@ $cloud = Public_Home_Read_Model::preview_word_cloud();
 			<?php if ( ! is_array( $search ) && ! empty( $cloud ) ) : ?>
 				<div class="bdc-home-suggestions" aria-label="Assuntos sugeridos">
 					<span>Assuntos em destaque</span>
-					<?php foreach ( array_slice( $cloud, 0, 6 ) as $term ) : ?>
-						<a href="<?php echo esc_url( Public_Experience::home_preview_url( 0, (string) $term['term'] ) ); ?>"><?php echo esc_html( (string) $term['term'] ); ?></a>
+					<?php foreach ( array_slice( $cloud, 0, 12 ) as $term ) : ?>
+						<a data-bdc-consult-term="<?php echo esc_attr( (string) $term['term'] ); ?>" data-bdc-consult-source="topic_click" href="<?php echo esc_url( Public_Experience::home_preview_url( 0, (string) $term['term'] ) ); ?>"><span><?php echo esc_html( (string) $term['term'] ); ?></span><b aria-label="<?php echo esc_attr( (string) absint( $term['consultation_count'] ?? 0 ) . ' consultas' ); ?>"><?php echo esc_html( (string) absint( $term['consultation_count'] ?? 0 ) ); ?></b></a>
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>

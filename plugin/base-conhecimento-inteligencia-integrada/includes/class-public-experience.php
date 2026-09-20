@@ -52,7 +52,6 @@ final class Public_Experience {
 		if ( 'base-de-conhecimento_page_' . self::PAGE_SLUG !== $hook_suffix ) {
 			return;
 		}
-
 		wp_enqueue_style(
 			'bdc-kb-public-preview-admin',
 			BDC_KB_URL . 'assets/css/visual-foundation.css',
@@ -69,20 +68,20 @@ final class Public_Experience {
 
 		echo '<div class="wrap bdc-kb-admin">';
 		echo '<h1>' . esc_html__( 'Prévia da Experiência Pública', 'bdc-knowledge-base' ) . '</h1>';
-		echo '<p>' . esc_html__( 'Esta superfície não altera a Home nem os artigos públicos. Ela serve para validar o novo frontend BDC antes do cutover.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p>' . esc_html__( 'Redesign em homologação. A Home e os artigos públicos atuais permanecem intactos até aceite explícito.', 'bdc-knowledge-base' ) . '</p>';
 
 		echo '<div class="bdc-kb-overview-grid">';
 		echo '<section class="bdc-kb-overview-card">';
 		echo '<span class="bdc-kb-card-icon"><span class="dashicons dashicons-admin-home" aria-hidden="true"></span></span>';
-		echo '<h4>' . esc_html__( 'Home BDC', 'bdc-knowledge-base' ) . '</h4>';
-		echo '<p>' . esc_html__( 'Prévia do shell plugin-owned com Header, Search lexical, categorias, Últimas, Populares e Word Cloud provisória.', 'bdc-knowledge-base' ) . '</p>';
-		echo '<a class="button button-primary bdc-kb-button-with-icon" target="_blank" rel="noopener" href="' . esc_url( self::home_preview_url() ) . '"><span class="dashicons dashicons-visibility" aria-hidden="true"></span><span>' . esc_html__( 'Abrir prévia da Home', 'bdc-knowledge-base' ) . '</span></a>';
+		echo '<h4>' . esc_html__( 'Home BDC — Redesign', 'bdc-knowledge-base' ) . '</h4>';
+		echo '<p>' . esc_html__( 'Portal plugin-owned com busca dominante, categorias, assuntos em destaque, últimas, populares, navegação robusta e Auth Bridge.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<a class="button button-primary bdc-kb-button-with-icon" target="_blank" rel="noopener" href="' . esc_url( self::home_preview_url() ) . '"><span class="dashicons dashicons-visibility" aria-hidden="true"></span><span>' . esc_html__( 'Abrir nova Home', 'bdc-knowledge-base' ) . '</span></a>';
 		echo '</section>';
 
 		echo '<section class="bdc-kb-overview-card">';
 		echo '<span class="bdc-kb-card-icon"><span class="dashicons dashicons-media-document" aria-hidden="true"></span></span>';
-		echo '<h4>' . esc_html__( 'Article Reader BDC', 'bdc-knowledge-base' ) . '</h4>';
-		echo '<p>' . esc_html__( 'Amostras representativas do corpus. GAC e WP Unified Indexer permanecem no pipeline; Tips/Rail GRE são substituídos somente nesta prévia.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h4>' . esc_html__( 'Article Reader — Redesign', 'bdc-knowledge-base' ) . '</h4>';
+		echo '<p>' . esc_html__( 'Reader com chrome legado sanitizado, Dicas úteis responsivas, Summary Rail ampliado e pipeline GAC/WPUI preservado.', 'bdc-knowledge-base' ) . '</p>';
 		echo '<div class="bdc-kb-vocabulary-actions">';
 		foreach ( self::ARTICLE_SAMPLES as $post_id ) {
 			$post = get_post( $post_id );
@@ -137,12 +136,10 @@ final class Public_Experience {
 			$candidate = BDC_KB_DIR . 'templates/public-home-preview.php';
 			return is_file( $candidate ) ? $candidate : $template;
 		}
-
 		if ( 'article' === $kind && is_singular( 'post' ) ) {
 			$candidate = BDC_KB_DIR . 'templates/public-article-preview.php';
 			return is_file( $candidate ) ? $candidate : $template;
 		}
-
 		return $template;
 	}
 
@@ -153,26 +150,15 @@ final class Public_Experience {
 		}
 
 		nocache_headers();
-
 		if ( 'article' !== $kind ) {
 			return;
 		}
 
-		// In preview only, replace GRE Tips/Rail with BDC equivalents.
-		remove_filter(
-			'the_content',
-			array( 'BDC\\ExecutiveSummary\\Helpful_Tips_Renderer', 'prepend_to_content' ),
-			15
-		);
-		remove_filter(
-			'the_content',
-			array( 'BDC\\ExecutiveSummary\\Frontend_Renderer', 'append_side_panel' ),
-			30
-		);
-		remove_action(
-			'wp_footer',
-			array( 'BDC\\ExecutiveSummary\\Frontend_Renderer', 'render_side_panel' )
-		);
+		// Preview-only replacement: prevent duplicate GRE visual blocks while keeping
+		// the canonical content pipeline and other integrations intact.
+		remove_filter( 'the_content', array( 'BDC\\ExecutiveSummary\\Helpful_Tips_Renderer', 'prepend_to_content' ), 15 );
+		remove_filter( 'the_content', array( 'BDC\\ExecutiveSummary\\Frontend_Renderer', 'append_side_panel' ), 30 );
+		remove_action( 'wp_footer', array( 'BDC\\ExecutiveSummary\\Frontend_Renderer', 'render_side_panel' ) );
 	}
 
 	public static function enqueue_assets(): void {
@@ -181,40 +167,19 @@ final class Public_Experience {
 			return;
 		}
 
-		wp_enqueue_style(
-			'bdc-kb-public-foundation',
-			BDC_KB_URL . 'assets/css/public-foundation.css',
-			array(),
-			BDC_KB_VERSION
-		);
-		wp_enqueue_style(
-			'bdc-kb-public-header',
-			BDC_KB_URL . 'assets/css/public-header.css',
-			array( 'bdc-kb-public-foundation' ),
-			BDC_KB_VERSION
-		);
+		Public_Auth_Bridge::prime();
+		wp_enqueue_style( 'dashicons' );
+		wp_enqueue_style( 'bdc-kb-public-foundation', BDC_KB_URL . 'assets/css/public-foundation.css', array(), BDC_KB_VERSION );
+		wp_enqueue_style( 'bdc-kb-public-header', BDC_KB_URL . 'assets/css/public-header.css', array( 'bdc-kb-public-foundation' ), BDC_KB_VERSION );
 
 		if ( 'home' === $kind ) {
-			wp_enqueue_style(
-				'bdc-kb-public-home',
-				BDC_KB_URL . 'assets/css/public-home.css',
-				array( 'bdc-kb-public-header' ),
-				BDC_KB_VERSION
-			);
+			wp_enqueue_style( 'bdc-kb-public-home', BDC_KB_URL . 'assets/css/public-home.css', array( 'bdc-kb-public-header' ), BDC_KB_VERSION );
 		} else {
-			wp_enqueue_style(
-				'bdc-kb-public-article',
-				BDC_KB_URL . 'assets/css/public-article.css',
-				array( 'bdc-kb-public-header' ),
-				BDC_KB_VERSION
-			);
+			wp_enqueue_style( 'bdc-kb-public-article', BDC_KB_URL . 'assets/css/public-article.css', array( 'bdc-kb-public-header' ), BDC_KB_VERSION );
 		}
 	}
 
-	/**
-	 * @param array<int,string> $classes
-	 * @return array<int,string>
-	 */
+	/** @param array<int,string> $classes @return array<int,string> */
 	public static function body_class( array $classes ): array {
 		$kind = self::preview_kind();
 		if ( null === $kind ) {
@@ -226,101 +191,66 @@ final class Public_Experience {
 	}
 
 	public static function render_header(): void {
-		$user = wp_get_current_user();
-		$display = $user instanceof \WP_User && $user->exists() ? (string) $user->display_name : __( 'Visitante', 'bdc-knowledge-base' );
-		$initials = self::initials( $display );
-
-		$items = apply_filters(
-			'bdc_kb_public_nav_items',
-			array(
-				array( 'label' => 'Página Inicial', 'url' => home_url( '/' ) ),
-				array( 'label' => 'Consulta Avançada', 'url' => self::resolve_page_url( 'Consulta Avançada' ) ),
-				array( 'label' => 'Telefones', 'url' => self::resolve_page_url( 'Telefones' ) ),
-				array( 'label' => 'Links Úteis', 'url' => self::resolve_page_url( 'Links Úteis' ) ),
-				array( 'label' => 'POSTI', 'url' => self::resolve_page_url( 'POSTI' ) ),
-			)
-		);
+		$items = Public_Navigation::items();
 
 		echo '<header class="bdc-public-header"><div class="bdc-public-header__inner">';
-		echo '<a class="bdc-public-brand" href="' . esc_url( home_url( '/' ) ) . '"><span class="bdc-public-brand__mark" aria-hidden="true">BDC</span><span><strong>Base de Conhecimento</strong><small>Central de apoio operacional</small></span></a>';
+		echo '<a class="bdc-public-brand" href="' . esc_url( home_url( '/' ) ) . '">';
+		self::render_brand_visual();
+		echo '<span class="bdc-public-brand__copy"><strong>' . esc_html__( 'Base de Conhecimento', 'bdc-knowledge-base' ) . '</strong><small>' . esc_html__( 'Central de apoio operacional', 'bdc-knowledge-base' ) . '</small></span>';
+		echo '</a>';
+
 		echo '<nav class="bdc-public-nav" aria-label="' . esc_attr__( 'Navegação principal da Base de Conhecimento', 'bdc-knowledge-base' ) . '">';
-		foreach ( (array) $items as $item ) {
-			$label = is_array( $item ) ? (string) ( $item['label'] ?? '' ) : '';
-			$url = is_array( $item ) ? (string) ( $item['url'] ?? '' ) : '';
+		foreach ( $items as $item ) {
+			$label = (string) ( $item['label'] ?? '' );
+			$url = (string) ( $item['url'] ?? '' );
+			$icon = sanitize_html_class( (string) ( $item['icon'] ?? 'dashicons-admin-links' ) );
 			if ( '' === $label ) {
 				continue;
 			}
 			if ( '' === $url ) {
-				echo '<span class="bdc-public-nav__item is-unavailable" aria-disabled="true">' . esc_html( $label ) . '</span>';
+				echo '<span class="bdc-public-nav__item is-unavailable" aria-disabled="true"><span class="dashicons ' . esc_attr( $icon ) . '" aria-hidden="true"></span><span>' . esc_html( $label ) . '</span></span>';
 				continue;
 			}
-			echo '<a class="bdc-public-nav__item" href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a>';
+			echo '<a class="bdc-public-nav__item" href="' . esc_url( $url ) . '"><span class="dashicons ' . esc_attr( $icon ) . '" aria-hidden="true"></span><span>' . esc_html( $label ) . '</span></a>';
 		}
 		echo '</nav>';
-		echo '<div class="bdc-public-profile"><span class="bdc-public-profile__avatar">' . esc_html( $initials ) . '</span><span class="bdc-public-profile__name">' . esc_html( $display ) . '</span></div>';
+
+		Public_Auth_Bridge::render();
 		echo '</div></header>';
 	}
 
 	public static function render_preview_banner( string $label ): void {
-		echo '<div class="bdc-public-preview-banner" role="status"><strong>' . esc_html__( 'Prévia administrativa', 'bdc-knowledge-base' ) . '</strong><span>' . esc_html( $label ) . ' — ' . esc_html__( 'nenhuma rota pública foi substituída.', 'bdc-knowledge-base' ) . '</span></div>';
+		echo '<div class="bdc-public-preview-banner" role="status"><span class="dashicons dashicons-hammer" aria-hidden="true"></span><strong>' . esc_html__( 'Prévia', 'bdc-knowledge-base' ) . '</strong><span>' . esc_html( $label ) . ' · ' . esc_html__( 'sem cutover', 'bdc-knowledge-base' ) . '</span></div>';
+	}
+
+	private static function render_brand_visual(): void {
+		$logo_id = absint( get_theme_mod( 'custom_logo', 0 ) );
+		if ( $logo_id > 0 ) {
+			$url = wp_get_attachment_image_url( $logo_id, 'thumbnail' );
+			if ( is_string( $url ) && '' !== $url ) {
+				echo '<span class="bdc-public-brand__logo"><img src="' . esc_url( $url ) . '" alt="" aria-hidden="true"></span>';
+				return;
+			}
+		}
+		echo '<span class="bdc-public-brand__mark" aria-hidden="true">BDC</span>';
 	}
 
 	private static function preview_kind(): ?string {
 		if ( is_admin() || ! current_user_can( 'manage_options' ) ) {
 			return null;
 		}
-
 		$kind = isset( $_GET[ self::QUERY_KEY ] ) && is_scalar( $_GET[ self::QUERY_KEY ] )
 			? sanitize_key( wp_unslash( (string) $_GET[ self::QUERY_KEY ] ) )
 			: '';
 		if ( ! in_array( $kind, array( 'home', 'article' ), true ) ) {
 			return null;
 		}
-
 		$nonce = isset( $_GET[ self::NONCE_KEY ] ) && is_scalar( $_GET[ self::NONCE_KEY ] )
 			? wp_unslash( (string) $_GET[ self::NONCE_KEY ] )
 			: '';
 		if ( ! wp_verify_nonce( $nonce, 'bdc_kb_public_preview_' . $kind ) ) {
 			return null;
 		}
-
 		return $kind;
-	}
-
-	private static function resolve_page_url( string $title ): string {
-		$pages = get_posts(
-			array(
-				'post_type' => 'page',
-				'post_status' => 'publish',
-				'posts_per_page' => 1,
-				'title' => $title,
-				'fields' => 'ids',
-				'no_found_rows' => true,
-				'suppress_filters' => false,
-			)
-		);
-		if ( empty( $pages ) ) {
-			return '';
-		}
-		$url = get_permalink( (int) $pages[0] );
-		return is_string( $url ) ? $url : '';
-	}
-
-	private static function initials( string $name ): string {
-		$parts = preg_split( '/\s+/u', trim( $name ), -1, PREG_SPLIT_NO_EMPTY );
-		if ( empty( $parts ) ) {
-			return 'U';
-		}
-
-		$char = static function ( string $value ): string {
-			return function_exists( 'mb_substr' ) ? mb_substr( $value, 0, 1 ) : substr( $value, 0, 1 );
-		};
-		$upper = static function ( string $value ): string {
-			return function_exists( 'mb_strtoupper' ) ? mb_strtoupper( $value ) : strtoupper( $value );
-		};
-
-		$first = $char( (string) $parts[0] );
-		$last = count( $parts ) > 1 ? $char( (string) $parts[ count( $parts ) - 1 ] ) : '';
-		return $upper( $first . $last );
 	}
 }

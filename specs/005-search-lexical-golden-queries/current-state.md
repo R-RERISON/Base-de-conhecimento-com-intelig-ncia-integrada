@@ -1,6 +1,6 @@
 # Estado atual — SPEC-005
 
-**ATIVA — R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 PASS/CLOSED; P-580A/UX-004 OPEN; G-585 PAUSED.**
+**ATIVA — R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 PASS/CLOSED; P-580A/P-580B/UX-004/UX-005 OPEN; G-585 PAUSED.**
 
 **Branch:** `spec005-search-lexical-golden-queries`  
 **Base:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`
@@ -752,4 +752,45 @@ Próxima ação:
 2. localizar ownership dos artefatos atuais da Home;
 3. fechar contrato Public Search + Word Cloud + Home;
 4. somente então implementar novo pacote de Home/decommission.
+
+## Rebaseline pública — UX-005 Article Reader / P-580B GRE
+
+Nova evidência do ambiente:
+- Home atual é conteúdo editorial + CSS/shortcodes, não superfície plugin-owned;
+- Astra Custom CSS v3 preview mistura Home, ASI, Single Post, Elementor hardening e legacy normalizer;
+- GRE 0.6.0 possui frontend rail automático e coverage/admin capabilities;
+- Article Reader público precisa ser BDC-owned.
+
+Novos artefatos:
+- `specs/005-search-lexical-golden-queries/gre-functional-inventory-v1.md`;
+- `ux/005-public-article-reader/spec.md`;
+- `ux/005-public-article-reader/tasks.md`.
+
+Owners atuais confirmados:
+- Summary BDC: Objetivo, Escalonamento, Importante;
+- Classification BDC: Audiência, Equipes responsáveis, Itens de catálogo;
+- GRE sem owner BDC ainda: Serviço Afetado, Sistemas Envolvidos.
+
+Structured Tips / “Dicas úteis”:
+- capacidade obrigatória do Article Reader;
+- lista ordenada estruturada;
+- edição via Workspace;
+- renderização automática no topo;
+- sem HTML manual/shortcode como arquitetura final;
+- storage ainda não congelado.
+
+CSS/theme direction:
+- Astra Custom CSS deixa de ser owner;
+- regras úteis de Elementor legacy serão absorvidas em compatibility layer BDC escopada;
+- assets públicos serão separados por surface/component;
+- target gate A-050 prova Article Reader com Astra Custom CSS desativado.
+
+Estado:
+- G-580 CLOSED;
+- P-580A OPEN;
+- P-580B OPEN;
+- UX-004 OPEN;
+- UX-005 OPEN;
+- G-585 PAUSED;
+- G-590 BLOCKED.
 

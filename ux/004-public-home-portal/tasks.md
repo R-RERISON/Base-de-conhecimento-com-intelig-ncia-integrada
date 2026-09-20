@@ -24,9 +24,9 @@
 - [x] H016 H-010 CLOSED/FROZEN FOR IMPLEMENTATION.
 
 ## H-020 Implementation
-- [ ] H020 Public Home shell — `.3` search-first local PASS; environmental/human pending.
+- [ ] H020 Public Home shell — `.5` search-first + live incremental Search local PASS; environmental/human pending.
 - [ ] H021 Header/Auth — `.2` adds custom-logo, menu-first navigation and Entra shortcode bridge; environmental verification pending.
-- [ ] H022 Public Search — admin preview reuses frozen Search; public authorization facade still required before cutover.
+- [ ] H022 Public Search — `.5` adds input-driven preview AJAX over frozen Search; public authorization facade + section/trecho parity still required before cutover.
 - [ ] H023 Word Cloud — provisional content-only preview implemented; full ASI parity still required.
 - [ ] H024 categorias/filtros — curated preview implemented; environmental/human pending.
 - [ ] H025 últimas — deterministic date/ID provider preview implemented.
@@ -34,7 +34,7 @@
 - [ ] H027 states/a11y/responsive — source contract present; environmental/human pending.
 
 - [x] H028 Search-first addendum/research frozen.
-- [ ] H029 validate progressive disclosure + candidate-to-candidate navigation in homologation.
+- [ ] H029 validate progressive disclosure + candidate-to-candidate navigation + live Search without Enter in homologation.
 
 - [ ] H030-HDR validar em homologação os cinco links rápidos + Entra profile-menu completo + mobile toggle.
 

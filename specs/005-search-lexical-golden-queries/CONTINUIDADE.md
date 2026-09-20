@@ -660,3 +660,34 @@ Próximo passo:
 4. fechar A010-A015;
 5. só depois implementar reader/package.
 
+## Continuidade — P-580 Public Experience Inventory
+
+A discovery build `0.5.0-p580a.1` is ready.
+
+Purpose:
+- identify runtime ownership of current Home/article behavior before rebuilding UX-004/UX-005;
+- no product behavior changes;
+- G-585 remains paused.
+
+Expected environmental artifact:
+- `front_page_settings`;
+- `theme.custom_css` hash/bytes only;
+- `target_shortcodes` with callback source;
+- `public_hooks` with callback source;
+- `public_surfaces.candidates`;
+- `corpus.source_kind_counts`;
+- `corpus.structured_tips_discovery`;
+- `corpus.gre_meta_coverage`;
+- safety flags all true/false as declared;
+- errors/throwables empty.
+
+Interpretation rules:
+- callback source is evidence of ownership, not authorization to copy code;
+- Custom CSS content is intentionally not exported;
+- post content/GRE values are intentionally not exported;
+- source-kind samples are IDs only;
+- if Code Snippets or another generic host owns a callback, further targeted discovery may be required;
+- no implementation starts until H-001/A-001 findings are classified.
+
+Package SHA-256:
+`39a0c8ba819d46713d1584fbd36c0efc6ab635c0929b63e21e1683d145109277`.

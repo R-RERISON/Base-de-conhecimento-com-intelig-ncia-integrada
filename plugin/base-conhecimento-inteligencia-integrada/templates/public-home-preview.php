@@ -84,7 +84,7 @@ $cloud = Public_Home_Read_Model::preview_word_cloud();
 				</div>
 				<div class="bdc-home-cloud__terms">
 					<?php foreach ( $cloud as $term ) : ?>
-						<a href="<?php echo esc_url( Public_Experience::home_preview_url( $category_id, (string) $term['term'] ) ); ?>" style="--bdc-cloud-weight: <?php echo esc_attr( (string) min( 6, max( 1, (int) $term['count'] ) ) ); ?>">
+						<a href="<?php echo esc_url( Public_Experience::home_preview_url( $category_id, (string) $term['term'] ) ); ?>" style="--bdc-cloud-weight: <?php echo esc_attr( (string) min( 6, max( 1, (int) $term['count'] ) ) ); ?>;">
 							<?php echo esc_html( (string) $term['term'] ); ?>
 						</a>
 					<?php endforeach; ?>

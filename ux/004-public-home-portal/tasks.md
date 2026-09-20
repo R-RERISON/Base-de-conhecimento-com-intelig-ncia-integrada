@@ -36,6 +36,8 @@
 - [x] H028 Search-first addendum/research frozen.
 - [ ] H029 validate progressive disclosure + candidate-to-candidate navigation in homologation.
 
+- [ ] H030-HDR validar em homologação os cinco links rápidos + Entra profile-menu completo + mobile toggle.
+
 ## H-030 Technical acceptance
 - [ ] H030 functional parity matrix.
 - [ ] H031 security/capability.

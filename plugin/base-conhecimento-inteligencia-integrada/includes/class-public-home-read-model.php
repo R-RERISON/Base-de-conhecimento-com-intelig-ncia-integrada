@@ -13,23 +13,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Public_Home_Read_Model {
 
-	/** @var array<int,string> */
+	/** @var array<string,string> */
 	private const CURATED_CATEGORIES = array(
-		'Email',
-		'Externo',
-		'Hardware',
-		'Rede',
-		'Segurança',
-		'Sistemas',
-		'Software',
+		'Email' => 'dashicons-email',
+		'Externo' => 'dashicons-external',
+		'Hardware' => 'dashicons-desktop',
+		'Rede' => 'dashicons-networking',
+		'Segurança' => 'dashicons-shield',
+		'Sistemas' => 'dashicons-admin-generic',
+		'Software' => 'dashicons-editor-code',
 	);
 
 	/**
-	 * @return array<int,array{id:int,name:string}>
+	 * @return array<int,array{id:int,name:string,icon:string}>
 	 */
 	public static function categories(): array {
 		$out = array();
-		foreach ( self::CURATED_CATEGORIES as $name ) {
+		foreach ( self::CURATED_CATEGORIES as $name => $icon ) {
 			$term = get_term_by( 'name', $name, 'category' );
 			if ( ! is_object( $term ) || ! isset( $term->term_id, $term->name ) ) {
 				continue;
@@ -37,9 +37,16 @@ final class Public_Home_Read_Model {
 			$out[] = array(
 				'id' => (int) $term->term_id,
 				'name' => (string) $term->name,
+				'icon' => $icon,
 			);
 		}
 		return $out;
+	}
+
+
+	public static function published_count(): int {
+		$counts = wp_count_posts( 'post' );
+		return is_object( $counts ) && isset( $counts->publish ) ? max( 0, (int) $counts->publish ) : 0;
 	}
 
 	/**

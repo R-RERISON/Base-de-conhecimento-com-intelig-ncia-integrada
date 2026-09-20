@@ -1,13 +1,13 @@
 # Estado atual — SPEC-005
 
-**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 PASS/CLOSED; G-550 PASS/CLOSED; G-560 PASS/CLOSED; G-570 OPEN.**
+**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 PASS/CLOSED; G-550 PASS/CLOSED; G-560 PASS/CLOSED; G-570 PASS/CLOSED; G-580 OPEN.**
 
 **Branch:** `spec005-search-lexical-golden-queries`  
 **Base:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`
 
 ## Gate atual
 
-**G-570 — Segurança/Performance.**
+**G-580 — Lifecycle.**
 
 G-520 fechou os contratos e autorizou implementação local da engine. Isso **não** autoriza produção nem merge.
 
@@ -457,3 +457,46 @@ Estado:
 - G-570 global: OPEN.
 
 Próxima ação: instalar `0.5.0-g570.1`, executar **Base de Conhecimento → Security & Performance G-570** e anexar o JSON.
+
+
+## G-570 — PASS/CLOSED
+
+Evidência ambiental:
+`evidence/g570-environmental-review-20260920T164828Z.json`
+
+SHA-256 do upload:
+`38d399cab1f466c1b919513b8cf3650dd3ae7b6a55d94b715efe5597c3b89ffd`
+
+Resultado:
+- 45/45 checks PASS;
+- Projection ready=true / corpus 623;
+- edit_posts denial fail-closed;
+- edit_post(583) denial ocultou o documento;
+- live results todos revalidados por capability;
+- candidate cap 200 comprovado;
+- result hard cap 50 comprovado;
+- min limit clamp 1 comprovado;
+- SQL-like payload bounded;
+- abuse cases 7/7 PASS;
+- benchmark 30 amostras;
+- mean 165.3279 ms;
+- p50 178.4739 ms;
+- p95 207.7448 ms;
+- max 212.9128 ms;
+- budget p95 750 ms / max 1500 ms;
+- fallback_count=0;
+- technical_error_count=0;
+- fingerprint editorial idêntico;
+- network=false;
+- query logging=false;
+- ASI=false;
+- FULLTEXT=false;
+- runner writes Projection=false;
+- runner writes editorial=false;
+- errors=[];
+- throwables=[];
+- T570/T571/T572/T573/T574=true;
+- next_gate=G-580.
+
+Próximo gate:
+- G-580 Lifecycle — activation/update, rebuild/fallback, disable module e uninstall retention.

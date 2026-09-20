@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$root = dirname( __DIR__, 2 ) . '/plugin/base-conhecimento-inteligencia-integrada/';
+$root = dirname( __DIR__, 2 ) . '/base-conhecimento-inteligencia-integrada/';
 $bootstrap = file_get_contents( $root . 'base-conhecimento-inteligencia-integrada.php' );
 $experience = file_get_contents( $root . 'includes/class-public-experience.php' );
 $home = file_get_contents( $root . 'includes/class-public-home-read-model.php' );
@@ -52,49 +52,27 @@ $checks = array(
 		&& str_contains( $bootstrap, 'class-public-article-read-model.php' )
 		&& str_contains( $bootstrap, 'class-helpful-tips-store.php' ),
 	'preview_registered' => str_contains( $bootstrap, 'Public_Experience::register()' ),
-
 	'preview_manage_options' => str_contains( $experience, "current_user_can( 'manage_options' )" ),
-	'preview_nonce_required' => str_contains( $experience, 'wp_verify_nonce' )
-		&& str_contains( $experience, 'bdc_kb_public_preview_' ),
-	'preview_no_default_takeover' => str_contains( $experience, "if ( null === $kind )" )
-		&& str_contains( $experience, 'return $template;' ),
+	'preview_nonce_required' => str_contains( $experience, 'wp_verify_nonce' ) && str_contains( $experience, 'bdc_kb_public_preview_' ),
+	'preview_admin_assets' => str_contains( $experience, 'enqueue_admin_assets' ) && str_contains( $experience, 'visual-foundation.css' ),
+	'preview_no_default_takeover' => str_contains( $experience, 'null === $kind' ) && str_contains( $experience, 'return $template;' ),
 	'preview_no_editorial_writes' => 1 !== preg_match( $write_pattern, $runtime ),
 	'preview_no_network' => 1 !== preg_match( $network_pattern, $runtime ),
-
 	'home_uses_bdc_search' => str_contains( $home, 'Search_Service::search' ),
 	'home_latest_explicit_date' => str_contains( $home, "'date' => 'DESC'" ),
 	'home_popular_compat_comment_count' => str_contains( $home, "'comment_count' => 'DESC'" ),
-	'home_categories_curated' => str_contains( $home, 'CURATED_CATEGORIES' )
-		&& str_contains( $home, "'Segurança'" )
-		&& str_contains( $home, "'Software'" ),
-	'word_cloud_marked_preview' => str_contains( $home_template, 'content-only' )
-		&& str_contains( $home_template, 'PREVIEW' ),
-
+	'home_categories_curated' => str_contains( $home, 'CURATED_CATEGORIES' ) && str_contains( $home, "'Segurança'" ) && str_contains( $home, "'Software'" ),
+	'word_cloud_marked_preview' => str_contains( $home_template, 'content-only' ) && str_contains( $home_template, 'PREVIEW' ),
 	'tips_physical_key_preserved' => str_contains( $tips, "'_bdc_es_helpful_tips'" ),
-	'tips_read_only_slice' => ! str_contains( $tips_code, 'update_post_meta(' )
-		&& ! str_contains( $tips_code, 'delete_post_meta(' ),
-	'summary_read_model_composed' => str_contains( $article, 'Summary_Store::read' )
-		&& str_contains( $article, 'Classification_Store::read' )
-		&& str_contains( $article, "'_bdc_es_affected_service'" )
-		&& str_contains( $article, "'_bdc_es_systems_involved'" ),
+	'tips_read_only_slice' => ! str_contains( $tips_code, 'update_post_meta(' ) && ! str_contains( $tips_code, 'delete_post_meta(' ),
+	'summary_read_model_composed' => str_contains( $article, 'Summary_Store::read' ) && str_contains( $article, 'Classification_Store::read' ) && str_contains( $article, "'_bdc_es_affected_service'" ) && str_contains( $article, "'_bdc_es_systems_involved'" ),
 	'article_preserves_the_content' => str_contains( $article_template, 'the_content();' ),
-	'article_preview_suppresses_gre_only' => str_contains( $experience, 'Helpful_Tips_Renderer' )
-		&& str_contains( $experience, 'Frontend_Renderer' )
-		&& ! str_contains( $experience, 'GAC\\' )
-		&& ! str_contains( $experience, 'WPUI_Frontend' ),
-	'article_sticky_rail' => str_contains( $article_css, 'position:sticky' )
-		&& str_contains( $article_css, 'max-height:calc(100vh' ),
+	'article_preview_suppresses_gre_only' => str_contains( $experience, 'Helpful_Tips_Renderer' ) && str_contains( $experience, 'Frontend_Renderer' ) && ! str_contains( $experience, 'GAC\\' ) && ! str_contains( $experience, 'WPUI_Frontend' ),
+	'article_sticky_rail' => str_contains( $article_css, 'position:sticky' ) && str_contains( $article_css, 'max-height:calc(100vh' ),
 	'article_print_contract' => str_contains( $article_css, '@media print' ),
-	'breakpoints_782_520' => str_contains( $foundation_css, '@media(max-width:782px)' )
-		&& str_contains( $foundation_css, '@media(max-width:520px)' )
-		&& str_contains( $home_css, '@media(max-width:782px)' )
-		&& str_contains( $article_css, '@media(max-width:520px)' ),
-	'scoped_public_css' => str_contains( $foundation_css, '.bdc-public' )
-		&& str_contains( $header_css, '.bdc-public-header' )
-		&& str_contains( $home_css, '.bdc-home-' )
-		&& str_contains( $article_css, '.bdc-reader-'),
-	'no_asi_markup_dependency' => ! str_contains( $runtime . $home_template . $article_template, 'asi_search_form' )
-		&& ! str_contains( $runtime . $home_template . $article_template, 'bdc_word_cloud' ),
+	'breakpoints_782_520' => str_contains( $foundation_css, '@media(max-width:782px)' ) && str_contains( $foundation_css, '@media(max-width:520px)' ) && str_contains( $home_css, '@media(max-width:782px)' ) && str_contains( $article_css, '@media(max-width:520px)' ),
+	'scoped_public_css' => str_contains( $foundation_css, '.bdc-public' ) && str_contains( $header_css, '.bdc-public-header' ) && str_contains( $home_css, '.bdc-home-' ) && str_contains( $article_css, '.bdc-reader-' ),
+	'no_asi_markup_dependency' => ! str_contains( $runtime . $home_template . $article_template, 'asi_search_form' ) && ! str_contains( $runtime . $home_template . $article_template, 'bdc_word_cloud' ),
 );
 
 $failed = 0;

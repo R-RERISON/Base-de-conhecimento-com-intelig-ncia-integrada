@@ -1,13 +1,13 @@
 # Estado atual — SPEC-005
 
-**ATIVA — R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 PASS/CLOSED; G-540 PASS/CLOSED; G-550 PASS/CLOSED; G-560 PASS/CLOSED; G-570 PASS/CLOSED; G-580 OPEN.**
+**ATIVA — R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 PASS/CLOSED; G-585 OPEN.**
 
 **Branch:** `spec005-search-lexical-golden-queries`  
 **Base:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`
 
 ## Gate atual
 
-**G-580 — Lifecycle.**
+**G-585 — ASI Independence / Decommission Readiness.**
 
 G-520 fechou os contratos e autorizou implementação local da engine. Isso **não** autoriza produção nem merge.
 
@@ -594,3 +594,77 @@ Estado:
 - G-580: OPEN.
 
 Próxima ação: instalar `0.5.0-g580.2` sobre `g580.1`, executar novamente **Base de Conhecimento → Lifecycle G-580 → Executar G-580 e baixar JSON** e anexar o novo JSON.
+
+## G-580 — PASS/CLOSED — 2026-09-20
+
+Evidência canônica:
+- `evidence/g580-environmental-review-20260920T173016Z.json`;
+- closeout: `g580-closeout-20260920.md`;
+- upload SHA-256 `f778789c8067d4ced3272fce02054a1a696d321c5b6b1bdd5cfea0f6b16b53f6`.
+
+Resultado:
+- T580/T581/T582/T583/T584 = PASS;
+- activation/update sem rebuild implícito;
+- rebuild 623/623;
+- pass1/pass2 623 NO_CHANGE / 0 WRITTEN;
+- determinism mismatch=0;
+- fallback Projection-not-ready PASS;
+- disable module fallback PASS;
+- uninstall/deactivation retention PASS;
+- fingerprint editorial equal;
+- no ASI/network/query logging;
+- errors=[] / throwables=[];
+- next_gate=G-585.
+
+A execução g580.1 com falso negativo ficou preservada como evidência diagnóstica. O patch g580.2 corrigiu somente o validador; Search core/ranker não mudaram.
+
+## G-585 — candidato de homologação 0.5.0-g585.1
+
+Contrato:
+`g585-asi-independence-contract-v1.md`
+
+Evidência local:
+`evidence/g585-local-package-validation-20260920.json`
+
+Objetivo:
+- provar runtime BDC sem dependência do Advanced Search Intelligence;
+- ASI deve ser manualmente desativado em homologação;
+- runner não chama `deactivate_plugins()` e não remove storage legado;
+- presença física de tabelas/options ASI não bloqueia; dependência runtime bloqueia.
+
+Runner prova:
+- T585 static scan dos PHP BDC carregados + símbolos/hooks runtime;
+- T586 ASI ausente de active_plugins/sitewide;
+- T587 Search probes + Golden Suite PASS sem ASI;
+- T588 rebuild próprio PASS sem ASI;
+- T589 lifecycle + kill switch + deactivation retention sem ASI;
+- T589.1 evidence dependency-zero;
+- T589.2 G-585 PASS.
+
+Validação local:
+- 66 arquivos / 59 PHP;
+- 59/59 lint PASS;
+- 48/48 active requires;
+- 29/29 contract checks;
+- source/package parity bootstrap + runner;
+- delta vs g580.2: 1 added / 1 modified / 0 deleted;
+- Search Service, rebuild, lifecycle e ranker byte-identical ao g580.2;
+- ranker SHA-256 `47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78`;
+- deterministic build 2/2;
+- ZIP SHA-256 `cae86ef93572e9320efe89d8fed891e90be032e5d46e4aaccf6dca647bf62880`.
+
+Estado:
+- G-580 CLOSED;
+- G-585 package/local PASS;
+- G-585 environmental NOT_RUN;
+- G-585 global OPEN;
+- G-590 bloqueado.
+
+Próxima ação:
+1. desativar manualmente **Advanced Search Intelligence** em homologação;
+2. atualizar o BDC para `0.5.0-g585.1`;
+3. acessar **Base de Conhecimento → Independência G-585**;
+4. executar **Executar G-585 e baixar JSON**;
+5. anexar o JSON para decisão T585–T589.2.
+
+Não desinstalar/remover tabelas ASI neste gate.

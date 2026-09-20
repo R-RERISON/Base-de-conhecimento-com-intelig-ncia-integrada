@@ -781,3 +781,48 @@ After visual review:
 - add Workspace Helpful Tips writer;
 - execute source-kind regression before any cutover.
 
+## Continuidade — redesign public preview 0.5.0-ux004005.2
+
+Previous preview:
+- `0.5.0-ux004005.1` = architecture/functional baseline;
+- human visual direction REJECTED;
+- never use .1 as final visual reference.
+
+Redesign candidate:
+- version `0.5.0-ux004005.2`;
+- SHA-256 `24e96812189a7fdd1252714030a4b0341f9357170721c2aa94dbcc2d18c4181b`;
+- 80 files / 69 PHP;
+- 69/69 lint + extracted ZIP lint;
+- 52/52 active requires;
+- 33/33 checks;
+- deterministic build 2/2.
+
+Critical changes:
+- Auth Bridge -> `[bdc_entra_login]` preferred;
+- WP account/logout fallback;
+- custom logo first;
+- menu-first navigation resolver;
+- complete Home visual recomposition;
+- no technical cloud copy in consumer UI;
+- read-only Article Content compatibility stage;
+- duplicate legacy chrome removed only with title + >=2 chrome marker evidence;
+- Tips auto-fit;
+- 360px sticky Summary Rail;
+- canonical content pipeline/GAC/WPUI preserved.
+
+Safety:
+- admin preview only;
+- manage_options + nonce;
+- no page_on_front/content/meta/Elementor write;
+- no ASI/GRE decommission;
+- Search core/ranker unchanged;
+- G-585 PAUSED / G-590 BLOCKED.
+
+Next homologation:
+- install .2 over .1;
+- Base de Conhecimento → Prévia Pública;
+- Home screenshot;
+- article screenshot with Tips + Summary;
+- confirm login/profile action;
+- confirm no duplicated title/header inside article.
+

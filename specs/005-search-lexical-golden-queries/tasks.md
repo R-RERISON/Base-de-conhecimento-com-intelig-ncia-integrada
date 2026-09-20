@@ -98,6 +98,22 @@
 - [ ] P580A-07 mapear Operations/Queue/Migrations/Post-Install.
 - [ ] P580A-08 fechar rebaseline antes de Decommission Readiness.
 
+## P-580B — GRE Functional Parity
+- [ ] P580B-01 inventário GRE 0.6.0.
+- [ ] P580B-02 mapear oito fields para owners BDC.
+- [ ] P580B-03 fechar gaps Serviço Afetado/Sistemas Envolvidos.
+- [ ] P580B-04 absorver coverage/curation management.
+- [ ] P580B-05 homologar Executive Summary Rail BDC.
+- [ ] P580B-06 provar zero dependência GRE antes de retirada.
+
+## UX-005 — Public Article Reader
+- [ ] UX005-A001 inventory de template/CSS/source kinds.
+- [ ] UX005-A010 contract do reader/rail/tips/compat.
+- [ ] UX005-A020 implementação plugin-owned.
+- [ ] UX005-A030 corpus regression.
+- [ ] UX005-A040 human acceptance.
+- [ ] UX005-A050 Astra Custom CSS não requerido.
+
 ## G-585 — ASI Independence / Decommission Readiness
 > PAUSED: G-585 não pode fechar antes de P-580A/UX-004 eliminarem perda funcional bloqueante.
 - [ ] T585 static scan runtime: zero `asi_*`, `asi4_*`, classes/functions/hooks ASI.

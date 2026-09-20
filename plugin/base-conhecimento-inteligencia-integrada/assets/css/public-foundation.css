@@ -30,7 +30,7 @@
 .bdc-public-eyebrow{margin:0 0 8px;color:var(--bdc-blue-600);font-size:12px;font-weight:800;letter-spacing:.08em}
 .bdc-public-badge{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border-radius:999px;background:var(--bdc-info-bg);color:var(--bdc-blue-700);font-size:11px;font-weight:800;letter-spacing:.04em}
 .bdc-public-empty{padding:16px;border:1px dashed var(--bdc-border-strong);border-radius:12px;background:#fff;color:var(--bdc-text-secondary)}
-.bdc-public-preview-banner{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;background:#fff5dc;color:#6f4d00;font-size:12px;border-bottom:1px solid #f2d58a}
-.bdc-public-preview-banner strong{font-weight:850}
+.bdc-public-preview-banner{display:flex;align-items:center;justify-content:center;gap:7px;padding:7px 16px;border-bottom:1px solid #dce7f5;background:#f4f8ff;color:#486078;font-size:10.5px}
+.bdc-public-preview-banner .dashicons{width:14px;height:14px;font-size:14px;line-height:14px;color:#0b63e5}.bdc-public-preview-banner strong{color:#0b63e5;font-weight:900;letter-spacing:.04em;text-transform:uppercase}
 @media(max-width:782px){.bdc-public-main{width:min(100% - 24px,1320px);padding-top:18px}.bdc-public-preview-banner{align-items:flex-start;flex-direction:column}}
 @media(max-width:520px){.bdc-public-main{width:min(100% - 16px,1320px)}}

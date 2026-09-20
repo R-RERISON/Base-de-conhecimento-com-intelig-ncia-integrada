@@ -1075,3 +1075,31 @@ Environmental recheck:
 Do not compare consultation counts numerically with ASI yet: Search Events/Interactions remain pending SPEC-006.
 
 G-585 stays PAUSED until H-023 quality acceptance plus Home technical acceptance.
+
+## Continuidade — P-580WC.3 consultation counts
+
+Install:
+- `0.5.0-p580wc.3`;
+- SHA-256 `33cef92d7667cbf3acd9ad1abb9b6e20684ee4dd16c95816e8db44e5cffd7ae9`.
+
+Expected Home:
+- up to 12 highlighted topics instead of 6;
+- every topic displays a BDC consultation count;
+- new BDC aggregate counts start at 0;
+- existing ASI historical counts are NOT silently copied;
+- topic/result clicks increment only valid current public terms;
+- usage gives logarithmic display-score boost without bypassing semantic quality.
+
+Environmental recheck:
+1. install p580wc.3 over p580wc.2;
+2. open Home preview and confirm 12 topics/count badges;
+3. choose one visible topic and note its count;
+4. click the topic, return/refresh Home and confirm +1;
+5. search for a public term, click the matching result, refresh and confirm +1 when the result title maps to a public term;
+6. repeat a few times to confirm higher count can reorder highlighted topics;
+7. confirm live typing alone does not change counts;
+8. open Nuvem de Conhecimento admin and confirm “consultas agregadas” metric.
+
+Historical ASI count preservation, if desired, requires a separate explicit one-time migration and is not part of runtime dependency.
+
+Do not run G-585 until H-023 and remaining Home technical acceptance are closed.

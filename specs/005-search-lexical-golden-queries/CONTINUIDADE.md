@@ -691,3 +691,39 @@ Interpretation rules:
 
 Package SHA-256:
 `39a0c8ba819d46713d1584fbd36c0efc6ab635c0929b63e21e1683d145109277`.
+
+## Continuidade — P-580A.2 deep inventory
+
+Environmental p580a.1 established:
+- active Home ID 41395 is Elementor page;
+- Home shortcodes/filter are hosted by Code Snippets;
+- Entra login owner is external gateway;
+- Search/Word Cloud disappear when ASI is disabled;
+- published corpus is predominantly legacy_html (528/606);
+- GRE environment injects Helpful Tips + Summary Rail through the_content;
+- Tips meta is `_bdc_es_helpful_tips` on 7 posts;
+- GAC and WP Unified Indexer also alter the public article pipeline.
+
+Do NOT implement Home/Reader from appearance alone.
+
+p580a.2 is the final targeted discovery pass before H-010/A-010:
+1. identify exact Code Snippet metadata/hash containing Home v2.7.0 functions;
+2. report behavioral signals for latest/popular/filter without exporting source;
+3. report installed plugin versions and hashes of GRE Tips/Frontend files;
+4. profile only the structural shape of Helpful Tips values.
+
+Package:
+- version `0.5.0-p580a.2`;
+- SHA-256 `319b97c4f5ee0a6f9f0679cb478d113b91413660bf19a00b83ec56eca2b6d0b4`;
+- 60/60 PHP lint;
+- 46/46 active requires;
+- 25/25 checks;
+- deterministic 2/2;
+- G-585 runner OFF.
+
+Next:
+- install p580a.2 over p580a.1;
+- Base de Conhecimento → Inventário Público;
+- execute and attach JSON;
+- then close H-001/A-001 and freeze H-010/A-010 contracts.
+

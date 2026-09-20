@@ -794,3 +794,55 @@ Estado:
 - G-585 PAUSED;
 - G-590 BLOCKED.
 
+## P-580A/H-001/A-001 — Public Experience Inventory package ready
+
+Build:
+- `0.5.0-p580a.1`;
+- ZIP SHA-256 `39a0c8ba819d46713d1584fbd36c0efc6ab635c0929b63e21e1683d145109277`;
+- 67 files / 60 PHP;
+- 60/60 PHP lint;
+- 46/46 active requires;
+- 21/21 contract checks;
+- deterministic build 2/2;
+- delta vs g585.2: 1 added / 1 modified / 0 deleted.
+
+Runner:
+- Home/front-page configuration;
+- theme/child theme;
+- active Additional CSS bytes + SHA only;
+- target shortcode registration and callback origin;
+- public hook callback origin;
+- `bdc_home_filter_v270` AJAX ownership;
+- Home candidate posts/pages without exporting content;
+- published-post source-kind distribution;
+- warning families;
+- “Dicas úteis” discovery by meta-key/content/Elementor presence without values;
+- GRE 8-field coverage counts without values.
+
+Safety:
+- read-only;
+- no shortcode execution;
+- no `the_content` filter execution;
+- no editorial/meta/Elementor writes;
+- no network;
+- no CSS/content/GRE value export.
+
+Build flags:
+- Search engine ON;
+- G-585 runner OFF;
+- P-580 inventory runner ON.
+
+Evidence:
+- `evidence/p580-public-experience-inventory-local-validation-20260920.json`.
+
+Status:
+- package/local PASS;
+- environmental NOT_RUN;
+- H-001/A-001 remain OPEN pending JSON from homologation.
+
+Next:
+1. install `0.5.0-p580a.1`;
+2. open **Base de Conhecimento → Inventário Público**;
+3. run **Executar inventário e baixar JSON**;
+4. attach JSON;
+5. use evidence to close ownership/corpus discovery before implementation.

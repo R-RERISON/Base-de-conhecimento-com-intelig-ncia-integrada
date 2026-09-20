@@ -20,6 +20,11 @@ final class Search_Service {
 	/** @var array<int,string> */
 	private const ALLOWED_STATUSES = array( 'publish', 'draft', 'pending', 'private', 'future' );
 
+	public static function is_enabled(): bool {
+		$enabled = ! defined( 'BDC_KB_SEARCH_ENABLED' ) || true === (bool) BDC_KB_SEARCH_ENABLED;
+		return (bool) apply_filters( 'bdc_kb_search_enabled', $enabled );
+	}
+
 	/**
 	 * @return array<string,mixed>
 	 */
@@ -40,6 +45,10 @@ final class Search_Service {
 				new \WP_Error( 'search_empty_query', 'Informe ao menos um termo para pesquisa.', array( 'status' => 400 ) ),
 				$query
 			);
+		}
+
+		if ( ! self::is_enabled() ) {
+			return self::wordpress_fallback( $query, $limit, 'search_module_disabled' );
 		}
 
 		if ( ! Search_Projection_Repository::is_ready() ) {

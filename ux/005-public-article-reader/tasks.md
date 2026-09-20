@@ -1,6 +1,8 @@
 # Tasks — UX-005 Public Article Reader
 
 ## A-001 Inventory
+- [x] A000-PKG discovery runner `0.5.0-p580a.1` preparado e validado localmente.
+- [ ] A000-ENV executar Inventário Público em homologação e anexar JSON.
 - [ ] A001 mapear template/theme atual do single post.
 - [ ] A002 classificar regras do Astra Custom CSS em product vs legacy compatibility.
 - [ ] A003 inventariar divergências por source kind.

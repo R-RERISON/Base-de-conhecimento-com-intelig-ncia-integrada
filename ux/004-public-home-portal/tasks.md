@@ -16,7 +16,7 @@
 
 ## H-010 Contract
 - [x] H010 contrato Public Search — `h010-public-home-contract-v1.md`.
-- [x] H011 contrato Word Cloud BDC — frozen v1.
+- [x] H011 contrato Word Cloud BDC — frozen v1 + quality amendment v1.1.
 - [x] H012 contrato Home Components — frozen v1.
 - [x] H013 plugin-owned template/renderer + preview/takeover progressivo.
 - [x] H014 página 41395 preservada como route/rollback anchor; zero content write.
@@ -27,7 +27,7 @@
 - [ ] H020 Public Home shell — `.6` premium polish local PASS; live Search behavior preserved; environmental/human pending.
 - [ ] H021 Header/Auth — `.2` adds custom-logo, menu-first navigation and Entra shortcode bridge; environmental verification pending.
 - [ ] H022 Public Search — `.5` adds input-driven preview AJAX over frozen Search; public authorization facade + section/trecho parity still required before cutover.
-- [ ] H023 Word Cloud — `word-cloud-v1.0.0` BDC-owned local PASS (`0.5.0-p580wc.1`); environmental generation/health/click-to-search pending.
+- [ ] H023 Word Cloud — `p580wc.1` ENV runtime PASS but QUALITY FAIL CONTROLADO; `word-cloud-v1.1.0` / `0.5.0-p580wc.2` local PASS; environmental quality recheck required.
 - [ ] H024 categorias/filtros — curated preview implemented; environmental/human pending.
 - [ ] H025 últimas — deterministic date/ID provider preview implemented.
 - [ ] H026 populares — legacy comment_count compatibility provider preview implemented.

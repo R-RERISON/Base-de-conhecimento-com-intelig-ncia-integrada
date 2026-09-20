@@ -1,8 +1,9 @@
-# SPEC-005 — BDC Word Cloud Contract v1.0.0
+# SPEC-005 — BDC Word Cloud Contract v1.1.0
 
 **Status:** FROZEN FOR HOMOLOGATION  
 **Gate context:** P-580A / UX-004 H-023  
-**Version:** `word-cloud-v1.0.0`
+**Version:** `word-cloud-v1.1.0`  
+**Quality profile:** `semantic-balanced-v2`
 
 ## 1. Objective
 
@@ -30,13 +31,13 @@ Deactivation clears only the Word Cloud cron hook.
 
 ## 3. Current sources
 
-Available in v1:
+Available:
 - published post titles;
 - semantic headings/fragments from Content Extractor;
-- semantic body fragments when enabled;
+- semantic body fragments as explicit opt-in;
 - category/post_tag;
 - canonical BDC classification taxonomies;
-- allowlist;
+- governed allowlist;
 - blocklist/stopwords.
 
 Explicitly pending:
@@ -57,7 +58,7 @@ Boundaries:
 - soft runtime budget 8s;
 - snapshot may be marked partial when budget is reached;
 - generation lock prevents concurrent runs;
-- snapshot and last good state remain readable during generation/failure.
+- snapshot and last good state remain retained during generation/failure.
 
 Default schedule:
 - hourly WordPress cron;
@@ -71,11 +72,14 @@ Deterministic canonicalization:
 - accent normalization;
 - punctuation/whitespace collapse.
 
-Noise guards:
-- minimum token length;
-- numeric-only exclusion;
-- long hash/fragment exclusion;
-- blocklist.
+Quality profile `semantic-balanced-v2`:
+- semantic body terms are disabled by default;
+- PT-BR stopwords are applied before scoring;
+- corporate/generic noise is blocked through a governed blocklist;
+- title/heading phrases are preserved as candidates, including bounded multi-word expressions and product/version forms such as `Windows 11`;
+- default allowlist is a governed label/boost source only when the term is observed in corpus material;
+- document/structural evidence is tracked;
+- content-only frequency never makes a term public.
 
 Maturity:
 - `candidate`;
@@ -88,16 +92,19 @@ Public rendering only accepts:
 - mature;
 - promoted.
 
-Allowlist produces governed promotion; blocklist is authoritative exclusion.
+Allowlist produces governed promotion only after observation.
+Blocklist remains authoritative for the current content-derived profile.
 
 ## 6. Scoring sources
 
-Initial relative signals:
-- title: strong;
-- heading: strong;
+Relative signals:
+- title phrase: strong;
+- title token: strong;
+- heading phrase: strong;
+- heading token: strong;
 - taxonomy: strong + bounded usage count;
-- body/content: low;
-- allowlist: explicit boost.
+- body/content: low and opt-in;
+- observed allowlist hit: governed boost.
 
 These are Word Cloud generation weights, not Search ranking weights.
 Changing them does not change `lexical-ranker-v1.0.0`.
@@ -106,25 +113,45 @@ Changing them does not change `lexical-ranker-v1.0.0`.
 
 Snapshot contains:
 - snapshot contract version;
+- quality profile version;
 - generated timestamp;
 - ranked terms;
 - canonical form;
 - score;
 - count;
 - source labels;
+- document count;
 - maturity;
+- quality reason;
 - public_allowed;
 - display weight 1..6;
 - quality summary;
 - source availability.
 
+A public request ignores snapshots created by an older snapshot contract or quality profile.
+
 Snapshot is a derived cache, never editorial truth.
 
-## 8. Health/history
+## 8. Migration from v1.0
+
+When `p580wc.2` encounters v1.0 state:
+- settings receive the new quality profile;
+- body terms are disabled by default;
+- new governed allowlist is merged with current entries;
+- new blocklist is merged with current entries;
+- previous snapshot is retained physically but marked stale by contract/profile;
+- previous snapshot is not used by the Public Home;
+- manual/cron regeneration produces a current v1.1 snapshot.
+
+No editorial data is changed.
+
+## 9. Health/history
 
 Health reports:
-- status: not_built|ready|partial|failed;
+- status: not_built|ready|partial|failed|stale_quality_profile;
 - freshness;
+- snapshot_current;
+- quality_profile;
 - age;
 - term counts;
 - lock status;
@@ -133,7 +160,7 @@ Health reports:
 
 Run history is bounded to the most recent 20 reports.
 
-## 9. Admin operations
+## 10. Admin operations
 
 Page:
 **Base de Conhecimento → Nuvem de Conhecimento**
@@ -146,26 +173,28 @@ Operations:
 - generate snapshot now;
 - enable/disable scheduling;
 - bounded corpus size;
-- include/exclude semantic body terms;
+- optional semantic body terms;
 - max public terms;
 - allowlist;
 - blocklist;
 - snapshot/health preview.
 
-## 10. Public UX
+The admin surface warns when an older snapshot must be regenerated.
+
+## 11. Public UX
 
 The Public Home consumes the BDC snapshot only.
 
-If snapshot is absent:
+If snapshot is absent or stale:
 - Search/Home remain functional;
 - no legacy Word Cloud fallback is used;
 - no generation occurs in the request.
 
 Clicking a term routes to the BDC candidate Search using the term as the query.
 
-Visual presentation may remain compact/search-first; functional Word Cloud does not require a traditional variable-font cloud.
+Until Search Events/Interactions exist, the public label is **Assuntos em destaque**, not “mais consultados”. A consumption-based label is authorized only when real telemetry exists.
 
-## 11. Safety
+## 12. Safety
 
 Prohibited:
 - ASI table/option/runtime reads;
@@ -175,10 +204,11 @@ Prohibited:
 - public-request rebuild;
 - second Search ranker.
 
-## 12. Acceptance
+## 13. Acceptance
 
 Local:
 - contract checks PASS;
+- quality harness PASS;
 - PHP lint PASS;
 - active requires resolved;
 - deterministic package;
@@ -187,6 +217,8 @@ Local:
 Environmental:
 - manual generation PASS;
 - non-empty public snapshot;
+- obvious generic/noise terms from the v1 failure are absent from the public top set;
+- meaningful title/heading/taxonomy concepts are visible;
 - health ready or documented partial;
 - click-to-search PASS;
 - cron scheduled;
@@ -194,4 +226,4 @@ Environmental:
 - Home remains functional with ASI disabled;
 - no editorial fingerprint change.
 
-Telemetry/vocabulary source parity is not required for this v1 gate; those sources remain PLANNED and visible as pending.
+Telemetry/vocabulary source parity is not required for this v1.1 quality gate; those sources remain PLANNED and visible as pending.

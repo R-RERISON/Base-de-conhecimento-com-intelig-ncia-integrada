@@ -16,11 +16,11 @@
   }
 
   function resultMarkup(row) {
-    var meta = row.category ? '<small>' + escapeHtml(row.category) + '</small>' : '<small>Instrução</small>';
+    var meta = '<span class="bdc-live-result__meta">' + escapeHtml(row.category || 'Instrução') + '</span>';
     var excerpt = row.excerpt ? '<p>' + escapeHtml(row.excerpt) + '</p>' : '';
     return '<a class="bdc-live-result" href="' + escapeHtml(row.url) + '">' +
       '<span class="bdc-live-result__rank">' + (row.rank || '') + '</span>' +
-      '<span class="bdc-live-result__copy"><strong>' + escapeHtml(row.title) + '</strong>' + meta + excerpt + '</span>' +
+      '<span class="bdc-live-result__copy">' + meta + '<strong>' + escapeHtml(row.title) + '</strong>' + excerpt + '</span>' +
       '<span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span></a>';
   }
 
@@ -34,6 +34,8 @@
     var target = panel.querySelector('[data-bdc-live-search-results]');
     var title = panel.querySelector('[data-bdc-live-search-title]');
     if (!target) return;
+    target.setAttribute('aria-busy', 'false');
+    panel.classList.remove('is-loading');
 
     if (!query || query.length < Number(config.minChars || 2)) {
       panel.hidden = true;
@@ -42,7 +44,10 @@
     }
 
     panel.hidden = false;
-    if (title) title.textContent = 'Resultados para “' + query + '”';
+    if (title) {
+      var count = payload && Array.isArray(payload.results) ? payload.results.length : 0;
+      title.textContent = count + (count === 1 ? ' resultado' : ' resultados') + ' para “' + query + '”';
+    }
 
     if (!payload || payload.state === 'empty' || !Array.isArray(payload.results) || !payload.results.length) {
       target.innerHTML = '<div class="bdc-search-empty">Nenhum resultado encontrado.</div>';
@@ -50,6 +55,21 @@
     }
 
     target.innerHTML = '<div class="bdc-live-results">' + payload.results.map(resultMarkup).join('') + '</div>';
+  }
+
+  function setLoading(form, query) {
+    var surface = form.closest('.bdc-public') || document;
+    var panel = form.parentElement && form.parentElement.querySelector('[data-bdc-live-search-panel]');
+    if (!panel && form.classList.contains('bdc-global-search')) {
+      panel = surface.querySelector('.bdc-global-search-panel[data-bdc-live-search-panel]');
+    }
+    if (!panel) return;
+    var target = panel.querySelector('[data-bdc-live-search-results]');
+    var title = panel.querySelector('[data-bdc-live-search-title]');
+    panel.hidden = false;
+    panel.classList.add('is-loading');
+    if (target) target.setAttribute('aria-busy', 'true');
+    if (title) title.textContent = 'Buscando “' + query + '”';
   }
 
   function liveSearch(form, input) {
@@ -63,6 +83,7 @@
     }
 
     timer = window.setTimeout(function () {
+      setLoading(form, query);
       controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
       var data = new URLSearchParams();
       data.append('action', 'bdc_kb_public_search_preview');

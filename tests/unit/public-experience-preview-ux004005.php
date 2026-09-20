@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$root = dirname( __DIR__, 2 ) . '/plugin/base-conhecimento-inteligencia-integrada/';
+$root = '/mnt/data/ux3build/base-conhecimento-inteligencia-integrada/';
 $read = static fn(string $rel): string => (string) file_get_contents($root . $rel);
 
 $bootstrap = $read('base-conhecimento-inteligencia-integrada.php');
@@ -35,7 +35,7 @@ $write_pattern = '/update_(?:post|option|site_option|post_meta)\s*\(|add_(?:opti
 $network_pattern = '/wp_remote_[A-Za-z0-9_]*\s*\(|curl_[A-Za-z0-9_]+\s*\(|fsockopen\s*\(|stream_socket_client\s*\(/i';
 
 $checks = [
-    'version_preview2' => str_contains($bootstrap, 'Version: 0.5.0-ux004005.2'),
+    'version_preview3' => str_contains($bootstrap, 'Version: 0.5.0-ux004005.3'),
     'preview_build_on' => str_contains($bootstrap, "BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD', true"),
     'auth_bridge_loaded' => str_contains($bootstrap, 'class-public-auth-bridge.php'),
     'navigation_loaded' => str_contains($bootstrap, 'class-public-navigation.php'),
@@ -53,7 +53,7 @@ $checks = [
     'home_search_preserved' => str_contains($home, 'Search_Service::search'),
     'home_category_icons' => str_contains($home, 'dashicons-email') && str_contains($home, 'dashicons-shield'),
     'home_count_read_model' => str_contains($home, 'published_count'),
-    'home_redesign_copy' => str_contains($home_template, 'Encontre a orientação certa') && str_contains($home_template, 'Assuntos em destaque'),
+    'home_redesign_copy' => str_contains($home_template, 'O que você precisa encontrar?') && str_contains($home_template, 'Explorar a Base'),
     'home_no_technical_cloud_copy' => ! str_contains($home_template, 'Quality/telemetry/vocabulary') && ! str_contains($home_template, 'content-only'),
     'article_uses_compat_stage' => str_contains($article_template, 'Public_Article_Content::render'),
     'article_no_direct_the_content' => ! str_contains($article_template, 'the_content();'),
@@ -62,11 +62,18 @@ $checks = [
     'legacy_chrome_fail_safe' => str_contains($article_content, 'return $html;') && str_contains($article_content, 'class_exists'),
     'gre_suppressed_preview_only' => str_contains($experience, 'Helpful_Tips_Renderer') && str_contains($experience, 'Frontend_Renderer'),
     'gac_wpui_not_removed' => ! str_contains($experience, 'GAC\\') && ! str_contains($experience, 'WPUI_Frontend'),
-    'tips_autofit' => str_contains($article_css, 'repeat(auto-fit,minmax(230px,1fr))'),
-    'summary_wider_sticky' => str_contains($article_css, '360px') && str_contains($article_css, 'position:sticky'),
+    'tips_autofit' => str_contains($article_css, 'repeat(auto-fit,minmax(220px,1fr))'),
+    'summary_wider_sticky' => str_contains($article_css, '330px') && str_contains($article_css, 'position:sticky'),
     'print_contract' => str_contains($article_css, '@media print'),
     'responsive_782_520' => str_contains($home_css, '@media(max-width:782px)') && str_contains($home_css, '@media(max-width:520px)') && str_contains($article_css, '@media(max-width:782px)') && str_contains($article_css, '@media(max-width:520px)'),
     'public_css_scoped' => str_contains($foundation_css, '.bdc-public') && str_contains($header_css, '.bdc-public-header') && str_contains($home_css, '.bdc-home-') && str_contains($article_css, '.bdc-reader-'),
+    'global_search_on_article' => str_contains($experience, 'render_global_search') && str_contains($experience, 'bdc_global_q'),
+    'global_search_keeps_preview_reader' => str_contains($experience, 'article_preview_url( $post_id )'),
+    'home_search_first' => str_contains($home_template, 'bdc-home-search-stage') && str_contains($home_template, 'data-bdc-primary-search'),
+    'home_explore_collapsed' => str_contains($home_template, '<details class="bdc-home-explore"'),
+    'preview_links_use_new_reader' => str_contains($home_template, 'Public_Experience::article_preview_url'),
+    'keyboard_search_asset' => is_file($root . 'assets/js/public-search.js') && str_contains((string) file_get_contents($root . 'assets/js/public-search.js'), "event.key.toLowerCase() === 'k'"),
+    'article_clean_heading' => str_contains($article_template, 'bdc-reader-heading') && ! str_contains($article_template, 'bdc-reader-hero__subtitle'),
     'no_asi_markup_dependency' => ! str_contains($runtime . $home_template . $article_template, 'asi_search_form') && ! str_contains($runtime . $home_template . $article_template, 'bdc_word_cloud'),
 ];
 

@@ -120,6 +120,7 @@ final class Public_Experience {
 				'nonce' => wp_create_nonce( 'bdc_kb_public_search_preview' ),
 				'minChars' => 2,
 				'debounceMs' => 180,
+				'uiVersion' => 'premium-v6',
 			)
 		);
 	}
@@ -201,8 +202,17 @@ final class Public_Experience {
 		}
 		foreach ( $results as $result ) {
 			$post_id = (int) ( $result['post_id'] ?? 0 );
-			if ( $post_id <= 0 ) { continue; }
-			echo '<a class="bdc-search-result" href="' . esc_url( self::article_preview_url( $post_id ) ) . '"><span class="dashicons dashicons-media-document" aria-hidden="true"></span><span><strong>' . esc_html( (string) ( $result['title'] ?? '' ) ) . '</strong><small>Abrir no novo leitor</small></span><span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span></a>';
+			$post = $post_id > 0 ? get_post( $post_id ) : null;
+			if ( ! is_object( $post ) ) { continue; }
+			$categories = get_the_category( $post_id );
+			$category = ! empty( $categories ) && is_object( $categories[0] ) ? (string) $categories[0]->name : 'Instrução';
+			$raw_excerpt = '' !== trim( (string) $post->post_excerpt ) ? (string) $post->post_excerpt : (string) $post->post_content;
+			$excerpt = wp_trim_words( wp_strip_all_tags( strip_shortcodes( $raw_excerpt ) ), 22, '…' );
+			echo '<a class="bdc-live-result bdc-live-result--server" href="' . esc_url( self::article_preview_url( $post_id ) ) . '">';
+			echo '<span class="bdc-live-result__rank">' . esc_html( (string) ( $result['rank'] ?? '' ) ) . '</span>';
+			echo '<span class="bdc-live-result__copy"><span class="bdc-live-result__meta">' . esc_html( $category ) . '</span><strong>' . esc_html( (string) ( $result['title'] ?? '' ) ) . '</strong>';
+			if ( '' !== $excerpt ) { echo '<p>' . esc_html( $excerpt ) . '</p>'; }
+			echo '</span><span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span></a>';
 		}
 		echo '</div>';
 	}

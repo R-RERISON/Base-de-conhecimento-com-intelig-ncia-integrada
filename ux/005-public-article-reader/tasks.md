@@ -22,13 +22,13 @@
 - [x] A015 print/responsive/accessibility contract frozen.
 
 ## A-020 Implementation
-- [ ] A020 plugin-owned Article Reader shell.
-- [ ] A021 hero/metadados.
-- [ ] A022 Structured Tips.
-- [ ] A023 Executive Summary Rail.
-- [ ] A024 content renderer integration.
-- [ ] A025 legacy Elementor compat stylesheet.
-- [ ] A026 Core Blocks native path.
+- [ ] A020 plugin-owned Article Reader shell — preview candidate `0.5.0-ux004005.1` local PASS; environmental/human pending.
+- [ ] A021 hero/metadados — preview implemented.
+- [ ] A022 Structured Tips — read-only BDC preview over `_bdc_es_helpful_tips`; Workspace writer pending.
+- [ ] A023 Executive Summary Rail — composed sticky rail preview implemented.
+- [ ] A024 canonical `the_content` preserved; GAC/WPUI preserved; environmental verification pending.
+- [ ] A025 scoped Elementor compatibility minimum present; corpus regression pending.
+- [ ] A026 Core Blocks uses canonical content path; dedicated regression pending.
 
 ## A-030 Regression
 - [ ] A030 Gutenberg article.

@@ -1,13 +1,13 @@
 # Estado atual — SPEC-005
 
-**ATIVA — R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 PASS/CLOSED; G-585 OPEN.**
+**ATIVA — R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 PASS/CLOSED; P-580A/UX-004 OPEN; G-585 PAUSED.**
 
 **Branch:** `spec005-search-lexical-golden-queries`  
 **Base:** `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`
 
 ## Gate atual
 
-**G-585 — ASI Independence / Decommission Readiness.**
+**P-580A — ASI Functional Inventory + UX-004 Public Home. G-585 PAUSED.**
 
 G-520 fechou os contratos e autorizou implementação local da engine. Isso **não** autoriza produção nem merge.
 
@@ -721,3 +721,35 @@ Próxima ação:
 3. executar novamente **Base de Conhecimento → Independência G-585**;
 4. anexar o JSON;
 5. usar `loaded_symbols[].source_scope/source_path` para decidir a remoção/desativação do componente residual ou corrigir o ownership, sem whitelist prematura.
+
+## Rebaseline de produto — ASI Functional Parity / UX-004
+
+Decisão do Product Owner em 2026-09-20:
+
+- zero dependência do ASI NÃO autoriza perda de funcionalidades;
+- ASI 4.6.8 passa a ser baseline funcional completa, não somente referência de Search;
+- toda capacidade relevante deve ser PARITY, IMPROVED, SUPERSEDED_WITH_EVIDENCE ou RETIRED_BY_PO;
+- Word Cloud é funcionalidade obrigatória;
+- Home pública é superfície canônica obrigatória do BDC;
+- Header/Body/scripts isolados devem convergir para uma implementação mantida pelo plugin BDC;
+- g585.2 permanece válido como diagnóstico, mas G-585 está PAUSED até rebaseline funcional.
+
+Artefatos:
+- `asi-functional-parity-rebaseline-v1.md`;
+- `asi-functional-inventory-v1.md`;
+- `ux/004-public-home-portal/spec.md`;
+- `ux/004-public-home-portal/tasks.md`.
+
+Estado revisado:
+- G-580 CLOSED;
+- P-580A Functional Inventory OPEN;
+- UX-004 DISCOVERY/CONTRACT;
+- G-585 PAUSED / BLOCKED BY FUNCTIONAL PARITY REBASELINE;
+- G-590 BLOCKED.
+
+Próxima ação:
+1. concluir inventário funcional ASI;
+2. localizar ownership dos artefatos atuais da Home;
+3. fechar contrato Public Search + Word Cloud + Home;
+4. somente então implementar novo pacote de Home/decommission.
+

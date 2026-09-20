@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.5.0-ux004005.6
+ * Version: 0.5.0-p580wc.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.5.0-ux004005.6' );
+define( 'BDC_KB_VERSION', '0.5.0-p580wc.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -51,6 +51,7 @@ define( 'BDC_KB_SPEC005_G580_LIFECYCLE_BUILD', false );
 define( 'BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD', false );
 define( 'BDC_KB_P580_PUBLIC_INVENTORY_BUILD', false );
 define( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD', true );
+define( 'BDC_KB_WORD_CLOUD_BUILD', true );
 if ( ! defined( 'BDC_KB_SEARCH_ENABLED' ) ) {
 	define( 'BDC_KB_SEARCH_ENABLED', true );
 }
@@ -102,6 +103,12 @@ require_once BDC_KB_DIR . 'includes/class-post-core-blocks-activity.php';
 require_once BDC_KB_DIR . 'includes/class-admin-page.php';
 require_once BDC_KB_DIR . 'includes/class-visual-foundation.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
+if ( defined( 'BDC_KB_WORD_CLOUD_BUILD' ) && BDC_KB_WORD_CLOUD_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-word-cloud-contract.php';
+	require_once BDC_KB_DIR . 'includes/class-word-cloud-quality.php';
+	require_once BDC_KB_DIR . 'includes/class-word-cloud-service.php';
+	require_once BDC_KB_DIR . 'includes/class-word-cloud-admin.php';
+}
 
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-content-profile.php';
@@ -231,6 +238,10 @@ if ( defined( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD' ) && BDC_KB_PUBLIC_EXPERI
 
 \BDC\KnowledgeBase\Plugin::register();
 \BDC\KnowledgeBase\Visual_Foundation::register();
+if ( defined( 'BDC_KB_WORD_CLOUD_BUILD' ) && BDC_KB_WORD_CLOUD_BUILD ) {
+	\BDC\KnowledgeBase\Word_Cloud_Service::register();
+	\BDC\KnowledgeBase\Word_Cloud_Admin::register();
+}
 if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD ) {
 	\BDC\KnowledgeBase\Search_Lifecycle::register();
 }

@@ -343,16 +343,22 @@ final class Search_Independence_Runner_G585 {
 		$symbols = array();
 		foreach ( get_declared_classes() as $class ) {
 			if ( self::looks_like_legacy_symbol( (string) $class ) ) {
-				$symbols[] = 'class:' . $class;
+				$symbols[] = self::describe_class_symbol( (string) $class );
 			}
 		}
 		$functions = get_defined_functions();
 		foreach ( (array) ( $functions['user'] ?? array() ) as $function ) {
 			if ( self::looks_like_legacy_symbol( (string) $function ) ) {
-				$symbols[] = 'function:' . $function;
+				$symbols[] = self::describe_function_symbol( (string) $function );
 			}
 		}
-		sort( $symbols, SORT_STRING );
+		usort(
+			$symbols,
+			static fn ( array $a, array $b ): int => strcmp(
+				(string) ( $a['symbol'] ?? '' ),
+				(string) ( $b['symbol'] ?? '' )
+			)
+		);
 
 		$hooks = array();
 		foreach ( array_keys( is_array( $wp_filter ) ? $wp_filter : array() ) as $hook ) {
@@ -370,6 +376,83 @@ final class Search_Independence_Runner_G585 {
 			'no_loaded_legacy_symbols' => empty( $symbols ),
 			'no_loaded_legacy_hooks' => empty( $hooks ),
 			'physical_legacy_storage_removal_required' => false,
+		);
+	}
+
+	/** @return array<string,string> */
+	private static function describe_class_symbol( string $class ): array {
+		try {
+			$reflection = new \ReflectionClass( $class );
+			$file = $reflection->getFileName();
+			$source = self::describe_source_file( is_string( $file ) ? $file : '' );
+		} catch ( \Throwable $error ) {
+			$source = array(
+				'source_scope' => 'unknown',
+				'source_path' => '',
+			);
+		}
+
+		return array(
+			'type' => 'class',
+			'symbol' => $class,
+			'source_scope' => (string) ( $source['source_scope'] ?? 'unknown' ),
+			'source_path' => (string) ( $source['source_path'] ?? '' ),
+		);
+	}
+
+	/** @return array<string,string> */
+	private static function describe_function_symbol( string $function ): array {
+		try {
+			$reflection = new \ReflectionFunction( $function );
+			$file = $reflection->getFileName();
+			$source = self::describe_source_file( is_string( $file ) ? $file : '' );
+		} catch ( \Throwable $error ) {
+			$source = array(
+				'source_scope' => 'unknown',
+				'source_path' => '',
+			);
+		}
+
+		return array(
+			'type' => 'function',
+			'symbol' => $function,
+			'source_scope' => (string) ( $source['source_scope'] ?? 'unknown' ),
+			'source_path' => (string) ( $source['source_path'] ?? '' ),
+		);
+	}
+
+	/** @return array{source_scope:string,source_path:string} */
+	private static function describe_source_file( string $file ): array {
+		if ( '' === $file ) {
+			return array(
+				'source_scope' => 'internal_or_unknown',
+				'source_path' => '',
+			);
+		}
+
+		$normalized = wp_normalize_path( $file );
+		$roots = array(
+			'bdc_plugin' => wp_normalize_path( BDC_KB_DIR ),
+			'mu_plugin' => defined( 'WPMU_PLUGIN_DIR' ) ? trailingslashit( wp_normalize_path( WPMU_PLUGIN_DIR ) ) : '',
+			'plugin' => defined( 'WP_PLUGIN_DIR' ) ? trailingslashit( wp_normalize_path( WP_PLUGIN_DIR ) ) : '',
+			'theme' => trailingslashit( wp_normalize_path( get_theme_root() ) ),
+			'wordpress_core' => trailingslashit( wp_normalize_path( ABSPATH ) ),
+		);
+
+		foreach ( $roots as $scope => $root ) {
+			if ( '' === $root || ! str_starts_with( $normalized, $root ) ) {
+				continue;
+			}
+
+			return array(
+				'source_scope' => $scope,
+				'source_path' => ltrim( substr( $normalized, strlen( $root ) ), '/' ),
+			);
+		}
+
+		return array(
+			'source_scope' => 'external_or_unknown',
+			'source_path' => basename( $normalized ),
 		);
 	}
 

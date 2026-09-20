@@ -100,7 +100,7 @@ final class Public_Home_Read_Model {
 		if ( ! class_exists( Word_Cloud_Service::class ) ) {
 			return array();
 		}
-		return Word_Cloud_Service::public_terms( 20 );
+		return Word_Cloud_Service::public_terms( 32 );
 	}
 
 	/**

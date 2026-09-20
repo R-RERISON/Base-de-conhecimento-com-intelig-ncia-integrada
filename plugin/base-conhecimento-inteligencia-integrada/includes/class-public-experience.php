@@ -30,6 +30,7 @@ final class Public_Experience {
 
 	public static function register(): void {
 		add_action( 'admin_menu', array( self::class, 'register_admin_page' ), 55 );
+		add_action( 'admin_enqueue_scripts', array( self::class, 'enqueue_admin_assets' ), 60 );
 		add_filter( 'template_include', array( self::class, 'template_include' ), 99 );
 		add_action( 'template_redirect', array( self::class, 'prepare_preview_request' ), 1 );
 		add_action( 'wp_enqueue_scripts', array( self::class, 'enqueue_assets' ), 40 );
@@ -45,6 +46,20 @@ final class Public_Experience {
 			self::PAGE_SLUG,
 			array( self::class, 'render_admin_page' )
 		);
+	}
+
+	public static function enqueue_admin_assets( string $hook_suffix ): void {
+		if ( 'base-de-conhecimento_page_' . self::PAGE_SLUG !== $hook_suffix ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'bdc-kb-public-preview-admin',
+			BDC_KB_URL . 'assets/css/visual-foundation.css',
+			array(),
+			BDC_KB_VERSION
+		);
+		wp_enqueue_style( 'dashicons' );
 	}
 
 	public static function render_admin_page(): void {
@@ -292,12 +307,19 @@ final class Public_Experience {
 	}
 
 	private static function initials( string $name ): string {
-		$parts = preg_split( '/\s+/u', trim( $name ), -1, PREG_SPLIT_NO_EMPTY );
+		$parts = preg_split( '/\\s+/u', trim( $name ), -1, PREG_SPLIT_NO_EMPTY );
 		if ( empty( $parts ) ) {
 			return 'U';
 		}
-		$first = mb_substr( (string) $parts[0], 0, 1 );
-		$last = count( $parts ) > 1 ? mb_substr( (string) $parts[ count( $parts ) - 1 ], 0, 1 ) : '';
-		return mb_strtoupper( $first . $last );
-	}
-}
+
+		$char = static function ( string $value ): string {
+			return function_exists( 'mb_substr' ) ? mb_substr( $value, 0, 1 ) : substr( $value, 0, 1 );
+		};
+		$upper = static function ( string $value ): string {
+			return function_exists( 'mb_strtoupper' ) ? mb_strtoupper( $value ) : strtoupper( $value );
+		};
+
+		$first = $char( (string) $parts[0] );
+		$last = count( $parts ) > 1 ? $char( (string) $parts[ count( $parts ) - 1 ] ) : '';
+		return $upper( $first . $last );
+	}}

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.5.0-g570.1
+ * Version: 0.5.0-g580.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.5.0-g570.1' );
+define( 'BDC_KB_VERSION', '0.5.0-g580.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -46,7 +46,11 @@ define( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD', true );
 define( 'BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD', false );
 define( 'BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD', false );
 define( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD', false );
-define( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD', true );
+define( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD', false );
+define( 'BDC_KB_SPEC005_G580_LIFECYCLE_BUILD', true );
+if ( ! defined( 'BDC_KB_SEARCH_ENABLED' ) ) {
+	define( 'BDC_KB_SEARCH_ENABLED', true );
+}
 if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
 	define( 'BDC_KB_ELEMENTOR_WRITER_ENABLED', false );
 }
@@ -183,6 +187,8 @@ if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530
 	require_once BDC_KB_DIR . 'includes/class-search-query-normalizer.php';
 	require_once BDC_KB_DIR . 'includes/class-search-document-builder.php';
 	require_once BDC_KB_DIR . 'includes/class-search-projection-repository.php';
+	require_once BDC_KB_DIR . 'includes/class-search-rebuild-service.php';
+	require_once BDC_KB_DIR . 'includes/class-search-lifecycle.php';
 	require_once BDC_KB_DIR . 'includes/class-lexical-ranker.php';
 	require_once BDC_KB_DIR . 'includes/class-search-service.php';
 }
@@ -199,9 +205,15 @@ if ( defined( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD' ) && BDC_KB_SPEC005_G
 if ( defined( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD' ) && BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-search-security-performance-runner-g570.php';
 }
+if ( defined( 'BDC_KB_SPEC005_G580_LIFECYCLE_BUILD' ) && BDC_KB_SPEC005_G580_LIFECYCLE_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-search-lifecycle-runner-g580.php';
+}
 
 \BDC\KnowledgeBase\Plugin::register();
 \BDC\KnowledgeBase\Visual_Foundation::register();
+if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD ) {
+	\BDC\KnowledgeBase\Search_Lifecycle::register();
+}
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
 	\BDC\KnowledgeBase\Content_Profile::register();
 }
@@ -288,4 +300,7 @@ if ( defined( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD' ) && BDC_KB_SPEC005_G
 }
 if ( defined( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD' ) && BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD ) {
 	\BDC\KnowledgeBase\Search_Security_Performance_Runner_G570::register();
+}
+if ( defined( 'BDC_KB_SPEC005_G580_LIFECYCLE_BUILD' ) && BDC_KB_SPEC005_G580_LIFECYCLE_BUILD ) {
+	\BDC\KnowledgeBase\Search_Lifecycle_Runner_G580::register();
 }

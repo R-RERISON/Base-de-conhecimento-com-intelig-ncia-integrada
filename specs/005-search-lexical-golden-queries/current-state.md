@@ -7,7 +7,7 @@
 
 ## Gate atual
 
-**P-580A — ASI Functional Inventory + UX-004 Public Home. G-585 PAUSED.**
+**UX-004/H-020 + UX-005/A-020 — Public Experience preview. G-585 PAUSED.**
 
 G-520 fechou os contratos e autorizou implementação local da engine. Isso **não** autoriza produção nem merge.
 
@@ -891,4 +891,70 @@ Status:
 - P-580A/P-580B OPEN;
 - G-585 PAUSED;
 - G-590 BLOCKED.
+
+## UX-004/H-020 + UX-005/A-020 — preview candidate 0.5.0-ux004005.1
+
+Contracts frozen:
+- `ux/004-public-home-portal/h010-public-home-contract-v1.md`;
+- `ux/005-public-article-reader/a010-article-reader-contract-v1.md`.
+
+Implementation mode:
+- ADMIN PREVIEW ONLY;
+- manage_options + nonce;
+- no public route takeover;
+- no page_on_front change;
+- no post/meta/Elementor write;
+- current Home/articles remain authoritative outside preview.
+
+Home preview:
+- plugin-owned Header/shell;
+- Search uses frozen Search Service only because preview is admin-only;
+- public consumer authorization facade remains pending;
+- curated categories;
+- Últimas provider date DESC / ID DESC;
+- Populares provider legacy-compatible comment_count DESC;
+- Word Cloud content-only preview explicitly NON-CUTOVER; ASI quality/telemetry/vocabulary/health parity remains required.
+
+Article preview:
+- plugin-owned shell/hero;
+- canonical the_content pipeline preserved;
+- GAC + WP Unified Indexer preserved;
+- GRE Tips/Rail suppressed only inside preview to avoid duplication;
+- BDC Helpful Tips reads existing `_bdc_es_helpful_tips`;
+- composed Executive Summary Rail;
+- sticky desktop / reflow narrow / print flow.
+
+Local/package validation:
+- 77 files / 66 PHP;
+- PHP lint 66/66;
+- extracted ZIP lint 66/66;
+- active requires 49/49;
+- 26/26 contract checks;
+- source/package parity for all changed/new source;
+- delta vs p580a.2: 10 added + bootstrap modified / 0 deleted;
+- deterministic build 2/2;
+- ZIP SHA-256 `d61acada9230f454efc7ecb2c4580cf4c612d4a7724edaa84d7e8fd1314e8fe7`;
+- Search/rebuild/lifecycle/ranker unchanged.
+
+Evidence:
+- `evidence/ux004005-public-preview-local-validation-20260920.json`.
+
+Status:
+- H-001 CLOSED;
+- H-010 CLOSED/FROZEN;
+- H-020 candidate local PASS / ENV+HUMAN pending;
+- A-001 CLOSED;
+- A-010 CLOSED/FROZEN;
+- A-020 candidate local PASS / ENV+HUMAN pending;
+- P-580A/P-580B remain open for broader parity;
+- G-585 PAUSED;
+- G-590 BLOCKED.
+
+Next:
+1. install `0.5.0-ux004005.1`;
+2. open **Base de Conhecimento → Prévia Pública**;
+3. inspect Home preview;
+4. inspect representative Article Reader previews, especially one with Helpful Tips/Summary;
+5. send screenshots for visual iteration;
+6. do not disable ASI/GRE/Code Snippets/Astra for this preview.
 

@@ -1317,3 +1317,57 @@ Status:
 - P-580A ACTIVE;
 - G-585 PAUSED;
 - G-590 BLOCKED.
+
+## P-580WC.3 — highlighted topics + aggregate consultation signal
+
+Human feedback after p580wc.2:
+- semantic quality materially improved;
+- Home should expose more highlighted topics;
+- each topic should display a real consultation count;
+- consultation usage should add relevance weight.
+
+Decision:
+- do not reuse semantic occurrence count as “consultations”;
+- do not count every live-search keystroke;
+- record only confirmed interactions: topic click and Search result click;
+- no raw event log, user_id, IP or session storage;
+- only current public Word Cloud terms can receive aggregate counts;
+- current collector is preview/admin-only;
+- future public anonymous collector/anti-abuse remains telemetry work.
+
+Implementation:
+- contract `word-cloud-v1.2.0`;
+- aggregate `consultation-aggregate-v1.0.0`;
+- Option `bdc_kb_word_cloud_consultations`, autoload=false;
+- bounded 500 canonical terms;
+- display_score = semantic_score + logarithmic consultation boost;
+- Home candidate pool 32;
+- visible highlighted topics 6 -> 12;
+- visible count badge on every topic;
+- live and server Search result clicks can confirm a consultation;
+- no Search ranker change;
+- no snapshot regeneration required from p580wc.2.
+
+Package:
+- `0.5.0-p580wc.3`;
+- SHA-256 `33cef92d7667cbf3acd9ad1abb9b6e20684ee4dd16c95816e8db44e5cffd7ae9`;
+- 86 files / 74 PHP / 2 JS;
+- 74/74 PHP lint;
+- 74/74 extracted ZIP lint;
+- JS syntax PASS;
+- Home CSS parse PASS / 0 errors;
+- active requires 57/57;
+- 26/26 static checks;
+- 6/6 consultation harness;
+- source/package/repository parity 10/10;
+- deterministic build 2/2;
+- delta vs p580wc.2: 1 added + 9 modified / 0 deleted.
+
+Evidence:
+- `evidence/p580-word-cloud-consultation-v3-local-validation-20260920.json`.
+
+Status:
+- H-023 p580wc.3 LOCAL PASS / ENV count+ranking recheck required;
+- P-580A ACTIVE;
+- G-585 PAUSED;
+- G-590 BLOCKED.

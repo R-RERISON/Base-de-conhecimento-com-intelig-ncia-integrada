@@ -1041,3 +1041,37 @@ Homologation:
 
 Do not execute G-585 yet until Word Cloud/Home technical acceptance closes the blocking parity condition.
 
+## Continuidade — P-580WC.2 quality recheck
+
+Do not accept `READY` alone as Word Cloud parity.
+
+v1 environmental finding:
+- runtime generation succeeded;
+- semantic top terms were too noisy/generic;
+- H-023 remains open.
+
+Install:
+- `0.5.0-p580wc.2`;
+- SHA-256 `dd65c56adb150c3799036f7bf166dc5f63ebe1ed94e8b8c22c9e5faf90167bb1`.
+
+Expected migration:
+- existing v1 snapshot becomes stale by contract/profile;
+- body terms switch OFF by default;
+- new allow/block defaults merge once;
+- Home will not publish the stale snapshot;
+- manual regeneration creates `word-cloud-snapshot-v1.1.0` / `semantic-balanced-v2`.
+
+Environmental recheck:
+1. install p580wc.2 over p580wc.1;
+2. open Base de Conhecimento → Nuvem de Conhecimento;
+3. confirm stale/regeneration warning if shown;
+4. generate snapshot manually;
+5. capture top public terms;
+6. verify obvious noise from v1 is absent;
+7. verify meaningful concepts/phrases are visible;
+8. open Home preview and click at least one term into live Search;
+9. report READY/PARTIAL, public count and source statuses.
+
+Do not compare consultation counts numerically with ASI yet: Search Events/Interactions remain pending SPEC-006.
+
+G-585 stays PAUSED until H-023 quality acceptance plus Home technical acceptance.

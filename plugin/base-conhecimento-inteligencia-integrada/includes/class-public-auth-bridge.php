@@ -55,7 +55,7 @@ final class Public_Auth_Bridge {
 			return '';
 		}
 
-		$markup = do_shortcode( '[' . self::ENTRA_SHORTCODE . ']' );
+		$markup = do_shortcode( '[' . self::ENTRA_SHORTCODE . ' mode="profile-menu" show_department="true" show_job_title="true" show_logout="true" show_admin_link="auto"]' );
 		self::$gateway_markup = is_string( $markup ) ? trim( $markup ) : '';
 		return self::$gateway_markup;
 	}

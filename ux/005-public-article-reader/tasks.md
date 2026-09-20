@@ -33,6 +33,9 @@
 - [ ] A027 global Search no Reader (Ctrl/Cmd+K + same-page results) — implemented preview, env/human pending.
 - [ ] A028 candidate result/latest/popular links stay in new Reader — implemented preview, env pending.
 
+- [ ] A029 sticky Executive Summary rail — v4 local PASS; validar scroll longo em homologação.
+- [ ] A029B protected reading width / visual separation — v4 local PASS; human pending.
+
 ## A-030 Regression
 - [ ] A030 Gutenberg article.
 - [ ] A031 legacy HTML article.

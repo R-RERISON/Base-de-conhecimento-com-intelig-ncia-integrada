@@ -18,7 +18,7 @@
   function resultMarkup(row) {
     var meta = '<span class="bdc-live-result__meta">' + escapeHtml(row.category || 'Instrução') + '</span>';
     var excerpt = row.excerpt ? '<p>' + escapeHtml(row.excerpt) + '</p>' : '';
-    return '<a class="bdc-live-result" href="' + escapeHtml(row.url) + '">' +
+    return '<a class="bdc-live-result" data-bdc-consult-term="' + escapeHtml(row.title || '') + '" data-bdc-consult-source="result_click" href="' + escapeHtml(row.url) + '">' +
       '<span class="bdc-live-result__rank">' + (row.rank || '') + '</span>' +
       '<span class="bdc-live-result__copy">' + meta + '<strong>' + escapeHtml(row.title) + '</strong>' + excerpt + '</span>' +
       '<span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span></a>';
@@ -135,6 +135,22 @@
     }
   });
 
+  function recordConsultation(term, source) {
+    if (!term || !config.consultAction || !config.consultNonce || !config.ajaxUrl) return;
+    var data = new URLSearchParams();
+    data.append('action', String(config.consultAction));
+    data.append('nonce', String(config.consultNonce));
+    data.append('term', String(term));
+    data.append('source', String(source || 'result_click'));
+    fetch(String(config.ajaxUrl), {
+      method: 'POST',
+      credentials: 'same-origin',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+      body: data.toString()
+    }).catch(function () {});
+  }
+
   document.addEventListener('click', function (event) {
     var toggle = event.target.closest('[data-bdc-header-toggle]');
     if (toggle) {
@@ -144,6 +160,11 @@
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       toggle.setAttribute('aria-label', open ? 'Fechar links rápidos' : 'Abrir links rápidos');
       return;
+    }
+
+    var consult = event.target.closest('[data-bdc-consult-term]');
+    if (consult) {
+      recordConsultation(consult.getAttribute('data-bdc-consult-term') || '', consult.getAttribute('data-bdc-consult-source') || 'result_click');
     }
 
     var clear = event.target.closest('[data-bdc-live-search-clear]');

@@ -89,54 +89,18 @@ final class Public_Home_Read_Model {
 	}
 
 	/**
-	 * Provisional content-only cloud for admin preview.
+	 * BDC-owned Word Cloud snapshot for the candidate Home.
 	 *
-	 * @return array<int,array{term:string,count:int}>
+	 * Generation is never triggered by a public request. If no snapshot exists,
+	 * the Home remains functional and simply renders no suggested terms.
+	 *
+	 * @return array<int,array<string,mixed>>
 	 */
 	public static function preview_word_cloud(): array {
-		$ids = get_posts(
-			array(
-				'post_type' => 'post',
-				'post_status' => 'publish',
-				'posts_per_page' => 120,
-				'fields' => 'ids',
-				'orderby' => 'date',
-				'order' => 'DESC',
-				'no_found_rows' => true,
-				'suppress_filters' => false,
-			)
-		);
-
-		$stop = array_fill_keys(
-			array(
-				'para','com','sem','uma','das','dos','que','como','mais','por','nos','nas','de','do','da',
-				'em','no','na','os','as','ao','aos','e','ou','se','um','uma','base','conhecimento',
-			),
-			true
-		);
-		$count = array();
-
-		foreach ( (array) $ids as $raw_id ) {
-			$post = get_post( (int) $raw_id );
-			if ( ! is_object( $post ) ) {
-				continue;
-			}
-			$text = remove_accents( strtolower( (string) $post->post_title ) );
-			$tokens = preg_split( '/[^a-z0-9]+/u', $text, -1, PREG_SPLIT_NO_EMPTY );
-			foreach ( (array) $tokens as $token ) {
-				if ( strlen( $token ) < 4 || isset( $stop[ $token ] ) || ctype_digit( $token ) ) {
-					continue;
-				}
-				$count[ $token ] = (int) ( $count[ $token ] ?? 0 ) + 1;
-			}
+		if ( ! class_exists( Word_Cloud_Service::class ) ) {
+			return array();
 		}
-
-		arsort( $count, SORT_NUMERIC );
-		$out = array();
-		foreach ( array_slice( $count, 0, 20, true ) as $term => $frequency ) {
-			$out[] = array( 'term' => (string) $term, 'count' => (int) $frequency );
-		}
-		return $out;
+		return Word_Cloud_Service::public_terms( 20 );
 	}
 
 	/**

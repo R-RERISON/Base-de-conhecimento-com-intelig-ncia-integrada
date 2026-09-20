@@ -876,3 +876,50 @@ Next homologation:
 7. capture Home + Reader screenshots;
 8. do not cut over or disable ASI/GRE yet.
 
+## Continuidade — 0.5.0-ux004005.4
+
+Keep Home search-first direction.
+
+v4 focus:
+1. restore complete Header behavior without reverting visual direction;
+2. preserve exact Entra profile-menu attributes;
+3. keep global article Search without replacing quick links;
+4. move Executive Summary to a true right-side sticky context rail;
+5. protect article reading width;
+6. add restrained visual separation to Reader canvas.
+
+Header parity:
+- Home;
+- Consulta Avançada;
+- Telefones;
+- Links Úteis;
+- POSTI;
+- Entra profile menu;
+- mobile quick-link toggle.
+
+Reader:
+- content ~980px;
+- rail ~350px;
+- sticky;
+- header-aware top offset;
+- independent internal scroll only when required;
+- reflow below article on narrower viewport.
+
+Package:
+- `0.5.0-ux004005.4`;
+- SHA-256 `a07a518708b9ad92afbffacb6cd6527e944247e7084112851bc1e84c2c6ea300`;
+- 69/69 lint + extracted lint;
+- 19/19 v4 checks;
+- deterministic 2/2.
+
+Next homologation:
+- install .4 over .3;
+- verify all five Header links;
+- open Entra profile menu and confirm department/job title/admin/logout;
+- verify mobile quick-link toggle if possible;
+- open a long article and scroll: Summary must follow until end of article region;
+- confirm article width remains comfortable;
+- capture Home + long Reader screenshot.
+
+No cutover / no plugin decommission.
+

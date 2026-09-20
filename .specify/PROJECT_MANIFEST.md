@@ -472,3 +472,23 @@ Aceita em 2026-09-18:
 - SHA-256 `4cd915fc3be58166a354434bf9688f0a1509ca36d570697540dff9eace82ab62`;
 - environmental NOT_RUN;
 - G-570 remains OPEN.
+
+
+#### G-570 Security / Performance — PASS/CLOSED — 2026-09-20
+
+- evidence: `evidence/g570-environmental-review-20260920T164828Z.json`;
+- upload SHA-256: `38d399cab1f466c1b919513b8cf3650dd3ae7b6a55d94b715efe5597c3b89ffd`;
+- 45/45 checks PASS;
+- Projection ready / corpus 623;
+- capability/object-scope fail-closed PASS;
+- SQL/bounds/abuse PASS;
+- performance samples: 30;
+- p50 178.4739 ms;
+- p95 207.7448 ms;
+- max 212.9128 ms;
+- fallback_count=0;
+- technical_error_count=0;
+- editorial fingerprint equal;
+- errors/throwables: 0;
+- G-570 CLOSED;
+- next gate: G-580 Lifecycle.

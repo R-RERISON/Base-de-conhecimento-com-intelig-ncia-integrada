@@ -1,6 +1,8 @@
 # Tasks — UX-004 Public Home
 
 ## H-001 Inventory
+- [x] H000-PKG discovery runner `0.5.0-p580a.1` preparado e validado localmente.
+- [ ] H000-ENV executar Inventário Público em homologação e anexar JSON.
 - [ ] H001 localizar `bc_home_config`.
 - [ ] H002 localizar `bc_ultimas`.
 - [ ] H003 localizar `bc_populares`.

@@ -94,6 +94,9 @@ final class Word_Cloud_Service {
 		}
 		$terms = is_array( $snapshot['terms'] ?? null ) ? $snapshot['terms'] : array();
 		$terms = array_values( array_filter( $terms, static fn ( $row ): bool => is_array( $row ) && ! empty( $row['public_allowed'] ) ) );
+		if ( class_exists( Word_Cloud_Consultations::class ) ) {
+			$terms = Word_Cloud_Consultations::decorate_terms( $terms );
+		}
 		return array_slice( $terms, 0, max( 1, min( 60, $limit ) ) );
 	}
 

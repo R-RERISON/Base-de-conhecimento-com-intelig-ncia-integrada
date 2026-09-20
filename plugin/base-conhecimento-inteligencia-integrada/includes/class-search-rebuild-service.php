@@ -31,6 +31,15 @@ final class Search_Rebuild_Service {
 		$stale_deleted = null;
 
 		if ( empty( $post_ids ) ) {
+			Search_Projection_Repository::write_state(
+				array(
+					'status' => 'failed',
+					'corpus_count' => 0,
+					'source_fingerprint' => '',
+					'last_success_at_gmt' => '',
+					'last_error_code' => 'search_rebuild_empty_corpus',
+				)
+			);
 			return self::failure( 'search_rebuild_empty_corpus', array(), array() );
 		}
 

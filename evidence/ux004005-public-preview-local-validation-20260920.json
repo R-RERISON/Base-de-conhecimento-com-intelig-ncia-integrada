@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "UX-004/H-020 + UX-005/A-020",
+  "mode": "public_experience_preview_local_package_validation",
+  "generated_at": "2026-09-20T19:15:00Z",
+  "version": "0.5.0-ux004005.1",
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-ux004005.1.zip",
+    "sha256": "d61acada9230f454efc7ecb2c4580cf4c612d4a7724edaa84d7e8fd1314e8fe7",
+    "size_bytes": 204054,
+    "files": 77,
+    "php_files": 66,
+    "archive_integrity": "PASS",
+    "extracted_php_lint": {
+      "passed": 66,
+      "total": 66,
+      "failed": 0
+    },
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "validation": {
+    "php_lint": {
+      "passed": 66,
+      "total": 66,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 49,
+      "total": 49,
+      "missing": 0
+    },
+    "contract_suite": {
+      "passed": 26,
+      "total": 26,
+      "failed": 0
+    },
+    "source_blob_parity": {
+      "base-conhecimento-inteligencia-integrada.php": "9635d99e0519c539bab7da00f012dc1bceff0368",
+      "includes/class-helpful-tips-store.php": "8971b60a76dafb70bdb9a20a86f813b94ec350e7",
+      "includes/class-public-home-read-model.php": "62d7303b70d69ca172cb2b01bded64ff3ae20312",
+      "includes/class-public-article-read-model.php": "2ae024202794d89dd8e365366c520ba5b6631b87",
+      "includes/class-public-experience.php": "95a457ef2be0f48c704a4bd199e6f969b7c24be9",
+      "templates/public-home-preview.php": "a620f2efe7c8abcd02fdcbb6ee57932e7c1e68b8",
+      "templates/public-article-preview.php": "9eba10c8e0345f780f70bbe65ff9bea226e493d6",
+      "assets/css/public-foundation.css": "d31dfacaaabaae27bab8432914fec98ee05cc6e2",
+      "assets/css/public-header.css": "147899ba212049d375bbeff2b4af21efcf40b11d",
+      "assets/css/public-home.css": "edb13596b4bcb3e2cb33b22e237f6e2ea92d90a7",
+      "assets/css/public-article.css": "6f0f8a729749cd892fcc69574bad265c90de02c5",
+      "tests/unit/public-experience-preview-ux004005.php": "43ff81b8e7b8134c8899389fb707c505a59b10d6"
+    }
+  },
+  "delta_from_p580a_2": {
+    "added": [
+      "assets/css/public-article.css",
+      "assets/css/public-foundation.css",
+      "assets/css/public-header.css",
+      "assets/css/public-home.css",
+      "includes/class-helpful-tips-store.php",
+      "includes/class-public-article-read-model.php",
+      "includes/class-public-experience.php",
+      "includes/class-public-home-read-model.php",
+      "templates/public-article-preview.php",
+      "templates/public-home-preview.php"
+    ],
+    "modified": [
+      "base-conhecimento-inteligencia-integrada.php"
+    ],
+    "deleted": []
+  },
+  "frozen_core": {
+    "search_service_sha256": "32efc481bae00488e7e47913e69fa1e9c580cb64ee0f27fdceb04a7e12aafd38",
+    "rebuild_service_sha256": "8f9a2732c81afd653a4add93d0ad0b8bedecd781bfb45909b8e0926aaede1523",
+    "lifecycle_sha256": "325e8f9a03ddf9dbe8de3ceb5eb282a16c2ad8de72208ddcbd3d72d23f0f0b7e",
+    "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78"
+  },
+  "preview_contract": {
+    "admin_only": true,
+    "manage_options_required": true,
+    "nonce_required": true,
+    "route_takeover": false,
+    "page_on_front_changed": false,
+    "editorial_write": false,
+    "meta_write": false,
+    "elementor_write": false,
+    "g585_runner_enabled": false,
+    "home": {
+      "plugin_owned_template_preview": true,
+      "header": true,
+      "latest": true,
+      "popular_provider": "legacy_comment_count_compat_preview",
+      "categories": true,
+      "search": "ADMIN_PREVIEW_ONLY_CURRENT_SEARCH_SERVICE",
+      "public_search_facade": "PENDING",
+      "word_cloud": "PROVISIONAL_CONTENT_ONLY_PREVIEW",
+      "word_cloud_cutover_ready": false
+    },
+    "article": {
+      "plugin_owned_template_preview": true,
+      "canonical_the_content_preserved": true,
+      "gac_preserved": true,
+      "wp_unified_indexer_preserved": true,
+      "gre_helpful_tips_suppressed_in_preview_only": true,
+      "gre_summary_rail_suppressed_in_preview_only": true,
+      "bdc_helpful_tips_read_model": true,
+      "bdc_composed_summary_rail": true,
+      "sticky_rail": true,
+      "print_contract": true
+    }
+  },
+  "gate_state": {
+    "h001": "CLOSED",
+    "h010": "CLOSED_FROZEN",
+    "h020": "CANDIDATE_PREVIEW_LOCAL_PASS",
+    "a001": "CLOSED",
+    "a010": "CLOSED_FROZEN",
+    "a020": "CANDIDATE_PREVIEW_LOCAL_PASS",
+    "g585": "PAUSED",
+    "g590": "BLOCKED",
+    "next_action": "Install ux004005.1 in homologation, open Base de Conhecimento > Prévia Pública, visually review Home and representative Article Reader samples. Do not disable ASI/GRE/Code Snippets/Astra for this preview."
+  }
+}

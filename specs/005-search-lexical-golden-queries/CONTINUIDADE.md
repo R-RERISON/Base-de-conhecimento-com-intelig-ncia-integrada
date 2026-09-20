@@ -826,3 +826,53 @@ Next homologation:
 - confirm login/profile action;
 - confirm no duplicated title/header inside article.
 
+## Continuidade — 0.5.0-ux004005.3 Search-first
+
+Design decision:
+- Home is a Search product;
+- secondary discovery is progressive disclosure;
+- Search is available inside Article Reader;
+- candidate navigation must not fall back to legacy articles.
+
+Research:
+- Material persistent Search;
+- Zendesk search on all Help Center pages;
+- Intercom Modern Help Center quick Search / clean docs reading;
+- GitBook Ctrl/Cmd+K global Search;
+- Algolia DocSearch documentation-search UX.
+
+Package:
+- version `0.5.0-ux004005.3`;
+- SHA-256 `19bebb7b55015dac8b356f66390915c8a21659b362df2315f64a9f69905a2cea`;
+- 81 files / 69 PHP / 2 JS;
+- 69/69 lint + extracted lint;
+- 52/52 active requires;
+- 40/40 checks;
+- deterministic 2/2.
+
+Home:
+- centered primary Search;
+- compact suggestions;
+- “Explorar a Base” disclosure contains Categories + Latest + Popular;
+- no metrics dashboard;
+- no large marketing hero.
+
+Article:
+- persistent global Search in header;
+- Ctrl/Cmd+K;
+- query result panel stays in article;
+- result links use candidate Reader;
+- clean article heading/content;
+- Tips + Summary Rail preserved;
+- legacy chrome sanitizer remains.
+
+Next homologation:
+1. install .3 over .2;
+2. open Home preview;
+3. test Ctrl+K;
+4. search from Home and open a result — it must stay in new Reader;
+5. search from inside Reader — no Home return required;
+6. test Latest/Popular links — must open new Reader;
+7. capture Home + Reader screenshots;
+8. do not cut over or disable ASI/GRE yet.
+

@@ -846,3 +846,49 @@ Next:
 3. run **Executar inventário e baixar JSON**;
 4. attach JSON;
 5. use evidence to close ownership/corpus discovery before implementation.
+
+## P-580 environmental inventory #1 — PASS / deep inventory pending
+
+Evidence:
+- `evidence/p580-public-experience-inventory-20260920T184051Z.json`;
+- review: `evidence/p580-public-experience-inventory-review-20260920.md`;
+- upload SHA-256 `ea4b050f9d1f8cc52954498acb5ed363a7273d34b4528719088db0f7d4b5c65a`.
+
+Findings:
+- Home canônica atual = page 41395 / publish / Elementor Header Footer;
+- Astra 4.13.3 / no child theme / Additional CSS 36,804 bytes;
+- Home v2.7.0 behaviors are hosted in Code Snippets runtime;
+- ASI Search/Word Cloud absent when ASI off;
+- Entra login belongs to BDC Entra Gateway;
+- 606 published posts: 528 legacy_html, 41 plain_text, 31 Elementor, 3 mixed, 3 Gutenberg;
+- article runtime also includes GAC panels/bridge, WP Unified Indexer anchors, GRE Tips and GRE Summary Rail;
+- Helpful Tips = `_bdc_es_helpful_tips`, 7 published posts, not embedded in post_content/Elementor;
+- GRE historical fields have real environmental coverage and cannot be silently retired;
+- no errors/throwables; safety contract PASS.
+
+Important correction:
+- Article Reader compatibility priority is legacy_html first, not Elementor-first.
+- Environment GRE contains Helpful Tips runtime not present in the consulted GRE main/0.6.0 repository; environmental code has diverged and must be profiled before migration.
+
+Deep discovery build:
+- `0.5.0-p580a.2`;
+- 67 files / 60 PHP;
+- lint 60/60;
+- active requires 46/46;
+- 25/25 contract checks;
+- deterministic build 2/2;
+- ZIP SHA-256 `319b97c4f5ee0a6f9f0679cb478d113b91413660bf19a00b83ec56eca2b6d0b4`;
+- evidence local: `evidence/p580-deep-inventory-local-validation-20260920.json`.
+
+p580a.2 adds diagnostics only:
+- target plugin versions + selected file hashes;
+- Code Snippets ID/name/scope/hash + behavioral signals, no source export;
+- Helpful Tips type/list keys/item counts, no values.
+
+Status:
+- H-001: PARTIAL PASS;
+- A-001: PARTIAL PASS;
+- P-580A/P-580B OPEN;
+- G-585 PAUSED;
+- G-590 BLOCKED.
+

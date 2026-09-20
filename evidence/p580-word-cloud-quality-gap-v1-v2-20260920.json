@@ -1,0 +1,156 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "P-580A / UX-004 H-023",
+  "mode": "word_cloud_quality_gap_review_and_v2_patch",
+  "generated_at": "2026-09-20T22:45:00Z",
+  "environmental_v1": {
+    "version": "0.5.0-p580wc.1",
+    "runtime_status": "READY",
+    "public_term_count": 300,
+    "freshness": "OK",
+    "source_statuses": {
+      "title": "available",
+      "heading": "available",
+      "content": "available",
+      "taxonomy": "available",
+      "allowlist": "available",
+      "blocklist": "available",
+      "search_events": "pending_telemetry_spec",
+      "interactions": "pending_telemetry_spec",
+      "vocabulary": "pending_governance_spec"
+    },
+    "observed_public_terms": [
+      "usuario",
+      "nao",
+      "clicar",
+      "acesso",
+      "central",
+      "ser",
+      "banco",
+      "objetivo",
+      "abaixo",
+      "tela",
+      "sistema",
+      "sera",
+      "caso",
+      "conceitos",
+      "regras",
+      "apos",
+      "mail",
+      "esta",
+      "atividades",
+      "ncia"
+    ],
+    "comparison_reference_examples": [
+      "Estrutura",
+      "MSTeams",
+      "windows 11",
+      "pendrive",
+      "Termo de assinatura",
+      "Verificação de Conhecimento de Acesso a Sistemas",
+      "BCProtege",
+      "Plataforma Paral",
+      "bitlocker",
+      "mensageria"
+    ],
+    "result": "FAIL_CONTROLADO_QUALITY",
+    "product_runtime_failure": false,
+    "architecture_failure": false,
+    "quality_parity_failure": true,
+    "interpretation": "READY proved generation/runtime health only; public semantic quality was not acceptable."
+  },
+  "root_causes": [
+    "body semantic terms were enabled by default and dominated frequency",
+    "PT-BR stop/blocklist was too small",
+    "default governed allowlist was empty",
+    "multi-word concepts were reduced mainly to simple tokens",
+    "frequency alone could classify generic terms as mature"
+  ],
+  "remediation_v2": {
+    "version": "0.5.0-p580wc.2",
+    "contract": "word-cloud-v1.1.0",
+    "quality_profile": "semantic-balanced-v2",
+    "changes": [
+      "semantic body disabled by default",
+      "expanded PT-BR stopwords and corporate noise blocklist",
+      "governed corporate allowlist seeded but promoted only when observed in content",
+      "title/heading semantic phrase candidates including single-concept titles and numeric product names such as Windows 11",
+      "document-frequency and structural-source maturity requirements",
+      "content-only frequency cannot become public",
+      "snapshot contract/profile guard prevents publishing v1 stale snapshot",
+      "one-time v1 profile migration merges new allow/block defaults and marks old state stale",
+      "Home label changed from Assuntos frequentes to Assuntos em destaque while consultation telemetry is pending"
+    ]
+  },
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-p580wc.2.zip",
+    "sha256": "dd65c56adb150c3799036f7bf166dc5f63ebe1ed94e8b8c22c9e5faf90167bb1",
+    "size_bytes": 228935,
+    "files": 85,
+    "php_files": 73,
+    "js_files": 2,
+    "php_lint": {
+      "passed": 73,
+      "total": 73,
+      "failed": 0
+    },
+    "extracted_php_lint": {
+      "passed": 73,
+      "total": 73,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 56,
+      "total": 56,
+      "missing": 0
+    },
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    },
+    "delta_from_p580wc1": {
+      "added": [],
+      "deleted": [],
+      "modified": [
+        "base-conhecimento-inteligencia-integrada.php",
+        "includes/class-word-cloud-admin.php",
+        "includes/class-word-cloud-contract.php",
+        "includes/class-word-cloud-quality.php",
+        "includes/class-word-cloud-service.php",
+        "templates/public-home-preview.php"
+      ]
+    }
+  },
+  "validation": {
+    "static_contract_checks": {
+      "passed": 20,
+      "total": 20,
+      "failed": 0
+    },
+    "quality_harness": {
+      "passed": 7,
+      "total": 7,
+      "failed": 0
+    },
+    "repository_source_parity": {
+      "passed": 6,
+      "total": 6,
+      "failed": 0
+    }
+  },
+  "safety": {
+    "new_tables": 0,
+    "asi_runtime_dependency": false,
+    "external_network": false,
+    "editorial_write": false,
+    "public_request_generation": false,
+    "search_ranker_changed": false
+  },
+  "gate_state": {
+    "h023": "V1_ENV_QUALITY_FAIL_CONTROLADO / V2_LOCAL_PASS_ENV_RECHECK_REQUIRED",
+    "p580a": "ACTIVE",
+    "g585": "PAUSED",
+    "g590": "BLOCKED",
+    "next_action": "Install p580wc.2 over p580wc.1, regenerate snapshot manually, compare public concepts against current reference and verify noisy generic terms are removed before any ASI-off gate."
+  }
+}

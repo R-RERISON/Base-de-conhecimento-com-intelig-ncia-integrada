@@ -88,7 +88,18 @@
 - [ ] T595 merge only after human approval.
 
 
+## P-580A — ASI Functional Parity Rebaseline
+- [ ] P580A-01 inventário funcional completo ASI 4.6.8.
+- [ ] P580A-02 matriz PARITY / IMPROVED / MISSING / PLANNED / RETIRED_BY_PO.
+- [ ] P580A-03 mapear Public Search e Home.
+- [ ] P580A-04 mapear Word Cloud completa.
+- [ ] P580A-05 mapear Telemetry/Search Intelligence.
+- [ ] P580A-06 mapear item-level/deep-link/anchors.
+- [ ] P580A-07 mapear Operations/Queue/Migrations/Post-Install.
+- [ ] P580A-08 fechar rebaseline antes de Decommission Readiness.
+
 ## G-585 — ASI Independence / Decommission Readiness
+> PAUSED: G-585 não pode fechar antes de P-580A/UX-004 eliminarem perda funcional bloqueante.
 - [ ] T585 static scan runtime: zero `asi_*`, `asi4_*`, classes/functions/hooks ASI.
 - [ ] T586 desativar ASI em homologação.
 - [ ] T587 executar Search + Golden Suite com ASI ausente.

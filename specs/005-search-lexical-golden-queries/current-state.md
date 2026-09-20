@@ -1266,3 +1266,54 @@ Status:
 - G-585 remains PAUSED until Word Cloud/Home technical acceptance and ASI-off proof;
 - G-590 BLOCKED.
 
+## P-580WC — environmental quality gap / p580wc.2
+
+Environmental execution of `0.5.0-p580wc.1`:
+- runtime status READY;
+- 300 public terms;
+- freshness OK;
+- source availability correctly reported;
+- however public top terms included generic/noisy tokens such as `usuario`, `nao`, `clicar`, `ser`, `banco`, `objetivo`, `sistema`, `regras`, `mail`, `ncia`.
+
+Interpretation:
+- generation/runtime pipeline PASS;
+- semantic public quality FAIL CONTROLADO;
+- not an architecture/runtime failure;
+- H-023 remains OPEN.
+
+Reference comparison:
+- current ASI surface shows recognizable concepts/phrases such as MSTeams, Windows 11, pendrive, Termo de assinatura, BitLocker and mensageria;
+- ASI consultation counts cannot be reproduced honestly until BDC telemetry/interactions exist.
+
+Remediation `0.5.0-p580wc.2`:
+- contract `word-cloud-v1.1.0`;
+- quality profile `semantic-balanced-v2`;
+- body terms OFF by default;
+- expanded PT-BR stopwords + governed noise blocklist;
+- observed governed allowlist;
+- title/heading phrase preservation;
+- document/structural evidence for maturity;
+- frequency alone cannot publish a content-only term;
+- stale v1 snapshot contract guard + one-time profile migration;
+- Home wording = `Assuntos em destaque` until consultation telemetry exists.
+
+Local validation:
+- 85 files / 73 PHP / 2 JS;
+- 73/73 PHP lint;
+- 73/73 extracted ZIP lint;
+- 56/56 active requires;
+- 20/20 static quality/contract checks;
+- 7/7 quality harness;
+- source/package/repository parity 6/6;
+- deterministic build 2/2;
+- delta vs p580wc.1: 6 modified / 0 added / 0 deleted;
+- SHA-256 `dd65c56adb150c3799036f7bf166dc5f63ebe1ed94e8b8c22c9e5faf90167bb1`.
+
+Evidence:
+- `evidence/p580-word-cloud-quality-gap-v1-v2-20260920.json`.
+
+Status:
+- H-023 = v1 ENV QUALITY FAIL CONTROLADO / v2 LOCAL PASS / ENV RECHECK REQUIRED;
+- P-580A ACTIVE;
+- G-585 PAUSED;
+- G-590 BLOCKED.

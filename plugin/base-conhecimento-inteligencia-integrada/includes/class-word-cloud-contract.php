@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Word_Cloud_Contract {
 
-	public const VERSION = 'word-cloud-v1.1.0';
+	public const VERSION = 'word-cloud-v1.2.0';
 	public const SNAPSHOT_VERSION = 'word-cloud-snapshot-v1.1.0';
 	public const QUALITY_PROFILE = 'semantic-balanced-v2';
 	public const CRON_HOOK = 'bdc_kb_word_cloud_hourly_generate';
@@ -73,6 +73,7 @@ final class Word_Cloud_Contract {
 			'allowlist' => 'available',
 			'blocklist' => 'available',
 			'search_events' => 'pending_telemetry_spec',
+			'consultations' => 'available_aggregate_preview',
 			'interactions' => 'pending_telemetry_spec',
 			'vocabulary' => 'pending_governance_spec',
 		);

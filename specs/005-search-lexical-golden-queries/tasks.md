@@ -66,11 +66,11 @@
 - [x] T565 G-560 PASS — CLOSED em 2026-09-19; próximo gate G-570.
 
 ## G-570 — Segurança/Performance
-- [ ] T570 scope/capability.
-- [ ] T571 SQL/bounds.
-- [ ] T572 abuse/long query.
-- [ ] T573 p50/p95.
-- [ ] T574 G-570 PASS.
+- [x] T570 scope/capability — PASS ambiental.
+- [x] T571 SQL/bounds — PASS ambiental.
+- [x] T572 abuse/long query — PASS ambiental.
+- [x] T573 p50/p95 — PASS: p95 207.7448 ms / max 212.9128 ms.
+- [x] T574 G-570 PASS — CLOSED em 2026-09-20; próximo gate G-580.
 
 ## G-580 — Lifecycle
 - [ ] T580 activation/update.
@@ -141,4 +141,4 @@
 - [x] G570-PKG-07 37/37 checks locais PASS; PHP lint 54/54; active requires 44/44.
 - [x] G570-PKG-08 zero write editorial/Projection no runner; zero rede/ASI/FULLTEXT/query logging.
 - [x] G570-PKG-09 build determinístico 2/2 — SHA-256 `4cd915fc3be58166a354434bf9688f0a1509ca36d570697540dff9eace82ab62`.
-- [ ] G570-ENV executar runner no WordPress e anexar JSON; T570–T574 permanecem abertos até essa evidência.
+- [x] G570-ENV PASS — 45/45 checks; evidence `g570-environmental-review-20260920T164828Z.json`; upload SHA-256 `38d399cab1f466c1b919513b8cf3650dd3ae7b6a55d94b715efe5597c3b89ffd`.

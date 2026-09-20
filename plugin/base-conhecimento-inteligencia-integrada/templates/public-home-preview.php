@@ -30,7 +30,7 @@ $cloud = Public_Home_Read_Model::preview_word_cloud();
 <?php wp_body_open(); ?>
 <div class="bdc-public">
 	<?php Public_Experience::render_header(); ?>
-	<?php Public_Experience::render_preview_banner( 'UX-004 / search-first premium v6' ); ?>
+	<?php Public_Experience::render_preview_banner( 'UX-004 / Word Cloud BDC v1' ); ?>
 
 	<main class="bdc-public-main bdc-home">
 		<section class="bdc-home-search-stage" aria-labelledby="bdc-home-title">
@@ -55,7 +55,7 @@ $cloud = Public_Home_Read_Model::preview_word_cloud();
 					<?php if ( is_array( $search ) ) : ?><?php Public_Experience::render_search_results( $search, 'bdc-search-results bdc-search-results--home' ); ?><?php endif; ?>
 				</div>
 			</div>
-			<?php if ( ! is_array( $search ) ) : ?>
+			<?php if ( ! is_array( $search ) && ! empty( $cloud ) ) : ?>
 				<div class="bdc-home-suggestions" aria-label="Assuntos sugeridos">
 					<span>Assuntos frequentes</span>
 					<?php foreach ( array_slice( $cloud, 0, 6 ) as $term ) : ?>

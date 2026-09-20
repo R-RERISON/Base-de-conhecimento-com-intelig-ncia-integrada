@@ -1,8 +1,8 @@
-# SPEC-005 — BDC Word Cloud Contract v1.1.0
+# SPEC-005 — BDC Word Cloud Contract v1.2.0
 
 **Status:** FROZEN FOR HOMOLOGATION  
 **Gate context:** P-580A / UX-004 H-023  
-**Version:** `word-cloud-v1.1.0`  
+**Version:** `word-cloud-v1.2.0`  
 **Quality profile:** `semantic-balanced-v2`
 
 ## 1. Objective
@@ -22,6 +22,7 @@ BDC-owned state:
 - `bdc_kb_word_cloud_snapshot`;
 - `bdc_kb_word_cloud_state`;
 - `bdc_kb_word_cloud_history`;
+- `bdc_kb_word_cloud_consultations` — aggregate counters only;
 - transient lock `bdc_kb_word_cloud_generation_lock`.
 
 All Options are autoload=false when first created.
@@ -40,9 +41,12 @@ Available:
 - governed allowlist;
 - blocklist/stopwords.
 
+Available as bounded preview aggregate:
+- confirmed consultation counts for current public terms.
+
 Explicitly pending:
-- search events;
-- interactions/click correlation;
+- full search-event stream;
+- generalized interactions/outcomes;
 - governed vocabulary.
 
 Pending signals are reported in health/state and are not simulated.
@@ -108,6 +112,23 @@ Relative signals:
 
 These are Word Cloud generation weights, not Search ranking weights.
 Changing them does not change `lexical-ranker-v1.0.0`.
+
+### 6.1 Consultation weight
+
+A separate aggregate usage signal may decorate already-public terms:
+- confirmed topic click;
+- confirmed result click.
+
+Rules:
+- no keypress event is counted;
+- no raw query event log is stored;
+- no user_id, IP or session identifier is stored;
+- only canonical terms that are public in the current snapshot may be incremented;
+- storage is bounded to 500 canonical terms;
+- consultation boost is logarithmic and added to the semantic display score;
+- semantic quality remains the admission gate, so usage cannot resurrect blocked/noisy terms.
+
+Current collector is preview/admin-only. Public anonymous collection, anti-abuse and concurrency hardening remain part of the future telemetry layer.
 
 ## 7. Snapshot
 
@@ -192,14 +213,18 @@ If snapshot is absent or stale:
 
 Clicking a term routes to the BDC candidate Search using the term as the query.
 
-Until Search Events/Interactions exist, the public label is **Assuntos em destaque**, not “mais consultados”. A consumption-based label is authorized only when real telemetry exists.
+The Home displays **Assuntos em destaque** with up to 12 visible topics in the current preview. Each topic includes its BDC aggregate consultation count.
+
+The count represents confirmed BDC interactions only; it is not seeded from ASI and does not claim historical parity. Existing ASI history may only be migrated through a future explicit, auditable one-time migration.
+
+Because the complete Search Events/Interactions model is still pending, the section remains **Assuntos em destaque**, not “mais consultados”.
 
 ## 12. Safety
 
 Prohibited:
 - ASI table/option/runtime reads;
 - network calls;
-- Search query logging;
+- raw Search query/event logging inside this aggregate module;
 - post/meta/taxonomy editorial writes;
 - public-request rebuild;
 - second Search ranker.
@@ -212,7 +237,9 @@ Local:
 - PHP lint PASS;
 - active requires resolved;
 - deterministic package;
-- no ASI markers in Word Cloud runtime source.
+- no ASI markers in Word Cloud runtime source;
+- aggregate consultation checks PASS;
+- Home exposes a larger highlighted-topic set with visible counts.
 
 Environmental:
 - manual generation PASS;
@@ -221,6 +248,9 @@ Environmental:
 - meaningful title/heading/taxonomy concepts are visible;
 - health ready or documented partial;
 - click-to-search PASS;
+- topic/result clicks increment only valid current public-term aggregates;
+- count appears on the Home and influences display ordering;
+- live keystrokes do not inflate counts;
 - cron scheduled;
 - deactivation removes cron but retains state;
 - Home remains functional with ASI disabled;

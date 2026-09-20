@@ -1,6 +1,6 @@
 <?php
 /**
- * BDC public Home preview template.
+ * BDC public Home redesign preview template.
  *
  * @package BDC_Knowledge_Base
  */
@@ -20,10 +20,12 @@ $query_value = isset( $_GET['bdc_q'] ) && is_scalar( $_GET['bdc_q'] )
 	: '';
 
 $categories = Public_Home_Read_Model::categories();
-$latest = Public_Home_Read_Model::latest( $category_id, 4 );
-$popular = Public_Home_Read_Model::popular( $category_id, 4 );
+$latest = Public_Home_Read_Model::latest( $category_id, 5 );
+$popular = Public_Home_Read_Model::popular( $category_id, 5 );
 $search = Public_Home_Read_Model::preview_search( $query_value );
 $cloud = Public_Home_Read_Model::preview_word_cloud();
+$published_count = Public_Home_Read_Model::published_count();
+$latest_date = ! empty( $latest ) ? (string) ( $latest[0]['date'] ?? '' ) : '';
 
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
@@ -36,90 +38,111 @@ $cloud = Public_Home_Read_Model::preview_word_cloud();
 <?php wp_body_open(); ?>
 <div class="bdc-public">
 	<?php Public_Experience::render_header(); ?>
-	<?php Public_Experience::render_preview_banner( 'UX-004 / H-020 preview' ); ?>
+	<?php Public_Experience::render_preview_banner( 'UX-004 / redesign v2' ); ?>
 
-	<main class="bdc-public-main">
-		<section class="bdc-home-hero" aria-labelledby="bdc-home-title">
-			<p class="bdc-public-eyebrow">PORTAL DE CONHECIMENTO</p>
-			<h1 id="bdc-home-title">Base de Conhecimento</h1>
-			<p>Encontre rapidamente instruções, procedimentos internos e materiais de apoio para atendimento.</p>
-
-			<form class="bdc-home-search" method="get" role="search">
-				<input type="hidden" name="bdc_kb_preview" value="home">
-				<input type="hidden" name="bdc_kb_preview_nonce" value="<?php echo esc_attr( wp_create_nonce( 'bdc_kb_public_preview_home' ) ); ?>">
-				<?php if ( $category_id > 0 ) : ?>
-					<input type="hidden" name="bdc_category" value="<?php echo esc_attr( (string) $category_id ); ?>">
-				<?php endif; ?>
-				<label for="bdc-home-query">O que você precisa resolver?</label>
-				<div class="bdc-home-search__row">
-					<input id="bdc-home-query" type="search" name="bdc_q" value="<?php echo esc_attr( $query_value ); ?>" placeholder="Pesquise por produto, erro, procedimento ou serviço">
-					<button type="submit">Buscar</button>
+	<main class="bdc-public-main bdc-home">
+		<section class="bdc-home-command" aria-labelledby="bdc-home-title">
+			<div class="bdc-home-command__copy">
+				<span class="bdc-home-command__badge"><span class="dashicons dashicons-welcome-learn-more" aria-hidden="true"></span> Conhecimento operacional</span>
+				<h1 id="bdc-home-title">Encontre a orientação certa,<br><span>sem perder tempo.</span></h1>
+				<p>Acesse procedimentos, instruções e referências da Base de Conhecimento em uma experiência única e pesquisável.</p>
+				<div class="bdc-home-metrics" aria-label="Resumo da Base de Conhecimento">
+					<div><strong><?php echo esc_html( number_format_i18n( $published_count ) ); ?></strong><span>artigos publicados</span></div>
+					<div><strong><?php echo esc_html( (string) count( $categories ) ); ?></strong><span>áreas principais</span></div>
+					<?php if ( '' !== $latest_date ) : ?><div><strong><?php echo esc_html( $latest_date ); ?></strong><span>última publicação</span></div><?php endif; ?>
 				</div>
-			</form>
+			</div>
 
-			<?php if ( is_array( $search ) ) : ?>
-				<div class="bdc-home-search-results" aria-live="polite">
-					<div class="bdc-home-section-heading">
-						<div><h2>Resultados da busca</h2><p><?php echo esc_html( (string) ( $search['count'] ?? 0 ) ); ?> resultado(s) — <?php echo esc_html( (string) ( $search['retrieval_mode'] ?? 'none' ) ); ?></p></div>
+			<div class="bdc-home-search-card">
+				<div class="bdc-home-search-card__heading">
+					<span class="dashicons dashicons-search" aria-hidden="true"></span>
+					<div><strong>O que você precisa resolver?</strong><small>Pesquise por sistema, erro, procedimento, serviço ou palavra-chave.</small></div>
+				</div>
+				<form class="bdc-home-search" method="get" role="search">
+					<input type="hidden" name="bdc_kb_preview" value="home">
+					<input type="hidden" name="bdc_kb_preview_nonce" value="<?php echo esc_attr( wp_create_nonce( 'bdc_kb_public_preview_home' ) ); ?>">
+					<?php if ( $category_id > 0 ) : ?><input type="hidden" name="bdc_category" value="<?php echo esc_attr( (string) $category_id ); ?>"><?php endif; ?>
+					<label class="screen-reader-text" for="bdc-home-query">Pesquisar na Base de Conhecimento</label>
+					<div class="bdc-home-search__row">
+						<input id="bdc-home-query" type="search" name="bdc_q" value="<?php echo esc_attr( $query_value ); ?>" placeholder="Ex.: acesso, Windows, certificado, mensageria..." autocomplete="off">
+						<button type="submit"><span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span><span>Pesquisar</span></button>
 					</div>
-					<?php if ( empty( $search['results'] ) ) : ?>
-						<div class="bdc-public-empty">Nenhuma correspondência encontrada.</div>
-					<?php else : ?>
-						<div class="bdc-home-search-results__grid">
-						<?php foreach ( (array) $search['results'] as $result ) : ?>
-							<a class="bdc-home-search-result" href="<?php echo esc_url( (string) ( $result['official_url'] ?? '' ) ); ?>">
-								<span class="bdc-home-search-result__rank">#<?php echo esc_html( (string) ( $result['rank'] ?? '' ) ); ?></span>
-								<strong><?php echo esc_html( (string) ( $result['title'] ?? '' ) ); ?></strong>
-							</a>
-						<?php endforeach; ?>
-						</div>
-					<?php endif; ?>
-				</div>
-			<?php endif; ?>
-
-			<div class="bdc-home-cloud" aria-labelledby="bdc-cloud-title">
-				<div class="bdc-home-cloud__heading">
-					<div><h2 id="bdc-cloud-title">Nuvem de conhecimento</h2><p>Prévia BDC content-only. Quality/telemetry/vocabulary do ASI permanecem pendentes antes do cutover.</p></div>
-					<span class="bdc-public-badge">PREVIEW</span>
-				</div>
-				<div class="bdc-home-cloud__terms">
-					<?php foreach ( $cloud as $term ) : ?>
-						<a href="<?php echo esc_url( Public_Experience::home_preview_url( $category_id, (string) $term['term'] ) ); ?>" style="--bdc-cloud-weight: <?php echo esc_attr( (string) min( 6, max( 1, (int) $term['count'] ) ) ); ?>;">
-							<?php echo esc_html( (string) $term['term'] ); ?>
-						</a>
-					<?php endforeach; ?>
-				</div>
+				</form>
+				<div class="bdc-home-search-card__hint"><span class="dashicons dashicons-lightbulb" aria-hidden="true"></span><span>Use termos curtos e objetivos. O ranking lexical prioriza correspondência no conteúdo da Base.</span></div>
 			</div>
 		</section>
 
-		<nav class="bdc-home-categories" aria-label="Categorias da Base de Conhecimento">
-			<a class="<?php echo 0 === $category_id ? 'is-active' : ''; ?>" href="<?php echo esc_url( Public_Experience::home_preview_url() ); ?>">Todos</a>
-			<?php foreach ( $categories as $category ) : ?>
-				<a class="<?php echo (int) $category['id'] === $category_id ? 'is-active' : ''; ?>" href="<?php echo esc_url( Public_Experience::home_preview_url( (int) $category['id'] ) ); ?>"><?php echo esc_html( (string) $category['name'] ); ?></a>
-			<?php endforeach; ?>
-		</nav>
+		<?php if ( is_array( $search ) ) : ?>
+			<section class="bdc-home-results" aria-live="polite" aria-labelledby="bdc-home-results-title">
+				<div class="bdc-home-section-heading">
+					<div><span class="bdc-home-section-kicker">BUSCA</span><h2 id="bdc-home-results-title">Resultados para “<?php echo esc_html( $query_value ); ?>”</h2><p><?php echo esc_html( (string) ( $search['count'] ?? 0 ) ); ?> resultado(s)</p></div>
+					<a href="<?php echo esc_url( Public_Experience::home_preview_url( $category_id ) ); ?>">Limpar busca</a>
+				</div>
+				<?php if ( empty( $search['results'] ) ) : ?>
+					<div class="bdc-public-empty">Nenhuma correspondência encontrada. Tente outro termo ou navegue pelas categorias.</div>
+				<?php else : ?>
+					<div class="bdc-home-results__grid">
+					<?php foreach ( (array) $search['results'] as $result ) : ?>
+						<a class="bdc-home-result" href="<?php echo esc_url( (string) ( $result['official_url'] ?? '' ) ); ?>">
+							<span class="bdc-home-result__rank"><?php echo esc_html( (string) ( $result['rank'] ?? '' ) ); ?></span>
+							<span><strong><?php echo esc_html( (string) ( $result['title'] ?? '' ) ); ?></strong><small>Abrir artigo</small></span>
+							<span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span>
+						</a>
+					<?php endforeach; ?>
+					</div>
+				<?php endif; ?>
+			</section>
+		<?php endif; ?>
 
-		<div class="bdc-home-columns">
-			<section>
-				<div class="bdc-home-section-heading"><div><h2>Últimas Atualizações</h2><p>Publicações recentes da base.</p></div></div>
-				<div class="bdc-home-list">
+		<section class="bdc-home-topics" aria-labelledby="bdc-home-topics-title">
+			<div class="bdc-home-section-heading">
+				<div><span class="bdc-home-section-kicker">DESCOBERTA</span><h2 id="bdc-home-topics-title">Assuntos em destaque</h2><p>Termos frequentes para começar uma pesquisa rapidamente.</p></div>
+				<span class="bdc-public-badge">preview</span>
+			</div>
+			<div class="bdc-home-topic-list">
+				<?php foreach ( array_slice( $cloud, 0, 14 ) as $term ) : ?>
+					<a href="<?php echo esc_url( Public_Experience::home_preview_url( $category_id, (string) $term['term'] ) ); ?>"><span>#</span><?php echo esc_html( (string) $term['term'] ); ?></a>
+				<?php endforeach; ?>
+			</div>
+		</section>
+
+		<section class="bdc-home-explore" aria-labelledby="bdc-home-explore-title">
+			<div class="bdc-home-section-heading">
+				<div><span class="bdc-home-section-kicker">NAVEGAÇÃO</span><h2 id="bdc-home-explore-title">Explore por categoria</h2><p>Filtre o conteúdo por área de atendimento.</p></div>
+				<?php if ( $category_id > 0 ) : ?><a href="<?php echo esc_url( Public_Experience::home_preview_url() ); ?>">Ver todas</a><?php endif; ?>
+			</div>
+			<nav class="bdc-home-categories" aria-label="Categorias da Base de Conhecimento">
+				<a class="bdc-home-category <?php echo 0 === $category_id ? 'is-active' : ''; ?>" href="<?php echo esc_url( Public_Experience::home_preview_url() ); ?>"><span class="bdc-home-category__icon"><span class="dashicons dashicons-grid-view" aria-hidden="true"></span></span><span><strong>Todos</strong><small>Visão geral</small></span></a>
+				<?php foreach ( $categories as $category ) : ?>
+					<a class="bdc-home-category <?php echo (int) $category['id'] === $category_id ? 'is-active' : ''; ?>" href="<?php echo esc_url( Public_Experience::home_preview_url( (int) $category['id'] ) ); ?>">
+						<span class="bdc-home-category__icon"><span class="dashicons <?php echo esc_attr( sanitize_html_class( (string) $category['icon'] ) ); ?>" aria-hidden="true"></span></span>
+						<span><strong><?php echo esc_html( (string) $category['name'] ); ?></strong><small>Explorar artigos</small></span>
+					</a>
+				<?php endforeach; ?>
+			</nav>
+		</section>
+
+		<div class="bdc-home-content-grid">
+			<section class="bdc-home-feed" aria-labelledby="bdc-home-latest-title">
+				<div class="bdc-home-section-heading"><div><span class="bdc-home-section-kicker">RECENTES</span><h2 id="bdc-home-latest-title">Últimas atualizações</h2><p>Conteúdo publicado recentemente na Base.</p></div></div>
+				<div class="bdc-home-feed__list">
 					<?php foreach ( $latest as $row ) : ?>
-						<a class="bdc-home-card" href="<?php echo esc_url( (string) $row['url'] ); ?>">
-							<strong><?php echo esc_html( (string) $row['title'] ); ?></strong>
-							<span><em><?php echo esc_html( (string) $row['category'] ); ?></em><?php echo esc_html( (string) $row['date'] ); ?></span>
+						<a class="bdc-home-feed-card" href="<?php echo esc_url( (string) $row['url'] ); ?>">
+							<div class="bdc-home-feed-card__main"><span class="bdc-home-feed-card__category"><?php echo esc_html( (string) $row['category'] ); ?></span><strong><?php echo esc_html( (string) $row['title'] ); ?></strong><small>Atualizado em <?php echo esc_html( (string) $row['date'] ); ?></small></div>
+							<span class="bdc-home-feed-card__action"><span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span></span>
 						</a>
 					<?php endforeach; ?>
 				</div>
 			</section>
 
-			<section>
-				<div class="bdc-home-section-heading"><div><h2>Instruções Populares</h2><p>Compatibilidade inicial baseada no sinal legado de popularidade.</p></div></div>
+			<aside class="bdc-home-popular-panel" aria-labelledby="bdc-home-popular-title">
+				<div class="bdc-home-section-heading"><div><span class="bdc-home-section-kicker">MAIS ACESSADOS</span><h2 id="bdc-home-popular-title">Instruções populares</h2><p>Referências recorrentes da Base.</p></div></div>
 				<ol class="bdc-home-popular">
 					<?php $position = 0; foreach ( $popular as $row ) : ++$position; ?>
-						<li><a href="<?php echo esc_url( (string) $row['url'] ); ?>"><span class="bdc-home-popular__rank"><?php echo esc_html( (string) $position ); ?></span><span><strong><?php echo esc_html( (string) $row['title'] ); ?></strong><small><?php echo esc_html( (string) $row['category'] ); ?> · <?php echo esc_html( (string) $row['date'] ); ?></small></span></a></li>
+						<li><a href="<?php echo esc_url( (string) $row['url'] ); ?>"><span class="bdc-home-popular__rank"><?php echo esc_html( str_pad( (string) $position, 2, '0', STR_PAD_LEFT ) ); ?></span><span class="bdc-home-popular__copy"><strong><?php echo esc_html( (string) $row['title'] ); ?></strong><small><?php echo esc_html( (string) $row['category'] ); ?> · <?php echo esc_html( (string) $row['date'] ); ?></small></span><span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span></a></li>
 					<?php endforeach; ?>
 				</ol>
-			</section>
+			</aside>
 		</div>
 	</main>
 </div>

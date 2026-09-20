@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-585",
+  "mode": "local_package_validation",
+  "generated_at": "2026-09-20T17:50:00Z",
+  "code_head": "314d42449447ad7a2d370a76dad27c3f431a6798",
+  "version": "0.5.0-g585.1",
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-g585.1.zip",
+    "sha256": "cae86ef93572e9320efe89d8fed891e90be032e5d46e4aaccf6dca647bf62880",
+    "size_bytes": 178093,
+    "files": 66,
+    "php_files": 59,
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    },
+    "archive_integrity": "PASS"
+  },
+  "validation": {
+    "php_lint": {
+      "passed": 59,
+      "total": 59,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 48,
+      "total": 48,
+      "missing": 0
+    },
+    "contract_suite": {
+      "passed": 29,
+      "total": 29,
+      "failed": 0
+    },
+    "source_blob_parity": {
+      "base-conhecimento-inteligencia-integrada.php": "fa3c5f50eef481ed63c9f5009effabea80bcfb7d",
+      "includes/class-search-independence-runner-g585.php": "f748dc42ab6f582d9df750fdd405b73ce3d1ce81",
+      "tests/unit/spec005-asi-independence-g585.php": "3ef077988bfef05b99197930543f436f5d50bce3"
+    }
+  },
+  "delta_from_g580_2": {
+    "added": [
+      "includes/class-search-independence-runner-g585.php"
+    ],
+    "modified": [
+      "base-conhecimento-inteligencia-integrada.php"
+    ],
+    "deleted": []
+  },
+  "frozen_core": {
+    "search_service_sha256": "32efc481bae00488e7e47913e69fa1e9c580cb64ee0f27fdceb04a7e12aafd38",
+    "rebuild_service_sha256": "8f9a2732c81afd653a4add93d0ad0b8bedecd781bfb45909b8e0926aaede1523",
+    "lifecycle_sha256": "325e8f9a03ddf9dbe8de3ceb5eb282a16c2ad8de72208ddcbd3d72d23f0f0b7e",
+    "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78",
+    "ranker_version": "lexical-ranker-v1.0.0"
+  },
+  "safety": {
+    "automatic_legacy_deactivation": false,
+    "legacy_data_cleanup": false,
+    "runner_editorial_write": false,
+    "runner_external_network": false,
+    "runner_destructive_cleanup": false,
+    "g580_runner_disabled": true,
+    "g585_runner_enabled": true,
+    "search_core_changed": false,
+    "ranker_changed": false
+  },
+  "environmental_contract": {
+    "legacy_plugin_must_be_manually_disabled": true,
+    "blocked_if_legacy_active": "BLOCKED_LEGACY_ACTIVE",
+    "t585_static_runtime_dependency_zero": "NOT_RUN",
+    "t586_legacy_inactive": "NOT_RUN",
+    "t587_search_golden_without_legacy": "NOT_RUN",
+    "t588_rebuild_without_legacy": "NOT_RUN",
+    "t589_lifecycle_rollback_without_legacy": "NOT_RUN",
+    "t589_2_g585_pass": "NOT_RUN"
+  },
+  "gate_result": {
+    "package_local_pass": true,
+    "environmental_status": "NOT_RUN",
+    "g585_status": "OPEN",
+    "next_action": "Manually disable Advanced Search Intelligence in homologation, install 0.5.0-g585.1, execute G-585 runner and attach JSON."
+  }
+}

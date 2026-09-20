@@ -22,11 +22,11 @@
 - [x] A015 print/responsive/accessibility contract frozen.
 
 ## A-020 Implementation
-- [ ] A020 plugin-owned Article Reader shell — preview candidate `0.5.0-ux004005.1` local PASS; environmental/human pending.
+- [ ] A020 plugin-owned Article Reader shell — `.1` human visual rejected; redesign `.2` local PASS, environmental/human pending.
 - [ ] A021 hero/metadados — preview implemented.
 - [ ] A022 Structured Tips — read-only BDC preview over `_bdc_es_helpful_tips`; Workspace writer pending.
-- [ ] A023 Executive Summary Rail — composed sticky rail preview implemented.
-- [ ] A024 canonical `the_content` preserved; GAC/WPUI preserved; environmental verification pending.
+- [ ] A023 Executive Summary Rail — redesigned composed sticky rail, 360px desktop target; human/environmental pending.
+- [ ] A024 canonical `the_content` pipeline preserved through `Public_Article_Content`; strong-evidence legacy chrome sanitizer added; environmental verification pending.
 - [ ] A025 scoped Elementor compatibility minimum present; corpus regression pending.
 - [ ] A026 Core Blocks uses canonical content path; dedicated regression pending.
 

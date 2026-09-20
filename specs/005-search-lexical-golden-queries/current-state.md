@@ -1126,3 +1126,52 @@ Status:
 - G-585 PAUSED;
 - G-590 BLOCKED.
 
+## UX-004/UX-005 — v5 live search + GAC parity + follow-scroll rail
+
+Human findings from v4:
+- Summary rail did not actually follow viewport scroll;
+- title card remained too large;
+- GAC content actions disappeared;
+- Article Search worked but lacked emphasis;
+- ASI production Search confirms input-driven incremental results without Enter.
+
+v5 implementation:
+- authenticated preview AJAX Search;
+- 2-char minimum;
+- 180ms debounce;
+- stale-request cancellation through AbortController;
+- Home + Reader update results while typing;
+- candidate result links stay in new Reader;
+- section/trecho result parity remains future ASI capability work;
+- GAC regression fixed by executing canonical the_content() inside the true WordPress loop before read-only legacy chrome sanitization;
+- Summary rail moved to a full-height slot and follows scroll through clamped JS transform, stopping at article end;
+- rail width reduced to ~300px;
+- content target increased to ~1060px;
+- posts without Summary switch to centered single-column Reader;
+- title surface reduced to 30px heading / 16x20 padding;
+- Article Search receives stronger visual treatment.
+
+Package:
+- version `0.5.0-ux004005.5`;
+- SHA-256 `9b011563b24345139350fb0c7477050e7803ea51ef7aa912bf983b98e2b89cd9`;
+- 81 files / 69 PHP / 2 JS;
+- 69/69 PHP lint;
+- 69/69 extracted ZIP lint;
+- 25/25 v5 contract checks;
+- active requires unchanged 52/52;
+- deterministic build 2/2;
+- delta vs v4: 10 modified / 0 added / 0 deleted;
+- exact source/package blob parity for all changed files;
+- Search/rebuild/lifecycle/ranker unchanged.
+
+Evidence:
+- `evidence/ux004005-live-search-gac-reader-v5-local-validation-20260920.json`.
+
+Status:
+- H-020 v5 LOCAL PASS / ENV+HUMAN pending;
+- A-020 v5 LOCAL PASS / ENV+HUMAN pending;
+- GAC environmental confirmation REQUIRED;
+- ASI section/trecho parity still tracked, not claimed complete;
+- no cutover;
+- G-585 PAUSED;
+- G-590 BLOCKED.

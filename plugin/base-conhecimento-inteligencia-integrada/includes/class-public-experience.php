@@ -121,6 +121,8 @@ final class Public_Experience {
 				'minChars' => 2,
 				'debounceMs' => 180,
 				'uiVersion' => 'premium-v6',
+				'consultAction' => class_exists( Word_Cloud_Consultations::class ) ? Word_Cloud_Consultations::AJAX_ACTION : '',
+				'consultNonce' => class_exists( Word_Cloud_Consultations::class ) ? wp_create_nonce( Word_Cloud_Consultations::NONCE_ACTION ) : '',
 			)
 		);
 	}
@@ -208,7 +210,7 @@ final class Public_Experience {
 			$category = ! empty( $categories ) && is_object( $categories[0] ) ? (string) $categories[0]->name : 'Instrução';
 			$raw_excerpt = '' !== trim( (string) $post->post_excerpt ) ? (string) $post->post_excerpt : (string) $post->post_content;
 			$excerpt = wp_trim_words( wp_strip_all_tags( strip_shortcodes( $raw_excerpt ) ), 22, '…' );
-			echo '<a class="bdc-live-result bdc-live-result--server" href="' . esc_url( self::article_preview_url( $post_id ) ) . '">';
+			echo '<a class="bdc-live-result bdc-live-result--server" data-bdc-consult-term="' . esc_attr( (string) ( $result['title'] ?? '' ) ) . '" data-bdc-consult-source="result_click" href="' . esc_url( self::article_preview_url( $post_id ) ) . '">';
 			echo '<span class="bdc-live-result__rank">' . esc_html( (string) ( $result['rank'] ?? '' ) ) . '</span>';
 			echo '<span class="bdc-live-result__copy"><span class="bdc-live-result__meta">' . esc_html( $category ) . '</span><strong>' . esc_html( (string) ( $result['title'] ?? '' ) ) . '</strong>';
 			if ( '' !== $excerpt ) { echo '<p>' . esc_html( $excerpt ) . '</p>'; }

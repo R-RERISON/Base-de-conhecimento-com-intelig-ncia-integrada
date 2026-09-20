@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-580",
+  "review_type": "environmental_false_negative_review",
+  "source_artifact": "bdc-kb-spec005-g580-lifecycle-20260920-172010.json",
+  "generated_at_source": "2026-09-20T17:20:10+00:00",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.5.0-g580.1",
+    "db_server": "12.2.2"
+  },
+  "functional_results": {
+    "t580_activation_update_pass": true,
+    "t581_rebuild_fallback_pass": true,
+    "t582_disable_module_pass": true,
+    "t583_uninstall_retention_pass": true,
+    "t584_g580_pass": false,
+    "projection_state_after": "ready",
+    "corpus_count": 623,
+    "row_count": 623,
+    "pass1": {
+      "processed": 623,
+      "written": 0,
+      "no_change": 623,
+      "error_count": 0,
+      "throwable_count": 0
+    },
+    "pass2": {
+      "processed": 623,
+      "written": 0,
+      "no_change": 623,
+      "error_count": 0,
+      "throwable_count": 0
+    },
+    "determinism_mismatch_count": 0,
+    "stale_rows_deleted": 0,
+    "editorial_fingerprint_equal": true,
+    "corpus_ids_equal": true,
+    "errors": [],
+    "throwables": []
+  },
+  "safety_report": {
+    "no_asi": true,
+    "no_network": true,
+    "no_query_logging": false,
+    "persists_query_log": false,
+    "calls_external_network": false,
+    "depends_on_asi": false,
+    "ranker_version_frozen": true,
+    "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78"
+  },
+  "root_cause": {
+    "classification": "VALIDATOR_FALSE_NEGATIVE",
+    "description": "runtime_source_safety included class-search-lifecycle-runner-g580.php in its own source scan and searched for the literal marker bdc_kb_search_query_log. The literal existed in the assertion itself, so no_query_logging was deterministically false even though no query log was persisted.",
+    "product_defect": false,
+    "ranking_change": false,
+    "data_loss": false
+  },
+  "remediation": {
+    "version": "0.5.0-g580.2",
+    "scope": "validator-only + package version bump",
+    "runner_fix": "construct query-log marker from two string fragments before scanning, preventing self-match while preserving detection of the real contiguous marker",
+    "regression_test_added": true
+  },
+  "decision": {
+    "g580_status": "OPEN",
+    "reason": "Machine gate T584 remains false in the original environmental artifact. Re-run corrected validator before closing G-580.",
+    "next_action": "Install 0.5.0-g580.2 and execute Lifecycle G-580 once more."
+  }
+}

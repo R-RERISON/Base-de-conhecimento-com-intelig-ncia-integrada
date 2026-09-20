@@ -35,7 +35,7 @@ $editorial_write = '/wp_update_post\s*\(|wp_insert_post\s*\(|update_post_meta\s*
 $network = '/wp_remote_[A-Za-z0-9_]*\s*\(|curl_[A-Za-z0-9_]+\s*\(|fsockopen\s*\(|stream_socket_client\s*\(/i';
 
 $checks = array(
-	'version_g585' => str_contains( $bootstrap, 'Version: 0.5.0-g585.1' ),
+	'version_g585' => str_contains( $bootstrap, 'Version: 0.5.0-g585.2' ),
 	'g530_engine_on' => str_contains( $bootstrap, "BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD', true" ),
 	'g580_runner_off' => str_contains( $bootstrap, "BDC_KB_SPEC005_G580_LIFECYCLE_BUILD', false" ),
 	'g585_runner_on' => str_contains( $bootstrap, "BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD', true" ),
@@ -58,6 +58,18 @@ $checks = array(
 	't585_scans_symbols_hooks' => str_contains( $runner, 'get_declared_classes()' )
 		&& str_contains( $runner, 'get_defined_functions()' )
 		&& str_contains( $runner, 'array_keys( is_array( $wp_filter )' ),
+	't585_reports_symbol_origin' => str_contains( $runner, 'describe_class_symbol' )
+		&& str_contains( $runner, 'describe_function_symbol' )
+		&& str_contains( $runner, "'source_scope'" )
+		&& str_contains( $runner, "'source_path'" )
+		&& str_contains( $runner, 'ReflectionClass' )
+		&& str_contains( $runner, 'ReflectionFunction' ),
+	't585_redacts_absolute_source_paths' => str_contains( $runner, "'bdc_plugin'" )
+		&& str_contains( $runner, "'mu_plugin'" )
+		&& str_contains( $runner, "'plugin'" )
+		&& str_contains( $runner, "'theme'" )
+		&& str_contains( $runner, "'wordpress_core'" )
+		&& str_contains( $runner, "basename( $normalized )" ),
 	't586_reads_active_plugins' => str_contains( $runner, "get_option( 'active_plugins'" )
 		&& str_contains( $runner, "get_site_option( 'active_sitewide_plugins'" ),
 	't586_blocks_active_legacy' => str_contains( $runner, "'BLOCKED_LEGACY_ACTIVE'" ),

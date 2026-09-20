@@ -44,15 +44,19 @@ final class Word_Cloud_Admin {
 		$allow = Word_Cloud_Service::allowlist();
 		$block = Word_Cloud_Service::blocklist();
 		$snapshot = Word_Cloud_Service::snapshot();
-		$terms = array_slice( (array) ( $snapshot['terms'] ?? array() ), 0, 20 );
+		$terms = Word_Cloud_Service::public_terms( 20 );
 
 		echo '<div class="wrap bdc-kb-admin">';
 		echo '<h1>Nuvem de Conhecimento</h1>';
-		echo '<p>Geração BDC-owned baseada em conteúdo, headings, taxonomias e listas governadas. Telemetria/vocabulary permanecem explicitamente pendentes.</p>';
+		echo '<p>Geração BDC-owned baseada prioritariamente em títulos, headings, taxonomias e listas governadas. Corpo semântico é opt-in. Telemetria/vocabulary permanecem explicitamente pendentes.</p>';
+		if ( empty( $health['snapshot_current'] ) ) {
+			echo '<div class="notice notice-warning inline"><p><strong>Snapshot requer regeneração.</strong> O perfil de qualidade foi atualizado e o snapshot anterior não será publicado.</p></div>';
+		}
 		echo '<div class="bdc-kb-metrics">';
 		self::metric( strtoupper( (string) $health['status'] ), 'estado' );
 		self::metric( (string) $health['public_term_count'], 'termos públicos' );
 		self::metric( ! empty( $health['fresh'] ) ? 'OK' : 'STALE', 'freshness' );
+		self::metric( (string) ( $health['quality_profile'] ?? '' ), 'quality profile' );
 		echo '</div>';
 
 		echo '<section class="bdc-kb-panel" style="padding:20px;margin-bottom:16px">';
@@ -69,7 +73,7 @@ final class Word_Cloud_Admin {
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_SAVE ) . '">';
 		wp_nonce_field( self::NONCE, 'bdc_kb_word_cloud_nonce' );
 		echo '<p><label><input type="checkbox" name="enabled" value="1" ' . checked( ! empty( $settings['enabled'] ), true, false ) . '> habilitar geração/scheduling</label></p>';
-		echo '<p><label><input type="checkbox" name="include_body_terms" value="1" ' . checked( ! empty( $settings['include_body_terms'] ), true, false ) . '> incluir termos do corpo semântico</label></p>';
+		echo '<p><label><input type="checkbox" name="include_body_terms" value="1" ' . checked( ! empty( $settings['include_body_terms'] ), true, false ) . '> incluir termos do corpo semântico <em>(avançado; desligado por padrão para reduzir ruído)</em></label></p>';
 		echo '<p><label>Máx. posts por geração<br><input type="number" min="25" max="1000" name="max_posts_scan" value="' . esc_attr( (string) $settings['max_posts_scan'] ) . '"></label></p>';
 		echo '<p><label>Máx. termos públicos<br><input type="number" min="6" max="60" name="max_public_terms" value="' . esc_attr( (string) $settings['max_public_terms'] ) . '"></label></p>';
 		echo '<div class="bdc-kb-field-grid"><div><label>Allowlist</label><textarea name="allowlist" rows="8">' . esc_textarea( implode( "\n", $allow ) ) . '</textarea></div>';
@@ -86,7 +90,8 @@ final class Word_Cloud_Admin {
 				if ( ! is_array( $term ) || empty( $term['public_allowed'] ) ) {
 					continue;
 				}
-				echo '<span class="bdc-kb-badge bdc-kb-badge--info">' . esc_html( (string) $term['term'] ) . ' · ' . esc_html( (string) $term['status'] ) . '</span>';
+				$sources = implode( ', ', array_map( 'sanitize_key', (array) ( $term['sources'] ?? array() ) ) );
+				echo '<span class="bdc-kb-badge bdc-kb-badge--info">' . esc_html( (string) $term['term'] ) . ' · ' . esc_html( (string) $term['status'] ) . ' · ' . esc_html( (string) ( $term['quality_reason'] ?? '' ) ) . ( '' !== $sources ? ' · ' . esc_html( $sources ) : '' ) . '</span>';
 			}
 			echo '</div>';
 		}
@@ -108,6 +113,7 @@ final class Word_Cloud_Admin {
 		$defaults = Word_Cloud_Contract::default_settings();
 		$settings = array(
 			'enabled' => isset( $_POST['enabled'] ),
+			'quality_profile' => Word_Cloud_Contract::QUALITY_PROFILE,
 			'include_body_terms' => isset( $_POST['include_body_terms'] ),
 			'max_posts_scan' => isset( $_POST['max_posts_scan'] ) ? max( 25, min( 1000, absint( wp_unslash( $_POST['max_posts_scan'] ) ) ) ) : $defaults['max_posts_scan'],
 			'max_public_terms' => isset( $_POST['max_public_terms'] ) ? max( 6, min( 60, absint( wp_unslash( $_POST['max_public_terms'] ) ) ) ) : $defaults['max_public_terms'],

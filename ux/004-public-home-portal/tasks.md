@@ -24,7 +24,7 @@
 - [x] H016 H-010 CLOSED/FROZEN FOR IMPLEMENTATION.
 
 ## H-020 Implementation
-- [ ] H020 Public Home shell — `.5` search-first + live incremental Search local PASS; environmental/human pending.
+- [ ] H020 Public Home shell — `.6` premium polish local PASS; live Search behavior preserved; environmental/human pending.
 - [ ] H021 Header/Auth — `.2` adds custom-logo, menu-first navigation and Entra shortcode bridge; environmental verification pending.
 - [ ] H022 Public Search — `.5` adds input-driven preview AJAX over frozen Search; public authorization facade + section/trecho parity still required before cutover.
 - [ ] H023 Word Cloud — provisional content-only preview implemented; full ASI parity still required.

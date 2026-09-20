@@ -22,19 +22,19 @@
 - [x] A015 print/responsive/accessibility contract frozen.
 
 ## A-020 Implementation
-- [ ] A020 plugin-owned Article Reader shell — `.3` clean Reader + persistent Search local PASS; environmental/human pending.
+- [ ] A020 plugin-owned Article Reader shell — `.5` live Search + GAC loop parity + follow-scroll rail local PASS; environmental/human pending.
 - [ ] A021 hero/metadados — preview implemented.
 - [ ] A022 Structured Tips — read-only BDC preview over `_bdc_es_helpful_tips`; Workspace writer pending.
 - [ ] A023 Executive Summary Rail — redesigned composed sticky rail, 360px desktop target; human/environmental pending.
-- [ ] A024 canonical `the_content` pipeline preserved through `Public_Article_Content`; strong-evidence legacy chrome sanitizer added; environmental verification pending.
+- [ ] A024 canonical `the_content` now captured inside the true WordPress loop; GAC/WPUI parity environmental verification pending; legacy chrome sanitizer remains read-only.
 - [ ] A025 scoped Elementor compatibility minimum present; corpus regression pending.
 - [ ] A026 Core Blocks uses canonical content path; dedicated regression pending.
 
-- [ ] A027 global Search no Reader (Ctrl/Cmd+K + same-page results) — implemented preview, env/human pending.
+- [ ] A027 global Search no Reader — `.5` live input-driven results + Ctrl/Cmd+K; env/human pending.
 - [ ] A028 candidate result/latest/popular links stay in new Reader — implemented preview, env pending.
 
-- [ ] A029 sticky Executive Summary rail — v4 local PASS; validar scroll longo em homologação.
-- [ ] A029B protected reading width / visual separation — v4 local PASS; human pending.
+- [ ] A029 Executive Summary follow-scroll rail — `.5` JS-clamped rail local PASS; validar scroll longo/stop-at-end em homologação.
+- [ ] A029B protected reading width / visual separation — `.5` 1060px article + 300px rail + single-column no-summary; human pending.
 
 ## A-030 Regression
 - [ ] A030 Gutenberg article.

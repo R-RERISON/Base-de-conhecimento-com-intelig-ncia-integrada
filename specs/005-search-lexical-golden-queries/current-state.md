@@ -1018,3 +1018,56 @@ Next:
 5. verify no duplicate legacy hero;
 6. iterate before public facade/Word Cloud parity work.
 
+## UX-004/UX-005 — search-first candidate 0.5.0-ux004005.3
+
+Human direction:
+- Home must behave like a knowledge Search product, not a marketing/portal site;
+- Search must remain available inside article reading;
+- candidate links must stay inside the new Reader during homologation;
+- Visual Contract BDC remains the design authority.
+
+Web research captured in:
+- `ux/004-public-home-portal/visual-research-search-first-v1.md`;
+- `ux/004-public-home-portal/public-experience-search-first-addendum-v2.md`.
+
+Patterns adopted:
+- persistent/search-first pattern;
+- Ctrl/Cmd+K;
+- clean documentation reading;
+- progressive disclosure of secondary discovery;
+- global Search inside articles.
+
+Candidate `0.5.0-ux004005.3`:
+- removes metric dashboard / large marketing hero from Home;
+- centered dominant search;
+- compact frequent topics;
+- Categories/Latest/Popular preserved inside progressive “Explorar a Base” disclosure;
+- Article Reader header contains persistent Search;
+- Article Search stays on current page and renders candidate result panel;
+- Search/Home/Latest/Popular result links route to Article Reader preview, not legacy article;
+- Ctrl/Cmd+K focuses primary/global Search;
+- Article Reader simplified to breadcrumb + title/meta + content + Tips + Summary Rail;
+- previous auth bridge, legacy chrome sanitizer, GAC/WPUI preservation remain.
+
+Validation:
+- 81 files / 69 PHP / 2 JS;
+- 69/69 PHP lint;
+- 69/69 extracted ZIP lint;
+- 52/52 active requires;
+- 40/40 contract checks;
+- deterministic build 2/2;
+- ZIP SHA-256 `19bebb7b55015dac8b356f66390915c8a21659b362df2315f64a9f69905a2cea`;
+- Search/rebuild/lifecycle/ranker unchanged.
+
+Evidence:
+- `evidence/ux004005-search-first-v3-local-validation-20260920.json`.
+
+Status:
+- H-020 search-first candidate LOCAL PASS / ENV+HUMAN pending;
+- A-020 clean Reader candidate LOCAL PASS / ENV+HUMAN pending;
+- public authorization facade / instant suggestions remain pending;
+- full Word Cloud parity remains pending;
+- no cutover;
+- G-585 PAUSED;
+- G-590 BLOCKED.
+

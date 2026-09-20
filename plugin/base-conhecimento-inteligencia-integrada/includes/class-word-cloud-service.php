@@ -30,6 +30,7 @@ final class Word_Cloud_Service {
 		self::add_option_if_missing( Word_Cloud_Contract::BLOCKLIST_OPTION, Word_Cloud_Contract::default_blocklist() );
 		self::add_option_if_missing( Word_Cloud_Contract::STATE_OPTION, self::default_state() );
 		self::add_option_if_missing( Word_Cloud_Contract::HISTORY_OPTION, array() );
+		self::maybe_migrate_quality_profile();
 	}
 
 	public static function ensure_schedule(): void {
@@ -56,6 +57,7 @@ final class Word_Cloud_Service {
 		$raw = get_option( Word_Cloud_Contract::SETTINGS_OPTION, array() );
 		$settings = wp_parse_args( is_array( $raw ) ? $raw : array(), Word_Cloud_Contract::default_settings() );
 		$settings['enabled'] = ! empty( $settings['enabled'] );
+		$settings['quality_profile'] = (string) ( $settings['quality_profile'] ?? Word_Cloud_Contract::QUALITY_PROFILE );
 		$settings['max_posts_scan'] = max( 25, min( 1000, absint( $settings['max_posts_scan'] ) ) );
 		$settings['include_body_terms'] = ! empty( $settings['include_body_terms'] );
 		$settings['max_public_terms'] = max( 6, min( 60, absint( $settings['max_public_terms'] ) ) );
@@ -70,7 +72,11 @@ final class Word_Cloud_Service {
 
 	/** @return array<int,string> */
 	public static function blocklist(): array {
-		return self::normalized_list_option( Word_Cloud_Contract::BLOCKLIST_OPTION );
+		$list = self::normalized_list_option( Word_Cloud_Contract::BLOCKLIST_OPTION );
+		foreach ( array_keys( Word_Cloud_Quality::stopwords() ) as $word ) {
+			$list[] = $word;
+		}
+		return self::unique_labels( $list );
 	}
 
 	/** @return array<string,mixed> */
@@ -82,6 +88,10 @@ final class Word_Cloud_Service {
 	/** @return array<int,array<string,mixed>> */
 	public static function public_terms( int $limit = 12 ): array {
 		$snapshot = self::snapshot();
+		if ( Word_Cloud_Contract::SNAPSHOT_VERSION !== (string) ( $snapshot['version'] ?? '' )
+			|| Word_Cloud_Contract::QUALITY_PROFILE !== (string) ( $snapshot['quality_profile'] ?? '' ) ) {
+			return array();
+		}
 		$terms = is_array( $snapshot['terms'] ?? null ) ? $snapshot['terms'] : array();
 		$terms = array_values( array_filter( $terms, static fn ( $row ): bool => is_array( $row ) && ! empty( $row['public_allowed'] ) ) );
 		return array_slice( $terms, 0, max( 1, min( 60, $limit ) ) );
@@ -100,15 +110,20 @@ final class Word_Cloud_Service {
 		$generated_ts = absint( $state['generated_ts'] ?? 0 );
 		$age = $generated_ts > 0 ? max( 0, time() - $generated_ts ) : null;
 		$status = (string) ( $state['status'] ?? 'not_built' );
-		$fresh = 'ready' === $status && null !== $age && $age <= (int) $settings['stale_after_seconds'];
+		$snapshot = self::snapshot();
+		$snapshot_current = Word_Cloud_Contract::SNAPSHOT_VERSION === (string) ( $snapshot['version'] ?? '' )
+			&& Word_Cloud_Contract::QUALITY_PROFILE === (string) ( $snapshot['quality_profile'] ?? '' );
+		$fresh = 'ready' === $status && $snapshot_current && null !== $age && $age <= (int) $settings['stale_after_seconds'];
 		return array(
 			'status' => $status,
 			'fresh' => $fresh,
 			'age_seconds' => $age,
 			'generated_at' => (string) ( $state['generated_at'] ?? '' ),
-			'term_count' => absint( $state['term_count'] ?? 0 ),
-			'public_term_count' => absint( $state['public_term_count'] ?? 0 ),
+			'term_count' => $snapshot_current ? absint( $state['term_count'] ?? 0 ) : 0,
+			'public_term_count' => $snapshot_current ? absint( $state['public_term_count'] ?? 0 ) : 0,
 			'partial' => ! empty( $state['partial'] ),
+			'quality_profile' => Word_Cloud_Contract::QUALITY_PROFILE,
+			'snapshot_current' => $snapshot_current,
 			'locked' => (bool) get_transient( Word_Cloud_Contract::LOCK_TRANSIENT ),
 			'next_scheduled' => wp_next_scheduled( Word_Cloud_Contract::CRON_HOOK ) ?: null,
 			'sources' => Word_Cloud_Contract::source_availability(),
@@ -169,7 +184,9 @@ final class Word_Cloud_Service {
 					continue;
 				}
 
-				self::add_tokens( $terms, (string) $post->post_title, 8.0, 'title', $block_map, 60 );
+				self::add_phrase( $terms, (string) $post->post_title, 14.0, 'title_phrase', $block_map, $post_id );
+				self::add_tokens( $terms, (string) $post->post_title, 7.0, 'title', $block_map, 60, $post_id );
+				self::add_allowlist_hits( $terms, (string) $post->post_title, $allow_map, $block_map, $post_id );
 				$extracted = Content_Extractor::extract( $post_id );
 				if ( is_wp_error( $extracted ) ) {
 					++$report['extractor_errors'];
@@ -184,10 +201,12 @@ final class Word_Cloud_Service {
 					if ( '' === trim( $text ) ) {
 						continue;
 					}
+					self::add_allowlist_hits( $terms, $text, $allow_map, $block_map, $post_id );
 					if ( str_contains( $kind, 'heading' ) || 'title' === $kind ) {
-						self::add_tokens( $terms, $text, 6.0, 'heading', $block_map, 50 );
+						self::add_phrase( $terms, $text, 10.0, 'heading_phrase', $block_map, $post_id );
+						self::add_tokens( $terms, $text, 5.0, 'heading', $block_map, 50, $post_id );
 					} elseif ( $settings['include_body_terms'] ) {
-						self::add_tokens( $terms, $text, 1.0, 'content', $block_map, 80 );
+						self::add_tokens( $terms, $text, 0.5, 'content', $block_map, 80, $post_id );
 					}
 				}
 				++$report['posts_evaluated'];
@@ -206,13 +225,10 @@ final class Word_Cloud_Service {
 						continue;
 					}
 					$count = max( 1, absint( $term->count ?? 1 ) );
-					self::add_term( $terms, (string) $term->name, 8 + min( 20, $count ), 'taxonomy', $block_map, $count );
+					self::add_term( $terms, (string) $term->name, 12 + min( 20, $count ), 'taxonomy', $block_map, $count, 0, str_contains( Word_Cloud_Quality::canonical( (string) $term->name ), ' ' ), $count );
 				}
 			}
 
-			foreach ( $allow_map as $canonical => $label ) {
-				self::add_term( $terms, $label, 20, 'allowlist', $block_map, 1 );
-			}
 
 			$list = array();
 			$excluded = 0;
@@ -225,6 +241,10 @@ final class Word_Cloud_Service {
 				$list[] = $row;
 			}
 			usort( $list, static function ( array $a, array $b ): int {
+				$public = (int) ! empty( $b['public_allowed'] ) <=> (int) ! empty( $a['public_allowed'] );
+				if ( 0 !== $public ) {
+					return $public;
+				}
 				$score = (float) ( $b['score'] ?? 0 ) <=> (float) ( $a['score'] ?? 0 );
 				return 0 !== $score ? $score : strcmp( (string) ( $a['term'] ?? '' ), (string) ( $b['term'] ?? '' ) );
 			} );
@@ -252,6 +272,7 @@ final class Word_Cloud_Service {
 
 			$snapshot = array(
 				'version' => Word_Cloud_Contract::SNAPSHOT_VERSION,
+				'quality_profile' => Word_Cloud_Contract::QUALITY_PROFILE,
 				'generated_at' => $report['finished_at'],
 				'generated_ts' => time(),
 				'terms' => $list,
@@ -272,6 +293,7 @@ final class Word_Cloud_Service {
 					'term_count' => count( $list ),
 					'public_term_count' => $public_count,
 					'partial' => $report['partial'],
+					'quality_profile' => Word_Cloud_Contract::QUALITY_PROFILE,
 					'last_trigger' => $trigger,
 					'last_report' => $report,
 				),
@@ -306,19 +328,43 @@ final class Word_Cloud_Service {
 	}
 
 	/** @param array<string,array<string,mixed>> $terms @param array<string,string> $block_map */
-	private static function add_tokens( array &$terms, string $text, float $weight, string $source, array $block_map, int $limit ): void {
+	private static function add_tokens( array &$terms, string $text, float $weight, string $source, array $block_map, int $limit, int $document_id = 0 ): void {
 		$tokens = Word_Cloud_Quality::tokens( $text, $limit );
 		foreach ( array_count_values( $tokens ) as $token => $count ) {
-			self::add_term( $terms, (string) $token, $weight * (int) $count, $source, $block_map, (int) $count );
+			self::add_term( $terms, (string) $token, $weight * (int) $count, $source, $block_map, (int) $count, $document_id );
+		}
+	}
+
+	/** @param array<string,array<string,mixed>> $terms @param array<string,string> $allow_map @param array<string,string> $block_map */
+	private static function add_allowlist_hits( array &$terms, string $text, array $allow_map, array $block_map, int $document_id ): void {
+		$haystack = ' ' . Word_Cloud_Quality::canonical( substr( $text, 0, 60000 ) ) . ' ';
+		if ( '  ' === $haystack ) {
+			return;
+		}
+		foreach ( $allow_map as $canonical => $label ) {
+			if ( '' !== $canonical && str_contains( $haystack, ' ' . $canonical . ' ' ) ) {
+				self::add_term( $terms, $label, 12.0, 'allowlist', $block_map, 1, $document_id, str_contains( $canonical, ' ' ) );
+			}
 		}
 	}
 
 	/** @param array<string,array<string,mixed>> $terms @param array<string,string> $block_map */
-	private static function add_term( array &$terms, string $label, float $score, string $source, array $block_map, int $count = 1 ): void {
+	private static function add_phrase( array &$terms, string $text, float $score, string $source, array $block_map, int $document_id ): void {
+		$phrase = Word_Cloud_Quality::phrase_candidate( $text, $block_map );
+		if ( null === $phrase ) {
+			return;
+		}
+		self::add_term( $terms, $phrase['label'], $score, $source, $block_map, 1, $document_id, true );
+	}
+
+	/** @param array<string,array<string,mixed>> $terms @param array<string,string> $block_map */
+	private static function add_term( array &$terms, string $label, float $score, string $source, array $block_map, int $count = 1, int $document_id = 0, bool $is_phrase = false, int $taxonomy_count = 0 ): void {
 		$canonical = Word_Cloud_Quality::canonical( $label );
 		if ( '' === $canonical || strlen( $canonical ) < 3 || isset( $block_map[ $canonical ] ) ) {
 			return;
 		}
+		$source = sanitize_key( $source );
+		$priority = in_array( $source, array( 'allowlist', 'taxonomy', 'title_phrase', 'heading_phrase' ), true ) ? 20 : 10;
 		if ( ! isset( $terms[ $canonical ] ) ) {
 			$terms[ $canonical ] = array(
 				'term' => trim( $label ) ?: $canonical,
@@ -326,11 +372,25 @@ final class Word_Cloud_Service {
 				'score' => 0.0,
 				'count' => 0,
 				'sources' => array(),
+				'documents' => array(),
+				'taxonomy_count' => 0,
+				'is_phrase' => $is_phrase,
+				'label_priority' => $priority,
 			);
+		} elseif ( $priority > (int) ( $terms[ $canonical ]['label_priority'] ?? 0 ) ) {
+			$terms[ $canonical ]['term'] = trim( $label ) ?: $canonical;
+			$terms[ $canonical ]['label_priority'] = $priority;
 		}
 		$terms[ $canonical ]['score'] += $score;
 		$terms[ $canonical ]['count'] += max( 1, $count );
-		$terms[ $canonical ]['sources'][ sanitize_key( $source ) ] = true;
+		$terms[ $canonical ]['sources'][ $source ] = true;
+		$terms[ $canonical ]['is_phrase'] = ! empty( $terms[ $canonical ]['is_phrase'] ) || $is_phrase;
+		if ( $document_id > 0 ) {
+			$terms[ $canonical ]['documents'][ $document_id ] = true;
+		}
+		if ( $taxonomy_count > 0 ) {
+			$terms[ $canonical ]['taxonomy_count'] = max( (int) $terms[ $canonical ]['taxonomy_count'], $taxonomy_count );
+		}
 	}
 
 	/** @return array<string,string> */
@@ -365,6 +425,46 @@ final class Word_Cloud_Service {
 		return $out;
 	}
 
+
+	/** @return array<int,string> */
+	private static function unique_labels( array $list ): array {
+		$out = array();
+		$seen = array();
+		foreach ( $list as $label ) {
+			$label = trim( sanitize_text_field( (string) $label ) );
+			$key = Word_Cloud_Quality::canonical( $label );
+			if ( '' === $key || isset( $seen[ $key ] ) ) {
+				continue;
+			}
+			$seen[ $key ] = true;
+			$out[] = $label;
+		}
+		return $out;
+	}
+
+	private static function maybe_migrate_quality_profile(): void {
+		$raw = get_option( Word_Cloud_Contract::SETTINGS_OPTION, array() );
+		$raw = is_array( $raw ) ? $raw : array();
+		if ( Word_Cloud_Contract::QUALITY_PROFILE === (string) ( $raw['quality_profile'] ?? '' ) ) {
+			return;
+		}
+
+		$raw['quality_profile'] = Word_Cloud_Contract::QUALITY_PROFILE;
+		$raw['include_body_terms'] = false;
+		update_option( Word_Cloud_Contract::SETTINGS_OPTION, wp_parse_args( $raw, Word_Cloud_Contract::default_settings() ), false );
+
+		$allow = self::unique_labels( array_merge( Word_Cloud_Contract::default_allowlist(), self::normalized_list_option( Word_Cloud_Contract::ALLOWLIST_OPTION ) ) );
+		$block = self::unique_labels( array_merge( Word_Cloud_Contract::default_blocklist(), self::normalized_list_option( Word_Cloud_Contract::BLOCKLIST_OPTION ) ) );
+		update_option( Word_Cloud_Contract::ALLOWLIST_OPTION, $allow, false );
+		update_option( Word_Cloud_Contract::BLOCKLIST_OPTION, $block, false );
+
+		$state = get_option( Word_Cloud_Contract::STATE_OPTION, array() );
+		$state = is_array( $state ) ? wp_parse_args( $state, self::default_state() ) : self::default_state();
+		$state['status'] = 'stale_quality_profile';
+		$state['quality_profile'] = Word_Cloud_Contract::QUALITY_PROFILE;
+		update_option( Word_Cloud_Contract::STATE_OPTION, $state, false );
+	}
+
 	/** @param array<string,mixed> $report */
 	private static function append_history( array $report ): void {
 		$history = get_option( Word_Cloud_Contract::HISTORY_OPTION, array() );
@@ -389,6 +489,7 @@ final class Word_Cloud_Service {
 			'term_count' => 0,
 			'public_term_count' => 0,
 			'partial' => false,
+			'quality_profile' => Word_Cloud_Contract::QUALITY_PROFILE,
 			'last_trigger' => '',
 			'last_report' => array(),
 		);

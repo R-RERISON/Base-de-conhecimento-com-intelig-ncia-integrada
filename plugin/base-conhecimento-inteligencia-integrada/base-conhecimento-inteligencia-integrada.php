@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.5.0-p580wc.2
+ * Version: 0.5.0-p580wc.3
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.5.0-p580wc.2' );
+define( 'BDC_KB_VERSION', '0.5.0-p580wc.3' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -107,6 +107,7 @@ if ( defined( 'BDC_KB_WORD_CLOUD_BUILD' ) && BDC_KB_WORD_CLOUD_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-word-cloud-contract.php';
 	require_once BDC_KB_DIR . 'includes/class-word-cloud-quality.php';
 	require_once BDC_KB_DIR . 'includes/class-word-cloud-service.php';
+	require_once BDC_KB_DIR . 'includes/class-word-cloud-consultations.php';
 	require_once BDC_KB_DIR . 'includes/class-word-cloud-admin.php';
 }
 
@@ -240,6 +241,7 @@ if ( defined( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD' ) && BDC_KB_PUBLIC_EXPERI
 \BDC\KnowledgeBase\Visual_Foundation::register();
 if ( defined( 'BDC_KB_WORD_CLOUD_BUILD' ) && BDC_KB_WORD_CLOUD_BUILD ) {
 	\BDC\KnowledgeBase\Word_Cloud_Service::register();
+	\BDC\KnowledgeBase\Word_Cloud_Consultations::register();
 	\BDC\KnowledgeBase\Word_Cloud_Admin::register();
 }
 if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD ) {

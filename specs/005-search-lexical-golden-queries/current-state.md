@@ -539,3 +539,58 @@ Estado:
 
 Próxima ação: instalar `0.5.0-g580.1` sobre a versão atual em homologação, acessar **Base de Conhecimento → Lifecycle G-580**, executar **Executar G-580 e baixar JSON** e anexar o JSON gerado.
 
+## G-580 — primeira execução ambiental / FAIL CONTROLADO
+
+Artefato:
+`bdc-kb-spec005-g580-lifecycle-20260920-172010.json`
+
+Revisão:
+`evidence/g580-environmental-false-negative-review-20260920.json`
+
+Resultados funcionais:
+- T580 PASS;
+- T581 PASS;
+- T582 PASS;
+- T583 PASS;
+- Projection final `ready`;
+- corpus/row_count 623/623;
+- pass1 623 NO_CHANGE / 0 written;
+- pass2 623 NO_CHANGE / 0 written;
+- determinism mismatch=0;
+- stale_rows_deleted=0;
+- fingerprint editorial igual;
+- errors=[] / throwables=[].
+
+Bloqueio:
+- T584=false exclusivamente porque `runtime_source.no_query_logging=false`;
+- o mesmo relatório informa `persists_query_log=false`;
+- root cause confirmado no runner: autocolisão do literal `bdc_kb_search_query_log` com a própria asserção de source scan;
+- classificação: VALIDATOR_FALSE_NEGATIVE;
+- não é defeito funcional da Search;
+- G-580 permanece OPEN porque o artefato machine-readable original não marcou T584 PASS.
+
+## G-580 — patch de validador 0.5.0-g580.2
+
+Evidência local:
+`evidence/g580-validator-patch-local-validation-20260920.json`
+
+Escopo:
+- somente bootstrap/version + runner G-580;
+- lifecycle/rebuild/Search Service/ranker inalterados;
+- regression check adicionada ao teste unitário.
+
+Validação:
+- 65 arquivos / 58 PHP;
+- 58/58 lint;
+- 46/46 active requires;
+- delta vs g580.1: 2 modified / 0 added / 0 deleted;
+- build determinístico 2/2;
+- ZIP SHA-256 `47f3d2c641863eca5048bcb4ed469ebe243c1262ef4aaada582f60ceec84cf29`;
+- ranker SHA-256 permanece `47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78`.
+
+Estado:
+- package/local patch: PASS;
+- environmental recheck: REQUIRED;
+- G-580: OPEN.
+
+Próxima ação: instalar `0.5.0-g580.2` sobre `g580.1`, executar novamente **Base de Conhecimento → Lifecycle G-580 → Executar G-580 e baixar JSON** e anexar o novo JSON.

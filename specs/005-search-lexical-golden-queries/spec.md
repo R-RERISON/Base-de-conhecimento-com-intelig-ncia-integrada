@@ -1,6 +1,6 @@
 # SPEC-005 — Search Lexical e Golden Queries
 
-**Status:** ATIVA — DISCOVERY / IMPLEMENTAÇÃO DE RUNTIME BLOQUEADA ATÉ DoR
+**Status:** ATIVA — IMPLEMENTAÇÃO/HOMOLOGAÇÃO
 
 **Branch:** `spec005-search-lexical-golden-queries`
 
@@ -10,7 +10,7 @@
 
 **Idioma:** pt-BR.
 
-**Gate atual:** R-500 PASS/CLOSED; R-510 PASS/CLOSED; G-520 PASS/CLOSED; G-530 OPEN.
+**Gate atual:** R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 PASS/CLOSED; G-585 OPEN.
 
 > **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
@@ -324,6 +324,14 @@ ADR-005-002 separa Golden Relevance, Technical Challenge e Real-world Query Enri
 - update não reindexa destrutivamente;
 - projection reconstruível;
 - uninstall não destrutivo por default.
+
+### G-585 — ASI Independence / Decommission Readiness
+- static runtime scan dependency-zero;
+- ASI desativado manualmente em homologação;
+- Search + Golden PASS sem ASI;
+- rebuild próprio PASS sem ASI;
+- lifecycle/rollback sem ASI;
+- nenhuma remoção física de storage legado neste gate.
 
 ### G-590 — RC
 - mesmo artefato testado;

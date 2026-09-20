@@ -2,15 +2,17 @@
 
 ## H-001 Inventory
 - [x] H000-PKG discovery runner `0.5.0-p580a.1` preparado e validado localmente.
-- [ ] H000-ENV executar Inventário Público em homologação e anexar JSON.
-- [ ] H001 localizar `bc_home_config`.
-- [ ] H002 localizar `bc_ultimas`.
-- [ ] H003 localizar `bc_populares`.
-- [ ] H004 localizar `bdc_home_filter_v270`.
-- [ ] H005 localizar `bdc_entra_login` e ownership do Header.
+- [x] H000-ENV inventário `p580a.1` executado — evidence `p580-public-experience-inventory-20260920T184051Z.json`.
+- [x] H001 `bc_home_config` localizado — Code Snippets / `bdc_home_v270_config_shortcode`.
+- [x] H002 `bc_ultimas` localizado — Code Snippets / `bdc_home_v270_ultimas_shortcode`.
+- [x] H003 `bc_populares` localizado — Code Snippets / `bdc_home_v270_populares_shortcode`.
+- [x] H004 `bdc_home_filter_v270` localizado — Code Snippets / AJAX auth+nopriv.
+- [x] H005 `bdc_entra_login` = BDC Entra Gateway; Home/Header atual reside na página Elementor 41395.
 - [ ] H006 mapear origem de popularidade/categorias.
-- [ ] H007 mapear dependências ASI da Home além de Search/Word Cloud.
-- [ ] H008 fechar inventário.
+- [x] H007 na Home ativa não foram observados outros shortcodes ASI além de Search/Word Cloud; inventário funcional ASI amplo permanece em P-580A.
+- [ ] H008 fechar inventário após semântica de snippets.
+- [x] H009-PKG `0.5.0-p580a.2` deep inventory preparado — snippets sem código + plugin versions/hashes + Tips shape.
+- [ ] H009-ENV executar `p580a.2` e anexar JSON.
 
 ## H-010 Contract
 - [ ] H010 contrato Public Search.

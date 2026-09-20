@@ -164,11 +164,15 @@ final class Search_Lifecycle_Runner_G580 {
 			$throwables[] = self::throwable_row( 'explicit_rebuild', $error );
 		}
 
+		$rebuild_state_after = is_array( $rebuild['state_after'] ?? null ) ? $rebuild['state_after'] : array();
+		$rebuild_pass2 = is_array( $rebuild['pass2'] ?? null ) ? $rebuild['pass2'] : array();
+		$rebuild_determinism = is_array( $rebuild['determinism'] ?? null ) ? $rebuild['determinism'] : array();
+
 		$t581_rebuild = 'PASS' === (string) ( $rebuild['status'] ?? '' )
-			&& 'ready' === (string) ( (array) ( $rebuild['state_after'] ?? array() )['status'] ?? '' )
-			&& 0 === (int) ( (array) ( $rebuild['pass2'] ?? array() )['written'] ?? -1 )
-			&& (int) ( $rebuild['corpus_count'] ?? 0 ) === (int) ( (array) ( $rebuild['pass2'] ?? array() )['no_change'] ?? -1 )
-			&& 0 === (int) ( (array) ( $rebuild['determinism'] ?? array() )['mismatch_count'] ?? -1 );
+			&& 'ready' === (string) ( $rebuild_state_after['status'] ?? '' )
+			&& 0 === (int) ( $rebuild_pass2['written'] ?? -1 )
+			&& (int) ( $rebuild['corpus_count'] ?? 0 ) === (int) ( $rebuild_pass2['no_change'] ?? -1 )
+			&& 0 === (int) ( $rebuild_determinism['mismatch_count'] ?? -1 );
 
 		$t581 = $t581_fallback && $t581_rebuild;
 

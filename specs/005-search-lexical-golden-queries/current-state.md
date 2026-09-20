@@ -1175,3 +1175,55 @@ Status:
 - no cutover;
 - G-585 PAUSED;
 - G-590 BLOCKED.
+
+## UX-004/UX-005 — premium polish candidate 0.5.0-ux004005.6
+
+v5 functional baseline confirmed by human review:
+- live Search works without Enter;
+- GAC content actions restored;
+- Summary follow-scroll works;
+- Home direction accepted.
+
+v6 scope:
+- visual/product polish only;
+- no Search/ranking redesign;
+- no GAC integration change;
+- no Summary follow algorithm change;
+- no Header behavior change.
+
+Premium changes:
+- Search results use document-search hierarchy: compact rank, category metadata, title, two-line excerpt, restrained arrow;
+- live loading state + reduced-motion fallback;
+- result panel has bounded internal scroll;
+- server/live Search visual hierarchy aligned;
+- Home search-first composition preserved with tighter rhythm;
+- Header chrome visually quieter;
+- Article heading de-cardified into document context;
+- Helpful Tips becomes integrated callout rather than nested card;
+- article typography/readability refined; prose/list target around 82ch where compatible;
+- Executive Summary visual weight reduced while follow-scroll remains unchanged.
+
+Validation:
+- 81 files / 69 PHP / 2 JS;
+- 69/69 PHP lint;
+- 69/69 extracted ZIP lint;
+- JS syntax PASS;
+- CSS parse 4/4 PASS;
+- 24/24 static checks;
+- 52/52 active requires unchanged;
+- repository/package source parity 9/9;
+- deterministic build 2/2;
+- delta vs v5: 9 modified / 0 added / 0 deleted;
+- ZIP SHA-256 `68b916b6eaf1281bc3b6208694dbaf7733831970bbcc970ae69de58fce5a1ad4`.
+
+Artifacts:
+- `ux/005-public-article-reader/premium-polish-addendum-v4.md`;
+- `evidence/ux004005-premium-polish-v6-local-validation-20260920.json`.
+
+Status:
+- H-020 v6 LOCAL PASS / ENV+HUMAN pending;
+- A-020 v6 LOCAL PASS / ENV+HUMAN pending;
+- no cutover;
+- G-585 PAUSED;
+- G-590 BLOCKED.
+

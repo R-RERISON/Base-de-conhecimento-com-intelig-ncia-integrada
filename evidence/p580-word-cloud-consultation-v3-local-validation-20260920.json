@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "P-580A / UX-004 H-023",
+  "mode": "word_cloud_consultation_signal_v3_local_validation",
+  "generated_at": "2026-09-20T23:10:00Z",
+  "version": "0.5.0-p580wc.3",
+  "contract": "word-cloud-v1.2.0",
+  "quality_profile": "semantic-balanced-v2",
+  "environmental_input": {
+    "p580wc2_quality": "SUBSTANTIALLY_IMPROVED",
+    "remaining_request": [
+      "show more highlighted topics",
+      "show true consultation counts such as Autran (20)",
+      "use consultation count as relevance weight"
+    ]
+  },
+  "consultation_aggregate": {
+    "version": "consultation-aggregate-v1.0.0",
+    "storage_option": "bdc_kb_word_cloud_consultations",
+    "autoload": false,
+    "event_model": "aggregate_only",
+    "counted_events": [
+      "topic_click",
+      "result_click"
+    ],
+    "live_keypress_counted": false,
+    "raw_query_log": false,
+    "user_id": false,
+    "ip": false,
+    "session_id": false,
+    "max_terms": 500,
+    "preview_collector": "authenticated manage_options AJAX only",
+    "public_anonymous_collector": "PENDING_TELEMETRY_SPEC",
+    "historical_asi_import": false
+  },
+  "ranking": {
+    "admission_gate": "semantic public_allowed from word-cloud snapshot",
+    "consultation_boost": "min(60, 12 * ln(1 + consultation_count))",
+    "display_score": "semantic_score + consultation_boost",
+    "blocked_noise_can_reenter": false
+  },
+  "home": {
+    "previous_visible_topics": 6,
+    "new_visible_topics": 12,
+    "candidate_pool": 32,
+    "count_visible": true,
+    "count_initial_value": 0,
+    "css_count_badge": true,
+    "label": "Assuntos em destaque"
+  },
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-p580wc.3.zip",
+    "sha256": "33cef92d7667cbf3acd9ad1abb9b6e20684ee4dd16c95816e8db44e5cffd7ae9",
+    "size_bytes": 231818,
+    "files": 86,
+    "php_files": 74,
+    "js_files": 2,
+    "php_lint": {
+      "passed": 74,
+      "total": 74,
+      "failed": 0
+    },
+    "extracted_php_lint": {
+      "passed": 74,
+      "total": 74,
+      "failed": 0
+    },
+    "javascript_syntax": "PASS",
+    "css_home_parse": {
+      "passed": true,
+      "errors": 0
+    },
+    "active_requires": {
+      "passed": 57,
+      "total": 57,
+      "missing": 0
+    },
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "validation": {
+    "static_contract_checks": {
+      "passed": 26,
+      "total": 26,
+      "failed": 0
+    },
+    "consultation_harness": {
+      "passed": 6,
+      "total": 6,
+      "failed": 0
+    },
+    "repository_source_parity": {
+      "passed": 10,
+      "total": 10,
+      "failed": 0
+    }
+  },
+  "delta_from_p580wc2": {
+    "added": [
+      "includes/class-word-cloud-consultations.php"
+    ],
+    "modified": [
+      "assets/css/public-home.css",
+      "assets/js/public-search.js",
+      "base-conhecimento-inteligencia-integrada.php",
+      "includes/class-public-experience.php",
+      "includes/class-public-home-read-model.php",
+      "includes/class-word-cloud-admin.php",
+      "includes/class-word-cloud-contract.php",
+      "includes/class-word-cloud-service.php",
+      "templates/public-home-preview.php"
+    ],
+    "deleted": []
+  },
+  "safety": {
+    "new_tables": 0,
+    "asi_runtime_dependency": false,
+    "external_network": false,
+    "editorial_write": false,
+    "search_ranker_changed": false,
+    "public_anonymous_collection": false
+  },
+  "gate_state": {
+    "h023": "P580WC3_LOCAL_PASS_ENV_COUNT_RECHECK_REQUIRED",
+    "p580a": "ACTIVE",
+    "g585": "PAUSED",
+    "g590": "BLOCKED",
+    "next_action": "Install p580wc.3 over p580wc.2. Verify 12 highlighted topics with visible zero-based BDC counts. Click a topic/result repeatedly and refresh Home to confirm count increment and ranking effect. Do not compare initial counts with ASI history unless an explicit one-time migration is later authorized."
+  }
+}

@@ -7,19 +7,19 @@
 - [x] A002 baseline classificada: Product shell vs Legacy Elementor/HTML compatibility; detalhamento preservado em UX-005.
 - [x] A003 corpus publicado: legacy_html 528, plain_text 41, Elementor 31, mixed 3, Gutenberg 3.
 - [x] A004 GRE rail ambiental identificado em `Frontend_Renderer::append_side_panel`, priority 30.
-- [ ] A005 owner/meta localizados (`Helpful_Tips_Renderer`, `_bdc_es_helpful_tips`, 7 posts); shape físico pendente `p580a.2`.
+- [x] A005 Helpful Tips fechado: `_bdc_es_helpful_tips`, list `{title:string,content:string}`, 7 posts, GRE 0.8.0.
 - [x] A006 amostras por source kind registradas pelo artifact; incluir long/empty summary e tips present/absent na seleção final.
 
 - [x] A007-PKG `0.5.0-p580a.2` deep inventory preparado.
-- [ ] A007-ENV executar deep inventory para fechar Tips/GRE ambiental.
+- [x] A007-ENV p580a.2 PASS; GRE ambiental 0.8.0 + hashes capturados.
 
 ## A-010 Contract
-- [ ] A010 reader template contract.
-- [ ] A011 Executive Summary Rail composed read model.
-- [ ] A012 Structured Tips data/render contract.
-- [ ] A013 legacy compatibility contract.
-- [ ] A014 conditional asset contract.
-- [ ] A015 print/responsive/accessibility contract.
+- [x] A010 reader template contract — `a010-article-reader-contract-v1.md`.
+- [x] A011 Executive Summary Rail composed read model frozen.
+- [x] A012 Structured Tips contract frozen sobre physical key existente.
+- [x] A013 source-kind/third-party compatibility contract frozen.
+- [x] A014 conditional/scoped asset contract frozen.
+- [x] A015 print/responsive/accessibility contract frozen.
 
 ## A-020 Implementation
 - [ ] A020 plugin-owned Article Reader shell.

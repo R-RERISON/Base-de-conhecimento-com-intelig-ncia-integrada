@@ -13,6 +13,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Public_Article_Content {
 
+	/**
+	 * Capture the canonical WordPress content pipeline while the main query is
+	 * inside the loop. Integrations such as GAC are allowed to observe the same
+	 * conditions they receive on the legacy single-post surface.
+	 */
+	public static function capture_current_loop(): string {
+		global $post;
+
+		if ( ! is_object( $post ) || 'post' !== (string) ( $post->post_type ?? '' ) ) {
+			return '';
+		}
+
+		ob_start();
+		the_content();
+		$html = (string) ob_get_clean();
+
+		if ( '' === trim( $html ) ) {
+			return '';
+		}
+
+		return self::strip_duplicate_legacy_chrome( $html, (string) $post->post_title );
+	}
+
+	/**
+	 * Compatibility fallback for callers that are not inside the loop.
+	 */
 	public static function render( int $post_id ): string {
 		$post = get_post( $post_id );
 		if ( ! is_object( $post ) || 'post' !== (string) ( $post->post_type ?? '' ) ) {
@@ -114,7 +140,7 @@ final class Public_Article_Content {
 
 	private static function normalize( string $value ): string {
 		$value = strtolower( remove_accents( wp_strip_all_tags( $value ) ) );
-		$value = preg_replace( '/\s+/u', ' ', $value ) ?? $value;
+		$value = preg_replace( '/\\s+/u', ' ', $value ) ?? $value;
 		return trim( $value );
 	}
 }

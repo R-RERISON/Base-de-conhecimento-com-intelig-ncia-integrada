@@ -727,3 +727,57 @@ Next:
 - execute and attach JSON;
 - then close H-001/A-001 and freeze H-010/A-010 contracts.
 
+## Continuidade — Public Experience preview 0.5.0-ux004005.1
+
+Discovery is closed for Home/Article ownership:
+- H-001 CLOSED;
+- A-001 CLOSED.
+
+Contracts:
+- H-010 CLOSED/FROZEN;
+- A-010 CLOSED/FROZEN.
+
+Preview package:
+- version `0.5.0-ux004005.1`;
+- SHA-256 `d61acada9230f454efc7ecb2c4580cf4c612d4a7724edaa84d7e8fd1314e8fe7`;
+- 77 files / 66 PHP;
+- 66/66 lint + extracted lint;
+- 49/49 active requires;
+- 26/26 checks;
+- deterministic build 2/2.
+
+Safety:
+- admin-only preview;
+- manage_options + nonce;
+- no default template takeover;
+- no page_on_front/editorial/meta/Elementor writes;
+- G-585 runner OFF;
+- Search core/ranker unchanged.
+
+Home:
+- preview shell/Header;
+- latest/categories/popular compatibility;
+- admin-only lexical Search;
+- Word Cloud provisional ONLY — not parity/cutover ready.
+
+Article:
+- preview shell;
+- canonical the_content remains;
+- GAC/WPUI preserved;
+- GRE Helpful Tips/Rail replaced only in preview;
+- BDC Tips Store reads existing physical key;
+- composed sticky Summary Rail.
+
+Human next:
+- install over p580a.2;
+- Base de Conhecimento → Prévia Pública;
+- capture Home preview + at least one article with Tips/Summary;
+- do not change legacy plugins/snippets/theme during this review.
+
+After visual review:
+- iterate H-020/A-020;
+- build real public Search facade;
+- implement full Word Cloud parity module;
+- add Workspace Helpful Tips writer;
+- execute source-kind regression before any cutover.
+

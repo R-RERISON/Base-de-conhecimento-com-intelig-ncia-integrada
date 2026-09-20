@@ -2,13 +2,16 @@
 
 ## A-001 Inventory
 - [x] A000-PKG discovery runner `0.5.0-p580a.1` preparado e validado localmente.
-- [ ] A000-ENV executar Inventário Público em homologação e anexar JSON.
-- [ ] A001 mapear template/theme atual do single post.
-- [ ] A002 classificar regras do Astra Custom CSS em product vs legacy compatibility.
-- [ ] A003 inventariar divergências por source kind.
-- [ ] A004 inventariar GRE rail.
-- [ ] A005 localizar implementação/dados atuais de Dicas úteis.
-- [ ] A006 selecionar corpus de regressão visual.
+- [x] A000-ENV inventário `p580a.1` executado — evidence `p580-public-experience-inventory-20260920T184051Z.json`.
+- [x] A001 Astra 4.13.3; sem child theme; nenhum `single_template` custom; Elementor/Royal atuam em `template_include`.
+- [x] A002 baseline classificada: Product shell vs Legacy Elementor/HTML compatibility; detalhamento preservado em UX-005.
+- [x] A003 corpus publicado: legacy_html 528, plain_text 41, Elementor 31, mixed 3, Gutenberg 3.
+- [x] A004 GRE rail ambiental identificado em `Frontend_Renderer::append_side_panel`, priority 30.
+- [ ] A005 owner/meta localizados (`Helpful_Tips_Renderer`, `_bdc_es_helpful_tips`, 7 posts); shape físico pendente `p580a.2`.
+- [x] A006 amostras por source kind registradas pelo artifact; incluir long/empty summary e tips present/absent na seleção final.
+
+- [x] A007-PKG `0.5.0-p580a.2` deep inventory preparado.
+- [ ] A007-ENV executar deep inventory para fechar Tips/GRE ambiental.
 
 ## A-010 Contract
 - [ ] A010 reader template contract.

@@ -48,7 +48,7 @@ final class Word_Cloud_Admin {
 
 		echo '<div class="wrap bdc-kb-admin">';
 		echo '<h1>Nuvem de Conhecimento</h1>';
-		echo '<p>Geração BDC-owned baseada prioritariamente em títulos, headings, taxonomias e listas governadas. Corpo semântico é opt-in. Telemetria/vocabulary permanecem explicitamente pendentes.</p>';
+		echo '<p>Geração BDC-owned baseada prioritariamente em títulos, headings, taxonomias e listas governadas. Corpo semântico é opt-in. Consultas agregadas BDC dão peso de uso sem armazenar usuário/IP/sessão; telemetria detalhada/vocabulary permanecem pendentes.</p>';
 		if ( empty( $health['snapshot_current'] ) ) {
 			echo '<div class="notice notice-warning inline"><p><strong>Snapshot requer regeneração.</strong> O perfil de qualidade foi atualizado e o snapshot anterior não será publicado.</p></div>';
 		}
@@ -57,6 +57,7 @@ final class Word_Cloud_Admin {
 		self::metric( (string) $health['public_term_count'], 'termos públicos' );
 		self::metric( ! empty( $health['fresh'] ) ? 'OK' : 'STALE', 'freshness' );
 		self::metric( (string) ( $health['quality_profile'] ?? '' ), 'quality profile' );
+		self::metric( class_exists( Word_Cloud_Consultations::class ) ? (string) Word_Cloud_Consultations::total_count() : '0', 'consultas agregadas' );
 		echo '</div>';
 
 		echo '<section class="bdc-kb-panel" style="padding:20px;margin-bottom:16px">';
@@ -91,7 +92,7 @@ final class Word_Cloud_Admin {
 					continue;
 				}
 				$sources = implode( ', ', array_map( 'sanitize_key', (array) ( $term['sources'] ?? array() ) ) );
-				echo '<span class="bdc-kb-badge bdc-kb-badge--info">' . esc_html( (string) $term['term'] ) . ' · ' . esc_html( (string) $term['status'] ) . ' · ' . esc_html( (string) ( $term['quality_reason'] ?? '' ) ) . ( '' !== $sources ? ' · ' . esc_html( $sources ) : '' ) . '</span>';
+				echo '<span class="bdc-kb-badge bdc-kb-badge--info">' . esc_html( (string) $term['term'] ) . ' · ' . esc_html( (string) absint( $term['consultation_count'] ?? 0 ) ) . ' consultas · ' . esc_html( (string) $term['status'] ) . ' · ' . esc_html( (string) ( $term['quality_reason'] ?? '' ) ) . ( '' !== $sources ? ' · ' . esc_html( $sources ) : '' ) . '</span>';
 			}
 			echo '</div>';
 		}

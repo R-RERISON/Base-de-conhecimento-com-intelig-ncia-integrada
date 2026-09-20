@@ -330,11 +330,12 @@ final class Search_Lifecycle_Runner_G580 {
 		}
 
 		$source_without_comments = self::strip_php_comments( $source );
+		$query_log_marker = 'bdc_kb_search_' . 'query_log';
 
 		return array(
 			'no_asi' => 1 !== preg_match( '/\basi(?:4)?_/i', $source_without_comments ),
 			'no_network' => 1 !== preg_match( '/wp_remote_[A-Za-z0-9_]*\s*\(|curl_[A-Za-z0-9_]+\s*\(|(?<![A-Za-z0-9_])fsockopen\s*\(|(?<![A-Za-z0-9_])stream_socket_client\s*\(/i', $source_without_comments ),
-			'no_query_logging' => ! str_contains( $source_without_comments, 'bdc_kb_search_query_log' ),
+			'no_query_logging' => ! str_contains( $source_without_comments, $query_log_marker ),
 			'ranker_version_frozen' => 'lexical-ranker-v1.0.0' === Lexical_Ranker::VERSION,
 			'ranker_sha256' => is_readable( BDC_KB_DIR . 'includes/class-lexical-ranker.php' )
 				? hash_file( 'sha256', BDC_KB_DIR . 'includes/class-lexical-ranker.php' )

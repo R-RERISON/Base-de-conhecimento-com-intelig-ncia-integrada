@@ -500,3 +500,42 @@ Resultado:
 
 Próximo gate:
 - G-580 Lifecycle — activation/update, rebuild/fallback, disable module e uninstall retention.
+
+## G-580 — candidato de homologação 0.5.0-g580.1
+
+Contrato:
+`g580-lifecycle-rebuild-contract-v1.md`
+
+Evidência local:
+`evidence/g580-local-package-validation-20260920.json`
+
+Implementação:
+- activation/update preparam somente schema e estado; não executam rebuild implícito;
+- rebuild do corpus é operação explícita e separada do bootstrap;
+- Projection não-ready usa `wordpress_fallback` em estado degraded;
+- kill switch `BDC_KB_SEARCH_ENABLED` + filtro `bdc_kb_search_enabled`, sem nova Option persistente;
+- deactivation e uninstall v1 preservam tabela/Option por default;
+- erro de corpus vazio marca Projection como failed;
+- Search ranker e pesos permanecem congelados.
+
+Validação local/package:
+- base G-570 retida revalidada por SHA-256 `4cd915fc3be58166a354434bf9688f0a1509ca36d570697540dff9eace82ab62`;
+- 65 arquivos / 58 PHP;
+- 58/58 PHP lint PASS;
+- 46/46 active requires;
+- suíte G-580 33/33 PASS;
+- delta exato: 4 arquivos adicionados + 2 modificados / 0 removidos;
+- ranker SHA-256 antes/depois `47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78`;
+- build determinístico 2/2;
+- ZIP íntegro;
+- SHA-256 `b2a2d55793a3835ff06151d2c1cc4e301292df51bc35c5b5bdf166546a4f166e`.
+
+Estado:
+- G-580 package/local: PASS;
+- G-580 ambiental: NOT_RUN;
+- T580–T584: permanecem OPEN até evidência ambiental;
+- G-580 global: OPEN;
+- G-585 continua obrigatório antes do RC.
+
+Próxima ação: instalar `0.5.0-g580.1` sobre a versão atual em homologação, acessar **Base de Conhecimento → Lifecycle G-580**, executar **Executar G-580 e baixar JSON** e anexar o JSON gerado.
+

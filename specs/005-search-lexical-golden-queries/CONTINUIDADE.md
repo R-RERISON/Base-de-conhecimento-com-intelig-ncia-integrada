@@ -569,3 +569,49 @@ Próxima ação humana:
 4. anexar JSON.
 
 Se o símbolo vier de outro plugin/MU-plugin, identificar o componente exato antes de qualquer ação. Não remover tabelas ASI e não criar whitelist sem evidência.
+
+## Continuidade — Rebaseline ASI Functional Parity / UX-004
+
+Product Owner explicitou:
+- não aceitar perda de função existente do ASI;
+- reconstruir/melhorar capacidades dentro do BDC;
+- Word Cloud deve continuar funcional;
+- BDC deve possuir Home pública própria;
+- Home atual é baseline funcional/visual;
+- Header/Body isolados são dívida de manutenção e devem ser consolidados.
+
+ASI 4.6.8 inventory inicial confirmou:
+- Public Search;
+- post + item/section retrieval;
+- QueryContext/vocabulary/bindings/relevance rules;
+- Word Cloud completa;
+- Search Events/Interactions/Outcomes/Quality Signals;
+- Search Intelligence;
+- Knowledge Curation/Diagnostics/Suggestions;
+- Ranking Simulation;
+- Golden Queries;
+- queue/indexing/migrations/reconciliation/post-install;
+- Quality Diagnostics.
+
+Novos documentos:
+- `specs/005-search-lexical-golden-queries/asi-functional-parity-rebaseline-v1.md`;
+- `specs/005-search-lexical-golden-queries/asi-functional-inventory-v1.md`;
+- `ux/004-public-home-portal/spec.md`;
+- `ux/004-public-home-portal/tasks.md`.
+
+Gate state:
+- G-580 CLOSED;
+- P-580A OPEN;
+- UX-004 DISCOVERY/CONTRACT;
+- G-585 PAUSED;
+- G-590 BLOCKED.
+
+Não instalar g585.2 neste momento como próxima ação. Preservar o pacote/evidência para retomada posterior.
+
+Próximo passo técnico:
+1. localizar ownership de `bc_home_config`, `bc_ultimas`, `bc_populares`, `bdc_home_filter_v270`, `bdc_entra_login`;
+2. inventariar public Search/Word Cloud ASI com contratos;
+3. decidir entry-point único da Home BDC;
+4. implementar somente após H-001/H-010 fechados;
+5. retomar G-585 apenas quando Home e matriz funcional não tiverem MISSING bloqueante sem plano.
+

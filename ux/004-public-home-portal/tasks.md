@@ -24,14 +24,14 @@
 - [x] H016 H-010 CLOSED/FROZEN FOR IMPLEMENTATION.
 
 ## H-020 Implementation
-- [ ] H020 Public Home shell.
-- [ ] H021 Header integrado.
-- [ ] H022 Public Search.
-- [ ] H023 Word Cloud.
-- [ ] H024 categorias/filtros.
-- [ ] H025 últimas.
-- [ ] H026 populares.
-- [ ] H027 states/a11y/responsive.
+- [ ] H020 Public Home shell — preview candidate `0.5.0-ux004005.1` local PASS; environmental/human pending.
+- [ ] H021 Header integrado — preview implemented; human/environmental pending.
+- [ ] H022 Public Search — admin preview reuses frozen Search; public authorization facade still required before cutover.
+- [ ] H023 Word Cloud — provisional content-only preview implemented; full ASI parity still required.
+- [ ] H024 categorias/filtros — curated preview implemented; environmental/human pending.
+- [ ] H025 últimas — deterministic date/ID provider preview implemented.
+- [ ] H026 populares — legacy comment_count compatibility provider preview implemented.
+- [ ] H027 states/a11y/responsive — source contract present; environmental/human pending.
 
 ## H-030 Technical acceptance
 - [ ] H030 functional parity matrix.

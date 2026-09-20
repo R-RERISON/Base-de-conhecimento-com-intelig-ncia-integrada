@@ -156,8 +156,29 @@ final class Public_Experience_Inventory_Runner_P580 {
 			$throwables[] = self::throwable_row( 'corpus_inventory', $error );
 		}
 
+		try {
+			$plugin_inventory = self::plugin_inventory();
+		} catch ( \Throwable $error ) {
+			$plugin_inventory = array();
+			$throwables[] = self::throwable_row( 'plugin_inventory', $error );
+		}
+
+		try {
+			$snippet_inventory = self::code_snippets_inventory();
+		} catch ( \Throwable $error ) {
+			$snippet_inventory = array();
+			$throwables[] = self::throwable_row( 'code_snippets_inventory', $error );
+		}
+
+		try {
+			$helpful_tips_profile = self::helpful_tips_profile();
+		} catch ( \Throwable $error ) {
+			$helpful_tips_profile = array();
+			$throwables[] = self::throwable_row( 'helpful_tips_profile', $error );
+		}
+
 		return array(
-			'schema_version' => '1.0.0',
+			'schema_version' => '1.1.0',
 			'mode' => 'p580_public_experience_inventory',
 			'generated_at' => gmdate( 'c' ),
 			'environment' => array(
@@ -169,6 +190,9 @@ final class Public_Experience_Inventory_Runner_P580 {
 			),
 			'front_page_settings' => self::front_page_settings(),
 			'theme' => $theme,
+			'plugin_inventory' => $plugin_inventory,
+			'code_snippets_inventory' => $snippet_inventory,
+			'helpful_tips_profile' => $helpful_tips_profile,
 			'target_shortcodes' => $shortcodes,
 			'public_hooks' => $hooks,
 			'public_surfaces' => $surfaces,
@@ -193,6 +217,306 @@ final class Public_Experience_Inventory_Runner_P580 {
 			),
 			'next_action' => 'Use this artifact to close H-001/A-001 ownership and corpus discovery. Do not decommission ASI/GRE from this report alone.',
 		);
+	}
+
+	/** @return array<string,mixed> */
+	private static function plugin_inventory(): array {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$plugins = function_exists( 'get_plugins' ) ? get_plugins() : array();
+		$targets = array(
+			'code_snippets' => array( 'code snippets' ),
+			'gre' => array( 'gerenciador de resumo executivo', 'resumo executivo' ),
+			'gac' => array( 'gac', 'acompanhamento' ),
+			'wp_unified_indexer' => array( 'unified indexer', 'wp unified indexer' ),
+			'entra_gateway' => array( 'entra', 'authentication gateway' ),
+		);
+		$out = array();
+
+		foreach ( $targets as $key => $needles ) {
+			$out[ $key ] = array();
+			foreach ( (array) $plugins as $basename => $headers ) {
+				$name = strtolower( (string) ( $headers['Name'] ?? '' ) );
+				$text_domain = strtolower( (string) ( $headers['TextDomain'] ?? '' ) );
+				$haystack = $name . ' ' . $text_domain . ' ' . strtolower( (string) $basename );
+				$matched = false;
+				foreach ( $needles as $needle ) {
+					if ( str_contains( $haystack, $needle ) ) {
+						$matched = true;
+						break;
+					}
+				}
+				if ( ! $matched ) {
+					continue;
+				}
+
+				$root = trailingslashit( WP_PLUGIN_DIR ) . dirname( (string) $basename );
+				$files = array();
+				if ( 'gre' === $key && is_dir( $root . '/includes' ) ) {
+					$patterns = array(
+						$root . '/includes/*helpful*tips*.php',
+						$root . '/includes/class-frontend-renderer.php',
+					);
+					foreach ( $patterns as $pattern ) {
+						foreach ( (array) glob( $pattern ) as $file ) {
+							if ( ! is_file( $file ) ) {
+								continue;
+							}
+							$relative = ltrim( str_replace( wp_normalize_path( $root ), '', wp_normalize_path( $file ) ), '/' );
+							$files[ $relative ] = array(
+								'bytes' => (int) filesize( $file ),
+								'sha256' => hash_file( 'sha256', $file ),
+							);
+						}
+					}
+					ksort( $files, SORT_STRING );
+				}
+
+				$out[ $key ][] = array(
+					'basename' => (string) $basename,
+					'name' => (string) ( $headers['Name'] ?? '' ),
+					'version' => (string) ( $headers['Version'] ?? '' ),
+					'text_domain' => (string) ( $headers['TextDomain'] ?? '' ),
+					'active' => is_plugin_active( (string) $basename ),
+					'files_of_interest' => $files,
+				);
+			}
+		}
+
+		return $out;
+	}
+
+	/** @return array<string,mixed> */
+	private static function code_snippets_inventory(): array {
+		global $wpdb;
+
+		$table = $wpdb->prefix . 'snippets';
+		$table_exists = $wpdb->get_var(
+			$wpdb->prepare( 'SHOW TABLES LIKE %s', $table )
+		) === $table;
+
+		if ( ! $table_exists ) {
+			return array(
+				'table_present' => false,
+				'matches' => array(),
+				'code_exported' => false,
+			);
+		}
+
+		$columns_raw = $wpdb->get_results( 'SHOW COLUMNS FROM ' . esc_sql( $table ), ARRAY_A );
+		$columns = array();
+		foreach ( (array) $columns_raw as $column ) {
+			$field = (string) ( $column['Field'] ?? '' );
+			if ( '' !== $field ) {
+				$columns[] = $field;
+			}
+		}
+
+		$select = array_values(
+			array_intersect(
+				array( 'id', 'name', 'scope', 'priority', 'active', 'code' ),
+				$columns
+			)
+		);
+		if ( ! in_array( 'code', $select, true ) ) {
+			return array(
+				'table_present' => true,
+				'columns' => $columns,
+				'matches' => array(),
+				'code_exported' => false,
+				'warning' => 'CODE_COLUMN_NOT_AVAILABLE',
+			);
+		}
+
+		$sql = 'SELECT ' . implode( ', ', array_map( static fn ( string $field ): string => esc_sql( $field ), $select ) )
+			. ' FROM ' . esc_sql( $table );
+		$rows = $wpdb->get_results( $sql, ARRAY_A );
+
+		$symbols = array(
+			'bdc_home_v270_config_shortcode',
+			'bdc_home_v270_ultimas_shortcode',
+			'bdc_home_v270_populares_shortcode',
+			'bdc_home_v270_ajax_filter',
+		);
+		$matches = array();
+
+		foreach ( (array) $rows as $row ) {
+			$code = isset( $row['code'] ) && is_string( $row['code'] ) ? $row['code'] : '';
+			$found = array();
+			foreach ( $symbols as $symbol ) {
+				if ( str_contains( $code, $symbol ) ) {
+					$found[] = $symbol;
+				}
+			}
+			if ( empty( $found ) ) {
+				continue;
+			}
+
+			$matches[] = array(
+				'id' => isset( $row['id'] ) ? (int) $row['id'] : 0,
+				'name' => isset( $row['name'] ) ? (string) $row['name'] : '',
+				'scope' => isset( $row['scope'] ) ? (string) $row['scope'] : '',
+				'priority' => isset( $row['priority'] ) ? (int) $row['priority'] : null,
+				'active' => isset( $row['active'] ) ? (bool) $row['active'] : null,
+				'code_bytes' => strlen( $code ),
+				'code_sha256' => hash( 'sha256', $code ),
+				'matched_symbols' => $found,
+				'behavioral_signals' => self::snippet_behavioral_signals( $code ),
+			);
+		}
+
+		return array(
+			'table_present' => true,
+			'columns' => $columns,
+			'matches' => $matches,
+			'code_exported' => false,
+		);
+	}
+
+	/** @return array<string,bool> */
+	private static function snippet_behavioral_signals( string $code ): array {
+		$lower = strtolower( $code );
+		return array(
+			'uses_wp_query' => str_contains( $code, 'WP_Query' ),
+			'uses_get_posts' => str_contains( $code, 'get_posts(' ),
+			'uses_get_terms' => str_contains( $code, 'get_terms(' ) || str_contains( $code, 'get_categories(' ),
+			'uses_post_meta' => str_contains( $code, 'get_post_meta(' ),
+			'uses_comment_count' => str_contains( $lower, 'comment_count' ),
+			'uses_orderby_date' => str_contains( $lower, "'orderby' => 'date'" ) || str_contains( $lower, 'orderby=date' ),
+			'uses_orderby_modified' => str_contains( $lower, 'modified' ),
+			'uses_orderby_meta' => str_contains( $lower, 'meta_value' ) || str_contains( $lower, 'meta_key' ),
+			'uses_tax_query' => str_contains( $lower, 'tax_query' ),
+			'uses_category' => str_contains( $lower, 'category' ),
+			'uses_nonce' => str_contains( $code, 'check_ajax_referer(' ) || str_contains( $code, 'wp_verify_nonce(' ),
+			'uses_capability_check' => str_contains( $code, 'current_user_can(' ),
+			'uses_json_response' => str_contains( $code, 'wp_send_json_' ),
+		);
+	}
+
+	/** @return array<string,mixed> */
+	private static function helpful_tips_profile(): array {
+		$key = '_bdc_es_helpful_tips';
+		$ids = get_posts(
+			array(
+				'post_type' => 'post',
+				'post_status' => 'publish',
+				'posts_per_page' => -1,
+				'fields' => 'ids',
+				'meta_key' => $key,
+				'meta_compare' => 'EXISTS',
+				'orderby' => 'ID',
+				'order' => 'ASC',
+				'no_found_rows' => true,
+				'suppress_filters' => false,
+			)
+		);
+
+		$rows = array();
+		$union_item_keys = array();
+		$item_key_types = array();
+		$item_counts = array();
+
+		foreach ( (array) $ids as $raw_id ) {
+			$post_id = absint( $raw_id );
+			$value = get_post_meta( $post_id, $key, true );
+			$shape = self::value_shape( $value );
+			$item_counts[] = (int) ( $shape['item_count'] ?? 0 );
+			foreach ( (array) ( $shape['item_keys'] ?? array() ) as $item_key ) {
+				$union_item_keys[ (string) $item_key ] = true;
+			}
+			foreach ( (array) ( $shape['item_key_types'] ?? array() ) as $item_key => $types ) {
+				if ( ! isset( $item_key_types[ $item_key ] ) ) {
+					$item_key_types[ $item_key ] = array();
+				}
+				foreach ( (array) $types as $type ) {
+					$item_key_types[ $item_key ][ (string) $type ] = true;
+				}
+			}
+			$rows[] = array(
+				'post_id' => $post_id,
+				'value_type' => gettype( $value ),
+				'json_bytes' => self::json_bytes( $value ),
+				'shape' => $shape,
+			);
+		}
+
+		$types_out = array();
+		foreach ( $item_key_types as $item_key => $types ) {
+			$types_out[ $item_key ] = array_keys( $types );
+			sort( $types_out[ $item_key ], SORT_STRING );
+		}
+		ksort( $types_out, SORT_STRING );
+
+		return array(
+			'meta_key' => $key,
+			'post_count' => count( $rows ),
+			'posts' => $rows,
+			'union_item_keys' => array_keys( $union_item_keys ),
+			'item_key_types' => $types_out,
+			'item_count_min' => empty( $item_counts ) ? 0 : min( $item_counts ),
+			'item_count_max' => empty( $item_counts ) ? 0 : max( $item_counts ),
+			'values_exported' => false,
+		);
+	}
+
+	/** @return array<string,mixed> */
+	private static function value_shape( mixed $value ): array {
+		if ( is_array( $value ) ) {
+			$is_list = array_is_list( $value );
+			$item_keys = array();
+			$item_key_types = array();
+			if ( $is_list ) {
+				foreach ( $value as $item ) {
+					if ( ! is_array( $item ) ) {
+						continue;
+					}
+					foreach ( $item as $key => $item_value ) {
+						$item_keys[ (string) $key ] = true;
+						if ( ! isset( $item_key_types[ (string) $key ] ) ) {
+							$item_key_types[ (string) $key ] = array();
+						}
+						$item_key_types[ (string) $key ][ gettype( $item_value ) ] = true;
+					}
+				}
+			}
+			$types = array();
+			foreach ( $item_key_types as $key => $set ) {
+				$types[ $key ] = array_keys( $set );
+			}
+			return array(
+				'kind' => $is_list ? 'list' : 'associative_array',
+				'item_count' => count( $value ),
+				'item_keys' => array_keys( $item_keys ),
+				'item_key_types' => $types,
+			);
+		}
+
+		if ( is_string( $value ) ) {
+			$decoded = json_decode( $value, true );
+			$json_ok = JSON_ERROR_NONE === json_last_error();
+			return array(
+				'kind' => 'string',
+				'item_count' => 0,
+				'json_decodable' => $json_ok,
+				'json_decoded_type' => $json_ok ? gettype( $decoded ) : '',
+				'item_keys' => array(),
+				'item_key_types' => array(),
+			);
+		}
+
+		return array(
+			'kind' => gettype( $value ),
+			'item_count' => 0,
+			'item_keys' => array(),
+			'item_key_types' => array(),
+		);
+	}
+
+	private static function json_bytes( mixed $value ): int {
+		$json = wp_json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+		return is_string( $json ) ? strlen( $json ) : 0;
 	}
 
 	/** @return array<string,mixed> */

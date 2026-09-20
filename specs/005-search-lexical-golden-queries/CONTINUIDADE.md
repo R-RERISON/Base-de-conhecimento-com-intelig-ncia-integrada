@@ -422,3 +422,37 @@ Próxima ação humana:
 4. anexar o JSON para decisão T580–T584;
 5. somente após G-580 CLOSED avançar para G-585.
 
+## Continuidade G-580.2 — validator false-negative patch
+
+Primeira execução ambiental em `0.5.0-g580.1`:
+- T580=true;
+- T581=true;
+- T582=true;
+- T583=true;
+- T584=false;
+- único blocker: `runtime_source.no_query_logging=false`;
+- `persists_query_log=false`;
+- errors/throwables=0;
+- Projection final ready;
+- fingerprint editorial igual.
+
+Root cause:
+- o runner incluía seu próprio source na varredura;
+- procurava literalmente `bdc_kb_search_query_log`;
+- a própria linha de asserção continha esse literal;
+- falso negativo determinístico.
+
+Patch:
+- build `0.5.0-g580.2`;
+- somente bootstrap/version + runner;
+- marker montado por concatenação para evitar self-match;
+- detecção real continua válida;
+- local/package PASS;
+- SHA-256 `47f3d2c641863eca5048bcb4ed469ebe243c1262ef4aaada582f60ceec84cf29`.
+
+Não fechar G-580 ainda. Reexecutar runner em homologação e exigir:
+- `no_query_logging=true`;
+- T580/T581/T582/T583/T584=true;
+- `next_gate=G-585`;
+- errors=[] / throwables=[];
+- fingerprint editorial equal.

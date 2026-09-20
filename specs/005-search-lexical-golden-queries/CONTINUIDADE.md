@@ -28,7 +28,9 @@ ESTADO
 - G-530 PASS/CLOSED
 - G-540 PASS/CLOSED
 - G-550 PASS/CLOSED
-- G-560 OPEN / próximo gate
+- G-560 PASS/CLOSED
+- G-570 PASS/CLOSED
+- G-580 OPEN / gate atual
 - G-585 obrigatório antes do RC
 
 R-510 FREEZE
@@ -381,3 +383,42 @@ G-580 objetivo:
 3. disable Search module safely;
 4. uninstall/retention behavior;
 5. no editorial loss and no ASI dependency.
+
+## Continuidade G-580 — pacote 2026-09-20
+
+Build:
+- `0.5.0-g580.1`;
+- contrato: `g580-lifecycle-rebuild-contract-v1.md`;
+- evidence local: `evidence/g580-local-package-validation-20260920.json`;
+- ZIP SHA-256: `b2a2d55793a3835ff06151d2c1cc4e301292df51bc35c5b5bdf166546a4f166e`;
+- 65 arquivos / 58 PHP;
+- lint 58/58;
+- active requires 46/46;
+- suíte G-580 33/33;
+- deterministic build 2/2.
+
+Garantias:
+- base G-570 validada por checksum canônico;
+- delta package G-570 -> G-580 = 4 added / 2 modified / 0 deleted;
+- ranker SHA-256 inalterado: `47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78`;
+- activation/update sem rebuild implícito;
+- explicit rebuild com pass2 NO_CHANGE obrigatório;
+- fallback WordPress quando Projection não-ready;
+- disable operacional sem nova Option persistente;
+- deactivation/uninstall não destrutivos;
+- zero ASI/FULLTEXT/query logging.
+
+Estado:
+- G-570 CLOSED;
+- G-580 package/local PASS;
+- G-580 environmental NOT_RUN;
+- T580–T584 OPEN;
+- G-580 ainda OPEN.
+
+Próxima ação humana:
+1. instalar o ZIP `0.5.0-g580.1` sobre a versão atual em homologação;
+2. acessar **Base de Conhecimento → Lifecycle G-580**;
+3. executar **Executar G-580 e baixar JSON**;
+4. anexar o JSON para decisão T580–T584;
+5. somente após G-580 CLOSED avançar para G-585.
+

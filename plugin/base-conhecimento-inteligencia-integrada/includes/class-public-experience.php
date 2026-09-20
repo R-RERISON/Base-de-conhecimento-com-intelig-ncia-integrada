@@ -307,7 +307,7 @@ final class Public_Experience {
 	}
 
 	private static function initials( string $name ): string {
-		$parts = preg_split( '/\\s+/u', trim( $name ), -1, PREG_SPLIT_NO_EMPTY );
+		$parts = preg_split( '/\s+/u', trim( $name ), -1, PREG_SPLIT_NO_EMPTY );
 		if ( empty( $parts ) ) {
 			return 'U';
 		}
@@ -322,4 +322,5 @@ final class Public_Experience {
 		$first = $char( (string) $parts[0] );
 		$last = count( $parts ) > 1 ? $char( (string) $parts[ count( $parts ) - 1 ] ) : '';
 		return $upper( $first . $last );
-	}}
+	}
+}

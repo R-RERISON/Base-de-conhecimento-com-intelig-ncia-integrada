@@ -59,9 +59,9 @@ $checks = array(
 	'rebuild_stale_cleanup_after_pass1' => false !== strpos( $rebuild, 'count( $post_ids ) === (int) $pass1' )
 		&& false !== strpos( $rebuild, 'delete_stale_rows' )
 		&& strpos( $rebuild, 'count( $post_ids ) === (int) $pass1' ) < strpos( $rebuild, 'delete_stale_rows' ),
-	'rebuild_second_pass' => str_contains( $rebuild, "self::run_pass( $post_ids, 'pass2' )" ),
-	'rebuild_requires_no_change' => str_contains( $rebuild, "0 === (int) $pass2['written']" )
-		&& str_contains( $rebuild, "count( $post_ids ) === (int) $pass2['no_change']" ),
+	'rebuild_second_pass' => str_contains( $rebuild, "self::run_pass( \\$post_ids, 'pass2' )" ),
+	'rebuild_requires_no_change' => str_contains( $rebuild, "0 === (int) \\$pass2['written']" )
+		&& str_contains( $rebuild, "count( \\$post_ids ) === (int) \\$pass2['no_change']" ),
 	'rebuild_no_editorial_write' => 1 !== preg_match( '/wp_update_post\s*\(|wp_insert_post\s*\(|update_post_meta\s*\(|wp_set_object_terms\s*\(/i', $rebuild_code ),
 	'rebuild_no_network' => 1 !== preg_match( '/wp_remote_[A-Za-z0-9_]*\s*\(|curl_[A-Za-z0-9_]+\s*\(|fsockopen\s*\(|stream_socket_client\s*\(/i', $rebuild_code ),
 	'rebuild_no_asi' => 1 !== preg_match( '/\basi(?:4)?_/i', $rebuild_code ),

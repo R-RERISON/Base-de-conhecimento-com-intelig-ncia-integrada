@@ -532,3 +532,40 @@ Aceite esperado:
 - errors=[] / throwables=[].
 
 Se qualquer item falhar, manter G-585 OPEN e diagnosticar antes de RC.
+
+## Continuidade G-585.2 — atribuição do símbolo residual
+
+Primeira execução G-585 em `0.5.0-g585.1`:
+- ASI desativado;
+- static BDC runtime scan limpo: 48 arquivos / 0 matches;
+- legacy active plugins=[];
+- loaded legacy hooks=[];
+- loaded symbol: `BDC_KX_ASI_Adapter`;
+- T585=false / T586=true;
+- status `FAIL_DEPENDENCY_FOUND`;
+- T587/T588/T589 não executados por fail-fast.
+
+Não inferir de onde `BDC_KX_ASI_Adapter` vem. O g585.1 não gravou file origin.
+
+Patch `0.5.0-g585.2`:
+- usa ReflectionClass/ReflectionFunction;
+- reporta `type`, `symbol`, `source_scope`, `source_path`;
+- scopes possíveis: bdc_plugin, mu_plugin, plugin, theme, wordpress_core, external_or_unknown, internal_or_unknown;
+- nunca exporta caminho absoluto;
+- regra de gate inalterada: qualquer símbolo legacy ainda bloqueia T585;
+- Search/rebuild/lifecycle/ranker inalterados.
+
+Package:
+- 59/59 PHP lint;
+- 48/48 active requires;
+- 31/31 checks;
+- deterministic 2/2;
+- SHA-256 `0db339e50e997bbc4211972173809ea71517fc242696b17345bf8d095146c915`.
+
+Próxima ação humana:
+1. manter ASI desativado;
+2. instalar g585.2;
+3. executar G-585;
+4. anexar JSON.
+
+Se o símbolo vier de outro plugin/MU-plugin, identificar o componente exato antes de qualquer ação. Não remover tabelas ASI e não criar whitelist sem evidência.

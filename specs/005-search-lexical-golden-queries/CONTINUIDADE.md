@@ -1011,3 +1011,33 @@ Next homologation:
 
 No cutover / no dependency decommission.
 
+## Continuidade — visual paused / P-580WC.1
+
+Visual:
+- `0.5.0-ux004005.6` is the approved current baseline;
+- stop active UI polish;
+- resume only as new maturity/capabilities justify it.
+
+Next functional candidate:
+- `0.5.0-p580wc.1`;
+- SHA-256 `0b68e3eefa19bb68dce74de208e37bb128e6de1190162fbfc326ac67670f3a8d`;
+- Word Cloud BDC-owned v1;
+- no ASI runtime/storage reads;
+- no new table;
+- no public-request generation;
+- manual + hourly generation;
+- quality/snapshot/lock/health/history/admin;
+- telemetry/vocabulary sources are explicit pending, not simulated.
+
+Homologation:
+1. install p580wc.1 over v6;
+2. open Base de Conhecimento → Nuvem de Conhecimento;
+3. click Gerar snapshot agora;
+4. capture state/term count/source statuses;
+5. open Public Home preview and verify suggested terms;
+6. click a term and verify Search receives it;
+7. verify cron is scheduled;
+8. later repeat Home smoke with ASI manually disabled.
+
+Do not execute G-585 yet until Word Cloud/Home technical acceptance closes the blocking parity condition.
+

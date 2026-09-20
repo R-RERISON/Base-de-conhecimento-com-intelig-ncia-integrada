@@ -968,3 +968,46 @@ Next homologation:
 - capture screenshots.
 
 No cutover / no ASI-GRE-GAC decommission.
+
+## Continuidade — 0.5.0-ux004005.6 Premium Polish
+
+Do not reopen architecture unless homologation exposes a regression.
+
+Preserve:
+- live Search;
+- GAC;
+- Summary follow-scroll;
+- Header parity;
+- Home search-first;
+- candidate-to-candidate navigation.
+
+v6 polish:
+- premium Search result hierarchy;
+- loading feedback;
+- internal Search result scroll;
+- quieter Header;
+- document heading without card treatment;
+- integrated Helpful Tips callout;
+- refined article typography/line length;
+- quieter Summary presentation.
+
+Package:
+- `0.5.0-ux004005.6`;
+- SHA-256 `68b916b6eaf1281bc3b6208694dbaf7733831970bbcc970ae69de58fce5a1ad4`;
+- 69/69 lint + extracted lint;
+- JS syntax PASS;
+- CSS 4/4 parse PASS;
+- 24/24 checks;
+- source parity 9/9;
+- deterministic 2/2.
+
+Next homologation:
+1. install .6 over .5;
+2. compare Home live Search visually with .5;
+3. verify loading/typing/scroll in result panel;
+4. inspect Autran Reader: GAC and Summary behavior must be unchanged;
+5. judge only visual hierarchy, density and readability;
+6. capture Home result state + Reader top + Reader mid-scroll.
+
+No cutover / no dependency decommission.
+

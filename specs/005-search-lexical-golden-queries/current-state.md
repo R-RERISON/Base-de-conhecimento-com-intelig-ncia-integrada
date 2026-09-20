@@ -958,3 +958,63 @@ Next:
 5. send screenshots for visual iteration;
 6. do not disable ASI/GRE/Code Snippets/Astra for this preview.
 
+## UX-004/UX-005 — human visual review + redesign candidate 0.5.0-ux004005.2
+
+Human result for `0.5.0-ux004005.1`:
+- FUNCTIONAL BASELINE only;
+- VISUAL/PRODUCT DIRECTION REJECTED;
+- no cutover authorized.
+
+Observed:
+- Home too close to legacy composition;
+- static identity did not preserve Entra Gateway experience;
+- some navigation targets unresolved;
+- Word Cloud preview leaked technical copy;
+- Article Reader duplicated legacy article chrome;
+- Tips fixed grid produced dead space;
+- Summary Rail too cramped.
+
+Redesign addendum:
+- `ux/004-public-home-portal/public-experience-redesign-addendum-v1.md`.
+
+Candidate `0.5.0-ux004005.2`:
+- Public Auth Bridge delegates to `[bdc_entra_login]` when registered, WordPress fallback otherwise;
+- WordPress custom logo first;
+- navigation menu-first + page fallback;
+- redesigned Home composition;
+- technical Word Cloud copy removed from consumer surface;
+- `Public_Article_Content` compatibility stage preserves `the_content` pipeline and strips duplicate legacy chrome only with strong evidence;
+- Tips auto-fit;
+- Summary Rail widened to 360px desktop;
+- GAC/WPUI not removed;
+- GRE Tips/Rail suppressed in preview only.
+
+Local validation:
+- 80 files / 69 PHP;
+- 69/69 lint;
+- 69/69 extracted ZIP lint;
+- 52/52 active requires;
+- 33/33 contract checks;
+- deterministic build 2/2;
+- exact source/package parity;
+- ZIP SHA-256 `24e96812189a7fdd1252714030a4b0341f9357170721c2aa94dbcc2d18c4181b`;
+- Search/rebuild/lifecycle/ranker unchanged.
+
+Evidence:
+- `evidence/ux004005-public-redesign-local-validation-20260920.json`.
+
+Status:
+- H-020 redesign candidate LOCAL PASS / ENV+HUMAN pending;
+- A-020 redesign candidate LOCAL PASS / ENV+HUMAN pending;
+- no cutover;
+- G-585 PAUSED;
+- G-590 BLOCKED.
+
+Next:
+1. install `0.5.0-ux004005.2` over current preview;
+2. review Home;
+3. review Article Reader #36431 or equivalent with Tips/Summary;
+4. verify Gateway Entra UI/action;
+5. verify no duplicate legacy hero;
+6. iterate before public facade/Word Cloud parity work.
+

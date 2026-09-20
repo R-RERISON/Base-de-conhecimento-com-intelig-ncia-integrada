@@ -923,3 +923,48 @@ Next homologation:
 
 No cutover / no plugin decommission.
 
+## Continuidade — 0.5.0-ux004005.5
+
+Focus:
+1. incremental Search like current ASI interaction model;
+2. restore GAC in candidate Reader;
+3. make Summary follow scroll reliably;
+4. reduce title chrome and optimize article width;
+5. emphasize Search inside article without changing Header parity.
+
+Search v5:
+- typing triggers results;
+- no Enter required;
+- min 2 chars;
+- debounce 180ms;
+- AbortController cancels stale requests;
+- current BDC Search Service remains the retrieval engine;
+- live results include title/category/excerpt/rank and candidate Reader link;
+- ASI section/trecho result parity remains pending.
+
+Reader v5:
+- real WordPress loop + the_content pipeline restores integration conditions for GAC/WPUI;
+- duplicate legacy chrome sanitizer remains read-only;
+- Summary rail = 300px follow-scroll context rail;
+- article target = 1060px;
+- no-Summary articles use single centered column;
+- reduced heading card;
+- Search row visually stronger.
+
+Package:
+- `0.5.0-ux004005.5`;
+- SHA-256 `9b011563b24345139350fb0c7477050e7803ea51ef7aa912bf983b98e2b89cd9`;
+- 69/69 lint + extracted ZIP lint;
+- 25/25 checks;
+- deterministic 2/2.
+
+Next homologation:
+- install .5 over .4;
+- type in Home Search without Enter and observe results changing;
+- repeat inside Reader;
+- open long article and confirm Summary follows scroll and stops at article end;
+- confirm GAC “Ações do conteúdo” is restored;
+- verify an article with no Summary uses full-width single column;
+- capture screenshots.
+
+No cutover / no ASI-GRE-GAC decommission.

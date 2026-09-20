@@ -14,9 +14,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Word_Cloud_Service {
 
 	public static function register(): void {
+		register_deactivation_hook( BDC_KB_FILE, array( self::class, 'deactivate' ) );
 		add_action( 'init', array( self::class, 'ensure_defaults' ), 19 );
 		add_action( 'init', array( self::class, 'ensure_schedule' ), 31 );
 		add_action( Word_Cloud_Contract::CRON_HOOK, array( self::class, 'cron_generate' ) );
+	}
+
+	public static function deactivate(): void {
+		wp_clear_scheduled_hook( Word_Cloud_Contract::CRON_HOOK );
 	}
 
 	public static function ensure_defaults(): void {

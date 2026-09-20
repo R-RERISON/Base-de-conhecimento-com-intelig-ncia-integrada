@@ -30,7 +30,7 @@ $write_pattern = '/update_(?:post|option|site_option|post_meta)\s*\(|add_(?:opti
 $network_pattern = '/wp_remote_[A-Za-z0-9_]*\s*\(|curl_[A-Za-z0-9_]+\s*\(|fsockopen\s*\(|stream_socket_client\s*\(/i';
 
 $checks = array(
-	'version_p580a1' => str_contains( $bootstrap, 'Version: 0.5.0-p580a.1' ),
+	'version_p580a1' => str_contains( $bootstrap, 'Version: 0.5.0-p580a.2' ),
 	'g585_runner_off' => str_contains( $bootstrap, "BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD', false" ),
 	'p580_runner_on' => str_contains( $bootstrap, "BDC_KB_P580_PUBLIC_INVENTORY_BUILD', true" ),
 	'p580_runner_loaded' => str_contains( $bootstrap, "class-public-experience-inventory-runner-p580.php" ),
@@ -78,6 +78,23 @@ $checks = array(
 		&& str_contains( $runner, "'_bdc_es_target_audience'" )
 		&& str_contains( $runner, "'_bdc_es_escalation'" )
 		&& str_contains( $runner, "'_bdc_es_important'" ),
+	'deep_plugin_inventory' => str_contains( $runner, 'plugin_inventory' )
+		&& str_contains( $runner, 'get_plugins' )
+		&& str_contains( $runner, "'files_of_interest'" ),
+	'deep_code_snippets_inventory' => str_contains( $runner, 'code_snippets_inventory' )
+		&& str_contains( $runner, "'bdc_home_v270_config_shortcode'" )
+		&& str_contains( $runner, "'bdc_home_v270_ultimas_shortcode'" )
+		&& str_contains( $runner, "'bdc_home_v270_populares_shortcode'" )
+		&& str_contains( $runner, "'bdc_home_v270_ajax_filter'" )
+		&& str_contains( $runner, "'code_exported' => false" ),
+	'deep_snippet_behavioral_signals' => str_contains( $runner, 'snippet_behavioral_signals' )
+		&& str_contains( $runner, "'uses_wp_query'" )
+		&& str_contains( $runner, "'uses_post_meta'" )
+		&& str_contains( $runner, "'uses_tax_query'" ),
+	'deep_helpful_tips_shape' => str_contains( $runner, 'helpful_tips_profile' )
+		&& str_contains( $runner, "'_bdc_es_helpful_tips'" )
+		&& str_contains( $runner, "'union_item_keys'" )
+		&& str_contains( $runner, "'values_exported' => false" ),
 	'safety_contract' => str_contains( $runner, "'exports_editorial_content' => false" )
 		&& str_contains( $runner, "'exports_gre_values' => false" )
 		&& str_contains( $runner, "'calls_external_network' => false" ),

@@ -96,6 +96,13 @@
 - [ ] T589 comprovar rollback/lifecycle sem ASI.
 - [ ] T589.1 registrar evidência de dependency-zero.
 - [ ] T589.2 G-585 PASS antes de RC.
+- [x] G585-PKG-01 contrato `g585-asi-independence-contract-v1.md` congelado.
+- [x] G585-PKG-02 runner nunca desativa/remove ASI automaticamente; bloqueia com `BLOCKED_LEGACY_ACTIVE`.
+- [x] G585-PKG-03 static runtime scan + loaded symbols/hooks + active plugin probe implementados.
+- [x] G585-PKG-04 Search + Golden + rebuild + lifecycle/rollback integrados ao runner.
+- [x] G585-PKG-05 29/29 checks locais; 59/59 PHP lint; 48/48 active requires.
+- [x] G585-PKG-06 build determinístico 2/2 — SHA-256 `cae86ef93572e9320efe89d8fed891e90be032e5d46e4aaccf6dca647bf62880`.
+- [ ] G585-ENV executar com ASI manualmente desativado e anexar JSON.
 
 ### G-540 — pacote de homologação
 - [x] G540-PKG-01 source/package parity 55/55.

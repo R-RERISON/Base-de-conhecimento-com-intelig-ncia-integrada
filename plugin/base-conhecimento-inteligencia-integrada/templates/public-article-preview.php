@@ -37,7 +37,7 @@ while ( have_posts() ) {
 ?>
 <div class="bdc-public">
 	<?php Public_Experience::render_header(); ?>
-	<?php Public_Experience::render_preview_banner( 'UX-005 / reader-docs v5 · ' . (string) $model['source_kind'] ); ?>
+	<?php Public_Experience::render_preview_banner( 'UX-005 / reader-premium v6 · ' . (string) $model['source_kind'] ); ?>
 
 	<main class="bdc-public-main bdc-reader">
 		<nav class="bdc-reader-breadcrumb" aria-label="Caminho do artigo"><a href="<?php echo esc_url( Public_Experience::home_preview_url() ); ?>">Base</a><span>/</span><?php if ( '' !== (string) $model['category'] ) : ?><span><?php echo esc_html( (string) $model['category'] ); ?></span><span>/</span><?php endif; ?><strong><?php echo esc_html( (string) $model['title'] ); ?></strong></nav>
@@ -52,7 +52,7 @@ while ( have_posts() ) {
 		</header>
 
 		<div class="bdc-reader-layout<?php echo empty( $model['summary_items'] ) ? ' bdc-reader-layout--single' : ''; ?>">
-			<article class="bdc-reader-content">
+			<article class="bdc-reader-content bdc-reader-content--premium">
 				<?php if ( ! empty( $model['tips'] ) ) : ?>
 					<section class="bdc-reader-tips" aria-labelledby="bdc-reader-tips-title">
 						<header><span class="dashicons dashicons-lightbulb" aria-hidden="true"></span><div><h2 id="bdc-reader-tips-title">Dicas úteis</h2><p>Antes de começar</p></div></header>
@@ -68,7 +68,7 @@ while ( have_posts() ) {
 			</article>
 
 			<?php if ( ! empty( $model['summary_items'] ) ) : ?>
-				<div class="bdc-reader-summary-slot" data-bdc-summary-slot>
+				<div class="bdc-reader-summary-slot" data-bdc-summary-slot aria-label="Contexto do artigo">
 					<aside class="bdc-reader-summary" data-bdc-summary-rail aria-labelledby="bdc-reader-summary-title"><header><h2 id="bdc-reader-summary-title">Resumo Executivo</h2><small>Contexto rápido</small></header><div class="bdc-reader-summary__body"><dl>
 						<?php foreach ( (array) $model['summary_items'] as $item ) : ?><div class="bdc-reader-summary__item bdc-reader-summary__item--<?php echo esc_attr( sanitize_html_class( (string) ( $item['kind'] ?? 'fact' ) ) ); ?>"><dt><?php echo esc_html( (string) ( $item['label'] ?? '' ) ); ?></dt><dd><?php echo nl2br( esc_html( (string) ( $item['value'] ?? '' ) ) ); ?></dd></div><?php endforeach; ?>
 					</dl></div></aside>

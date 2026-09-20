@@ -27,7 +27,7 @@
 - [ ] H020 Public Home shell — `.6` premium polish local PASS; live Search behavior preserved; environmental/human pending.
 - [ ] H021 Header/Auth — `.2` adds custom-logo, menu-first navigation and Entra shortcode bridge; environmental verification pending.
 - [ ] H022 Public Search — `.5` adds input-driven preview AJAX over frozen Search; public authorization facade + section/trecho parity still required before cutover.
-- [ ] H023 Word Cloud — provisional content-only preview implemented; full ASI parity still required.
+- [ ] H023 Word Cloud — `word-cloud-v1.0.0` BDC-owned local PASS (`0.5.0-p580wc.1`); environmental generation/health/click-to-search pending.
 - [ ] H024 categorias/filtros — curated preview implemented; environmental/human pending.
 - [ ] H025 últimas — deterministic date/ID provider preview implemented.
 - [ ] H026 populares — legacy comment_count compatibility provider preview implemented.
@@ -46,7 +46,7 @@
 - [ ] H034 regression Search/Golden.
 
 ## H-040 Human acceptance
-- [ ] H040 visual Product Owner review.
+- [x] H040 visual Product Owner review — PASS current maturity on `0.5.0-ux004005.6`; future visual refinement allowed.
 
 ## H-050 Decommission
 - [ ] H050 Home independence PASS.

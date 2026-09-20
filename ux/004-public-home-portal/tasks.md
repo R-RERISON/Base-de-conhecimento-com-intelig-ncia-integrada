@@ -24,8 +24,8 @@
 - [x] H016 H-010 CLOSED/FROZEN FOR IMPLEMENTATION.
 
 ## H-020 Implementation
-- [ ] H020 Public Home shell — preview candidate `0.5.0-ux004005.1` local PASS; environmental/human pending.
-- [ ] H021 Header integrado — preview implemented; human/environmental pending.
+- [ ] H020 Public Home shell — `.1` human visual rejected; redesign `.2` local PASS, environmental/human pending.
+- [ ] H021 Header/Auth — `.2` adds custom-logo, menu-first navigation and Entra shortcode bridge; environmental verification pending.
 - [ ] H022 Public Search — admin preview reuses frozen Search; public authorization facade still required before cutover.
 - [ ] H023 Word Cloud — provisional content-only preview implemented; full ASI parity still required.
 - [ ] H024 categorias/filtros — curated preview implemented; environmental/human pending.

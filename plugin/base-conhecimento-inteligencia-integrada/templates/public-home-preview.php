@@ -30,7 +30,7 @@ $cloud = Public_Home_Read_Model::preview_word_cloud();
 <?php wp_body_open(); ?>
 <div class="bdc-public">
 	<?php Public_Experience::render_header(); ?>
-	<?php Public_Experience::render_preview_banner( 'UX-004 / search-first v5' ); ?>
+	<?php Public_Experience::render_preview_banner( 'UX-004 / search-first premium v6' ); ?>
 
 	<main class="bdc-public-main bdc-home">
 		<section class="bdc-home-search-stage" aria-labelledby="bdc-home-title">
@@ -50,14 +50,9 @@ $cloud = Public_Home_Read_Model::preview_word_cloud();
 			</form>
 
 			<div class="bdc-home-live-panel" data-bdc-live-search-panel<?php echo is_array( $search ) ? '' : ' hidden'; ?>>
-				<div class="bdc-home-search-results-head"><strong data-bdc-live-search-title><?php echo is_array( $search ) ? 'Resultados para “' . esc_html( $query_value ) . '”' : 'Resultados'; ?></strong><a href="<?php echo esc_url( Public_Experience::home_preview_url( $category_id ) ); ?>" data-bdc-live-search-clear>Limpar</a></div>
-				<div data-bdc-live-search-results>
-			<?php if ( is_array( $search ) ) : ?>
-				<div class="bdc-home-search-results-wrap">
-					<div class="bdc-home-search-results-head"><strong>Resultados para “<?php echo esc_html( $query_value ); ?>”</strong><a href="<?php echo esc_url( Public_Experience::home_preview_url( $category_id ) ); ?>">Limpar</a></div>
-					<?php Public_Experience::render_search_results( $search, 'bdc-search-results bdc-search-results--home' ); ?>
-				</div>
-			<?php endif; ?>
+				<div class="bdc-home-search-results-head"><strong data-bdc-live-search-title><?php echo is_array( $search ) ? esc_html( (string) ( $search['count'] ?? 0 ) ) . ' resultado(s) para “' . esc_html( $query_value ) . '”' : 'Resultados'; ?></strong><a href="<?php echo esc_url( Public_Experience::home_preview_url( $category_id ) ); ?>" data-bdc-live-search-clear>Limpar</a></div>
+				<div data-bdc-live-search-results aria-live="polite" aria-busy="false">
+					<?php if ( is_array( $search ) ) : ?><?php Public_Experience::render_search_results( $search, 'bdc-search-results bdc-search-results--home' ); ?><?php endif; ?>
 				</div>
 			</div>
 			<?php if ( ! is_array( $search ) ) : ?>

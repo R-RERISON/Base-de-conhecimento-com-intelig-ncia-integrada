@@ -10,7 +10,7 @@
 
 **Idioma:** pt-BR.
 
-**Gate atual:** R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 PASS/CLOSED; G-585 OPEN.
+**Gate atual:** R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 PASS/CLOSED; P-580A/UX-004 ACTIVE; G-585 PAUSED até fechar paridade funcional bloqueante.
 
 > **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 

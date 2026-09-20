@@ -73,11 +73,11 @@
 - [x] T574 G-570 PASS — CLOSED em 2026-09-20; próximo gate G-580.
 
 ## G-580 — Lifecycle
-- [ ] T580 activation/update.
-- [ ] T581 rebuild/fallback.
-- [ ] T582 disable module.
-- [ ] T583 uninstall retention.
-- [ ] T584 G-580 PASS.
+- [x] T580 activation/update — PASS ambiental; schema-only, implicit_rebuild=false, Projection snapshot unchanged.
+- [x] T581 rebuild/fallback — PASS ambiental; fallback honesto + rebuild 623/623, pass2 NO_CHANGE, mismatch=0.
+- [x] T582 disable module — PASS ambiental; wordpress_fallback / search_module_disabled.
+- [x] T583 uninstall retention — PASS ambiental; deactivation/uninstall não destrutivos por default.
+- [x] T584 G-580 PASS — CLOSED em 2026-09-20; evidence g580-environmental-review-20260920T173016Z.json; próximo gate G-585.
 
 ## G-590 — RC
 - [ ] T590 deterministic build.

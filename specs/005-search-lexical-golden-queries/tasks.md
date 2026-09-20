@@ -89,13 +89,13 @@
 
 
 ## P-580A — ASI Functional Parity Rebaseline
-- [ ] P580A-01 inventário funcional completo ASI 4.6.8.
-- [ ] P580A-02 matriz PARITY / IMPROVED / MISSING / PLANNED / RETIRED_BY_PO.
-- [ ] P580A-03 mapear Public Search e Home.
-- [ ] P580A-04 mapear Word Cloud completa.
-- [ ] P580A-05 mapear Telemetry/Search Intelligence.
-- [ ] P580A-06 mapear item-level/deep-link/anchors.
-- [ ] P580A-07 mapear Operations/Queue/Migrations/Post-Install.
+- [x] P580A-01 inventário funcional completo ASI 4.6.8 — baseline funcional versionada.
+- [x] P580A-02 matriz de disposição v2 criada — parity/improved/planned/superseded; nenhum descarte silencioso.
+- [x] P580A-03 Public Search/Home mapeados; UX-004 candidata v6 human accepted.
+- [x] P580A-04 Word Cloud inventariada; `word-cloud-v1.0.0` candidata BDC local PASS.
+- [x] P580A-05 Telemetry/Search Intelligence mapeados → PLANNED SPEC-006.
+- [x] P580A-06 item-level/deep-link/anchors mapeados → PLANNED gate próprio.
+- [x] P580A-07 Operations/Queue/Migrations/Post-Install mapeados → PLANNED SPEC-007.
 - [ ] P580A-08 fechar rebaseline antes de Decommission Readiness.
 
 ## P-580B — GRE Functional Parity

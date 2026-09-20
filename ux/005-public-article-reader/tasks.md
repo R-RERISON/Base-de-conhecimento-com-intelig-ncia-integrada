@@ -22,7 +22,7 @@
 - [x] A015 print/responsive/accessibility contract frozen.
 
 ## A-020 Implementation
-- [ ] A020 plugin-owned Article Reader shell — `.5` live Search + GAC loop parity + follow-scroll rail local PASS; environmental/human pending.
+- [ ] A020 plugin-owned Article Reader shell — `.6` premium polish local PASS; GAC + follow-scroll preserved; environmental/human pending.
 - [ ] A021 hero/metadados — preview implemented.
 - [ ] A022 Structured Tips — read-only BDC preview over `_bdc_es_helpful_tips`; Workspace writer pending.
 - [ ] A023 Executive Summary Rail — redesigned composed sticky rail, 360px desktop target; human/environmental pending.
@@ -34,7 +34,7 @@
 - [ ] A028 candidate result/latest/popular links stay in new Reader — implemented preview, env pending.
 
 - [ ] A029 Executive Summary follow-scroll rail — `.5` JS-clamped rail local PASS; validar scroll longo/stop-at-end em homologação.
-- [ ] A029B protected reading width / visual separation — `.5` 1060px article + 300px rail + single-column no-summary; human pending.
+- [ ] A029B protected reading width / visual separation — `.6` premium typography + de-cardified heading + integrated Tips; human pending.
 
 ## A-030 Regression
 - [ ] A030 Gutenberg article.

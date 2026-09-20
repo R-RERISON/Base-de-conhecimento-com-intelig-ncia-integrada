@@ -456,3 +456,79 @@ Não fechar G-580 ainda. Reexecutar runner em homologação e exigir:
 - `next_gate=G-585`;
 - errors=[] / throwables=[];
 - fingerprint editorial equal.
+
+## Continuidade G-580 CLOSED / G-585 package ready — 2026-09-20
+
+### Gate anterior
+
+G-580 PASS/CLOSED.
+
+Evidência:
+- `evidence/g580-environmental-review-20260920T173016Z.json`;
+- SHA-256 `f778789c8067d4ced3272fce02054a1a696d321c5b6b1bdd5cfea0f6b16b53f6`.
+
+Resultado:
+- T580–T584=true;
+- Projection ready 623/623;
+- pass1/pass2 623 NO_CHANGE;
+- mismatch=0;
+- fingerprint editorial equal;
+- no network/query logging/ASI;
+- next_gate=G-585.
+
+### Gate atual
+
+G-585 — ASI Independence / Decommission Readiness.
+
+Contrato:
+- `g585-asi-independence-contract-v1.md`;
+- ADR: `adr-005-001-zero-runtime-dependency-asi.md`.
+
+Build:
+- `0.5.0-g585.1`;
+- ZIP SHA-256 `cae86ef93572e9320efe89d8fed891e90be032e5d46e4aaccf6dca647bf62880`;
+- 66 arquivos / 59 PHP;
+- lint 59/59;
+- active requires 48/48;
+- local suite 29/29;
+- deterministic build 2/2.
+
+Delta vs g580.2:
+- added: `includes/class-search-independence-runner-g585.php`;
+- modified: bootstrap/version/flags only;
+- deleted: none;
+- Search Service/rebuild/lifecycle/ranker unchanged.
+
+Invariantes:
+- runner nunca desativa ASI automaticamente;
+- se ASI estiver ativo -> `BLOCKED_LEGACY_ACTIVE` antes de rebuild/Golden;
+- nenhuma remoção física de tabela/option ASI;
+- static scan cobre runtime PHP carregado, símbolos e hooks;
+- Search + Golden + rebuild + lifecycle devem passar com ASI ausente;
+- ranker permanece `lexical-ranker-v1.0.0`;
+- G-590 permanece bloqueado até G-585 ambiental PASS.
+
+### Próxima ação humana exata
+
+1. desativar manualmente o plugin **Advanced Search Intelligence** em homologação;
+2. manter arquivos/tabelas/options legados intactos;
+3. instalar `0.5.0-g585.1` por atualização sobre o BDC atual;
+4. abrir **Base de Conhecimento → Independência G-585**;
+5. executar **Executar G-585 e baixar JSON**;
+6. anexar o JSON.
+
+Aceite esperado:
+- `status=PASS`;
+- static_runtime_scan.matches=[];
+- legacy_environment.active_plugins=[];
+- legacy_environment.loaded_symbols=[];
+- legacy_environment.loaded_hooks=[];
+- Search probes projection_like;
+- Golden status=PASS / blocking_failed=0 / technical_failed=0;
+- rebuild PASS / pass2 written=0 / mismatch=0;
+- lifecycle rollback PASS;
+- T585/T586/T587/T588/T589/T589.1/T589.2=true;
+- `next_gate=G-590`;
+- errors=[] / throwables=[].
+
+Se qualquer item falhar, manter G-585 OPEN e diagnosticar antes de RC.

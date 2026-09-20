@@ -103,6 +103,8 @@
 - [x] G585-PKG-05 29/29 checks locais; 59/59 PHP lint; 48/48 active requires.
 - [x] G585-PKG-06 build determinístico 2/2 — SHA-256 `cae86ef93572e9320efe89d8fed891e90be032e5d46e4aaccf6dca647bf62880`.
 - [ ] G585-ENV executar com ASI manualmente desativado e anexar JSON.
+  - g585.1: FAIL CONTROLADO — ASI inativo, source BDC dependency-zero, porém símbolo carregado `BDC_KX_ASI_Adapter`; origem não atribuída.
+  - g585.2: patch diagnóstico pronto; Reflection reporta source_scope/source_path; gate permanece bloqueante; reexecução requerida.
 
 ### G-540 — pacote de homologação
 - [x] G540-PKG-01 source/package parity 55/55.

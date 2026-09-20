@@ -14,8 +14,8 @@
 | G-540 | `evidence/g540-environmental-20260919T115727Z.json` | PASS/CLOSED |
 | G-550 | `evidence/g550-environmental-20260919T121422Z.json` | PASS/CLOSED |
 | G-560 | `evidence/g560-local-package-validation-20260919.json` + `evidence/g560-environmental-review-20260919T134816Z.json` + `evidence/g560-human-visual-acceptance-20260919.md` | PASS/CLOSED |
-| G-570 | `g570-security-performance-contract-v1.md` + `evidence/g570-local-package-validation-20260919.json` + ambiental pendente | PACKAGE/LOCAL PASS — ENV NOT_RUN |
-| G-580 | lifecycle/rebuild/fallback | NOT_RUN |
+| G-570 | `g570-security-performance-contract-v1.md` + `evidence/g570-local-package-validation-20260919.json` + `evidence/g570-environmental-review-20260920T164828Z.json` | PASS/CLOSED |
+| G-580 | lifecycle/rebuild/fallback | OPEN |
 | G-585 | ASI ausente + Search/Golden + rebuild próprio | NOT_RUN |
 | G-590 | package + manifest + checksum + final smoke | NOT_RUN |
 

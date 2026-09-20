@@ -38,7 +38,7 @@ $runner_code = $strip_comments( $runner );
 $destructive = '/DROP\s+TABLE|TRUNCATE\s+TABLE|delete_option\s*\(|wp_delete_post\s*\(|delete_post_meta\s*\(|wp_delete_term\s*\(/i';
 
 $checks = array(
-	'version_g580' => str_contains( $bootstrap, 'Version: 0.5.0-g580.1' ),
+	'version_g580' => str_contains( $bootstrap, 'Version: 0.5.0-g580.2' ),
 	'g530_engine_on' => str_contains( $bootstrap, "BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD', true" ),
 	'g570_runner_off' => str_contains( $bootstrap, "BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD', false" ),
 	'g580_runner_on' => str_contains( $bootstrap, "BDC_KB_SPEC005_G580_LIFECYCLE_BUILD', true" ),
@@ -89,6 +89,7 @@ $checks = array(
 		&& str_contains( $runner, "'t582_disable_module_pass'" )
 		&& str_contains( $runner, "'t583_uninstall_retention_pass'" )
 		&& str_contains( $runner, "'t584_g580_pass'" ),
+	'runner_query_log_probe_self_safe' => str_contains( $runner, "\$query_log_marker = 'bdc_kb_search_' . 'query_log';" ),
 	'runner_no_editorial_write' => 1 !== preg_match( '/wp_update_post\s*\(|wp_insert_post\s*\(|update_post_meta\s*\(|wp_set_object_terms\s*\(/i', $runner_code ),
 	'ranker_version_unchanged' => str_contains( $ranker, "public const VERSION = 'lexical-ranker-v1.0.0';" ),
 );

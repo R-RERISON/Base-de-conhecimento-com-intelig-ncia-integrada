@@ -124,26 +124,39 @@ final class Public_Experience {
 
 	public static function render_header(): void {
 		$kind = self::preview_kind() ?? 'home';
-		$items = Public_Navigation::items();
-		echo '<header class="bdc-public-header"><div class="bdc-public-header__inner">';
-		echo '<a class="bdc-public-brand" href="' . esc_url( self::home_preview_url() ) . '">';
+		$links = array(
+			array( 'label' => 'Página Inicial', 'url' => self::home_preview_url(), 'icon' => 'dashicons-admin-home', 'external' => false ),
+			array( 'label' => 'Consulta Avançada', 'url' => home_url( '/consulta-avancada/' ), 'icon' => 'dashicons-media-document', 'external' => false ),
+			array( 'label' => 'Telefones', 'url' => home_url( '/telefones-importantes/' ), 'icon' => 'dashicons-phone', 'external' => false ),
+			array( 'label' => 'Links Úteis', 'url' => home_url( '/links-uteis/' ), 'icon' => 'dashicons-admin-links', 'external' => false ),
+			array( 'label' => 'POSTI', 'url' => 'https://vok-smb2.cloud-p.bcnet.bcb.gov.br/app/manual/posti/publico', 'icon' => 'dashicons-external', 'external' => true ),
+		);
+
+		echo '<header class="bdc-public-header" data-bdc-header><div class="bdc-public-header__inner">';
+		echo '<a class="bdc-public-brand" href="' . esc_url( self::home_preview_url() ) . '" aria-label="Página inicial da Base de Conhecimento">';
 		self::render_brand_visual();
 		echo '<span class="bdc-public-brand__copy"><strong>Base de Conhecimento</strong><small>Central de apoio operacional</small></span></a>';
 
-		if ( 'article' === $kind ) {
-			self::render_global_search( true );
-		} else {
-			echo '<nav class="bdc-public-nav" aria-label="Navegação principal">';
-			foreach ( $items as $item ) {
-				$label = (string) ( $item['label'] ?? '' ); $url = (string) ( $item['url'] ?? '' );
-				if ( '' === $label || '' === $url ) { continue; }
-				echo '<a class="bdc-public-nav__item" href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a>';
-			}
-			echo '</nav>';
+		echo '<nav class="bdc-public-quicknav" aria-label="Links rápidos"><span class="bdc-public-quicknav__label">Links rápidos</span><div class="bdc-public-quicknav__links">';
+		foreach ( $links as $item ) {
+			$external = ! empty( $item['external'] );
+			echo '<a class="bdc-public-quicknav__link' . ( $external ? ' is-external' : '' ) . '" href="' . esc_url( (string) $item['url'] ) . '"' . ( $external ? ' target="_blank" rel="noopener noreferrer"' : '' ) . '>';
+			echo '<span class="dashicons ' . esc_attr( (string) $item['icon'] ) . '" aria-hidden="true"></span><span>' . esc_html( (string) $item['label'] ) . '</span></a>';
 		}
+		echo '</div></nav>';
+
+		echo '<div class="bdc-public-header__profile">';
 		Public_Auth_Bridge::render();
 		echo '</div>';
-		if ( 'article' === $kind ) { self::render_global_search_results(); }
+		echo '<button class="bdc-public-header__toggle" type="button" data-bdc-header-toggle aria-label="Abrir links rápidos" aria-expanded="false"><span></span><span></span><span></span></button>';
+		echo '</div>';
+
+		if ( 'article' === $kind ) {
+			echo '<div class="bdc-public-header__searchrow"><div class="bdc-public-header__searchinner">';
+			self::render_global_search( true );
+			echo '</div></div>';
+			self::render_global_search_results();
+		}
 		echo '</header>';
 	}
 

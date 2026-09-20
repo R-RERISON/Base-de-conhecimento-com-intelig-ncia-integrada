@@ -1227,3 +1227,42 @@ Status:
 - G-585 PAUSED;
 - G-590 BLOCKED.
 
+## Visual baseline accepted + P-580WC.1 Word Cloud
+
+Human decision:
+- Public Experience `0.5.0-ux004005.6` approved as CURRENT VISUAL BASELINE;
+- visual work pauses and may resume as product maturity increases;
+- this does not authorize public cutover or close technical parity gates.
+
+Word Cloud v1:
+- contract: `word-cloud-v1.0.0`;
+- BDC-owned Options/transient only; zero new table;
+- title/heading/content/taxonomy/allowlist/blocklist available;
+- search events/interactions/vocabulary explicitly pending;
+- snapshot + quality maturity + lock + hourly cron + health/history + admin operations + click-to-search;
+- public requests never generate snapshot;
+- zero ASI runtime/storage dependency;
+- deactivation clears cron only and retains state.
+
+Package:
+- `0.5.0-p580wc.1`;
+- SHA-256 `0b68e3eefa19bb68dce74de208e37bb128e6de1190162fbfc326ac67670f3a8d`;
+- 85 files / 73 PHP;
+- 73/73 lint + extracted lint;
+- 56/56 active requires;
+- 19/19 contract checks;
+- source/package/repository parity 7/7;
+- deterministic 2/2.
+
+Evidence:
+- `evidence/p580-word-cloud-v1-local-validation-20260920.json`;
+- `specs/005-search-lexical-golden-queries/word-cloud-contract-v1.md`;
+- `specs/005-search-lexical-golden-queries/asi-functional-disposition-matrix-v2.md`.
+
+Status:
+- H-040/A-040 current human visual PASS;
+- H-023 LOCAL PASS / ENV pending;
+- P-580A classification advanced; no capability may be silently dropped;
+- G-585 remains PAUSED until Word Cloud/Home technical acceptance and ASI-off proof;
+- G-590 BLOCKED.
+

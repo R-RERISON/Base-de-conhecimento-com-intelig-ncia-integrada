@@ -615,3 +615,48 @@ Próximo passo técnico:
 4. implementar somente após H-001/H-010 fechados;
 5. retomar G-585 apenas quando Home e matriz funcional não tiverem MISSING bloqueante sem plano.
 
+## Continuidade — UX-005 Public Article Reader / GRE parity
+
+O plugin BDC passa a controlar também a experiência pública dos artigos.
+
+Baseline externa observada:
+- GRE 0.6.0: 8 fields, editor/coverage e painel lateral automático;
+- Astra Custom CSS atual: Home + ASI + Single Post + Elementor compatibility na mesma folha;
+- screenshot real: hero documental, conteúdo principal, Dicas úteis e Resumo Executivo persistente à direita.
+
+Decisão:
+- UX-004 fica responsável pela Home;
+- UX-005 fica responsável pelo Article Reader;
+- P-580B inventaria GRE integralmente;
+- não aposentar GRE por já existirem 3 metas Summary no BDC.
+
+Executive Summary Rail futuro:
+- read model composto;
+- WP_Post title;
+- Summary: objective/escalation/important;
+- Classification: audience/responsible_team/catalog_item;
+- affected_service/systems_involved: owners pendentes;
+- preferir sticky dentro da grid;
+- read-only e reflow mobile.
+
+Dicas úteis:
+- structured repeatable content;
+- ordered;
+- automatic top-of-article rendering;
+- Workspace editor;
+- ausência => zero markup;
+- search/KD integration precisa de contrato;
+- storage ainda não congelado.
+
+Theme/CSS:
+- retirar Astra Custom CSS da posição de owner;
+- migrar hardening Elementor útil para CSS escopado do BDC;
+- Article Reader deve provar funcionamento com Custom CSS desligado antes do cutover.
+
+Próximo passo:
+1. A001-A006 inventory;
+2. localizar source/data de Dicas úteis;
+3. fechar owners Serviço Afetado/Sistemas Envolvidos;
+4. fechar A010-A015;
+5. só depois implementar reader/package.
+

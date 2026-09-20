@@ -668,3 +668,56 @@ Próxima ação:
 5. anexar o JSON para decisão T585–T589.2.
 
 Não desinstalar/remover tabelas ASI neste gate.
+
+## G-585 — primeira execução ambiental / FAIL CONTROLADO
+
+Evidência:
+- `evidence/g585-environmental-fail-dependency-20260920T174342Z.json`;
+- revisão: `evidence/g585-dependency-blocker-review-20260920.json`;
+- upload SHA-256 `4e7ebdef00dd90d7141d34496549e6f41033dc9f97de91b69869039417b1ca42`.
+
+Resultado:
+- static scan dos 48 arquivos BDC carregados: `matches=[]`;
+- `dependency_zero=true` para runtime source BDC;
+- ASI ativo: não;
+- `active_plugins=[]` para legacy detector;
+- loaded hooks legacy: nenhum;
+- loaded symbol legacy: `class:BDC_KX_ASI_Adapter`;
+- T585=false;
+- T586=true;
+- Search/Golden/rebuild/lifecycle não executados por fail-fast;
+- status `FAIL_DEPENDENCY_FOUND`;
+- G-585 permanece OPEN;
+- G-590 permanece BLOCKED.
+
+Interpretação:
+- não há evidência de regressão da Search;
+- não há referência ASI encontrada no runtime source BDC;
+- o blocker é um símbolo já carregado no ambiente e seu arquivo de origem não era registrado pelo g585.1;
+- não relaxar o gate sem atribuir a origem.
+
+## G-585 — patch diagnóstico 0.5.0-g585.2
+
+Objetivo único:
+- atribuir origem de classes/functions legacy via Reflection;
+- registrar `source_scope` e `source_path` relativos;
+- não exportar caminho absoluto do servidor;
+- manter exatamente o mesmo comportamento bloqueante do T585.
+
+Validação local:
+- 66 arquivos / 59 PHP;
+- 59/59 lint;
+- 48/48 active requires;
+- 31/31 checks;
+- deterministic build 2/2;
+- ZIP SHA-256 `0db339e50e997bbc4211972173809ea71517fc242696b17345bf8d095146c915`;
+- delta vs g585.1: 0 added / 2 modified / 0 deleted;
+- Search Service/rebuild/lifecycle/ranker inalterados;
+- ranker SHA-256 `47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78`.
+
+Próxima ação:
+1. manter o Advanced Search Intelligence desativado;
+2. atualizar para `0.5.0-g585.2`;
+3. executar novamente **Base de Conhecimento → Independência G-585**;
+4. anexar o JSON;
+5. usar `loaded_symbols[].source_scope/source_path` para decidir a remoção/desativação do componente residual ou corrigir o ownership, sem whitelist prematura.

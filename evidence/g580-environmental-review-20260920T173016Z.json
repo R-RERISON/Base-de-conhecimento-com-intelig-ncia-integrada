@@ -1,0 +1,176 @@
+{
+    "schema_version": "1.0.0",
+    "gate": "G-580",
+    "mode": "spec005_lifecycle_rebuild_environmental",
+    "generated_at": "2026-09-20T17:30:16+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.5.0-g580.2",
+        "multisite": false,
+        "db_server": "12.2.2"
+    },
+    "contract": {
+        "reference": "specs/005-search-lexical-golden-queries/g580-lifecycle-rebuild-contract-v1.md",
+        "activation_mass_rebuild_allowed": false,
+        "update_mass_rebuild_allowed": false,
+        "uninstall_retention_default": true,
+        "new_persistent_enable_option": false
+    },
+    "activation_update": {
+        "schema_before": true,
+        "rows_before": 623,
+        "projection_snapshot_before": "605d7195d29139db10633da20287350ed8e01361324ac5f4d9ca52c4ba7ec510",
+        "result": {
+            "schema_before": true,
+            "schema_after": true,
+            "rows_before": 623,
+            "rows_after": 623,
+            "state_before": {
+                "schema_version": "1.0.0",
+                "status": "ready",
+                "document_version": "search-document-v1.0.0",
+                "normalizer_version": "search-normalizer-v1.0.0",
+                "corpus_count": 623,
+                "source_fingerprint": "6c4b861283faeab3841c2de8f7a841277d48dc300c812b7333ae03421f39128f",
+                "last_success_at_gmt": "2026-09-20 17:20:10",
+                "last_error_code": ""
+            },
+            "state_after": {
+                "schema_version": "1.0.0",
+                "status": "ready",
+                "document_version": "search-document-v1.0.0",
+                "normalizer_version": "search-normalizer-v1.0.0",
+                "corpus_count": 623,
+                "source_fingerprint": "6c4b861283faeab3841c2de8f7a841277d48dc300c812b7333ae03421f39128f",
+                "last_success_at_gmt": "2026-09-20 17:20:10",
+                "last_error_code": ""
+            },
+            "implicit_rebuild": false,
+            "errors": [],
+            "throwables": []
+        },
+        "rows_after_prepare": 623,
+        "projection_snapshot_after_prepare": "605d7195d29139db10633da20287350ed8e01361324ac5f4d9ca52c4ba7ec510",
+        "prepare_did_not_reindex": true
+    },
+    "fallback_probe": {
+        "state": "degraded",
+        "retrieval_mode": "wordpress_fallback",
+        "count": 5,
+        "degraded_reason": "projection_not_ready",
+        "error_code": ""
+    },
+    "disable_probe": {
+        "state": "degraded",
+        "retrieval_mode": "wordpress_fallback",
+        "count": 5,
+        "degraded_reason": "search_module_disabled",
+        "error_code": ""
+    },
+    "explicit_rebuild": {
+        "status": "PASS",
+        "corpus_count": 623,
+        "row_count": 623,
+        "stale_rows_deleted": 0,
+        "pass1": {
+            "name": "pass1",
+            "processed": 623,
+            "written": 0,
+            "no_change": 623,
+            "error_count": 0,
+            "throwable_count": 0
+        },
+        "pass2": {
+            "name": "pass2",
+            "processed": 623,
+            "written": 0,
+            "no_change": 623,
+            "error_count": 0,
+            "throwable_count": 0
+        },
+        "determinism": {
+            "compared": 623,
+            "mismatch_count": 0,
+            "mismatch_post_ids": []
+        },
+        "source_fingerprint": "6c4b861283faeab3841c2de8f7a841277d48dc300c812b7333ae03421f39128f",
+        "state_after": {
+            "schema_version": "1.0.0",
+            "status": "ready",
+            "document_version": "search-document-v1.0.0",
+            "normalizer_version": "search-normalizer-v1.0.0",
+            "corpus_count": 623,
+            "source_fingerprint": "6c4b861283faeab3841c2de8f7a841277d48dc300c812b7333ae03421f39128f",
+            "last_success_at_gmt": "2026-09-20 17:30:16",
+            "last_error_code": ""
+        },
+        "errors": [],
+        "throwables": [],
+        "runtime_ms": 4768.646
+    },
+    "retention": {
+        "uninstall_file_exists": true,
+        "uninstall_non_destructive": true,
+        "deactivation_non_destructive": true,
+        "table_retained_by_default": true,
+        "state_option_retained_by_default": true
+    },
+    "safety": {
+        "editorial_fingerprint_before": "8484633b65268d040945217032a311510a523aebda25d172d3e3e4db83ec2143",
+        "editorial_fingerprint_after": "8484633b65268d040945217032a311510a523aebda25d172d3e3e4db83ec2143",
+        "editorial_fingerprint_equal": true,
+        "corpus_ids_equal": true,
+        "state_before": {
+            "schema_version": "1.0.0",
+            "status": "ready",
+            "document_version": "search-document-v1.0.0",
+            "normalizer_version": "search-normalizer-v1.0.0",
+            "corpus_count": 623,
+            "source_fingerprint": "6c4b861283faeab3841c2de8f7a841277d48dc300c812b7333ae03421f39128f",
+            "last_success_at_gmt": "2026-09-20 17:20:10",
+            "last_error_code": ""
+        },
+        "state_after": {
+            "schema_version": "1.0.0",
+            "status": "ready",
+            "document_version": "search-document-v1.0.0",
+            "normalizer_version": "search-normalizer-v1.0.0",
+            "corpus_count": 623,
+            "source_fingerprint": "6c4b861283faeab3841c2de8f7a841277d48dc300c812b7333ae03421f39128f",
+            "last_success_at_gmt": "2026-09-20 17:30:16",
+            "last_error_code": ""
+        },
+        "runtime_source": {
+            "no_asi": true,
+            "no_network": true,
+            "no_query_logging": true,
+            "ranker_version_frozen": true,
+            "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78"
+        },
+        "calls_external_network": false,
+        "persists_query_log": false,
+        "depends_on_asi": false
+    },
+    "errors": [],
+    "throwables": [],
+    "runner": {
+        "total_runtime_ms": 9393.2841,
+        "peak_memory_bytes": 48234496
+    },
+    "gate_result": {
+        "t580_activation_update_pass": true,
+        "t581_rebuild_fallback_pass": true,
+        "t582_disable_module_pass": true,
+        "t583_uninstall_retention_pass": true,
+        "t584_g580_pass": true,
+        "next_gate": "G-585"
+    },
+    "interpretation_rules": [
+        "Activation/update prepara schema, mas nunca reconstrói o corpus implicitamente.",
+        "Fallback é obrigatório quando Projection não está ready ou quando o módulo Search está desabilitado.",
+        "Uninstall v1 preserva tabela e Option por default; limpeza destrutiva exige gate futuro.",
+        "Rebuild explícito pode escrever apenas na Search Projection derivada e na Option de estado.",
+        "G-580 PASS não equivale a RC ou produção; G-585 continua obrigatório."
+    ]
+}

@@ -1,0 +1,16 @@
+.bdc-public-header{position:relative;z-index:20;border-bottom:1px solid #e8edf3;background:#fff}
+.bdc-public-header__inner{display:grid;grid-template-columns:minmax(250px,1fr) auto minmax(180px,1fr);align-items:center;gap:20px;width:min(1450px,calc(100% - 48px));min-height:76px;margin:0 auto}
+.bdc-public-brand{display:inline-flex;align-items:center;gap:11px;width:max-content;text-decoration:none}
+.bdc-public-brand__mark{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#0b1f4d,#0b63e5);color:#fff;font-size:11px;font-weight:900;letter-spacing:.04em;box-shadow:0 6px 18px rgba(11,31,77,.16)}
+.bdc-public-brand strong{display:block;color:var(--bdc-brand-navy);font-size:14px;line-height:1.2}
+.bdc-public-brand small{display:block;margin-top:2px;color:var(--bdc-text-muted);font-size:11px}
+.bdc-public-nav{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap}
+.bdc-public-nav__item{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:6px 11px;border:1px solid #dfe7ef;border-radius:999px;background:#fff;color:var(--bdc-brand-navy);font-size:12px;font-weight:750;text-decoration:none}
+.bdc-public-nav__item:hover{border-color:#b8c8d8;background:#f8fbff}
+.bdc-public-nav__item.is-unavailable{opacity:.5}
+.bdc-public-profile{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
+.bdc-public-profile__avatar{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--bdc-brand-navy);color:#fff;font-size:11px;font-weight:850}
+.bdc-public-profile__name{max-width:140px;overflow:hidden;color:var(--bdc-brand-navy);font-size:12px;font-weight:750;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1050px){.bdc-public-header__inner{grid-template-columns:1fr auto}.bdc-public-nav{grid-column:1/-1;grid-row:2;padding-bottom:12px}.bdc-public-profile{grid-column:2;grid-row:1}}
+@media(max-width:782px){.bdc-public-header__inner{width:calc(100% - 24px);grid-template-columns:1fr auto}.bdc-public-nav{justify-content:flex-start;overflow:auto;flex-wrap:nowrap}.bdc-public-nav__item{white-space:nowrap}}
+@media(max-width:520px){.bdc-public-profile__name{display:none}.bdc-public-brand small{display:none}}

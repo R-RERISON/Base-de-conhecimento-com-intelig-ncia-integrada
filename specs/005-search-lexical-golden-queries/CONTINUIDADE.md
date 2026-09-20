@@ -340,3 +340,44 @@ Estado:
 - G-570 package/local PASS;
 - G-570 environmental NOT_RUN;
 - T570–T574 permanecem abertos.
+
+
+## G-570 ambiental — PASS/CLOSED — 2026-09-20
+
+Evidence:
+- `evidence/g570-environmental-review-20260920T164828Z.json`;
+- upload SHA-256 `38d399cab1f466c1b919513b8cf3650dd3ae7b6a55d94b715efe5597c3b89ffd`.
+
+Security:
+- 45/45 checks PASS;
+- capability fail-closed PASS;
+- object-level denial PASS;
+- SQL/bounds PASS;
+- abuse PASS;
+- zero network/query log/ASI/FULLTEXT;
+- fingerprint editorial equal.
+
+Performance:
+- 30 samples;
+- p50 178.4739 ms;
+- p95 207.7448 ms;
+- max 212.9128 ms;
+- fallback 0;
+- technical errors 0;
+- budget comfortably met.
+
+Gate:
+- T570 PASS;
+- T571 PASS;
+- T572 PASS;
+- T573 PASS;
+- T574 PASS;
+- G-570 CLOSED;
+- gate atual: G-580.
+
+G-580 objetivo:
+1. activation/update;
+2. explicit rebuild + fallback;
+3. disable Search module safely;
+4. uninstall/retention behavior;
+5. no editorial loss and no ASI dependency.

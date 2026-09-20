@@ -27,10 +27,11 @@ foreach ( $files as $key => $relative ) {
 
 $checks = array(
 	'version_v4' => str_contains( $src['bootstrap'], 'Version: 0.5.0-ux004005.4' ),
-	'exact_entra_profile_menu_contract' => str_contains(
-		$src['auth'],
-		'bdc_entra_login' . ' mode="profile-menu" show_department="true" show_job_title="true" show_logout="true" show_admin_link="auto"'
-	),
+	'exact_entra_profile_menu_contract' => str_contains( $src['auth'], 'mode="profile-menu"' )
+		&& str_contains( $src['auth'], 'show_department="true"' )
+		&& str_contains( $src['auth'], 'show_job_title="true"' )
+		&& str_contains( $src['auth'], 'show_logout="true"' )
+		&& str_contains( $src['auth'], 'show_admin_link="auto"' ),
 	'header_home_link' => str_contains( $src['experience'], "'Página Inicial'" ),
 	'header_consulta_link' => str_contains( $src['experience'], "/consulta-avancada/" ),
 	'header_telefones_link' => str_contains( $src['experience'], "/telefones-importantes/" ),

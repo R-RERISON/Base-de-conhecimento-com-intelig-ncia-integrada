@@ -1,6 +1,6 @@
 <?php
 /**
- * BDC Word Cloud v1 contract and defaults.
+ * BDC Word Cloud v1.1 contract and defaults.
  *
  * @package BDC_Knowledge_Base
  */
@@ -13,8 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Word_Cloud_Contract {
 
-	public const VERSION = 'word-cloud-v1.0.0';
-	public const SNAPSHOT_VERSION = 'word-cloud-snapshot-v1.0.0';
+	public const VERSION = 'word-cloud-v1.1.0';
+	public const SNAPSHOT_VERSION = 'word-cloud-snapshot-v1.1.0';
+	public const QUALITY_PROFILE = 'semantic-balanced-v2';
 	public const CRON_HOOK = 'bdc_kb_word_cloud_hourly_generate';
 	public const SETTINGS_OPTION = 'bdc_kb_word_cloud_settings';
 	public const ALLOWLIST_OPTION = 'bdc_kb_word_cloud_allowlist';
@@ -30,8 +31,9 @@ final class Word_Cloud_Contract {
 	public static function default_settings(): array {
 		return array(
 			'enabled' => true,
+			'quality_profile' => self::QUALITY_PROFILE,
 			'max_posts_scan' => 400,
-			'include_body_terms' => true,
+			'include_body_terms' => false,
 			'max_public_terms' => 24,
 			'stale_after_seconds' => 3 * HOUR_IN_SECONDS,
 		);
@@ -39,15 +41,23 @@ final class Word_Cloud_Contract {
 
 	/** @return array<int,string> */
 	public static function default_allowlist(): array {
-		return array();
+		return array(
+			'VPN','MFA','2FA','AD','TI','BI','RH','Teams','MSTeams','Outlook','Microsoft 365','Office 365','Intune','SCCM',
+			'Senha','Certificado','BitLocker','OneDrive','SharePoint','Office','Windows 10','Windows 11','Power BI','Power Apps',
+			'Rotulação','E-mail','Python','Autenticação',
+		);
 	}
 
 	/** @return array<int,string> */
 	public static function default_blocklist(): array {
 		return array(
-			'base','conhecimento','artigo','artigos','pagina','página','clique','aqui','mais','sobre','para','com','sem','uma','umas','uns',
-			'das','dos','que','como','por','nos','nas','de','do','da','em','no','na','os','as','ao','aos','e','ou','se','um','the','and','from',
-			'http','https','www','html','php','jpg','jpeg','png','gif','svg','wordpress','elementor',
+			'base','conhecimento','artigo','artigos','pagina','página','clique','clicar','acesse','documento','documentos',
+			'sistema','sistemas','arquivo','arquivos','usuario','usuário','usuarios','usuários','informacao','informação',
+			'informacoes','informações','ambiente','ambientes','processo','processos','servico','serviço','servicos','serviços',
+			'solicitacao','solicitação','solicitacoes','solicitações','realizar','utilizar','acessar','conforme','atraves','através',
+			'necessario','necessário','orientacao','orientação','objetivo','objetivos','abrangencia','abrangência','conceitos',
+			'definicoes','definições','regras','atividades','abaixo','tela','caso','banco','central','mail',
+			'http','https','www','html','php','jpg','jpeg','png','gif','svg','wordpress','elementor','rotu','pytho','auth','ncia',
 		);
 	}
 
@@ -55,8 +65,10 @@ final class Word_Cloud_Contract {
 	public static function source_availability(): array {
 		return array(
 			'title' => 'available',
+			'title_phrase' => 'available',
 			'heading' => 'available',
-			'content' => 'available',
+			'heading_phrase' => 'available',
+			'content' => 'available_opt_in',
 			'taxonomy' => 'available',
 			'allowlist' => 'available',
 			'blocklist' => 'available',

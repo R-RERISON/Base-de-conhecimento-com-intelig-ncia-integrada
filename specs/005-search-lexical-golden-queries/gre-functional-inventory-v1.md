@@ -3,7 +3,8 @@
 **Status:** OPEN / INVENTORY  
 **Data:** 2026-09-20  
 **Baseline:** `R-RERISON/Gerenciador-de-Resumo-Executivo-da-Base-de-Conhecimento` main  
-**Versão observada:** 0.6.0
+**Versão de repositório observada:** 0.6.0  
+**Versão ambiental homologação:** 0.8.0
 
 ## 1. Regra
 
@@ -60,6 +61,27 @@ A absorção pelo BDC exige:
 - shortcode explícito como fallback;
 - anti-duplicação;
 - zero dependência Elementor.
+
+## 2.1. Baseline ambiental 0.8.0
+
+P-580 deep inventory comprovou que homologação executa GRE 0.8.0.
+
+Arquivos observados:
+- `class-frontend-renderer.php` — SHA-256 `062e4eb9564e9390ed45c4011694072fe7950113efd28e57dc1776efe7bef3ee`;
+- `class-helpful-tips-renderer.php` — SHA-256 `65913c0317a0820e2dafd4f733d73c03f4583c791dcf4a5af38b67405b9b3b8f`;
+- `class-helpful-tips-store.php` — SHA-256 `86df682678a8b4b0c26d4ebaf2a4f63864ce4c5e1d46afae0c31c75ae5ca25f7`.
+
+O ambiente possui capacidades Helpful Tips não presentes na baseline main 0.6.0 consultada. Para paridade funcional, o runtime ambiental 0.8.0 prevalece como evidência de capacidade existente.
+
+Helpful Tips:
+- physical key `_bdc_es_helpful_tips`;
+- 7 posts publicados;
+- storage = lista ordenada;
+- item keys exatas: `title`, `content`;
+- ambos string;
+- 1–4 itens observados;
+- zero ocorrência em post_content/_elementor_data;
+- BDC pode absorver o mesmo physical key sob API própria, evitando migration obrigatória.
 
 ## 3. Mapping GRE → BDC atual
 

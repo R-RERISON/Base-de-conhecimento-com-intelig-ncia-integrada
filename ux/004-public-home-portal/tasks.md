@@ -8,20 +8,20 @@
 - [x] H003 `bc_populares` localizado — Code Snippets / `bdc_home_v270_populares_shortcode`.
 - [x] H004 `bdc_home_filter_v270` localizado — Code Snippets / AJAX auth+nopriv.
 - [x] H005 `bdc_entra_login` = BDC Entra Gateway; Home/Header atual reside na página Elementor 41395.
-- [ ] H006 mapear origem de popularidade/categorias.
+- [x] H006 snippet #9 usa WP_Query + category + comment_count; métrica exata tratada como legacy compatibility provider, sem copiar source.
 - [x] H007 na Home ativa não foram observados outros shortcodes ASI além de Search/Word Cloud; inventário funcional ASI amplo permanece em P-580A.
-- [ ] H008 fechar inventário após semântica de snippets.
+- [x] H008 H-001 CLOSED por evidence p580a.1 + p580a.2.
 - [x] H009-PKG `0.5.0-p580a.2` deep inventory preparado — snippets sem código + plugin versions/hashes + Tips shape.
-- [ ] H009-ENV executar `p580a.2` e anexar JSON.
+- [x] H009-ENV `p580a.2` PASS — evidence `p580-public-experience-deep-inventory-20260920T185920Z.json`.
 
 ## H-010 Contract
-- [ ] H010 contrato Public Search.
-- [ ] H011 contrato Word Cloud BDC.
-- [ ] H012 contrato Home Components.
-- [ ] H013 decisão shortcode/block/template.
-- [ ] H014 contrato de migração da página ativa.
-- [ ] H015 visual contract/mapping.
-- [ ] H016 fechar contrato.
+- [x] H010 contrato Public Search — `h010-public-home-contract-v1.md`.
+- [x] H011 contrato Word Cloud BDC — frozen v1.
+- [x] H012 contrato Home Components — frozen v1.
+- [x] H013 plugin-owned template/renderer + preview/takeover progressivo.
+- [x] H014 página 41395 preservada como route/rollback anchor; zero content write.
+- [x] H015 Visual Contract v2 + Home v2.7/Header v2.6.5 como baseline.
+- [x] H016 H-010 CLOSED/FROZEN FOR IMPLEMENTATION.
 
 ## H-020 Implementation
 - [ ] H020 Public Home shell.

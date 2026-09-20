@@ -1071,3 +1071,58 @@ Status:
 - G-585 PAUSED;
 - G-590 BLOCKED.
 
+## UX-004/UX-005 — v4 Header parity + Reader context rail
+
+Human review of `0.5.0-ux004005.3`:
+- Home search-first direction accepted/improving;
+- Header lost legacy functional components;
+- Article Reader still too white / weakly separated;
+- Executive Summary must live in an independent right rail and follow scroll.
+
+Header contract source reintroduced:
+- Página Inicial;
+- Consulta Avançada;
+- Telefones;
+- Links Úteis;
+- POSTI external;
+- Entra profile menu with department/job title/logout/admin attributes;
+- responsive quick-links toggle.
+
+Article Search:
+- no longer replaces quick links;
+- appears as a second compact row under the functional Header;
+- Ctrl/Cmd+K retained.
+
+Reader v4:
+- light application canvas;
+- distinct article surface;
+- content target ~980px;
+- Summary rail ~350px;
+- gap ~48px;
+- Reader workspace ~1420px;
+- sticky Summary with header-aware top offset;
+- rail reflows below article <=1040px;
+- print becomes static flow.
+
+Package:
+- version `0.5.0-ux004005.4`;
+- SHA-256 `a07a518708b9ad92afbffacb6cd6527e944247e7084112851bc1e84c2c6ea300`;
+- 81 files / 69 PHP / 2 JS;
+- 69/69 PHP lint;
+- 69/69 extracted ZIP lint;
+- 19/19 v4 contract checks;
+- deterministic build 2/2;
+- delta vs v3: 8 modified / 0 added / 0 deleted;
+- Search/rebuild/lifecycle/ranker unchanged.
+
+Artifacts:
+- `ux/005-public-article-reader/header-parity-reader-rail-addendum-v3.md`;
+- `evidence/ux004005-header-reader-v4-local-validation-20260920.json`.
+
+Status:
+- H-020 v4 LOCAL PASS / ENV+HUMAN pending;
+- A-020 v4 LOCAL PASS / ENV+HUMAN pending;
+- no cutover;
+- G-585 PAUSED;
+- G-590 BLOCKED.
+

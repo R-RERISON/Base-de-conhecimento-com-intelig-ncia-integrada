@@ -1,0 +1,36 @@
+.bdc-public {
+	--bdc-brand-navy:#0b1f4d;
+	--bdc-blue-500:#1677ff;
+	--bdc-blue-600:#0b63e5;
+	--bdc-blue-700:#084fb8;
+	--bdc-bg:#f6f8fb;
+	--bdc-surface:#fff;
+	--bdc-surface-soft:#fbfcfd;
+	--bdc-text:#172033;
+	--bdc-text-secondary:#475467;
+	--bdc-text-muted:#667085;
+	--bdc-border:#dfe5ec;
+	--bdc-border-strong:#c7d2df;
+	--bdc-info-bg:#eef4ff;
+	--bdc-warning-bg:#fff5dc;
+	--bdc-radius-sm:10px;
+	--bdc-radius-md:16px;
+	--bdc-radius-lg:22px;
+	--bdc-shadow:0 8px 28px rgba(11,31,77,.06);
+	--bdc-focus:0 0 0 3px rgba(22,119,255,.24);
+	min-height:100vh;
+	background:var(--bdc-bg);
+	color:var(--bdc-text);
+	font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;
+}
+.bdc-public *, .bdc-public *::before, .bdc-public *::after{box-sizing:border-box}
+.bdc-public a{color:inherit}
+.bdc-public :where(a,button,input,select,textarea):focus-visible{outline:0;box-shadow:var(--bdc-focus)}
+.bdc-public-main{width:min(1320px,calc(100% - 48px));margin:0 auto;padding:28px 0 56px}
+.bdc-public-eyebrow{margin:0 0 8px;color:var(--bdc-blue-600);font-size:12px;font-weight:800;letter-spacing:.08em}
+.bdc-public-badge{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border-radius:999px;background:var(--bdc-info-bg);color:var(--bdc-blue-700);font-size:11px;font-weight:800;letter-spacing:.04em}
+.bdc-public-empty{padding:16px;border:1px dashed var(--bdc-border-strong);border-radius:12px;background:#fff;color:var(--bdc-text-secondary)}
+.bdc-public-preview-banner{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;background:#fff5dc;color:#6f4d00;font-size:12px;border-bottom:1px solid #f2d58a}
+.bdc-public-preview-banner strong{font-weight:850}
+@media(max-width:782px){.bdc-public-main{width:min(100% - 24px,1320px);padding-top:18px}.bdc-public-preview-banner{align-items:flex-start;flex-direction:column}}
+@media(max-width:520px){.bdc-public-main{width:min(100% - 16px,1320px)}}

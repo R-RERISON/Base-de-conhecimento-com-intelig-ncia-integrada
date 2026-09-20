@@ -28,6 +28,7 @@ final class Public_Experience {
 		add_action( 'template_redirect', array( self::class, 'prepare_preview_request' ), 1 );
 		add_action( 'wp_enqueue_scripts', array( self::class, 'enqueue_assets' ), 40 );
 		add_filter( 'body_class', array( self::class, 'body_class' ) );
+		add_action( 'wp_ajax_bdc_kb_public_search_preview', array( self::class, 'ajax_search_preview' ) );
 	}
 
 	public static function register_admin_page(): void {
@@ -111,6 +112,16 @@ final class Public_Experience {
 		wp_enqueue_style( 'bdc-kb-public-header', BDC_KB_URL . 'assets/css/public-header.css', array( 'bdc-kb-public-foundation' ), BDC_KB_VERSION );
 		wp_enqueue_style( 'bdc-kb-public-' . $kind, BDC_KB_URL . 'assets/css/public-' . $kind . '.css', array( 'bdc-kb-public-header' ), BDC_KB_VERSION );
 		wp_enqueue_script( 'bdc-kb-public-search', BDC_KB_URL . 'assets/js/public-search.js', array(), BDC_KB_VERSION, true );
+		wp_localize_script(
+			'bdc-kb-public-search',
+			'BDC_KB_PUBLIC_SEARCH',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce' => wp_create_nonce( 'bdc_kb_public_search_preview' ),
+				'minChars' => 2,
+				'debounceMs' => 180,
+			)
+		);
 	}
 
 	/** @param array<int,string> $classes @return array<int,string> */
@@ -166,12 +177,12 @@ final class Public_Experience {
 		$post_id = 'article' === $kind ? (int) get_queried_object_id() : 0;
 		$action = 'article' === $kind && $post_id > 0 ? get_permalink( $post_id ) : get_permalink( absint( get_option( 'page_on_front', 0 ) ) );
 		if ( ! is_string( $action ) || '' === $action ) { $action = home_url( '/' ); }
-		echo '<form class="bdc-global-search' . ( $compact ? ' bdc-global-search--compact' : '' ) . '" method="get" action="' . esc_url( $action ) . '" role="search">';
+		echo '<form class="bdc-global-search' . ( $compact ? ' bdc-global-search--compact' : '' ) . '" method="get" action="' . esc_url( $action ) . '" role="search" data-bdc-live-search-form data-bdc-search-context="article">';
 		echo '<input type="hidden" name="' . esc_attr( self::QUERY_KEY ) . '" value="' . esc_attr( $kind ) . '">';
 		echo '<input type="hidden" name="' . esc_attr( self::NONCE_KEY ) . '" value="' . esc_attr( wp_create_nonce( 'bdc_kb_public_preview_' . $kind ) ) . '">';
 		echo '<span class="dashicons dashicons-search" aria-hidden="true"></span>';
 		echo '<label class="screen-reader-text" for="bdc-global-search-input">Buscar na Base de Conhecimento</label>';
-		echo '<input id="bdc-global-search-input" data-bdc-global-search type="search" name="' . esc_attr( self::GLOBAL_QUERY_KEY ) . '" value="' . esc_attr( $query ) . '" placeholder="Buscar na Base de Conhecimento">';
+		echo '<input id="bdc-global-search-input" data-bdc-global-search data-bdc-live-search-input type="search" name="' . esc_attr( self::GLOBAL_QUERY_KEY ) . '" value="' . esc_attr( $query ) . '" placeholder="Buscar na Base de Conhecimento">';
 		echo '<kbd>Ctrl K</kbd><button type="submit" aria-label="Pesquisar"><span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span></button></form>';
 	}
 
@@ -198,10 +209,60 @@ final class Public_Experience {
 
 	private static function render_global_search_results(): void {
 		$search = self::global_search_results();
-		if ( ! is_array( $search ) ) { return; }
-		echo '<div class="bdc-global-search-panel"><div class="bdc-global-search-panel__inner"><div class="bdc-global-search-panel__head"><strong>Resultados</strong><a href="' . esc_url( self::article_preview_url( (int) get_queried_object_id() ) ) . '">Limpar</a></div>';
-		self::render_search_results( $search, 'bdc-search-results bdc-search-results--header' );
-		echo '</div></div>';
+		$hidden = is_array( $search ) ? '' : ' hidden';
+		echo '<div class="bdc-global-search-panel" data-bdc-live-search-panel' . $hidden . '><div class="bdc-global-search-panel__inner">';
+		echo '<div class="bdc-global-search-panel__head"><strong data-bdc-live-search-title>Resultados</strong><a href="' . esc_url( self::article_preview_url( (int) get_queried_object_id() ) ) . '" data-bdc-live-search-clear>Limpar</a></div>';
+		echo '<div data-bdc-live-search-results>';
+		if ( is_array( $search ) ) {
+			self::render_search_results( $search, 'bdc-search-results bdc-search-results--header' );
+		}
+		echo '</div></div></div>';
+	}
+
+	public static function ajax_search_preview(): void {
+		check_ajax_referer( 'bdc_kb_public_search_preview', 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Permissão insuficiente.' ), 403 );
+		}
+
+		$query = isset( $_POST['query'] ) && is_scalar( $_POST['query'] )
+			? sanitize_text_field( wp_unslash( (string) $_POST['query'] ) )
+			: '';
+		$query = trim( $query );
+		$length = function_exists( 'mb_strlen' ) ? mb_strlen( $query ) : strlen( $query );
+		if ( $length < 2 ) {
+			wp_send_json_success( array( 'query' => $query, 'count' => 0, 'results' => array(), 'state' => 'min_chars' ) );
+		}
+
+		$search = Public_Home_Read_Model::preview_search( $query );
+		$rows = array();
+		foreach ( (array) ( is_array( $search ) ? ( $search['results'] ?? array() ) : array() ) as $result ) {
+			$post_id = (int) ( $result['post_id'] ?? 0 );
+			$post = $post_id > 0 ? get_post( $post_id ) : null;
+			if ( ! is_object( $post ) || 'publish' !== (string) ( $post->post_status ?? '' ) ) {
+				continue;
+			}
+			$categories = get_the_category( $post_id );
+			$category = ! empty( $categories ) && is_object( $categories[0] ) ? (string) $categories[0]->name : '';
+			$raw_excerpt = '' !== trim( (string) $post->post_excerpt ) ? (string) $post->post_excerpt : (string) $post->post_content;
+			$rows[] = array(
+				'postId' => $post_id,
+				'title' => (string) $post->post_title,
+				'category' => $category,
+				'excerpt' => wp_trim_words( wp_strip_all_tags( strip_shortcodes( $raw_excerpt ) ), 22, '…' ),
+				'url' => self::article_preview_url( $post_id ),
+				'rank' => (int) ( $result['rank'] ?? 0 ),
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'query' => $query,
+				'count' => count( $rows ),
+				'results' => $rows,
+				'state' => empty( $rows ) ? 'empty' : 'ready',
+			)
+		);
 	}
 
 	public static function render_preview_banner( string $label ): void {

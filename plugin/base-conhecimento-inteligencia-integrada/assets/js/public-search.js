@@ -148,12 +148,15 @@
     if (consultationEvents.has(element)) return;
     consultationEvents.add(element);
 
+    var eventId = element.getAttribute('data-bdc-consult-event-id') || consultationEventId();
+    element.setAttribute('data-bdc-consult-event-id', eventId);
+
     var data = new URLSearchParams();
     data.append('action', String(config.consultAction));
     data.append('nonce', String(config.consultNonce));
     data.append('term', String(term));
     data.append('source', String(source || 'result_click'));
-    data.append('event_id', consultationEventId());
+    data.append('event_id', eventId);
     fetch(String(config.ajaxUrl), {
       method: 'POST',
       credentials: 'same-origin',

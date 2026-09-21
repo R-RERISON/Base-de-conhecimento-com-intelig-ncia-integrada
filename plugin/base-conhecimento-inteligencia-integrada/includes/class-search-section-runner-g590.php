@@ -311,6 +311,7 @@ final class Search_Section_Runner_G590 {
 		$numbered_with_heading = 0;
 		$unique_title_candidates = array();
 		$title_frequency = array();
+		$token_frequency = array();
 
 		foreach ( $post_ids as $post_id ) {
 			$extraction = Content_Extractor::extract( $post_id );
@@ -344,8 +345,16 @@ final class Search_Section_Runner_G590 {
 				}
 
 				$title_norm = (string) ( $section['title_norm'] ?? '' );
+				$text_norm = (string) ( $section['text_norm'] ?? '' );
 				if ( '' !== $title_norm ) {
 					$title_frequency[ $title_norm ] = (int) ( $title_frequency[ $title_norm ] ?? 0 ) + 1;
+					$section_tokens = Search_Query_Normalizer::tokens_from_normalized(
+						trim( $title_norm . ' ' . $text_norm )
+					);
+					foreach ( array_unique( $section_tokens ) as $token ) {
+						$token_frequency[ $token ] = (int) ( $token_frequency[ $token ] ?? 0 ) + 1;
+					}
+
 					$unique_title_candidates[] = array(
 						'post_id' => $post_id,
 						'post_status' => (string) get_post_status( $post_id ),
@@ -353,6 +362,7 @@ final class Search_Section_Runner_G590 {
 						'section_key' => (string) ( $section['section_key'] ?? '' ),
 						'title' => (string) ( $section['title'] ?? '' ),
 						'title_norm' => $title_norm,
+						'text_norm' => $text_norm,
 						'anchor_id' => (string) ( $section['anchor_id'] ?? '' ),
 						'anchor_state' => (string) ( $section['anchor_state'] ?? '' ),
 						'source_ordinal' => (int) ( $section['source_ordinal'] ?? 0 ),
@@ -394,17 +404,104 @@ final class Search_Section_Runner_G590 {
 			if (
 				'publish' !== (string) $candidate['post_status']
 				|| 'generated' !== (string) $candidate['anchor_state']
-				|| 1 !== (int) ( $title_frequency[ $title_norm ] ?? 0 )
 			) {
 				continue;
 			}
-			$query = Search_Query_Normalizer::normalize( (string) $candidate['title'] );
-			if ( $query instanceof \WP_Error || count( (array) $query['tokens'] ) < 2 ) {
+
+			$title_query = Search_Query_Normalizer::normalize( (string) $candidate['title'] );
+			if ( $title_query instanceof \WP_Error || empty( $title_query['tokens'] ) ) {
 				continue;
 			}
+
+			$probe_query = (string) $candidate['title'];
+			$probe_strategy = 'unique_title';
+			$discriminator_token = '';
+			$discriminator_frequency = 0;
+			$title_count = (int) ( $title_frequency[ $title_norm ] ?? 0 );
+
+			if ( 1 !== $title_count ) {
+				$title_tokens = array_fill_keys( (array) $title_query['tokens'], true );
+				$text_tokens = Search_Query_Normalizer::tokens_from_normalized(
+					(string) ( $candidate['text_norm'] ?? '' )
+				);
+				$discriminators = array();
+
+				foreach ( $text_tokens as $token ) {
+					if ( isset( $title_tokens[ $token ] ) || strlen( $token ) < 3 ) {
+						continue;
+					}
+					$discriminators[] = array(
+						'token' => $token,
+						'frequency' => (int) ( $token_frequency[ $token ] ?? PHP_INT_MAX ),
+					);
+				}
+
+				usort(
+					$discriminators,
+					static function ( array $left, array $right ): int {
+						$frequency = (int) $left['frequency'] <=> (int) $right['frequency'];
+						return 0 !== $frequency
+							? $frequency
+							: strcmp( (string) $left['token'], (string) $right['token'] );
+					}
+				);
+
+				foreach ( $discriminators as $discriminator ) {
+					$candidate_query = trim( (string) $candidate['title'] . ' ' . (string) $discriminator['token'] );
+					$normalized_candidate = Search_Query_Normalizer::normalize( $candidate_query );
+					if ( $normalized_candidate instanceof \WP_Error ) {
+						continue;
+					}
+					$probe_query = $candidate_query;
+					$probe_strategy = 'title_plus_rare_section_token';
+					$discriminator_token = (string) $discriminator['token'];
+					$discriminator_frequency = (int) $discriminator['frequency'];
+					break;
+				}
+
+				if ( 'title_plus_rare_section_token' !== $probe_strategy ) {
+					continue;
+				}
+			}
+
+			$candidate['probe_query'] = $probe_query;
+			$candidate['probe_strategy'] = $probe_strategy;
+			$candidate['title_frequency'] = $title_count;
+			$candidate['discriminator_token'] = $discriminator_token;
+			$candidate['discriminator_frequency'] = $discriminator_frequency;
+
 			$kind = (string) ( $candidate['source_kind'] ?? 'unknown' );
 			$eligible_by_source_kind[ $kind ][] = $candidate;
 		}
+
+		foreach ( $eligible_by_source_kind as &$candidates_for_kind ) {
+			usort(
+				$candidates_for_kind,
+				static function ( array $left, array $right ): int {
+					$left_strategy = 'unique_title' === (string) ( $left['probe_strategy'] ?? '' ) ? 0 : 1;
+					$right_strategy = 'unique_title' === (string) ( $right['probe_strategy'] ?? '' ) ? 0 : 1;
+					$comparison = $left_strategy <=> $right_strategy;
+					if ( 0 !== $comparison ) {
+						return $comparison;
+					}
+					$comparison = (int) ( $left['title_frequency'] ?? PHP_INT_MAX )
+						<=> (int) ( $right['title_frequency'] ?? PHP_INT_MAX );
+					if ( 0 !== $comparison ) {
+						return $comparison;
+					}
+					$comparison = (int) ( $left['discriminator_frequency'] ?? PHP_INT_MAX )
+						<=> (int) ( $right['discriminator_frequency'] ?? PHP_INT_MAX );
+					if ( 0 !== $comparison ) {
+						return $comparison;
+					}
+					$comparison = (int) ( $left['post_id'] ?? 0 ) <=> (int) ( $right['post_id'] ?? 0 );
+					return 0 !== $comparison
+						? $comparison
+						: (int) ( $left['source_ordinal'] ?? 0 ) <=> (int) ( $right['source_ordinal'] ?? 0 );
+				}
+			);
+		}
+		unset( $candidates_for_kind );
 
 		ksort( $source_kinds, SORT_STRING );
 		ksort( $generated_by_source_kind, SORT_STRING );
@@ -481,10 +578,11 @@ final class Search_Section_Runner_G590 {
 		foreach ( array_slice( $candidates, 0, self::MAX_PROBES ) as $candidate ) {
 			$post_id = (int) ( $candidate['post_id'] ?? 0 );
 			$title = (string) ( $candidate['title'] ?? '' );
+			$probe_query = trim( (string) ( $candidate['probe_query'] ?? $title ) );
 			$section_key = (string) ( $candidate['section_key'] ?? '' );
 			$anchor_id = (string) ( $candidate['anchor_id'] ?? '' );
 
-			$section_response = Search_Service::search_sections( $title, Search_Section_Service::MAX_PARENTS, 5 );
+			$section_response = Search_Service::search_sections( $probe_query, Search_Section_Service::MAX_PARENTS, 5 );
 			$found_section = false;
 			foreach ( (array) ( (array) ( $section_response['items_by_post'] ?? array() )[ $post_id ] ?? array() ) as $item ) {
 				if ( hash_equals( $section_key, (string) ( $item['section_key'] ?? '' ) ) ) {
@@ -523,7 +621,11 @@ final class Search_Section_Runner_G590 {
 			$rows[] = array(
 				'post_id' => $post_id,
 				'source_kind' => (string) ( $candidate['source_kind'] ?? '' ),
-				'query' => $title,
+				'query' => $probe_query,
+				'query_strategy' => (string) ( $candidate['probe_strategy'] ?? '' ),
+				'title_frequency' => (int) ( $candidate['title_frequency'] ?? 0 ),
+				'discriminator_token' => (string) ( $candidate['discriminator_token'] ?? '' ),
+				'discriminator_frequency' => (int) ( $candidate['discriminator_frequency'] ?? 0 ),
 				'section_key' => $section_key,
 				'section_query_state' => (string) ( $section_response['state'] ?? '' ),
 				'section_query_found_expected' => $found_section,
@@ -548,7 +650,7 @@ final class Search_Section_Runner_G590 {
 	private static function performance_benchmark( array $candidates ): array {
 		$queries = array();
 		foreach ( array_slice( $candidates, 0, self::BENCHMARK_QUERY_CAP ) as $candidate ) {
-			$query = trim( (string) ( $candidate['title'] ?? '' ) );
+			$query = trim( (string) ( $candidate['probe_query'] ?? $candidate['title'] ?? '' ) );
 			if ( '' !== $query ) {
 				$queries[] = $query;
 			}

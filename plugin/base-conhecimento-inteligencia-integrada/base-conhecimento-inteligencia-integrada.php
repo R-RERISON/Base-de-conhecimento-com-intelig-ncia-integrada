@@ -197,11 +197,15 @@ if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD' ) && BDC_KB_SPEC
 }
 if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-search-query-normalizer.php';
+	require_once BDC_KB_DIR . 'includes/class-search-section-projector.php';
 	require_once BDC_KB_DIR . 'includes/class-search-document-builder.php';
 	require_once BDC_KB_DIR . 'includes/class-search-projection-repository.php';
 	require_once BDC_KB_DIR . 'includes/class-search-rebuild-service.php';
 	require_once BDC_KB_DIR . 'includes/class-search-lifecycle.php';
 	require_once BDC_KB_DIR . 'includes/class-lexical-ranker.php';
+	require_once BDC_KB_DIR . 'includes/class-search-section-ranker.php';
+	require_once BDC_KB_DIR . 'includes/class-search-section-service.php';
+	require_once BDC_KB_DIR . 'includes/class-search-anchor-manager.php';
 	require_once BDC_KB_DIR . 'includes/class-search-service.php';
 }
 if ( defined( 'BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD' ) && BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD ) {
@@ -253,6 +257,7 @@ if ( defined( 'BDC_KB_WORD_CLOUD_BUILD' ) && BDC_KB_WORD_CLOUD_BUILD ) {
 }
 if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD ) {
 	\BDC\KnowledgeBase\Search_Lifecycle::register();
+	\BDC\KnowledgeBase\Search_Anchor_Manager::register();
 }
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
 	\BDC\KnowledgeBase\Content_Profile::register();

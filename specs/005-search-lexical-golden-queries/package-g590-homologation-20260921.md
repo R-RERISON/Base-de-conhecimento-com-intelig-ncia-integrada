@@ -1,14 +1,14 @@
 # G-590 — Package & Environmental Homologation Runbook
 
-**Status:** READY FOR PACKAGE PREFLIGHT / ENVIRONMENTAL GATE NOT RUN  
+**Status:** LOCAL PACKAGE PASS / ENVIRONMENTAL GATE NOT RUN  
 **Date:** 2026-09-21  
 **Branch:** `spec005-section-retrieval-deeplink`
 
 ## Identity
 
-- Product Version: `0.5.1-rc.1`
-- Build label: `g590.1`
-- Build ID: `g590.1-<12-char-git-sha>`
+- Product Version: `0.5.1-rc.2`
+- Build label: `g590.2`
+- Build ID: `g590.2-7f72385084e6`
 - G-590 remains OPEN until environmental evidence passes.
 
 The engineering gate is not encoded as the public Product Version.
@@ -32,7 +32,7 @@ python tools/homologation/spec005/build-g590.py
 
 Expected artifacts under `dist/`:
 
-- `base-conhecimento-inteligencia-integrada-0.5.1-rc.1-g590.1.zip`
+- `base-conhecimento-inteligencia-integrada-0.5.1-rc.2-g590.2.zip`
 - matching `.manifest.json`
 - `g590-local-package-validation.json`
 
@@ -99,7 +99,7 @@ WordPress Admin:
 
 **Base de Conhecimento → Section Retrieval G-590**
 
-Execute once and download the JSON.
+Use **Iniciar / Retomar G-590**. The runner executes in resumable phases and persists progress. When the state becomes **Concluído — JSON disponível**, download the final JSON. A browser/proxy timeout by itself is not a functional gate failure; use the persisted state to resume.
 
 The runner is allowed to write only:
 - Search Projection derived data;
@@ -120,8 +120,8 @@ failed=0
 ```
 
 The validator also requires:
-- Product Version `0.5.1-rc.1`;
-- Build ID `g590.1-<commit>`;
+- Product Version `0.5.1-rc.2`;
+- Build ID `g590.2-<commit>`;
 - physical schema contract PASS;
 - safe version transition;
 - explicit rebuild PASS;
@@ -187,3 +187,17 @@ Only after accepted environmental evidence:
 5. resume G-585 as **engine-independence proof**, not ASI retirement;
 6. execute G-595 Boundary Closeout;
 7. only after G-595 may SPEC-006 begin.
+
+
+## RC2 packaged artifact
+
+- Source commit: `7f72385084e669fa5859af2172d25ef05fdf6abf`
+- Runner blob: `cd1e49abdf34635db6020fe8c1b3ae34ad4a35e7`
+- Product Version: `0.5.1-rc.2`
+- Build ID: `g590.2-7f72385084e6`
+- Files: `82`
+- PHP lint: `70/70 PASS`
+- JS syntax: `2/2 PASS`
+- Deterministic build: `2/2 identical`
+- ZIP SHA-256: `73ac3ee1b11efbda3b817cd782434001d3d88ed573aa37a21f4552f60b15d3cf`
+- Environmental G-590: `PENDING`

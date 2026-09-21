@@ -1,19 +1,10 @@
-# SPEC-010 — Revisão Assistida por IA
+# PLACEHOLDER HISTÓRICO — antiga SPEC-010 Revisão Assistida por IA
 
-**Status:** Planejada  
-**Pré-requisito:** SPEC-009 concluída.
+**Status:** SUPERSEDIDA PELO PREMIUM REBASELINE 2026-09-21.
 
-## Problema
-Analistas precisam acelerar revisão e padronização sem delegar autoridade editorial ao modelo.
+Nova SPEC canônica:
+`specs/012-ai-assisted-knowledge-governance/`.
 
-## Resultado esperado
-Sugestões rastreáveis de resumo, classificação, qualidade, inconsistências e obsolescência, com aceite/rejeição humano e auditoria.
+O escopo foi ampliado para governança assistida, eligibility policy, provenance e decisão humana.
 
-## WordPress-first
-Persistência final usa APIs WordPress dos domínios; IA apenas propõe valores.
-
-## Princípio de negação
-Executar regras estruturais/determinísticas antes de chamar LLM.
-
-## Gate
-Post → análise local → IA somente onde agrega → sugestão → humano aceita/rejeita → apenas decisão humana persiste → custo registrado.
+Não executar este diretório como SPEC ativa.

@@ -1,19 +1,13 @@
-# SPEC-006 — Telemetria, Inteligência de Busca e Lacunas
+# PLACEHOLDER HISTÓRICO — antiga SPEC-006 Telemetria / Inteligência de Busca
 
-**Status:** Planejada  
-**Pré-requisito:** SPEC-005 concluída.
+**Status:** SUPERSEDIDA PELO PREMIUM REBASELINE 2026-09-21.
 
-## Problema
-Sem outcomes confiáveis não sabemos se a busca ajuda, falha ou apenas não gera clique.
+A capability continua necessária e foi reorganizada como:
+`specs/008-search-intelligence-telemetry-governed-relevance/`.
 
-## Resultado esperado
-Eventos, interações, zero-result, engajamento, privacidade e knowledge gaps integrados ao produto.
+Motivos:
+- inserir Product Foundation/Distribution antes de expandir runtime;
+- separar Public Experience da engine Search;
+- consolidar telemetria, privacidade e relevância governada no mesmo bounded context.
 
-## WordPress-first
-Usar recursos nativos para configuração/cron/cache; tabela própria só se volume e consultas justificarem.
-
-## Princípio de negação
-Coletar apenas métricas que suportam uma decisão real.
-
-## Gate
-Busca real → evento → clique válido → interação correlacionada → outcome correto → relatório/lacuna sem inferência indevida.
+Não executar este diretório como SPEC ativa.

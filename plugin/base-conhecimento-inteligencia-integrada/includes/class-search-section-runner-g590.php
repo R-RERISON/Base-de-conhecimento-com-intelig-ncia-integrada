@@ -975,6 +975,301 @@ JS;
 		);
 	}
 
+
+	/** @return array<string,mixed> */
+	private static function coverage_accumulator_empty(): array {
+		return array(
+			'posts_analyzed' => 0,
+			'extractor_error_count' => 0,
+			'extractor_errors' => array(),
+			'source_kinds' => array(),
+			'generated_by_source_kind' => array(),
+			'section_count' => 0,
+			'generated_anchor_count' => 0,
+			'unresolved_anchor_count' => 0,
+			'posts_without_sections' => 0,
+			'heading_levels' => array_fill( 1, 6, 0 ),
+			'numbered_non_heading_nodes' => 0,
+			'numbered_with_heading_context' => 0,
+			'numbered_without_heading_context' => 0,
+			'title_frequency' => array(),
+			'token_frequency' => array(),
+			'candidates' => array(),
+		);
+	}
+
+	/**
+	 * @param array<string,mixed> $accumulator
+	 * @param array<int,int>      $post_ids
+	 * @return array<string,mixed>
+	 */
+	private static function coverage_accumulate( array $accumulator, array $post_ids ): array {
+		foreach ( $post_ids as $post_id ) {
+			$post_id = (int) $post_id;
+			$extraction = Content_Extractor::extract( $post_id );
+			if ( $extraction instanceof \WP_Error ) {
+				++$accumulator['extractor_error_count'];
+				if ( count( (array) $accumulator['extractor_errors'] ) < 50 ) {
+					$accumulator['extractor_errors'][] = array(
+						'post_id' => $post_id,
+						'code' => $extraction->get_error_code(),
+					);
+				}
+				continue;
+			}
+
+			++$accumulator['posts_analyzed'];
+			$post_status = (string) get_post_status( $post_id );
+			$source_kind = sanitize_key( (string) ( $extraction['source_kind'] ?? 'unknown' ) );
+			$accumulator['source_kinds'][ $source_kind ] = (int) ( $accumulator['source_kinds'][ $source_kind ] ?? 0 ) + 1;
+			$fragments = (array) ( $extraction['fragments'] ?? array() );
+			$sections = Search_Section_Projector::project( $post_id, $fragments );
+
+			if ( empty( $sections ) ) {
+				++$accumulator['posts_without_sections'];
+			}
+
+			foreach ( $sections as $section ) {
+				++$accumulator['section_count'];
+				$level = max( 1, min( 6, (int) ( $section['level'] ?? 2 ) ) );
+				$accumulator['heading_levels'][ $level ] = (int) ( $accumulator['heading_levels'][ $level ] ?? 0 ) + 1;
+
+				$anchor_state = (string) ( $section['anchor_state'] ?? '' );
+				if ( 'generated' === $anchor_state ) {
+					++$accumulator['generated_anchor_count'];
+					$accumulator['generated_by_source_kind'][ $source_kind ] =
+						(int) ( $accumulator['generated_by_source_kind'][ $source_kind ] ?? 0 ) + 1;
+				} else {
+					++$accumulator['unresolved_anchor_count'];
+				}
+
+				$title_norm = (string) ( $section['title_norm'] ?? '' );
+				$text_norm = (string) ( $section['text_norm'] ?? '' );
+				if ( '' !== $title_norm ) {
+					$accumulator['title_frequency'][ $title_norm ] =
+						(int) ( $accumulator['title_frequency'][ $title_norm ] ?? 0 ) + 1;
+
+					$section_tokens = Search_Query_Normalizer::tokens_from_normalized(
+						trim( $title_norm . ' ' . $text_norm )
+					);
+					foreach ( array_unique( $section_tokens ) as $token ) {
+						$accumulator['token_frequency'][ $token ] =
+							(int) ( $accumulator['token_frequency'][ $token ] ?? 0 ) + 1;
+					}
+
+					if ( 'publish' === $post_status && 'generated' === $anchor_state ) {
+						$accumulator['candidates'][] = array(
+							'post_id' => $post_id,
+							'post_status' => $post_status,
+							'source_kind' => $source_kind,
+							'section_key' => (string) ( $section['section_key'] ?? '' ),
+							'title' => (string) ( $section['title'] ?? '' ),
+							'title_norm' => $title_norm,
+							'text_tokens' => Search_Query_Normalizer::tokens_from_normalized( $text_norm ),
+							'anchor_id' => (string) ( $section['anchor_id'] ?? '' ),
+							'anchor_state' => $anchor_state,
+							'source_ordinal' => (int) ( $section['source_ordinal'] ?? 0 ),
+						);
+					}
+				}
+			}
+
+			$hierarchy = Numbered_Hierarchy_Resolver::resolve( $fragments );
+			foreach ( (array) ( $hierarchy['nodes'] ?? array() ) as $node ) {
+				$ordinal = (int) ( $node['ordinal'] ?? -1 );
+				if ( $ordinal < 0 || ! isset( $fragments[ $ordinal ] ) ) {
+					continue;
+				}
+				$fragment = (array) $fragments[ $ordinal ];
+				if ( 'heading' === (string) ( $fragment['kind'] ?? '' ) ) {
+					continue;
+				}
+				++$accumulator['numbered_non_heading_nodes'];
+
+				$has_heading_context = false;
+				for ( $cursor = $ordinal - 1; $cursor >= 0; --$cursor ) {
+					$previous = (array) ( $fragments[ $cursor ] ?? array() );
+					if ( 'heading' === (string) ( $previous['kind'] ?? '' ) ) {
+						$has_heading_context = true;
+						break;
+					}
+				}
+				if ( $has_heading_context ) {
+					++$accumulator['numbered_with_heading_context'];
+				} else {
+					++$accumulator['numbered_without_heading_context'];
+				}
+			}
+		}
+
+		return $accumulator;
+	}
+
+	/** @param array<string,mixed> $accumulator @return array<string,mixed> */
+	private static function coverage_finalize( array $accumulator, int $corpus_count ): array {
+		$title_frequency = (array) ( $accumulator['title_frequency'] ?? array() );
+		$token_frequency = (array) ( $accumulator['token_frequency'] ?? array() );
+		$eligible_by_source_kind = array();
+
+		foreach ( (array) ( $accumulator['candidates'] ?? array() ) as $candidate ) {
+			$title_norm = (string) ( $candidate['title_norm'] ?? '' );
+			$title_query = Search_Query_Normalizer::normalize( (string) ( $candidate['title'] ?? '' ) );
+			if ( $title_query instanceof \WP_Error || empty( $title_query['tokens'] ) ) {
+				continue;
+			}
+
+			$probe_query = (string) $candidate['title'];
+			$probe_strategy = 'unique_title';
+			$discriminator_token = '';
+			$discriminator_frequency = 0;
+			$title_count = (int) ( $title_frequency[ $title_norm ] ?? 0 );
+
+			if ( 1 !== $title_count ) {
+				$title_tokens = array_fill_keys( (array) $title_query['tokens'], true );
+				$discriminators = array();
+				foreach ( (array) ( $candidate['text_tokens'] ?? array() ) as $token ) {
+					if ( isset( $title_tokens[ $token ] ) || strlen( (string) $token ) < 3 ) {
+						continue;
+					}
+					$discriminators[] = array(
+						'token' => (string) $token,
+						'frequency' => (int) ( $token_frequency[ $token ] ?? PHP_INT_MAX ),
+					);
+				}
+				usort(
+					$discriminators,
+					static function ( array $left, array $right ): int {
+						$frequency = (int) $left['frequency'] <=> (int) $right['frequency'];
+						return 0 !== $frequency
+							? $frequency
+							: strcmp( (string) $left['token'], (string) $right['token'] );
+					}
+				);
+
+				foreach ( $discriminators as $discriminator ) {
+					$candidate_query = trim( (string) $candidate['title'] . ' ' . (string) $discriminator['token'] );
+					$normalized_candidate = Search_Query_Normalizer::normalize( $candidate_query );
+					if ( $normalized_candidate instanceof \WP_Error ) {
+						continue;
+					}
+					$probe_query = $candidate_query;
+					$probe_strategy = 'title_plus_rare_section_token';
+					$discriminator_token = (string) $discriminator['token'];
+					$discriminator_frequency = (int) $discriminator['frequency'];
+					break;
+				}
+				if ( 'title_plus_rare_section_token' !== $probe_strategy ) {
+					continue;
+				}
+			}
+
+			unset( $candidate['text_tokens'] );
+			$candidate['probe_query'] = $probe_query;
+			$candidate['probe_strategy'] = $probe_strategy;
+			$candidate['title_frequency'] = $title_count;
+			$candidate['discriminator_token'] = $discriminator_token;
+			$candidate['discriminator_frequency'] = $discriminator_frequency;
+			$kind = (string) ( $candidate['source_kind'] ?? 'unknown' );
+			$eligible_by_source_kind[ $kind ][] = $candidate;
+		}
+
+		foreach ( $eligible_by_source_kind as &$candidates_for_kind ) {
+			usort(
+				$candidates_for_kind,
+				static function ( array $left, array $right ): int {
+					$left_strategy = 'unique_title' === (string) ( $left['probe_strategy'] ?? '' ) ? 0 : 1;
+					$right_strategy = 'unique_title' === (string) ( $right['probe_strategy'] ?? '' ) ? 0 : 1;
+					$comparison = $left_strategy <=> $right_strategy;
+					if ( 0 !== $comparison ) {
+						return $comparison;
+					}
+					$comparison = (int) ( $left['title_frequency'] ?? PHP_INT_MAX )
+						<=> (int) ( $right['title_frequency'] ?? PHP_INT_MAX );
+					if ( 0 !== $comparison ) {
+						return $comparison;
+					}
+					$comparison = (int) ( $left['discriminator_frequency'] ?? PHP_INT_MAX )
+						<=> (int) ( $right['discriminator_frequency'] ?? PHP_INT_MAX );
+					if ( 0 !== $comparison ) {
+						return $comparison;
+					}
+					$comparison = (int) ( $left['post_id'] ?? 0 ) <=> (int) ( $right['post_id'] ?? 0 );
+					return 0 !== $comparison
+						? $comparison
+						: (int) ( $left['source_ordinal'] ?? 0 ) <=> (int) ( $right['source_ordinal'] ?? 0 );
+				}
+			);
+		}
+		unset( $candidates_for_kind );
+
+		$source_kinds = (array) ( $accumulator['source_kinds'] ?? array() );
+		$generated_by_source_kind = (array) ( $accumulator['generated_by_source_kind'] ?? array() );
+		ksort( $source_kinds, SORT_STRING );
+		ksort( $generated_by_source_kind, SORT_STRING );
+		ksort( $eligible_by_source_kind, SORT_STRING );
+
+		$required_probe_source_kinds = array_keys(
+			array_filter(
+				$generated_by_source_kind,
+				static fn ( int $count ): bool => $count > 0
+			)
+		);
+		$probe_candidates = array();
+		$selected_section_keys = array();
+		$unprobed_source_kinds = array();
+
+		foreach ( $required_probe_source_kinds as $kind ) {
+			$candidates_for_kind = (array) ( $eligible_by_source_kind[ $kind ] ?? array() );
+			if ( empty( $candidates_for_kind ) ) {
+				$unprobed_source_kinds[] = $kind;
+				continue;
+			}
+			$candidate = $candidates_for_kind[0];
+			$key = (string) ( $candidate['section_key'] ?? '' );
+			$probe_candidates[] = $candidate;
+			$selected_section_keys[ $key ] = true;
+		}
+
+		foreach ( $eligible_by_source_kind as $candidates_for_kind ) {
+			foreach ( $candidates_for_kind as $candidate ) {
+				if ( count( $probe_candidates ) >= self::MAX_PROBES ) {
+					break 2;
+				}
+				$key = (string) ( $candidate['section_key'] ?? '' );
+				if ( '' === $key || isset( $selected_section_keys[ $key ] ) ) {
+					continue;
+				}
+				$probe_candidates[] = $candidate;
+				$selected_section_keys[ $key ] = true;
+			}
+		}
+
+		$heading_levels = (array) ( $accumulator['heading_levels'] ?? array_fill( 1, 6, 0 ) );
+		ksort( $heading_levels, SORT_NUMERIC );
+
+		return array(
+			'corpus_count' => max( 0, $corpus_count ),
+			'posts_analyzed' => (int) ( $accumulator['posts_analyzed'] ?? 0 ),
+			'extractor_error_count' => (int) ( $accumulator['extractor_error_count'] ?? 0 ),
+			'extractor_errors' => array_slice( (array) ( $accumulator['extractor_errors'] ?? array() ), 0, 50 ),
+			'source_kinds' => $source_kinds,
+			'generated_by_source_kind' => $generated_by_source_kind,
+			'required_probe_source_kinds' => $required_probe_source_kinds,
+			'unprobed_source_kinds' => $unprobed_source_kinds,
+			'section_count' => (int) ( $accumulator['section_count'] ?? 0 ),
+			'generated_anchor_count' => (int) ( $accumulator['generated_anchor_count'] ?? 0 ),
+			'unresolved_anchor_count' => (int) ( $accumulator['unresolved_anchor_count'] ?? 0 ),
+			'posts_without_sections' => (int) ( $accumulator['posts_without_sections'] ?? 0 ),
+			'heading_levels' => $heading_levels,
+			'numbered_non_heading_nodes' => (int) ( $accumulator['numbered_non_heading_nodes'] ?? 0 ),
+			'numbered_with_heading_context' => (int) ( $accumulator['numbered_with_heading_context'] ?? 0 ),
+			'numbered_without_heading_context' => (int) ( $accumulator['numbered_without_heading_context'] ?? 0 ),
+			'numbered_granularity_review_required' => (int) ( $accumulator['numbered_with_heading_context'] ?? 0 ) > 0,
+			'probe_candidate_count' => count( $probe_candidates ),
+			'probe_candidates' => $probe_candidates,
+		);
+	}
+
 	/** @return array<string,mixed> */
 	private static function coverage_audit( array $post_ids ): array {
 		$posts_analyzed = 0;

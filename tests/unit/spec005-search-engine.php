@@ -317,6 +317,8 @@ namespace BDC\KnowledgeBase {
 		assert_true_search( str_contains( $a['taxonomy_norm'], 'usuarios' ), 'Taxonomia deve ser materializada.' );
 		assert_same_search( $a['source_hash'], $b['source_hash'], 'Source hash deve ser determinístico.' );
 		assert_same_search( $a['document_hash'], $b['document_hash'], 'Document hash deve ser determinístico.' );
+		assert_same_search( 1, count( $a['sections'] ), 'Heading deve gerar Section Projection sem alterar body post-level.' );
+		assert_same_search( Search_Section_Projector::VERSION, $a['section_projection_version'], 'Section Projection version deve ser explícita.' );
 	};
 
 	$tests['document_compose_degrades_on_source_error'] = static function (): void {
@@ -475,6 +477,8 @@ namespace BDC\KnowledgeBase {
 		$result = Search_Projection_Repository::upsert( $document );
 		assert_same_search( Search_Projection_Repository::UPSERT_WRITTEN, $result, 'Documento alterado deve ser persistido.' );
 		assert_same_search( 1, $GLOBALS['wpdb']->replace_calls, 'Documento alterado deve fazer exatamente um replace.' );
+		assert_true_search( isset( $GLOBALS['spec005_last_replace']['data']['sections_json'] ), 'Persistência deve materializar sections_json.' );
+		assert_same_search( '[]', $GLOBALS['spec005_last_replace']['data']['sections_json'], 'Documento sem sections explícitas deve persistir array vazio canônico.' );
 	};
 
 	$tests['repository_rejects_invalid_projection_state'] = static function (): void {
@@ -504,6 +508,7 @@ namespace BDC\KnowledgeBase {
 		assert_true_search( str_contains( $first['sql'], "CONCAT(' ', title_norm, ' ') LIKE %s" ), 'Retrieval deve aplicar fronteira lexical nos campos normalizados.' );
 		assert_same_search( '% windows %', $first['args'][0], 'Pattern SQL deve exigir token com fronteiras lexicais.' );
 		assert_true_search( str_contains( $first['sql'], 'ORDER BY post_id ASC' ), 'Candidate SQL deve ordenar determinísticamente.' );
+		assert_true_search( ! str_contains( $first['sql'], 'sections_json' ), 'Candidate retrieval de até 200 posts não pode carregar Section Projection.' );
 	};
 
 	$passed = 0;

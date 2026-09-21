@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.5.0-h030.1
+ * Version: 0.5.0-g590.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.5.0-h030.1' );
+define( 'BDC_KB_VERSION', '0.5.0-g590.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -49,10 +49,10 @@ define( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD', false );
 define( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD', false );
 define( 'BDC_KB_SPEC005_G580_LIFECYCLE_BUILD', false );
 define( 'BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD', false );
-define( 'BDC_KB_SPEC005_G590_SECTION_BUILD', false );
+define( 'BDC_KB_SPEC005_G590_SECTION_BUILD', true );
 define( 'BDC_KB_P580_PUBLIC_INVENTORY_BUILD', false );
 define( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD', true );
-define( 'BDC_KB_UX004_H030_TECHNICAL_BUILD', true );
+define( 'BDC_KB_UX004_H030_TECHNICAL_BUILD', false );
 define( 'BDC_KB_WORD_CLOUD_BUILD', true );
 if ( ! defined( 'BDC_KB_SEARCH_ENABLED' ) ) {
 	define( 'BDC_KB_SEARCH_ENABLED', true );

@@ -102,6 +102,7 @@ final class Search_Section_Runner_G590 {
 		$editorial_fingerprint_before = Canonical_JSON::hash( $editorial_before );
 
 		$state_before = Search_Projection_Repository::state();
+		$schema_before = Search_Projection_Repository::schema_exists();
 		$rows_before = self::row_count();
 		$snapshot_before = self::projection_snapshot_hash();
 
@@ -112,12 +113,22 @@ final class Search_Section_Runner_G590 {
 		$rows_after_prepare = self::row_count();
 		$snapshot_after_prepare = self::projection_snapshot_hash();
 
-		$prepare_did_not_reindex = $rows_before === $rows_after_prepare
-			&& $snapshot_before === $snapshot_after_prepare
-			&& false === (bool) ( $lifecycle['implicit_rebuild'] ?? true );
+		$prepare_did_not_reindex = $schema_before
+			? $rows_before === $rows_after_prepare
+				&& $snapshot_before === $snapshot_after_prepare
+				&& false === (bool) ( $lifecycle['implicit_rebuild'] ?? true )
+			: 0 === (int) $rows_after_prepare
+				&& false === (bool) ( $lifecycle['implicit_rebuild'] ?? true );
 
+		$state_was_empty = empty( $state_before );
 		$version_transition_safe = $state_versions_before_current
-			|| 'degraded' === (string) ( $state_after_prepare['status'] ?? '' );
+			|| ( $state_was_empty
+				&& 'not_built' === (string) ( $state_after_prepare['status'] ?? '' )
+				&& self::state_versions_current( $state_after_prepare ) )
+			|| ( ! $state_was_empty
+				&& ! $state_versions_before_current
+				&& 'degraded' === (string) ( $state_after_prepare['status'] ?? '' )
+				&& self::state_versions_current( $state_after_prepare ) );
 
 		$rebuild = array();
 		try {
@@ -208,6 +219,7 @@ final class Search_Section_Runner_G590 {
 			),
 			'lifecycle' => array(
 				'state_before' => $state_before,
+				'schema_before' => $schema_before,
 				'rows_before' => $rows_before,
 				'projection_snapshot_before' => $snapshot_before,
 				'prepare_schema' => $lifecycle,

@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "UX-004/H-030",
+  "mode": "public_home_technical_acceptance_candidate_local_validation",
+  "generated_at": "2026-09-21T10:00:00Z",
+  "version": "0.5.0-h030.1",
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-h030.1.zip",
+    "sha256": "00e5032ea500515b3dae04e9695f2e5e234c53c94905525509e1b3da5a741f03",
+    "size_bytes": 243039,
+    "files": 88,
+    "php_files": 76,
+    "js_files": 2,
+    "php_lint": {
+      "passed": 76,
+      "total": 76,
+      "failed": 0
+    },
+    "extracted_php_lint": {
+      "passed": 76,
+      "total": 76,
+      "failed": 0
+    },
+    "javascript_syntax": "PASS",
+    "active_requires": {
+      "passed": 61,
+      "total": 61,
+      "missing": 0
+    },
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "validation": {
+    "static_h030_checks": {
+      "passed": 24,
+      "total": 24,
+      "failed": 0
+    },
+    "source_package_repository_parity": {
+      "passed": 6,
+      "total": 6,
+      "failed": 0
+    }
+  },
+  "delta_from_p580wc32": {
+    "added": [
+      "includes/class-public-search-facade.php",
+      "includes/class-public-home-technical-runner-h030.php"
+    ],
+    "modified": [
+      "assets/js/public-search.js",
+      "base-conhecimento-inteligencia-integrada.php",
+      "includes/class-public-experience.php",
+      "includes/class-public-home-read-model.php"
+    ],
+    "deleted": []
+  },
+  "public_search_facade": {
+    "version": "public-search-facade-v1.0.0",
+    "same_normalizer": true,
+    "same_projection": true,
+    "same_ranker": true,
+    "second_ranker": false,
+    "eligible_statuses": [
+      "publish",
+      "private"
+    ],
+    "private_requires_read_post": true,
+    "draft_pending_future_excluded": true,
+    "password_protected_excluded": true,
+    "ajax_authenticated": true,
+    "ajax_nopriv": true,
+    "nonce": true,
+    "min_chars": 2,
+    "max_query_chars": 160,
+    "default_limit": 8,
+    "max_limit": 20,
+    "rate_limit_per_minute": 60,
+    "raw_ip_persisted": false,
+    "query_logging": false
+  },
+  "h030_runner": {
+    "h030_functional_parity": true,
+    "h031_security_capability": true,
+    "h032_asi_off_smoke": true,
+    "h033_no_raw_legacy_shortcode": true,
+    "h034_search_golden_regression": true,
+    "automatic_asi_deactivation": false,
+    "environmental_run_required": true
+  },
+  "frozen_core": {
+    "search_service_sha256": "32efc481bae00488e7e47913e69fa1e9c580cb64ee0f27fdceb04a7e12aafd38",
+    "rebuild_service_sha256": "8f9a2732c81afd653a4add93d0ad0b8bedecd781bfb45909b8e0926aaede1523",
+    "lifecycle_sha256": "325e8f9a03ddf9dbe8de3ceb5eb282a16c2ad8de72208ddcbd3d72d23f0f0b7e",
+    "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78"
+  },
+  "gate_state": {
+    "h023": "PASS_CLOSED",
+    "h030": "LOCAL_PASS_ENV_PENDING",
+    "h050": "BLOCKED_BY_H030",
+    "g585": "PAUSED_UNTIL_H030_PASS",
+    "g590": "BLOCKED",
+    "next_action": "Install h030.1. Manually disable ASI in homologation. Run Base de Conhecimento > Aceite Técnico H-030 and attach the JSON."
+  }
+}

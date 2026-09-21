@@ -1416,3 +1416,46 @@ Status:
 - G-585 PAUSED;
 - G-590 BLOCKED.
 
+## P-580WC.3.2 — atomic consultation idempotency
+
+Environmental p580wc.3.1 finding:
+- after explicit reset, Windows 10 still incremented twice from one interaction;
+- frontend gesture-id reuse alone was insufficient;
+- transient check/set remained race-prone.
+
+Root cause:
+- `get_transient()` + `set_transient()` is not an atomic claim;
+- concurrent requests can both observe the key as absent before either writes it;
+- classification: FAIL CONTROLADO — ATOMICITY.
+
+Patch:
+- version `0.5.0-p580wc.3.2`;
+- consultation aggregate `v1.2.0`;
+- atomic event claim via `add_option()`;
+- unique `option_name` prevents two concurrent requests from claiming the same event;
+- 5-minute expiry stored as option value;
+- expired claim retry;
+- hourly opportunistic GC, max 500 expired keys/run;
+- reset action clears both consultation counts and event-claim keys;
+- existing client event_id/WeakSet/keepalive guards preserved.
+
+Validation:
+- 86 files / 74 PHP / 2 JS;
+- 74/74 PHP lint;
+- 74/74 extracted ZIP lint;
+- 57/57 active requires unchanged;
+- 16/16 atomicity checks;
+- exact source/package/repository parity 2/2;
+- deterministic build 2/2;
+- delta vs p580wc.3.1: 2 modified / 0 added / 0 deleted;
+- SHA-256 `06b0a03fd6c969b48eade9dfad20eac1882817adf33660b6a41df48287cef321`.
+
+Evidence:
+- `evidence/p580-word-cloud-consultation-atomicity-v32-20260921.json`.
+
+Status:
+- H-023 remains OPEN pending environmental +1 verification;
+- P-580A ACTIVE;
+- G-585 PAUSED;
+- G-590 BLOCKED.
+

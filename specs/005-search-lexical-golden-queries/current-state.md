@@ -2,6 +2,50 @@
 
 **ATIVA — PREMIUM CONSOLIDATION / G-590 SECTION RETRIEVAL & DEEP-LINK.**
 
+**Branch:** `spec005-section-retrieval-deeplink`
+
+## Implementação G-590 — estado em 2026-09-21
+
+Implementado no runtime candidato:
+- Section Projector determinístico;
+- Search Document `v1.1.0`;
+- Projection schema `1.1.0` na tabela única;
+- schema contract físico de colunas + índices;
+- lifecycle degrade-safe em schema incompleto/version mismatch;
+- Section Ranker/Service;
+- fachada canônica `Search_Service::search_sections()`;
+- Anchor Manager efêmero/fail-closed;
+- G-550 addendum para document v1.1 sem mudar ranker/result;
+- runner ambiental G-590;
+- validador machine-readable de evidência;
+- budget G-590: p95 <= 900 ms / max <= 1500 ms.
+
+Validação estática sobre blobs GitHub: **18/18 PASS** antes do último hardening de schema/performance; novo gate estático foi ampliado e precisa ser executado no package de homologação.
+
+Master Parity Ledger:
+- ASI-003/004/005 = PARTIAL;
+- continuam blockers;
+- nenhuma paridade/cutover foi declarada.
+
+## Próximo passo exato
+
+Criar build de homologação G-590 com:
+- versão própria;
+- `BDC_KB_SPEC005_G590_SECTION_BUILD=true`;
+- demais runners de engenharia desativados salvo dependências necessárias;
+- lint/package parity;
+- instalar sobre ambiente que possua Projection anterior;
+- executar **Base de Conhecimento → Section Retrieval G-590**;
+- validar o JSON com `tools/homologation/spec005/validate-g590-evidence.php`.
+
+G-590 somente pode fechar após evidência ambiental. G-585 permanece PAUSED até então.
+
+---
+
+# Estado atual — SPEC-005
+
+**ATIVA — PREMIUM CONSOLIDATION / G-590 SECTION RETRIEVAL & DEEP-LINK.**
+
 **Branch:** `spec005-section-retrieval-deeplink`  
 **Base de consolidação:** Premium Rebaseline @ `01508379f91a336b26b17268fb119458bd077f7e`.
 

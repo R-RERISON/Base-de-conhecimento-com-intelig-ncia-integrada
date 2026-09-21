@@ -83,14 +83,15 @@ O core `Search_Rebuild_Service` permanece inalterado porque já foi homologado n
 
 ## Próximo passo exato
 
-Preparar build de homologação G-590:
-- Product Version `0.5.1-rc.2` + Build ID `g590.2-<commit>`;
-- `BDC_KB_SPEC005_G590_SECTION_BUILD=true`;
-- runners de engenharia não relacionados desativados;
-- package/lint/parity/checksum;
-- instalar sobre ambiente com Projection anterior;
-- executar **Base de Conhecimento → Section Retrieval G-590**;
-- validar JSON com `tools/homologation/spec005/validate-g590-evidence.php`.
+Pacote RC2 pronto para homologação:
+- Product Version `0.5.1-rc.2`;
+- Build ID `g590.2-7f72385084e6`;
+- source commit `7f72385084e669fa5859af2172d25ef05fdf6abf`;
+- runner blob `cd1e49abdf34635db6020fe8c1b3ae34ad4a35e7`;
+- ZIP SHA-256 `73ac3ee1b11efbda3b817cd782434001d3d88ed573aa37a21f4552f60b15d3cf`;
+- local package gate PASS: 82 arquivos, PHP 70/70, JS 2/2, deterministic build 2/2.
+
+Instalar sobre o ambiente de homologação, abrir **Base de Conhecimento → Section Retrieval G-590**, usar **Iniciar / Retomar G-590**, aguardar `Concluído — JSON disponível`, baixar o JSON final e validar com `tools/homologation/spec005/validate-g590-evidence.php`.
 
 Após evidência ambiental:
 1. fechar T590-14..T590-19 somente se todos os subgates PASS;

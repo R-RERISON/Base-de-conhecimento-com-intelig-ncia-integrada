@@ -132,3 +132,34 @@ Esta seção é obrigatória para toda implementação material, mesmo quando n�
 - [ ] O prompt instrui o novo chat a reler Constituição, Manifesto, SPEC, DoD e confirmar o GitHub antes de agir.
 
 **Gate:** se qualquer item desta seção aplicável estiver pendente, a implementação não está concluída.
+
+
+## 14. Premium Product Gate
+
+Aplicável a toda capability material após o Premium Rebaseline:
+
+- [ ] O `docs/PREMIUM-PLUGIN-PRODUCT-STANDARD.md` foi lido e aplicado.
+- [ ] O ID correspondente no `specs/MASTER-FUNCTIONAL-PARITY-LEDGER.md` foi atualizado quando aplicável.
+- [ ] WPCS/PHPCS foi executado no runtime afetado.
+- [ ] PHPUnit/integration tests aplicáveis foram executados.
+- [ ] Análise estática aplicável foi executada ou possui baseline/waiver explícito.
+- [ ] Plugin Check foi executado no artefato quando a fase da SPEC exigir.
+- [ ] Metadata/licença/versionamento/readme/changelog permanecem coerentes.
+- [ ] Compatibilidade mínima/corporativa/corrente foi considerada.
+- [ ] Build/gate interno não foi confundido com versão pública do produto.
+- [ ] O ZIP de produção não inclui runner/profiler/evidence/tool de laboratório sem necessidade operacional explícita.
+- [ ] Assets estão limitados às superfícies que os consomem.
+- [ ] Classes/composition roots grandes foram revisados por coesão.
+- [ ] Não foi introduzido endpoint/store/framework apenas por modernidade.
+
+## 15. Paridade e Cutover
+
+- [ ] `PLANNED` não foi usado como sinônimo de paridade.
+- [ ] Capability legada afetada está em PARITY_VERIFIED, IMPROVED_VERIFIED, SUPERSEDED_WITH_EVIDENCE ou RETIRED_BY_PRODUCT_DECISION.
+- [ ] Consumidores reais foram verificados quando há shortcode/hook/filter/adapter histórico.
+- [ ] Dados canônicos foram preservados/adotados ou a não migração foi justificada.
+- [ ] Coexistência não cria dual-write permanente.
+- [ ] Rollback/reactivação é conhecido e testável.
+- [ ] Nenhum plugin legado é considerado aposentável apenas por ausência de dependência de código.
+
+**Gate Premium:** FAIL, NOT_RUN, STALE, PARTIAL, GAP ou UNKNOWN_ENVIRONMENTAL aplicável bloqueia o respectivo cutover.

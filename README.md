@@ -6,19 +6,17 @@ Plataforma WordPress de **gestão, curadoria, governança, busca e inteligência
 
 ## Estado atual
 
-O projeto já possui runtime funcional e evolui por vertical slices governados por SPECs.
+O projeto entrou em **consolidação premium**.
 
-Baseline consolidada em `main`: SPEC-000/001/002/003/004 concluídas; UX-001/002/003 concluídas; SPEC-004 CLOSED/main após G-240/G-245/G-250. Release homologada: `0.4.0-spec004-rc2`; Knowledge Document schema `2.1.0`.
+Baseline de runtime em `main`: SPEC-001–004 concluídas. A SPEC-005 permanece ativa na branch `spec005-search-lexical-golden-queries`, com Search lexical/Golden já avançados e a fronteira sendo refinada.
 
-Frente atual: **SPEC-005 — Search Lexical e Golden Queries / ATIVA / DISCOVERY**, na branch `spec005-search-lexical-golden-queries`.
+Em 2026-09-21 foi aberto o **Premium Product Rebaseline**:
+- padrão premium: `docs/PREMIUM-PLUGIN-PRODUCT-STANDARD.md`;
+- revisão de todas as SPECs: `specs/PREMIUM-REBASELINE-SPEC-REVIEW.md`;
+- paridade viva: `specs/MASTER-FUNCTIONAL-PARITY-LEDGER.md`;
+- roadmap futuro: SPEC-006–014.
 
-- R-500: PASS/CLOSED; superfície inicial ADMIN-FIRST.
-- T510 e T511.2: PASS AMBIENTAL.
-- T511.2: seis candidates; admin atual atende 2/6; admin relevância e publish nativo atendem 6/6 até max_rank histórico.
-- R-510: OPEN; próxima etapa é revisão humana T513 e diversidade T514.
-- Engine bloqueada até R-500 + R-510 + G-520.
-
-[Estado detalhado](specs/005-search-lexical-golden-queries/current-state.md) · [Prompt de continuidade](specs/005-search-lexical-golden-queries/CONTINUIDADE.md).
+A nova política reserva `1.0.0` para o gate final de cutover/retirement. `PLANNED` continua sendo GAP para fins de retirada de legado.
 
 ## Regra de produto mais importante
 
@@ -95,6 +93,12 @@ Os três repositórios abaixo permanecem fontes obrigatórias de aprendizado e c
 
 ## Status
 
-🟡 **DESENVOLVIMENTO / HOMOLOGAÇÃO CONTROLADA** — SPEC-004 CLOSED/main; SPEC-005 ATIVA/DISCOVERY, com R-510 OPEN e engine ainda bloqueada.
+🟡 **CONSOLIDAÇÃO PREMIUM / HOMOLOGAÇÃO CONTROLADA**
+
+- SPEC-001–004: concluídas;
+- SPEC-005: ativa, scope refinado;
+- Premium Rebaseline: versionado em branch de governança;
+- produção/cutover: não autorizados;
+- 1.0.0: bloqueada até SPEC-014.
 
 **GO de desenvolvimento/homologação não equivale a GO de produção.**

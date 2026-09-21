@@ -82,6 +82,7 @@ UNIT_TESTS = (
     "tests/unit/spec004-hierarchy-v21.php",
     "tests/unit/spec005-search-engine.php",
     "tests/unit/spec005-golden-gate.php",
+    "tests/unit/spec005-runtime-resources.php",
     "tests/unit/spec005-section-retrieval-g590.php",
     "tests/unit/spec005-section-runner-g590.php",
 )

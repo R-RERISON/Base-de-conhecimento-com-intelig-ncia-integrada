@@ -29,6 +29,29 @@ final class Search_Projection_Repository {
 		'body_norm',
 	);
 
+	/** @var array<int,string> */
+	private const REQUIRED_COLUMNS = array(
+		'post_id',
+		'document_state',
+		'source_kind',
+		'title_norm',
+		'summary_norm',
+		'headings_norm',
+		'taxonomy_norm',
+		'body_norm',
+		'sections_json',
+		'section_projection_version',
+		'source_hash',
+		'document_hash',
+		'document_version',
+		'normalizer_version',
+		'post_modified_gmt',
+		'indexed_at_gmt',
+	);
+
+	/** @var array<int,string> */
+	private const REQUIRED_INDEXES = array( 'PRIMARY', 'document_state', 'document_version', 'source_hash' );
+
 	public static function table_name(): string {
 		global $wpdb;
 		return $wpdb->prefix . 'bdc_kb_search_documents';
@@ -329,6 +352,62 @@ final class Search_Projection_Repository {
 		}
 
 		return $out;
+	}
+
+	/**
+	 * Verifica a estrutura física sem colocar SHOW em hot path de Search.
+	 *
+	 * @return array<string,mixed>|\WP_Error
+	 */
+	public static function schema_contract(): array|\WP_Error {
+		global $wpdb;
+
+		if ( ! self::schema_exists() ) {
+			return new \WP_Error( 'search_projection_schema_missing', 'Tabela da Search Projection não existe.' );
+		}
+
+		$table = self::table_name();
+		$column_rows = $wpdb->get_results( 'SHOW COLUMNS FROM ' . $table, ARRAY_A );
+		if ( '' !== (string) $wpdb->last_error ) {
+			return new \WP_Error( 'search_projection_schema_columns_failed', 'Falha ao inspecionar colunas da Search Projection.' );
+		}
+
+		$actual_columns = array();
+		foreach ( is_array( $column_rows ) ? $column_rows : array() as $row ) {
+			$field = (string) ( $row['Field'] ?? '' );
+			if ( '' !== $field ) {
+				$actual_columns[] = $field;
+			}
+		}
+
+		$index_rows = $wpdb->get_results( 'SHOW INDEX FROM ' . $table, ARRAY_A );
+		if ( '' !== (string) $wpdb->last_error ) {
+			return new \WP_Error( 'search_projection_schema_indexes_failed', 'Falha ao inspecionar índices da Search Projection.' );
+		}
+
+		$actual_indexes = array();
+		foreach ( is_array( $index_rows ) ? $index_rows : array() as $row ) {
+			$name = (string) ( $row['Key_name'] ?? '' );
+			if ( '' !== $name ) {
+				$actual_indexes[ $name ] = true;
+			}
+		}
+		$actual_indexes = array_keys( $actual_indexes );
+		sort( $actual_indexes, SORT_STRING );
+
+		$missing_columns = array_values( array_diff( self::REQUIRED_COLUMNS, $actual_columns ) );
+		$missing_indexes = array_values( array_diff( self::REQUIRED_INDEXES, $actual_indexes ) );
+
+		return array(
+			'schema_version' => self::SCHEMA_VERSION,
+			'required_columns' => self::REQUIRED_COLUMNS,
+			'actual_columns' => $actual_columns,
+			'missing_columns' => $missing_columns,
+			'required_indexes' => self::REQUIRED_INDEXES,
+			'actual_indexes' => $actual_indexes,
+			'missing_indexes' => $missing_indexes,
+			'pass' => empty( $missing_columns ) && empty( $missing_indexes ),
+		);
 	}
 
 	public static function schema_exists(): bool {

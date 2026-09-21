@@ -186,15 +186,16 @@
 - [x] T590-03 congelar Section Retrieval Contract v1.
 - [x] T590-04 congelar Deep-Link Contract v1.
 - [x] T590-05 congelar Cross-SPEC Regression Contract.
-- [ ] T590-10 implementar Section Projector determinístico.
-- [ ] T590-11 evoluir Search Document/Projection schema para 1.1.0.
-- [ ] T590-12 implementar Section Ranker/Service.
-- [ ] T590-13 implementar Anchor Manager read-only/fail-closed.
+- [x] T590-10 implementar Section Projector determinístico.
+- [x] T590-11 evoluir Search Document/Projection schema para 1.1.0.
+- [x] T590-12 implementar Section Ranker/Service + fachada canônica `Search_Service::search_sections()`.
+- [x] T590-13 implementar Anchor Manager read-only/fail-closed.
+- [x] T590-13A adicionar schema contract físico (colunas+índices) e lifecycle degraded-safe.
 - [ ] T590-14 unit/regression Search post-level + SPEC-001–004.
-- [ ] T590-15 coverage diagnostic ambiental.
-- [ ] T590-16 technical challenge/Golden section-level.
-- [ ] T590-17 lifecycle migration 1.0→1.1 + explicit rebuild.
-- [ ] T590-18 performance/security.
+- [ ] T590-15 coverage diagnostic ambiental — runner/validator IMPLEMENTADOS; evidência ENV pendente.
+- [ ] T590-16 technical challenge/Golden section-level — probes corpus-derived IMPLEMENTADOS; ENV pendente.
+- [ ] T590-17 lifecycle migration 1.0→1.1 + explicit rebuild — runtime/guard IMPLEMENTADOS; ENV pendente.
+- [ ] T590-18 performance/security — budgets e source-safety IMPLEMENTADOS; ENV pendente.
 - [ ] T590-19 G-590 PASS/CLOSED.
 
 ## Pós G-590

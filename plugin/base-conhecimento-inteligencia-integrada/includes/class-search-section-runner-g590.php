@@ -268,6 +268,7 @@ final class Search_Section_Runner_G590 {
 			'phase' => 'editorial_before',
 			'cursor' => 0,
 			'started_at' => gmdate( 'c' ),
+			'started_unix' => microtime( true ),
 			'updated_at' => gmdate( 'c' ),
 			'plugin_version' => defined( 'BDC_KB_VERSION' ) ? BDC_KB_VERSION : '',
 			'build_id' => defined( 'BDC_KB_BUILD_ID' ) ? BDC_KB_BUILD_ID : '',
@@ -434,6 +435,7 @@ final class Search_Section_Runner_G590 {
 		}
 
 		$job['updated_at'] = gmdate( 'c' );
+		$job['peak_memory_bytes'] = max( (int) ( $job['peak_memory_bytes'] ?? 0 ), memory_get_peak_usage( true ) );
 		return $job;
 	}
 
@@ -647,6 +649,154 @@ final class Search_Section_Runner_G590 {
 JS;
 	}
 
+
+
+	/** @param array<string,mixed> $job @return array<string,mixed> */
+	private static function assemble_job_report( array $job ): array {
+		$post_ids = array_values( array_map( 'intval', (array) ( $job['post_ids'] ?? array() ) ) );
+		$post_ids_after = array_values( array_map( 'intval', (array) ( $job['post_ids_after'] ?? array() ) ) );
+		$editorial_before = (array) ( $job['editorial_before'] ?? array() );
+		$editorial_after = (array) ( $job['editorial_after'] ?? array() );
+		ksort( $editorial_before, SORT_NUMERIC );
+		ksort( $editorial_after, SORT_NUMERIC );
+
+		$editorial_fingerprint_before = Canonical_JSON::hash( $editorial_before );
+		$editorial_fingerprint_after = Canonical_JSON::hash( $editorial_after );
+		$editorial_equal = hash_equals( $editorial_fingerprint_before, $editorial_fingerprint_after )
+			&& $post_ids === $post_ids_after;
+
+		$lifecycle_data = is_array( $job['lifecycle'] ?? null ) ? $job['lifecycle'] : array();
+		$rebuild = is_array( $job['rebuild'] ?? null ) ? $job['rebuild'] : array();
+		$coverage = is_array( $job['coverage'] ?? null ) ? $job['coverage'] : array();
+		$probes = is_array( $job['probes'] ?? null ) ? $job['probes'] : array();
+		$performance = is_array( $job['performance'] ?? null ) ? $job['performance'] : array();
+		$golden = is_array( $job['golden'] ?? null ) ? $job['golden'] : array();
+		$errors = (array) ( $job['errors'] ?? array() );
+		$throwables = (array) ( $job['throwables'] ?? array() );
+
+		$rebuild_state_after = is_array( $rebuild['state_after'] ?? null ) ? $rebuild['state_after'] : array();
+		$rebuild_determinism = is_array( $rebuild['determinism'] ?? null ) ? $rebuild['determinism'] : array();
+		$rebuild_pass = 'PASS' === (string) ( $rebuild['status'] ?? '' )
+			&& 'ready' === (string) ( $rebuild_state_after['status'] ?? '' )
+			&& 0 === (int) ( $rebuild_determinism['mismatch_count'] ?? -1 );
+
+		$golden_pass = 'PASS' === (string) ( $golden['status'] ?? '' )
+			&& 0 === (int) ( $golden['blocking_failed'] ?? -1 )
+			&& 0 === (int) ( $golden['technical_failed'] ?? -1 )
+			&& empty( $golden['technical_errors'] ?? array() );
+
+		$coverage_complete = count( $post_ids ) === (int) ( $coverage['posts_analyzed'] ?? -1 )
+			&& 0 === (int) ( $coverage['extractor_error_count'] ?? -1 );
+		$no_uncontextual_numbered_gap = 0 === (int) ( $coverage['numbered_without_heading_context'] ?? -1 );
+		$probe_pass = (int) ( $probes['eligible_probe_count'] ?? 0 ) >= self::MIN_PROBES
+			&& empty( $coverage['unprobed_source_kinds'] ?? array() )
+			&& 0 === (int) ( $probes['section_query_failed'] ?? -1 )
+			&& 0 === (int) ( $probes['deep_link_failed'] ?? -1 )
+			&& 0 === (int) ( $probes['visible_text_changed'] ?? -1 );
+
+		$source_safety = self::runtime_source_safety();
+		$schema_contract = is_array( $lifecycle_data['schema_contract'] ?? null ) ? $lifecycle_data['schema_contract'] : array();
+		$prepare_did_not_reindex = ! empty( $lifecycle_data['prepare_did_not_reindex'] );
+		$version_transition_safe = ! empty( $lifecycle_data['version_transition_safe'] );
+
+		$t59014 = $golden_pass
+			&& ! empty( $source_safety['parent_ranker_version_frozen'] )
+			&& ! empty( $source_safety['candidate_query_does_not_load_sections'] );
+		$t59015 = $coverage_complete && $no_uncontextual_numbered_gap;
+		$t59016 = $probe_pass;
+		$t59017 = ! empty( $schema_contract['pass'] )
+			&& $prepare_did_not_reindex
+			&& $version_transition_safe
+			&& $rebuild_pass;
+		$t59018 = $editorial_equal
+			&& ! empty( $performance['pass'] )
+			&& ! empty( $source_safety['no_editorial_write'] )
+			&& ! empty( $source_safety['no_network'] )
+			&& ! empty( $source_safety['no_asi'] );
+		$g590_pass = $t59014 && $t59015 && $t59016 && $t59017 && $t59018
+			&& empty( $errors )
+			&& empty( $throwables );
+
+		$public_coverage = $coverage;
+		unset( $public_coverage['probe_candidates'] );
+
+		$started_unix = (float) ( $job['started_unix'] ?? microtime( true ) );
+		return array(
+			'schema_version' => '1.1.0',
+			'gate' => 'G-590',
+			'mode' => 'spec005_section_retrieval_deeplink_environmental',
+			'generated_at' => gmdate( 'c' ),
+			'environment' => array(
+				'wordpress' => get_bloginfo( 'version' ),
+				'php' => PHP_VERSION,
+				'plugin' => defined( 'BDC_KB_VERSION' ) ? BDC_KB_VERSION : (string) ( $job['plugin_version'] ?? '' ),
+				'build_id' => defined( 'BDC_KB_BUILD_ID' ) ? BDC_KB_BUILD_ID : (string) ( $job['build_id'] ?? '' ),
+				'multisite' => is_multisite(),
+				'db_server' => self::db_version(),
+			),
+			'contracts' => array(
+				'section' => 'g590-section-retrieval-contract-v1.md',
+				'deep_link' => 'g590-deep-link-contract-v1.md',
+				'regression' => 'g590-regression-contract-v1.md',
+				'g550_addendum' => 'g550-addendum-document-v1.1-compatibility.md',
+				'orchestration' => self::JOB_VERSION,
+			),
+			'lifecycle' => array(
+				'state_before' => is_array( $job['state_before'] ?? null ) ? $job['state_before'] : array(),
+				'schema_before' => ! empty( $job['schema_before'] ),
+				'rows_before' => $job['rows_before'] ?? null,
+				'projection_snapshot_before' => (string) ( $job['projection_snapshot_before'] ?? '' ),
+				'prepare_schema' => is_array( $lifecycle_data['prepare_schema'] ?? null ) ? $lifecycle_data['prepare_schema'] : array(),
+				'state_versions_before_current' => ! empty( $job['state_versions_before_current'] ),
+				'state_after_prepare' => is_array( $lifecycle_data['state_after_prepare'] ?? null ) ? $lifecycle_data['state_after_prepare'] : array(),
+				'version_transition_safe' => $version_transition_safe,
+				'schema_contract' => $schema_contract,
+				'rows_after_prepare' => $lifecycle_data['rows_after_prepare'] ?? null,
+				'projection_snapshot_after_prepare' => (string) ( $lifecycle_data['projection_snapshot_after_prepare'] ?? '' ),
+				'prepare_did_not_reindex' => $prepare_did_not_reindex,
+				'explicit_rebuild' => $rebuild,
+			),
+			'coverage' => $public_coverage,
+			'section_deep_link_probes' => $probes,
+			'performance' => $performance,
+			'post_level_golden_regression' => $golden,
+			'safety' => array(
+				'editorial_fingerprint_before' => $editorial_fingerprint_before,
+				'editorial_fingerprint_after' => $editorial_fingerprint_after,
+				'editorial_fingerprint_equal' => $editorial_equal,
+				'corpus_ids_equal' => $post_ids === $post_ids_after,
+				'runtime_source' => $source_safety,
+			),
+			'errors' => $errors,
+			'throwables' => $throwables,
+			'runner' => array(
+				'execution_model' => 'resumable_ajax_v1',
+				'job_version' => self::JOB_VERSION,
+				'job_id' => (string) ( $job['job_id'] ?? '' ),
+				'snapshot_batch_size' => self::SNAPSHOT_BATCH_SIZE,
+				'coverage_batch_size' => self::COVERAGE_BATCH_SIZE,
+				'total_runtime_ms' => round( max( 0.0, microtime( true ) - $started_unix ) * 1000, 4 ),
+				'peak_memory_bytes' => (int) ( $job['peak_memory_bytes'] ?? memory_get_peak_usage( true ) ),
+			),
+			'gate_result' => array(
+				't59014_cross_spec_regression_pass' => $t59014,
+				't59015_coverage_audit_pass' => $t59015,
+				't59016_section_golden_deeplink_pass' => $t59016,
+				't59017_lifecycle_schema_pass' => $t59017,
+				't59018_security_performance_safety_pass' => $t59018,
+				't59019_g590_pass' => $g590_pass,
+				'next_gate' => $g590_pass ? 'G-585' : 'G-590',
+			),
+			'interpretation_rules' => array(
+				'Section Projection não pode alterar o ranking post-level fechado.',
+				'Número hierárquico forte sem heading contextual é blocker por potencial perda de navegabilidade.',
+				'Número hierárquico dentro de heading é reportado para revisão de granularidade, mas não é auto-falha.',
+				'Deep-link só passa quando o anchor é materializável e o texto visível permanece idêntico.',
+				'O runner ambiental é resumível; timeout HTTP do navegador/proxy não equivale a falha funcional do gate.',
+				'G-590 PASS ainda não autoriza aposentadoria do ASI; G-585 e Master Parity Ledger continuam obrigatórios.',
+			),
+		);
+	}
 
 	/** @return array<string,mixed> */
 	public static function run(): array {

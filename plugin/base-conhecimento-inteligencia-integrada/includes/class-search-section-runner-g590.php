@@ -134,6 +134,520 @@ final class Search_Section_Runner_G590 {
 	}
 
 
+
+	public static function ajax_start(): void {
+		self::authorize_ajax();
+		$restart = isset( $_POST['restart'] ) && '1' === (string) wp_unslash( $_POST['restart'] );
+		try {
+			$job = self::start_job( $restart );
+			wp_send_json_success( self::public_job_state( $job ) );
+		} catch ( \Throwable $error ) {
+			wp_send_json_error(
+				array( 'message' => 'Falha ao iniciar G-590: ' . $error->getMessage() ),
+				500
+			);
+		}
+	}
+
+	public static function ajax_status(): void {
+		self::authorize_ajax();
+		wp_send_json_success( self::public_job_state( self::load_job() ) );
+	}
+
+	public static function ajax_step(): void {
+		self::authorize_ajax();
+		$job_id = isset( $_POST['job_id'] ) && is_scalar( $_POST['job_id'] )
+			? sanitize_text_field( wp_unslash( (string) $_POST['job_id'] ) )
+			: '';
+		$job = self::load_job();
+
+		if ( '' === $job_id || $job_id !== (string) ( $job['job_id'] ?? '' ) ) {
+			wp_send_json_error( array( 'message' => 'Job G-590 inexistente ou divergente.' ), 409 );
+		}
+		if ( 'running' !== (string) ( $job['status'] ?? '' ) ) {
+			wp_send_json_success( self::public_job_state( $job ) );
+		}
+
+		$lock = self::JOB_LOCK_PREFIX . md5( $job_id );
+		if ( get_transient( $lock ) ) {
+			$public = self::public_job_state( $job );
+			$public['busy'] = true;
+			$public['detail'] = 'Fase em processamento no servidor. Aguardando conclusão sem iniciar execução concorrente.';
+			wp_send_json_success( $public );
+		}
+
+		set_transient( $lock, (string) time(), 2 * MINUTE_IN_SECONDS );
+		try {
+			$job = self::step_job( $job );
+			self::save_job( $job );
+		} catch ( \Throwable $error ) {
+			$job['status'] = 'failed';
+			$job['phase'] = 'failed';
+			$job['updated_at'] = gmdate( 'c' );
+			$job['job_error'] = array(
+				'class' => get_class( $error ),
+				'code' => (string) $error->getCode(),
+				'message' => $error->getMessage(),
+			);
+			self::save_job( $job );
+		} finally {
+			delete_transient( $lock );
+		}
+
+		wp_send_json_success( self::public_job_state( $job ) );
+	}
+
+	public static function handle_download(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Permissão insuficiente.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
+		}
+
+		$job_id = isset( $_GET['job_id'] ) && is_scalar( $_GET['job_id'] )
+			? sanitize_text_field( wp_unslash( (string) $_GET['job_id'] ) )
+			: '';
+		$nonce = isset( $_GET['_wpnonce'] ) && is_scalar( $_GET['_wpnonce'] )
+			? wp_unslash( (string) $_GET['_wpnonce'] )
+			: '';
+
+		if ( '' === $job_id || ! wp_verify_nonce( $nonce, self::DOWNLOAD_ACTION . '_' . $job_id ) ) {
+			wp_die( esc_html__( 'Nonce inválido ou expirado.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
+		}
+
+		$job = self::load_job();
+		if (
+			$job_id !== (string) ( $job['job_id'] ?? '' )
+			|| 'complete' !== (string) ( $job['status'] ?? '' )
+			|| ! is_array( $job['report'] ?? null )
+		) {
+			wp_die( esc_html__( 'Relatório G-590 ainda não está disponível.', 'bdc-knowledge-base' ), '', array( 'response' => 409 ) );
+		}
+
+		$json = wp_json_encode( $job['report'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+		if ( ! is_string( $json ) ) {
+			wp_die( esc_html__( 'Falha ao serializar relatório.', 'bdc-knowledge-base' ), '', array( 'response' => 500 ) );
+		}
+
+		nocache_headers();
+		header( 'Content-Type: application/json; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename="bdc-kb-spec005-g590-section-' . gmdate( 'Ymd-His' ) . '.json"' );
+		echo $json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON download.
+		exit;
+	}
+
+	private static function authorize_ajax(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Permissão insuficiente.' ), 403 );
+		}
+		check_ajax_referer( self::AJAX_NONCE_ACTION, 'nonce' );
+		if ( 'POST' !== strtoupper( (string) ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) {
+			wp_send_json_error( array( 'message' => 'Método HTTP não permitido.' ), 405 );
+		}
+	}
+
+	/** @return array<string,mixed> */
+	private static function start_job( bool $restart ): array {
+		$existing = self::load_job();
+		if (
+			! $restart
+			&& self::JOB_VERSION === (string) ( $existing['job_version'] ?? '' )
+			&& in_array( (string) ( $existing['status'] ?? '' ), array( 'running', 'complete' ), true )
+		) {
+			return $existing;
+		}
+
+		$post_ids = self::corpus_ids();
+		if ( empty( $post_ids ) ) {
+			throw new \RuntimeException( 'Corpus G-590 vazio.' );
+		}
+
+		$state_before = Search_Projection_Repository::state();
+		$job = array(
+			'job_version' => self::JOB_VERSION,
+			'job_id' => wp_generate_uuid4(),
+			'status' => 'running',
+			'phase' => 'editorial_before',
+			'cursor' => 0,
+			'started_at' => gmdate( 'c' ),
+			'updated_at' => gmdate( 'c' ),
+			'plugin_version' => defined( 'BDC_KB_VERSION' ) ? BDC_KB_VERSION : '',
+			'build_id' => defined( 'BDC_KB_BUILD_ID' ) ? BDC_KB_BUILD_ID : '',
+			'post_ids' => $post_ids,
+			'post_ids_after' => array(),
+			'editorial_before' => array(),
+			'editorial_after' => array(),
+			'state_before' => $state_before,
+			'schema_before' => Search_Projection_Repository::schema_exists(),
+			'rows_before' => self::row_count(),
+			'projection_snapshot_before' => self::projection_snapshot_hash(),
+			'state_versions_before_current' => self::state_versions_current( $state_before ),
+			'lifecycle' => array(),
+			'rebuild' => array(),
+			'coverage_accumulator' => self::coverage_accumulator_empty(),
+			'coverage' => array(),
+			'probes' => array(),
+			'performance' => array(),
+			'golden' => array(),
+			'errors' => array(),
+			'throwables' => array(),
+			'report' => array(),
+		);
+		self::save_job( $job );
+		return $job;
+	}
+
+	/** @param array<string,mixed> $job @return array<string,mixed> */
+	private static function step_job( array $job ): array {
+		$phase = (string) ( $job['phase'] ?? '' );
+		$post_ids = array_values( array_map( 'intval', (array) ( $job['post_ids'] ?? array() ) ) );
+
+		switch ( $phase ) {
+			case 'editorial_before':
+				$cursor = max( 0, (int) ( $job['cursor'] ?? 0 ) );
+				$batch = array_slice( $post_ids, $cursor, self::SNAPSHOT_BATCH_SIZE );
+				$job['editorial_before'] = array_replace(
+					(array) ( $job['editorial_before'] ?? array() ),
+					self::editorial_snapshot( $batch )
+				);
+				$job['cursor'] = $cursor + count( $batch );
+				if ( (int) $job['cursor'] >= count( $post_ids ) ) {
+					$job['phase'] = 'preflight_rebuild';
+					$job['cursor'] = 0;
+				}
+				break;
+
+			case 'preflight_rebuild':
+				$state_before = is_array( $job['state_before'] ?? null ) ? $job['state_before'] : array();
+				$lifecycle = Search_Lifecycle::prepare_schema();
+				$state_after_prepare = Search_Projection_Repository::state();
+				$schema_contract = self::schema_contract();
+				$rows_after_prepare = self::row_count();
+				$snapshot_after_prepare = self::projection_snapshot_hash();
+				$schema_before = ! empty( $job['schema_before'] );
+				$rows_before = $job['rows_before'] ?? null;
+				$snapshot_before = (string) ( $job['projection_snapshot_before'] ?? '' );
+
+				$prepare_did_not_reindex = $schema_before
+					? $rows_before === $rows_after_prepare
+						&& $snapshot_before === $snapshot_after_prepare
+						&& false === (bool) ( $lifecycle['implicit_rebuild'] ?? true )
+					: 0 === (int) $rows_after_prepare
+						&& false === (bool) ( $lifecycle['implicit_rebuild'] ?? true );
+
+				$state_was_empty = empty( $state_before );
+				$state_versions_before_current = ! empty( $job['state_versions_before_current'] );
+				$version_transition_safe = $state_versions_before_current
+					|| ( $state_was_empty
+						&& 'not_built' === (string) ( $state_after_prepare['status'] ?? '' )
+						&& self::state_versions_current( $state_after_prepare ) )
+					|| ( ! $state_was_empty
+						&& ! $state_versions_before_current
+						&& 'degraded' === (string) ( $state_after_prepare['status'] ?? '' )
+						&& self::state_versions_current( $state_after_prepare ) );
+
+				$rebuild = array();
+				try {
+					$rebuild = Search_Rebuild_Service::rebuild();
+				} catch ( \Throwable $error ) {
+					$job['throwables'][] = self::throwable_row( 'explicit_rebuild', $error );
+				}
+
+				$job['lifecycle'] = array(
+					'state_after_prepare' => $state_after_prepare,
+					'prepare_schema' => $lifecycle,
+					'schema_contract' => $schema_contract,
+					'rows_after_prepare' => $rows_after_prepare,
+					'projection_snapshot_after_prepare' => $snapshot_after_prepare,
+					'prepare_did_not_reindex' => $prepare_did_not_reindex,
+					'version_transition_safe' => $version_transition_safe,
+				);
+				$job['rebuild'] = $rebuild;
+				$job['phase'] = 'coverage';
+				$job['cursor'] = 0;
+				break;
+
+			case 'coverage':
+				$cursor = max( 0, (int) ( $job['cursor'] ?? 0 ) );
+				$batch = array_slice( $post_ids, $cursor, self::COVERAGE_BATCH_SIZE );
+				$accumulator = is_array( $job['coverage_accumulator'] ?? null )
+					? $job['coverage_accumulator']
+					: self::coverage_accumulator_empty();
+				$job['coverage_accumulator'] = self::coverage_accumulate( $accumulator, $batch );
+				$job['cursor'] = $cursor + count( $batch );
+				if ( (int) $job['cursor'] >= count( $post_ids ) ) {
+					$job['coverage'] = self::coverage_finalize(
+						(array) $job['coverage_accumulator'],
+						count( $post_ids )
+					);
+					unset( $job['coverage_accumulator'] );
+					$job['phase'] = 'probes';
+					$job['cursor'] = 0;
+				}
+				break;
+
+			case 'probes':
+				$coverage = is_array( $job['coverage'] ?? null ) ? $job['coverage'] : array();
+				$job['probes'] = self::section_and_anchor_probes( (array) ( $coverage['probe_candidates'] ?? array() ) );
+				$job['phase'] = 'performance';
+				break;
+
+			case 'performance':
+				$coverage = is_array( $job['coverage'] ?? null ) ? $job['coverage'] : array();
+				$job['performance'] = self::performance_benchmark( (array) ( $coverage['probe_candidates'] ?? array() ) );
+				$job['phase'] = 'golden';
+				break;
+
+			case 'golden':
+				try {
+					$job['golden'] = Golden_Gate_Runner_G550::run();
+				} catch ( \Throwable $error ) {
+					$job['throwables'][] = self::throwable_row( 'golden_regression', $error );
+					$job['golden'] = array();
+				}
+				$job['post_ids_after'] = self::corpus_ids();
+				$job['phase'] = 'editorial_after';
+				$job['cursor'] = 0;
+				break;
+
+			case 'editorial_after':
+				$post_ids_after = array_values( array_map( 'intval', (array) ( $job['post_ids_after'] ?? array() ) ) );
+				$cursor = max( 0, (int) ( $job['cursor'] ?? 0 ) );
+				$batch = array_slice( $post_ids_after, $cursor, self::SNAPSHOT_BATCH_SIZE );
+				$job['editorial_after'] = array_replace(
+					(array) ( $job['editorial_after'] ?? array() ),
+					self::editorial_snapshot( $batch )
+				);
+				$job['cursor'] = $cursor + count( $batch );
+				if ( (int) $job['cursor'] >= count( $post_ids_after ) ) {
+					$job['phase'] = 'finalize';
+					$job['cursor'] = 0;
+				}
+				break;
+
+			case 'finalize':
+				$job['report'] = self::assemble_job_report( $job );
+				$job['status'] = 'complete';
+				$job['phase'] = 'complete';
+				break;
+
+			default:
+				throw new \RuntimeException( 'Fase G-590 inválida: ' . $phase );
+		}
+
+		$job['updated_at'] = gmdate( 'c' );
+		return $job;
+	}
+
+	/** @return array<string,mixed> */
+	private static function load_job(): array {
+		$job = get_option( self::JOB_OPTION, array() );
+		return is_array( $job ) ? $job : array();
+	}
+
+	/** @param array<string,mixed> $job */
+	private static function save_job( array $job ): void {
+		update_option( self::JOB_OPTION, $job, false );
+	}
+
+	/** @param array<string,mixed> $job @return array<string,mixed> */
+	private static function public_job_state( array $job ): array {
+		if ( empty( $job ) || self::JOB_VERSION !== (string) ( $job['job_version'] ?? '' ) ) {
+			return array(
+				'job_id' => '',
+				'status' => 'idle',
+				'status_label' => 'Pronto para iniciar',
+				'phase' => 'idle',
+				'phase_label' => '—',
+				'progress' => 0,
+				'detail' => 'Nenhuma execução resumível ativa.',
+				'download_url' => '',
+				'busy' => false,
+			);
+		}
+
+		$status = (string) ( $job['status'] ?? 'idle' );
+		$phase = (string) ( $job['phase'] ?? 'idle' );
+		$labels = array(
+			'editorial_before' => 'Fingerprint editorial — antes',
+			'preflight_rebuild' => 'Lifecycle + rebuild explícito',
+			'coverage' => 'Coverage estrutural do corpus',
+			'probes' => 'Section/deep-link probes',
+			'performance' => 'Benchmark',
+			'golden' => 'Golden regression',
+			'editorial_after' => 'Fingerprint editorial — depois',
+			'finalize' => 'Consolidação da evidência',
+			'complete' => 'Concluído',
+			'failed' => 'Falha operacional',
+		);
+		$status_labels = array(
+			'running' => 'Em execução',
+			'complete' => 'Concluído — JSON disponível',
+			'failed' => 'Falha operacional',
+		);
+
+		$download_url = '';
+		if ( 'complete' === $status && ! empty( $job['report'] ) ) {
+			$job_id = (string) ( $job['job_id'] ?? '' );
+			$download_url = wp_nonce_url(
+				admin_url( 'admin-post.php?action=' . self::DOWNLOAD_ACTION . '&job_id=' . rawurlencode( $job_id ) ),
+				self::DOWNLOAD_ACTION . '_' . $job_id
+			);
+		}
+
+		$detail = self::job_detail( $job );
+		if ( 'failed' === $status && is_array( $job['job_error'] ?? null ) ) {
+			$detail = 'Falha operacional: ' . (string) ( $job['job_error']['message'] ?? 'erro não identificado' );
+		}
+
+		return array(
+			'job_id' => (string) ( $job['job_id'] ?? '' ),
+			'status' => $status,
+			'status_label' => (string) ( $status_labels[ $status ] ?? $status ),
+			'phase' => $phase,
+			'phase_label' => (string) ( $labels[ $phase ] ?? $phase ),
+			'progress' => self::job_progress( $job ),
+			'detail' => $detail,
+			'download_url' => $download_url,
+			'busy' => false,
+		);
+	}
+
+	/** @param array<string,mixed> $job */
+	private static function job_progress( array $job ): int {
+		$phase = (string) ( $job['phase'] ?? '' );
+		$cursor = max( 0, (int) ( $job['cursor'] ?? 0 ) );
+		$total = max( 1, count( (array) ( $job['post_ids'] ?? array() ) ) );
+		$after_total = max( 1, count( (array) ( $job['post_ids_after'] ?? array() ) ) );
+
+		return match ( $phase ) {
+			'editorial_before' => min( 15, (int) floor( 15 * $cursor / $total ) ),
+			'preflight_rebuild' => 15,
+			'coverage' => 45 + min( 30, (int) floor( 30 * $cursor / $total ) ),
+			'probes' => 75,
+			'performance' => 80,
+			'golden' => 85,
+			'editorial_after' => 90 + min( 9, (int) floor( 9 * $cursor / $after_total ) ),
+			'finalize' => 99,
+			'complete' => 100,
+			'failed' => min( 99, max( 1, (int) ( $job['progress_at_failure'] ?? 1 ) ) ),
+			default => 0,
+		};
+	}
+
+	/** @param array<string,mixed> $job */
+	private static function job_detail( array $job ): string {
+		$phase = (string) ( $job['phase'] ?? '' );
+		$cursor = max( 0, (int) ( $job['cursor'] ?? 0 ) );
+		$total = count( (array) ( $job['post_ids'] ?? array() ) );
+
+		if ( in_array( $phase, array( 'editorial_before', 'coverage' ), true ) ) {
+			return sprintf( '%d de %d posts processados nesta fase.', min( $cursor, $total ), $total );
+		}
+		if ( 'editorial_after' === $phase ) {
+			$after_total = count( (array) ( $job['post_ids_after'] ?? array() ) );
+			return sprintf( '%d de %d posts processados nesta fase.', min( $cursor, $after_total ), $after_total );
+		}
+		if ( 'preflight_rebuild' === $phase ) {
+			return 'Executando lifecycle e rebuild explícito já homologado no G-580.';
+		}
+		if ( 'complete' === $phase ) {
+			return 'Evidência consolidada. O resultado do gate está dentro do JSON; conclusão operacional não implica PASS funcional.';
+		}
+		return 'Executando fase isolada. A página pode ser recarregada e a execução será retomada.';
+	}
+
+	private static function browser_runner_script(): string {
+		return <<<'JS'
+(function(){
+	'use strict';
+	var cfg=window.BDCG590||{};
+	var root=document.getElementById('bdc-g590-runner');
+	if(!root){return;}
+	var start=root.querySelector('[data-bdc-g590-start]');
+	var restart=root.querySelector('[data-bdc-g590-restart]');
+	var statusEl=root.querySelector('[data-bdc-g590-status]');
+	var phaseEl=root.querySelector('[data-bdc-g590-phase]');
+	var progressEl=root.querySelector('[data-bdc-g590-progress]');
+	var detailEl=root.querySelector('[data-bdc-g590-detail]');
+	var download=root.querySelector('[data-bdc-g590-download]');
+	var errorBox=root.querySelector('[data-bdc-g590-error]');
+	var running=false;
+
+	function render(s){
+		if(!s){return;}
+		statusEl.textContent=s.status_label||s.status||'';
+		phaseEl.textContent=s.phase_label||s.phase||'';
+		progressEl.value=Number(s.progress||0);
+		detailEl.textContent=s.detail||'';
+		if(s.download_url){download.href=s.download_url;download.hidden=false;}else{download.hidden=true;}
+		start.disabled=running||s.status==='complete';
+		restart.disabled=running;
+	}
+
+	function showError(message){
+		errorBox.style.display='block';
+		errorBox.querySelector('p').textContent=message;
+	}
+	function clearError(){errorBox.style.display='none';errorBox.querySelector('p').textContent='';}
+	function delay(ms){return new Promise(function(resolve){window.setTimeout(resolve,ms);});}
+
+	async function request(action,extra){
+		var body=new URLSearchParams();
+		body.set('action',action);
+		body.set('nonce',cfg.nonce||'');
+		Object.keys(extra||{}).forEach(function(key){body.set(key,String(extra[key]));});
+		var response=await fetch(cfg.ajaxUrl,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},body:body.toString()});
+		var payload;
+		try{payload=await response.json();}catch(e){throw new Error('Resposta HTTP não-JSON ('+response.status+').');}
+		if(!response.ok||!payload||payload.success!==true){
+			var msg=payload&&payload.data&&payload.data.message?payload.data.message:'Falha HTTP '+response.status;
+			throw new Error(msg);
+		}
+		return payload.data||{};
+	}
+
+	async function recover(jobId){
+		try{
+			var s=await request(cfg.actions.status,{job_id:jobId||''});
+			render(s);
+			if(s.status==='running'){await delay(1200);return cycle(s.job_id);}
+			return s;
+		}catch(e){showError('Conexão interrompida. A execução é resumível; use “Iniciar / Retomar G-590”. '+e.message);running=false;render(cfg.initial||{});return null;}
+	}
+
+	async function cycle(jobId){
+		running=true;clearError();
+		try{
+			while(true){
+				var s=await request(cfg.actions.step,{job_id:jobId});
+				render(s);
+				if(s.status!=='running'){running=false;render(s);return s;}
+				if(s.busy){await delay(1000);}else{await delay(120);}
+			}
+		}catch(e){
+			showError('A requisição atual não concluiu no navegador. Consultando estado persistido para retomar sem duplicar trabalho. '+e.message);
+			return recover(jobId);
+		}
+	}
+
+	async function begin(forceRestart){
+		if(running){return;}
+		running=true;clearError();render(cfg.initial||{});
+		try{
+			var s=await request(cfg.actions.start,{restart:forceRestart?'1':'0'});
+			cfg.initial=s;render(s);
+			if(s.status==='running'){return cycle(s.job_id);}
+			running=false;render(s);return s;
+		}catch(e){running=false;showError(e.message);render(cfg.initial||{});return null;}
+	}
+
+	start.addEventListener('click',function(){begin(false);});
+	restart.addEventListener('click',function(){begin(true);});
+	render(cfg.initial||{});
+})();
+JS;
+	}
+
+
 	/** @return array<string,mixed> */
 	public static function run(): array {
 		$started = microtime( true );

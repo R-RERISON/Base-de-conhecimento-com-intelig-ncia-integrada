@@ -18,6 +18,9 @@ foreach ( compact( 'builder', 'regression', 'loader' ) as $name => $content ) {
 $resources = array(
 	'resources/search/golden-relevance-v1.0.0.json',
 	'resources/search/technical-challenge-v1.0.0.json',
+	'templates/public-home-preview.php',
+	'templates/public-article-preview.php',
+	'uninstall.php',
 );
 $flags = array(
 	'BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD',
@@ -33,6 +36,14 @@ $checks = array(
 	'regression_has_conditional_runtime_resources' => str_contains( $regression, 'CONDITIONAL_RUNTIME_RESOURCES' ),
 	'regression_promotes_resources_to_active_required' => str_contains( $regression, 'active_required.update(paths)' ),
 	'regression_checks_missing_runtime_resources' => str_contains( $regression, 'missing_runtime_resources' ),
+	'builder_knows_public_preview_runtime' => str_contains( $builder, 'PUBLIC_PREVIEW_RUNTIME_FILES' )
+		&& str_contains( $builder, 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD' ),
+	'regression_knows_public_preview_runtime' => str_contains( $regression, 'PUBLIC_PREVIEW_RUNTIME_FILES' )
+		&& str_contains( $regression, 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD' ),
+	'builder_knows_uninstall' => str_contains( $builder, 'BASE_RUNTIME_FILES' )
+		&& str_contains( $builder, '"uninstall.php"' ),
+	'regression_knows_uninstall' => str_contains( $regression, 'BASE_RUNTIME_FILES' )
+		&& str_contains( $regression, '"uninstall.php"' ),
 );
 
 foreach ( $resources as $resource ) {

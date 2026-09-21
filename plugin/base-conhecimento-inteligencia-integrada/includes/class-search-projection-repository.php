@@ -16,6 +16,7 @@ final class Search_Projection_Repository {
 	public const SCHEMA_VERSION = '1.1.0';
 	public const STATE_OPTION = 'bdc_kb_search_projection_state';
 	public const CANDIDATE_CAP = 200;
+	public const SECTION_PARENT_CAP = 20;
 	public const UPSERT_WRITTEN = 'WRITTEN';
 	public const UPSERT_NO_CHANGE = 'NO_CHANGE';
 
@@ -284,7 +285,7 @@ final class Search_Projection_Repository {
 				)
 			)
 		);
-		$post_ids = array_slice( $post_ids, 0, Search_Section_Service::MAX_PARENTS );
+		$post_ids = array_slice( $post_ids, 0, self::SECTION_PARENT_CAP );
 
 		if ( empty( $post_ids ) ) {
 			return array();

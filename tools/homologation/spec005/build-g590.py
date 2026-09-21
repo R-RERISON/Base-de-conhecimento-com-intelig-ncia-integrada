@@ -73,6 +73,22 @@ REQUIRED_TRUE_FLAGS = (
     "BDC_KB_WORD_CLOUD_BUILD",
 )
 
+REQUIRED_ARTIFACT_FILES = (
+    "includes/class-search-section-runner-g590.php",
+    "includes/class-golden-suite-loader.php",
+    "includes/class-golden-gate-runner-g550.php",
+    "resources/search/golden-relevance-v1.0.0.json",
+    "resources/search/technical-challenge-v1.0.0.json",
+)
+
+FORBIDDEN_ARTIFACT_FILES = (
+    "includes/class-search-security-performance-runner-g570.php",
+    "includes/class-search-lifecycle-runner-g580.php",
+    "includes/class-search-independence-runner-g585.php",
+    "includes/class-public-home-technical-runner-h030.php",
+    "includes/class-public-experience-inventory-runner-p580.php",
+)
+
 UNIT_TESTS = (
     "tests/unit/spec001-summary-store.php",
     "tests/unit/spec002-classification-contract.php",
@@ -332,6 +348,35 @@ def main() -> int:
 
         shutil.copy2(first, output)
         manifest_data = json.loads(first_manifest.read_text(encoding="utf-8"))
+        if manifest_data.get("plugin_version") != VERSION:
+            raise RuntimeError(
+                f"manifest product version mismatch: {manifest_data.get('plugin_version')} != {VERSION}"
+            )
+        if manifest_data.get("build_id") != build_id:
+            raise RuntimeError(
+                f"manifest build id mismatch: {manifest_data.get('build_id')} != {build_id}"
+            )
+
+        included_files = set((manifest_data.get("included_files") or {}).keys())
+        missing_required = sorted(set(REQUIRED_ARTIFACT_FILES) - included_files)
+        forbidden_present = sorted(set(FORBIDDEN_ARTIFACT_FILES) & included_files)
+        if missing_required:
+            raise RuntimeError(
+                "G-590 artifact missing required runtime file(s): " + ", ".join(missing_required)
+            )
+        if forbidden_present:
+            raise RuntimeError(
+                "G-590 artifact contains unrelated engineering runner(s): " + ", ".join(forbidden_present)
+            )
+
+        artifact_contract = {
+            "required_files": list(REQUIRED_ARTIFACT_FILES),
+            "missing_required": missing_required,
+            "forbidden_files": list(FORBIDDEN_ARTIFACT_FILES),
+            "forbidden_present": forbidden_present,
+            "pass": True,
+        }
+
         manifest_data["g590_build_profile"] = build_profile
         manifest_data["deterministic_second_sha256"] = sha2
         manifest_data["deterministic_equal"] = True
@@ -372,6 +417,7 @@ def main() -> int:
         "source_lint": source_lint,
         "zip_lint": zip_lint,
         "staged_artifact_regression": staged_artifact_regression,
+        "artifact_contract": artifact_contract,
         "artifact": {
             "path": str(output),
             "sha256": sha256(output),

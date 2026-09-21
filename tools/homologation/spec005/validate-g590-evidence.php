@@ -34,9 +34,9 @@ $get = static function ( array $source, array $path, mixed $default = null ): mi
 $checks = array(
 	'gate_is_g590' => 'G-590' === (string) ( $data['gate'] ?? '' ),
 	'mode_is_environmental' => 'spec005_section_retrieval_deeplink_environmental' === (string) ( $data['mode'] ?? '' ),
-	'product_version_is_rc' => '0.5.1-rc.3' === (string) $get( $data, array( 'environment', 'plugin' ), '' ),
+	'product_version_is_rc' => '0.5.1-rc.4' === (string) $get( $data, array( 'environment', 'plugin' ), '' ),
 	'build_id_is_g590' => 1 === preg_match(
-		'/^g590\.3-[a-f0-9]{12}$/',
+		'/^g590\.4-[a-f0-9]{12}$/',
 		(string) $get( $data, array( 'environment', 'build_id' ), '' )
 	),
 	'schema_current' => true === (bool) $get( $data, array( 'lifecycle', 'schema_contract', 'pass' ), false ),

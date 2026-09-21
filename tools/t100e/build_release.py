@@ -6,7 +6,8 @@ contains only:
 - the plugin bootstrap;
 - unconditional bootstrap dependencies;
 - dependencies behind currently-true build flags;
-- assets/css and assets/js files.
+- assets/css and assets/js files;
+- explicit runtime resource files required by active capabilities.
 
 No WordPress bootstrap, DB access, network access, or editorial write occurs.
 """
@@ -154,6 +155,9 @@ def main() -> int:
     version_match = re.search(
         r"define\(\s*'BDC_KB_VERSION'\s*,\s*'([^']+)'\s*\)", source
     )
+    build_match = re.search(
+        r"define\(\s*'BDC_KB_BUILD_ID'\s*,\s*'([^']+)'\s*\)", source
+    )
     source_files = sorted(
         str(path.relative_to(plugin)).replace("\\", "/")
         for path in plugin.rglob("*")
@@ -165,6 +169,7 @@ def main() -> int:
         "schema_version": "1.0.0",
         "builder": "tools/t100e/build_release.py",
         "plugin_version": version_match.group(1) if version_match else "",
+        "build_id": build_match.group(1) if build_match else "",
         "zip_root": ZIP_ROOT,
         "zip_sha256": zip_hash,
         "active_conditional_flags": active_flags,

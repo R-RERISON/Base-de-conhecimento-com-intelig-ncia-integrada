@@ -139,8 +139,12 @@ namespace BDC\KnowledgeBase {
 			)
 		);
 		g590_assert_same( 1, count( $sections ), 'Uma seção esperada.' );
+		$value = (string) $sections[0]['text_norm'];
+		$length = function_exists( 'mb_strlen' )
+			? mb_strlen( $value, 'UTF-8' )
+			: ( preg_match_all( '/./us', $value, $unused ) ?: strlen( $value ) );
 		g590_assert_true(
-			strlen( (string) $sections[0]['text_norm'] ) <= Search_Section_Projector::MAX_TEXT_CHARS,
+			$length <= Search_Section_Projector::MAX_TEXT_CHARS,
 			'Texto normalizado deve respeitar o bound de 4.000 caracteres.'
 		);
 	};
@@ -218,6 +222,29 @@ namespace BDC\KnowledgeBase {
 		g590_assert_same( array(), $ranked, '1/4 tokens não pode superar coverage mínimo.' );
 	};
 
+	$tests['ranker_keeps_unresolved_section_retrievable'] = static function (): void {
+		$query = Search_Query_Normalizer::normalize( 'passos validacao' );
+		g590_assert_true( is_array( $query ), 'Query válida esperada.' );
+		$ranked = Search_Section_Ranker::rank(
+			$query,
+			array(
+				array(
+					'section_key'=>str_repeat( '7', 64 ),
+					'ordinal'=>0,
+					'title'=>'Passos de validação',
+					'title_norm'=>'passos de validacao',
+					'text_norm'=>'confirme o resultado antes de concluir',
+					'anchor_id'=>'',
+					'anchor_state'=>'unresolved',
+				),
+			),
+			1,
+			3
+		);
+		g590_assert_same( 1, count( $ranked ), 'Seção unresolved relevante não pode desaparecer do retrieval.' );
+		g590_assert_same( 'unresolved', $ranked[0]['anchor_state'], 'Estado do anchor deve ser preservado.' );
+	};
+
 	$tests['anchor_injection_preserves_visible_text_and_existing_heading_id'] = static function (): void {
 		$anchor = 'bdc-kb-section-' . str_repeat( 'e', 20 );
 		$content = '<h2 id="editorial-id"><em>Pré-requisitos</em></h2><p>Conteúdo.</p>';
@@ -284,10 +311,39 @@ namespace BDC\KnowledgeBase {
 		g590_assert_same( 'ready', $result['state'], 'Service deve responder ready.' );
 		g590_assert_same( 1, $result['count'], 'Uma seção esperada.' );
 		g590_assert_true(
-			str_contains( $result['items_by_post'][9][0]['url'], '#bdc-kb-section-' ),
+			true === ( $result['items_by_post'][9][0]['deep_link_available'] ?? false )
+				&& str_contains( $result['items_by_post'][9][0]['deep_link_url'], '#bdc-kb-section-' )
+				&& str_contains( $result['items_by_post'][9][0]['url'], '#bdc-kb-section-' ),
 			'Deep-link deve usar anchor projetado.'
 		);
 		g590_assert_same( 2, $result['items_by_post'][9][0]['parent_rank'], 'Parent rank deve ser preservado.' );
+	};
+
+	$tests['section_service_falls_back_to_parent_for_unresolved_anchor'] = static function (): void {
+		$query = Search_Query_Normalizer::normalize( 'passos' );
+		Search_Projection_Repository::$fixture = array(
+			12 => array(
+				array(
+					'section_key'=>str_repeat( '8', 64 ),
+					'ordinal'=>0,
+					'title'=>'Passos',
+					'title_norm'=>'passos',
+					'text_norm'=>'execute os passos',
+					'anchor_id'=>'',
+					'anchor_state'=>'unresolved',
+				),
+			),
+		);
+		$result = Search_Section_Service::rank_for_authorized_results(
+			$query,
+			array( array( 'post_id'=>12, 'rank'=>1 ) )
+		);
+		$row = $result['items_by_post'][12][0] ?? array();
+		g590_assert_same( 'unresolved', $row['anchor_state'] ?? '', 'Anchor unresolved deve ser explícito.' );
+		g590_assert_same( false, $row['deep_link_available'] ?? null, 'Deep-link não pode ser anunciado.' );
+		g590_assert_same( '', $row['deep_link_url'] ?? null, 'Deep-link não pode ser inventado.' );
+		g590_assert_same( 'https://example.test/?p=12', $row['url'] ?? '', 'Fallback deve ser o permalink pai.' );
+		g590_assert_same( 'https://example.test/?p=12', $row['parent_url'] ?? '', 'Parent URL deve ser explícita.' );
 	};
 
 	$passed = 0;

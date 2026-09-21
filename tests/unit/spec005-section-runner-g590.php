@@ -56,6 +56,8 @@ $checks = array(
 	'single_search_table_preserved' => substr_count( $repository, "bdc_kb_search_documents" ) >= 1
 		&& ! str_contains( $repository, 'bdc_kb_search_sections' ),
 	'schema_1_1' => str_contains( $repository, "public const SCHEMA_VERSION = '1.1.0';" ),
+	'schema_contract_runtime' => str_contains( $repository, 'public static function schema_contract' )
+		&& str_contains( $repository, "REQUIRED_INDEXES = array( 'PRIMARY', 'document_state', 'document_version', 'source_hash' )" ),
 	'sections_json_column' => str_contains( $repository, 'sections_json LONGTEXT NOT NULL' ),
 	'section_version_column' => str_contains( $repository, 'section_projection_version VARCHAR(32) NOT NULL' ),
 	'candidate_query_does_not_load_sections' => ! str_contains( $candidate_source, 'sections_json' ),
@@ -85,6 +87,11 @@ $checks = array(
 		&& str_contains( $runner, "'editorial_fingerprint_after'" ),
 	'runner_numbered_gap_detection' => str_contains( $runner, 'numbered_without_heading_context' )
 		&& str_contains( $runner, 'Numbered_Hierarchy_Resolver::resolve' ),
+	'runner_performance_budget' => str_contains( $runner, 'PERF_P95_BUDGET_MS = 900.0' )
+		&& str_contains( $runner, 'PERF_MAX_BUDGET_MS = 1500.0' )
+		&& str_contains( $runner, 'performance_benchmark' ),
+	'runner_lifecycle_transition' => str_contains( $runner, 'state_versions_before_current' )
+		&& str_contains( $runner, 'version_transition_safe' ),
 	'runner_deep_link_materialization' => str_contains( $runner, 'Search_Anchor_Manager::inject_for_sections' )
 		&& str_contains( $runner, "'anchor_materialized'" ),
 	'runner_section_query_probe' => str_contains( $runner, 'Search_Service::search_sections' )

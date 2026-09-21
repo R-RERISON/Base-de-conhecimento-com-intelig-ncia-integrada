@@ -119,7 +119,7 @@ final class Search_Lifecycle {
 			$errors[] = array( 'code' => 'search_projection_schema_unavailable' );
 		}
 
-		if ( ( ! empty( $errors ) || ! empty( $throwables ) ) && ! empty( $state_before ) ) {
+		if ( ! empty( $errors ) || ! empty( $throwables ) ) {
 			self::write_degraded_state( $state_before, 'search_projection_schema_incomplete' );
 		}
 

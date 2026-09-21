@@ -130,6 +130,21 @@ namespace BDC\KnowledgeBase {
 		g590_assert_same( Search_Section_Projector::MAX_SECTIONS, count( $sections ), 'Projection deve ser bounded.' );
 	};
 
+	$tests['projector_bounds_section_text_length'] = static function (): void {
+		$sections = Search_Section_Projector::project(
+			11,
+			array(
+				array( 'kind'=>'heading', 'text'=>'Conteúdo extenso', 'ordinal'=>0, 'meta'=>array( 'level'=>2 ) ),
+				array( 'kind'=>'paragraph', 'text'=>str_repeat( 'abcdef ', 1000 ), 'ordinal'=>1 ),
+			)
+		);
+		g590_assert_same( 1, count( $sections ), 'Uma seção esperada.' );
+		g590_assert_true(
+			strlen( (string) $sections[0]['text_norm'] ) <= Search_Section_Projector::MAX_TEXT_CHARS,
+			'Texto normalizado deve respeitar o bound de 4.000 caracteres.'
+		);
+	};
+
 	$tests['ranker_prefers_exact_section_title'] = static function (): void {
 		$query = Search_Query_Normalizer::normalize( 'Validar certificado' );
 		g590_assert_true( is_array( $query ), 'Query válida esperada.' );

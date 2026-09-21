@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Search_Section_Service {
 
-	public const VERSION = 'search-section-result-v1.0.0';
+	public const VERSION = 'search-section-result-v1.1.0';
 	public const MAX_PARENTS = 20;
 
 	/**
@@ -65,20 +65,26 @@ final class Search_Section_Service {
 			$rows = array();
 			foreach ( $ranked as $section ) {
 				$anchor = (string) ( $section['anchor_id'] ?? '' );
-				if ( '' === $anchor ) {
-					continue;
-				}
+				$anchor_state = 'generated' === (string) ( $section['anchor_state'] ?? '' ) && '' !== $anchor
+					? 'generated'
+					: 'unresolved';
 				$permalink = get_permalink( $post_id );
 				$base_url = is_string( $permalink ) ? $permalink : '';
+				$deep_link_url = 'generated' === $anchor_state && '' !== $base_url
+					? $base_url . '#' . rawurlencode( $anchor )
+					: '';
 				$rows[] = array(
 					'post_id' => $post_id,
 					'parent_rank' => $parent_rank,
 					'section_key' => (string) ( $section['section_key'] ?? '' ),
 					'title' => (string) ( $section['title'] ?? '' ),
-					'url' => '' === $base_url ? '' : $base_url . '#' . rawurlencode( $anchor ),
+					'parent_url' => $base_url,
+					'deep_link_url' => $deep_link_url,
+					'url' => '' !== $deep_link_url ? $deep_link_url : $base_url,
 					'score' => (float) ( $section['score'] ?? 0.0 ),
 					'matched_signals' => array_values( array_map( 'strval', (array) ( $section['matched_signals'] ?? array() ) ) ),
-					'anchor_state' => 'generated',
+					'anchor_state' => $anchor_state,
+					'deep_link_available' => '' !== $deep_link_url,
 				);
 			}
 

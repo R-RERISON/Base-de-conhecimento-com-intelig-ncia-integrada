@@ -79,6 +79,9 @@ REQUIRED_ARTIFACT_FILES = (
     "includes/class-golden-gate-runner-g550.php",
     "resources/search/golden-relevance-v1.0.0.json",
     "resources/search/technical-challenge-v1.0.0.json",
+    "templates/public-home-preview.php",
+    "templates/public-article-preview.php",
+    "uninstall.php",
 )
 
 FORBIDDEN_ARTIFACT_FILES = (

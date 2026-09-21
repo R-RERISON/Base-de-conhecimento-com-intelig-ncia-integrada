@@ -16,16 +16,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Word_Cloud_Consultations {
 
-	public const VERSION = 'consultation-aggregate-v1.1.0';
+	public const VERSION = 'consultation-aggregate-v1.2.0';
 	public const OPTION = 'bdc_kb_word_cloud_consultations';
 	public const AJAX_ACTION = 'bdc_kb_word_cloud_consult_preview';
 	public const NONCE_ACTION = 'bdc_kb_word_cloud_consult_preview';
 	private const MAX_TERMS = 500;
 	private const EVENT_DEDUPE_TTL = 5 * MINUTE_IN_SECONDS;
 	private const EVENT_ID_MAX_LENGTH = 96;
+	private const EVENT_DEDUPE_PREFIX = 'bdc_kb_wc_evt_';
+	private const EVENT_GC_TRANSIENT = 'bdc_kb_wc_evt_gc';
 
 	public static function register(): void {
 		add_action( 'init', array( self::class, 'ensure_default' ), 20 );
+		add_action( 'init', array( self::class, 'maybe_cleanup_event_claims' ), 99 );
 		add_action( 'wp_ajax_' . self::AJAX_ACTION, array( self::class, 'ajax_record' ) );
 	}
 
@@ -42,7 +45,7 @@ final class Word_Cloud_Consultations {
 			return array( 'version' => self::VERSION, 'terms' => array(), 'updated_at' => '' );
 		}
 		$version = (string) ( $value['version'] ?? '' );
-		if ( ! in_array( $version, array( self::VERSION, 'consultation-aggregate-v1.0.0' ), true ) ) {
+		if ( ! in_array( $version, array( self::VERSION, 'consultation-aggregate-v1.1.0', 'consultation-aggregate-v1.0.0' ), true ) ) {
 			return array( 'version' => self::VERSION, 'terms' => array(), 'updated_at' => '' );
 		}
 		$value['version'] = self::VERSION;
@@ -67,6 +70,15 @@ final class Word_Cloud_Consultations {
 
 	public static function reset(): void {
 		update_option( self::OPTION, array( 'version' => self::VERSION, 'terms' => array(), 'updated_at' => gmdate( 'c' ) ), false );
+		self::delete_all_event_claims();
+	}
+
+	public static function maybe_cleanup_event_claims(): void {
+		if ( get_transient( self::EVENT_GC_TRANSIENT ) ) {
+			return;
+		}
+		self::cleanup_expired_event_claims();
+		set_transient( self::EVENT_GC_TRANSIENT, 1, HOUR_IN_SECONDS );
 	}
 
 	/**
@@ -152,17 +164,54 @@ final class Word_Cloud_Consultations {
 		}
 
 		$canonical = Word_Cloud_Quality::canonical( $term );
-		$dedupe_key = 'bdc_kb_wc_evt_' . sha1( $event_id . '|' . $canonical . '|' . sanitize_key( $source ) );
-		if ( get_transient( $dedupe_key ) ) {
+		$dedupe_key = self::EVENT_DEDUPE_PREFIX . sha1( $event_id . '|' . $canonical . '|' . sanitize_key( $source ) );
+		if ( ! self::claim_event( $dedupe_key ) ) {
 			wp_send_json_success( array( 'recorded' => false, 'duplicate' => true ) );
 		}
 
-		set_transient( $dedupe_key, 1, self::EVENT_DEDUPE_TTL );
 		$recorded = self::record( $term, $source );
 		if ( ! $recorded ) {
-			delete_transient( $dedupe_key );
+			delete_option( $dedupe_key );
 		}
 		wp_send_json_success( array( 'recorded' => $recorded, 'duplicate' => false ) );
+	}
+
+	private static function claim_event( string $dedupe_key ): bool {
+		$now = time();
+		$expires_at = $now + self::EVENT_DEDUPE_TTL;
+
+		// add_option() is an atomic claim because option_name is unique in wp_options.
+		if ( add_option( $dedupe_key, $expires_at, '', false ) ) {
+			return true;
+		}
+
+		$existing_expires_at = absint( get_option( $dedupe_key, 0 ) );
+		if ( $existing_expires_at > 0 && $existing_expires_at <= $now ) {
+			delete_option( $dedupe_key );
+			return add_option( $dedupe_key, $expires_at, '', false );
+		}
+
+		return false;
+	}
+
+	private static function cleanup_expired_event_claims(): void {
+		global $wpdb;
+		$like = $wpdb->esc_like( self::EVENT_DEDUPE_PREFIX ) . '%';
+		$now = time();
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s AND CAST(option_value AS UNSIGNED) <= %d LIMIT 500",
+				$like,
+				$now
+			)
+		);
+	}
+
+	private static function delete_all_event_claims(): void {
+		global $wpdb;
+		$like = $wpdb->esc_like( self::EVENT_DEDUPE_PREFIX ) . '%';
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $like ) );
+		delete_transient( self::EVENT_GC_TRANSIENT );
 	}
 
 	/** @return array<string,string> */

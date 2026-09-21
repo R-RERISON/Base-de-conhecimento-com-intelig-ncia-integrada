@@ -67,6 +67,7 @@ final class Search_Section_Runner_G590 {
 
 	public static function register(): void {
 		add_action( 'admin_menu', array( self::class, 'register_page' ), 48 );
+		add_action( 'admin_enqueue_scripts', array( self::class, 'enqueue_assets' ) );
 		add_action( 'wp_ajax_' . self::AJAX_START, array( self::class, 'ajax_start' ) );
 		add_action( 'wp_ajax_' . self::AJAX_STEP, array( self::class, 'ajax_step' ) );
 		add_action( 'wp_ajax_' . self::AJAX_STATUS, array( self::class, 'ajax_status' ) );
@@ -84,6 +85,43 @@ final class Search_Section_Runner_G590 {
 		);
 	}
 
+
+	public static function enqueue_assets( string $hook_suffix ): void {
+		unset( $hook_suffix );
+
+		$page = isset( $_GET['page'] ) && is_scalar( $_GET['page'] )
+			? sanitize_key( wp_unslash( (string) $_GET['page'] ) )
+			: '';
+
+		if ( self::PAGE_SLUG !== $page || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$handle = 'bdc-kb-g590-runner';
+		wp_enqueue_script(
+			$handle,
+			BDC_KB_URL . 'assets/js/search-section-g590.js',
+			array(),
+			defined( 'BDC_KB_VERSION' ) ? BDC_KB_VERSION : null,
+			true
+		);
+
+		wp_localize_script(
+			$handle,
+			'BDCG590',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce' => wp_create_nonce( self::AJAX_NONCE_ACTION ),
+				'actions' => array(
+					'start' => self::AJAX_START,
+					'step' => self::AJAX_STEP,
+					'status' => self::AJAX_STATUS,
+				),
+				'initial' => self::public_job_state( self::load_job() ),
+			)
+		);
+	}
+
 	public static function render_page(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'Permissão insuficiente.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
@@ -91,8 +129,6 @@ final class Search_Section_Runner_G590 {
 
 		$job = self::load_job();
 		$public_job = self::public_job_state( $job );
-		$ajax_nonce = wp_create_nonce( self::AJAX_NONCE_ACTION );
-
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'SPEC-005 — G-590 Section Retrieval & Deep-Link', 'bdc-knowledge-base' ) . '</h1>';
 		echo '<div class="notice notice-info inline"><p>';
@@ -112,19 +148,6 @@ final class Search_Section_Runner_G590 {
 		echo '</div>';
 		echo '</div>';
 
-		wp_enqueue_script( 'jquery' );
-		$config = array(
-			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			'nonce' => $ajax_nonce,
-			'actions' => array(
-				'start' => self::AJAX_START,
-				'step' => self::AJAX_STEP,
-				'status' => self::AJAX_STATUS,
-			),
-			'initial' => $public_job,
-		);
-		$script = 'window.BDCG590=' . wp_json_encode( $config ) . ';' . self::browser_runner_script();
-		wp_add_inline_script( 'jquery', $script, 'after' );
 	}
 
 
@@ -557,100 +580,6 @@ final class Search_Section_Runner_G590 {
 		}
 		return 'Executando fase isolada. A página pode ser recarregada e a execução será retomada.';
 	}
-
-	private static function browser_runner_script(): string {
-		return <<<'JS'
-(function(){
-	'use strict';
-	var cfg=window.BDCG590||{};
-	var root=document.getElementById('bdc-g590-runner');
-	if(!root){return;}
-	var start=root.querySelector('[data-bdc-g590-start]');
-	var restart=root.querySelector('[data-bdc-g590-restart]');
-	var statusEl=root.querySelector('[data-bdc-g590-status]');
-	var phaseEl=root.querySelector('[data-bdc-g590-phase]');
-	var progressEl=root.querySelector('[data-bdc-g590-progress]');
-	var detailEl=root.querySelector('[data-bdc-g590-detail]');
-	var download=root.querySelector('[data-bdc-g590-download]');
-	var errorBox=root.querySelector('[data-bdc-g590-error]');
-	var running=false;
-
-	function render(s){
-		if(!s){return;}
-		statusEl.textContent=s.status_label||s.status||'';
-		phaseEl.textContent=s.phase_label||s.phase||'';
-		progressEl.value=Number(s.progress||0);
-		detailEl.textContent=s.detail||'';
-		if(s.download_url){download.href=s.download_url;download.hidden=false;}else{download.hidden=true;}
-		start.disabled=running||s.status==='complete';
-		restart.disabled=running;
-	}
-
-	function showError(message){
-		errorBox.style.display='block';
-		errorBox.querySelector('p').textContent=message;
-	}
-	function clearError(){errorBox.style.display='none';errorBox.querySelector('p').textContent='';}
-	function delay(ms){return new Promise(function(resolve){window.setTimeout(resolve,ms);});}
-
-	async function request(action,extra){
-		var body=new URLSearchParams();
-		body.set('action',action);
-		body.set('nonce',cfg.nonce||'');
-		Object.keys(extra||{}).forEach(function(key){body.set(key,String(extra[key]));});
-		var response=await fetch(cfg.ajaxUrl,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},body:body.toString()});
-		var payload;
-		try{payload=await response.json();}catch(e){throw new Error('Resposta HTTP não-JSON ('+response.status+').');}
-		if(!response.ok||!payload||payload.success!==true){
-			var msg=payload&&payload.data&&payload.data.message?payload.data.message:'Falha HTTP '+response.status;
-			throw new Error(msg);
-		}
-		return payload.data||{};
-	}
-
-	async function recover(jobId){
-		try{
-			var s=await request(cfg.actions.status,{job_id:jobId||''});
-			render(s);
-			if(s.status==='running'){await delay(1200);return cycle(s.job_id);}
-			return s;
-		}catch(e){showError('Conexão interrompida. A execução é resumível; use “Iniciar / Retomar G-590”. '+e.message);running=false;render(cfg.initial||{});return null;}
-	}
-
-	async function cycle(jobId){
-		running=true;clearError();
-		try{
-			while(true){
-				var s=await request(cfg.actions.step,{job_id:jobId});
-				render(s);
-				if(s.status!=='running'){running=false;render(s);return s;}
-				if(s.busy){await delay(1000);}else{await delay(120);}
-			}
-		}catch(e){
-			showError('A requisição atual não concluiu no navegador. Consultando estado persistido para retomar sem duplicar trabalho. '+e.message);
-			return recover(jobId);
-		}
-	}
-
-	async function begin(forceRestart){
-		if(running){return;}
-		running=true;clearError();render(cfg.initial||{});
-		try{
-			var s=await request(cfg.actions.start,{restart:forceRestart?'1':'0'});
-			cfg.initial=s;render(s);
-			if(s.status==='running'){return cycle(s.job_id);}
-			running=false;render(s);return s;
-		}catch(e){running=false;showError(e.message);render(cfg.initial||{});return null;}
-	}
-
-	start.addEventListener('click',function(){begin(false);});
-	restart.addEventListener('click',function(){begin(true);});
-	render(cfg.initial||{});
-})();
-JS;
-	}
-
-
 
 	/** @param array<string,mixed> $job @return array<string,mixed> */
 	private static function assemble_job_report( array $job ): array {

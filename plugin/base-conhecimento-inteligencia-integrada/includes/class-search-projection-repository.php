@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Search_Projection_Repository {
 
-	public const SCHEMA_VERSION = '1.0.0';
+	public const SCHEMA_VERSION = '1.1.0';
 	public const STATE_OPTION = 'bdc_kb_search_projection_state';
 	public const CANDIDATE_CAP = 200;
 	public const UPSERT_WRITTEN = 'WRITTEN';
@@ -53,6 +53,8 @@ final class Search_Projection_Repository {
 			headings_norm LONGTEXT NOT NULL,
 			taxonomy_norm LONGTEXT NOT NULL,
 			body_norm LONGTEXT NOT NULL,
+			sections_json LONGTEXT NOT NULL,
+			section_projection_version VARCHAR(32) NOT NULL,
 			source_hash CHAR(64) NOT NULL,
 			document_hash CHAR(64) NOT NULL,
 			document_version VARCHAR(32) NOT NULL,
@@ -82,7 +84,8 @@ final class Search_Projection_Repository {
 		return 'ready' === (string) ( $state['status'] ?? '' )
 			&& self::SCHEMA_VERSION === (string) ( $state['schema_version'] ?? '' )
 			&& Search_Document_Builder::VERSION === (string) ( $state['document_version'] ?? '' )
-			&& Search_Query_Normalizer::VERSION === (string) ( $state['normalizer_version'] ?? '' );
+			&& Search_Query_Normalizer::VERSION === (string) ( $state['normalizer_version'] ?? '' )
+			&& Search_Section_Projector::VERSION === (string) ( $state['section_projection_version'] ?? '' );
 	}
 
 	/**
@@ -99,6 +102,7 @@ final class Search_Projection_Repository {
 			'status' => $status,
 			'document_version' => Search_Document_Builder::VERSION,
 			'normalizer_version' => Search_Query_Normalizer::VERSION,
+			'section_projection_version' => Search_Section_Projector::VERSION,
 			'corpus_count' => max( 0, (int) ( $state['corpus_count'] ?? 0 ) ),
 			'source_fingerprint' => preg_replace( '/[^a-f0-9]/', '', strtolower( (string) ( $state['source_fingerprint'] ?? '' ) ) ) ?? '',
 			'last_success_at_gmt' => (string) ( $state['last_success_at_gmt'] ?? '' ),
@@ -115,6 +119,12 @@ final class Search_Projection_Repository {
 	public static function upsert( array $document ): string|\WP_Error {
 		global $wpdb;
 
+		try {
+			$sections_json = Canonical_JSON::encode( is_array( $document['sections'] ?? null ) ? $document['sections'] : array() );
+		} catch ( \JsonException $error ) {
+			return new \WP_Error( 'search_projection_sections_encode_failed', 'Falha ao serializar Section Projection.' );
+		}
+
 		$data = array(
 			'post_id' => (int) ( $document['post_id'] ?? 0 ),
 			'document_state' => (string) ( $document['document_state'] ?? 'degraded' ),
@@ -124,6 +134,8 @@ final class Search_Projection_Repository {
 			'headings_norm' => (string) ( $document['headings_norm'] ?? '' ),
 			'taxonomy_norm' => (string) ( $document['taxonomy_norm'] ?? '' ),
 			'body_norm' => (string) ( $document['body_norm'] ?? '' ),
+			'sections_json' => $sections_json,
+			'section_projection_version' => (string) ( $document['section_projection_version'] ?? Search_Section_Projector::VERSION ),
 			'source_hash' => (string) ( $document['source_hash'] ?? '' ),
 			'document_hash' => (string) ( $document['document_hash'] ?? '' ),
 			'document_version' => (string) ( $document['document_version'] ?? '' ),
@@ -137,7 +149,7 @@ final class Search_Projection_Repository {
 		}
 
 		$existing_sql = $wpdb->prepare(
-			'SELECT source_hash, document_hash, document_version, normalizer_version FROM ' . self::table_name() . ' WHERE post_id = %d LIMIT 1',
+			'SELECT source_hash, document_hash, document_version, normalizer_version, section_projection_version FROM ' . self::table_name() . ' WHERE post_id = %d LIMIT 1',
 			$data['post_id']
 		);
 		$existing = $wpdb->get_row( $existing_sql, ARRAY_A );
@@ -152,6 +164,7 @@ final class Search_Projection_Repository {
 			&& $data['document_hash'] === (string) ( $existing['document_hash'] ?? '' )
 			&& $data['document_version'] === (string) ( $existing['document_version'] ?? '' )
 			&& $data['normalizer_version'] === (string) ( $existing['normalizer_version'] ?? '' )
+			&& $data['section_projection_version'] === (string) ( $existing['section_projection_version'] ?? '' )
 		) {
 			return self::UPSERT_NO_CHANGE;
 		}
@@ -159,7 +172,7 @@ final class Search_Projection_Repository {
 		$result = $wpdb->replace(
 			self::table_name(),
 			$data,
-			array( '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
+			array( '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
 		);
 
 		if ( false === $result ) {
@@ -252,6 +265,69 @@ final class Search_Projection_Repository {
 		}
 
 		return is_array( $rows ) ? $rows : array();
+	}
+
+	/**
+	 * Carrega Section Projection somente para parents já ranqueados.
+	 *
+	 * @param array<int,int> $post_ids
+	 * @return array<int,array<int,array<string,mixed>>>|\WP_Error
+	 */
+	public static function sections_for_posts( array $post_ids ): array|\WP_Error {
+		global $wpdb;
+
+		$post_ids = array_values(
+			array_unique(
+				array_filter(
+					array_map( 'intval', $post_ids ),
+					static fn ( int $post_id ): bool => $post_id > 0
+				)
+			)
+		);
+		$post_ids = array_slice( $post_ids, 0, Search_Section_Service::MAX_PARENTS );
+
+		if ( empty( $post_ids ) ) {
+			return array();
+		}
+		if ( ! self::is_ready() ) {
+			return new \WP_Error( 'search_projection_not_ready', 'Search Projection não está pronta.', array( 'status' => 503 ) );
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $post_ids ), '%d' ) );
+		$sql = $wpdb->prepare(
+			'SELECT post_id, sections_json, section_projection_version FROM ' . self::table_name() . " WHERE post_id IN ({$placeholders}) ORDER BY post_id ASC",
+			...$post_ids
+		);
+		$rows = $wpdb->get_results( $sql, ARRAY_A );
+
+		if ( '' !== (string) $wpdb->last_error ) {
+			return new \WP_Error( 'search_projection_sections_read_failed', 'Falha ao consultar Section Projection.' );
+		}
+
+		$out = array_fill_keys( $post_ids, array() );
+		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+			$post_id = (int) ( $row['post_id'] ?? 0 );
+			if ( ! isset( $out[ $post_id ] ) ) {
+				continue;
+			}
+			if ( Search_Section_Projector::VERSION !== (string) ( $row['section_projection_version'] ?? '' ) ) {
+				return new \WP_Error( 'search_projection_sections_version_mismatch', 'Section Projection está stale.' );
+			}
+
+			$json = (string) ( $row['sections_json'] ?? '[]' );
+			try {
+				$sections = json_decode( $json, true, 512, JSON_THROW_ON_ERROR );
+			} catch ( \JsonException $error ) {
+				return new \WP_Error( 'search_projection_sections_decode_failed', 'Section Projection inválida.' );
+			}
+
+			if ( ! is_array( $sections ) ) {
+				return new \WP_Error( 'search_projection_sections_invalid', 'Section Projection possui formato inválido.' );
+			}
+			$out[ $post_id ] = array_slice( array_values( $sections ), 0, Search_Section_Projector::MAX_SECTIONS );
+		}
+
+		return $out;
 	}
 
 	public static function schema_exists(): bool {

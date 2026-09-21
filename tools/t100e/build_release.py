@@ -31,11 +31,21 @@ GOLDEN_RUNTIME_RESOURCES = (
     "resources/search/technical-challenge-v1.0.0.json",
 )
 
+PUBLIC_PREVIEW_RUNTIME_FILES = (
+    "templates/public-home-preview.php",
+    "templates/public-article-preview.php",
+)
+
+BASE_RUNTIME_FILES = (
+    "uninstall.php",
+)
+
 CONDITIONAL_RUNTIME_RESOURCES = {
     "BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD": GOLDEN_RUNTIME_RESOURCES,
     "BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD": GOLDEN_RUNTIME_RESOURCES,
     "BDC_KB_SPEC005_G590_SECTION_BUILD": GOLDEN_RUNTIME_RESOURCES,
     "BDC_KB_UX004_H030_TECHNICAL_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD": PUBLIC_PREVIEW_RUNTIME_FILES,
 }
 
 
@@ -119,6 +129,9 @@ def main() -> int:
 
     source = bootstrap.read_text(encoding="utf-8")
     files: set[str] = {BOOTSTRAP}
+    for rel in BASE_RUNTIME_FILES:
+        if (plugin / rel).is_file():
+            files.add(rel)
 
     uncond = unconditional_requires(source)
     cond = conditional_requires(source)

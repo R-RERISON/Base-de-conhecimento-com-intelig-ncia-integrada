@@ -1459,3 +1459,51 @@ Status:
 - G-585 PAUSED;
 - G-590 BLOCKED.
 
+## H-023 CLOSED / H-030 candidate 0.5.0-h030.1
+
+Word Cloud:
+- p580wc.3.2 environmental human confirmation PASS;
+- one confirmed interaction = one aggregate increment;
+- H-023 PASS/CLOSED for current maturity.
+
+Public Search Facade:
+- contract `public-search-facade-v1.0.0`;
+- same normalizer/projection/ranker/result contracts;
+- no second ranker;
+- hard public status policy: publish/private only;
+- private requires `read_post`;
+- draft/pending/future excluded;
+- password-protected excluded;
+- AJAX auth+nopriv;
+- nonce + bounded query/result size;
+- approximate 60/minute rate bound with HMAC fingerprint; no raw IP persistence;
+- no query log.
+
+H-030 runner:
+- H030 functional parity;
+- H031 security/capability including anonymous Search probes;
+- H032 candidate Home smoke with ASI manually inactive;
+- H033 raw legacy shortcode scan;
+- H034 Search/Golden regression;
+- editorial fingerprint before/after;
+- never deactivates ASI automatically.
+
+Package:
+- `0.5.0-h030.1`;
+- SHA-256 `00e5032ea500515b3dae04e9695f2e5e234c53c94905525509e1b3da5a741f03`;
+- 88 files / 76 PHP / 2 JS;
+- 76/76 PHP lint + extracted ZIP lint;
+- JS syntax PASS;
+- 61/61 active requires;
+- 24/24 H-030 static checks;
+- source/package/repository parity 6/6;
+- deterministic 2/2;
+- Search Service/rebuild/lifecycle/ranker byte-identical.
+
+Status:
+- H-023 CLOSED;
+- H-030 LOCAL PASS / ENV pending;
+- H-050 BLOCKED until H-030;
+- G-585 PAUSED until H-030 PASS;
+- G-590 BLOCKED.
+

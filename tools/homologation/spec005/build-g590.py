@@ -88,6 +88,25 @@ UNIT_TESTS = (
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
+def git_provenance(repo: Path) -> dict[str, object]:
+    git = shutil.which("git")
+    if not git:
+        return {"available": False, "head": "", "dirty": None}
+
+    head = run([git, "rev-parse", "HEAD"], repo)
+    if head.returncode != 0:
+        return {"available": False, "head": "", "dirty": None}
+
+    status = run([git, "status", "--porcelain"], repo)
+    if status.returncode != 0:
+        raise RuntimeError("failed to inspect git status")
+
+    return {
+        "available": True,
+        "head": head.stdout.strip(),
+        "dirty": bool(status.stdout.strip()),
+    }
+
 def run(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         cmd,
@@ -223,6 +242,9 @@ def main() -> int:
             raise SystemExit(f"required file missing: {required}")
 
     local_gates: dict[str, object] = {}
+    provenance = git_provenance(repo)
+    if provenance.get("available") and provenance.get("dirty"):
+        raise SystemExit("refusing G-590 build from dirty git working tree")
 
     php = shutil.which("php")
     if not php:
@@ -256,6 +278,7 @@ def main() -> int:
 
         shutil.copytree(plugin, staging_plugin)
         shutil.copy2(build_tool, staging_tools / "build_release.py")
+        shutil.copy2(regression_tool, staging_tools / "regression_runner.py")
 
         build_profile = patch_bootstrap(staging_plugin / BOOTSTRAP)
         source_lint = lint_tree(staging_plugin)
@@ -297,14 +320,35 @@ def main() -> int:
 
         zip_lint = lint_zip(output)
 
+        artifact_regression_json = Path(tmp) / "artifact-regression.json"
+        artifact_regression = run(
+            [
+                sys.executable,
+                str(staging_tools / "regression_runner.py"),
+                "--root",
+                str(staging),
+                "--artifact-zip",
+                str(output),
+                "--json",
+                str(artifact_regression_json),
+            ],
+            staging,
+        )
+        require_success("T100E staged artifact regression", artifact_regression)
+        staged_artifact_regression = json.loads(
+            artifact_regression_json.read_text(encoding="utf-8")
+        )
+
     evidence = {
         "schema_version": "1.0.0",
         "gate": "G-590-PACKAGE",
         "mode": "local_deterministic_homologation_build",
         "plugin_version": VERSION,
+        "source_provenance": provenance,
         "local_gates": local_gates,
         "source_lint": source_lint,
         "zip_lint": zip_lint,
+        "staged_artifact_regression": staged_artifact_regression,
         "artifact": {
             "path": str(output),
             "sha256": sha256(output),

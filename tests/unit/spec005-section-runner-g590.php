@@ -97,6 +97,13 @@ $checks = array(
 	'runner_source_kind_probe_coverage' => str_contains( $runner, "'generated_by_source_kind'" )
 		&& str_contains( $runner, "'required_probe_source_kinds'" )
 		&& str_contains( $runner, "'unprobed_source_kinds'" ),
+	'runner_probe_not_unique_title_only' => ! str_contains(
+		$runner,
+		"|| 1 !== (int) ( \$title_frequency[ \$title_norm ] ?? 0 )"
+	),
+	'runner_probe_discriminator_strategy' => str_contains( $runner, "'title_plus_rare_section_token'" )
+		&& str_contains( $runner, "'probe_query'" )
+		&& str_contains( $runner, "'discriminator_frequency'" ),
 	'runner_deep_link_materialization' => str_contains( $runner, 'Search_Anchor_Manager::inject_for_sections' )
 		&& str_contains( $runner, "'anchor_materialized'" ),
 	'runner_section_query_probe' => str_contains( $runner, 'Search_Service::search_sections' )

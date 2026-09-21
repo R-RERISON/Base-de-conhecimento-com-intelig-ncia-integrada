@@ -2,7 +2,7 @@
 
 **Status:** FROZEN PARA IMPLEMENTAÇÃO
 **Section projection:** `search-section-projection-v1.0.0`
-**Section ranker:** `lexical-section-ranker-v1.0.0`
+**Section ranker:** `lexical-section-ranker-v1.1.0`
 
 ## Objetivo
 
@@ -35,6 +35,8 @@ A identidade estrutural usa post_id, level, heading path normalizado e ocorrênc
 
 Duplicidade estrutural recebe keys distintas, porém fica `anchor_state=unresolved` quando não houver alvo renderizado inequívoco.
 
+`anchor_state` controla **navegabilidade**, não elegibilidade de retrieval. Uma seção unresolved continua pesquisável e identificável por `section_key`.
+
 ## Section text
 
 Texto após o heading até o próximo heading.
@@ -50,6 +52,8 @@ Pré-condição: parent post já foi ranqueado/autorizado.
 Sinais: exact section title, title token coverage, section text coverage, exact phrase em title/text e bounded parent-rank boost.
 
 Um parent match isolado não transforma toda seção em resultado.
+
+O ranker não exige deep-link disponível. `generated|unresolved` podem ser resultados; somente a camada de navegação decide se existe `deep_link_url`.
 
 Para query com >=2 tokens, seção precisa cobrir pelo menos 50% dos tokens no title/text.
 
@@ -71,3 +75,11 @@ Tie-break:
 ## Proibições
 
 Segundo ranker de post, segunda tabela, mutação editorial, aliases/vocabulary/relevance rules, telemetry, IA ou vetor.
+
+
+## Addendum v1.1
+
+A separação formal entre retrieval e deep-link está congelada em:
+`g590-section-retrieval-addendum-v1.1.md`.
+
+Result contract atual: `search-section-result-v1.1.0`.

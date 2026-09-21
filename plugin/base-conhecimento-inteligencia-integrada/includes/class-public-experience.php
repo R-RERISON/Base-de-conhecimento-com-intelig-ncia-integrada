@@ -117,8 +117,10 @@ final class Public_Experience {
 			'BDC_KB_PUBLIC_SEARCH',
 			array(
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-				'nonce' => wp_create_nonce( 'bdc_kb_public_search_preview' ),
-				'minChars' => 2,
+				'action' => Public_Search_Facade::AJAX_ACTION,
+				'nonce' => wp_create_nonce( Public_Search_Facade::NONCE_ACTION ),
+				'previewMode' => true,
+				'minChars' => Public_Search_Facade::MIN_QUERY_LENGTH,
 				'debounceMs' => 180,
 				'uiVersion' => 'premium-v6',
 				'consultAction' => class_exists( Word_Cloud_Consultations::class ) ? Word_Cloud_Consultations::AJAX_ACTION : '',

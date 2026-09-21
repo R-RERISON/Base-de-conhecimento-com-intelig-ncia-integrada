@@ -27,7 +27,7 @@
 - [ ] H020 Public Home shell — `.6` premium polish local PASS; live Search behavior preserved; environmental/human pending.
 - [ ] H021 Header/Auth — `.2` adds custom-logo, menu-first navigation and Entra shortcode bridge; environmental verification pending.
 - [ ] H022 Public Search — `.5` adds input-driven preview AJAX over frozen Search; public authorization facade + section/trecho parity still required before cutover.
-- [ ] H023 Word Cloud — p580wc.2 semantic quality improved; p580wc.3 count signal worked but duplicate delivery observed on Windows 10. `0.5.0-p580wc.3.1` idempotency patch local PASS; environmental +1 recheck required.
+- [ ] H023 Word Cloud — p580wc.3.1 still duplicated Windows 10 after reset; root cause narrowed to non-atomic transient claim. `0.5.0-p580wc.3.2` atomic add_option claim local PASS; environmental +1 recheck required.
 - [ ] H024 categorias/filtros — curated preview implemented; environmental/human pending.
 - [ ] H025 últimas — deterministic date/ID provider preview implemented.
 - [ ] H026 populares — legacy comment_count compatibility provider preview implemented.

@@ -73,6 +73,14 @@ REQUIRED_TRUE_FLAGS = (
 )
 
 UNIT_TESTS = (
+    "tests/unit/spec001-summary-store.php",
+    "tests/unit/spec002-classification-contract.php",
+    "tests/unit/spec003-review-store.php",
+    "tests/unit/spec004-content-extractor.php",
+    "tests/unit/spec004-knowledge-document.php",
+    "tests/unit/spec004-hierarchy-v21.php",
+    "tests/unit/spec005-search-engine.php",
+    "tests/unit/spec005-golden-gate.php",
     "tests/unit/spec005-section-retrieval-g590.php",
     "tests/unit/spec005-section-runner-g590.php",
 )

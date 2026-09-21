@@ -25,6 +25,18 @@ BOOTSTRAP = "base-conhecimento-inteligencia-integrada.php"
 ZIP_ROOT = "base-conhecimento-inteligencia-integrada"
 FIXED_ZIP_TIME = (1980, 1, 1, 0, 0, 0)
 
+GOLDEN_RUNTIME_RESOURCES = (
+    "resources/search/golden-relevance-v1.0.0.json",
+    "resources/search/technical-challenge-v1.0.0.json",
+)
+
+CONDITIONAL_RUNTIME_RESOURCES = {
+    "BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_SPEC005_G590_SECTION_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_UX004_H030_TECHNICAL_BUILD": GOLDEN_RUNTIME_RESOURCES,
+}
+
 
 def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
@@ -120,6 +132,14 @@ def main() -> int:
         if value is True:
             files.update(paths)
 
+    active_runtime_resources: dict[str, list[str]] = {}
+    for flag, paths in CONDITIONAL_RUNTIME_RESOURCES.items():
+        value = flag_value(source, flag)
+        active_flags.setdefault(flag, value)
+        if value is True:
+            files.update(paths)
+            active_runtime_resources[flag] = list(paths)
+
     add_tree_files(plugin, "assets/css", files)
     add_tree_files(plugin, "assets/js", files)
 
@@ -149,6 +169,7 @@ def main() -> int:
         "zip_sha256": zip_hash,
         "active_conditional_flags": active_flags,
         "unconditional_requires": uncond,
+        "active_runtime_resources": active_runtime_resources,
         "included_file_count": len(files_sorted),
         "included_files": file_hashes,
         "excluded_source_file_count": len(excluded),

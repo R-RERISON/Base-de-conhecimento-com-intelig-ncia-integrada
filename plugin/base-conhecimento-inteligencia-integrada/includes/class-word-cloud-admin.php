@@ -16,12 +16,14 @@ final class Word_Cloud_Admin {
 	public const PAGE_SLUG = 'bdc-kb-word-cloud';
 	private const ACTION_GENERATE = 'bdc_kb_word_cloud_generate';
 	private const ACTION_SAVE = 'bdc_kb_word_cloud_save';
+	private const ACTION_RESET_CONSULTATIONS = 'bdc_kb_word_cloud_reset_consultations';
 	private const NONCE = 'bdc_kb_word_cloud_admin';
 
 	public static function register(): void {
 		add_action( 'admin_menu', array( self::class, 'register_page' ), 56 );
 		add_action( 'admin_post_' . self::ACTION_GENERATE, array( self::class, 'handle_generate' ) );
 		add_action( 'admin_post_' . self::ACTION_SAVE, array( self::class, 'handle_save' ) );
+		add_action( 'admin_post_' . self::ACTION_RESET_CONSULTATIONS, array( self::class, 'handle_reset_consultations' ) );
 	}
 
 	public static function register_page(): void {
@@ -67,6 +69,11 @@ final class Word_Cloud_Admin {
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_GENERATE ) . '">';
 		wp_nonce_field( self::NONCE, 'bdc_kb_word_cloud_nonce' );
 		submit_button( 'Gerar snapshot agora', 'primary', 'submit', false );
+		echo '</form>';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" style="margin-top:10px">';
+		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_RESET_CONSULTATIONS ) . '">';
+		wp_nonce_field( self::NONCE, 'bdc_kb_word_cloud_nonce' );
+		submit_button( 'Resetar consultas de homologação', 'secondary', 'submit', false, array( 'onclick' => "return confirm('Zerar os contadores agregados da Nuvem de Conhecimento?');" ) );
 		echo '</form></section>';
 
 		echo '<section class="bdc-kb-panel" style="padding:20px;margin-bottom:16px"><h2>Configuração</h2>';
@@ -107,6 +114,14 @@ final class Word_Cloud_Admin {
 		self::guard();
 		$result = Word_Cloud_Service::generate( 'manual_admin' );
 		self::redirect( 'failed' === (string) ( $result['status'] ?? '' ) ? 'failed' : 'generated' );
+	}
+
+	public static function handle_reset_consultations(): never {
+		self::guard();
+		if ( class_exists( Word_Cloud_Consultations::class ) ) {
+			Word_Cloud_Consultations::reset();
+		}
+		self::redirect( 'consultations_reset' );
 	}
 
 	public static function handle_save(): never {

@@ -1154,3 +1154,37 @@ The specific acceptance criterion is now strict:
 
 G-585 remains PAUSED until H-023 closes.
 
+## Continuidade — UX-004 H-030 Technical Acceptance
+
+Install:
+- `0.5.0-h030.1`;
+- SHA-256 `00e5032ea500515b3dae04e9695f2e5e234c53c94905525509e1b3da5a741f03`.
+
+Before running:
+1. keep the BDC plugin active;
+2. manually deactivate Advanced Search Intelligence in homologation;
+3. do not remove ASI tables/options/files;
+4. do not change page content or Elementor.
+
+Run:
+- Base de Conhecimento → Aceite Técnico H-030;
+- click **Executar H-030 e baixar JSON**;
+- attach the downloaded JSON.
+
+Expected:
+- status PASS;
+- H030/H031/H032/H033/H034 all true;
+- editorial fingerprint equal;
+- Public Search facade version `public-search-facade-v1.0.0`;
+- Word Cloud current/non-empty;
+- anonymous Search probes return publish/public only;
+- Golden PASS;
+- errors/throwables empty;
+- next_gate = H-050/G-585 readiness.
+
+If ASI is still active:
+- expected status `BLOCKED_ASI_ACTIVE`;
+- runner must not deactivate it.
+
+Do not run G-585 yet. First close H-030 from environmental evidence.
+

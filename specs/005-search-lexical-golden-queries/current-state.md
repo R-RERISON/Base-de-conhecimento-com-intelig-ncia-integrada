@@ -91,18 +91,32 @@ Classificação:
 - causa: enqueue tardio dentro de `render_page()`;
 - correção RC3: asset próprio via `admin_enqueue_scripts` + `wp_localize_script`.
 
+## Incidente G-590.3
+
+O RC3 executou o runner até **Concluído — JSON disponível**, porém o link de download transportou `&amp;` literal e o WordPress rejeitou o nonce.
+
+Classificação:
+- execução G-590 = CONCLUÍDA;
+- relatório persistido = DISPONÍVEL;
+- download = FAIL CONTROLADO;
+- nenhuma reexecução funcional é necessária para a correção RC4.
+
+A causa foi dupla codificação de URL ao usar `wp_nonce_url()` antes do boundary de renderização.
+
+RC4 usa `add_query_arg()` + `wp_create_nonce()` e preserva o escaping somente no HTML.
+
 ## Próximo passo exato
 
-Pacote RC3 pronto para homologação:
-- Product Version `0.5.1-rc.3`;
-- Build ID `g590.3-79734d820a5e`;
-- source commit `79734d820a5e2960fa4a0e9e69588418a6fe56bf`;
-- runner blob `e1ea5488537c3e11df82c793d6a9eb522d4984cf`;
+Pacote RC4 pronto para homologação:
+- Product Version `0.5.1-rc.4`;
+- Build ID `g590.4-5d74569e70bb`;
+- source commit `5d74569e70bb3e0a646a081ec2e3e855e581a452`;
+- runner blob `8cf78c31842aea1b6ec12be5e4010c27647e49a2`;
 - admin JS blob `77c58e75ff6429ecfbf1acdc279f4815aa02e14f`;
-- ZIP SHA-256 `22f9caae295f30347676eb835dd879c78c8c7468915cfde272020a8b7911560d`;
+- ZIP SHA-256 `c05211f1db3ee568403b5f3b74abd8f8d3335d11865e9b77197afaf20e33b3ee`;
 - local package gate PASS: 82 arquivos, PHP 69/69, JS 3/3, deterministic build 2/2.
 
-Instalar sobre homologação, abrir **Base de Conhecimento → Section Retrieval G-590**, usar **Iniciar / Retomar G-590**, aguardar `Concluído — JSON disponível`, baixar o JSON final e validar com `tools/homologation/spec005/validate-g590-evidence.php`.
+Instalar RC4 sobre o RC3. Se a tela continuar em **Concluído — JSON disponível**, **não reiniciar evidência**. Apenas clicar em **Baixar JSON final** e validar o arquivo com `tools/homologation/spec005/validate-g590-evidence.php`.
 
 Após evidência ambiental:
 1. fechar T590-14..T590-19 somente se todos os subgates PASS;

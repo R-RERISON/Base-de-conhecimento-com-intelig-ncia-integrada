@@ -445,11 +445,15 @@ def main() -> int:
     version_match = re.search(
         r"define\(\s*'BDC_KB_VERSION'\s*,\s*'([^']+)'\s*\)", source
     )
+    build_match = re.search(
+        r"define\(\s*'BDC_KB_BUILD_ID'\s*,\s*'([^']+)'\s*\)", source
+    )
     report = {
         "schema_version": "1.1.0",
         "gate": "T100E",
         "mode": "static_regression_runner",
         "plugin_version": version_match.group(1) if version_match else "",
+        "build_id": build_match.group(1) if build_match else "",
         "checks": checks,
         "warnings": warnings,
         "failures": failures,

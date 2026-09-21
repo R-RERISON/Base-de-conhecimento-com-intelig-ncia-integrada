@@ -1,7 +1,7 @@
 # Constituição — Base de Conhecimento com Inteligência Integrada
 
-**Versão:** 1.3.0  
-**Ratificação:** 2026-09-17  
+**Versão:** 1.4.0  
+**Ratificação:** 2026-09-21  
 **Idioma oficial:** Português do Brasil  
 **Mantra constitucional:** **“Quem não sabe onde está, não sabe para onde quer ir”.**
 
@@ -469,3 +469,33 @@ O handoff deve distinguir claramente:
 
 ### XVIII.8 — Saída obrigatória do Orquestrador
 Ao encerrar uma implementação material em chat, o Orquestrador deve informar que o `CONTINUIDADE.md` foi atualizado e disponibilizar o Prompt de Continuidade ou indicar seu caminho canônico no repositório.
+
+
+---
+
+## Artigo XIX — Padrão Premium e regressão entre SPECs
+
+### XIX.1 — Premium é condição de engenharia
+Toda nova implementação deve satisfazer o `docs/PREMIUM-PLUGIN-PRODUCT-STANDARD.md`. Premium envolve produto, WordPress-first, UX, segurança, privacidade, performance, qualidade, distribuição, operação, suporte e rollback.
+
+### XIX.2 — SPEC fechada continua protegida
+Fechar uma SPEC não encerra sua responsabilidade de regressão. Toda mudança posterior deve identificar contratos fechados potencialmente afetados e executar cobertura proporcional.
+
+### XIX.3 — Reabertura é preferível à regressão silenciosa
+Quando evidência nova demonstrar gap, conflito ou premissa desatualizada, a SPEC pode ser reaberta por addendum/gate de consolidação. É proibido esconder regressão apenas para preservar o rótulo CLOSED.
+
+### XIX.4 — Código não existe para fechar checklist
+Nenhuma implementação é aprovada apenas porque satisfaz uma task. Antes do runtime devem existir baseline, contrato, alternativa mais simples, teste, impacto retroativo e rollback/fallback.
+
+### XIX.5 — Paridade incremental
+Capabilities de referências e ambiente são rastreadas na Master Functional Parity Ledger. PLANNED, PARTIAL e UNKNOWN_ENVIRONMENTAL não autorizam cutover.
+
+### XIX.6 — Especialistas obrigatórios
+Mudança material deve ser confrontada, no mínimo, por WordPress Core, domínio/produto, simplicidade e QA/segurança; especialistas adicionais entram conforme Search, dados, release, performance, privacidade ou IA.
+
+### XIX.7 — Emenda 1.4.0
+Problema tratado: risco de evolução rápida criar regressões cruzadas, dívida de distribuição e código orientado a fechar escopo em vez de consolidar produto.
+
+Alternativa simples: manter vertical slices, mas tornar regressão histórica e Premium Product Gate obrigatórios em toda nova implementação.
+
+Risco: aumentar o custo inicial de cada mudança. Mitigação: gates proporcionais ao impacto, reuso de suites existentes e princípio de negação para evitar burocracia sem valor.

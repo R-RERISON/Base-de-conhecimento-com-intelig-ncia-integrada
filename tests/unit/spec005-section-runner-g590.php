@@ -92,6 +92,9 @@ $checks = array(
 		&& str_contains( $runner, 'performance_benchmark' ),
 	'runner_lifecycle_transition' => str_contains( $runner, 'state_versions_before_current' )
 		&& str_contains( $runner, 'version_transition_safe' ),
+	'runner_source_kind_probe_coverage' => str_contains( $runner, "'generated_by_source_kind'" )
+		&& str_contains( $runner, "'required_probe_source_kinds'" )
+		&& str_contains( $runner, "'unprobed_source_kinds'" ),
 	'runner_deep_link_materialization' => str_contains( $runner, 'Search_Anchor_Manager::inject_for_sections' )
 		&& str_contains( $runner, "'anchor_materialized'" ),
 	'runner_section_query_probe' => str_contains( $runner, 'Search_Service::search_sections' )

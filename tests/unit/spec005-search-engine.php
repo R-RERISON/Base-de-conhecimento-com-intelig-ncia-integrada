@@ -143,7 +143,7 @@ namespace BDC\KnowledgeBase {
 		public static function hash( mixed $value ): string {
 			return hash( 'sha256', self::encode( $value ) );
 		}
-		private static function encode( mixed $value ): string {
+		public static function encode( mixed $value ): string {
 			return json_encode(
 				self::normalize( $value ),
 				JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION | JSON_THROW_ON_ERROR
@@ -169,6 +169,7 @@ namespace BDC\KnowledgeBase {
 
 	$root = __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/';
 	require_once $root . 'class-search-query-normalizer.php';
+	require_once $root . 'class-search-section-projector.php';
 	require_once $root . 'class-search-document-builder.php';
 	require_once $root . 'class-search-projection-repository.php';
 	require_once $root . 'class-lexical-ranker.php';
@@ -340,6 +341,7 @@ namespace BDC\KnowledgeBase {
 			'status'=>'ready',
 			'document_version'=>Search_Document_Builder::VERSION,
 			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'section_projection_version'=>Search_Section_Projector::VERSION,
 		);
 		assert_true_search( Search_Projection_Repository::is_ready(), 'State current deve ser ready.' );
 
@@ -353,6 +355,7 @@ namespace BDC\KnowledgeBase {
 			'status'=>'ready',
 			'document_version'=>Search_Document_Builder::VERSION,
 			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'section_projection_version'=>Search_Section_Projector::VERSION,
 		);
 		$GLOBALS['spec005_posts'] = array(
 			1 => (object) array( 'ID'=>1,'post_type'=>'post','post_status'=>'publish','post_title'=>'Windows 11 oficial' ),
@@ -415,6 +418,7 @@ namespace BDC\KnowledgeBase {
 			'document_hash'=>str_repeat( 'b', 64 ),
 			'document_version'=>Search_Document_Builder::VERSION,
 			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'section_projection_version'=>Search_Section_Projector::VERSION,
 			'post_modified_gmt'=>'2026-09-18 10:00:00',
 			'indexed_at_gmt'=>'2026-09-19 09:30:00',
 		);
@@ -428,6 +432,7 @@ namespace BDC\KnowledgeBase {
 				'document_hash'=>$document['document_hash'],
 				'document_version'=>$document['document_version'],
 				'normalizer_version'=>$document['normalizer_version'],
+				'section_projection_version'=>$document['section_projection_version'] ?? Search_Section_Projector::VERSION,
 			),
 		);
 
@@ -450,6 +455,7 @@ namespace BDC\KnowledgeBase {
 			'document_hash'=>str_repeat( 'd', 64 ),
 			'document_version'=>Search_Document_Builder::VERSION,
 			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'section_projection_version'=>Search_Section_Projector::VERSION,
 			'post_modified_gmt'=>'2026-09-18 10:00:00',
 			'indexed_at_gmt'=>'2026-09-19 09:30:00',
 		);
@@ -462,6 +468,7 @@ namespace BDC\KnowledgeBase {
 				'document_hash'=>str_repeat( '1', 64 ),
 				'document_version'=>$document['document_version'],
 				'normalizer_version'=>$document['normalizer_version'],
+				'section_projection_version'=>$document['section_projection_version'] ?? Search_Section_Projector::VERSION,
 			),
 		);
 
@@ -483,6 +490,7 @@ namespace BDC\KnowledgeBase {
 			'status'=>'ready',
 			'document_version'=>Search_Document_Builder::VERSION,
 			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'section_projection_version'=>Search_Section_Projector::VERSION,
 		);
 		$GLOBALS['wpdb']->last_error = '';
 		$GLOBALS['wpdb']->queries = array();

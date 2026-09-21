@@ -513,9 +513,13 @@ final class Search_Section_Runner_G590 {
 		$download_url = '';
 		if ( 'complete' === $status && ! empty( $job['report'] ) ) {
 			$job_id = (string) ( $job['job_id'] ?? '' );
-			$download_url = wp_nonce_url(
-				admin_url( 'admin-post.php?action=' . self::DOWNLOAD_ACTION . '&job_id=' . rawurlencode( $job_id ) ),
-				self::DOWNLOAD_ACTION . '_' . $job_id
+			$download_url = add_query_arg(
+				array(
+					'action' => self::DOWNLOAD_ACTION,
+					'job_id' => $job_id,
+					'_wpnonce' => wp_create_nonce( self::DOWNLOAD_ACTION . '_' . $job_id ),
+				),
+				admin_url( 'admin-post.php' )
 			);
 		}
 

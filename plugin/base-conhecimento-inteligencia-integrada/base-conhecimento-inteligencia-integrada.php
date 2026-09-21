@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.5.0-p580wc.3.2
+ * Version: 0.5.0-h030.1
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.5.0-p580wc.3.2' );
+define( 'BDC_KB_VERSION', '0.5.0-h030.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -51,6 +51,7 @@ define( 'BDC_KB_SPEC005_G580_LIFECYCLE_BUILD', false );
 define( 'BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD', false );
 define( 'BDC_KB_P580_PUBLIC_INVENTORY_BUILD', false );
 define( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD', true );
+define( 'BDC_KB_UX004_H030_TECHNICAL_BUILD', true );
 define( 'BDC_KB_WORD_CLOUD_BUILD', true );
 if ( ! defined( 'BDC_KB_SEARCH_ENABLED' ) ) {
 	define( 'BDC_KB_SEARCH_ENABLED', true );
@@ -224,10 +225,16 @@ if ( defined( 'BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD' ) && BDC_KB_SPEC005_G
 	require_once BDC_KB_DIR . 'includes/class-golden-gate-runner-g550.php';
 	require_once BDC_KB_DIR . 'includes/class-search-independence-runner-g585.php';
 }
+if ( defined( 'BDC_KB_UX004_H030_TECHNICAL_BUILD' ) && BDC_KB_UX004_H030_TECHNICAL_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-golden-suite-loader.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-gate-runner-g550.php';
+	require_once BDC_KB_DIR . 'includes/class-public-home-technical-runner-h030.php';
+}
 if ( defined( 'BDC_KB_P580_PUBLIC_INVENTORY_BUILD' ) && BDC_KB_P580_PUBLIC_INVENTORY_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-public-experience-inventory-runner-p580.php';
 }
 if ( defined( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD' ) && BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-public-search-facade.php';
 	require_once BDC_KB_DIR . 'includes/class-helpful-tips-store.php';
 	require_once BDC_KB_DIR . 'includes/class-public-navigation.php';
 	require_once BDC_KB_DIR . 'includes/class-public-auth-bridge.php';
@@ -340,9 +347,13 @@ if ( defined( 'BDC_KB_SPEC005_G580_LIFECYCLE_BUILD' ) && BDC_KB_SPEC005_G580_LIF
 if ( defined( 'BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD' ) && BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD ) {
 	\BDC\KnowledgeBase\Search_Independence_Runner_G585::register();
 }
+if ( defined( 'BDC_KB_UX004_H030_TECHNICAL_BUILD' ) && BDC_KB_UX004_H030_TECHNICAL_BUILD ) {
+	\BDC\KnowledgeBase\Public_Home_Technical_Runner_H030::register();
+}
 if ( defined( 'BDC_KB_P580_PUBLIC_INVENTORY_BUILD' ) && BDC_KB_P580_PUBLIC_INVENTORY_BUILD ) {
 	\BDC\KnowledgeBase\Public_Experience_Inventory_Runner_P580::register();
 }
 if ( defined( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD' ) && BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD ) {
+	\BDC\KnowledgeBase\Public_Search_Facade::register();
 	\BDC\KnowledgeBase\Public_Experience::register();
 }

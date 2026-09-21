@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Search_Document_Builder {
 
-	public const VERSION = 'search-document-v1.0.0';
+	public const VERSION = 'search-document-v1.1.0';
 
 	/** @var array<int,string> */
 	private const ALLOWED_STATUSES = array( 'publish', 'draft', 'pending', 'private', 'future' );
@@ -77,6 +77,7 @@ final class Search_Document_Builder {
 
 		$document = self::compose( $components );
 		$document['diagnostics'] = array(
+			'section_count' => count( (array) ( $document['sections'] ?? array() ) ),
 			'extractor_error_code' => $extractor_error ? $extraction->get_error_code() : '',
 			'taxonomy_error_code' => $taxonomy_error ? $taxonomy->get_error_code() : '',
 			'extractor_warning_count' => $extractor_error ? 0 : count( (array) ( $extraction['warnings'] ?? array() ) ),
@@ -130,6 +131,8 @@ final class Search_Document_Builder {
 			}
 		}
 
+		$sections = Search_Section_Projector::project( $post_id, $fragments );
+
 		$taxonomy_raw_parts = array();
 		foreach ( $taxonomy_rows as $row ) {
 			if ( ! is_array( $row ) ) {
@@ -156,6 +159,8 @@ final class Search_Document_Builder {
 			'headings_norm' => Search_Query_Normalizer::normalize_document_text( implode( ' ', $headings ) ),
 			'taxonomy_norm' => Search_Query_Normalizer::normalize_document_text( implode( ' ', $taxonomy_raw_parts ) ),
 			'body_norm' => Search_Query_Normalizer::normalize_document_text( implode( ' ', $body ) ),
+			'sections' => $sections,
+			'section_projection_version' => Search_Section_Projector::VERSION,
 			'document_version' => self::VERSION,
 			'normalizer_version' => Search_Query_Normalizer::VERSION,
 			'post_modified_gmt' => (string) ( $components['post_modified_gmt'] ?? '' ),
@@ -187,6 +192,8 @@ final class Search_Document_Builder {
 				'headings_norm' => $document['headings_norm'],
 				'taxonomy_norm' => $document['taxonomy_norm'],
 				'body_norm' => $document['body_norm'],
+				'sections' => $document['sections'],
+				'section_projection_version' => $document['section_projection_version'],
 				'document_state' => $document['document_state'],
 				'source_kind' => $document['source_kind'],
 				'document_version' => self::VERSION,

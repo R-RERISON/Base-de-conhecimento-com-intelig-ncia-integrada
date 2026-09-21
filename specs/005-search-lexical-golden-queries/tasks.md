@@ -208,7 +208,10 @@
 - [x] G590-ENV-07 RC2 `0.5.1-rc.2/g590.2` gerado; execução ambiental encontrou FAIL CONTROLADO de UI bootstrap — botões sem JS por late enqueue em `render_page()`.
 - [x] G590-ENV-07A corrigir lifecycle de assets via `admin_enqueue_scripts` + asset dedicado + `wp_localize_script`.
 - [x] G590-ENV-07B gerar RC3 `0.5.1-rc.3/g590.3` — LOCAL PACKAGE PASS; SHA-256 `22f9caae295f30347676eb835dd879c78c8c7468915cfde272020a8b7911560d`.
-- [ ] G590-ENV-08 executar RC3 e baixar JSON completo.
+- [x] G590-ENV-08 RC3 executado até `Concluído — JSON disponível`; download bloqueado por dupla codificação `&amp;`/nonce — FAIL CONTROLADO de download, gate não reiniciado.
+- [x] G590-ENV-08A corrigir URL de download: `add_query_arg()` + `wp_create_nonce()` + escaping somente no render boundary.
+- [x] G590-ENV-08B gerar RC4 `0.5.1-rc.4/g590.4` — LOCAL PACKAGE PASS; SHA-256 `c05211f1db3ee568403b5f3b74abd8f8d3335d11865e9b77197afaf20e33b3ee`.
+- [ ] G590-ENV-08C instalar RC4 e baixar JSON do job já concluído, sem reiniciar evidência.
 - [ ] G590-ENV-09 validar evidence machine `failed=0`.
 
 ## Pós G-590

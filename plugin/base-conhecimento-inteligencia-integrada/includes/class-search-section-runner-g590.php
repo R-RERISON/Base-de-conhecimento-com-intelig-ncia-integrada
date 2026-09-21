@@ -20,6 +20,11 @@ final class Search_Section_Runner_G590 {
 	private const NONCE_FIELD = 'bdc_kb_spec005_g590_section_nonce';
 	private const MAX_PROBES = 12;
 	private const MIN_PROBES = 5;
+	private const BENCHMARK_QUERY_CAP = 6;
+	private const BENCHMARK_WARMUPS = 1;
+	private const BENCHMARK_REPEATS = 5;
+	private const PERF_P95_BUDGET_MS = 900.0;
+	private const PERF_MAX_BUDGET_MS = 1500.0;
 
 	/** @var array<int,string> */
 	private const ALLOWED_STATUSES = array( 'publish', 'draft', 'pending', 'private', 'future' );
@@ -100,7 +105,9 @@ final class Search_Section_Runner_G590 {
 		$rows_before = self::row_count();
 		$snapshot_before = self::projection_snapshot_hash();
 
+		$state_versions_before_current = self::state_versions_current( $state_before );
 		$lifecycle = Search_Lifecycle::prepare_schema();
+		$state_after_prepare = Search_Projection_Repository::state();
 		$schema_contract = self::schema_contract();
 		$rows_after_prepare = self::row_count();
 		$snapshot_after_prepare = self::projection_snapshot_hash();
@@ -108,6 +115,9 @@ final class Search_Section_Runner_G590 {
 		$prepare_did_not_reindex = $rows_before === $rows_after_prepare
 			&& $snapshot_before === $snapshot_after_prepare
 			&& false === (bool) ( $lifecycle['implicit_rebuild'] ?? true );
+
+		$version_transition_safe = $state_versions_before_current
+			|| 'degraded' === (string) ( $state_after_prepare['status'] ?? '' );
 
 		$rebuild = array();
 		try {
@@ -117,7 +127,9 @@ final class Search_Section_Runner_G590 {
 		}
 
 		$coverage = self::coverage_audit( $post_ids );
-		$probes = self::section_and_anchor_probes( (array) ( $coverage['probe_candidates'] ?? array() ) );
+		$probe_candidates = (array) ( $coverage['probe_candidates'] ?? array() );
+		$probes = self::section_and_anchor_probes( $probe_candidates );
+		$performance = self::performance_benchmark( $probe_candidates );
 
 		$golden = array();
 		try {
@@ -162,8 +174,10 @@ final class Search_Section_Runner_G590 {
 		$t59016 = $probe_pass;
 		$t59017 = ! empty( $schema_contract['pass'] )
 			&& $prepare_did_not_reindex
+			&& $version_transition_safe
 			&& $rebuild_pass;
 		$t59018 = $editorial_equal
+			&& ! empty( $performance['pass'] )
 			&& ! empty( $source_safety['no_editorial_write'] )
 			&& ! empty( $source_safety['no_network'] )
 			&& ! empty( $source_safety['no_asi'] );
@@ -197,6 +211,9 @@ final class Search_Section_Runner_G590 {
 				'rows_before' => $rows_before,
 				'projection_snapshot_before' => $snapshot_before,
 				'prepare_schema' => $lifecycle,
+				'state_versions_before_current' => $state_versions_before_current,
+				'state_after_prepare' => $state_after_prepare,
+				'version_transition_safe' => $version_transition_safe,
 				'schema_contract' => $schema_contract,
 				'rows_after_prepare' => $rows_after_prepare,
 				'projection_snapshot_after_prepare' => $snapshot_after_prepare,
@@ -205,6 +222,7 @@ final class Search_Section_Runner_G590 {
 			),
 			'coverage' => $coverage,
 			'section_deep_link_probes' => $probes,
+			'performance' => $performance,
 			'post_level_golden_regression' => $golden,
 			'safety' => array(
 				'editorial_fingerprint_before' => $editorial_fingerprint_before,
@@ -440,6 +458,90 @@ final class Search_Section_Runner_G590 {
 			'visible_text_changed' => $visible_text_changed,
 			'rows' => $rows,
 		);
+	}
+
+
+	/** @return array<string,mixed> */
+	private static function performance_benchmark( array $candidates ): array {
+		$queries = array();
+		foreach ( array_slice( $candidates, 0, self::BENCHMARK_QUERY_CAP ) as $candidate ) {
+			$query = trim( (string) ( $candidate['title'] ?? '' ) );
+			if ( '' !== $query ) {
+				$queries[] = $query;
+			}
+		}
+
+		$samples = array();
+		$technical_failures = array();
+
+		foreach ( $queries as $query ) {
+			for ( $i = 0; $i < self::BENCHMARK_WARMUPS; ++$i ) {
+				Search_Service::search_sections( $query, Search_Section_Service::MAX_PARENTS, 3 );
+			}
+
+			for ( $i = 0; $i < self::BENCHMARK_REPEATS; ++$i ) {
+				$started = microtime( true );
+				$response = Search_Service::search_sections( $query, Search_Section_Service::MAX_PARENTS, 3 );
+				$runtime_ms = ( microtime( true ) - $started ) * 1000;
+				$samples[] = $runtime_ms;
+
+				if (
+					'success' !== (string) ( $response['state'] ?? '' )
+					|| (int) ( $response['section_count'] ?? 0 ) <= 0
+				) {
+					$technical_failures[] = array(
+						'query' => $query,
+						'state' => (string) ( $response['state'] ?? '' ),
+						'error_code' => (string) ( $response['error_code'] ?? '' ),
+					);
+				}
+			}
+		}
+
+		sort( $samples, SORT_NUMERIC );
+		$p50 = self::percentile( $samples, 0.50 );
+		$p95 = self::percentile( $samples, 0.95 );
+		$max = empty( $samples ) ? 0.0 : (float) max( $samples );
+
+		$pass = ! empty( $queries )
+			&& ! empty( $samples )
+			&& empty( $technical_failures )
+			&& $p95 <= self::PERF_P95_BUDGET_MS
+			&& $max <= self::PERF_MAX_BUDGET_MS;
+
+		return array(
+			'query_count' => count( $queries ),
+			'warmups_per_query' => self::BENCHMARK_WARMUPS,
+			'repeats_per_query' => self::BENCHMARK_REPEATS,
+			'sample_count' => count( $samples ),
+			'p50_ms' => round( $p50, 4 ),
+			'p95_ms' => round( $p95, 4 ),
+			'max_ms' => round( $max, 4 ),
+			'p95_budget_ms' => self::PERF_P95_BUDGET_MS,
+			'max_budget_ms' => self::PERF_MAX_BUDGET_MS,
+			'technical_failure_count' => count( $technical_failures ),
+			'technical_failures' => array_slice( $technical_failures, 0, 20 ),
+			'pass' => $pass,
+		);
+	}
+
+	/** @param array<int,float> $samples */
+	private static function percentile( array $samples, float $percentile ): float {
+		$count = count( $samples );
+		if ( 0 === $count ) {
+			return 0.0;
+		}
+		$index = (int) ceil( $percentile * $count ) - 1;
+		$index = max( 0, min( $count - 1, $index ) );
+		return (float) $samples[ $index ];
+	}
+
+	/** @param array<string,mixed> $state */
+	private static function state_versions_current( array $state ): bool {
+		return Search_Projection_Repository::SCHEMA_VERSION === (string) ( $state['schema_version'] ?? '' )
+			&& Search_Document_Builder::VERSION === (string) ( $state['document_version'] ?? '' )
+			&& Search_Query_Normalizer::VERSION === (string) ( $state['normalizer_version'] ?? '' )
+			&& Search_Section_Projector::VERSION === (string) ( $state['section_projection_version'] ?? '' );
 	}
 
 	/** @return array<string,mixed> */

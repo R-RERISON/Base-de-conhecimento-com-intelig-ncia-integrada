@@ -130,9 +130,12 @@ final class Search_Section_Runner_G590 {
 		$editorial_fingerprint_after = Canonical_JSON::hash( $editorial_after );
 		$editorial_equal = hash_equals( $editorial_fingerprint_before, $editorial_fingerprint_after );
 
+		$rebuild_state_after = is_array( $rebuild['state_after'] ?? null ) ? $rebuild['state_after'] : array();
+		$rebuild_determinism = is_array( $rebuild['determinism'] ?? null ) ? $rebuild['determinism'] : array();
+
 		$rebuild_pass = 'PASS' === (string) ( $rebuild['status'] ?? '' )
-			&& 'ready' === (string) ( (array) ( $rebuild['state_after'] ?? array() )['status'] ?? '' )
-			&& 0 === (int) ( (array) ( $rebuild['determinism'] ?? array() )['mismatch_count'] ?? -1 );
+			&& 'ready' === (string) ( $rebuild_state_after['status'] ?? '' )
+			&& 0 === (int) ( $rebuild_determinism['mismatch_count'] ?? -1 );
 
 		$golden_pass = 'PASS' === (string) ( $golden['status'] ?? '' )
 			&& 0 === (int) ( $golden['blocking_failed'] ?? -1 )
@@ -397,7 +400,7 @@ final class Search_Section_Runner_G590 {
 			if ( is_object( $post ) ) {
 				$GLOBALS['post'] = $post;
 				setup_postdata( $post );
-				$rendered = apply_filters( 'the_content', (string) ( $post->post_content ?? '' ) );
+				$rendered = (string) apply_filters( 'the_content', (string) ( $post->post_content ?? '' ) );
 				wp_reset_postdata();
 			}
 

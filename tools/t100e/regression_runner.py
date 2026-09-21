@@ -101,11 +101,21 @@ GOLDEN_RUNTIME_RESOURCES = (
     "resources/search/technical-challenge-v1.0.0.json",
 )
 
+PUBLIC_PREVIEW_RUNTIME_FILES = (
+    "templates/public-home-preview.php",
+    "templates/public-article-preview.php",
+)
+
+BASE_RUNTIME_FILES = (
+    "uninstall.php",
+)
+
 CONDITIONAL_RUNTIME_RESOURCES = {
     "BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD": GOLDEN_RUNTIME_RESOURCES,
     "BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD": GOLDEN_RUNTIME_RESOURCES,
     "BDC_KB_SPEC005_G590_SECTION_BUILD": GOLDEN_RUNTIME_RESOURCES,
     "BDC_KB_UX004_H030_TECHNICAL_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD": PUBLIC_PREVIEW_RUNTIME_FILES,
 }
 
 DEFENSIVE_PAIRS = {
@@ -278,6 +288,9 @@ def main() -> int:
             warnings.append(f"{name} still enabled; not yet replaced by consolidated tooling")
 
     active_required = set(uncond)
+    for rel in BASE_RUNTIME_FILES:
+        if (plugin / rel).is_file():
+            active_required.add(rel)
     for flag, paths in cond.items():
         if flags.get(flag) is True:
             active_required.update(paths)

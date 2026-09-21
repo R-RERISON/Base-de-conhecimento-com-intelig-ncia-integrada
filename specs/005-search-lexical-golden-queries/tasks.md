@@ -79,13 +79,13 @@
 - [x] T583 uninstall retention — PASS ambiental; deactivation/uninstall não destrutivos por default.
 - [x] T584 G-580 PASS — CLOSED em 2026-09-20; evidence g580-environmental-review-20260920T173016Z.json; próximo gate G-585.
 
-## G-590 — RC
-- [ ] T590 deterministic build.
-- [ ] T591 manifest/checksum.
-- [ ] T592 regression SPEC-001–004.
-- [ ] T593 environmental RC smoke.
-- [ ] T594 final report.
-- [ ] T595 merge only after human approval.
+## G-595 — Boundary Closeout / RC técnico
+- [ ] T595-01 deterministic build do artefato que fechou G-590/G-585.
+- [ ] T595-02 manifest/checksum.
+- [ ] T595-03 regressão SPEC-001–005 consolidada.
+- [ ] T595-04 environmental boundary smoke.
+- [ ] T595-05 relatório final da fronteira Search.
+- [ ] T595-06 merge somente após aprovação humana.
 
 
 ## P-580A — ASI Functional Parity Rebaseline

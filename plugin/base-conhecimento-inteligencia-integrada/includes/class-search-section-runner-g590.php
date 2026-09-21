@@ -546,28 +546,17 @@ final class Search_Section_Runner_G590 {
 
 	/** @return array<string,mixed> */
 	private static function schema_contract(): array {
-		global $wpdb;
-
-		$required = array(
-			'post_id','document_state','source_kind','title_norm','summary_norm','headings_norm',
-			'taxonomy_norm','body_norm','sections_json','section_projection_version','source_hash',
-			'document_hash','document_version','normalizer_version','post_modified_gmt','indexed_at_gmt',
-		);
-
-		$rows = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Search_Projection_Repository::table_name(), ARRAY_A );
-		$actual = array();
-		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
-			$actual[] = (string) ( $row['Field'] ?? '' );
+		$contract = Search_Projection_Repository::schema_contract();
+		if ( $contract instanceof \WP_Error ) {
+			return array(
+				'expected_schema_version' => Search_Projection_Repository::SCHEMA_VERSION,
+				'pass' => false,
+				'error_code' => $contract->get_error_code(),
+				'error_message' => $contract->get_error_message(),
+			);
 		}
-		$missing = array_values( array_diff( $required, $actual ) );
-
-		return array(
-			'expected_schema_version' => Search_Projection_Repository::SCHEMA_VERSION,
-			'required_columns' => $required,
-			'actual_columns' => $actual,
-			'missing_columns' => $missing,
-			'pass' => empty( $missing ) && '' === (string) $wpdb->last_error,
-		);
+		$contract['expected_schema_version'] = Search_Projection_Repository::SCHEMA_VERSION;
+		return $contract;
 	}
 
 	/** @return array<string,bool|string> */

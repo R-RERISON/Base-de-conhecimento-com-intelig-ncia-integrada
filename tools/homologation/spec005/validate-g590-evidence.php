@@ -45,6 +45,7 @@ $checks = array(
 		=== (int) $get( $data, array( 'coverage', 'posts_analyzed' ), -2 ),
 	'no_extractor_errors' => 0 === (int) $get( $data, array( 'coverage', 'extractor_error_count' ), -1 ),
 	'no_uncontextual_numbered_gap' => 0 === (int) $get( $data, array( 'coverage', 'numbered_without_heading_context' ), -1 ),
+	'all_generated_source_kinds_probed' => empty( $get( $data, array( 'coverage', 'unprobed_source_kinds' ), array( '__missing__' ) ) ),
 
 	'minimum_section_probes' => (int) $get( $data, array( 'section_deep_link_probes', 'eligible_probe_count' ), 0 )
 		>= (int) $get( $data, array( 'section_deep_link_probes', 'minimum_required' ), 5 ),

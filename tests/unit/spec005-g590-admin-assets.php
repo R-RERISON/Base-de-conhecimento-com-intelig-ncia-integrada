@@ -69,6 +69,13 @@ $checks = array(
 	),
 	'asset_no_external_origin' => ! str_contains( $asset, 'http://' )
 		&& ! str_contains( $asset, 'https://' ),
+	'download_url_not_preescaped' => ! str_contains( $runner, 'wp_nonce_url(' )
+		&& str_contains( $runner, 'add_query_arg(' )
+		&& str_contains( $runner, "'_wpnonce' => wp_create_nonce(" ),
+	'download_url_escaped_only_at_render_boundary' => str_contains(
+		$runner,
+		"esc_url( (string) ( \$public_job['download_url'] ?? '' ) )"
+	),
 );
 
 $failed = 0;

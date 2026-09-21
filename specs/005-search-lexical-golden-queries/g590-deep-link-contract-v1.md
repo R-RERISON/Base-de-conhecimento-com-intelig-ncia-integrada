@@ -50,3 +50,13 @@ Obrigatório provar:
 - idempotência;
 - headings duplicados sem deep-link;
 - anchor somente para post/section atuais.
+
+
+## Retrieval independente
+
+Este contrato não controla se uma seção pode aparecer na Search.
+
+- `anchor_state=generated`: Section Result pode emitir `deep_link_url`;
+- `anchor_state=unresolved`: Section Result continua válido, mas `deep_link_url=''` e `url` cai para o permalink do artigo.
+
+Portanto, falha de anchor é fail-closed para **navegação direta**, não para **encontrabilidade da seção**.

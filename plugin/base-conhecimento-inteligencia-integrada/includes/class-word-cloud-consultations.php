@@ -16,11 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Word_Cloud_Consultations {
 
-	public const VERSION = 'consultation-aggregate-v1.0.0';
+	public const VERSION = 'consultation-aggregate-v1.1.0';
 	public const OPTION = 'bdc_kb_word_cloud_consultations';
 	public const AJAX_ACTION = 'bdc_kb_word_cloud_consult_preview';
 	public const NONCE_ACTION = 'bdc_kb_word_cloud_consult_preview';
 	private const MAX_TERMS = 500;
+	private const EVENT_DEDUPE_TTL = 5 * MINUTE_IN_SECONDS;
+	private const EVENT_ID_MAX_LENGTH = 96;
 
 	public static function register(): void {
 		add_action( 'init', array( self::class, 'ensure_default' ), 20 );
@@ -36,9 +38,14 @@ final class Word_Cloud_Consultations {
 	/** @return array<string,mixed> */
 	public static function payload(): array {
 		$value = get_option( self::OPTION, array() );
-		if ( ! is_array( $value ) || self::VERSION !== (string) ( $value['version'] ?? '' ) ) {
+		if ( ! is_array( $value ) ) {
 			return array( 'version' => self::VERSION, 'terms' => array(), 'updated_at' => '' );
 		}
+		$version = (string) ( $value['version'] ?? '' );
+		if ( ! in_array( $version, array( self::VERSION, 'consultation-aggregate-v1.0.0' ), true ) ) {
+			return array( 'version' => self::VERSION, 'terms' => array(), 'updated_at' => '' );
+		}
+		$value['version'] = self::VERSION;
 		$value['terms'] = is_array( $value['terms'] ?? null ) ? $value['terms'] : array();
 		return $value;
 	}
@@ -56,6 +63,10 @@ final class Word_Cloud_Consultations {
 
 	public static function total_count(): int {
 		return array_sum( self::counts() );
+	}
+
+	public static function reset(): void {
+		update_option( self::OPTION, array( 'version' => self::VERSION, 'terms' => array(), 'updated_at' => gmdate( 'c' ) ), false );
 	}
 
 	/**
@@ -133,8 +144,25 @@ final class Word_Cloud_Consultations {
 		}
 		$term = isset( $_POST['term'] ) && is_scalar( $_POST['term'] ) ? sanitize_text_field( wp_unslash( (string) $_POST['term'] ) ) : '';
 		$source = isset( $_POST['source'] ) && is_scalar( $_POST['source'] ) ? sanitize_key( wp_unslash( (string) $_POST['source'] ) ) : 'result_click';
+		$event_id = isset( $_POST['event_id'] ) && is_scalar( $_POST['event_id'] ) ? sanitize_text_field( wp_unslash( (string) $_POST['event_id'] ) ) : '';
+		$event_id = substr( trim( $event_id ), 0, self::EVENT_ID_MAX_LENGTH );
+
+		if ( '' === $event_id ) {
+			wp_send_json_error( array( 'message' => 'event_id ausente.' ), 400 );
+		}
+
+		$canonical = Word_Cloud_Quality::canonical( $term );
+		$dedupe_key = 'bdc_kb_wc_evt_' . sha1( $event_id . '|' . $canonical . '|' . sanitize_key( $source ) );
+		if ( get_transient( $dedupe_key ) ) {
+			wp_send_json_success( array( 'recorded' => false, 'duplicate' => true ) );
+		}
+
+		set_transient( $dedupe_key, 1, self::EVENT_DEDUPE_TTL );
 		$recorded = self::record( $term, $source );
-		wp_send_json_success( array( 'recorded' => $recorded ) );
+		if ( ! $recorded ) {
+			delete_transient( $dedupe_key );
+		}
+		wp_send_json_success( array( 'recorded' => $recorded, 'duplicate' => false ) );
 	}
 
 	/** @return array<string,string> */

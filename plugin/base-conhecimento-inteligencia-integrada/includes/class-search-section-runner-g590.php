@@ -25,6 +25,16 @@ final class Search_Section_Runner_G590 {
 	private const BENCHMARK_REPEATS = 5;
 	private const PERF_P95_BUDGET_MS = 900.0;
 	private const PERF_MAX_BUDGET_MS = 1500.0;
+	private const JOB_VERSION = 'g590-resumable-v1.0.0';
+	private const JOB_OPTION = 'bdc_kb_spec005_g590_job';
+	private const JOB_LOCK_PREFIX = 'bdc_kb_g590_lock_';
+	private const AJAX_START = 'bdc_kb_g590_start';
+	private const AJAX_STEP = 'bdc_kb_g590_step';
+	private const AJAX_STATUS = 'bdc_kb_g590_status';
+	private const DOWNLOAD_ACTION = 'bdc_kb_g590_download';
+	private const AJAX_NONCE_ACTION = 'bdc_kb_g590_ajax';
+	private const SNAPSHOT_BATCH_SIZE = 50;
+	private const COVERAGE_BATCH_SIZE = 25;
 
 	/** @var array<int,string> */
 	private const GOVERNED_META_KEYS = array(
@@ -57,7 +67,10 @@ final class Search_Section_Runner_G590 {
 
 	public static function register(): void {
 		add_action( 'admin_menu', array( self::class, 'register_page' ), 48 );
-		add_action( 'admin_post_' . self::ACTION, array( self::class, 'handle_run' ) );
+		add_action( 'wp_ajax_' . self::AJAX_START, array( self::class, 'ajax_start' ) );
+		add_action( 'wp_ajax_' . self::AJAX_STEP, array( self::class, 'ajax_step' ) );
+		add_action( 'wp_ajax_' . self::AJAX_STATUS, array( self::class, 'ajax_status' ) );
+		add_action( 'admin_post_' . self::DOWNLOAD_ACTION, array( self::class, 'handle_download' ) );
 	}
 
 	public static function register_page(): void {
@@ -76,47 +89,50 @@ final class Search_Section_Runner_G590 {
 			wp_die( esc_html__( 'Permissão insuficiente.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
 		}
 
+		$job = self::load_job();
+		$public_job = self::public_job_state( $job );
+		$ajax_nonce = wp_create_nonce( self::AJAX_NONCE_ACTION );
+
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'SPEC-005 — G-590 Section Retrieval & Deep-Link', 'bdc-knowledge-base' ) . '</h1>';
 		echo '<div class="notice notice-info inline"><p>';
-		echo esc_html__( 'Executa rebuild explícito, regressão Golden, cobertura estrutural do corpus, probes section-level/deep-link e fingerprint editorial. Não grava conteúdo editorial.', 'bdc-knowledge-base' );
+		echo esc_html__( 'Execução resumível: o gate é dividido em fases curtas para não depender do timeout HTTP do proxy/webserver. O rebuild continua explícito e o conteúdo editorial permanece read-only.', 'bdc-knowledge-base' );
 		echo '</p></div>';
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
-		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '">';
-		wp_nonce_field( self::NONCE_ACTION, self::NONCE_FIELD );
-		submit_button( __( 'Executar G-590 e baixar JSON', 'bdc-knowledge-base' ), 'primary' );
-		echo '</form>';
+		echo '<div id="bdc-g590-runner" class="card" style="max-width:820px;padding:20px">';
+		echo '<p><strong>' . esc_html__( 'Estado:', 'bdc-knowledge-base' ) . '</strong> <span data-bdc-g590-status>' . esc_html( (string) ( $public_job['status_label'] ?? 'Pronto para iniciar' ) ) . '</span></p>';
+		echo '<p><strong>' . esc_html__( 'Fase:', 'bdc-knowledge-base' ) . '</strong> <span data-bdc-g590-phase>' . esc_html( (string) ( $public_job['phase_label'] ?? '—' ) ) . '</span></p>';
+		echo '<progress data-bdc-g590-progress max="100" value="' . esc_attr( (string) ( $public_job['progress'] ?? 0 ) ) . '" style="width:100%;height:20px"></progress>';
+		echo '<p data-bdc-g590-detail>' . esc_html( (string) ( $public_job['detail'] ?? 'Nenhuma execução ativa.' ) ) . '</p>';
+		echo '<p>';
+		echo '<button type="button" class="button button-primary" data-bdc-g590-start>' . esc_html__( 'Iniciar / Retomar G-590', 'bdc-knowledge-base' ) . '</button> ';
+		echo '<button type="button" class="button" data-bdc-g590-restart>' . esc_html__( 'Reiniciar evidência', 'bdc-knowledge-base' ) . '</button> ';
+		echo '<a class="button" data-bdc-g590-download href="' . esc_url( (string) ( $public_job['download_url'] ?? '' ) ) . '"' . ( empty( $public_job['download_url'] ) ? ' hidden' : '' ) . '>' . esc_html__( 'Baixar JSON final', 'bdc-knowledge-base' ) . '</a>';
+		echo '</p>';
+		echo '<div class="notice notice-error inline" data-bdc-g590-error style="display:none"><p></p></div>';
 		echo '</div>';
+		echo '</div>';
+
+		wp_enqueue_script( 'jquery' );
+		$config = array(
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'nonce' => $ajax_nonce,
+			'actions' => array(
+				'start' => self::AJAX_START,
+				'step' => self::AJAX_STEP,
+				'status' => self::AJAX_STATUS,
+			),
+			'initial' => $public_job,
+		);
+		$script = 'window.BDCG590=' . wp_json_encode( $config ) . ';' . self::browser_runner_script();
+		wp_add_inline_script( 'jquery', $script, 'after' );
 	}
+
 
 	public static function handle_run(): void {
-		if ( 'POST' !== strtoupper( (string) ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) {
-			wp_die( esc_html__( 'Método HTTP não permitido.', 'bdc-knowledge-base' ), '', array( 'response' => 405 ) );
-		}
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Permissão insuficiente.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
-		}
-
-		$nonce = isset( $_POST[ self::NONCE_FIELD ] ) && is_scalar( $_POST[ self::NONCE_FIELD ] )
-			? wp_unslash( (string) $_POST[ self::NONCE_FIELD ] )
-			: '';
-
-		if ( ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
-			wp_die( esc_html__( 'Nonce inválido ou expirado.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
-		}
-
-		$report = self::run();
-		$json = wp_json_encode( $report, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
-		if ( ! is_string( $json ) ) {
-			wp_die( esc_html__( 'Falha ao serializar relatório.', 'bdc-knowledge-base' ), '', array( 'response' => 500 ) );
-		}
-
-		nocache_headers();
-		header( 'Content-Type: application/json; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename="bdc-kb-spec005-g590-section-' . gmdate( 'Ymd-His' ) . '.json"' );
-		echo $json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON download.
+		wp_safe_redirect( admin_url( 'admin.php?page=' . self::PAGE_SLUG ) );
 		exit;
 	}
+
 
 	/** @return array<string,mixed> */
 	public static function run(): array {

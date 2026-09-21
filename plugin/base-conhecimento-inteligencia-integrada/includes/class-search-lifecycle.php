@@ -126,7 +126,8 @@ final class Search_Lifecycle {
 	private static function state_versions_compatible( array $state ): bool {
 		return Search_Projection_Repository::SCHEMA_VERSION === (string) ( $state['schema_version'] ?? '' )
 			&& Search_Document_Builder::VERSION === (string) ( $state['document_version'] ?? '' )
-			&& Search_Query_Normalizer::VERSION === (string) ( $state['normalizer_version'] ?? '' );
+			&& Search_Query_Normalizer::VERSION === (string) ( $state['normalizer_version'] ?? '' )
+			&& Search_Section_Projector::VERSION === (string) ( $state['section_projection_version'] ?? '' );
 	}
 
 	/**

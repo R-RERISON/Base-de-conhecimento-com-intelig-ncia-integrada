@@ -27,6 +27,32 @@ final class Search_Section_Runner_G590 {
 	private const PERF_MAX_BUDGET_MS = 1500.0;
 
 	/** @var array<int,string> */
+	private const GOVERNED_META_KEYS = array(
+		'_elementor_data',
+		'_bdc_es_objective',
+		'_bdc_es_responsible_team',
+		'_bdc_es_catalog_item',
+		'_bdc_es_affected_service',
+		'_bdc_es_systems_involved',
+		'_bdc_es_target_audience',
+		'_bdc_es_escalation',
+		'_bdc_es_important',
+		'_bdc_es_helpful_tips',
+		'_kb2ops_review_state',
+		'_kb2ops_knowledge_type',
+		'_kb2ops_technologies',
+		'_kb2ops_review_notes',
+		'_kb2ops_reviewed_at',
+		'_kb2ops_reviewed_by',
+		'_kb2ops_target_audience',
+		'_kb2ops_service',
+		'_kb2ops_keywords',
+		'_kb2ops_versions',
+		'_kb2ops_include_ai',
+		'_kb2ops_review_history',
+	);
+
+	/** @var array<int,string> */
 	private const ALLOWED_STATUSES = array( 'publish', 'draft', 'pending', 'private', 'future' );
 
 	public static function register(): void {
@@ -687,25 +713,50 @@ final class Search_Section_Runner_G590 {
 			}
 
 			$meta = array();
-			foreach ( Meta_Contract::fields() as $definition ) {
-				$key = (string) ( $definition['key'] ?? '' );
-				if ( '' !== $key ) {
-					$meta[ $key ] = self::stable_value( get_post_meta( $post_id, $key, true ) );
-				}
+			foreach ( self::GOVERNED_META_KEYS as $key ) {
+				$meta[ $key ] = self::stable_value( get_post_meta( $post_id, $key, true ) );
 			}
-			$meta['_elementor_data'] = self::stable_value( get_post_meta( $post_id, '_elementor_data', true ) );
 
 			$taxonomies = array();
+			$taxonomy_names = array( 'category', 'post_tag' );
 			foreach ( Classification_Contract::fields() as $definition ) {
 				$taxonomy = (string) ( $definition['taxonomy'] ?? '' );
-				if ( '' === $taxonomy ) {
-					continue;
+				if ( '' !== $taxonomy ) {
+					$taxonomy_names[] = $taxonomy;
 				}
+			}
+			$taxonomy_names = array_values( array_unique( $taxonomy_names ) );
+			sort( $taxonomy_names, SORT_STRING );
+
+			foreach ( $taxonomy_names as $taxonomy ) {
 				$terms = get_the_terms( $post_id, $taxonomy );
 				$taxonomies[ $taxonomy ] = is_array( $terms )
 					? array_values( array_map( static fn ( object $term ): int => (int) $term->term_id, $terms ) )
 					: array();
 				sort( $taxonomies[ $taxonomy ], SORT_NUMERIC );
+			}
+
+			$review_events = get_comments(
+				array(
+					'post_id' => $post_id,
+					'type' => Review_Contract::COMMENT_TYPE,
+					'status' => 'approve',
+					'number' => 0,
+					'orderby' => 'comment_ID',
+					'order' => 'ASC',
+				)
+			);
+			$review_projection = array();
+			foreach ( is_array( $review_events ) ? $review_events : array() as $comment ) {
+				if ( ! is_object( $comment ) ) {
+					continue;
+				}
+				$review_projection[] = array(
+					'comment_ID' => (int) ( $comment->comment_ID ?? 0 ),
+					'user_id' => (int) ( $comment->user_id ?? 0 ),
+					'comment_date_gmt' => (string) ( $comment->comment_date_gmt ?? '' ),
+					'comment_content' => (string) ( $comment->comment_content ?? '' ),
+				);
 			}
 
 			$out[ $post_id ] = Canonical_JSON::hash(
@@ -717,6 +768,7 @@ final class Search_Section_Runner_G590 {
 					'post_modified_gmt' => (string) ( $post->post_modified_gmt ?? '' ),
 					'meta' => $meta,
 					'taxonomies' => $taxonomies,
+					'review_events' => $review_projection,
 				)
 			);
 		}

@@ -6,9 +6,9 @@
 
 ## Identity
 
-- Product Version: `0.5.1-rc.2`
-- Build label: `g590.2`
-- Build ID: `g590.2-7f72385084e6`
+- Product Version: `0.5.1-rc.3`
+- Build label: `g590.3`
+- Build ID: `g590.3-79734d820a5e`
 - G-590 remains OPEN until environmental evidence passes.
 
 The engineering gate is not encoded as the public Product Version.
@@ -32,7 +32,7 @@ python tools/homologation/spec005/build-g590.py
 
 Expected artifacts under `dist/`:
 
-- `base-conhecimento-inteligencia-integrada-0.5.1-rc.2-g590.2.zip`
+- `base-conhecimento-inteligencia-integrada-0.5.1-rc.3-g590.3.zip`
 - matching `.manifest.json`
 - `g590-local-package-validation.json`
 
@@ -120,8 +120,8 @@ failed=0
 ```
 
 The validator also requires:
-- Product Version `0.5.1-rc.2`;
-- Build ID `g590.2-<commit>`;
+- Product Version `0.5.1-rc.3`;
+- Build ID `g590.3-<commit>`;
 - physical schema contract PASS;
 - safe version transition;
 - explicit rebuild PASS;
@@ -191,13 +191,32 @@ Only after accepted environmental evidence:
 
 ## RC2 packaged artifact
 
-- Source commit: `7f72385084e669fa5859af2172d25ef05fdf6abf`
+- Source commit: `79734d820a5e69fa5859af2172d25ef05fdf6abf`
 - Runner blob: `cd1e49abdf34635db6020fe8c1b3ae34ad4a35e7`
-- Product Version: `0.5.1-rc.2`
-- Build ID: `g590.2-7f72385084e6`
+- Product Version: `0.5.1-rc.3`
+- Build ID: `g590.3-79734d820a5e`
 - Files: `82`
 - PHP lint: `70/70 PASS`
 - JS syntax: `2/2 PASS`
 - Deterministic build: `2/2 identical`
-- ZIP SHA-256: `73ac3ee1b11efbda3b817cd782434001d3d88ed573aa37a21f4552f60b15d3cf`
+- ZIP SHA-256: `22f9caae295f30347676eb835dd879c78c8c7468915cfde272020a8b7911560d`
 - Environmental G-590: `PENDING`
+
+
+## Admin asset lifecycle — RC3
+
+RC2 was superseded after a controlled UI bootstrap failure: the page rendered, but the buttons had no JavaScript behavior because scripts were enqueued from `render_page()`.
+
+RC3 requires:
+- `admin_enqueue_scripts` for the G-590 page;
+- dedicated `assets/js/search-section-g590.js`;
+- runtime config/nonce via `wp_localize_script`;
+- no `wp_enqueue_script()` or `wp_add_inline_script()` inside `render_page()`.
+
+RC3 package:
+- Source commit: `79734d820a5e2960fa4a0e9e69588418a6fe56bf`
+- Runner blob: `e1ea5488537c3e11df82c793d6a9eb522d4984cf`
+- Admin JS blob: `77c58e75ff6429ecfbf1acdc279f4815aa02e14f`
+- ZIP SHA-256: `22f9caae295f30347676eb835dd879c78c8c7468915cfde272020a8b7911560d`
+- Local package status: `PASS`
+- Environmental G-590 status: `PENDING`

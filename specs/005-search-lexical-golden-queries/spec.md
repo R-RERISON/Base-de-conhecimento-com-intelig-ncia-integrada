@@ -109,8 +109,8 @@ Não criar nesta SPEC sem evidência:
 - vocabulary persistido;
 - bindings;
 - relevance rules administráveis;
-- item index;
-- anchors/deep-links;
+- segunda tabela de item sem benchmark/ADR;
+- anchors/deep-links fora do contrato G-590;
 - REST;
 - SPA;
 - semantic search;
@@ -333,15 +333,25 @@ ADR-005-002 separa Golden Relevance, Technical Challenge e Real-world Query Enri
 - lifecycle/rollback sem ASI;
 - nenhuma remoção física de storage legado neste gate.
 
-### G-590 — RC
+### G-590 — Section Retrieval & Deep-Link — ATIVO
+- Section Projection versionada na mesma tabela;
+- identidade estável de seção;
+- ranker de seção após ranking post-level;
+- anchors efêmeros fail-closed;
+- regressão SPEC-001–005;
+- coverage/Golden ambiental;
+- lifecycle/security/performance.
+
+### G-595 — Boundary Closeout / RC técnico
 - mesmo artefato testado;
 - manifest/checksum;
-- regressão;
-- PR review/merge.
+- regressão integral;
+- G-585 retomado como independência técnica da engine;
+- fechamento da fronteira da SPEC-005 antes da SPEC-006.
 
 ## 17. Aceite
 
-SPEC-005 só pode fechar quando:
+SPEC-005 só pode fechar após G-590 + G-595 quando:
 - Golden Suite ativa e não vazia;
 - zero blocking failure;
 - ranking determinístico;
@@ -354,7 +364,7 @@ SPEC-005 só pode fechar quando:
 
 ## 18. Rollback
 
-Até G-590:
+Até G-595:
 - feature flag/build flag permite desligar o novo Search sem afetar Workspace;
 - nenhuma projection é fonte da verdade;
 - desligar módulo retorna ao comportamento anterior;
@@ -363,10 +373,12 @@ Até G-590:
 
 ## 19. Fora de escopo
 
-- telemetria detalhada — SPEC-006;
-- queue/indexing operacional avançado — SPEC-007;
-- semantic/vector/hybrid — SPEC-008;
-- Foundry/RAG — SPEC-009+;
+- Public Experience — SPEC-007;
+- telemetria/vocabulary/relevance governance — SPEC-008;
+- queue/indexing operacional avançado — SPEC-009;
+- semantic/vector/hybrid — SPEC-010;
+- plataforma IA/Foundry — SPEC-011;
+- AI-assisted governance/RAG — SPEC-012/013;
 - AUTH-UX-001;
 - remoção Elementor;
 - migração editorial em massa.

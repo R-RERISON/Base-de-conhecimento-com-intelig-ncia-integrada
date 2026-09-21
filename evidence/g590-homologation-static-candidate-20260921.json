@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "status": "CANDIDATE_STATIC_PASS",
+  "gate": "G-590",
+  "generated_at": "2026-09-21",
+  "branch": "homologation/spec005-g590-20260921",
+  "commit": "2ccc3f9f5603f7dff6918229a803d2fce58cabdb",
+  "plugin_version": "0.5.0-g590.1",
+  "static_validation": {
+    "passed": 14,
+    "failed": 0,
+    "checks": [
+      "version_header",
+      "version_const",
+      "g590_on",
+      "h030_runner_off",
+      "g590_require",
+      "g590_register",
+      "document_v11",
+      "ranker_v1",
+      "schema_contract",
+      "section_facade",
+      "perf_budget",
+      "lifecycle_transition",
+      "evidence_validator",
+      "build_agnostic_test"
+    ]
+  },
+  "immutable_claims": {
+    "parity_verified": false,
+    "g590_closed": false,
+    "asi_retirement_authorized": false,
+    "environmental_evidence_pending": true
+  },
+  "limitations": [
+    "Sandbox atual não conseguiu baixar/materializar o archive GitHub para executar PHP lint/package ZIP local.",
+    "CANDIDATE_STATIC_PASS não substitui instalação WordPress, dbDelta 1.0->1.1, rebuild, Golden, deep-link render, performance ou fingerprint editorial."
+  ],
+  "next": [
+    "Install homologation branch/package over current homologation environment.",
+    "Open Base de Conhecimento -> Section Retrieval G-590.",
+    "Execute runner once and download JSON evidence.",
+    "Validate JSON with tools/homologation/spec005/validate-g590-evidence.php.",
+    "Do not disable ASI because G-590 PASS does not equal legacy cutover."
+  ]
+}

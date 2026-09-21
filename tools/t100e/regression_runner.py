@@ -96,6 +96,18 @@ LEGACY_ELEMENTOR_MIGRATION_FILES = (
     "includes/class-elementor-migration-lock.php",
 )
 
+GOLDEN_RUNTIME_RESOURCES = (
+    "resources/search/golden-relevance-v1.0.0.json",
+    "resources/search/technical-challenge-v1.0.0.json",
+)
+
+CONDITIONAL_RUNTIME_RESOURCES = {
+    "BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_SPEC005_G590_SECTION_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_UX004_H030_TECHNICAL_BUILD": GOLDEN_RUNTIME_RESOURCES,
+}
+
 DEFENSIVE_PAIRS = {
     "journal": (
         "class-block-migration-journal.php",
@@ -269,6 +281,25 @@ def main() -> int:
     for flag, paths in cond.items():
         if flags.get(flag) is True:
             active_required.update(paths)
+
+    active_runtime_resources = {}
+    for flag, paths in CONDITIONAL_RUNTIME_RESOURCES.items():
+        value = flag_value(source, flag)
+        flags.setdefault(flag, value)
+        if value is True:
+            active_required.update(paths)
+            active_runtime_resources[flag] = list(paths)
+    checks["active_runtime_resources"] = active_runtime_resources
+
+    missing_runtime_resources = sorted(
+        rel for rel in active_required
+        if rel.startswith("resources/") and not (plugin / rel).is_file()
+    )
+    checks["missing_runtime_resources"] = missing_runtime_resources
+    if missing_runtime_resources:
+        failures.append(
+            "missing active runtime resource(s): " + ", ".join(missing_runtime_resources)
+        )
 
     legacy_active = sorted(set(LEGACY_ELEMENTOR_MIGRATION_FILES) & active_required)
     checks["legacy_elementor_migration_active"] = legacy_active

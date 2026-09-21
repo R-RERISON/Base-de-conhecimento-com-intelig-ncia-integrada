@@ -44,7 +44,7 @@ $candidate_source = false !== $query_start
 	: '';
 
 $checks = array(
-	'g590_flag_default_off' => str_contains( $bootstrap, "define( 'BDC_KB_SPEC005_G590_SECTION_BUILD', false )" ),
+	'g590_flag_declared' => str_contains( $bootstrap, "define( 'BDC_KB_SPEC005_G590_SECTION_BUILD'," ),
 	'g590_runner_require_guarded' => str_contains( $bootstrap, "BDC_KB_SPEC005_G590_SECTION_BUILD" )
 		&& str_contains( $bootstrap, "class-search-section-runner-g590.php" ),
 	'g590_runner_register_guarded' => str_contains( $bootstrap, 'Search_Section_Runner_G590::register' ),

@@ -1128,3 +1128,29 @@ Do not regenerate the semantic snapshot; this patch only changes consultation ev
 
 G-585 remains PAUSED until H-023 closes.
 
+## Continuidade — P-580WC.3.2 atomic recheck
+
+Install:
+- `0.5.0-p580wc.3.2`;
+- SHA-256 `06b0a03fd6c969b48eade9dfad20eac1882817adf33660b6a41df48287cef321`.
+
+Before retest:
+1. Base de Conhecimento → Nuvem de Conhecimento;
+2. click **Resetar consultas de homologação**;
+3. confirm all visible counters are zero.
+
+Recheck:
+1. click Windows 10 once → expected 0→1;
+2. return/refresh;
+3. click Windows 10 once again → expected 1→2;
+4. repeat on E-mail and one other topic;
+5. perform a rapid/double click and confirm one gesture does not produce +2;
+6. live typing remains count-neutral.
+
+No snapshot regeneration is required.
+
+The specific acceptance criterion is now strict:
+**one confirmed gesture = exactly one aggregate increment**, including concurrent duplicate delivery.
+
+G-585 remains PAUSED until H-023 closes.
+

@@ -1371,3 +1371,48 @@ Status:
 - P-580A ACTIVE;
 - G-585 PAUSED;
 - G-590 BLOCKED.
+
+## P-580WC.3.1 — consultation idempotency patch
+
+Environmental p580wc.3 finding:
+- E-mail count incremented correctly;
+- Windows 10 duplicated a single cloud interaction;
+- consultation aggregate itself remained functional;
+- classification: FAIL CONTROLADO — EVENT IDEMPOTENCY.
+
+Root-cause boundary:
+- v3 endpoint had no idempotency key;
+- therefore duplicate valid delivery could increment twice;
+- exact browser-level duplicate mechanism is not assumed.
+
+Patch:
+- version `0.5.0-p580wc.3.1`;
+- consultation aggregate `v1.1.0`;
+- per-gesture event_id;
+- event_id persisted on the clicked DOM node so duplicated listeners reuse the same id;
+- WeakSet local repeat guard;
+- server transient dedupe for 5 minutes;
+- duplicate response = `recorded=false, duplicate=true`;
+- explicit admin action **Resetar consultas de homologação**;
+- counters are never reset automatically.
+
+Validation:
+- 86 files / 74 PHP / 2 JS;
+- 74/74 PHP lint;
+- 74/74 extracted ZIP lint;
+- JS syntax PASS;
+- 18/18 idempotency checks;
+- exact source/package/repository parity 4/4;
+- deterministic build 2/2;
+- delta vs p580wc.3: 4 modified / 0 added / 0 deleted;
+- SHA-256 `43a6ed6ac2bb6eac8d4ee1f9515d53e39b65acc19ca2f62c17b28da334224d64`.
+
+Evidence:
+- `evidence/p580-word-cloud-consultation-idempotency-v31-20260921.json`.
+
+Status:
+- H-023 remains OPEN pending environmental +1 verification;
+- P-580A ACTIVE;
+- G-585 PAUSED;
+- G-590 BLOCKED.
+

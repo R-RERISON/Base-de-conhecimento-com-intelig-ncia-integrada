@@ -61,10 +61,18 @@ Este PASS é estrutural/local. Não equivale a G-590 PASS ambiental.
 
 PARTIAL continua blocker de cutover.
 
+## Política de identidade do build
+
+O Premium Product Standard é aplicado já no G-590:
+- Product Version e engenharia são separados;
+- o source não recebe Build ID persistente;
+- o staging de homologação recebe `BDC_KB_BUILD_ID`;
+- o validador ambiental rejeita evidência sem Product Version/Build ID esperados.
+
 ## Próximo passo exato
 
 Preparar build de homologação G-590:
-- versão própria `0.5.0-g590.1`;
+- Product Version `0.5.1-rc.1` + Build ID `g590.1-<commit>`;
 - `BDC_KB_SPEC005_G590_SECTION_BUILD=true`;
 - runners de engenharia não relacionados desativados;
 - package/lint/parity/checksum;

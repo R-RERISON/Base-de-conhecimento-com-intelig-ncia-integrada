@@ -1,5 +1,35 @@
 # Estado atual — SPEC-005
 
+**ATIVA — PREMIUM CONSOLIDATION / G-590 SECTION RETRIEVAL & DEEP-LINK.**
+
+**Branch:** `spec005-section-retrieval-deeplink`  
+**Base de consolidação:** Premium Rebaseline @ `01508379f91a336b26b17268fb119458bd077f7e`.
+
+## Decisão atual
+
+R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 permanecem fechados e são contratos de regressão.
+
+A nova implementação não pode alterar `lexical-ranker-v1.0.0`.
+
+G-590 foi aberto para fechar ASI-003/004/005:
+- item/section retrieval;
+- identidade estável;
+- deep-link/anchor.
+
+Storage aprovado: mesma Search Projection, sem segunda tabela.
+
+Public Home/Reader seguem para SPEC-007. Telemetry/vocabulary/relevance seguem para SPEC-008.
+
+G-585 permanece PAUSED enquanto G-590 estiver aberto. Após G-590, será retomado como prova técnica de independência da engine, não como autorização de aposentadoria do ASI.
+
+## Próximo passo exato
+
+Implementar T590-10..T590-14, preservando post-level ranking e sem mutação editorial. Em seguida produzir package/runner para coverage ambiental antes de qualquer claim de paridade.
+
+---
+
+# Estado atual — SPEC-005
+
 **ATIVA — R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 PASS/CLOSED; P-580A/P-580B/UX-004/UX-005 OPEN; G-585 PAUSED.**
 
 **Branch:** `spec005-search-lexical-golden-queries`  

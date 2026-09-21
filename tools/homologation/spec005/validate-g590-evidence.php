@@ -36,6 +36,7 @@ $checks = array(
 	'mode_is_environmental' => 'spec005_section_retrieval_deeplink_environmental' === (string) ( $data['mode'] ?? '' ),
 	'schema_current' => true === (bool) $get( $data, array( 'lifecycle', 'schema_contract', 'pass' ), false ),
 	'no_implicit_reindex' => true === (bool) $get( $data, array( 'lifecycle', 'prepare_did_not_reindex' ), false ),
+	'version_transition_safe' => true === (bool) $get( $data, array( 'lifecycle', 'version_transition_safe' ), false ),
 	'rebuild_pass' => 'PASS' === (string) $get( $data, array( 'lifecycle', 'explicit_rebuild', 'status' ), '' ),
 	'projection_ready' => 'ready' === (string) $get( $data, array( 'lifecycle', 'explicit_rebuild', 'state_after', 'status' ), '' ),
 	'rebuild_deterministic' => 0 === (int) $get( $data, array( 'lifecycle', 'explicit_rebuild', 'determinism', 'mismatch_count' ), -1 ),
@@ -50,6 +51,13 @@ $checks = array(
 	'section_queries_pass' => 0 === (int) $get( $data, array( 'section_deep_link_probes', 'section_query_failed' ), -1 ),
 	'deep_links_pass' => 0 === (int) $get( $data, array( 'section_deep_link_probes', 'deep_link_failed' ), -1 ),
 	'visible_text_unchanged' => 0 === (int) $get( $data, array( 'section_deep_link_probes', 'visible_text_changed' ), -1 ),
+
+	'performance_pass' => true === (bool) $get( $data, array( 'performance', 'pass' ), false ),
+	'performance_p95_budget' => (float) $get( $data, array( 'performance', 'p95_ms' ), INF )
+		<= (float) $get( $data, array( 'performance', 'p95_budget_ms' ), 0.0 ),
+	'performance_max_budget' => (float) $get( $data, array( 'performance', 'max_ms' ), INF )
+		<= (float) $get( $data, array( 'performance', 'max_budget_ms' ), 0.0 ),
+	'performance_no_technical_failures' => 0 === (int) $get( $data, array( 'performance', 'technical_failure_count' ), -1 ),
 
 	'post_level_golden_pass' => 'PASS' === (string) $get( $data, array( 'post_level_golden_regression', 'status' ), '' ),
 	'golden_blocking_zero' => 0 === (int) $get( $data, array( 'post_level_golden_regression', 'blocking_failed' ), -1 ),

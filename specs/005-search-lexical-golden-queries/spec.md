@@ -10,7 +10,7 @@
 
 **Idioma:** pt-BR.
 
-**Gate atual:** R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 PASS/CLOSED; P-580A/UX-004 ACTIVE; G-585 PAUSED até fechar paridade funcional bloqueante.
+**Gate atual:** Premium Rebaseline aplicado; G-590 Section Retrieval & Deep-Link em consolidação. R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 permanecem PASS/CLOSED. G-585 será retomado como prova de independência técnica da engine após G-590.
 
 > **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
@@ -72,7 +72,7 @@ Contratos preservados:
 
 `consulta -> normalização -> retrieval lexical -> ranking -> resultados oficiais -> abrir artigo -> executar Golden Suite -> comparar expectativa -> PASS/FAIL explícito`
 
-A primeira implementação será **post-level**. Item-level/deep-link só entra mediante evidência e gate próprio.
+A primeira implementação foi post-level. O Premium Rebaseline autorizou **G-590 — Section Retrieval & Deep-Link** como gate próprio para fechar a fronteira técnica da Search.
 
 ## 5. Resultado esperado
 
@@ -410,3 +410,21 @@ ADR-005-002 é canônico para R-510:
 - Technical Challenge prova cobertura técnica de linguagem natural, Summary e Elementor/Content Extractor;
 - typo/alias reais são `PENDING_TELEMETRY` até a futura camada de Telemetria;
 - ambiguidade objetiva é quarentenada, não resolvida por ranking nem por escolha manual obrigatória.
+
+
+## G-590 — Section Retrieval & Deep-Link — REABERTURA DE CONSOLIDAÇÃO
+
+O gate fecha três blockers da Master Functional Parity Ledger:
+- ASI-003 item/section retrieval;
+- ASI-004 stable item identity;
+- ASI-005 anchors/deep-links.
+
+Contratos:
+- ADR-005-004;
+- `g590-section-retrieval-contract-v1.md`;
+- `g590-deep-link-contract-v1.md`;
+- `g590-regression-contract-v1.md`.
+
+Decisão de storage: **não criar segunda tabela**. A única Search Projection evolui de forma versionada.
+
+G-590 não altera pesos/tie-break do post ranker e não autoriza Public Experience/cutover.

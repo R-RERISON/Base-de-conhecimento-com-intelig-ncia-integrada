@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Search_Section_Ranker {
 
-	public const VERSION = 'lexical-section-ranker-v1.0.0';
+	public const VERSION = 'lexical-section-ranker-v1.1.0';
 
 	private const WEIGHT_EXACT_TITLE = 100.0;
 	private const WEIGHT_TITLE = 60.0;
@@ -40,7 +40,7 @@ final class Search_Section_Ranker {
 		$ranked = array();
 
 		foreach ( $sections as $section ) {
-			if ( ! is_array( $section ) || 'generated' !== (string) ( $section['anchor_state'] ?? '' ) ) {
+			if ( ! is_array( $section ) ) {
 				continue;
 			}
 

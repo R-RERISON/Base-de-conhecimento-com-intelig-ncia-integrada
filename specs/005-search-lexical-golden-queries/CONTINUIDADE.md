@@ -1103,3 +1103,28 @@ Environmental recheck:
 Historical ASI count preservation, if desired, requires a separate explicit one-time migration and is not part of runtime dependency.
 
 Do not run G-585 until H-023 and remaining Home technical acceptance are closed.
+
+## Continuidade — P-580WC.3.1 idempotency recheck
+
+Install:
+- `0.5.0-p580wc.3.1`;
+- SHA-256 `43a6ed6ac2bb6eac8d4ee1f9515d53e39b65acc19ca2f62c17b28da334224d64`.
+
+Before retest:
+1. Base de Conhecimento → Nuvem de Conhecimento;
+2. click **Resetar consultas de homologação**;
+3. confirm counters return to zero.
+
+Recheck:
+1. open Home preview;
+2. click E-mail once → expected 0→1;
+3. click Windows 10 once → expected 0→1;
+4. repeat with another visible topic;
+5. try a rapid/double click → one gesture id must not increment twice;
+6. refresh and confirm persisted counts;
+7. live typing alone must remain count-neutral.
+
+Do not regenerate the semantic snapshot; this patch only changes consultation event idempotency.
+
+G-585 remains PAUSED until H-023 closes.
+

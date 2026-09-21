@@ -198,6 +198,17 @@
 - [ ] T590-18 performance/security — budgets e source-safety IMPLEMENTADOS; ENV pendente.
 - [ ] T590-19 G-590 PASS/CLOSED.
 
+### G-590 — execução ambiental resumível
+- [x] G590-ENV-01 RC1 `0.5.1-rc.1/g590.1` executado — FAIL CONTROLADO HTTP 504; nenhum JSON; funcionalidade não avaliada.
+- [x] G590-ENV-02 causa raiz — runner monolítico síncrono.
+- [x] G590-ENV-03 arquitetura resumível implementada — AJAX + nonce + capability + Option autoload=false + lock.
+- [x] G590-ENV-04 fingerprint editorial chunked 50/posts.
+- [x] G590-ENV-05 coverage chunked 25/posts sem alterar semântica de probe.
+- [x] G590-ENV-06 rebuild core preservado; SPEC/G-580 não reaberto.
+- [ ] G590-ENV-07 gerar pacote `0.5.1-rc.2/g590.2`.
+- [ ] G590-ENV-08 executar RC2 e baixar JSON completo.
+- [ ] G590-ENV-09 validar evidence machine `failed=0`.
+
 ## Pós G-590
 - [ ] retomar G-585 apenas como engine independence proof.
 - [ ] fechar boundary da SPEC-005 antes da SPEC-006.

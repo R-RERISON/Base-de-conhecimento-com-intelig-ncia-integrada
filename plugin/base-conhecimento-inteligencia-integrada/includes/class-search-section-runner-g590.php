@@ -235,6 +235,7 @@ final class Search_Section_Runner_G590 {
 				'wordpress' => get_bloginfo( 'version' ),
 				'php' => PHP_VERSION,
 				'plugin' => defined( 'BDC_KB_VERSION' ) ? BDC_KB_VERSION : '',
+				'build_id' => defined( 'BDC_KB_BUILD_ID' ) ? BDC_KB_BUILD_ID : '',
 				'multisite' => is_multisite(),
 				'db_server' => self::db_version(),
 			),

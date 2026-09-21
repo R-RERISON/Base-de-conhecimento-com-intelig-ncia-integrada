@@ -178,3 +178,25 @@
 - [x] G570-PKG-08 zero write editorial/Projection no runner; zero rede/ASI/FULLTEXT/query logging.
 - [x] G570-PKG-09 build determinístico 2/2 — SHA-256 `4cd915fc3be58166a354434bf9688f0a1509ca36d570697540dff9eace82ab62`.
 - [x] G570-ENV PASS — 45/45 checks; evidence `g570-environmental-review-20260920T164828Z.json`; upload SHA-256 `38d399cab1f466c1b919513b8cf3650dd3ae7b6a55d94b715efe5597c3b89ffd`.
+
+
+## G-590 — Section Retrieval & Deep-Link — Premium consolidation
+- [x] T590-01 rebaseline/ownership: ASI-003/004/005 confirmados como blockers.
+- [x] T590-02 ADR-005-004: uma Search Projection; sem segunda tabela.
+- [x] T590-03 congelar Section Retrieval Contract v1.
+- [x] T590-04 congelar Deep-Link Contract v1.
+- [x] T590-05 congelar Cross-SPEC Regression Contract.
+- [ ] T590-10 implementar Section Projector determinístico.
+- [ ] T590-11 evoluir Search Document/Projection schema para 1.1.0.
+- [ ] T590-12 implementar Section Ranker/Service.
+- [ ] T590-13 implementar Anchor Manager read-only/fail-closed.
+- [ ] T590-14 unit/regression Search post-level + SPEC-001–004.
+- [ ] T590-15 coverage diagnostic ambiental.
+- [ ] T590-16 technical challenge/Golden section-level.
+- [ ] T590-17 lifecycle migration 1.0→1.1 + explicit rebuild.
+- [ ] T590-18 performance/security.
+- [ ] T590-19 G-590 PASS/CLOSED.
+
+## Pós G-590
+- [ ] retomar G-585 apenas como engine independence proof.
+- [ ] fechar boundary da SPEC-005 antes da SPEC-006.

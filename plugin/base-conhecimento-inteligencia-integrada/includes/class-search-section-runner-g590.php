@@ -176,11 +176,12 @@ final class Search_Section_Runner_G590 {
 			wp_send_json_success( $public );
 		}
 
-		set_transient( $lock, (string) time(), 2 * MINUTE_IN_SECONDS );
+		set_transient( $lock, (string) time(), 10 * MINUTE_IN_SECONDS );
 		try {
 			$job = self::step_job( $job );
 			self::save_job( $job );
 		} catch ( \Throwable $error ) {
+			$job['progress_at_failure'] = self::job_progress( $job );
 			$job['status'] = 'failed';
 			$job['phase'] = 'failed';
 			$job['updated_at'] = gmdate( 'c' );

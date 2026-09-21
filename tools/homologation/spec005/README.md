@@ -10,9 +10,9 @@ python tools/homologation/spec005/build-g590.py
 
 Outputs:
 
-- `dist/base-conhecimento-inteligencia-integrada-0.5.0-g590.1.zip`;
+- `dist/base-conhecimento-inteligencia-integrada-0.5.1-rc.1-g590.1.zip`;
 - matching manifest JSON;
-- `evidence/g590-local-package-validation.json`.
+- `dist/g590-local-package-validation.json`.
 
 The builder:
 
@@ -20,7 +20,7 @@ The builder:
 2. runs the G-590 structural safety gate;
 3. runs the existing T100E regression runner;
 4. copies the plugin to temporary staging;
-5. sets version `0.5.0-g590.1`;
+5. sets Product Version `0.5.1-rc.1` and injects Build ID `g590.1-<commit>` only in staging;
 6. enables only the G-590 engineering runner required for this gate;
 7. disables unrelated engineering runners;
 8. keeps product runtime capabilities from the current baseline;
@@ -44,3 +44,16 @@ php tools/homologation/spec005/validate-g590-evidence.php /path/evidence.json
 ```
 
 Do not mark G-590 PASS from package validation alone. Environmental evidence remains mandatory.
+
+
+### Product Version and Build ID
+
+G-590 follows the Premium Product Standard:
+
+- plugin Product Version: `0.5.1-rc.1`;
+- engineering Build ID: `g590.1-<12-char-git-sha>`;
+- artifact filename carries both for operator clarity;
+- runtime evidence must report both;
+- source bootstrap never persists the engineering Build ID.
+
+The local evidence remains under `dist/` until the package is accepted. Only accepted evidence is promoted to the repository `evidence/` tree.

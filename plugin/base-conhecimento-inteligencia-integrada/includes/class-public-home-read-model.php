@@ -76,7 +76,7 @@ final class Public_Home_Read_Model {
 	}
 
 	/**
-	 * Preview-only lexical search. Public authorization facade is a separate H-020 task.
+	 * Candidate/public lexical search through the authorization facade.
 	 *
 	 * @return array<string,mixed>|null
 	 */
@@ -85,7 +85,7 @@ final class Public_Home_Read_Model {
 		if ( '' === $query ) {
 			return null;
 		}
-		return Search_Service::search( $query, 8 );
+		return Public_Search_Facade::search( $query, 8 );
 	}
 
 	/**

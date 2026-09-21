@@ -137,13 +137,33 @@ final class Search_Section_Projector {
 	 */
 	private static function finalize( array $section ): array {
 		$text_norm = trim( implode( ' ', array_map( 'strval', (array) ( $section['text_parts'] ?? array() ) ) ) );
-		if ( strlen( $text_norm ) > self::MAX_TEXT_CHARS ) {
-			$text_norm = substr( $text_norm, 0, self::MAX_TEXT_CHARS );
+		if ( self::char_length( $text_norm ) > self::MAX_TEXT_CHARS ) {
+			$text_norm = self::truncate_chars( $text_norm, self::MAX_TEXT_CHARS );
 			$text_norm = rtrim( $text_norm );
 		}
 
 		unset( $section['text_parts'] );
 		$section['text_norm'] = $text_norm;
 		return $section;
+	}
+
+	private static function char_length( string $value ): int {
+		if ( function_exists( 'mb_strlen' ) ) {
+			return mb_strlen( $value, 'UTF-8' );
+		}
+		$count = preg_match_all( '/./us', $value, $unused );
+		return false === $count ? strlen( $value ) : $count;
+	}
+
+	private static function truncate_chars( string $value, int $limit ): string {
+		$limit = max( 0, $limit );
+		if ( function_exists( 'mb_substr' ) ) {
+			return mb_substr( $value, 0, $limit, 'UTF-8' );
+		}
+		if ( 0 === $limit ) {
+			return '';
+		}
+		$matched = preg_match( '/^(.{0,' . $limit . '})/us', $value, $matches );
+		return 1 === $matched ? (string) ( $matches[1] ?? '' ) : substr( $value, 0, $limit );
 	}
 }

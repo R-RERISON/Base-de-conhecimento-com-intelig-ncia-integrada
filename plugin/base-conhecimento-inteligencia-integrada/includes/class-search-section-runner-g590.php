@@ -722,7 +722,7 @@ JS;
 
 		$started_unix = (float) ( $job['started_unix'] ?? microtime( true ) );
 		return array(
-			'schema_version' => '1.1.0',
+			'schema_version' => '1.0.0',
 			'gate' => 'G-590',
 			'mode' => 'spec005_section_retrieval_deeplink_environmental',
 			'generated_at' => gmdate( 'c' ),

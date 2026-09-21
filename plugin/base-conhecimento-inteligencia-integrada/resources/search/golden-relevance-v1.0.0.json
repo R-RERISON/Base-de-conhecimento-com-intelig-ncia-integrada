@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "suite_kind": "golden_relevance",
+  "suite_version": "golden-relevance-v1.0.0",
+  "contract_version": "1.0.0",
+  "hash_algorithm": "sha256",
+  "hash_scope": "canonical_json(items sorted by id; UTF-8; compact JSON; unescaped Unicode/slashes; fixed field order)",
+  "set_hash": "e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4",
+  "source_evidence": {
+    "path": "evidence/r510-t5142-environmental-20260918T235252Z.json",
+    "sha256": "b461ff671177128958f8729208d1dcdb6a9635f93307879869b0908b8f252d89",
+    "generated_at": "2026-09-18T23:52:52+00:00",
+    "validator_contract_version": "1.1.0"
+  },
+  "counts": {
+    "total": 6,
+    "active": 5,
+    "blocking": 5,
+    "quarantined": 1,
+    "auto_fail": 0
+  },
+  "items": [
+    {
+      "id": "GQ-LEGACY-001",
+      "query": "pendrive",
+      "query_norm": "pendrive",
+      "expected_post_id": 527,
+      "max_rank": 3,
+      "severity": "blocking",
+      "source": "legacy_validated",
+      "active": true,
+      "disposition": "AUTO_PASS",
+      "quarantined": false,
+      "rationale": "Expectativa de origem humana/histórica revalidada objetivamente pelo T514.2.",
+      "contract_version": "1.0.0"
+    },
+    {
+      "id": "GQ-LEGACY-002",
+      "query": "MSTeams",
+      "query_norm": "msteams",
+      "expected_post_id": 579,
+      "max_rank": 3,
+      "severity": "blocking",
+      "source": "legacy_validated",
+      "active": true,
+      "disposition": "AUTO_PASS",
+      "quarantined": false,
+      "rationale": "Expectativa de origem humana/histórica revalidada objetivamente pelo T514.2.",
+      "contract_version": "1.0.0"
+    },
+    {
+      "id": "GQ-LEGACY-003",
+      "query": "Windows 11",
+      "query_norm": "windows 11",
+      "expected_post_id": 583,
+      "max_rank": 3,
+      "severity": "blocking",
+      "source": "legacy_validated",
+      "active": true,
+      "disposition": "AUTO_PASS",
+      "quarantined": false,
+      "rationale": "Expectativa de origem humana/histórica revalidada objetivamente pelo T514.2.",
+      "contract_version": "1.0.0"
+    },
+    {
+      "id": "GQ-LEGACY-004",
+      "query": "Termo de assinatura",
+      "query_norm": "termo de assinatura",
+      "expected_post_id": 45855,
+      "max_rank": 3,
+      "severity": "blocking",
+      "source": "legacy_validated",
+      "active": true,
+      "disposition": "AUTO_PASS",
+      "quarantined": false,
+      "rationale": "Expectativa de origem humana/histórica revalidada objetivamente pelo T514.2.",
+      "contract_version": "1.0.0"
+    },
+    {
+      "id": "GQ-LEGACY-005",
+      "query": "Estrutura",
+      "query_norm": "estrutura",
+      "expected_post_id": 36620,
+      "max_rank": 3,
+      "severity": "warning",
+      "source": "legacy_validated",
+      "active": false,
+      "disposition": "AMBIGUOUS_QUARANTINED",
+      "quarantined": true,
+      "rationale": "Expectativa de origem humana/histórica preservada em quarentena por ambiguidade; fora do conjunto blocking.",
+      "contract_version": "1.0.0"
+    },
+    {
+      "id": "GQ-LEGACY-006",
+      "query": "SCCM",
+      "query_norm": "sccm",
+      "expected_post_id": 412,
+      "max_rank": 3,
+      "severity": "blocking",
+      "source": "legacy_validated",
+      "active": true,
+      "disposition": "AUTO_PASS",
+      "quarantined": false,
+      "rationale": "Expectativa de origem humana/histórica revalidada objetivamente pelo T514.2.",
+      "contract_version": "1.0.0"
+    }
+  ]
+}

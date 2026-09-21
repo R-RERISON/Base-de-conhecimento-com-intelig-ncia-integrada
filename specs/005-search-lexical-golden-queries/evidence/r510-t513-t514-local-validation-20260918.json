@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "R-510/T513-T514-LOCAL",
+  "date": "2026-09-18",
+  "build": "0.5.0-r510-t513.1",
+  "artifact_sha256": "e5c10eba2f831584536e0f3e0c2ab50102c87c504424117530c1eafd64cbe0bc",
+  "purpose": "Automated Golden candidate validation and diversity/robustness validation",
+  "tests": {
+    "unit": {
+      "passed": 9,
+      "failed": 0,
+      "suite": "tests/unit/spec005-golden-candidate-validator.php"
+    },
+    "defect_prevented": {
+      "detected": "MSTeams initially not classified as product_token",
+      "corrected": true,
+      "regression_covered": true
+    }
+  },
+  "package": {
+    "files": 48,
+    "php_files": 43,
+    "php_lint_pre_zip": {
+      "passed": 43,
+      "total": 43,
+      "failures": []
+    },
+    "php_lint_post_zip": {
+      "passed": 43,
+      "total": 43,
+      "failures": []
+    },
+    "active_requires": 42,
+    "missing_active_requires": [],
+    "zip_integrity": true,
+    "deterministic_rebuild": true,
+    "rebuild_sha256": "e5c10eba2f831584536e0f3e0c2ab50102c87c504424117530c1eafd64cbe0bc"
+  },
+  "source_identity": {
+    "git_blob_parity_pass": true,
+    "matched": 5,
+    "total": 5,
+    "blob_shas": {
+      "bootstrap": "045354df8f5c4dc927440a5646a3a188e76e6c19",
+      "seed": "40b66cc4f92a072d3effd9254e86ae20ec3db52b",
+      "candidate_validator": "76368ee632b3a4199fdee77296db62ca9a439f39",
+      "diversity_validator": "dc39cc4bbbe14c038f4fb7a94f9d4ec6d4ad8c63",
+      "auto_runner": "4cebb7aea3105052b13e90a77f3d136c0c1035cc"
+    }
+  },
+  "active_flags": {
+    "BDC_KB_SPEC005_R500_DIAGNOSTIC_BUILD": false,
+    "BDC_KB_SPEC005_R510_LEGACY_GOLDEN_BUILD": false,
+    "BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD": false,
+    "BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD": true,
+    "BDC_KB_ELEMENTOR_WRITER_ENABLED": false
+  },
+  "safety_static": {
+    "asi_runtime_dependency_scan_pass": true,
+    "asi_forbidden_identifier_hits": [],
+    "auto_runner_forbidden_write_or_network_calls": [],
+    "creates_or_alters_schema": false,
+    "persists_results": false,
+    "changes_global_search_hooks": false
+  },
+  "validator_contract": {
+    "auto_pass": "Confirms continuity of an existing human-origin expectation when objective evidence is unambiguous.",
+    "review_required": "Only ambiguous or inconclusive cases require human review.",
+    "auto_fail": "Objective break such as missing/unpublished/not retrieved/outside max_rank/extractor failure.",
+    "may_create_expected_post": false,
+    "may_replace_expected_post": false,
+    "synthetic_queries_count_as_real_usage": false
+  },
+  "result": {
+    "t513_validator_local_pass": true,
+    "t514_validator_local_pass": true,
+    "environmental_validation": "NOT_RUN",
+    "r510_closed": false
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "P-580A/H-001/A-001",
+  "mode": "public_experience_inventory_local_package_validation",
+  "generated_at": "2026-09-20T18:35:00Z",
+  "version": "0.5.0-p580a.1",
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-p580a.1.zip",
+    "sha256": "39a0c8ba819d46713d1584fbd36c0efc6ab635c0929b63e21e1683d145109277",
+    "size_bytes": 184817,
+    "files": 67,
+    "php_files": 60,
+    "archive_integrity": "PASS",
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "validation": {
+    "php_lint": {
+      "passed": 60,
+      "total": 60,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 46,
+      "total": 46,
+      "missing": 0
+    },
+    "contract_suite": {
+      "passed": 21,
+      "total": 21,
+      "failed": 0
+    },
+    "source_blob_parity": {
+      "base-conhecimento-inteligencia-integrada.php": "252c516fd35c27f4a73800b7646f4e5147df67e5",
+      "includes/class-public-experience-inventory-runner-p580.php": "e82b6a6a58515435df6d09fcfd6e2c21ef71e2eb"
+    }
+  },
+  "delta_from_g585_2": {
+    "added": [
+      "includes/class-public-experience-inventory-runner-p580.php"
+    ],
+    "modified": [
+      "base-conhecimento-inteligencia-integrada.php"
+    ],
+    "deleted": []
+  },
+  "frozen_core": {
+    "search_service_sha256": "32efc481bae00488e7e47913e69fa1e9c580cb64ee0f27fdceb04a7e12aafd38",
+    "rebuild_service_sha256": "8f9a2732c81afd653a4add93d0ad0b8bedecd781bfb45909b8e0926aaede1523",
+    "lifecycle_sha256": "325e8f9a03ddf9dbe8de3ceb5eb282a16c2ad8de72208ddcbd3d72d23f0f0b7e",
+    "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78"
+  },
+  "build_flags": {
+    "g585_asi_independence": false,
+    "p580_public_inventory": true,
+    "search_engine": true
+  },
+  "inventory_scope": {
+    "front_page_settings": true,
+    "theme_custom_css_hash_only": true,
+    "target_shortcodes": [
+      "bc_home_config",
+      "bc_ultimas",
+      "bc_populares",
+      "asi_search_form",
+      "bdc_word_cloud",
+      "bdc_entra_login"
+    ],
+    "ajax_action": "bdc_home_filter_v270",
+    "callback_origin_reflection": true,
+    "public_hooks": [
+      "the_content",
+      "wp_footer",
+      "template_include",
+      "single_template",
+      "template_redirect"
+    ],
+    "corpus_source_kind_distribution": true,
+    "structured_tips_discovery": true,
+    "gre_meta_coverage_without_values": true
+  },
+  "safety": {
+    "read_only": true,
+    "writes_post_content": false,
+    "writes_post_meta": false,
+    "writes_elementor_data": false,
+    "executes_shortcodes": false,
+    "applies_the_content": false,
+    "exports_editorial_content": false,
+    "exports_gre_values": false,
+    "exports_custom_css": false,
+    "external_network": false
+  },
+  "environmental_status": "NOT_RUN",
+  "next_action": "Install p580a.1 in homologation and run Base de Conhecimento > Inventário Público; attach generated JSON."
+}

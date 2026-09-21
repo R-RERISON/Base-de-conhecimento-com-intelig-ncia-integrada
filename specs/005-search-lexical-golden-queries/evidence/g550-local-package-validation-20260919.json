@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-550",
+  "phase": "LOCAL_PACKAGE_VALIDATION",
+  "date": "2026-09-19",
+  "source_head": "74907079c4296ab55f918e03408e16b0943b6723",
+  "plugin_version": "0.5.0-g550.1",
+  "artifact": "base-conhecimento-inteligencia-integrada-0.5.0-g550.1.zip",
+  "artifact_sha256": "5c0fb99476aab84149341c1f069f64bfb9d8bdb57daaeca2636fe518164739b5",
+  "package": {
+    "files": 59,
+    "php_files": 52,
+    "zip_integrity": true,
+    "deterministic_builds": 2,
+    "byte_equal": true
+  },
+  "source_parity": {
+    "base_g540_validated_files": 55,
+    "g550_changed_or_added_plugin_files": 5,
+    "total_selected_package_files": 59,
+    "pass": true
+  },
+  "runtime": {
+    "active_requires": 45,
+    "missing_requires": 0,
+    "g530_search_engine": true,
+    "g540_corpus_runner": false,
+    "g550_golden_runner": true
+  },
+  "suites": {
+    "runner_version": "golden-runner-v1.0.0",
+    "golden_version": "golden-relevance-v1.0.0",
+    "golden_hash": "e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4",
+    "challenge_version": "technical-challenge-v1.0.0",
+    "challenge_hash": "2928dcd85e242bb50e013d58c71388b3302db76f462570cb09f19db61fc6e807",
+    "runtime_hash_validation": "PASS",
+    "stale_runtime_version_guard": true
+  },
+  "tests": {
+    "golden_local_harness": {
+      "passed": 6,
+      "failed": 0
+    },
+    "php_lint": {
+      "passed": 52,
+      "failed": 0
+    },
+    "extracted_zip_php_lint": {
+      "passed": 52,
+      "failed": 0
+    }
+  },
+  "safety": {
+    "editorial_write_calls": 0,
+    "network_calls": 0,
+    "asi_runtime_identifiers": 0,
+    "fulltext_sql_usage": 0,
+    "query_logging": false,
+    "projection_must_be_ready": true,
+    "wordpress_fallback_can_pass": false
+  },
+  "environmental_gate": "NOT_RUN",
+  "g550_status": "OPEN"
+}

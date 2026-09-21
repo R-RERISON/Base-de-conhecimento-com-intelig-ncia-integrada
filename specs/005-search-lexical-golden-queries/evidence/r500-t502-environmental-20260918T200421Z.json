@@ -1,0 +1,194 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "R-500/T502",
+  "mode": "spec005_read_only_search_baseline",
+  "source_artifact": {
+    "filename": "bdc-kb-spec005-r500-baseline-20260918-200421.json",
+    "sha256": "b8fc0c16df748e51ccfbcd15f3d1590e23d166c637ba618ddd773a7a21c4d963"
+  },
+  "generated_at": "2026-09-18T20:04:21+00:00",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.5.0-r500-t502.1",
+    "multisite": false,
+    "db_server": "12.2.2"
+  },
+  "safety": {
+    "read_only_design": true,
+    "creates_schema_or_table": false,
+    "persists_index": false,
+    "persists_golden_queries": false,
+    "persists_query_log": false,
+    "calls_external_network": false,
+    "executes_shortcodes": false,
+    "renders_elementor": false,
+    "renders_dynamic_blocks": false,
+    "exports_titles": false,
+    "exports_editorial_content": false,
+    "exports_generated_probe_queries": false,
+    "editorial_fingerprint_before": "316de392f4d8560077fda2941f77f7a2eacac53d03ec0eeb5e90af9b0450c340",
+    "editorial_fingerprint_after": "316de392f4d8560077fda2941f77f7a2eacac53d03ec0eeb5e90af9b0450c340",
+    "editorial_fingerprint_equal": true,
+    "changed_posts_during_run": 0,
+    "corpus_count_before": 623,
+    "corpus_count_after": 623
+  },
+  "corpus": {
+    "total_posts": 623,
+    "published_posts": 606,
+    "by_status": {
+      "draft": 12,
+      "pending": 3,
+      "private": 2,
+      "publish": 606
+    },
+    "source_kinds": {
+      "legacy_html": 535,
+      "plain_text": 41,
+      "elementor": 34,
+      "gutenberg": 5,
+      "mixed": 5,
+      "empty": 3
+    }
+  },
+  "semantic_coverage": {
+    "diagnostic_tokenizer_version": "r500-diagnostic-1.0.0",
+    "posts_with_semantic_text": 610,
+    "posts_with_semantic_tokens_not_fully_native_searchable": 91,
+    "gap_percent": 14.92,
+    "by_source_kind": {
+      "elementor": {
+        "posts": 34,
+        "mean_percent": 91.4928,
+        "p50_percent": 97.0833,
+        "p05_percent": 67.4242,
+        "min_percent": 1.6975
+      },
+      "gutenberg": {
+        "posts": 5,
+        "mean_percent": 97.1429,
+        "p50_percent": 100,
+        "p05_percent": 85.7143,
+        "min_percent": 85.7143
+      },
+      "legacy_html": {
+        "posts": 535,
+        "mean_percent": 99.4049,
+        "p50_percent": 100,
+        "p05_percent": 96.5368,
+        "min_percent": 72
+      },
+      "mixed": {
+        "posts": 5,
+        "mean_percent": 100,
+        "p50_percent": 100,
+        "p05_percent": 100,
+        "min_percent": 100
+      },
+      "plain_text": {
+        "posts": 31,
+        "mean_percent": 100,
+        "p50_percent": 100,
+        "p05_percent": 100,
+        "min_percent": 100
+      }
+    },
+    "summary": {
+      "posts_with_signal": 18,
+      "posts_with_signal_not_fully_native_searchable": 14,
+      "gap_percent": 77.78
+    },
+    "taxonomy": {
+      "posts_with_signal": 0,
+      "posts_with_signal_not_fully_native_searchable": 0
+    }
+  },
+  "wordpress_search_baseline": {
+    "probe_method": "deterministic_title_token_self_retrieval",
+    "probe_limit": 60,
+    "result_limit": 20,
+    "current_admin_semantics": {
+      "executed": 60,
+      "skipped": 0,
+      "top1": 20,
+      "top3": 37,
+      "top10": 46,
+      "top20": 52,
+      "missed": 8,
+      "top1_percent": 33.33,
+      "top3_percent": 61.67,
+      "top10_percent": 76.67,
+      "top20_percent": 86.67,
+      "latency_ms": {
+        "count": 60,
+        "mean": 131.803,
+        "p50": 122.9768,
+        "p95": 174.171,
+        "max": 177.523
+      }
+    },
+    "native_default_semantics": {
+      "executed": 60,
+      "skipped": 0,
+      "top1": 51,
+      "top3": 58,
+      "top10": 59,
+      "top20": 60,
+      "missed": 0,
+      "top1_percent": 85,
+      "top3_percent": 96.67,
+      "top10_percent": 98.33,
+      "top20_percent": 100,
+      "latency_ms": {
+        "count": 60,
+        "mean": 137.608,
+        "p50": 126.76,
+        "p95": 180.6052,
+        "max": 188.131
+      }
+    },
+    "deltas": {
+      "top1_pp": 51.67,
+      "top3_pp": 35,
+      "top20_pp": 13.33,
+      "p95_ms": 6.434
+    }
+  },
+  "extractor": {
+    "warnings": {
+      "HTML_STRUCTURAL_WRAPPER_TRAVERSED": 149,
+      "HTML_PARSE_RECOVERED": 62,
+      "SHORTCODE_NOT_EXPANDED": 55,
+      "ELEMENTOR_JSON_INVALID": 41,
+      "HTML_DIAG_EMPTY_HEADINGS": 35,
+      "HTML_SEMANTIC_EMPTY_HEADING_IGNORED": 35,
+      "HTML_LOCAL_HEADING_FLATTENED": 19,
+      "HTML_DIAG_HEADINGS_IN_TABLE": 9,
+      "HTML_DIAG_HEADINGS_IN_LIST": 9,
+      "HTML_DIAG_TABLE_NO_MATERIALIZABLE_TEXT": 3,
+      "HTML_DIAG_TABLE_PARSER_UNREACHABLE": 2,
+      "HTML_DIAG_TABLE_IMAGE_ONLY": 2,
+      "HTML_DIAG_LISTS_IN_TABLES": 2,
+      "HTML_NESTED_LIST_IN_TABLE_FLATTENED": 2,
+      "HTML_DIAG_LIST_PARSER_UNREACHABLE": 1
+    },
+    "errors": [],
+    "performance_ms": {
+      "count": 623,
+      "mean": 2.158,
+      "p50": 1.231,
+      "p95": 7.4911,
+      "max": 38.534
+    }
+  },
+  "performance": {
+    "total_runtime_ms": 22137,
+    "peak_memory_bytes": 44040192
+  },
+  "gate_result": {
+    "t502_read_only_safety_pass": true,
+    "r500_ready": false,
+    "reason": "T502 baseline evidence only; R-500 closeout is documented separately after interpretation."
+  }
+}

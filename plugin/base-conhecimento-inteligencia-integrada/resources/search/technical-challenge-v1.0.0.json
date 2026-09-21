@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0.0",
+  "suite_kind": "technical_challenge",
+  "suite_version": "technical-challenge-v1.0.0",
+  "contract_version": "1.0.0",
+  "hash_algorithm": "sha256",
+  "hash_scope": "canonical_json(items sorted by id; UTF-8; compact JSON; unescaped Unicode/slashes; fixed field order)",
+  "set_hash": "2928dcd85e242bb50e013d58c71388b3302db76f462570cb09f19db61fc6e807",
+  "source_evidence": {
+    "path": "evidence/r510-t5142-environmental-20260918T235252Z.json",
+    "sha256": "b461ff671177128958f8729208d1dcdb6a9635f93307879869b0908b8f252d89",
+    "generated_at": "2026-09-18T23:52:52+00:00",
+    "challenge_discovery_version": "1.0.0"
+  },
+  "counts": {
+    "natural_language": 1,
+    "summary_dependent": 3,
+    "elementor_semantic_gap": 3,
+    "total": 7
+  },
+  "complete": true,
+  "active_for_golden_blocking": false,
+  "real_world_query_claim": false,
+  "items": [
+    {
+      "id": "CH-ELM-001",
+      "query": "prematura",
+      "query_norm": "prematura",
+      "expected_post_id": 385,
+      "origin": "corpus_derived_challenge",
+      "declared_classes": [
+        "elementor_semantic_gap"
+      ],
+      "source_field": "content_extractor",
+      "source_kind": "elementor",
+      "summary_dependent": false,
+      "elementor_semantic_gap": true,
+      "document_frequency": 1,
+      "active_for_golden_blocking": false,
+      "contract_version": "1.0.0"
+    },
+    {
+      "id": "CH-ELM-002",
+      "query": "phising",
+      "query_norm": "phising",
+      "expected_post_id": 572,
+      "origin": "corpus_derived_challenge",
+      "declared_classes": [
+        "elementor_semantic_gap"
+      ],
+      "source_field": "content_extractor",
+      "source_kind": "elementor",
+      "summary_dependent": false,
+      "elementor_semantic_gap": true,
+      "document_frequency": 1,
+      "active_for_golden_blocking": false,
+      "contract_version": "1.0.0"
+    },
+    {
+      "id": "CH-ELM-003",
+      "query": "appdatalocalmicrosoftteamsmeetingaddin",
+      "query_norm": "appdatalocalmicrosoftteamsmeetingaddin",
+      "expected_post_id": 579,
+      "origin": "corpus_derived_challenge",
+      "declared_classes": [
+        "elementor_semantic_gap"
+      ],
+      "source_field": "content_extractor",
+      "source_kind": "elementor",
+      "summary_dependent": false,
+      "elementor_semantic_gap": true,
+      "document_frequency": 1,
+      "active_for_golden_blocking": false,
+      "contract_version": "1.0.0"
+    },
+    {
+      "id": "CH-NL-001",
+      "query": "Como estender uma videoconferência",
+      "query_norm": "como estender uma videoconferencia",
+      "expected_post_id": 531,
+      "origin": "corpus_derived_challenge",
+      "declared_classes": [
+        "natural_language"
+      ],
+      "source_field": "title",
+      "source_kind": "legacy_html",
+      "summary_dependent": false,
+      "elementor_semantic_gap": false,
+      "document_frequency": 1,
+      "active_for_golden_blocking": false,
+      "contract_version": "1.0.0"
+    },
+    {
+      "id": "CH-SUM-001",
+      "query": "essencialmente",
+      "query_norm": "essencialmente",
+      "expected_post_id": 45070,
+      "origin": "corpus_derived_challenge",
+      "declared_classes": [
+        "summary_dependent"
+      ],
+      "source_field": "summary",
+      "source_kind": "elementor",
+      "summary_dependent": true,
+      "elementor_semantic_gap": false,
+      "document_frequency": 1,
+      "active_for_golden_blocking": false,
+      "contract_version": "1.0.0"
+    },
+    {
+      "id": "CH-SUM-002",
+      "query": "emergencia",
+      "query_norm": "emergencia",
+      "expected_post_id": 45178,
+      "origin": "corpus_derived_challenge",
+      "declared_classes": [
+        "summary_dependent"
+      ],
+      "source_field": "summary",
+      "source_kind": "elementor",
+      "summary_dependent": true,
+      "elementor_semantic_gap": false,
+      "document_frequency": 1,
+      "active_for_golden_blocking": false,
+      "contract_version": "1.0.0"
+    },
+    {
+      "id": "CH-SUM-003",
+      "query": "coleguinhas",
+      "query_norm": "coleguinhas",
+      "expected_post_id": 45855,
+      "origin": "corpus_derived_challenge",
+      "declared_classes": [
+        "summary_dependent"
+      ],
+      "source_field": "summary",
+      "source_kind": "elementor",
+      "summary_dependent": true,
+      "elementor_semantic_gap": false,
+      "document_frequency": 1,
+      "active_for_golden_blocking": false,
+      "contract_version": "1.0.0"
+    }
+  ]
+}

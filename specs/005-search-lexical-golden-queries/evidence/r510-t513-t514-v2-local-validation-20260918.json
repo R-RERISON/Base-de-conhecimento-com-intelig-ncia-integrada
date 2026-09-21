@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "R-510/T513-T514-V2-LOCAL",
+  "date": "2026-09-18",
+  "build": "0.5.0-r510-t514.2",
+  "artifact_sha256": "9fb9e20828b1e5162db5fa924ed3b2a3b76d85531d1c61f2847205ebdd00ae2c",
+  "tests": {
+    "unit": {
+      "passed": 14,
+      "failed": 0,
+      "test_blob_sha": "a6011d1f80f14bdbb0853e88d16adbee15a753ee"
+    },
+    "php_lint": {
+      "passed": 44,
+      "total": 44
+    },
+    "active_requires": {
+      "passed": 43,
+      "total": 43,
+      "missing": []
+    }
+  },
+  "regressions_fixed": [
+    {
+      "id": "D-513-01",
+      "name": "product_token overmatch",
+      "guard": "MSTeams => product_token; Estrutura => not product_token"
+    },
+    {
+      "id": "D-513-02",
+      "name": "exact phrase substring overmatch",
+      "guard": "Estrutura does not exact-match Infraestrutura"
+    }
+  ],
+  "package": {
+    "files": 49,
+    "php_files": 44,
+    "deterministic_rebuild": true,
+    "git_blob_parity": "7/7"
+  },
+  "safety": {
+    "asi_forbidden_identifier_hits": [],
+    "legacy_diagnostic_files_present": [],
+    "forbidden_write_or_network_calls": [],
+    "elementor_writer_enabled": false
+  },
+  "governance": {
+    "ambiguous_case_policy": "AMBIGUOUS_QUARANTINED",
+    "quarantine_active_for_blocking": false,
+    "may_replace_expected_post": false,
+    "technical_challenge_is_real_user_query": false,
+    "real_typo_alias_status": "PENDING_TELEMETRY"
+  },
+  "result": {
+    "t513_v2_local_pass": true,
+    "t514_v2_local_pass": true,
+    "environmental_validation": "NOT_RUN",
+    "r510_closed": false
+  }
+}

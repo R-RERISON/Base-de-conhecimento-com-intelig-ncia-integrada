@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-560",
+  "phase": "LOCAL_PACKAGE_VALIDATION",
+  "date": "2026-09-19",
+  "source_head": "e8350d746c7f49b7087b3bfc37f75a63fa018392",
+  "plugin_version": "0.5.0-g560.1",
+  "artifact": "base-conhecimento-inteligencia-integrada-0.5.0-g560.1.zip",
+  "artifact_sha256": "9f4f14c775aaad4e7d2360ed11dd3b036587556b1497e210eccaf787c89b8297",
+  "package": {
+    "files": 60,
+    "php_files": 53,
+    "zip_integrity": true,
+    "deterministic_builds": 2,
+    "byte_equal": true
+  },
+  "source_parity": {
+    "checked_changed_runtime_files": 4,
+    "matched": 4,
+    "pass": true,
+    "blobs": {
+      "base-conhecimento-inteligencia-integrada.php": "8069ecf79c2a7ed3e556f059edfa87d8b43140a5",
+      "includes/class-admin-page.php": "a80e31c733c5630ae79a51b83a25e85890cf1883",
+      "assets/css/visual-foundation.css": "a4c1bd63bf5d90af5be9211bbfb6b48eeece6454",
+      "includes/class-search-ux-runner-g560.php": "f6b923f6b8e8c0b3a58182ff1cb4e2d9be60b9b8"
+    }
+  },
+  "php_lint": {
+    "passed": 53,
+    "failed": 0
+  },
+  "extracted_zip_php_lint": {
+    "passed": 53,
+    "failed": 0
+  },
+  "active_requires": {
+    "count": 44,
+    "missing": 0,
+    "pass": true
+  },
+  "static_contract_checks": {
+    "passed": 26,
+    "failed": 0
+  },
+  "safety_scan": {
+    "editorial_write_calls": 0,
+    "network_calls": 0,
+    "asi_runtime_identifiers": 0,
+    "fulltext_sql_usage": 0,
+    "persists_query_log": false
+  },
+  "implementation": {
+    "canonical_search_service_on_nonempty_query": true,
+    "default_list_preserves_modified_desc": true,
+    "search_results_are_bounded": true,
+    "search_pagination_disabled": true,
+    "states": [
+      "success",
+      "zero_results",
+      "degraded",
+      "invalid_query",
+      "technical_error"
+    ],
+    "accessibility": [
+      "role=search",
+      "visible label",
+      "aria-describedby",
+      "aria-live",
+      "focus-visible"
+    ],
+    "breakpoints": [
+      782,
+      520
+    ],
+    "human_visual_acceptance": "NOT_RUN"
+  },
+  "build_flags": {
+    "g530_search_engine": true,
+    "g540_runner": false,
+    "g550_runner": false,
+    "g560_runner": true
+  },
+  "environmental_gate": "NOT_RUN",
+  "g560_status": "OPEN",
+  "next_action": "Install build, run Search UX G-560 automated validator, then review one rendered Knowledge List search state for T564."
+}

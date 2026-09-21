@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-580",
+  "mode": "validator_patch_local_package_validation",
+  "generated_at": "2026-09-20T17:30:00Z",
+  "version": "0.5.0-g580.2",
+  "package": "base-conhecimento-inteligencia-integrada-0.5.0-g580.2.zip",
+  "sha256": "47f3d2c641863eca5048bcb4ed469ebe243c1262ef4aaada582f60ceec84cf29",
+  "size_bytes": 172541,
+  "package_files": 65,
+  "php_files": 58,
+  "validation": {
+    "php_lint": {
+      "passed": 58,
+      "total": 58,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 46,
+      "total": 46,
+      "missing": 0
+    },
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    },
+    "delta_from_g580_1": {
+      "added": [],
+      "modified": [
+        "base-conhecimento-inteligencia-integrada.php",
+        "includes/class-search-lifecycle-runner-g580.php"
+      ],
+      "deleted": []
+    },
+    "source_blob_parity": {
+      "base-conhecimento-inteligencia-integrada.php": "d7a742d9a0684e71509f5e80bb4cadf24597875f",
+      "includes/class-search-lifecycle-runner-g580.php": "221b97de53b4185f8ef3aef6c0408f9319992f97"
+    },
+    "query_log_literal_occurrences": {
+      "includes/class-search-lifecycle.php": 0,
+      "includes/class-search-rebuild-service.php": 0,
+      "includes/class-search-service.php": 0,
+      "includes/class-search-lifecycle-runner-g580.php": 0
+    },
+    "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78"
+  },
+  "safety": {
+    "validator_only_patch": true,
+    "lifecycle_logic_unchanged": true,
+    "rebuild_logic_unchanged": true,
+    "search_service_logic_unchanged": true,
+    "ranker_unchanged": true,
+    "storage_contract_unchanged": true
+  },
+  "gate_result": {
+    "package_local_pass": true,
+    "environmental_status": "RECHECK_REQUIRED",
+    "g580_status": "OPEN",
+    "next_action": "Install 0.5.0-g580.2 and re-run Lifecycle G-580."
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "P-580A / UX-004 H-023",
+  "mode": "bdc_word_cloud_v1_local_package_validation",
+  "generated_at": "2026-09-20T22:15:00Z",
+  "version": "0.5.0-p580wc.1",
+  "contract": "word-cloud-v1.0.0",
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-p580wc.1.zip",
+    "sha256": "0b68e3eefa19bb68dce74de208e37bb128e6de1190162fbfc326ac67670f3a8d",
+    "size_bytes": 226533,
+    "files": 85,
+    "php_files": 73,
+    "php_lint": {
+      "passed": 73,
+      "total": 73,
+      "failed": 0
+    },
+    "extracted_php_lint": {
+      "passed": 73,
+      "total": 73,
+      "failed": 0
+    },
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "validation": {
+    "contract_checks": {
+      "passed": 19,
+      "total": 19,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 56,
+      "total": 56,
+      "missing": 0
+    },
+    "source_package_repository_parity": {
+      "passed": 7,
+      "total": 7,
+      "failed": 0
+    }
+  },
+  "storage": {
+    "new_tables": 0,
+    "options": [
+      "bdc_kb_word_cloud_settings",
+      "bdc_kb_word_cloud_allowlist",
+      "bdc_kb_word_cloud_blocklist",
+      "bdc_kb_word_cloud_snapshot",
+      "bdc_kb_word_cloud_state",
+      "bdc_kb_word_cloud_history"
+    ],
+    "transient_lock": "bdc_kb_word_cloud_generation_lock",
+    "autoload_on_first_create": false,
+    "uninstall_retention": true,
+    "deactivation": "clear cron only; retain config/snapshot/state/history"
+  },
+  "sources": {
+    "available": [
+      "title",
+      "heading",
+      "content",
+      "taxonomy",
+      "allowlist",
+      "blocklist"
+    ],
+    "pending": {
+      "search_events": "SPEC-006 telemetry/search intelligence",
+      "interactions": "SPEC-006 telemetry/search intelligence",
+      "vocabulary": "future governed vocabulary/relevance phase"
+    }
+  },
+  "behavior": {
+    "public_request_generation": false,
+    "content_extractor": true,
+    "maturity_states": [
+      "candidate",
+      "observed",
+      "mature",
+      "promoted"
+    ],
+    "public_states": [
+      "observed",
+      "mature",
+      "promoted"
+    ],
+    "snapshot": true,
+    "generation_lock": true,
+    "hourly_cron": true,
+    "health": true,
+    "bounded_history": 20,
+    "manual_admin_generation": true,
+    "admin_configuration": true,
+    "click_to_search": true,
+    "asi_runtime_dependency": false,
+    "network_calls": false,
+    "editorial_writes": false
+  },
+  "gate_state": {
+    "visual_v6": "HUMAN_ACCEPTED_CURRENT_BASELINE",
+    "h023": "LOCAL_IMPLEMENTED_ENV_PENDING",
+    "p580a": "FUNCTIONAL_DISPOSITION_UPDATED_ENV_WORD_CLOUD_PENDING",
+    "g585": "PAUSED",
+    "g590": "BLOCKED",
+    "next_action": "Install p580wc.1 over v6, open Base de Conhecimento > Nuvem de Conhecimento, generate snapshot, attach environmental evidence/screenshots; then validate Home terms/click-to-search and ASI-off behavior."
+  }
+}

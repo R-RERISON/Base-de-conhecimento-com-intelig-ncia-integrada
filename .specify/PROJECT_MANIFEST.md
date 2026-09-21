@@ -2,10 +2,14 @@
 
 ## Identidade
 
-**Produto:** Base de Conhecimento com Inteligência Integrada  
-**Tipo:** Plugin WordPress único, modular internamente  
-**Idioma:** Português do Brasil  
-**Estado:** SPEC-000/001/002/003/004 concluídas; UX-001/UX-002/UX-003 concluídas; G-240/G-245/G-250 PASS/CLOSED  
+**Produto:** Base de Conhecimento com Inteligência Integrada
+
+**Tipo:** Plugin WordPress único, modular internamente
+
+**Idioma:** Português do Brasil
+
+**Estado:** SPEC-000/001/002/003/004 concluídas; SPEC-005 ATIVA/DISCOVERY; UX-001/UX-002/UX-003 concluídas; G-240/G-245/G-250 PASS/CLOSED
+
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
 ## Missão
@@ -223,13 +227,13 @@ T096 deve comprovar, usando `serialize_blocks()`/`parse_blocks()` reais do Core 
 
 ## Próximos gates
 
-1. T096 full-corpus lossless round-trip em homologação;
-2. T097 paridade renderizada/editorial em cohort controlado;
-3. T098 generalização dos gates defensivos para Block Migration;
-4. T099 canário de 1 artigo + rollback real, somente com Authorization Pack específico;
-5. T100 batches homologados;
-6. T101 dependência residual Elementor / gate de retirada futura;
-7. G-250 Lifecycle/RC.
+A sequência T096–G-250 descrita historicamente acima foi superada pelo fechamento da SPEC-004 registrado adiante. A frente atual é SPEC-005:
+
+1. T513 — Auto Validator v2: AUTO_PASS / AMBIGUOUS_QUARANTINED / AUTO_FAIL;
+2. T514 — Technical Challenge + Diversity/Robustness; typo/alias reais ficam PENDING_TELEMETRY;
+3. T515/T516 — congelar versão/hash e fechar R-510;
+4. G-520 — contratos/storage/security/rollback antes de runtime;
+5. G-585 — comprovar independência operacional do ASI antes do RC.
 
 ## Regra de liberação
 
@@ -260,9 +264,231 @@ Direção de produto: autorização continua obrigatória como decisão humana e
 
 ## Promoção SPEC-004 para main
 
-PR #4: **MERGED** em 2026-09-18.  
-Merge commit: `e08871557b2233bf1294b1e57752265d3fe68c0f`.  
-Release validada: `0.4.0-spec004-rc2`.  
+PR #4: **MERGED** em 2026-09-18.
+
+Merge commit: `e08871557b2233bf1294b1e57752265d3fe68c0f`.
+
+Release validada: `0.4.0-spec004-rc2`.
+
 SHA-256: `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`.
 
 Estado definitivo: **SPEC-004 CLOSED / main**.
+
+
+### SPEC-005 — Search Lexical e Golden Queries
+
+**ATIVA / DISCOVERY.**
+
+Branch: `spec005-search-lexical-golden-queries`.
+
+Base: `main @ 07f877b2978429dc6b31fbe172e6ce8fca7ee634`.
+
+Objetivo: estabelecer retrieval lexical determinístico e Golden Queries antes de semantic search, vetores ou IA.
+
+Gate atual: **G-570 — Segurança/Performance**.
+
+R-500 e R-510 estão PASS/CLOSED. G-520 foi fechado em 2026-09-19 com 25/25 checks, uma Search Retrieval Projection BDC própria, sem FULLTEXT v1, e contratos versionados de normalização/documento/ranking/resultado/Golden runner. G-530 está PASS/CLOSED; G-540 está OPEN para full-corpus/determinismo/idempotência em homologação. Produção continua bloqueada pelos gates posteriores. Ver `specs/005-search-lexical-golden-queries/current-state.md` e `CONTINUIDADE.md`.
+
+Regras de abertura:
+- runtime de engine bloqueado até R-500 + R-510 + G-520;
+- WordPress-first: medir `WP_Query` antes de projection/schema;
+- Content Extractor é a representação semântica comum para derivados;
+- Golden Suite vazia = NOT_CONFIGURED;
+- blocking Golden failure = NO-GO;
+- nenhuma telemetria detalhada, queue, vetor ou IA nesta fase;
+- nenhuma tabela criada apenas por herança do ASI.
+
+Referência histórica: ASI 4.6.8 @ `c0ddff89caad529ce1bcdc645eb795e4a9b187a1`, preservando contratos e não o runtime legado.
+
+
+#### ADR-005-002 — Golden/Challenge/Quarantine
+
+Aceita em 2026-09-18:
+- Golden Relevance Set mantém apenas origem humana/curada/histórica;
+- ambiguidade objetiva vira `AMBIGUOUS_QUARANTINED`, preservada mas fora do blocking set;
+- Technical Challenge Set pode ser corpus-derived/synthetic e prova capacidade, não intenção de usuário;
+- typo/alias reais são `PENDING_TELEMETRY` até a camada futura de Telemetria;
+- nenhum algoritmo pode trocar expected_post_id automaticamente.
+
+
+#### Fechamento R-510 — 2026-09-18
+
+- T513: PASS AUTOMATED WITH QUARANTINE;
+- T514: PASS AMBIENTAL;
+- T515: PASS / datasets congelados;
+- T516: PASS/CLOSED;
+- Golden version: `golden-relevance-v1.0.0`;
+- Golden set_hash: `e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4`;
+- Challenge version: `technical-challenge-v1.0.0`;
+- Challenge set_hash: `2928dcd85e242bb50e013d58c71388b3302db76f462570cb09f19db61fc6e807`;
+- source evidence SHA-256: `b461ff671177128958f8729208d1dcdb6a9635f93307879869b0908b8f252d89`;
+- real-world typo/alias: `PENDING_TELEMETRY`;
+- próximo gate: G-520.
+
+
+#### G-520 Search Contract v1 — PASS/CLOSED — 2026-09-19
+
+- normalizer: `search-normalizer-v1.0.0`;
+- document: `search-document-v1.0.0`;
+- ranker: `lexical-ranker-v1.0.0`;
+- result: `search-result-v1.0.0`;
+- Golden runner: `golden-runner-v1.0.0`;
+- storage: uma tabela `{$wpdb->prefix}bdc_kb_search_documents`;
+- state: Option `bdc_kb_search_projection_state`;
+- retrieval: bounded LIKE + ranker PHP;
+- fallback: WP_Query native relevance;
+- FULLTEXT v1: não autorizado;
+- validation: 25/25 PASS;
+- runtime changes durante G-520: zero;
+- próximo gate: G-530.
+
+
+#### G-530 Lexical Engine Local — PASS/CLOSED — 2026-09-19
+
+- build: `0.5.0-g530.1`;
+- Query Normalizer / Search Document / Projection Repository / Ranker / Search Service implementados;
+- fallback WordPress degradado;
+- 17/17 testes PASS;
+- 7/7 PHP lint;
+- blob parity local/GitHub 7/7;
+- zero write editorial;
+- zero network;
+- zero ASI runtime/storage;
+- zero FULLTEXT;
+- dois defects prevenidos por regressão automatizada;
+- próximo gate: G-540.
+
+
+#### G-540 Corpus / Projection Rebuild — PASS/CLOSED — 2026-09-19
+
+- evidence: `evidence/g540-environmental-20260919T115727Z.json`;
+- upload SHA-256: `c2f1195c35917bc1863f262a7c0a930d622e93733aaccbfba3325becf1b789de`;
+- corpus: 623;
+- Projection rows: 623;
+- pass1: 623 WRITTEN;
+- pass2: 623 NO_CHANGE / 0 WRITTEN;
+- determinism mismatch: 0;
+- DB snapshot mismatch: 0;
+- document_state ready: 623;
+- editorial changed posts: 0;
+- errors/throwables: 0;
+- Projection status: ready;
+- próximo gate: G-550.
+
+
+#### G-550 Golden Gate — pacote local pronto — 2026-09-19
+
+- build: `0.5.0-g550.1`;
+- Golden runtime resource próprio;
+- Technical Challenge runtime resource próprio;
+- runner: `golden-runner-v1.0.0`;
+- stale guard para normalizer/document/ranker/result;
+- Projection ready obrigatória;
+- fallback WordPress proibido para PASS;
+- 6/6 harness PASS;
+- 52/52 PHP lint;
+- 45/45 active requires;
+- deterministic build 2/2;
+- SHA-256 `5c0fb99476aab84149341c1f069f64bfb9d8bdb57daaeca2636fe518164739b5`;
+- ambiental NOT_RUN;
+- G-550 permanece OPEN.
+
+
+#### G-550 Golden Gate — PASS/CLOSED — 2026-09-19
+
+- evidence: `evidence/g550-environmental-20260919T121422Z.json`;
+- upload SHA-256: `e6f83104d330129cd0bd1835f4c1fd21f8d7117b461dbb646527f408d56cd07b`;
+- Projection ready;
+- Golden/Challenge hashes current;
+- 13 executions;
+- blocking_failed=0;
+- warning_failed=0;
+- technical_failed=0;
+- technical_error_count=0;
+- status PASS;
+- privacy/ASI independence fields all PASS;
+- próximo gate: G-560.
+
+
+#### G-560 Search UX — pacote técnico pronto — 2026-09-19
+
+- build: `0.5.0-g560.1`;
+- Search_Service integrado à Knowledge List somente quando há consulta;
+- listagem padrão modified DESC preservada;
+- Visual Contract v2 / UX-002.3 reutilizados;
+- estados success/zero_results/degraded/invalid_query/technical_error distintos;
+- label/helper/ARIA/focus/breakpoints 782/520;
+- fingerprint editorial completo;
+- 26/26 contract checks PASS;
+- 53/53 PHP lint;
+- 44/44 active requires;
+- deterministic build 2/2;
+- SHA-256 `9f4f14c775aaad4e7d2360ed11dd3b036587556b1497e210eccaf787c89b8297`;
+- ambiental NOT_RUN;
+- human visual acceptance NOT_RUN;
+- G-560 permanece OPEN.
+
+
+#### G-560 Search UX — technical/environmental PASS — 2026-09-19
+
+- evidence: `evidence/g560-environmental-review-20260919T134816Z.json`;
+- upload SHA-256: `9906bbecbd1d2c056a2a1e87d2b50d8d4885adc904621a8b1120ff49c40b1527`;
+- automated checks: 21/21 PASS;
+- live Search cases: 4/4 PASS;
+- accessibility/responsive source contracts: PASS;
+- editorial fingerprint equal;
+- errors: 0;
+- g560_technical_ready=true;
+- T564 human visual acceptance: NOT_RUN;
+- G-560-HUMAN é o gate ativo.
+
+
+#### G-560 Search UX — PASS/CLOSED — 2026-09-19
+
+- automated/environmental: PASS;
+- human desktop visual acceptance: PASS;
+- evidence: `evidence/g560-human-visual-acceptance-20260919.md`;
+- desktop Search hierarchy/toolbar/feedback: PASS;
+- mobile visual review: DEFERRED/NON-BLOCKING by explicit Product Owner decision;
+- 782/520 technical contracts remain PASS;
+- Visual Contract v2 unchanged;
+- next gate: G-570.
+
+
+#### G-570 Security / Performance — pacote local pronto — 2026-09-19
+
+- build: `0.5.0-g570.1`;
+- contract: `g570-security-performance-contract-v1.md`;
+- runner ambiental read-only;
+- capability negative tests temporários;
+- SQL/bounds/abuse automated;
+- benchmark: 30 amostras esperadas;
+- p95 budget 750 ms / max 1500 ms, homologation guardrail only;
+- Search core/ranking unchanged from approved G-560 baseline;
+- 37/37 local checks PASS;
+- 54/54 PHP lint;
+- 44/44 active requires;
+- deterministic build 2/2;
+- SHA-256 `4cd915fc3be58166a354434bf9688f0a1509ca36d570697540dff9eace82ab62`;
+- environmental NOT_RUN;
+- G-570 remains OPEN.
+
+
+#### G-570 Security / Performance — PASS/CLOSED — 2026-09-20
+
+- evidence: `evidence/g570-environmental-review-20260920T164828Z.json`;
+- upload SHA-256: `38d399cab1f466c1b919513b8cf3650dd3ae7b6a55d94b715efe5597c3b89ffd`;
+- 45/45 checks PASS;
+- Projection ready / corpus 623;
+- capability/object-scope fail-closed PASS;
+- SQL/bounds/abuse PASS;
+- performance samples: 30;
+- p50 178.4739 ms;
+- p95 207.7448 ms;
+- max 212.9128 ms;
+- fallback_count=0;
+- technical_error_count=0;
+- editorial fingerprint equal;
+- errors/throwables: 0;
+- G-570 CLOSED;
+- next gate: G-580 Lifecycle.

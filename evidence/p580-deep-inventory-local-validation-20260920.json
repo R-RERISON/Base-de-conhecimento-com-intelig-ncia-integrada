@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "P-580A/H-001/A-001",
+  "mode": "deep_inventory_local_package_validation",
+  "generated_at": "2026-09-20T18:55:00Z",
+  "version": "0.5.0-p580a.2",
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-p580a.2.zip",
+    "sha256": "319b97c4f5ee0a6f9f0679cb478d113b91413660bf19a00b83ec56eca2b6d0b4",
+    "size_bytes": 186868,
+    "files": 67,
+    "php_files": 60,
+    "archive_integrity": "PASS",
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "validation": {
+    "php_lint": {
+      "passed": 60,
+      "total": 60,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 46,
+      "total": 46,
+      "missing": 0
+    },
+    "contract_suite": {
+      "passed": 25,
+      "total": 25,
+      "failed": 0
+    },
+    "source_blob_parity": {
+      "base-conhecimento-inteligencia-integrada.php": "a9259191dee7a249076528e8d28595f70c33d4df",
+      "includes/class-public-experience-inventory-runner-p580.php": "7729abbd49ecd91015a77a6bbeeec8295b00f80a"
+    }
+  },
+  "delta_from_p580a_1": {
+    "added": [],
+    "modified": [
+      "base-conhecimento-inteligencia-integrada.php",
+      "includes/class-public-experience-inventory-runner-p580.php"
+    ],
+    "deleted": []
+  },
+  "deep_inventory": {
+    "plugin_versions_and_interest_file_hashes": true,
+    "code_snippets_metadata_and_hashes": true,
+    "code_snippets_code_exported": false,
+    "code_snippets_behavioral_signals": true,
+    "helpful_tips_shape_profile": true,
+    "helpful_tips_values_exported": false
+  },
+  "safety": {
+    "read_only": true,
+    "product_behavior_changed": false,
+    "g585_runner_enabled": false,
+    "search_core_changed": false,
+    "ranking_changed": false,
+    "external_network": false
+  },
+  "environmental_status": "NOT_RUN",
+  "next_action": "Install p580a.2 over p580a.1 and run Inventário Público again; attach JSON."
+}

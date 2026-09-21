@@ -1,0 +1,473 @@
+{
+    "schema_version": "1.0.0",
+    "gate": "G-550",
+    "mode": "spec005_golden_gate_runtime",
+    "generated_at": "2026-09-19T12:14:22+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.5.0-g550.1",
+        "multisite": false,
+        "db_server": "12.2.2"
+    },
+    "runtime_versions": {
+        "normalizer": "search-normalizer-v1.0.0",
+        "document": "search-document-v1.0.0",
+        "algorithm": "lexical-ranker-v1.0.0",
+        "result": "search-result-v1.0.0",
+        "runner": "golden-runner-v1.0.0"
+    },
+    "projection": {
+        "ready": true,
+        "state": {
+            "schema_version": "1.0.0",
+            "status": "ready",
+            "document_version": "search-document-v1.0.0",
+            "normalizer_version": "search-normalizer-v1.0.0",
+            "corpus_count": 623,
+            "source_fingerprint": "6c4b861283faeab3841c2de8f7a841277d48dc300c812b7333ae03421f39128f",
+            "last_success_at_gmt": "2026-09-19 11:57:27",
+            "last_error_code": ""
+        }
+    },
+    "suites": {
+        "golden": {
+            "suite_kind": "golden_relevance",
+            "suite_version": "golden-relevance-v1.0.0",
+            "set_hash": "e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4",
+            "computed_set_hash": "e449364d3ace062ea9e7b20580c2b69afe80f9d1efc3661b25136b9bb7a3f8d4",
+            "resource": "resources/search/golden-relevance-v1.0.0.json",
+            "count": 6
+        },
+        "challenge": {
+            "suite_kind": "technical_challenge",
+            "suite_version": "technical-challenge-v1.0.0",
+            "set_hash": "2928dcd85e242bb50e013d58c71388b3302db76f462570cb09f19db61fc6e807",
+            "computed_set_hash": "2928dcd85e242bb50e013d58c71388b3302db76f462570cb09f19db61fc6e807",
+            "resource": "resources/search/technical-challenge-v1.0.0.json",
+            "count": 7
+        }
+    },
+    "status": "PASS",
+    "blocking_failed": 0,
+    "warning_failed": 0,
+    "technical_failed": 0,
+    "technical_errors": [],
+    "results": [
+        {
+            "id": "GQ-LEGACY-001",
+            "suite_kind": "golden",
+            "query": "pendrive",
+            "query_norm": "pendrive",
+            "expected_post_id": 527,
+            "max_rank": 3,
+            "actual_rank": 1,
+            "pass": true,
+            "severity": "blocking",
+            "active": true,
+            "disposition": "AUTO_PASS",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                527,
+                1276,
+                1131,
+                1132,
+                1143,
+                1295,
+                1337,
+                1338,
+                36448,
+                43305
+            ],
+            "matched_signals": [
+                "exact_title_phrase",
+                "title:1.0000",
+                "body:1.0000",
+                "global:1.0000",
+                "exact_body_phrase"
+            ],
+            "technical_error": "",
+            "runtime_ms": 224.4141
+        },
+        {
+            "id": "GQ-LEGACY-002",
+            "suite_kind": "golden",
+            "query": "MSTeams",
+            "query_norm": "msteams",
+            "expected_post_id": 579,
+            "max_rank": 3,
+            "actual_rank": 1,
+            "pass": true,
+            "severity": "blocking",
+            "active": true,
+            "disposition": "AUTO_PASS",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                579
+            ],
+            "matched_signals": [
+                "body:1.0000",
+                "global:1.0000",
+                "exact_body_phrase"
+            ],
+            "technical_error": "",
+            "runtime_ms": 124.155
+        },
+        {
+            "id": "GQ-LEGACY-003",
+            "suite_kind": "golden",
+            "query": "Windows 11",
+            "query_norm": "windows 11",
+            "expected_post_id": 583,
+            "max_rank": 3,
+            "actual_rank": 1,
+            "pass": true,
+            "severity": "blocking",
+            "active": true,
+            "disposition": "AUTO_PASS",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                583,
+                36632,
+                36557,
+                624,
+                629,
+                1295,
+                14914,
+                1290,
+                1320,
+                1337
+            ],
+            "matched_signals": [
+                "exact_title_phrase",
+                "title:1.0000",
+                "body:1.0000",
+                "global:1.0000",
+                "exact_body_phrase"
+            ],
+            "technical_error": "",
+            "runtime_ms": 431.8299
+        },
+        {
+            "id": "GQ-LEGACY-004",
+            "suite_kind": "golden",
+            "query": "Termo de assinatura",
+            "query_norm": "termo de assinatura",
+            "expected_post_id": 45855,
+            "max_rank": 3,
+            "actual_rank": 1,
+            "pass": true,
+            "severity": "blocking",
+            "active": true,
+            "disposition": "AUTO_PASS",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                45855,
+                1160,
+                44705,
+                1321,
+                1307,
+                528,
+                533,
+                537,
+                1144,
+                1314
+            ],
+            "matched_signals": [
+                "title:1.0000",
+                "summary:0.3333",
+                "headings:1.0000",
+                "body:1.0000",
+                "global:1.0000"
+            ],
+            "technical_error": "",
+            "runtime_ms": 227.227
+        },
+        {
+            "id": "GQ-LEGACY-005",
+            "suite_kind": "golden",
+            "query": "Estrutura",
+            "query_norm": "estrutura",
+            "expected_post_id": 36620,
+            "max_rank": 3,
+            "actual_rank": 2,
+            "pass": true,
+            "severity": "warning",
+            "active": false,
+            "disposition": "AMBIGUOUS_QUARANTINED",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                516,
+                36620,
+                392,
+                480,
+                535,
+                564,
+                571,
+                587,
+                598,
+                609
+            ],
+            "matched_signals": [
+                "exact_title_phrase",
+                "title:1.0000",
+                "body:1.0000",
+                "global:1.0000",
+                "exact_body_phrase"
+            ],
+            "technical_error": "",
+            "runtime_ms": 153.481
+        },
+        {
+            "id": "GQ-LEGACY-006",
+            "suite_kind": "golden",
+            "query": "SCCM",
+            "query_norm": "sccm",
+            "expected_post_id": 412,
+            "max_rank": 3,
+            "actual_rank": 2,
+            "pass": true,
+            "severity": "blocking",
+            "active": true,
+            "disposition": "AUTO_PASS",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                367,
+                412,
+                1109,
+                487,
+                498,
+                527,
+                583,
+                593,
+                1205,
+                1288
+            ],
+            "matched_signals": [
+                "exact_title_phrase",
+                "title:1.0000",
+                "body:1.0000",
+                "global:1.0000",
+                "exact_body_phrase"
+            ],
+            "technical_error": "",
+            "runtime_ms": 179.4431
+        },
+        {
+            "id": "CH-ELM-001",
+            "suite_kind": "technical_challenge",
+            "query": "prematura",
+            "query_norm": "prematura",
+            "expected_post_id": 385,
+            "max_rank": 3,
+            "actual_rank": 1,
+            "pass": true,
+            "severity": "technical",
+            "active": false,
+            "disposition": "",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                385
+            ],
+            "matched_signals": [
+                "body:1.0000",
+                "global:1.0000",
+                "exact_body_phrase"
+            ],
+            "technical_error": "",
+            "runtime_ms": 123.467
+        },
+        {
+            "id": "CH-ELM-002",
+            "suite_kind": "technical_challenge",
+            "query": "phising",
+            "query_norm": "phising",
+            "expected_post_id": 572,
+            "max_rank": 3,
+            "actual_rank": 1,
+            "pass": true,
+            "severity": "technical",
+            "active": false,
+            "disposition": "",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                572
+            ],
+            "matched_signals": [
+                "body:1.0000",
+                "global:1.0000",
+                "exact_body_phrase"
+            ],
+            "technical_error": "",
+            "runtime_ms": 182.2779
+        },
+        {
+            "id": "CH-ELM-003",
+            "suite_kind": "technical_challenge",
+            "query": "appdatalocalmicrosoftteamsmeetingaddin",
+            "query_norm": "appdatalocalmicrosoftteamsmeetingaddin",
+            "expected_post_id": 579,
+            "max_rank": 3,
+            "actual_rank": 1,
+            "pass": true,
+            "severity": "technical",
+            "active": false,
+            "disposition": "",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                579
+            ],
+            "matched_signals": [
+                "body:1.0000",
+                "global:1.0000",
+                "exact_body_phrase"
+            ],
+            "technical_error": "",
+            "runtime_ms": 183.486
+        },
+        {
+            "id": "CH-NL-001",
+            "suite_kind": "technical_challenge",
+            "query": "Como estender uma videoconferência",
+            "query_norm": "como estender uma videoconferencia",
+            "expected_post_id": 531,
+            "max_rank": 3,
+            "actual_rank": 1,
+            "pass": true,
+            "severity": "technical",
+            "active": false,
+            "disposition": "",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                531,
+                388,
+                519,
+                609,
+                1133,
+                386,
+                396,
+                614,
+                639,
+                529
+            ],
+            "matched_signals": [
+                "exact_title_phrase",
+                "title:1.0000",
+                "body:0.7500",
+                "global:1.0000"
+            ],
+            "technical_error": "",
+            "runtime_ms": 202.4012
+        },
+        {
+            "id": "CH-SUM-001",
+            "suite_kind": "technical_challenge",
+            "query": "essencialmente",
+            "query_norm": "essencialmente",
+            "expected_post_id": 45070,
+            "max_rank": 3,
+            "actual_rank": 1,
+            "pass": true,
+            "severity": "technical",
+            "active": false,
+            "disposition": "",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                45070
+            ],
+            "matched_signals": [
+                "summary:1.0000",
+                "global:1.0000",
+                "exact_summary_phrase"
+            ],
+            "technical_error": "",
+            "runtime_ms": 114.9759
+        },
+        {
+            "id": "CH-SUM-002",
+            "suite_kind": "technical_challenge",
+            "query": "emergencia",
+            "query_norm": "emergencia",
+            "expected_post_id": 45178,
+            "max_rank": 3,
+            "actual_rank": 1,
+            "pass": true,
+            "severity": "technical",
+            "active": false,
+            "disposition": "",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                45178
+            ],
+            "matched_signals": [
+                "summary:1.0000",
+                "global:1.0000",
+                "exact_summary_phrase"
+            ],
+            "technical_error": "",
+            "runtime_ms": 182.9979
+        },
+        {
+            "id": "CH-SUM-003",
+            "suite_kind": "technical_challenge",
+            "query": "coleguinhas",
+            "query_norm": "coleguinhas",
+            "expected_post_id": 45855,
+            "max_rank": 3,
+            "actual_rank": 1,
+            "pass": true,
+            "severity": "technical",
+            "active": false,
+            "disposition": "",
+            "retrieval_state": "success",
+            "retrieval_mode": "projection_like",
+            "top_post_ids": [
+                45855
+            ],
+            "matched_signals": [
+                "summary:1.0000",
+                "global:1.0000",
+                "exact_summary_phrase"
+            ],
+            "technical_error": "",
+            "runtime_ms": 134.5861
+        }
+    ],
+    "performance": {
+        "count": 13,
+        "total_runtime_ms": 2469.2709
+    },
+    "gate_result": {
+        "t550_explicit_runner_executed": true,
+        "t551_json_report_generated": true,
+        "t552_blocking_failures_zero": true,
+        "t553_warnings_documented": true,
+        "t554_evidence_current_pass": true,
+        "t555_g550_pass": true,
+        "blocking_failed": 0,
+        "warning_failed": 0,
+        "technical_failed": 0,
+        "technical_error_count": 0,
+        "next_gate": "G-560"
+    },
+    "privacy": {
+        "persists_query_log": false,
+        "exports_identity": false,
+        "exports_ip": false,
+        "exports_session": false,
+        "calls_external_network": false,
+        "depends_on_asi": false
+    }
+}

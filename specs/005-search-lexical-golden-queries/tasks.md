@@ -205,7 +205,7 @@
 - [x] G590-ENV-04 fingerprint editorial chunked 50/posts.
 - [x] G590-ENV-05 coverage chunked 25/posts sem alterar semântica de probe.
 - [x] G590-ENV-06 rebuild core preservado; SPEC/G-580 não reaberto.
-- [ ] G590-ENV-07 gerar pacote `0.5.1-rc.2/g590.2`.
+- [x] G590-ENV-07 gerar pacote `0.5.1-rc.2/g590.2` — LOCAL PACKAGE PASS; SHA-256 `73ac3ee1b11efbda3b817cd782434001d3d88ed573aa37a21f4552f60b15d3cf`; source `7f72385084e669fa5859af2172d25ef05fdf6abf`.
 - [ ] G590-ENV-08 executar RC2 e baixar JSON completo.
 - [ ] G590-ENV-09 validar evidence machine `failed=0`.
 

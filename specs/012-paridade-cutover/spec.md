@@ -1,19 +1,10 @@
-# SPEC-012 — Paridade, Cutover e Aposentadoria Controlada
+# PLACEHOLDER HISTÓRICO — antiga SPEC-012 Paridade / Cutover
 
-**Status:** Planejada  
-**Pré-requisito:** SPEC-011 concluída e matriz de paridade madura.
+**Status:** SUPERSEDIDA PELO PREMIUM REBASELINE 2026-09-21.
 
-## Problema
-O novo plugin só pode substituir os três anteriores quando dados, comportamentos e operação estiverem comprovadamente cobertos.
+Nova SPEC canônica:
+`specs/014-parity-cutover-legacy-retirement/`.
 
-## Resultado esperado
-Matriz final de paridade, coexistência segura, migração/adoção de dados, rollback, release gate e desativação controlada dos plugins anteriores.
+A nova SPEC não descobre gaps; valida a Master Functional Parity Ledger acumulada e conduz retirement por plugin.
 
-## WordPress-first
-Usar lifecycle e APIs nativas para coexistência/ativação; nenhuma exclusão automática de plugins/dados durante activation.
-
-## Princípio de negação
-Migrar somente dados necessários. Índices/projeções reconstruíveis devem preferir rebuild controlado a migração complexa quando isso for mais seguro.
-
-## Gate
-Todos os contratos críticos passam, Golden Queries passam, dados preservados, ambiente real homologado, rollback testado e plugins antigos podem ser desativados sem perda de função necessária.
+Não executar este diretório como SPEC ativa.

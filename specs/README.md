@@ -15,25 +15,27 @@
 
 ## Estado canônico
 
-- `000-inventario-profundo-e-contratos` — Concluída.
+- `000-inventario-profundo-e-contratos` — Concluída historicamente + addendum Premium v2.
 - `001-core-summary-narrativo` — Concluída.
 - `002-classificacao-conhecimento` — Concluída.
 - `003-review-governanca` — Concluída.
-- `004-content-extractor-knowledge-document` — **CLOSED/main**.
-- `005-search-lexical-golden-queries` — **ATIVA / DISCOVERY**.
+- `004-content-extractor-knowledge-document` — CLOSED/main.
+- `005-search-lexical-golden-queries` — **ATIVA / scope refinado**.
+- `006-premium-product-foundation` — Planejada.
+- `007-public-knowledge-experience` — Planejada.
+- `008-search-intelligence-telemetry-governed-relevance` — Planejada.
+- `009-operations-indexing-reliability` — Planejada.
+- `010-semantic-search-vectors` — Planejada / evidence-gated.
+- `011-ai-platform-wordpress-foundry` — Planejada.
+- `012-ai-assisted-knowledge-governance` — Planejada.
+- `013-evidence-resolution-rag` — Planejada.
+- `014-parity-cutover-legacy-retirement` — Planejada / último gate pré-1.0.
 
-Placeholders posteriores não ganham autorização por existir.
+Os antigos diretórios 006–012 permanecem como placeholders históricos e estão formalmente supersedidos.
 
 ## SPEC ativa
 
-A SPEC-005 está em **G-540**:
-- R-500 baseline: PASS/CLOSED;
-- R-510 Golden Dataset: PASS/CLOSED;
-- G-520 Search Contract: PASS/CLOSED;
-- engine lexical local: PASS/CLOSED;
-- full-corpus/projection rebuild: OPEN.
-
-A implementação deve obedecer aos contratos G-520; produção continua não autorizada.
+A SPEC-005 possui estado detalhado em `005-search-lexical-golden-queries/current-state.md`. A engine lexical, Golden, lifecycle e experiências candidatas já possuem evidências relevantes; o Premium Rebaseline separa Search core, Public Experience e Search Intelligence em bounded contexts distintos. Produção continua não autorizada.
 
 ## Regra
 

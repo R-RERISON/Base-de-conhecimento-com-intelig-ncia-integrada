@@ -1,19 +1,10 @@
-# SPEC-011 — Resolução Assistida com Evidências
+# PLACEHOLDER HISTÓRICO — antiga SPEC-011 Resolução Assistida com Evidências
 
-**Status:** Planejada  
-**Pré-requisito:** SPEC-010 concluída.
+**Status:** SUPERSEDIDA PELO PREMIUM REBASELINE 2026-09-21.
 
-## Problema
-O resolvedor precisa de resposta operacional rápida sem perder rastreabilidade, fonte oficial e possibilidade de verificar o artigo completo.
+Nova SPEC canônica:
+`specs/013-evidence-resolution-rag/`.
 
-## Resultado esperado
-Retrieval confiável, síntese opcional, passos/validação/escalonamento e fontes explícitas, com fallback para resultados tradicionais.
+O novo contrato separa retrieval/evidence de síntese opcional.
 
-## WordPress-first
-A experiência pública permanece integrada ao WordPress; API adicional só nasce se houver consumidor real.
-
-## Princípio de negação
-Se o resultado operacional estruturado resolver, não chamar LLM apenas para reformular texto.
-
-## Gate
-Consulta → retrieval confiável → resposta estruturada → evidências/fontes → artigo oficial → fallback funcional sem IA.
+Não executar este diretório como SPEC ativa.

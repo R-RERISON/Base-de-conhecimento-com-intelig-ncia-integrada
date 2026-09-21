@@ -8,7 +8,7 @@
 
 **Idioma:** Português do Brasil
 
-**Estado:** SPEC-000/001/002/003/004 concluídas; SPEC-005 ATIVA/DISCOVERY; UX-001/UX-002/UX-003 concluídas; G-240/G-245/G-250 PASS/CLOSED
+**Estado:** SPEC-000 histórica concluída + Premium Rebaseline v2; SPEC-001/002/003/004 concluídas; SPEC-005 ATIVA com scope refinado; roadmap futuro reestruturado em SPEC-006–014.
 
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
@@ -17,6 +17,16 @@
 Construir uma plataforma única para governar a Base de Conhecimento sobre WordPress Core, com conteúdo editorial canônico em `WP_Post.post_content`/Core Blocks, evoluindo por vertical slices, com experiência coerente, encontrabilidade orientada à resposta confiável e dados derivados reconstruíveis.
 
 Elementor é tratado como fonte legada durante a transição; não como arquitetura editorial futura.
+
+## Premium Rebaseline — 2026-09-21
+
+Passam a ser normativos:
+- `docs/PREMIUM-PLUGIN-PRODUCT-STANDARD.md`;
+- `specs/MASTER-FUNCTIONAL-PARITY-LEDGER.md`;
+- `specs/PREMIUM-REBASELINE-SPEC-REVIEW.md`;
+- `specs/ROADMAP.md` v2.
+
+A SPEC-000 permanece concluída historicamente, com addendum documental v2. A baseline GRE foi atualizada para 0.8.0. PLANNED não conta como paridade para cutover. A versão 1.0.0 fica reservada ao gate final da SPEC-014.
 
 ## Estado consolidado
 
@@ -211,19 +221,22 @@ T096 deve comprovar, usando `serialize_blocks()`/`parse_blocks()` reais do Core 
 - UX/UI: UX-001 + UX-002, `scr/` e Visual Contract v2.
 - Nenhum write editorial está autorizado neste estágio.
 
-## Estratégia de produto
+## Estratégia de produto — Premium Roadmap v2
 
 1. Core + Summary — concluído;
-2. Classificação — concluído;
-3. UX-001 — concluído;
-4. Review & Governança — concluído;
-5. UX-002 — concluído / contrato permanente;
-6. Content Extractor + KD + Canonical Block Normalization — **concluído / SPEC-004 CLOSED**;
-7. Search lexical + Golden Queries;
-8. Telemetria/Inteligência de Busca;
-9. Operações/Indexação;
-10. Semantic Search/Vetores;
-11. IA/Foundry/RAG.
+2. Classificação — concluída;
+3. Review & Governança — concluída;
+4. Content Extractor/KD/Canonicalization — concluída;
+5. Search Lexical + Golden — ativa, scope refinado;
+6. Premium Product Foundation, Domain Consolidation & Distribution;
+7. Public Knowledge Experience;
+8. Search Intelligence, Telemetry, Privacy & Governed Relevance;
+9. Operations, Indexing & Reliability;
+10. Semantic Search & Vectors — evidence-gated;
+11. AI Platform, WordPress AI & Foundry;
+12. AI-Assisted Knowledge Governance;
+13. Evidence Resolution & RAG;
+14. Parity, Cutover & Legacy Retirement.
 
 ## Próximos gates
 

@@ -171,6 +171,7 @@ final class Search_Section_Runner_G590 {
 		$no_uncontextual_numbered_gap = 0 === (int) ( $coverage['numbered_without_heading_context'] ?? -1 );
 
 		$probe_pass = (int) ( $probes['eligible_probe_count'] ?? 0 ) >= self::MIN_PROBES
+			&& empty( $coverage['unprobed_source_kinds'] ?? array() )
 			&& 0 === (int) ( $probes['section_query_failed'] ?? -1 )
 			&& 0 === (int) ( $probes['deep_link_failed'] ?? -1 )
 			&& 0 === (int) ( $probes['visible_text_changed'] ?? -1 );
@@ -272,6 +273,7 @@ final class Search_Section_Runner_G590 {
 		$posts_analyzed = 0;
 		$extractor_errors = array();
 		$source_kinds = array();
+		$generated_by_source_kind = array();
 		$total_sections = 0;
 		$generated = 0;
 		$unresolved = 0;
@@ -309,6 +311,7 @@ final class Search_Section_Runner_G590 {
 				++$heading_levels[ $level ];
 				if ( 'generated' === (string) ( $section['anchor_state'] ?? '' ) ) {
 					++$generated;
+					$generated_by_source_kind[ $source_kind ] = (int) ( $generated_by_source_kind[ $source_kind ] ?? 0 ) + 1;
 				} else {
 					++$unresolved;
 				}
@@ -358,7 +361,7 @@ final class Search_Section_Runner_G590 {
 			}
 		}
 
-		$probe_candidates = array();
+		$eligible_by_source_kind = array();
 		foreach ( $unique_title_candidates as $candidate ) {
 			$title_norm = (string) $candidate['title_norm'];
 			if (
@@ -372,13 +375,51 @@ final class Search_Section_Runner_G590 {
 			if ( $query instanceof \WP_Error || count( (array) $query['tokens'] ) < 2 ) {
 				continue;
 			}
-			$probe_candidates[] = $candidate;
-			if ( count( $probe_candidates ) >= self::MAX_PROBES ) {
-				break;
-			}
+			$kind = (string) ( $candidate['source_kind'] ?? 'unknown' );
+			$eligible_by_source_kind[ $kind ][] = $candidate;
 		}
 
 		ksort( $source_kinds, SORT_STRING );
+		ksort( $generated_by_source_kind, SORT_STRING );
+		ksort( $eligible_by_source_kind, SORT_STRING );
+
+		$required_probe_source_kinds = array_keys(
+			array_filter(
+				$generated_by_source_kind,
+				static fn ( int $count ): bool => $count > 0
+			)
+		);
+		$probe_candidates = array();
+		$selected_section_keys = array();
+		$unprobed_source_kinds = array();
+
+		// Primeiro garante representação de cada adapter/source kind com anchor gerável.
+		foreach ( $required_probe_source_kinds as $kind ) {
+			$candidates_for_kind = (array) ( $eligible_by_source_kind[ $kind ] ?? array() );
+			if ( empty( $candidates_for_kind ) ) {
+				$unprobed_source_kinds[] = $kind;
+				continue;
+			}
+			$candidate = $candidates_for_kind[0];
+			$key = (string) ( $candidate['section_key'] ?? '' );
+			$probe_candidates[] = $candidate;
+			$selected_section_keys[ $key ] = true;
+		}
+
+		// Depois preenche diversidade adicional sem repetir section_key.
+		foreach ( $eligible_by_source_kind as $candidates_for_kind ) {
+			foreach ( $candidates_for_kind as $candidate ) {
+				if ( count( $probe_candidates ) >= self::MAX_PROBES ) {
+					break 2;
+				}
+				$key = (string) ( $candidate['section_key'] ?? '' );
+				if ( '' === $key || isset( $selected_section_keys[ $key ] ) ) {
+					continue;
+				}
+				$probe_candidates[] = $candidate;
+				$selected_section_keys[ $key ] = true;
+			}
+		}
 
 		return array(
 			'corpus_count' => count( $post_ids ),
@@ -386,6 +427,9 @@ final class Search_Section_Runner_G590 {
 			'extractor_error_count' => count( $extractor_errors ),
 			'extractor_errors' => array_slice( $extractor_errors, 0, 50 ),
 			'source_kinds' => $source_kinds,
+			'generated_by_source_kind' => $generated_by_source_kind,
+			'required_probe_source_kinds' => $required_probe_source_kinds,
+			'unprobed_source_kinds' => $unprobed_source_kinds,
 			'section_count' => $total_sections,
 			'generated_anchor_count' => $generated,
 			'unresolved_anchor_count' => $unresolved,

@@ -4,6 +4,7 @@
   var config = window.BDC_KB_PUBLIC_SEARCH || {};
   var controller = null;
   var timer = null;
+  var consultationEvents = new WeakSet();
 
   function searchTarget() {
     return document.querySelector('[data-bdc-primary-search]') || document.querySelector('[data-bdc-global-search]');
@@ -135,20 +136,33 @@
     }
   });
 
-  function recordConsultation(term, source) {
-    if (!term || !config.consultAction || !config.consultNonce || !config.ajaxUrl) return;
+  function consultationEventId() {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+      return window.crypto.randomUUID();
+    }
+    return 'bdc-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 14);
+  }
+
+  function recordConsultation(element, term, source) {
+    if (!element || !term || !config.consultAction || !config.consultNonce || !config.ajaxUrl) return;
+    if (consultationEvents.has(element)) return;
+    consultationEvents.add(element);
+
     var data = new URLSearchParams();
     data.append('action', String(config.consultAction));
     data.append('nonce', String(config.consultNonce));
     data.append('term', String(term));
     data.append('source', String(source || 'result_click'));
+    data.append('event_id', consultationEventId());
     fetch(String(config.ajaxUrl), {
       method: 'POST',
       credentials: 'same-origin',
       keepalive: true,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
       body: data.toString()
-    }).catch(function () {});
+    }).catch(function () {
+      consultationEvents.delete(element);
+    });
   }
 
   document.addEventListener('click', function (event) {
@@ -164,7 +178,7 @@
 
     var consult = event.target.closest('[data-bdc-consult-term]');
     if (consult) {
-      recordConsultation(consult.getAttribute('data-bdc-consult-term') || '', consult.getAttribute('data-bdc-consult-source') || 'result_click');
+      recordConsultation(consult, consult.getAttribute('data-bdc-consult-term') || '', consult.getAttribute('data-bdc-consult-source') || 'result_click');
     }
 
     var clear = event.target.closest('[data-bdc-live-search-clear]');

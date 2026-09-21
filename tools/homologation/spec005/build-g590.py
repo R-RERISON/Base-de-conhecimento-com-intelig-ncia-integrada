@@ -24,7 +24,8 @@ from pathlib import Path
 
 PLUGIN_REL = Path("plugin/base-conhecimento-inteligencia-integrada")
 BOOTSTRAP = "base-conhecimento-inteligencia-integrada.php"
-VERSION = "0.5.0-g590.1"
+VERSION = "0.5.1-rc.1"
+BUILD_LABEL = "g590.1"
 
 ENGINEERING_FLAGS_FALSE = (
     "BDC_KB_SPEC004_PROFILE_BUILD",
@@ -101,9 +102,14 @@ def git_provenance(repo: Path) -> dict[str, object]:
     if status.returncode != 0:
         raise RuntimeError("failed to inspect git status")
 
+    branch = run([git, "rev-parse", "--abbrev-ref", "HEAD"], repo)
+    if branch.returncode != 0:
+        raise RuntimeError("failed to inspect git branch")
+
     return {
         "available": True,
         "head": head.stdout.strip(),
+        "branch": branch.stdout.strip(),
         "dirty": bool(status.stdout.strip()),
     }
 
@@ -133,7 +139,7 @@ def set_flag(source: str, name: str, value: bool) -> str:
         raise RuntimeError(f"build flag not found exactly once: {name}")
     return updated
 
-def patch_bootstrap(path: Path) -> dict[str, object]:
+def patch_bootstrap(path: Path, build_id: str) -> dict[str, object]:
     source = path.read_text(encoding="utf-8")
 
     source, header_count = re.subn(
@@ -154,6 +160,14 @@ def patch_bootstrap(path: Path) -> dict[str, object]:
     if constant_count != 1:
         raise RuntimeError("BDC_KB_VERSION not found exactly once")
 
+    if "BDC_KB_BUILD_ID" in source:
+        raise RuntimeError("source bootstrap must not carry a persistent engineering BUILD_ID")
+    source = source.replace(
+        f"define( 'BDC_KB_VERSION', '{VERSION}' );",
+        f"define( 'BDC_KB_VERSION', '{VERSION}' );\ndefine( 'BDC_KB_BUILD_ID', '{build_id}' );",
+        1,
+    )
+
     for name in ENGINEERING_FLAGS_FALSE:
         source = set_flag(source, name, False)
     for name in REQUIRED_TRUE_FLAGS:
@@ -163,6 +177,7 @@ def patch_bootstrap(path: Path) -> dict[str, object]:
 
     return {
         "version": VERSION,
+        "build_id": build_id,
         "engineering_flags_false": list(ENGINEERING_FLAGS_FALSE),
         "required_true_flags": list(REQUIRED_TRUE_FLAGS),
     }
@@ -219,15 +234,15 @@ def main() -> int:
     ap.add_argument("--root", default=".", help="repository root")
     ap.add_argument(
         "--output",
-        default=f"dist/base-conhecimento-inteligencia-integrada-{VERSION}.zip",
+        default=f"dist/base-conhecimento-inteligencia-integrada-{VERSION}-{BUILD_LABEL}.zip",
     )
     ap.add_argument(
         "--manifest",
-        default=f"dist/base-conhecimento-inteligencia-integrada-{VERSION}.manifest.json",
+        default=f"dist/base-conhecimento-inteligencia-integrada-{VERSION}-{BUILD_LABEL}.manifest.json",
     )
     ap.add_argument(
         "--evidence",
-        default=f"evidence/g590-local-package-validation.json",
+        default=f"dist/g590-local-package-validation.json",
     )
     args = ap.parse_args()
 
@@ -243,8 +258,14 @@ def main() -> int:
 
     local_gates: dict[str, object] = {}
     provenance = git_provenance(repo)
-    if provenance.get("available") and provenance.get("dirty"):
+    if not provenance.get("available"):
+        raise SystemExit("G-590 homologation build requires git provenance")
+    if provenance.get("dirty"):
         raise SystemExit("refusing G-590 build from dirty git working tree")
+    head = str(provenance.get("head") or "")
+    if not re.fullmatch(r"[a-f0-9]{40}", head):
+        raise SystemExit("invalid git HEAD provenance")
+    build_id = f"{BUILD_LABEL}-{head[:12]}"
 
     php = shutil.which("php")
     if not php:
@@ -280,7 +301,7 @@ def main() -> int:
         shutil.copy2(build_tool, staging_tools / "build_release.py")
         shutil.copy2(regression_tool, staging_tools / "regression_runner.py")
 
-        build_profile = patch_bootstrap(staging_plugin / BOOTSTRAP)
+        build_profile = patch_bootstrap(staging_plugin / BOOTSTRAP, build_id)
         source_lint = lint_tree(staging_plugin)
 
         output = Path(args.output).resolve()
@@ -344,6 +365,7 @@ def main() -> int:
         "gate": "G-590-PACKAGE",
         "mode": "local_deterministic_homologation_build",
         "plugin_version": VERSION,
+        "build_id": build_id,
         "source_provenance": provenance,
         "local_gates": local_gates,
         "source_lint": source_lint,

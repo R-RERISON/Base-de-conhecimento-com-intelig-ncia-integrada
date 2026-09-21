@@ -69,10 +69,22 @@ O Premium Product Standard é aplicado já no G-590:
 - o staging de homologação recebe `BDC_KB_BUILD_ID`;
 - o validador ambiental rejeita evidência sem Product Version/Build ID esperados.
 
+## Incidente G-590.1
+
+O primeiro candidato ambiental `0.5.1-rc.1 / g590.1` retornou HTTP 504 antes da geração da evidência.
+
+Classificação:
+- FAIL CONTROLADO de orquestração;
+- resultado funcional G-590 = NÃO AVALIADO;
+- causa: runner monolítico síncrono;
+- correção: `g590-resumable-v1.0.0`, com estado persistido, batches e retomada.
+
+O core `Search_Rebuild_Service` permanece inalterado porque já foi homologado no G-580.
+
 ## Próximo passo exato
 
 Preparar build de homologação G-590:
-- Product Version `0.5.1-rc.1` + Build ID `g590.1-<commit>`;
+- Product Version `0.5.1-rc.2` + Build ID `g590.2-<commit>`;
 - `BDC_KB_SPEC005_G590_SECTION_BUILD=true`;
 - runners de engenharia não relacionados desativados;
 - package/lint/parity/checksum;

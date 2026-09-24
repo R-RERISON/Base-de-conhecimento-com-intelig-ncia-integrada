@@ -272,3 +272,33 @@ Próximo passo:
 5. somente então propor contrato de implementação.
 
 > Quem não sabe onde está, não sabe para onde quer ir.
+
+
+## R-260A — PASS / DISCOVERY CLOSED
+
+RC7 ambiental classificou 548 deterministic candidates em 94 posts:
+
+- TOC-like: 77;
+- body-bearing: 289;
+- uncertain: 182.
+
+Os três estados particionam integralmente o conjunto de candidates.
+
+Conclusão:
+- promoção massiva no Content Extractor continua proibida;
+- Search-only virtual sections continuam arquiteturalmente insuficientes;
+- Option C — dedicated structural projection shared by consumers — permanece preferida.
+
+Razão adicional: o Anchor Manager atual só materializa deep-link em headings reais; paragraph-derived structure exige contrato separado.
+
+## R-260B — OPEN / SHADOW ONLY
+
+Contrato: `r260b-structural-shadow-projection-contract-v1.md`.
+
+RC8 mede:
+- colisão com headings reais;
+- duplicidade entre body candidates;
+- overflow de `MAX_SECTIONS=64`;
+- candidates bloqueados pelo heading-only anchor contract.
+
+Nenhuma alteração de Content Extractor, KD, Search Section runtime ou conteúdo editorial é autorizada.

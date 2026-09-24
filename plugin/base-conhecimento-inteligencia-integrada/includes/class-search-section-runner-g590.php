@@ -943,6 +943,8 @@ final class Search_Section_Runner_G590 {
 			'r260_candidate_samples' => array(),
 			'r260b_shadow_profiles' => array(),
 			'r260b_shadow_samples' => array(),
+			'r260c_anchor_profiles' => array(),
+			'r260c_anchor_samples' => array(),
 			'hierarchy_node_source_counts' => array(),
 			'title_frequency' => array(),
 			'token_frequency' => array(),
@@ -1145,7 +1147,7 @@ final class Search_Section_Runner_G590 {
 			);
 			if ( (int) ( $r260b['candidate_count'] ?? 0 ) > 0 ) {
 				$r260b_summary = $r260b;
-				unset( $r260b_summary['samples'] );
+				unset( $r260b_summary['samples'], $r260b_summary['candidates'] );
 				$accumulator['r260b_shadow_profiles'][] = $r260b_summary;
 				foreach ( (array) ( $r260b['samples'] ?? array() ) as $sample ) {
 					if ( count( (array) $accumulator['r260b_shadow_samples'] ) >= 80 ) {
@@ -1157,6 +1159,44 @@ final class Search_Section_Runner_G590 {
 					$sample['post_id'] = $post_id;
 					$sample['source_kind'] = $source_kind;
 					$accumulator['r260b_shadow_samples'][] = $sample;
+				}
+			}
+
+			$promotable_shadow_count = (int) ( $r260b['promotable_shadow_count'] ?? 0 );
+			if ( $promotable_shadow_count > 0 ) {
+				$post = get_post( $post_id );
+				$rendered = '';
+				if ( is_object( $post ) ) {
+					$previous_post = $GLOBALS['post'] ?? null;
+					$GLOBALS['post'] = $post;
+					setup_postdata( $post );
+					$rendered = (string) apply_filters( 'the_content', (string) ( $post->post_content ?? '' ) );
+					wp_reset_postdata();
+					if ( is_object( $previous_post ) ) {
+						$GLOBALS['post'] = $previous_post;
+					}
+				}
+
+				$r260c = R260_Anchor_Feasibility_Profiler::profile(
+					$post_id,
+					$source_kind,
+					$rendered,
+					(array) ( $r260b['candidates'] ?? array() )
+				);
+				$r260c_summary = $r260c;
+				unset( $r260c_summary['samples'] );
+				$accumulator['r260c_anchor_profiles'][] = $r260c_summary;
+
+				foreach ( (array) ( $r260c['samples'] ?? array() ) as $sample ) {
+					if ( count( (array) $accumulator['r260c_anchor_samples'] ) >= 80 ) {
+						break;
+					}
+					if ( ! is_array( $sample ) ) {
+						continue;
+					}
+					$sample['post_id'] = $post_id;
+					$sample['source_kind'] = $source_kind;
+					$accumulator['r260c_anchor_samples'][] = $sample;
 				}
 			}
 		}
@@ -1408,6 +1448,38 @@ final class Search_Section_Runner_G590 {
 		ksort( $r260b_post_count_by_source_kind, SORT_STRING );
 		arsort( $r260b_top_promotable_posts, SORT_NUMERIC );
 
+		$r260c_profiles = array_values(
+			array_filter(
+				(array) ( $accumulator['r260c_anchor_profiles'] ?? array() ),
+				static fn ( mixed $row ): bool => is_array( $row )
+			)
+		);
+		$r260c_states = array(
+			'paragraph_unique' => 0,
+			'paragraph_ambiguous' => 0,
+			'block_unique_nonparagraph' => 0,
+			'block_ambiguous' => 0,
+			'not_rendered_exact' => 0,
+		);
+		$r260c_promotable_count = 0;
+		$r260c_post_count_by_source_kind = array();
+		foreach ( $r260c_profiles as $profile ) {
+			$kind = (string) ( $profile['source_kind'] ?? 'unknown' );
+			$r260c_post_count_by_source_kind[ $kind ] =
+				(int) ( $r260c_post_count_by_source_kind[ $kind ] ?? 0 ) + 1;
+			$r260c_promotable_count += (int) ( $profile['promotable_count'] ?? 0 );
+			foreach ( array_keys( $r260c_states ) as $state ) {
+				$r260c_states[ $state ] += (int) ( ( (array) ( $profile['states'] ?? array() ) )[ $state ] ?? 0 );
+			}
+		}
+		ksort( $r260c_post_count_by_source_kind, SORT_STRING );
+		$r260c_paragraph_unique_rate = $r260c_promotable_count > 0
+			? (float) $r260c_states['paragraph_unique'] / $r260c_promotable_count
+			: 0.0;
+		$r260c_any_unique_block_rate = $r260c_promotable_count > 0
+			? (float) ( $r260c_states['paragraph_unique'] + $r260c_states['block_unique_nonparagraph'] ) / $r260c_promotable_count
+			: 0.0;
+
 		ksort( $strong_by_source_kind, SORT_STRING );
 		ksort( $strong_without_heading_by_source_kind, SORT_STRING );
 		ksort( $strong_by_confidence, SORT_STRING );
@@ -1467,6 +1539,18 @@ final class Search_Section_Runner_G590 {
 					'top_promotable_posts' => array_slice( $r260b_top_promotable_posts, 0, 30, true ),
 					'post_profiles' => $r260b_profiles,
 					'samples' => array_slice( (array) ( $accumulator['r260b_shadow_samples'] ?? array() ), 0, 80 ),
+					'anchor_feasibility' => array(
+						'version' => R260_Anchor_Feasibility_Profiler::VERSION,
+						'post_count' => count( $r260c_profiles ),
+						'promotable_count' => $r260c_promotable_count,
+						'states' => $r260c_states,
+						'paragraph_unique_rate' => $r260c_paragraph_unique_rate,
+						'any_unique_block_rate' => $r260c_any_unique_block_rate,
+						'post_count_by_source_kind' => $r260c_post_count_by_source_kind,
+						'post_profiles' => $r260c_profiles,
+						'samples' => array_slice( (array) ( $accumulator['r260c_anchor_samples'] ?? array() ), 0, 80 ),
+						'interpretation' => 'diagnostic_only_no_anchor_injection',
+					),
 					'interpretation' => 'shadow_only_no_runtime_promotion',
 				),
 				'interpretation' => 'diagnostic_only_no_runtime_promotion',

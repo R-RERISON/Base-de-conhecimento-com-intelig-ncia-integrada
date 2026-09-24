@@ -234,3 +234,13 @@
 - [x] G590-ENV-21 gerar RC6 `0.5.1-rc.6/g590.6` — LOCAL PACKAGE PASS; source `27223c6ce89e7fb25453086d0fe6a60c0cdeec36`; SHA-256 `cd4cd53eea5ba140c60accfaeaaf58c2f99b049c542fc36d3d244588afd82842`.
 - [ ] G590-ENV-22 executar RC6 e baixar JSON.
 - [ ] G590-ENV-23 decidir owner R-260 com base na distribuição completa.
+
+
+### RC6 → R-260A / RC7
+- [x] G590-ENV-24 analisar RC6 — T590-16 PASS; T590-15 único blocker.
+- [x] G590-ENV-25 confirmar 1.294 strong gaps / 189 posts; 548 deterministic candidates / 94 posts.
+- [x] G590-ENV-26 congelar R-260A read-only profiler; sem promoção runtime.
+- [x] G590-ENV-27 implementar `R260_Hierarchy_Profiler` puro e isolado.
+- [x] G590-ENV-28 gerar RC7 `0.5.1-rc.7/g590.7` — LOCAL PACKAGE PASS; SHA-256 `b826005d8ad777bfeac47e8b9a0743d42ef033b535ba59ae08f1bb1a4d8e8fbc`.
+- [ ] G590-ENV-29 executar RC7 e baixar JSON.
+- [ ] G590-ENV-30 decidir R-260B architecture owner a partir de TOC/body/uncertain distribution.

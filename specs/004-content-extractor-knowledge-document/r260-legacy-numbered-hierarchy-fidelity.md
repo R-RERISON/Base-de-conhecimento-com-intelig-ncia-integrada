@@ -69,3 +69,43 @@ Risk: new abstraction and lifecycle/versioning cost.
 No solution is accepted merely because it makes G-590 green.
 
 The selected solution must improve structural fidelity without fabricating hierarchy, duplicating TOC entries or regressing closed SPEC-004 contracts.
+
+
+## RC6 evidence
+
+RC6 closed the Search probe coverage gap and isolated R-260 as the only remaining blocker.
+
+Measured corpus:
+- strong gaps without heading context: 1,294 across 189 posts;
+- deterministic paragraph candidates: 548 across 94 posts;
+- ambiguous gaps: 746;
+- legacy_html accounts for ~81.9% of strong gaps without heading context.
+
+### Leading architecture hypothesis
+
+**Option C — dedicated structural projection shared by consumers** is currently preferred, but not frozen.
+
+Reasons:
+- changing Content Extractor would change KD/document hashes and potentially every downstream consumer;
+- Search-only virtual structure would create consumer-specific semantics;
+- a versioned derived structural view can preserve source fidelity while allowing Search/AI/chunking consumers to opt into the same recovered semantics.
+
+R-260A remains mandatory before accepting Option C because TOC/index duplicates must be separated from body-bearing pseudo-headings.
+
+## R-260A profiler
+
+Profiler version: `r260-hierarchy-profiler-v1.0.0`.
+
+Diagnostic signals:
+- early candidate position;
+- later same normalized label;
+- later same numbering token;
+- body span before next structural boundary;
+- bounded candidate samples exported as hashes/metadata only.
+
+Diagnostic classes are **signals, not automatic semantic promotion**:
+- `toc_signal`;
+- `body_signal`;
+- `uncertain`.
+
+No class changes runtime behavior.

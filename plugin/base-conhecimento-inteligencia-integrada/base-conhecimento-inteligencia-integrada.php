@@ -233,6 +233,7 @@ if ( defined( 'BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD' ) && BDC_KB_SPEC005_G
 if ( defined( 'BDC_KB_SPEC005_G590_SECTION_BUILD' ) && BDC_KB_SPEC005_G590_SECTION_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-golden-suite-loader.php';
 	require_once BDC_KB_DIR . 'includes/class-golden-gate-runner-g550.php';
+	require_once BDC_KB_DIR . 'includes/class-r260-hierarchy-profiler.php';
 	require_once BDC_KB_DIR . 'includes/class-search-section-runner-g590.php';
 }
 if ( defined( 'BDC_KB_UX004_H030_TECHNICAL_BUILD' ) && BDC_KB_UX004_H030_TECHNICAL_BUILD ) {

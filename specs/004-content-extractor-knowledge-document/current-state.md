@@ -302,3 +302,40 @@ RC8 mede:
 - candidates bloqueados pelo heading-only anchor contract.
 
 Nenhuma alteração de Content Extractor, KD, Search Section runtime ou conteúdo editorial é autorizada.
+
+
+## R-260B — PASS / SHADOW DISCOVERY CLOSED
+
+RC8 ambiental classificou os 548 deterministic candidates:
+
+- toc_suppressed: 77;
+- existing_heading_redundant: 0;
+- duplicate_candidate_ambiguous: 78;
+- promotable_shadow: 211;
+- uncertain: 182.
+
+Capacity:
+- overflow posts: 0;
+- existing posts at MAX_SECTIONS: 0.
+
+Conclusão:
+- capacity não bloqueia a arquitetura no corpus atual;
+- nenhum promotable colide com heading real;
+- duplicidade pode continuar fail-closed;
+- 211 candidates são estruturalmente promovíveis em shadow;
+- o único desconhecido restante é anchorability no HTML renderizado.
+
+Option C — dedicated structural projection shared by consumers — é aceita como owner preferido, ainda sem ativação produtiva.
+
+## R-260C — OPEN / ANCHOR FEASIBILITY
+
+Contrato: `r260c-anchor-feasibility-contract-v1.md`.
+
+RC9 mede:
+- target único em paragraph;
+- paragraph ambíguo;
+- target único em bloco não-paragraph;
+- bloco ambíguo;
+- ausência de match exato.
+
+Nenhum anchor é injetado e nenhum runtime Search é alterado.

@@ -244,3 +244,14 @@
 - [x] G590-ENV-28 gerar RC7 `0.5.1-rc.7/g590.7` — LOCAL PACKAGE PASS; SHA-256 `b826005d8ad777bfeac47e8b9a0743d42ef033b535ba59ae08f1bb1a4d8e8fbc`.
 - [ ] G590-ENV-29 executar RC7 e baixar JSON.
 - [ ] G590-ENV-30 decidir R-260B architecture owner a partir de TOC/body/uncertain distribution.
+
+
+### RC7 → R-260B / RC8
+- [x] G590-ENV-31 analisar RC7 — T590-16 PASS; T590-15 único blocker.
+- [x] G590-ENV-32 fechar R-260A discovery: 548 candidates = 77 TOC + 289 body + 182 uncertain.
+- [x] G590-ENV-33 congelar R-260B Structural Shadow Projection Contract v1.
+- [x] G590-ENV-34 implementar shadow projector read-only: heading collision / duplicate label / MAX_SECTIONS / anchor blocker.
+- [x] G590-ENV-35 manter Option C como arquitetura preferida, ainda não congelada.
+- [ ] G590-ENV-36 gerar RC8 `0.5.1-rc.8/g590.8`.
+- [ ] G590-ENV-37 executar RC8 e baixar JSON.
+- [ ] G590-ENV-38 decidir R-260C runtime architecture a partir de capacity/collision/anchor evidence.

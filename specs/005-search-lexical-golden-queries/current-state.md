@@ -130,6 +130,39 @@ Evidence Contract v1.3 corrige somente runner/validator:
 
 SPEC-004 não é reaberta antes da evidência RC5.
 
+## Evidência ambiental RC5
+
+RC5 confirmou:
+- T590-14 PASS;
+- T590-15 FAIL;
+- T590-16 FAIL;
+- T590-17 PASS;
+- T590-18 PASS;
+- T590-19 FAIL / G-590 OPEN.
+
+T590-15 agora é tratado como gap estrutural real: 1.294 strong numbered nodes sem heading contextual, com amostras legacy_html materializadas como paragraphs.
+
+SPEC-004 foi reaberta em R-260 DISCOVERY/read-only. A baseline G-250 permanece válida.
+
+T590-16 continha divergência no runner: candidates eram publish-only, enquanto Search canônico autoriza todos os statuses governados com `edit_post`.
+
+## RC6 — discovery/evidence
+
+- Product Version `0.5.1-rc.6`;
+- Build ID `g590.6-27223c6ce89e`;
+- source commit `27223c6ce89e7fb25453086d0fe6a60c0cdeec36`;
+- runner blob `1a96246ed350ac9882836dfabcfc2437cb04a888`;
+- ZIP SHA-256 `cd4cd53eea5ba140c60accfaeaaf58c2f99b049c542fc36d3d244588afd82842`;
+- package: 82 arquivos;
+- PHP 69/69;
+- JS 3/3;
+- JSON 2/2;
+- active requires 65/65;
+- inherited files 80/80 byte-identical ao RC5;
+- deterministic build 2/2.
+
+RC6 não altera Search Section Projector/Ranker/Service/Anchor Manager. É diagnóstico para fechar T590-16 e dimensionar R-260.
+
 ## Próximo passo exato
 
 Pacote RC5 pronto para re-homologação:

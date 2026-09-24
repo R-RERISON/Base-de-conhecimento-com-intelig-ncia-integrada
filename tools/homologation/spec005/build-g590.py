@@ -24,8 +24,8 @@ from pathlib import Path
 
 PLUGIN_REL = Path("plugin/base-conhecimento-inteligencia-integrada")
 BOOTSTRAP = "base-conhecimento-inteligencia-integrada.php"
-VERSION = "0.5.1-rc.7"
-BUILD_LABEL = "g590.7"
+VERSION = "0.5.1-rc.8"
+BUILD_LABEL = "g590.8"
 
 ENGINEERING_FLAGS_FALSE = (
     "BDC_KB_SPEC004_PROFILE_BUILD",
@@ -76,6 +76,7 @@ REQUIRED_TRUE_FLAGS = (
 REQUIRED_ARTIFACT_FILES = (
     "includes/class-search-section-runner-g590.php",
     "includes/class-r260-hierarchy-profiler.php",
+    "includes/class-r260-structural-shadow-projector.php",
     "assets/js/search-section-g590.js",
     "includes/class-golden-suite-loader.php",
     "includes/class-golden-gate-runner-g550.php",
@@ -107,6 +108,7 @@ UNIT_TESTS = (
     "tests/unit/spec005-g590-admin-assets.php",
     "tests/unit/spec005-g590-evidence-contract-v13.php",
     "tests/unit/spec004-r260-hierarchy-profiler.php",
+    "tests/unit/spec004-r260b-structural-shadow-projector.php",
     "tests/unit/spec005-runtime-resources.php",
     "tests/unit/spec005-section-retrieval-g590.php",
     "tests/unit/spec005-section-runner-g590.php",

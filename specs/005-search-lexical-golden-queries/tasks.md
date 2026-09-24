@@ -224,3 +224,13 @@
 ## Pós G-590
 - [ ] retomar G-585 apenas como engine independence proof.
 - [ ] fechar boundary da SPEC-005 antes da SPEC-006.
+
+
+### G-590 — RC5 review / R-260 discovery
+- [x] G590-ENV-17 analisar RC5 — strong hierarchy gap confirmado: 1294 sem heading context.
+- [x] G590-ENV-18 reabrir SPEC-004 em R-260 DISCOVERY/read-only sem invalidar G-250.
+- [x] G590-ENV-19 identificar divergência de probe authorization: runner publish-only vs Search canonical allowed statuses + edit_post.
+- [x] G590-ENV-20 implementar diagnostics por source kind/confidence/post + structural recovery candidates.
+- [x] G590-ENV-21 gerar RC6 `0.5.1-rc.6/g590.6` — LOCAL PACKAGE PASS; source `27223c6ce89e7fb25453086d0fe6a60c0cdeec36`; SHA-256 `cd4cd53eea5ba140c60accfaeaaf58c2f99b049c542fc36d3d244588afd82842`.
+- [ ] G590-ENV-22 executar RC6 e baixar JSON.
+- [ ] G590-ENV-23 decidir owner R-260 com base na distribuição completa.

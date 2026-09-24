@@ -217,7 +217,7 @@
 - [x] G590-ENV-11 classificar T590-16 — probe selection gap: Gutenberg 17 generated anchors / 0 probe formulado no v1.2.
 - [x] G590-ENV-12 congelar Evidence Contract Addendum v1.3.
 - [x] G590-ENV-13 implementar strong hierarchy metric + samples + repeated-title runtime probe fallback.
-- [ ] G590-ENV-14 gerar pacote RC5 `0.5.1-rc.5/g590.5`.
+- [x] G590-ENV-14 gerar pacote RC5 `0.5.1-rc.5/g590.5` — LOCAL PACKAGE PASS; source `fea648a891f715fca2a081597d0529018f83b94f`; SHA-256 `eb0958461509817c1dfb5ebdead895d1e7b090891711927e3e9103752bf2a695`.
 - [ ] G590-ENV-15 executar RC5 e baixar JSON.
 - [ ] G590-ENV-16 validar evidence machine `failed=0` e decidir T590-15/T590-16.
 

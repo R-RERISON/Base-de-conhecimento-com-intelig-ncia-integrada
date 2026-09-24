@@ -1390,7 +1390,7 @@ final class Search_Section_Runner_G590 {
 			$kind = (string) ( $profile['source_kind'] ?? 'unknown' );
 			$r260b_post_count_by_source_kind[ $kind ] = (int) ( $r260b_post_count_by_source_kind[ $kind ] ?? 0 ) + 1;
 			foreach ( array_keys( $r260b_states ) as $state ) {
-				$r260b_states[ $state ] += (int) ( (array) ( $profile['states'] ?? array() ) )[ $state ] ?? 0;
+				$r260b_states[ $state ] += (int) ( ( (array) ( $profile['states'] ?? array() ) )[ $state ] ?? 0 );
 			}
 			if ( ! empty( $profile['max_sections_exceeded'] ) ) {
 				++$r260b_overflow_post_count;

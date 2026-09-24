@@ -159,6 +159,7 @@ final class R260_Hierarchy_Profiler {
 		return array(
 			'summary' => $summary,
 			'samples' => array_slice( $candidates, 0, self::MAX_SAMPLES_PER_POST ),
+			'candidates' => $candidates,
 		);
 	}
 

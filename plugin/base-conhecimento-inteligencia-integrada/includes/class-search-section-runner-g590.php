@@ -939,6 +939,8 @@ final class Search_Section_Runner_G590 {
 			'strong_without_heading_by_post' => array(),
 			'structural_recovery_candidates' => 0,
 			'structural_recovery_candidate_posts' => array(),
+			'r260_post_profiles' => array(),
+			'r260_candidate_samples' => array(),
 			'hierarchy_node_source_counts' => array(),
 			'title_frequency' => array(),
 			'token_frequency' => array(),
@@ -1112,6 +1114,23 @@ final class Search_Section_Runner_G590 {
 						'has_heading_context' => $has_heading_context,
 						'text_excerpt' => mb_substr( trim( (string) ( $fragment['text'] ?? '' ) ), 0, 240 ),
 					);
+				}
+			}
+
+			$r260 = R260_Hierarchy_Profiler::profile( $post_id, $source_kind, $fragments, $hierarchy );
+			$r260_summary = is_array( $r260['summary'] ?? null ) ? $r260['summary'] : array();
+			if ( (int) ( $r260_summary['candidate_count'] ?? 0 ) > 0 ) {
+				$accumulator['r260_post_profiles'][] = $r260_summary;
+				foreach ( (array) ( $r260['samples'] ?? array() ) as $sample ) {
+					if ( count( (array) $accumulator['r260_candidate_samples'] ) >= 60 ) {
+						break;
+					}
+					if ( ! is_array( $sample ) ) {
+						continue;
+					}
+					$sample['post_id'] = $post_id;
+					$sample['source_kind'] = $source_kind;
+					$accumulator['r260_candidate_samples'][] = $sample;
 				}
 			}
 		}
@@ -1296,6 +1315,31 @@ final class Search_Section_Runner_G590 {
 		$strong_without_heading_by_confidence = (array) ( $accumulator['strong_without_heading_by_confidence'] ?? array() );
 		$strong_without_heading_by_post = (array) ( $accumulator['strong_without_heading_by_post'] ?? array() );
 		$structural_recovery_candidate_posts = (array) ( $accumulator['structural_recovery_candidate_posts'] ?? array() );
+		$r260_post_profiles = array_values(
+			array_filter(
+				(array) ( $accumulator['r260_post_profiles'] ?? array() ),
+				static fn ( mixed $row ): bool => is_array( $row )
+			)
+		);
+		$r260_totals = array(
+			'candidate_count' => 0,
+			'early_candidate_count' => 0,
+			'later_same_label_count' => 0,
+			'later_same_token_count' => 0,
+			'body_span_ge2_count' => 0,
+			'toc_signal_count' => 0,
+			'body_signal_count' => 0,
+			'uncertain_count' => 0,
+		);
+		$r260_source_kind_posts = array();
+		foreach ( $r260_post_profiles as $profile ) {
+			$kind = (string) ( $profile['source_kind'] ?? 'unknown' );
+			$r260_source_kind_posts[ $kind ] = (int) ( $r260_source_kind_posts[ $kind ] ?? 0 ) + 1;
+			foreach ( array_keys( $r260_totals ) as $metric ) {
+				$r260_totals[ $metric ] += (int) ( $profile[ $metric ] ?? 0 );
+			}
+		}
+		ksort( $r260_source_kind_posts, SORT_STRING );
 		ksort( $strong_by_source_kind, SORT_STRING );
 		ksort( $strong_without_heading_by_source_kind, SORT_STRING );
 		ksort( $strong_by_confidence, SORT_STRING );
@@ -1336,6 +1380,15 @@ final class Search_Section_Runner_G590 {
 			'structural_recovery_candidate_count' => (int) ( $accumulator['structural_recovery_candidates'] ?? 0 ),
 			'structural_recovery_candidate_post_count' => count( $structural_recovery_candidate_posts ),
 			'structural_recovery_top_posts' => array_slice( $structural_recovery_candidate_posts, 0, 30, true ),
+			'r260_discovery' => array(
+				'profile_version' => 'r260-hierarchy-profiler-v1.0.0',
+				'candidate_post_count' => count( $r260_post_profiles ),
+				'totals' => $r260_totals,
+				'post_count_by_source_kind' => $r260_source_kind_posts,
+				'post_profiles' => $r260_post_profiles,
+				'candidate_samples' => array_slice( (array) ( $accumulator['r260_candidate_samples'] ?? array() ), 0, 60 ),
+				'interpretation' => 'diagnostic_only_no_runtime_promotion',
+			),
 			'hierarchy_node_source_counts' => $hierarchy_node_source_counts,
 			'probe_candidate_count' => count( $probe_candidates ),
 			'probe_candidate_source_kinds' => $probe_candidate_source_kinds,

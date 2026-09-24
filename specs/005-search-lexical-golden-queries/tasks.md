@@ -212,7 +212,14 @@
 - [x] G590-ENV-08A corrigir URL de download: `add_query_arg()` + `wp_create_nonce()` + escaping somente no render boundary.
 - [x] G590-ENV-08B gerar RC4 `0.5.1-rc.4/g590.4` — LOCAL PACKAGE PASS; SHA-256 `c05211f1db3ee568403b5f3b74abd8f8d3335d11865e9b77197afaf20e33b3ee`.
 - [ ] G590-ENV-08C instalar RC4 e baixar JSON do job já concluído, sem reiniciar evidência.
-- [ ] G590-ENV-09 validar evidence machine `failed=0`.
+- [x] G590-ENV-09 RC4 evidence analisada — T590-14 PASS, T590-15 FAIL, T590-16 FAIL, T590-17 PASS, T590-18 PASS; G-590 OPEN.
+- [x] G590-ENV-10 classificar T590-15 — evidence contract defect: contador incluía `explicit_dom` como strong hierarchy signal.
+- [x] G590-ENV-11 classificar T590-16 — probe selection gap: Gutenberg 17 generated anchors / 0 probe formulado no v1.2.
+- [x] G590-ENV-12 congelar Evidence Contract Addendum v1.3.
+- [x] G590-ENV-13 implementar strong hierarchy metric + samples + repeated-title runtime probe fallback.
+- [ ] G590-ENV-14 gerar pacote RC5 `0.5.1-rc.5/g590.5`.
+- [ ] G590-ENV-15 executar RC5 e baixar JSON.
+- [ ] G590-ENV-16 validar evidence machine `failed=0` e decidir T590-15/T590-16.
 
 ## Pós G-590
 - [ ] retomar G-585 apenas como engine independence proof.

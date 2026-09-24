@@ -105,9 +105,34 @@ A causa foi dupla codificação de URL ao usar `wp_nonce_url()` antes do boundar
 
 RC4 usa `add_query_arg()` + `wp_create_nonce()` e preserva o escaping somente no HTML.
 
+## Evidência ambiental RC4
+
+RC4 executou integralmente em WordPress 6.9.4 / PHP 8.5.10 / MariaDB 12.2.2.
+
+Resultado:
+- T590-14 PASS;
+- T590-15 FAIL;
+- T590-16 FAIL;
+- T590-17 PASS;
+- T590-18 PASS;
+- T590-19 FAIL / G-590 OPEN.
+
+Review determinou dois gaps no **evidence contract**, não regressão comprovada do runtime:
+
+1. T590-15 contava todo node não-heading de `Numbered_Hierarchy_Resolver`, inclusive listas `explicit_dom`, como strong hierarchy gap.
+2. T590-16 descartava candidates de título repetido sem rare token; Gutenberg possuía 17 generated anchors, mas nenhum probe formulável pelo v1.2.
+
+Evidence Contract v1.3 corrige somente runner/validator:
+- blocker hierarchy = `numbering_inferred && depth > 1`;
+- raw numbered nodes permanecem telemetria;
+- strong gaps recebem amostras concretas;
+- fallback `repeated_title_runtime_probe` não auto-aprova: a `section_key` esperada precisa ser recuperada pelo runtime.
+
+SPEC-004 não é reaberta antes da evidência RC5.
+
 ## Próximo passo exato
 
-Pacote RC4 pronto para homologação:
+Pacote RC5 em preparação para re-homologação:
 - Product Version `0.5.1-rc.4`;
 - Build ID `g590.4-5d74569e70bb`;
 - source commit `5d74569e70bb3e0a646a081ec2e3e855e581a452`;

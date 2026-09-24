@@ -941,6 +941,8 @@ final class Search_Section_Runner_G590 {
 			'structural_recovery_candidate_posts' => array(),
 			'r260_post_profiles' => array(),
 			'r260_candidate_samples' => array(),
+			'r260b_shadow_profiles' => array(),
+			'r260b_shadow_samples' => array(),
 			'hierarchy_node_source_counts' => array(),
 			'title_frequency' => array(),
 			'token_frequency' => array(),
@@ -1131,6 +1133,30 @@ final class Search_Section_Runner_G590 {
 					$sample['post_id'] = $post_id;
 					$sample['source_kind'] = $source_kind;
 					$accumulator['r260_candidate_samples'][] = $sample;
+				}
+			}
+
+			$r260b = R260_Structural_Shadow_Projector::project(
+				$post_id,
+				$source_kind,
+				$fragments,
+				$sections,
+				$r260
+			);
+			if ( (int) ( $r260b['candidate_count'] ?? 0 ) > 0 ) {
+				$r260b_summary = $r260b;
+				unset( $r260b_summary['samples'] );
+				$accumulator['r260b_shadow_profiles'][] = $r260b_summary;
+				foreach ( (array) ( $r260b['samples'] ?? array() ) as $sample ) {
+					if ( count( (array) $accumulator['r260b_shadow_samples'] ) >= 80 ) {
+						break;
+					}
+					if ( ! is_array( $sample ) ) {
+						continue;
+					}
+					$sample['post_id'] = $post_id;
+					$sample['source_kind'] = $source_kind;
+					$accumulator['r260b_shadow_samples'][] = $sample;
 				}
 			}
 		}
@@ -1340,6 +1366,48 @@ final class Search_Section_Runner_G590 {
 			}
 		}
 		ksort( $r260_source_kind_posts, SORT_STRING );
+
+		$r260b_profiles = array_values(
+			array_filter(
+				(array) ( $accumulator['r260b_shadow_profiles'] ?? array() ),
+				static fn ( mixed $row ): bool => is_array( $row )
+			)
+		);
+		$r260b_states = array(
+			'toc_suppressed' => 0,
+			'existing_heading_redundant' => 0,
+			'duplicate_candidate_ambiguous' => 0,
+			'promotable_shadow' => 0,
+			'uncertain' => 0,
+		);
+		$r260b_overflow_post_count = 0;
+		$r260b_overflow_total = 0;
+		$r260b_existing_at_limit_post_count = 0;
+		$r260b_anchor_blocked_count = 0;
+		$r260b_post_count_by_source_kind = array();
+		$r260b_top_promotable_posts = array();
+		foreach ( $r260b_profiles as $profile ) {
+			$kind = (string) ( $profile['source_kind'] ?? 'unknown' );
+			$r260b_post_count_by_source_kind[ $kind ] = (int) ( $r260b_post_count_by_source_kind[ $kind ] ?? 0 ) + 1;
+			foreach ( array_keys( $r260b_states ) as $state ) {
+				$r260b_states[ $state ] += (int) ( (array) ( $profile['states'] ?? array() ) )[ $state ] ?? 0;
+			}
+			if ( ! empty( $profile['max_sections_exceeded'] ) ) {
+				++$r260b_overflow_post_count;
+				$r260b_overflow_total += (int) ( $profile['overflow_by'] ?? 0 );
+			}
+			if ( ! empty( $profile['existing_at_limit'] ) ) {
+				++$r260b_existing_at_limit_post_count;
+			}
+			$r260b_anchor_blocked_count += (int) ( $profile['paragraph_anchor_contract_blocked_count'] ?? 0 );
+			$promotable = (int) ( $profile['promotable_shadow_count'] ?? 0 );
+			if ( $promotable > 0 ) {
+				$r260b_top_promotable_posts[ (string) ( $profile['post_id'] ?? 0 ) ] = $promotable;
+			}
+		}
+		ksort( $r260b_post_count_by_source_kind, SORT_STRING );
+		arsort( $r260b_top_promotable_posts, SORT_NUMERIC );
+
 		ksort( $strong_by_source_kind, SORT_STRING );
 		ksort( $strong_without_heading_by_source_kind, SORT_STRING );
 		ksort( $strong_by_confidence, SORT_STRING );
@@ -1387,6 +1455,20 @@ final class Search_Section_Runner_G590 {
 				'post_count_by_source_kind' => $r260_source_kind_posts,
 				'post_profiles' => $r260_post_profiles,
 				'candidate_samples' => array_slice( (array) ( $accumulator['r260_candidate_samples'] ?? array() ), 0, 60 ),
+				'shadow_projection' => array(
+					'version' => R260_Structural_Shadow_Projector::VERSION,
+					'post_count' => count( $r260b_profiles ),
+					'states' => $r260b_states,
+					'overflow_post_count' => $r260b_overflow_post_count,
+					'overflow_total' => $r260b_overflow_total,
+					'existing_at_limit_post_count' => $r260b_existing_at_limit_post_count,
+					'paragraph_anchor_contract_blocked_count' => $r260b_anchor_blocked_count,
+					'post_count_by_source_kind' => $r260b_post_count_by_source_kind,
+					'top_promotable_posts' => array_slice( $r260b_top_promotable_posts, 0, 30, true ),
+					'post_profiles' => $r260b_profiles,
+					'samples' => array_slice( (array) ( $accumulator['r260b_shadow_samples'] ?? array() ), 0, 80 ),
+					'interpretation' => 'shadow_only_no_runtime_promotion',
+				),
 				'interpretation' => 'diagnostic_only_no_runtime_promotion',
 			),
 			'hierarchy_node_source_counts' => $hierarchy_node_source_counts,

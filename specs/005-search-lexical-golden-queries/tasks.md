@@ -263,6 +263,6 @@
 - [x] G590-ENV-41 congelar R-260C Anchor Feasibility Contract v1.
 - [x] G590-ENV-42 implementar profiler read-only de targets renderizados exatos.
 - [x] G590-ENV-43 preservar Anchor Manager/Search Section runtime sem alteração.
-- [ ] G590-ENV-44 gerar RC9 `0.5.1-rc.9/g590.9`.
+- [x] G590-ENV-44 gerar RC9 `0.5.1-rc.9/g590.9` — LOCAL PACKAGE PASS; source `ea7203b6c2ab2e34438eb7b5d53c05ee877cac0a`; SHA-256 `8b56270a74b675d5601e93dc99553c11f0910017b3d2bf3a2c6aad3fe65c12f9`.
 - [ ] G590-ENV-45 executar RC9 e baixar JSON.
 - [ ] G590-ENV-46 decidir Deep-Link Contract v2 / R-260D runtime promotion.

@@ -34,9 +34,9 @@ $get = static function ( array $source, array $path, mixed $default = null ): mi
 $checks = array(
 	'gate_is_g590' => 'G-590' === (string) ( $data['gate'] ?? '' ),
 	'mode_is_environmental' => 'spec005_section_retrieval_deeplink_environmental' === (string) ( $data['mode'] ?? '' ),
-	'product_version_is_rc' => '0.5.1-rc.4' === (string) $get( $data, array( 'environment', 'plugin' ), '' ),
+	'product_version_is_rc' => '0.5.1-rc.5' === (string) $get( $data, array( 'environment', 'plugin' ), '' ),
 	'build_id_is_g590' => 1 === preg_match(
-		'/^g590\.4-[a-f0-9]{12}$/',
+		'/^g590\.5-[a-f0-9]{12}$/',
 		(string) $get( $data, array( 'environment', 'build_id' ), '' )
 	),
 	'schema_current' => true === (bool) $get( $data, array( 'lifecycle', 'schema_contract', 'pass' ), false ),
@@ -49,7 +49,7 @@ $checks = array(
 	'corpus_fully_analyzed' => (int) $get( $data, array( 'coverage', 'corpus_count' ), -1 )
 		=== (int) $get( $data, array( 'coverage', 'posts_analyzed' ), -2 ),
 	'no_extractor_errors' => 0 === (int) $get( $data, array( 'coverage', 'extractor_error_count' ), -1 ),
-	'no_uncontextual_numbered_gap' => 0 === (int) $get( $data, array( 'coverage', 'numbered_without_heading_context' ), -1 ),
+	'no_uncontextual_numbered_gap' => 0 === (int) $get( $data, array( 'coverage', 'strong_numbered_without_heading_context' ), -1 ),
 	'all_generated_source_kinds_probed' => empty( $get( $data, array( 'coverage', 'unprobed_source_kinds' ), array( '__missing__' ) ) ),
 
 	'minimum_section_probes' => (int) $get( $data, array( 'section_deep_link_probes', 'eligible_probe_count' ), 0 )

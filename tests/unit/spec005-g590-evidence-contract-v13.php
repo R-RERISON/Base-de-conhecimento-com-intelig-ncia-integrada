@@ -42,6 +42,30 @@ $checks = array(
 		$runner,
 		'return self::coverage_finalize( $accumulator, count( $post_ids ) );'
 	),
+	'probe_authorization_matches_search_service' => str_contains(
+		$runner,
+		"in_array( \$post_status, self::ALLOWED_STATUSES, true )"
+	) && str_contains(
+		$runner,
+		"current_user_can( 'edit_post', \$post_id )"
+	) && ! str_contains(
+		$runner,
+		"'publish' === \$post_status && 'generated' === \$anchor_state"
+	),
+	'probe_required_kinds_use_eligible_anchors' => str_contains(
+		$runner,
+		"'generated_probe_eligible_by_source_kind'"
+	),
+	'hierarchy_discovery_diagnostics' => str_contains(
+		$runner,
+		"'strong_without_heading_by_confidence'"
+	) && str_contains(
+		$runner,
+		"'structural_recovery_candidate_count'"
+	) && str_contains(
+		$runner,
+		"'strong_affected_post_count'"
+	),
 	'production_ranker_untouched' => ! str_contains( $runner, 'Search_Section_Ranker::VERSION =' ),
 );
 

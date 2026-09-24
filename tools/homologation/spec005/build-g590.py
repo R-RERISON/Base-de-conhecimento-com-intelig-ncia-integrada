@@ -75,6 +75,7 @@ REQUIRED_TRUE_FLAGS = (
 
 REQUIRED_ARTIFACT_FILES = (
     "includes/class-search-section-runner-g590.php",
+    "includes/class-r260-hierarchy-profiler.php",
     "assets/js/search-section-g590.js",
     "includes/class-golden-suite-loader.php",
     "includes/class-golden-gate-runner-g550.php",
@@ -104,7 +105,8 @@ UNIT_TESTS = (
     "tests/unit/spec005-golden-gate.php",
     "tests/unit/spec005-g590-resumable-runner.php",
     "tests/unit/spec005-g590-admin-assets.php",
-    "tests/unit/spec005-g590-evidence-contract-v13.php",\n    "tests/unit/spec004-r260-hierarchy-profiler.php",
+    "tests/unit/spec005-g590-evidence-contract-v13.php",
+    "tests/unit/spec004-r260-hierarchy-profiler.php",
     "tests/unit/spec005-runtime-resources.php",
     "tests/unit/spec005-section-retrieval-g590.php",
     "tests/unit/spec005-section-runner-g590.php",

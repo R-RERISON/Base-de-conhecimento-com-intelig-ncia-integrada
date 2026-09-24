@@ -252,6 +252,6 @@
 - [x] G590-ENV-33 congelar R-260B Structural Shadow Projection Contract v1.
 - [x] G590-ENV-34 implementar shadow projector read-only: heading collision / duplicate label / MAX_SECTIONS / anchor blocker.
 - [x] G590-ENV-35 manter Option C como arquitetura preferida, ainda não congelada.
-- [ ] G590-ENV-36 gerar RC8 `0.5.1-rc.8/g590.8`.
+- [x] G590-ENV-36 gerar RC8 `0.5.1-rc.8/g590.8` — LOCAL PACKAGE PASS; source `5456389bc8632cb21cedfa5d758380fa7ca5e242`; SHA-256 `f237f2be921acc5bcdf5798a664f020d5b1ba0d24d1435f78cd638e0af61ad32`.
 - [ ] G590-ENV-37 executar RC8 e baixar JSON.
 - [ ] G590-ENV-38 decidir R-260C runtime architecture a partir de capacity/collision/anchor evidence.

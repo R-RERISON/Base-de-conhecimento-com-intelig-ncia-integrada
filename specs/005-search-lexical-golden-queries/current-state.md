@@ -132,7 +132,13 @@ SPEC-004 não é reaberta antes da evidência RC5.
 
 ## Próximo passo exato
 
-Pacote RC5 em preparação para re-homologação:
+Pacote RC5 pronto para re-homologação:
+- Product Version `0.5.1-rc.5`;
+- Build ID `g590.5-fea648a891f7`;
+- source commit `fea648a891f715fca2a081597d0529018f83b94f`;
+- runner blob `44e6677d5c73ff214c9f25357c50ddd11871c76d`;
+- ZIP SHA-256 `eb0958461509817c1dfb5ebdead895d1e7b090891711927e3e9103752bf2a695`;
+- local package gate PASS: 82 arquivos, PHP 69/69, JS 3/3, JSON 2/2, Evidence Contract v1.3 12/12, active requires 65/65, deterministic build 2/2.
 - Product Version `0.5.1-rc.4`;
 - Build ID `g590.4-5d74569e70bb`;
 - source commit `5d74569e70bb3e0a646a081ec2e3e855e581a452`;

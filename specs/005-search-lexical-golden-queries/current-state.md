@@ -231,6 +231,25 @@ R-260B foi aberto em shadow-only para medir:
 
 Option C — dedicated structural projection shared by consumers — permanece arquitetura preferida, porém ainda não congelada.
 
+## RC8 — R-260B shadow package
+
+- Product Version `0.5.1-rc.8`;
+- Build ID `g590.8-5456389bc863`;
+- source commit `5456389bc8632cb21cedfa5d758380fa7ca5e242`;
+- runner blob `fd2f92f1146fb30aa4174eef9b6d37d18698cb56`;
+- R260 profiler blob `e6157eb3cdcb103beff529aac92bece1dd88f025`;
+- R260B shadow blob `a737c78264f6a52dfefd067e454dce997732647d`;
+- ZIP SHA-256 `f237f2be921acc5bcdf5798a664f020d5b1ba0d24d1435f78cd638e0af61ad32`;
+- files 84;
+- PHP 71/71;
+- JS 3/3;
+- JSON 2/2;
+- active requires 67/67;
+- RC7 inherited unchanged 80/80;
+- deterministic build 2/2.
+
+RC8 é shadow-only. Não promove paragraph para Section e não altera Anchor Manager.
+
 ## Próximo passo exato
 
 Pacote RC5 pronto para re-homologação:

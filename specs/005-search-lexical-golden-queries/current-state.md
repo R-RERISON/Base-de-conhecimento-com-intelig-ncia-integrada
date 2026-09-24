@@ -163,6 +163,47 @@ T590-16 continha divergência no runner: candidates eram publish-only, enquanto 
 
 RC6 não altera Search Section Projector/Ranker/Service/Anchor Manager. É diagnóstico para fechar T590-16 e dimensionar R-260.
 
+## RC6 — resultado ambiental
+
+RC6 fechou T590-16:
+- Elementor probe coverage PASS;
+- Gutenberg probe coverage PASS;
+- legacy_html probe coverage PASS;
+- unprobed_source_kinds = [];
+- section/deep-link/visible-text failures = 0.
+
+Gate:
+- T590-14 PASS;
+- T590-15 FAIL;
+- T590-16 PASS;
+- T590-17 PASS;
+- T590-18 PASS;
+- T590-19 FAIL / OPEN.
+
+Único blocker: T590-15 / R-260.
+
+R-260 evidence:
+- 1.294 strong gaps sem heading contextual;
+- 189 posts afetados;
+- 548 candidatos determinísticos em 94 posts;
+- ~81,9% dos gaps concentrados em legacy_html.
+
+## RC7 — R-260A discovery
+
+- Product Version `0.5.1-rc.7`;
+- Build ID `g590.7-4fd94fb372eb`;
+- source commit `4fd94fb372ebfe5ca9da35a43f73310156c9d573`;
+- runner blob `2485fa86808e9ea0b7420f63fc412b6cc3071c31`;
+- R260 profiler blob `535ce3ccaae5325f17b3a59bd533470318e4cf3f`;
+- ZIP SHA-256 `b826005d8ad777bfeac47e8b9a0743d42ef033b535ba59ae08f1bb1a4d8e8fbc`;
+- 83 files;
+- PHP 70/70;
+- JS 3/3;
+- JSON 2/2;
+- deterministic build 2/2.
+
+RC7 adiciona somente diagnóstico read-only para distinguir TOC duplicado de pseudo-heading com corpo.
+
 ## Próximo passo exato
 
 Pacote RC5 pronto para re-homologação:

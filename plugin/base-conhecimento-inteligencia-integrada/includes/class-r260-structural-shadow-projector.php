@@ -73,6 +73,7 @@ final class R260_Structural_Shadow_Projector {
 			'uncertain' => 0,
 		);
 		$samples = array();
+		$classified_candidates = array();
 
 		foreach ( $candidates as $candidate ) {
 			$ordinal = (int) ( $candidate['ordinal'] ?? -1 );
@@ -100,6 +101,17 @@ final class R260_Structural_Shadow_Projector {
 				$state = 'promotable_shadow';
 			}
 			++$states[ $state ];
+
+			$classified_candidates[] = array(
+				'ordinal' => $ordinal,
+				'token' => (string) ( $candidate['token'] ?? '' ),
+				'title_norm' => $label,
+				'state' => $state,
+				'body_span' => (int) ( $candidate['body_span'] ?? 0 ),
+				'position_bucket' => (string) ( $candidate['position_bucket'] ?? '' ),
+				'heading_collision_count' => $heading_collision_count,
+				'candidate_label_count' => $candidate_label_count,
+			);
 
 			if ( count( $samples ) < self::MAX_SAMPLES_PER_POST ) {
 				$samples[] = array(
@@ -136,6 +148,7 @@ final class R260_Structural_Shadow_Projector {
 			'overflow_by' => $overflow,
 			'paragraph_anchor_contract_blocked_count' => $promotable_count,
 			'samples' => $samples,
+			'candidates' => $classified_candidates,
 			'interpretation' => 'shadow_only_no_runtime_promotion',
 		);
 	}

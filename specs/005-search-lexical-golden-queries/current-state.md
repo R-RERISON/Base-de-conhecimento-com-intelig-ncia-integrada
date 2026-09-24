@@ -204,6 +204,33 @@ R-260 evidence:
 
 RC7 adiciona somente diagnóstico read-only para distinguir TOC duplicado de pseudo-heading com corpo.
 
+## Evidência ambiental RC7
+
+RC7:
+- T590-14 PASS;
+- T590-15 FAIL;
+- T590-16 PASS;
+- T590-17 PASS;
+- T590-18 PASS;
+- T590-19 OPEN.
+
+R-260A classificou 548 deterministic candidates:
+- 77 TOC-like;
+- 289 body-bearing;
+- 182 uncertain.
+
+R-260A = PASS / DISCOVERY CLOSED.
+
+O Anchor Manager atual é heading-only, portanto paragraph-derived Sections não podem receber deep-link comprovado sem novo contrato.
+
+R-260B foi aberto em shadow-only para medir:
+- heading collisions;
+- duplicate candidate labels;
+- MAX_SECTIONS overflow;
+- paragraph anchor-contract blockers.
+
+Option C — dedicated structural projection shared by consumers — permanece arquitetura preferida, porém ainda não congelada.
+
 ## Próximo passo exato
 
 Pacote RC5 pronto para re-homologação:

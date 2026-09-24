@@ -918,6 +918,8 @@ final class Search_Section_Runner_G590 {
 			'extractor_errors' => array(),
 			'source_kinds' => array(),
 			'generated_by_source_kind' => array(),
+			'generated_probe_eligible_by_source_kind' => array(),
+			'post_status_by_source_kind' => array(),
 			'section_count' => 0,
 			'generated_anchor_count' => 0,
 			'unresolved_anchor_count' => 0,
@@ -930,6 +932,13 @@ final class Search_Section_Runner_G590 {
 			'strong_numbered_with_heading_context' => 0,
 			'strong_numbered_without_heading_context' => 0,
 			'strong_numbered_samples' => array(),
+			'strong_by_source_kind' => array(),
+			'strong_without_heading_by_source_kind' => array(),
+			'strong_by_confidence' => array(),
+			'strong_without_heading_by_confidence' => array(),
+			'strong_without_heading_by_post' => array(),
+			'structural_recovery_candidates' => 0,
+			'structural_recovery_candidate_posts' => array(),
 			'hierarchy_node_source_counts' => array(),
 			'title_frequency' => array(),
 			'token_frequency' => array(),
@@ -960,7 +969,14 @@ final class Search_Section_Runner_G590 {
 			++$accumulator['posts_analyzed'];
 			$post_status = (string) get_post_status( $post_id );
 			$source_kind = sanitize_key( (string) ( $extraction['source_kind'] ?? 'unknown' ) );
+			$probe_post_authorized = in_array( $post_status, self::ALLOWED_STATUSES, true )
+				&& current_user_can( 'edit_post', $post_id );
 			$accumulator['source_kinds'][ $source_kind ] = (int) ( $accumulator['source_kinds'][ $source_kind ] ?? 0 ) + 1;
+			if ( ! isset( $accumulator['post_status_by_source_kind'][ $source_kind ] ) ) {
+				$accumulator['post_status_by_source_kind'][ $source_kind ] = array();
+			}
+			$accumulator['post_status_by_source_kind'][ $source_kind ][ $post_status ] =
+				(int) ( $accumulator['post_status_by_source_kind'][ $source_kind ][ $post_status ] ?? 0 ) + 1;
 			$fragments = (array) ( $extraction['fragments'] ?? array() );
 			$sections = Search_Section_Projector::project( $post_id, $fragments );
 
@@ -978,6 +994,10 @@ final class Search_Section_Runner_G590 {
 					++$accumulator['generated_anchor_count'];
 					$accumulator['generated_by_source_kind'][ $source_kind ] =
 						(int) ( $accumulator['generated_by_source_kind'][ $source_kind ] ?? 0 ) + 1;
+					if ( $probe_post_authorized ) {
+						$accumulator['generated_probe_eligible_by_source_kind'][ $source_kind ] =
+							(int) ( $accumulator['generated_probe_eligible_by_source_kind'][ $source_kind ] ?? 0 ) + 1;
+					}
 				} else {
 					++$accumulator['unresolved_anchor_count'];
 				}
@@ -996,7 +1016,7 @@ final class Search_Section_Runner_G590 {
 							(int) ( $accumulator['token_frequency'][ $token ] ?? 0 ) + 1;
 					}
 
-					if ( 'publish' === $post_status && 'generated' === $anchor_state ) {
+					if ( $probe_post_authorized && 'generated' === $anchor_state ) {
 						$accumulator['candidates'][] = array(
 							'post_id' => $post_id,
 							'post_status' => $post_status,
@@ -1057,10 +1077,26 @@ final class Search_Section_Runner_G590 {
 				}
 
 				++$accumulator['strong_numbered_non_heading_nodes'];
+				$accumulator['strong_by_source_kind'][ $source_kind ] =
+					(int) ( $accumulator['strong_by_source_kind'][ $source_kind ] ?? 0 ) + 1;
+				$accumulator['strong_by_confidence'][ $hierarchy_confidence ] =
+					(int) ( $accumulator['strong_by_confidence'][ $hierarchy_confidence ] ?? 0 ) + 1;
 				if ( $has_heading_context ) {
 					++$accumulator['strong_numbered_with_heading_context'];
 				} else {
 					++$accumulator['strong_numbered_without_heading_context'];
+					$accumulator['strong_without_heading_by_source_kind'][ $source_kind ] =
+						(int) ( $accumulator['strong_without_heading_by_source_kind'][ $source_kind ] ?? 0 ) + 1;
+					$accumulator['strong_without_heading_by_confidence'][ $hierarchy_confidence ] =
+						(int) ( $accumulator['strong_without_heading_by_confidence'][ $hierarchy_confidence ] ?? 0 ) + 1;
+					$accumulator['strong_without_heading_by_post'][ $post_id ] =
+						(int) ( $accumulator['strong_without_heading_by_post'][ $post_id ] ?? 0 ) + 1;
+
+					if ( 'deterministic' === $hierarchy_confidence && 'paragraph' === (string) ( $fragment['kind'] ?? '' ) ) {
+						++$accumulator['structural_recovery_candidates'];
+						$accumulator['structural_recovery_candidate_posts'][ $post_id ] =
+							(int) ( $accumulator['structural_recovery_candidate_posts'][ $post_id ] ?? 0 ) + 1;
+					}
 				}
 
 				if ( count( (array) $accumulator['strong_numbered_samples'] ) < 30 ) {
@@ -1190,13 +1226,23 @@ final class Search_Section_Runner_G590 {
 
 		$source_kinds = (array) ( $accumulator['source_kinds'] ?? array() );
 		$generated_by_source_kind = (array) ( $accumulator['generated_by_source_kind'] ?? array() );
+		$generated_probe_eligible_by_source_kind = (array) ( $accumulator['generated_probe_eligible_by_source_kind'] ?? array() );
+		$post_status_by_source_kind = (array) ( $accumulator['post_status_by_source_kind'] ?? array() );
 		ksort( $source_kinds, SORT_STRING );
 		ksort( $generated_by_source_kind, SORT_STRING );
+		ksort( $generated_probe_eligible_by_source_kind, SORT_STRING );
+		ksort( $post_status_by_source_kind, SORT_STRING );
+		foreach ( $post_status_by_source_kind as &$status_counts ) {
+			if ( is_array( $status_counts ) ) {
+				ksort( $status_counts, SORT_STRING );
+			}
+		}
+		unset( $status_counts );
 		ksort( $eligible_by_source_kind, SORT_STRING );
 
 		$required_probe_source_kinds = array_keys(
 			array_filter(
-				$generated_by_source_kind,
+				$generated_probe_eligible_by_source_kind,
 				static fn ( int $count ): bool => $count > 0
 			)
 		);
@@ -1244,6 +1290,18 @@ final class Search_Section_Runner_G590 {
 		}
 		ksort( $probe_candidate_source_kinds, SORT_STRING );
 		ksort( $probe_strategy_counts, SORT_STRING );
+		$strong_by_source_kind = (array) ( $accumulator['strong_by_source_kind'] ?? array() );
+		$strong_without_heading_by_source_kind = (array) ( $accumulator['strong_without_heading_by_source_kind'] ?? array() );
+		$strong_by_confidence = (array) ( $accumulator['strong_by_confidence'] ?? array() );
+		$strong_without_heading_by_confidence = (array) ( $accumulator['strong_without_heading_by_confidence'] ?? array() );
+		$strong_without_heading_by_post = (array) ( $accumulator['strong_without_heading_by_post'] ?? array() );
+		$structural_recovery_candidate_posts = (array) ( $accumulator['structural_recovery_candidate_posts'] ?? array() );
+		ksort( $strong_by_source_kind, SORT_STRING );
+		ksort( $strong_without_heading_by_source_kind, SORT_STRING );
+		ksort( $strong_by_confidence, SORT_STRING );
+		ksort( $strong_without_heading_by_confidence, SORT_STRING );
+		arsort( $strong_without_heading_by_post, SORT_NUMERIC );
+		arsort( $structural_recovery_candidate_posts, SORT_NUMERIC );
 
 		return array(
 			'corpus_count' => max( 0, $corpus_count ),
@@ -1252,6 +1310,8 @@ final class Search_Section_Runner_G590 {
 			'extractor_errors' => array_slice( (array) ( $accumulator['extractor_errors'] ?? array() ), 0, 50 ),
 			'source_kinds' => $source_kinds,
 			'generated_by_source_kind' => $generated_by_source_kind,
+			'generated_probe_eligible_by_source_kind' => $generated_probe_eligible_by_source_kind,
+			'post_status_by_source_kind' => $post_status_by_source_kind,
 			'required_probe_source_kinds' => $required_probe_source_kinds,
 			'unprobed_source_kinds' => $unprobed_source_kinds,
 			'section_count' => (int) ( $accumulator['section_count'] ?? 0 ),
@@ -1267,6 +1327,15 @@ final class Search_Section_Runner_G590 {
 			'strong_numbered_with_heading_context' => (int) ( $accumulator['strong_numbered_with_heading_context'] ?? 0 ),
 			'strong_numbered_without_heading_context' => (int) ( $accumulator['strong_numbered_without_heading_context'] ?? 0 ),
 			'strong_numbered_samples' => array_slice( (array) ( $accumulator['strong_numbered_samples'] ?? array() ), 0, 30 ),
+			'strong_by_source_kind' => $strong_by_source_kind,
+			'strong_without_heading_by_source_kind' => $strong_without_heading_by_source_kind,
+			'strong_by_confidence' => $strong_by_confidence,
+			'strong_without_heading_by_confidence' => $strong_without_heading_by_confidence,
+			'strong_affected_post_count' => count( $strong_without_heading_by_post ),
+			'strong_top_affected_posts' => array_slice( $strong_without_heading_by_post, 0, 30, true ),
+			'structural_recovery_candidate_count' => (int) ( $accumulator['structural_recovery_candidates'] ?? 0 ),
+			'structural_recovery_candidate_post_count' => count( $structural_recovery_candidate_posts ),
+			'structural_recovery_top_posts' => array_slice( $structural_recovery_candidate_posts, 0, 30, true ),
 			'hierarchy_node_source_counts' => $hierarchy_node_source_counts,
 			'probe_candidate_count' => count( $probe_candidates ),
 			'probe_candidate_source_kinds' => $probe_candidate_source_kinds,

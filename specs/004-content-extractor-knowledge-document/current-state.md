@@ -252,3 +252,23 @@ Merge commit: `e08871557b2233bf1294b1e57752265d3fe68c0f`.
 Evidência: `evidence/spec004-main-promotion-20260918.json`.
 
 Estado definitivo: **SPEC-004 CLOSED / main**.
+
+
+## R-260 — Reabertura controlada por evidência G-590
+
+Status: **DISCOVERY / READ-ONLY / OPEN**.
+
+A baseline G-250/RC2 permanece CLOSED e não foi invalidada.
+
+RC5 do G-590 encontrou `strong_numbered_without_heading_context=1294`. As amostras demonstram pseudo-headings numerados em `legacy_html` materializados como paragraphs pelo extractor.
+
+Nenhuma correção runtime foi autorizada ainda.
+
+Próximo passo:
+1. coletar diagnóstico RC6 com distribuição por source kind/confidence/post;
+2. separar sinais ambíguos de candidatos determinísticos;
+3. avaliar risco de duplicidade (sumário/índice vs conteúdo real);
+4. decidir owner arquitetural;
+5. somente então propor contrato de implementação.
+
+> Quem não sabe onde está, não sabe para onde quer ir.

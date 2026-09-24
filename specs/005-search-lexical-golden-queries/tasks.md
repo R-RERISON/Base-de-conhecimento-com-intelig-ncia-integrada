@@ -255,3 +255,14 @@
 - [x] G590-ENV-36 gerar RC8 `0.5.1-rc.8/g590.8` — LOCAL PACKAGE PASS; source `5456389bc8632cb21cedfa5d758380fa7ca5e242`; SHA-256 `f237f2be921acc5bcdf5798a664f020d5b1ba0d24d1435f78cd638e0af61ad32`.
 - [ ] G590-ENV-37 executar RC8 e baixar JSON.
 - [ ] G590-ENV-38 decidir R-260C runtime architecture a partir de capacity/collision/anchor evidence.
+
+
+### RC8 → R-260C / RC9
+- [x] G590-ENV-39 analisar RC8 — T590-16 PASS; T590-15 único blocker.
+- [x] G590-ENV-40 fechar R-260B: 211 promotable / 78 duplicate / 77 TOC / 182 uncertain / 0 overflow / 0 heading collision.
+- [x] G590-ENV-41 congelar R-260C Anchor Feasibility Contract v1.
+- [x] G590-ENV-42 implementar profiler read-only de targets renderizados exatos.
+- [x] G590-ENV-43 preservar Anchor Manager/Search Section runtime sem alteração.
+- [ ] G590-ENV-44 gerar RC9 `0.5.1-rc.9/g590.9`.
+- [ ] G590-ENV-45 executar RC9 e baixar JSON.
+- [ ] G590-ENV-46 decidir Deep-Link Contract v2 / R-260D runtime promotion.

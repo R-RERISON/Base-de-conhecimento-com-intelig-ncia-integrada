@@ -327,15 +327,41 @@ Conclusão:
 
 Option C — dedicated structural projection shared by consumers — é aceita como owner preferido, ainda sem ativação produtiva.
 
-## R-260C — OPEN / ANCHOR FEASIBILITY
+## R-260C — PASS / DISCOVERY CLOSED
 
 Contrato: `r260c-anchor-feasibility-contract-v1.md`.
 
-RC9 mede:
-- target único em paragraph;
-- paragraph ambíguo;
-- target único em bloco não-paragraph;
-- bloco ambíguo;
-- ausência de match exato.
+RC9 ambiental sobre 211 `promotable_shadow`:
+- paragraph_unique: 131;
+- paragraph_ambiguous: 80;
+- block_unique_nonparagraph: 0;
+- block_ambiguous: 0;
+- not_rendered_exact: 0.
 
-Nenhum anchor é injetado e nenhum runtime Search é alterado.
+Conclusão:
+- 100% dos promotable possuem representação exata no HTML renderizado;
+- 62,0853% já possuem target paragraph inequívoco;
+- 37,9147% continuam ambíguos;
+- ausência de renderização não é blocker;
+- seleção por primeira ocorrência/nth occurrence permanece proibida.
+
+Deep-Link Contract v2 é viável somente fail-closed.
+
+## R-260D1 — OPEN / CONTEXTUAL ANCHOR FEASIBILITY
+
+Contrato: `r260d-contextual-anchor-feasibility-contract-v1.md`.
+
+RC10 mede, sem runtime promotion, se os 80 títulos ambíguos podem ser desambiguados por:
+- título exato;
+- dois blocos corporais adjacentes derivados da fonte;
+- match exato e ordenado imediatamente após cada ocorrência renderizada.
+
+Estados:
+- title_unique;
+- context_unique;
+- context_ambiguous;
+- context_insufficient;
+- context_not_matched;
+- title_not_rendered.
+
+Search Section Projector, Anchor Manager, Content Extractor e KD permanecem inalterados. T590-15 e G-590 continuam OPEN.

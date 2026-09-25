@@ -191,11 +191,11 @@
 - [x] T590-12 implementar Section Ranker/Service + fachada canônica `Search_Service::search_sections()`.
 - [x] T590-13 implementar Anchor Manager read-only/fail-closed.
 - [x] T590-13A adicionar schema contract físico (colunas+índices) e lifecycle degraded-safe.
-- [ ] T590-14 unit/regression Search post-level + SPEC-001–004.
+- [x] T590-14 unit/regression Search post-level + SPEC-001–004 — PASS ambiental preservado até RC9.
 - [ ] T590-15 coverage diagnostic ambiental — runner/validator IMPLEMENTADOS; evidência ENV pendente.
-- [ ] T590-16 technical challenge/Golden section-level — probes corpus-derived IMPLEMENTADOS; ENV pendente.
-- [ ] T590-17 lifecycle migration 1.0→1.1 + explicit rebuild — runtime/guard IMPLEMENTADOS; ENV pendente.
-- [ ] T590-18 performance/security — budgets e source-safety IMPLEMENTADOS; ENV pendente.
+- [x] T590-16 technical challenge/Golden section-level — PASS ambiental; source kinds cobertos, 0 section/deep-link failures.
+- [x] T590-17 lifecycle migration 1.0→1.1 + explicit rebuild — PASS ambiental; prepare sem reindex, rebuild determinístico.
+- [x] T590-18 performance/security — PASS ambiental; RC9 p95 305.8531 ms / max 341.8281 ms; safety íntegra.
 - [ ] T590-19 G-590 PASS/CLOSED.
 
 ### G-590 — execução ambiental resumível
@@ -264,5 +264,10 @@
 - [x] G590-ENV-42 implementar profiler read-only de targets renderizados exatos.
 - [x] G590-ENV-43 preservar Anchor Manager/Search Section runtime sem alteração.
 - [x] G590-ENV-44 gerar RC9 `0.5.1-rc.9/g590.9` — LOCAL PACKAGE PASS; source `ea7203b6c2ab2e34438eb7b5d53c05ee877cac0a`; SHA-256 `8b56270a74b675d5601e93dc99553c11f0910017b3d2bf3a2c6aad3fe65c12f9`.
-- [ ] G590-ENV-45 executar RC9 e baixar JSON.
-- [ ] G590-ENV-46 decidir Deep-Link Contract v2 / R-260D runtime promotion.
+- [x] G590-ENV-45 executar RC9 e baixar JSON — evidence `bdc-kb-spec005-g590-section-20260925-180631.json`.
+- [x] G590-ENV-46 analisar RC9 e fechar R-260C — 211 promotable = 131 paragraph_unique + 80 paragraph_ambiguous; 0 no-match; Deep-Link v2 viável fail-closed.
+- [x] G590-ENV-47 dividir R-260D em D1 diagnóstico contextual e D2 runtime promotion evidence-gated.
+- [x] G590-ENV-48 congelar `r260d-contextual-anchor-feasibility-contract-v1.md` e implementar profiler + machine validator read-only.
+- [x] G590-ENV-49 gerar RC10 `0.5.1-rc.10/g590.10` — source `cf1374fd85de56c8d31192948a15d7e274eee1eb`; SHA-256 `456922cf831ef171a9d1ad8970bf3506294e1ac297e739bd690bc100ab603d5c`; 86 files; PHP 73/73; JS 3/3; JSON 2/2; active requires 69/69; D1 unit 15/15; deterministic 2/2.
+- [ ] G590-ENV-50 executar RC10 e baixar JSON.
+- [ ] G590-ENV-51 validar `validate-r260d-evidence.php` e decidir R-260D2 runtime promotion.

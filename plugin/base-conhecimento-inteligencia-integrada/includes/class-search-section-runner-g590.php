@@ -673,6 +673,7 @@ final class Search_Section_Runner_G590 {
 				'deep_link' => 'g590-deep-link-contract-v1.md',
 				'regression' => 'g590-regression-contract-v1.md',
 				'g550_addendum' => 'g550-addendum-document-v1.1-compatibility.md',
+				'r260d_contextual_anchor' => 'r260d-contextual-anchor-feasibility-contract-v1.md',
 				'orchestration' => self::JOB_VERSION,
 			),
 			'lifecycle' => array(
@@ -858,6 +859,7 @@ final class Search_Section_Runner_G590 {
 				'deep_link' => 'g590-deep-link-contract-v1.md',
 				'regression' => 'g590-regression-contract-v1.md',
 				'g550_addendum' => 'g550-addendum-document-v1.1-compatibility.md',
+				'r260d_contextual_anchor' => 'r260d-contextual-anchor-feasibility-contract-v1.md',
 			),
 			'lifecycle' => array(
 				'state_before' => $state_before,
@@ -945,6 +947,8 @@ final class Search_Section_Runner_G590 {
 			'r260b_shadow_samples' => array(),
 			'r260c_anchor_profiles' => array(),
 			'r260c_anchor_samples' => array(),
+			'r260d_context_profiles' => array(),
+			'r260d_context_samples' => array(),
 			'hierarchy_node_source_counts' => array(),
 			'title_frequency' => array(),
 			'token_frequency' => array(),
@@ -1197,6 +1201,30 @@ final class Search_Section_Runner_G590 {
 					$sample['post_id'] = $post_id;
 					$sample['source_kind'] = $source_kind;
 					$accumulator['r260c_anchor_samples'][] = $sample;
+				}
+
+				$r260d = R260_Contextual_Anchor_Feasibility_Profiler::profile(
+					$post_id,
+					$source_kind,
+					$rendered,
+					$fragments,
+					$hierarchy,
+					(array) ( $r260b['candidates'] ?? array() )
+				);
+				$r260d_summary = $r260d;
+				unset( $r260d_summary['samples'] );
+				$accumulator['r260d_context_profiles'][] = $r260d_summary;
+
+				foreach ( (array) ( $r260d['samples'] ?? array() ) as $sample ) {
+					if ( count( (array) $accumulator['r260d_context_samples'] ) >= 80 ) {
+						break;
+					}
+					if ( ! is_array( $sample ) ) {
+						continue;
+					}
+					$sample['post_id'] = $post_id;
+					$sample['source_kind'] = $source_kind;
+					$accumulator['r260d_context_samples'][] = $sample;
 				}
 			}
 		}
@@ -1480,6 +1508,42 @@ final class Search_Section_Runner_G590 {
 			? (float) ( $r260c_states['paragraph_unique'] + $r260c_states['block_unique_nonparagraph'] ) / $r260c_promotable_count
 			: 0.0;
 
+		$r260d_profiles = array_values(
+			array_filter(
+				(array) ( $accumulator['r260d_context_profiles'] ?? array() ),
+				static fn ( mixed $row ): bool => is_array( $row )
+			)
+		);
+		$r260d_states = array(
+			'title_unique' => 0,
+			'context_unique' => 0,
+			'context_ambiguous' => 0,
+			'context_insufficient' => 0,
+			'context_not_matched' => 0,
+			'title_not_rendered' => 0,
+		);
+		$r260d_promotable_count = 0;
+		$r260d_effective_unique_count = 0;
+		$r260d_context_resolved_count = 0;
+		$r260d_unresolved_remaining_count = 0;
+		$r260d_post_count_by_source_kind = array();
+		foreach ( $r260d_profiles as $profile ) {
+			$kind = (string) ( $profile['source_kind'] ?? 'unknown' );
+			$r260d_post_count_by_source_kind[ $kind ] =
+				(int) ( $r260d_post_count_by_source_kind[ $kind ] ?? 0 ) + 1;
+			$r260d_promotable_count += (int) ( $profile['promotable_count'] ?? 0 );
+			$r260d_effective_unique_count += (int) ( $profile['effective_unique_count'] ?? 0 );
+			$r260d_context_resolved_count += (int) ( $profile['context_resolved_count'] ?? 0 );
+			$r260d_unresolved_remaining_count += (int) ( $profile['unresolved_remaining_count'] ?? 0 );
+			foreach ( array_keys( $r260d_states ) as $state ) {
+				$r260d_states[ $state ] += (int) ( ( (array) ( $profile['states'] ?? array() ) )[ $state ] ?? 0 );
+			}
+		}
+		ksort( $r260d_post_count_by_source_kind, SORT_STRING );
+		$r260d_effective_unique_rate = $r260d_promotable_count > 0
+			? (float) $r260d_effective_unique_count / $r260d_promotable_count
+			: 0.0;
+
 		ksort( $strong_by_source_kind, SORT_STRING );
 		ksort( $strong_without_heading_by_source_kind, SORT_STRING );
 		ksort( $strong_by_confidence, SORT_STRING );
@@ -1550,6 +1614,20 @@ final class Search_Section_Runner_G590 {
 						'post_profiles' => $r260c_profiles,
 						'samples' => array_slice( (array) ( $accumulator['r260c_anchor_samples'] ?? array() ), 0, 80 ),
 						'interpretation' => 'diagnostic_only_no_anchor_injection',
+					),
+					'contextual_anchor_feasibility' => array(
+						'version' => R260_Contextual_Anchor_Feasibility_Profiler::VERSION,
+						'post_count' => count( $r260d_profiles ),
+						'promotable_count' => $r260d_promotable_count,
+						'states' => $r260d_states,
+						'effective_unique_count' => $r260d_effective_unique_count,
+						'effective_unique_rate' => $r260d_effective_unique_rate,
+						'context_resolved_count' => $r260d_context_resolved_count,
+						'unresolved_remaining_count' => $r260d_unresolved_remaining_count,
+						'post_count_by_source_kind' => $r260d_post_count_by_source_kind,
+						'post_profiles' => $r260d_profiles,
+						'samples' => array_slice( (array) ( $accumulator['r260d_context_samples'] ?? array() ), 0, 80 ),
+						'interpretation' => 'diagnostic_only_contextual_disambiguation_no_anchor_injection',
 					),
 					'interpretation' => 'shadow_only_no_runtime_promotion',
 				),
@@ -1755,6 +1833,7 @@ final class Search_Section_Runner_G590 {
 			BDC_KB_DIR . 'includes/class-search-anchor-manager.php',
 			BDC_KB_DIR . 'includes/class-search-service.php',
 			BDC_KB_DIR . 'includes/class-search-section-runner-g590.php',
+			BDC_KB_DIR . 'includes/class-r260-contextual-anchor-feasibility-profiler.php',
 		);
 		$source = '';
 		foreach ( $paths as $path ) {

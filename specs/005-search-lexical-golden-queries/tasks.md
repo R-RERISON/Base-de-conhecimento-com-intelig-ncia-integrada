@@ -192,7 +192,7 @@
 - [x] T590-13 implementar Anchor Manager read-only/fail-closed.
 - [x] T590-13A adicionar schema contract físico (colunas+índices) e lifecycle degraded-safe.
 - [x] T590-14 unit/regression Search post-level + SPEC-001–004 — PASS ambiental preservado até RC9.
-- [ ] T590-15 coverage diagnostic ambiental — runner/validator IMPLEMENTADOS; evidência ENV pendente.
+- [ ] T590-15 coverage diagnostic ambiental — FAIL/OPEN; 1.294 strong gaps originaram R-260; R-260D1 contextual discovery em RC10.
 - [x] T590-16 technical challenge/Golden section-level — PASS ambiental; source kinds cobertos, 0 section/deep-link failures.
 - [x] T590-17 lifecycle migration 1.0→1.1 + explicit rebuild — PASS ambiental; prepare sem reindex, rebuild determinístico.
 - [x] T590-18 performance/security — PASS ambiental; RC9 p95 305.8531 ms / max 341.8281 ms; safety íntegra.

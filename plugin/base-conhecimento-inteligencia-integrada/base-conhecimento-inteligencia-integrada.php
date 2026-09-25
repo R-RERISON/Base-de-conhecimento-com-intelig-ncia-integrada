@@ -49,6 +49,7 @@ define( 'BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD', false );
 define( 'BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD', false );
 define( 'BDC_KB_SPEC005_G580_LIFECYCLE_BUILD', false );
 define( 'BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD', false );
+define( 'BDC_KB_SPEC005_G590_SECTION_BUILD', false );
 define( 'BDC_KB_P580_PUBLIC_INVENTORY_BUILD', false );
 define( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD', true );
 define( 'BDC_KB_UX004_H030_TECHNICAL_BUILD', true );
@@ -197,11 +198,15 @@ if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD' ) && BDC_KB_SPEC
 }
 if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-search-query-normalizer.php';
+	require_once BDC_KB_DIR . 'includes/class-search-section-projector.php';
 	require_once BDC_KB_DIR . 'includes/class-search-document-builder.php';
 	require_once BDC_KB_DIR . 'includes/class-search-projection-repository.php';
 	require_once BDC_KB_DIR . 'includes/class-search-rebuild-service.php';
 	require_once BDC_KB_DIR . 'includes/class-search-lifecycle.php';
 	require_once BDC_KB_DIR . 'includes/class-lexical-ranker.php';
+	require_once BDC_KB_DIR . 'includes/class-search-section-ranker.php';
+	require_once BDC_KB_DIR . 'includes/class-search-section-service.php';
+	require_once BDC_KB_DIR . 'includes/class-search-anchor-manager.php';
 	require_once BDC_KB_DIR . 'includes/class-search-service.php';
 }
 if ( defined( 'BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD' ) && BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD ) {
@@ -224,6 +229,15 @@ if ( defined( 'BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD' ) && BDC_KB_SPEC005_G
 	require_once BDC_KB_DIR . 'includes/class-golden-suite-loader.php';
 	require_once BDC_KB_DIR . 'includes/class-golden-gate-runner-g550.php';
 	require_once BDC_KB_DIR . 'includes/class-search-independence-runner-g585.php';
+}
+if ( defined( 'BDC_KB_SPEC005_G590_SECTION_BUILD' ) && BDC_KB_SPEC005_G590_SECTION_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-golden-suite-loader.php';
+	require_once BDC_KB_DIR . 'includes/class-golden-gate-runner-g550.php';
+	require_once BDC_KB_DIR . 'includes/class-r260-hierarchy-profiler.php';
+	require_once BDC_KB_DIR . 'includes/class-r260-structural-shadow-projector.php';
+	require_once BDC_KB_DIR . 'includes/class-r260-anchor-feasibility-profiler.php';
+	require_once BDC_KB_DIR . 'includes/class-r260-contextual-anchor-feasibility-profiler.php';
+	require_once BDC_KB_DIR . 'includes/class-search-section-runner-g590.php';
 }
 if ( defined( 'BDC_KB_UX004_H030_TECHNICAL_BUILD' ) && BDC_KB_UX004_H030_TECHNICAL_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-golden-suite-loader.php';
@@ -253,6 +267,7 @@ if ( defined( 'BDC_KB_WORD_CLOUD_BUILD' ) && BDC_KB_WORD_CLOUD_BUILD ) {
 }
 if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD ) {
 	\BDC\KnowledgeBase\Search_Lifecycle::register();
+	\BDC\KnowledgeBase\Search_Anchor_Manager::register();
 }
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
 	\BDC\KnowledgeBase\Content_Profile::register();
@@ -346,6 +361,9 @@ if ( defined( 'BDC_KB_SPEC005_G580_LIFECYCLE_BUILD' ) && BDC_KB_SPEC005_G580_LIF
 }
 if ( defined( 'BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD' ) && BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD ) {
 	\BDC\KnowledgeBase\Search_Independence_Runner_G585::register();
+}
+if ( defined( 'BDC_KB_SPEC005_G590_SECTION_BUILD' ) && BDC_KB_SPEC005_G590_SECTION_BUILD ) {
+	\BDC\KnowledgeBase\Search_Section_Runner_G590::register();
 }
 if ( defined( 'BDC_KB_UX004_H030_TECHNICAL_BUILD' ) && BDC_KB_UX004_H030_TECHNICAL_BUILD ) {
 	\BDC\KnowledgeBase\Public_Home_Technical_Runner_H030::register();

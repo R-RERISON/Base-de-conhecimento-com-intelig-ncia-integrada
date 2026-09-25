@@ -96,6 +96,28 @@ LEGACY_ELEMENTOR_MIGRATION_FILES = (
     "includes/class-elementor-migration-lock.php",
 )
 
+GOLDEN_RUNTIME_RESOURCES = (
+    "resources/search/golden-relevance-v1.0.0.json",
+    "resources/search/technical-challenge-v1.0.0.json",
+)
+
+PUBLIC_PREVIEW_RUNTIME_FILES = (
+    "templates/public-home-preview.php",
+    "templates/public-article-preview.php",
+)
+
+BASE_RUNTIME_FILES = (
+    "uninstall.php",
+)
+
+CONDITIONAL_RUNTIME_RESOURCES = {
+    "BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_SPEC005_G590_SECTION_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_UX004_H030_TECHNICAL_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD": PUBLIC_PREVIEW_RUNTIME_FILES,
+}
+
 DEFENSIVE_PAIRS = {
     "journal": (
         "class-block-migration-journal.php",
@@ -266,9 +288,31 @@ def main() -> int:
             warnings.append(f"{name} still enabled; not yet replaced by consolidated tooling")
 
     active_required = set(uncond)
+    for rel in BASE_RUNTIME_FILES:
+        if (plugin / rel).is_file():
+            active_required.add(rel)
     for flag, paths in cond.items():
         if flags.get(flag) is True:
             active_required.update(paths)
+
+    active_runtime_resources = {}
+    for flag, paths in CONDITIONAL_RUNTIME_RESOURCES.items():
+        value = flag_value(source, flag)
+        flags.setdefault(flag, value)
+        if value is True:
+            active_required.update(paths)
+            active_runtime_resources[flag] = list(paths)
+    checks["active_runtime_resources"] = active_runtime_resources
+
+    missing_runtime_resources = sorted(
+        rel for rel in active_required
+        if rel.startswith("resources/") and not (plugin / rel).is_file()
+    )
+    checks["missing_runtime_resources"] = missing_runtime_resources
+    if missing_runtime_resources:
+        failures.append(
+            "missing active runtime resource(s): " + ", ".join(missing_runtime_resources)
+        )
 
     legacy_active = sorted(set(LEGACY_ELEMENTOR_MIGRATION_FILES) & active_required)
     checks["legacy_elementor_migration_active"] = legacy_active
@@ -414,11 +458,15 @@ def main() -> int:
     version_match = re.search(
         r"define\(\s*'BDC_KB_VERSION'\s*,\s*'([^']+)'\s*\)", source
     )
+    build_match = re.search(
+        r"define\(\s*'BDC_KB_BUILD_ID'\s*,\s*'([^']+)'\s*\)", source
+    )
     report = {
         "schema_version": "1.1.0",
         "gate": "T100E",
         "mode": "static_regression_runner",
         "plugin_version": version_match.group(1) if version_match else "",
+        "build_id": build_match.group(1) if build_match else "",
         "checks": checks,
         "warnings": warnings,
         "failures": failures,

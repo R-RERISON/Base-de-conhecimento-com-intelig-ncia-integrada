@@ -1,6 +1,6 @@
 # SPEC-004 — Content Extractor e Knowledge Document
 
-**Status:** CONCLUÍDA — R-200 PASS / R-210 PASS / G-220 PASS / G-230 PASS / G-240 PASS-CLOSED / G-245 PASS-CLOSED / G-250 PASS-CLOSED  
+**Status:** REABERTA EM DISCOVERY READ-ONLY — baseline G-250 permanece CLOSED; investigação R-260 aberta por evidência G-590 RC5  
 **Baseline de entrada:** `0.3.0-rc.1`  
 **Baseline consolidada em `main`:** `0.4.0-acceptance.12` / Knowledge Document `2.1.0`  
 **Pré-requisito:** SPEC-003 concluída — PASS.
@@ -220,3 +220,40 @@ A SPEC-004 foi encerrada após T100D PASS ambiental, T100E-E6 PASS ambiental, T1
 RC final limpo: `0.4.0-spec004-rc2`, SHA-256 `ac25c2ffd4a0ae2250fa2ce1a07bf07b4cad8a24030e31f12c78189e61e7506b`.
 
 O fechamento não autoriza migração em massa nem writer autônomo. O controle de autorização editorial permanece explícito e post-scoped. O download de Authorization Pack é uma implementação transitória; uma futura execução integrada à Workspace deve manter confirmação humana explícita, capability, nonce, dry-run, stale-source guard, journal, lock e rollback.
+
+
+## 16. Reabertura controlada R-260 — Legacy Numbered Hierarchy Fidelity
+
+**Data:** 2026-09-24  
+**Motivo:** evidência ambiental G-590 RC5.
+
+A baseline de produção da SPEC-004 continua válida e fechada em G-250. A reabertura é estritamente investigativa e não invalida os PASS anteriores.
+
+Evidência nova mostrou fragmentos `legacy_html` semanticamente semelhantes a headings numerados chegando como `kind=paragraph`, com `hierarchy_source=numbering_inferred`, inclusive sinais determinísticos de profundidade > 1 sem heading contextual.
+
+Exemplos observados incluem:
+- `5.1 INTRODUÇÃO`;
+- `5.2 POSTURA NO ATENDIMENTO`;
+- `6.1 AVALIAÇÃO DA MONITORIA DE QUALIDADE - 1º NÍVEL`.
+
+### R-260 — objetivo
+
+Determinar, sem write editorial:
+- distribuição real por source kind/confidence/post;
+- quantos sinais são índice/sumário duplicado vs. headings editoriais reais;
+- impacto potencial em KD, Block Projection e Search;
+- owner arquitetural correto da recuperação;
+- critérios determinísticos que não inventem hierarquia.
+
+### Proibições
+
+R-260 não autoriza:
+- alteração automática de `post_content`;
+- migration;
+- writer;
+- reclassificação massiva de fragments;
+- mudança de KD schema;
+- mudança de Search ranker;
+- heurística baseada somente em caixa alta/tamanho.
+
+Somente após diagnóstico ambiental completo será decidido se a correção pertence à SPEC-004 ou se deve permanecer como projeção derivada de consumidor.

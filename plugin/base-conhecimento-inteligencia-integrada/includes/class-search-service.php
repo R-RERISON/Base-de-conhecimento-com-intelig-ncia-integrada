@@ -116,6 +116,97 @@ final class Search_Service {
 		);
 	}
 
+
+	/**
+	 * Section Retrieval canônico. Preserva search() como owner do ranking/autorização
+	 * de parents e só então aplica o ranker bounded de seções.
+	 *
+	 * @return array<string,mixed>
+	 */
+	public static function search_sections(
+		mixed $query_value,
+		int $parent_limit = self::DEFAULT_LIMIT,
+		int $per_parent_limit = 3
+	): array {
+		$parent_limit = max( 1, min( Search_Section_Service::MAX_PARENTS, $parent_limit ) );
+		$per_parent_limit = max( 1, min( 5, $per_parent_limit ) );
+
+		$parents = self::search( $query_value, $parent_limit );
+		$state = (string) ( $parents['state'] ?? 'technical_error' );
+		$mode = (string) ( $parents['retrieval_mode'] ?? 'none' );
+
+		if ( 'projection_like' !== $mode ) {
+			return array(
+				'state' => $state,
+				'retrieval_mode' => 'section_unavailable',
+				'query' => is_array( $parents['query'] ?? null ) ? $parents['query'] : array(),
+				'parent_count' => (int) ( $parents['count'] ?? 0 ),
+				'section_count' => 0,
+				'items_by_post' => array(),
+				'degraded_reason' => 'section_retrieval_requires_projection',
+				'parent_response' => $parents,
+				'versions' => self::section_versions(),
+			);
+		}
+
+		if ( 'zero_results' === $state || empty( $parents['results'] ) ) {
+			return array(
+				'state' => 'zero_results',
+				'retrieval_mode' => 'projection_like_sections',
+				'query' => is_array( $parents['query'] ?? null ) ? $parents['query'] : array(),
+				'parent_count' => 0,
+				'section_count' => 0,
+				'items_by_post' => array(),
+				'versions' => self::section_versions(),
+			);
+		}
+
+		$query = is_array( $parents['query'] ?? null ) ? $parents['query'] : array();
+		$section_result = Search_Section_Service::rank_for_authorized_results(
+			$query,
+			(array) $parents['results'],
+			$per_parent_limit
+		);
+
+		if ( 'technical_error' === (string) ( $section_result['state'] ?? '' ) ) {
+			return array(
+				'state' => 'technical_error',
+				'retrieval_mode' => 'projection_like_sections',
+				'query' => $query,
+				'parent_count' => (int) ( $parents['count'] ?? 0 ),
+				'section_count' => 0,
+				'items_by_post' => array(),
+				'error_code' => (string) ( $section_result['error_code'] ?? 'section_retrieval_failed' ),
+				'versions' => self::section_versions(),
+			);
+		}
+
+		return array(
+			'state' => (int) ( $section_result['count'] ?? 0 ) > 0 ? 'success' : 'zero_results',
+			'retrieval_mode' => 'projection_like_sections',
+			'query' => $query,
+			'parent_count' => (int) ( $parents['count'] ?? 0 ),
+			'section_count' => (int) ( $section_result['count'] ?? 0 ),
+			'items_by_post' => (array) ( $section_result['items_by_post'] ?? array() ),
+			'versions' => self::section_versions(),
+		);
+	}
+
+	/**
+	 * @return array<string,string>
+	 */
+	private static function section_versions(): array {
+		return array(
+			'normalizer' => Search_Query_Normalizer::VERSION,
+			'document' => Search_Document_Builder::VERSION,
+			'parent_algorithm' => Lexical_Ranker::VERSION,
+			'parent_result' => self::RESULT_VERSION,
+			'section_projection' => Search_Section_Projector::VERSION,
+			'section_algorithm' => Search_Section_Ranker::VERSION,
+			'section_result' => Search_Section_Service::VERSION,
+		);
+	}
+
 	/**
 	 * @param array<string,mixed> $query
 	 * @return array<string,mixed>

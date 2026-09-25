@@ -143,7 +143,7 @@ namespace BDC\KnowledgeBase {
 		public static function hash( mixed $value ): string {
 			return hash( 'sha256', self::encode( $value ) );
 		}
-		private static function encode( mixed $value ): string {
+		public static function encode( mixed $value ): string {
 			return json_encode(
 				self::normalize( $value ),
 				JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION | JSON_THROW_ON_ERROR
@@ -169,6 +169,7 @@ namespace BDC\KnowledgeBase {
 
 	$root = __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/';
 	require_once $root . 'class-search-query-normalizer.php';
+	require_once $root . 'class-search-section-projector.php';
 	require_once $root . 'class-search-document-builder.php';
 	require_once $root . 'class-search-projection-repository.php';
 	require_once $root . 'class-lexical-ranker.php';
@@ -316,6 +317,8 @@ namespace BDC\KnowledgeBase {
 		assert_true_search( str_contains( $a['taxonomy_norm'], 'usuarios' ), 'Taxonomia deve ser materializada.' );
 		assert_same_search( $a['source_hash'], $b['source_hash'], 'Source hash deve ser determinístico.' );
 		assert_same_search( $a['document_hash'], $b['document_hash'], 'Document hash deve ser determinístico.' );
+		assert_same_search( 1, count( $a['sections'] ), 'Heading deve gerar Section Projection sem alterar body post-level.' );
+		assert_same_search( Search_Section_Projector::VERSION, $a['section_projection_version'], 'Section Projection version deve ser explícita.' );
 	};
 
 	$tests['document_compose_degrades_on_source_error'] = static function (): void {
@@ -340,6 +343,7 @@ namespace BDC\KnowledgeBase {
 			'status'=>'ready',
 			'document_version'=>Search_Document_Builder::VERSION,
 			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'section_projection_version'=>Search_Section_Projector::VERSION,
 		);
 		assert_true_search( Search_Projection_Repository::is_ready(), 'State current deve ser ready.' );
 
@@ -353,6 +357,7 @@ namespace BDC\KnowledgeBase {
 			'status'=>'ready',
 			'document_version'=>Search_Document_Builder::VERSION,
 			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'section_projection_version'=>Search_Section_Projector::VERSION,
 		);
 		$GLOBALS['spec005_posts'] = array(
 			1 => (object) array( 'ID'=>1,'post_type'=>'post','post_status'=>'publish','post_title'=>'Windows 11 oficial' ),
@@ -415,6 +420,7 @@ namespace BDC\KnowledgeBase {
 			'document_hash'=>str_repeat( 'b', 64 ),
 			'document_version'=>Search_Document_Builder::VERSION,
 			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'section_projection_version'=>Search_Section_Projector::VERSION,
 			'post_modified_gmt'=>'2026-09-18 10:00:00',
 			'indexed_at_gmt'=>'2026-09-19 09:30:00',
 		);
@@ -428,6 +434,7 @@ namespace BDC\KnowledgeBase {
 				'document_hash'=>$document['document_hash'],
 				'document_version'=>$document['document_version'],
 				'normalizer_version'=>$document['normalizer_version'],
+				'section_projection_version'=>$document['section_projection_version'] ?? Search_Section_Projector::VERSION,
 			),
 		);
 
@@ -450,6 +457,7 @@ namespace BDC\KnowledgeBase {
 			'document_hash'=>str_repeat( 'd', 64 ),
 			'document_version'=>Search_Document_Builder::VERSION,
 			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'section_projection_version'=>Search_Section_Projector::VERSION,
 			'post_modified_gmt'=>'2026-09-18 10:00:00',
 			'indexed_at_gmt'=>'2026-09-19 09:30:00',
 		);
@@ -462,12 +470,15 @@ namespace BDC\KnowledgeBase {
 				'document_hash'=>str_repeat( '1', 64 ),
 				'document_version'=>$document['document_version'],
 				'normalizer_version'=>$document['normalizer_version'],
+				'section_projection_version'=>$document['section_projection_version'] ?? Search_Section_Projector::VERSION,
 			),
 		);
 
 		$result = Search_Projection_Repository::upsert( $document );
 		assert_same_search( Search_Projection_Repository::UPSERT_WRITTEN, $result, 'Documento alterado deve ser persistido.' );
 		assert_same_search( 1, $GLOBALS['wpdb']->replace_calls, 'Documento alterado deve fazer exatamente um replace.' );
+		assert_true_search( isset( $GLOBALS['spec005_last_replace']['data']['sections_json'] ), 'Persistência deve materializar sections_json.' );
+		assert_same_search( '[]', $GLOBALS['spec005_last_replace']['data']['sections_json'], 'Documento sem sections explícitas deve persistir array vazio canônico.' );
 	};
 
 	$tests['repository_rejects_invalid_projection_state'] = static function (): void {
@@ -483,6 +494,7 @@ namespace BDC\KnowledgeBase {
 			'status'=>'ready',
 			'document_version'=>Search_Document_Builder::VERSION,
 			'normalizer_version'=>Search_Query_Normalizer::VERSION,
+			'section_projection_version'=>Search_Section_Projector::VERSION,
 		);
 		$GLOBALS['wpdb']->last_error = '';
 		$GLOBALS['wpdb']->queries = array();
@@ -496,6 +508,7 @@ namespace BDC\KnowledgeBase {
 		assert_true_search( str_contains( $first['sql'], "CONCAT(' ', title_norm, ' ') LIKE %s" ), 'Retrieval deve aplicar fronteira lexical nos campos normalizados.' );
 		assert_same_search( '% windows %', $first['args'][0], 'Pattern SQL deve exigir token com fronteiras lexicais.' );
 		assert_true_search( str_contains( $first['sql'], 'ORDER BY post_id ASC' ), 'Candidate SQL deve ordenar determinísticamente.' );
+		assert_true_search( ! str_contains( $first['sql'], 'sections_json' ), 'Candidate retrieval de até 200 posts não pode carregar Section Projection.' );
 	};
 
 	$passed = 0;

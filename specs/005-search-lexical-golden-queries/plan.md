@@ -37,18 +37,31 @@ Evoluir em evidência crescente, sem criar infraestrutura antes do baseline.
 5. segurança;
 6. human acceptance.
 
-### Fase E — RC
-1. regression;
-2. lifecycle;
-3. build determinístico;
-4. manifest/checksum;
-5. PR.
+### Fase E — Consolidação Premium / G-590
+1. congelar contrato de Section Projection;
+2. manter uma única tabela Search;
+3. implementar identidade/ranking de seção sem alterar o post ranker;
+4. implementar anchors efêmeros fail-closed;
+5. executar regressão cruzada SPEC-001–005;
+6. medir cobertura real no corpus;
+7. retomar G-585 como prova de independência técnica da engine.
+
+### Fase F — fechamento da fronteira Search
+1. Golden/Technical Challenge section-level;
+2. lifecycle/schema upgrade;
+3. security/performance;
+4. package determinístico;
+5. homologação ambiental;
+6. fechar boundary técnico da SPEC-005 antes da SPEC-006.
+
+Não criar segunda tabela de itens, queue, telemetry, vocabulary, vetor ou IA nesta SPEC.
+Public Experience pertence à SPEC-007 e Search Intelligence à SPEC-008.
 
 ## Ordem de decisão de persistência
 
 `WP_Query nativo -> hooks mínimos -> projection post-level -> FULLTEXT`.
 
-Não criar item index, queue ou analytics nesta SPEC.
+Não criar segunda tabela de item, queue ou analytics nesta SPEC.
 
 ## Critério de parada
 

@@ -252,3 +252,116 @@ Merge commit: `e08871557b2233bf1294b1e57752265d3fe68c0f`.
 Evidência: `evidence/spec004-main-promotion-20260918.json`.
 
 Estado definitivo: **SPEC-004 CLOSED / main**.
+
+
+## R-260 — Reabertura controlada por evidência G-590
+
+Status: **DISCOVERY / READ-ONLY / OPEN**.
+
+A baseline G-250/RC2 permanece CLOSED e não foi invalidada.
+
+RC5 do G-590 encontrou `strong_numbered_without_heading_context=1294`. As amostras demonstram pseudo-headings numerados em `legacy_html` materializados como paragraphs pelo extractor.
+
+Nenhuma correção runtime foi autorizada ainda.
+
+Próximo passo:
+1. coletar diagnóstico RC6 com distribuição por source kind/confidence/post;
+2. separar sinais ambíguos de candidatos determinísticos;
+3. avaliar risco de duplicidade (sumário/índice vs conteúdo real);
+4. decidir owner arquitetural;
+5. somente então propor contrato de implementação.
+
+> Quem não sabe onde está, não sabe para onde quer ir.
+
+
+## R-260A — PASS / DISCOVERY CLOSED
+
+RC7 ambiental classificou 548 deterministic candidates em 94 posts:
+
+- TOC-like: 77;
+- body-bearing: 289;
+- uncertain: 182.
+
+Os três estados particionam integralmente o conjunto de candidates.
+
+Conclusão:
+- promoção massiva no Content Extractor continua proibida;
+- Search-only virtual sections continuam arquiteturalmente insuficientes;
+- Option C — dedicated structural projection shared by consumers — permanece preferida.
+
+Razão adicional: o Anchor Manager atual só materializa deep-link em headings reais; paragraph-derived structure exige contrato separado.
+
+## R-260B — OPEN / SHADOW ONLY
+
+Contrato: `r260b-structural-shadow-projection-contract-v1.md`.
+
+RC8 mede:
+- colisão com headings reais;
+- duplicidade entre body candidates;
+- overflow de `MAX_SECTIONS=64`;
+- candidates bloqueados pelo heading-only anchor contract.
+
+Nenhuma alteração de Content Extractor, KD, Search Section runtime ou conteúdo editorial é autorizada.
+
+
+## R-260B — PASS / SHADOW DISCOVERY CLOSED
+
+RC8 ambiental classificou os 548 deterministic candidates:
+
+- toc_suppressed: 77;
+- existing_heading_redundant: 0;
+- duplicate_candidate_ambiguous: 78;
+- promotable_shadow: 211;
+- uncertain: 182.
+
+Capacity:
+- overflow posts: 0;
+- existing posts at MAX_SECTIONS: 0.
+
+Conclusão:
+- capacity não bloqueia a arquitetura no corpus atual;
+- nenhum promotable colide com heading real;
+- duplicidade pode continuar fail-closed;
+- 211 candidates são estruturalmente promovíveis em shadow;
+- o único desconhecido restante é anchorability no HTML renderizado.
+
+Option C — dedicated structural projection shared by consumers — é aceita como owner preferido, ainda sem ativação produtiva.
+
+## R-260C — PASS / DISCOVERY CLOSED
+
+Contrato: `r260c-anchor-feasibility-contract-v1.md`.
+
+RC9 ambiental sobre 211 `promotable_shadow`:
+- paragraph_unique: 131;
+- paragraph_ambiguous: 80;
+- block_unique_nonparagraph: 0;
+- block_ambiguous: 0;
+- not_rendered_exact: 0.
+
+Conclusão:
+- 100% dos promotable possuem representação exata no HTML renderizado;
+- 62,0853% já possuem target paragraph inequívoco;
+- 37,9147% continuam ambíguos;
+- ausência de renderização não é blocker;
+- seleção por primeira ocorrência/nth occurrence permanece proibida.
+
+Deep-Link Contract v2 é viável somente fail-closed.
+
+## R-260D1 — OPEN / CONTEXTUAL ANCHOR FEASIBILITY
+
+Contrato: `r260d-contextual-anchor-feasibility-contract-v1.md`.
+
+RC10 mede, sem runtime promotion, se os 80 títulos ambíguos podem ser desambiguados por:
+- título exato;
+- dois blocos corporais adjacentes derivados da fonte;
+- match exato e ordenado imediatamente após cada ocorrência renderizada.
+
+Estados:
+- title_unique;
+- context_unique;
+- context_ambiguous;
+- context_insufficient;
+- context_not_matched;
+- title_not_rendered.
+
+Search Section Projector, Anchor Manager, Content Extractor e KD permanecem inalterados. T590-15 e G-590 continuam OPEN.

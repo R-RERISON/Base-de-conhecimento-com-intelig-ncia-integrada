@@ -10,7 +10,7 @@
 
 **Idioma:** pt-BR.
 
-**Gate atual:** R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 PASS/CLOSED; P-580A/UX-004 ACTIVE; G-585 PAUSED até fechar paridade funcional bloqueante.
+**Gate atual:** Premium Rebaseline aplicado; G-590 Section Retrieval & Deep-Link em consolidação. R-500/R-510/G-520/G-530/G-540/G-550/G-560/G-570/G-580 permanecem PASS/CLOSED. G-585 será retomado como prova de independência técnica da engine após G-590.
 
 > **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
@@ -72,7 +72,7 @@ Contratos preservados:
 
 `consulta -> normalização -> retrieval lexical -> ranking -> resultados oficiais -> abrir artigo -> executar Golden Suite -> comparar expectativa -> PASS/FAIL explícito`
 
-A primeira implementação será **post-level**. Item-level/deep-link só entra mediante evidência e gate próprio.
+A primeira implementação foi post-level. O Premium Rebaseline autorizou **G-590 — Section Retrieval & Deep-Link** como gate próprio para fechar a fronteira técnica da Search.
 
 ## 5. Resultado esperado
 
@@ -109,8 +109,8 @@ Não criar nesta SPEC sem evidência:
 - vocabulary persistido;
 - bindings;
 - relevance rules administráveis;
-- item index;
-- anchors/deep-links;
+- segunda tabela de item sem benchmark/ADR;
+- anchors/deep-links fora do contrato G-590;
 - REST;
 - SPA;
 - semantic search;
@@ -333,15 +333,25 @@ ADR-005-002 separa Golden Relevance, Technical Challenge e Real-world Query Enri
 - lifecycle/rollback sem ASI;
 - nenhuma remoção física de storage legado neste gate.
 
-### G-590 — RC
+### G-590 — Section Retrieval & Deep-Link — ATIVO
+- Section Projection versionada na mesma tabela;
+- identidade estável de seção;
+- ranker de seção após ranking post-level;
+- anchors efêmeros fail-closed;
+- regressão SPEC-001–005;
+- coverage/Golden ambiental;
+- lifecycle/security/performance.
+
+### G-595 — Boundary Closeout / RC técnico
 - mesmo artefato testado;
 - manifest/checksum;
-- regressão;
-- PR review/merge.
+- regressão integral;
+- G-585 retomado como independência técnica da engine;
+- fechamento da fronteira da SPEC-005 antes da SPEC-006.
 
 ## 17. Aceite
 
-SPEC-005 só pode fechar quando:
+SPEC-005 só pode fechar após G-590 + G-595 quando:
 - Golden Suite ativa e não vazia;
 - zero blocking failure;
 - ranking determinístico;
@@ -354,7 +364,7 @@ SPEC-005 só pode fechar quando:
 
 ## 18. Rollback
 
-Até G-590:
+Até G-595:
 - feature flag/build flag permite desligar o novo Search sem afetar Workspace;
 - nenhuma projection é fonte da verdade;
 - desligar módulo retorna ao comportamento anterior;
@@ -363,10 +373,12 @@ Até G-590:
 
 ## 19. Fora de escopo
 
-- telemetria detalhada — SPEC-006;
-- queue/indexing operacional avançado — SPEC-007;
-- semantic/vector/hybrid — SPEC-008;
-- Foundry/RAG — SPEC-009+;
+- Public Experience — SPEC-007;
+- telemetria/vocabulary/relevance governance — SPEC-008;
+- queue/indexing operacional avançado — SPEC-009;
+- semantic/vector/hybrid — SPEC-010;
+- plataforma IA/Foundry — SPEC-011;
+- AI-assisted governance/RAG — SPEC-012/013;
 - AUTH-UX-001;
 - remoção Elementor;
 - migração editorial em massa.
@@ -410,3 +422,21 @@ ADR-005-002 é canônico para R-510:
 - Technical Challenge prova cobertura técnica de linguagem natural, Summary e Elementor/Content Extractor;
 - typo/alias reais são `PENDING_TELEMETRY` até a futura camada de Telemetria;
 - ambiguidade objetiva é quarentenada, não resolvida por ranking nem por escolha manual obrigatória.
+
+
+## G-590 — Section Retrieval & Deep-Link — REABERTURA DE CONSOLIDAÇÃO
+
+O gate fecha três blockers da Master Functional Parity Ledger:
+- ASI-003 item/section retrieval;
+- ASI-004 stable item identity;
+- ASI-005 anchors/deep-links.
+
+Contratos:
+- ADR-005-004;
+- `g590-section-retrieval-contract-v1.md`;
+- `g590-deep-link-contract-v1.md`;
+- `g590-regression-contract-v1.md`.
+
+Decisão de storage: **não criar segunda tabela**. A única Search Projection evolui de forma versionada.
+
+G-590 não altera pesos/tie-break do post ranker e não autoriza Public Experience/cutover.

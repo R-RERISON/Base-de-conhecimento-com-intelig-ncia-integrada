@@ -250,42 +250,110 @@ Option C — dedicated structural projection shared by consumers — permanece a
 
 RC8 é shadow-only. Não promove paragraph para Section e não altera Anchor Manager.
 
+## Evidência ambiental RC9 / R-260C
+
+RC9 executou integralmente em WordPress 6.9.4 / PHP 8.5.10 / MariaDB 12.2.2.
+
+Gate:
+- T590-14 PASS;
+- T590-15 FAIL;
+- T590-16 PASS;
+- T590-17 PASS;
+- T590-18 PASS;
+- T590-19 FAIL / OPEN.
+
+Lifecycle/regression:
+- corpus 623/623;
+- extractor errors 0;
+- explicit rebuild PASS;
+- pass1/pass2 623 NO_CHANGE / 0 writes;
+- determinism mismatch 0;
+- Golden post-level PASS;
+- p95 305.8531 ms / max 341.8281 ms;
+- fingerprint editorial equal.
+
+R-260C sobre 211 `promotable_shadow`:
+- paragraph_unique: 131;
+- paragraph_ambiguous: 80;
+- block_unique_nonparagraph: 0;
+- block_ambiguous: 0;
+- not_rendered_exact: 0.
+
+Disposition:
+- **R-260C PASS / DISCOVERY CLOSED**;
+- 100% dos targets existem no HTML renderizado;
+- 62,0853% são inequívocos por título;
+- 37,9147% exigem desambiguação;
+- Deep-Link Contract v2 é viável somente fail-closed;
+- first/nth occurrence, substring ou fuzzy matching permanecem proibidos.
+
+Review: `g590-rc9-r260c-environmental-review-20260925.md`.
+
+## R-260D1 / RC10
+
+R-260D foi dividido:
+- **D1** — contextual anchor feasibility, diagnóstico read-only;
+- **D2** — runtime promotion, bloqueado até evidência D1.
+
+D1 usa:
+- título exato;
+- dois blocos corporais adjacentes derivados da fonte;
+- comparação exata e ordenada contra os blocos imediatamente posteriores a cada ocorrência renderizada.
+
+Estados:
+- `title_unique`;
+- `context_unique`;
+- `context_ambiguous`;
+- `context_insufficient`;
+- `context_not_matched`;
+- `title_not_rendered`.
+
+Contrato: `../004-content-extractor-knowledge-document/r260d-contextual-anchor-feasibility-contract-v1.md`.
+
+RC10 preparado:
+- Product Version `0.5.1-rc.10`;
+- Build ID `g590.10-cf1374fd85de`;
+- source commit `cf1374fd85de56c8d31192948a15d7e274eee1eb`;
+- runner blob `e9e9d05ffa13b141631ff29c236ae1192ee9fca3`;
+- R260D1 blob `c37380e1aa329c43289fcaa9959a448a8295fdbe`;
+- ZIP SHA-256 `456922cf831ef171a9d1ad8970bf3506294e1ac297e739bd690bc100ab603d5c`;
+- files 86;
+- PHP 73/73;
+- JS 3/3;
+- JSON 2/2;
+- active requires 69/69;
+- R260D1 unit behavior 15/15;
+- deterministic build 2/2;
+- delta vs RC9: 1 added / 2 modified / 0 deleted;
+- RC9 inherited byte-identical: 83/83.
+
+Protected runtime permanece byte-identical ao RC9:
+- Search Section Projector;
+- Anchor Manager;
+- Content Extractor;
+- Knowledge Document;
+- parent Lexical Ranker;
+- Section Ranker;
+- Section Service;
+- Search Service.
+
 ## Próximo passo exato
 
-RC9 / R-260C é o candidato canônico para a próxima execução ambiental.
-
-Pacote:
-- Product Version `0.5.1-rc.9`;
-- Build ID `g590.9-ea7203b6c2ab`;
-- source commit `ea7203b6c2ab2e34438eb7b5d53c05ee877cac0a`;
-- runner blob `9e360a019d067c8fb7e70c06175502c725fe495b`;
-- R-260B shadow blob `19dd24055e5a9279b75ea7374a37f2063bfbf9b2`;
-- R-260C anchor-feasibility blob `63e888e1e90a2154263f774b5a351eab119b68e0`;
-- ZIP SHA-256 `8b56270a74b675d5601e93dc99553c11f0910017b3d2bf3a2c6aad3fe65c12f9`;
-- package gates: 85 arquivos, PHP 72/72, JS 3/3, JSON 2/2, active requires 68/68, RC8 inherited 81/81, deterministic build 2/2.
-
-Executar:
-1. instalar RC9 em homologação;
+1. instalar RC10 em homologação;
 2. abrir **Base de Conhecimento → Section Retrieval G-590**;
-3. iniciar nova evidência RC9;
+3. selecionar **Reiniciar evidência**;
 4. aguardar **Concluído — JSON disponível**;
-5. baixar o JSON e validar com `tools/homologation/spec005/validate-g590-evidence.php`;
-6. classificar R-260C por `paragraph_unique`, `paragraph_ambiguous`, `block_unique_nonparagraph`, `block_ambiguous` e `not_rendered_exact`;
-7. somente com essa evidência decidir Deep-Link Contract v2 / R-260D runtime promotion.
+5. baixar o JSON;
+6. validar com `tools/homologation/spec005/validate-r260d-evidence.php`;
+7. medir `context_unique` e `unresolved_remaining_count`;
+8. somente então congelar ou rejeitar R-260D2 runtime promotion.
 
-Regras:
-- `paragraph_unique` é o candidato primário para target navegável;
-- `block_unique_nonparagraph` exige revisão adicional;
-- ambiguous/no-match continuam fail-closed;
-- Anchor Manager, Search Section Projector, Content Extractor e KD permanecem inalterados até a decisão R-260D;
-- G-590 permanece OPEN.
-
-Após evidência ambiental RC9:
-1. decidir viabilidade do Deep-Link Contract v2;
-2. congelar ou rejeitar R-260D runtime promotion;
-3. somente depois reavaliar T590-15/T590-19;
-4. G-585 continua pausado até fechamento real de G-590;
-5. G-595 e SPEC-006 permanecem bloqueados.
+Durante D1:
+- T590-15 permanece FAIL por contrato;
+- T590-19 permanece OPEN;
+- G-585 continua pausado;
+- G-595 e SPEC-006 permanecem bloqueados;
+- nenhum runtime structural promotion é autorizado.
 
 ## Limites de escopo
 

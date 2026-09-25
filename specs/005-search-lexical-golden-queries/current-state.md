@@ -252,29 +252,40 @@ RC8 é shadow-only. Não promove paragraph para Section e não altera Anchor Man
 
 ## Próximo passo exato
 
-Pacote RC5 pronto para re-homologação:
-- Product Version `0.5.1-rc.5`;
-- Build ID `g590.5-fea648a891f7`;
-- source commit `fea648a891f715fca2a081597d0529018f83b94f`;
-- runner blob `44e6677d5c73ff214c9f25357c50ddd11871c76d`;
-- ZIP SHA-256 `eb0958461509817c1dfb5ebdead895d1e7b090891711927e3e9103752bf2a695`;
-- local package gate PASS: 82 arquivos, PHP 69/69, JS 3/3, JSON 2/2, Evidence Contract v1.3 12/12, active requires 65/65, deterministic build 2/2.
-- Product Version `0.5.1-rc.4`;
-- Build ID `g590.4-5d74569e70bb`;
-- source commit `5d74569e70bb3e0a646a081ec2e3e855e581a452`;
-- runner blob `8cf78c31842aea1b6ec12be5e4010c27647e49a2`;
-- admin JS blob `77c58e75ff6429ecfbf1acdc279f4815aa02e14f`;
-- ZIP SHA-256 `c05211f1db3ee568403b5f3b74abd8f8d3335d11865e9b77197afaf20e33b3ee`;
-- local package gate PASS: 82 arquivos, PHP 69/69, JS 3/3, deterministic build 2/2.
+RC9 / R-260C é o candidato canônico para a próxima execução ambiental.
 
-Instalar RC4 sobre o RC3. Se a tela continuar em **Concluído — JSON disponível**, **não reiniciar evidência**. Apenas clicar em **Baixar JSON final** e validar o arquivo com `tools/homologation/spec005/validate-g590-evidence.php`.
+Pacote:
+- Product Version `0.5.1-rc.9`;
+- Build ID `g590.9-ea7203b6c2ab`;
+- source commit `ea7203b6c2ab2e34438eb7b5d53c05ee877cac0a`;
+- runner blob `9e360a019d067c8fb7e70c06175502c725fe495b`;
+- R-260B shadow blob `19dd24055e5a9279b75ea7374a37f2063bfbf9b2`;
+- R-260C anchor-feasibility blob `63e888e1e90a2154263f774b5a351eab119b68e0`;
+- ZIP SHA-256 `8b56270a74b675d5601e93dc99553c11f0910017b3d2bf3a2c6aad3fe65c12f9`;
+- package gates: 85 arquivos, PHP 72/72, JS 3/3, JSON 2/2, active requires 68/68, RC8 inherited 81/81, deterministic build 2/2.
 
-Após evidência ambiental:
-1. fechar T590-14..T590-19 somente se todos os subgates PASS;
-2. promover ASI-003/004/005 somente com evidência;
-3. retomar G-585 como engine independence proof;
-4. executar G-595 Boundary Closeout;
-5. somente então abrir SPEC-006.
+Executar:
+1. instalar RC9 em homologação;
+2. abrir **Base de Conhecimento → Section Retrieval G-590**;
+3. iniciar nova evidência RC9;
+4. aguardar **Concluído — JSON disponível**;
+5. baixar o JSON e validar com `tools/homologation/spec005/validate-g590-evidence.php`;
+6. classificar R-260C por `paragraph_unique`, `paragraph_ambiguous`, `block_unique_nonparagraph`, `block_ambiguous` e `not_rendered_exact`;
+7. somente com essa evidência decidir Deep-Link Contract v2 / R-260D runtime promotion.
+
+Regras:
+- `paragraph_unique` é o candidato primário para target navegável;
+- `block_unique_nonparagraph` exige revisão adicional;
+- ambiguous/no-match continuam fail-closed;
+- Anchor Manager, Search Section Projector, Content Extractor e KD permanecem inalterados até a decisão R-260D;
+- G-590 permanece OPEN.
+
+Após evidência ambiental RC9:
+1. decidir viabilidade do Deep-Link Contract v2;
+2. congelar ou rejeitar R-260D runtime promotion;
+3. somente depois reavaliar T590-15/T590-19;
+4. G-585 continua pausado até fechamento real de G-590;
+5. G-595 e SPEC-006 permanecem bloqueados.
 
 ## Limites de escopo
 

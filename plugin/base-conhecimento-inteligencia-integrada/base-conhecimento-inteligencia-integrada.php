@@ -236,6 +236,7 @@ if ( defined( 'BDC_KB_SPEC005_G590_SECTION_BUILD' ) && BDC_KB_SPEC005_G590_SECTI
 	require_once BDC_KB_DIR . 'includes/class-r260-hierarchy-profiler.php';
 	require_once BDC_KB_DIR . 'includes/class-r260-structural-shadow-projector.php';
 	require_once BDC_KB_DIR . 'includes/class-r260-anchor-feasibility-profiler.php';
+	require_once BDC_KB_DIR . 'includes/class-r260-contextual-anchor-feasibility-profiler.php';
 	require_once BDC_KB_DIR . 'includes/class-search-section-runner-g590.php';
 }
 if ( defined( 'BDC_KB_UX004_H030_TECHNICAL_BUILD' ) && BDC_KB_UX004_H030_TECHNICAL_BUILD ) {

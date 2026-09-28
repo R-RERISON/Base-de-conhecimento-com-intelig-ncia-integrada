@@ -24,8 +24,8 @@ from pathlib import Path
 
 PLUGIN_REL = Path("plugin/base-conhecimento-inteligencia-integrada")
 BOOTSTRAP = "base-conhecimento-inteligencia-integrada.php"
-VERSION = "0.5.1-rc.11"
-BUILD_LABEL = "g590.11"
+VERSION = "0.5.1-rc.12"
+BUILD_LABEL = "g590.12"
 
 ENGINEERING_FLAGS_FALSE = (
     "BDC_KB_SPEC004_PROFILE_BUILD",

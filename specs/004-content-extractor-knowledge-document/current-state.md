@@ -382,9 +382,9 @@ Decisão:
 - Content Extractor e KD permanecem inalterados.
 
 Runtime candidate:
-- Structural Projection `r260-structural-projection-v1.0.0`;
+- Structural Projection `r260-structural-projection-v1.0.1`;
 - Section Projection `search-section-projection-v1.1.0`;
 - Deep-Link Contract v2;
 - Evidence Contract v1.5.
 
-RC11 aguarda homologação ambiental. G-590 continua OPEN.
+RC11 encontrou drift controlado TOC/uncertain sem perda de Sections. Structural Projection v1.0.1 corrige occurrence parity com R-260A; RC12 aguarda homologação ambiental. G-590 continua OPEN.

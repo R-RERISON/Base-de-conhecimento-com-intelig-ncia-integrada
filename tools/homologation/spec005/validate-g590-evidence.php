@@ -46,9 +46,9 @@ $expected_runtime = max( 0, $body_bearing - $redundant );
 $checks = array(
 	'gate_is_g590' => 'G-590' === (string) ( $data['gate'] ?? '' ),
 	'mode_is_environmental' => 'spec005_section_retrieval_deeplink_environmental' === (string) ( $data['mode'] ?? '' ),
-	'product_version_is_rc' => '0.5.1-rc.11' === (string) $get( $data, array( 'environment', 'plugin' ), '' ),
+	'product_version_is_rc' => '0.5.1-rc.12' === (string) $get( $data, array( 'environment', 'plugin' ), '' ),
 	'build_id_is_g590' => 1 === preg_match(
-		'/^g590\.11-[a-f0-9]{12}$/',
+		'/^g590\.12-[a-f0-9]{12}$/',
 		(string) $get( $data, array( 'environment', 'build_id' ), '' )
 	),
 	'schema_current' => true === (bool) $get( $data, array( 'lifecycle', 'schema_contract', 'pass' ), false ),
@@ -64,7 +64,7 @@ $checks = array(
 	'deep_link_contract_v2' => 'g590-deep-link-contract-v2.md' === (string) $get( $data, array( 'contracts', 'deep_link' ), '' ),
 	'evidence_contract_v15' => 'g590-evidence-contract-addendum-v1.5.md' === (string) $get( $data, array( 'contracts', 'evidence_addendum' ), '' ),
 	'section_projection_v11' => 'search-section-projection-v1.1.0' === (string) $get( $data, array( 'lifecycle', 'explicit_rebuild', 'state_after', 'section_projection_version' ), '' ),
-	'runtime_structural_version' => 'r260-structural-projection-v1.0.0' === (string) ( $runtime['version'] ?? '' ),
+	'runtime_structural_version' => 'r260-structural-projection-v1.0.1' === (string) ( $runtime['version'] ?? '' ),
 	'deterministic_candidate_reconciles' => (int) ( $runtime['deterministic_candidate_count'] ?? -1 )
 		=== (int) $get( $data, array( 'coverage', 'structural_recovery_candidate_count' ), -2 ),
 	'deterministic_disposition_partition' => (int) ( $runtime['deterministic_candidate_count'] ?? -1 ) === $disposition_sum,

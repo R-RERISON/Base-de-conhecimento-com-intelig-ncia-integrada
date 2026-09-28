@@ -23,6 +23,7 @@ namespace BDC\KnowledgeBase {
 		}
 	}
 
+	require_once dirname( __DIR__, 2 ) . '/plugin/base-conhecimento-inteligencia-integrada/includes/class-r260-contextual-anchor-resolver.php';
 	require_once dirname( __DIR__, 2 ) . '/plugin/base-conhecimento-inteligencia-integrada/includes/class-r260-contextual-anchor-feasibility-profiler.php';
 
 	$fragments = array(

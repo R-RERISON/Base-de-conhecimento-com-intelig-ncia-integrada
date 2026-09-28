@@ -347,21 +347,44 @@ Conclusão:
 
 Deep-Link Contract v2 é viável somente fail-closed.
 
-## R-260D1 — OPEN / CONTEXTUAL ANCHOR FEASIBILITY
+## R-260D1 — PASS / DISCOVERY CLOSED
 
 Contrato: `r260d-contextual-anchor-feasibility-contract-v1.md`.
 
-RC10 mede, sem runtime promotion, se os 80 títulos ambíguos podem ser desambiguados por:
-- título exato;
-- dois blocos corporais adjacentes derivados da fonte;
-- match exato e ordenado imediatamente após cada ocorrência renderizada.
+RC10 ambiental:
+- promotable_shadow: 211;
+- title_unique: 131;
+- context_unique: 66;
+- context_ambiguous: 0;
+- context_insufficient: 2;
+- context_not_matched: 12;
+- title_not_rendered: 0;
+- effective unique: 197/211 = 93,3649%;
+- unresolved: 14.
 
-Estados:
-- title_unique;
-- context_unique;
-- context_ambiguous;
-- context_insufficient;
-- context_not_matched;
-- title_not_rendered.
+Conclusão:
+- 66/80 targets antes ambíguos foram resolvidos por contexto exato;
+- nenhum target ficou contextualmente ambíguo;
+- os 14 não comprovados permanecem fail-closed;
+- R-260D2 foi autorizado.
 
-Search Section Projector, Anchor Manager, Content Extractor e KD permanecem inalterados. T590-15 e G-590 continuam OPEN.
+## R-260D2 — FROZEN / RUNTIME CANDIDATE
+
+Contrato: `r260d2-structural-runtime-promotion-contract-v1.md`.
+
+Arquitetura: **Option C — Dedicated Structural Projection shared by consumers**.
+
+Decisão:
+- 77 TOC-like permanecem suprimidos;
+- 182 uncertain permanecem sem promoção;
+- 289 body-bearing determinísticos recebem representação estrutural derivada;
+- os 78 duplicate-label body-bearing continuam retrieval-eligible, inicialmente fail-closed para anchor quando não houver resolução inequívoca;
+- Content Extractor e KD permanecem inalterados.
+
+Runtime candidate:
+- Structural Projection `r260-structural-projection-v1.0.0`;
+- Section Projection `search-section-projection-v1.1.0`;
+- Deep-Link Contract v2;
+- Evidence Contract v1.5.
+
+RC11 aguarda homologação ambiental. G-590 continua OPEN.

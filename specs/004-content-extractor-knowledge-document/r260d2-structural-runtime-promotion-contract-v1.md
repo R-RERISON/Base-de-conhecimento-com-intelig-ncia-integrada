@@ -154,7 +154,7 @@ RC10 mostrou capacity máxima <= 55 para headings + todos os body-bearing no cor
 
 ## Versionamento
 
-- Structural Projection: `r260-structural-projection-v1.0.0`;
+- Structural Projection: `r260-structural-projection-v1.0.1`;
 - Section Projection: `search-section-projection-v1.1.0`;
 - Search Document permanece `search-document-v1.1.0`;
 - Search Projection schema permanece `1.1.0`.
@@ -177,6 +177,22 @@ D2 não pode:
 - usar first/nth occurrence;
 - usar substring/fuzzy match para anchor;
 - chamar rede externa.
+
+## Erratum RC11 — occurrence population parity
+
+RC11 comprovou que runtime projection/retrieval/anchors estavam íntegros, porém o classificador runtime reportou 62 TOC + 289 body + 197 uncertain, enquanto R-260A canônico registra 77 TOC + 289 body + 182 uncertain.
+
+Causa:
+- R-260A calcula `later_same_label/token` sobre todos os hierarchy nodes antes de filtrar candidates;
+- Structural Projection v1.0.0 calculava ocorrências somente dentro do subset de candidates;
+- 15 early candidates em 6 posts perderam a evidência de ocorrência posterior e foram classificados como uncertain.
+
+Correção v1.0.1:
+- occurrence population = todos os hierarchy nodes válidos, exatamente como R-260A;
+- candidate filtering acontece somente depois;
+- runtime nodes body-bearing permanecem os mesmos 289;
+- nenhuma mudança em Content Extractor, KD, ranking, schema ou Deep-Link v2;
+- regression obrigatório R-260A ↔ runtime para candidate/toc/body/uncertain counts.
 
 ## Aceite ambiental D2
 

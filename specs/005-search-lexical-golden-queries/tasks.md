@@ -274,5 +274,10 @@
 - [x] G590-ENV-52 congelar R-260D2 Structural Runtime Contract + Deep-Link v2 + Evidence Contract v1.5.
 - [x] G590-ENV-53 implementar Option C: Structural Projection compartilhada + Search Section Projection v1.1 + paragraph anchors fail-closed.
 - [x] G590-ENV-54 gerar RC11 `0.5.1-rc.11/g590.11` — source `6952f6c29aca2ec0dec4ee4b19b0edf2e5a08563`; SHA-256 `49c2a96bef202c5f866499539055d1f9b78b14fe2fc840c69cf3cc47f1b63e76`; 88 files; PHP 75/75; JS 3/3; JSON 2/2; active requires 71/71; D2 behavior 18/18; Evidence v1.5 13/13; deterministic 2/2.
-- [ ] G590-ENV-55 executar RC11 e baixar JSON.
-- [ ] G590-ENV-56 validar RC11 com `validate-g590-evidence.php`; somente `failed=0` autoriza T590-15/T590-19 PASS/CLOSED.
+- [x] G590-ENV-55 executar RC11 e baixar JSON — evidence `bdc-kb-spec005-g590-section-20260928-121622.json`.
+- [x] G590-ENV-56 validar RC11 — FAIL CONTROLADO: 289/289 Sections íntegros, mas runtime classificou 62 TOC / 197 uncertain vs R-260A 77 / 182; T590-15 corretamente bloqueado.
+- [x] G590-ENV-57 identificar root cause — occurrence evidence runtime era calculada depois do candidate filter; R-260A usa todos os hierarchy nodes.
+- [x] G590-ENV-58 corrigir Structural Projection v1.0.1 + regression R-260A↔runtime candidate/TOC/body/uncertain.
+- [x] G590-ENV-59 gerar RC12 `0.5.1-rc.12/g590.12` — source `61681200f1152d98caf949568cfd99810c83e57a`; SHA-256 `eeeb4222ed2e68ed6a488d088df8d3e61bd6313d87ace09f06f2cb8173b55026`; 88 files; PHP 75/75; JS 3/3; JSON 2/2; D2 23/23; parity 4/4; Evidence v1.5 13/13; deterministic 2/2.
+- [ ] G590-ENV-60 executar RC12 e baixar JSON.
+- [ ] G590-ENV-61 validar RC12; somente `failed=0` autoriza T590-15/T590-19 PASS/CLOSED e atualização ASI-003/004/005.

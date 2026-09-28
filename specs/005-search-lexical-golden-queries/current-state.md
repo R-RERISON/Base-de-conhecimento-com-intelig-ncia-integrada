@@ -354,7 +354,7 @@ Disposition estrutural:
 - body-bearing duplicate-label: 78 — continuam retrieval-eligible, com anchor fail-closed quando target não for comprovado.
 
 A nova Structural Projection:
-- versão `r260-structural-projection-v1.0.0`;
+- versão `r260-structural-projection-v1.0.1`;
 - não altera Content Extractor;
 - não altera KD 2.1.0;
 - usa identity estável baseada em post/tipo/depth/token/título/occurrence;
@@ -394,47 +394,107 @@ PASS exige, entre outros:
 
 Isso não é waiver do T590-15; qualquer gap concreto continua bloqueante.
 
-## RC11 — candidato ambiental
+## Evidência ambiental RC11 — FAIL CONTROLADO
+
+RC11 executou integralmente em WordPress 6.9.4 / PHP 8.5.10 / MariaDB 12.2.2.
+
+Gate:
+- T590-14 PASS;
+- T590-15 FAIL;
+- T590-16 PASS;
+- T590-17 PASS;
+- T590-18 PASS;
+- T590-19 FAIL / OPEN.
+
+Runtime promotion comprovado:
+- 548 deterministic candidates;
+- 289 body-bearing canônicos;
+- 289 runtime Sections persistidas;
+- 78 duplicate-body retidas;
+- 263 anchors generated;
+- 26 unresolved;
+- projection gap 0;
+- projection extra 0;
+- unsafe promotion 0;
+- overflow 0;
+- identity collision 0;
+- repository errors 0;
+- generated anchor materialization failures 0;
+- visible text changed 0.
+
+Performance:
+- p50 154.7291 ms;
+- p95 231.3879 ms;
+- max 238.5709 ms;
+- technical failures 0.
+
+Safety:
+- editorial fingerprint equal;
+- corpus IDs equal;
+- zero ASI;
+- zero network;
+- zero editorial write;
+- parent ranker frozen.
+
+Único blocker:
+- runtime dispositions = 62 TOC / 289 body / 197 uncertain;
+- R-260A canônico = 77 TOC / 289 body / 182 uncertain.
+
+Root cause:
+- Structural Projection v1.0.0 calculava occurrence evidence somente após filtrar candidates;
+- R-260A calcula occurrences sobre todos os hierarchy nodes antes do filtro;
+- 15 candidates em 6 posts perderam `later_same_label` e foram classificados como uncertain;
+- os 289 body-bearing/Sections não foram afetados.
+
+Classificação:
+**FAIL CONTROLADO / CLASSIFICATION PARITY DRIFT.**
+
+Review: `g590-rc11-r260d2-environmental-review-20260928.md`.
+
+## RC12 — parity correction
+
+Structural Projection `r260-structural-projection-v1.0.1`:
+- occurrence population = todos os hierarchy nodes válidos;
+- candidate filtering ocorre depois;
+- sem mudança no conjunto dos 289 body-bearing;
+- regression R-260A ↔ runtime obrigatório para candidate/TOC/body/uncertain.
 
 Source commit:
-`6952f6c29aca2ec0dec4ee4b19b0edf2e5a08563`.
+`61681200f1152d98caf949568cfd99810c83e57a`.
 
 Package:
-- Product Version `0.5.1-rc.11`;
-- Build ID `g590.11-6952f6c29aca`;
-- ZIP SHA-256 `49c2a96bef202c5f866499539055d1f9b78b14fe2fc840c69cf3cc47f1b63e76`;
+- Product Version `0.5.1-rc.12`;
+- Build ID `g590.12-61681200f115`;
+- ZIP SHA-256 `eeeb4222ed2e68ed6a488d088df8d3e61bd6313d87ace09f06f2cb8173b55026`;
 - files 88;
 - PHP 75/75;
 - JS 3/3;
 - JSON 2/2;
 - active requires 71/71;
-- R-260D2 behavior 18/18;
+- R-260D2 behavior 23/23;
+- R-260A ↔ runtime parity 4/4;
 - Evidence Contract v1.5 fail-closed 13/13;
-- GitHub runtime blob parity 7/7;
 - deterministic build 2/2 byte-identical;
-- delta RC10 → RC11: +2 / ~6 / -0;
-- inherited byte-identical: 80/86.
+- delta RC11 → RC12: +0 / ~2 / -0;
+- inherited byte-identical: 86/88.
 
-Protected runtime byte-identical ao RC10:
-- Content Extractor;
-- Knowledge Document;
-- parent Lexical Ranker;
-- Section Ranker;
-- Section Service;
-- Search Service;
-- Search Projection Repository.
+Modified no ZIP:
+- bootstrap — somente Product Version / Build ID;
+- `class-r260-structural-projector.php` — occurrence parity fix.
+
+Todo o restante do runtime RC11 permanece byte-idêntico.
 
 ## Próximo passo exato
 
-1. instalar RC11 em homologação;
+1. instalar RC12 em homologação;
 2. abrir **Base de Conhecimento → Section Retrieval G-590**;
 3. selecionar **Reiniciar evidência**;
 4. aguardar **Concluído — JSON disponível**;
 5. baixar o JSON;
 6. validar com `tools/homologation/spec005/validate-g590-evidence.php`;
-7. somente se T590-14..18 = PASS e o validator retornar `failed=0`, fechar T590-15/T590-19 e promover ASI-003/004/005 no Master Parity Ledger.
+7. somente `failed=0` com T590-14..18 PASS autoriza T590-15/T590-19 PASS/CLOSED.
 
-Até a evidência RC11:
+Até a evidência RC12:
 - G-590 permanece OPEN;
 - PR #9 permanece DRAFT / NO MERGE;
 - G-585 continua pausado;

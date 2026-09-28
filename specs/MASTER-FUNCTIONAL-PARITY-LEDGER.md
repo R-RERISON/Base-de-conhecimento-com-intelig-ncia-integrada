@@ -25,9 +25,9 @@ PARITY_VERIFIED | IMPROVED_VERIFIED | SUPERSEDED_WITH_EVIDENCE | PARTIAL | GAP |
 | KB2-008 | KB2Ops 0.2.1 | Search/Portal aliases | UNKNOWN_ENVIRONMENTAL | SPEC-007/014 | CONDICIONAL |
 | ASI-001 | ASI 4.6.8 | post lexical retrieval | IMPROVED_VERIFIED | SPEC-005 | NÃO |
 | ASI-002 | ASI 4.6.8 | query normalization | IMPROVED_VERIFIED | SPEC-005 | NÃO |
-| ASI-003 | ASI 4.6.8 | item/section retrieval | PARTIAL | SPEC-005 / G-590 | SIM |
-| ASI-004 | ASI 4.6.8 | stable item identity | PARTIAL | SPEC-005 / G-590 | SIM |
-| ASI-005 | ASI 4.6.8 | anchors/deep links | PARTIAL | SPEC-005 / G-590 | SIM |
+| ASI-003 | ASI 4.6.8 | item/section retrieval | PARITY_VERIFIED | SPEC-005 / G-590 | NÃO |
+| ASI-004 | ASI 4.6.8 | stable item identity | PARITY_VERIFIED | SPEC-005 / G-590 | NÃO |
+| ASI-005 | ASI 4.6.8 | anchors/deep links | PARITY_VERIFIED | SPEC-005 / G-590 | NÃO |
 | ASI-006 | ASI 4.6.8 | Golden Queries | IMPROVED_VERIFIED | SPEC-005 | NÃO |
 | ASI-007 | ASI 4.6.8 | vocabulary/aliases | GAP | SPEC-008 | SIM |
 | ASI-008 | ASI 4.6.8 | term bindings | GAP | SPEC-008 | SIM |
@@ -73,21 +73,26 @@ PARITY_VERIFIED, IMPROVED_VERIFIED, SUPERSEDED_WITH_EVIDENCE ou RETIRED_BY_PRODU
 PARTIAL, GAP e UNKNOWN_ENVIRONMENTAL aplicáveis bloqueiam.
 
 
-### G-590 candidate status — 2026-09-21
+### G-590 final status — 2026-09-28
 
-ASI-003/004/005 foram promovidos de GAP para PARTIAL somente porque há runtime candidato versionado:
-- Search Section Projection na mesma tabela post-level;
-- section identity determinística;
-- Section Ranker/Service;
-- Search_Service::search_sections();
-- anchor efêmero fail-closed;
-- lifecycle schema 1.1 com verificação física;
-- runner ambiental + machine evidence validator.
+RC12 environmental evidence fechou G-590:
+- Product `0.5.1-rc.12`;
+- Build `g590.12-61681200f115`;
+- T590-14..19 PASS;
+- 548 deterministic candidates reconciliados em 77 TOC / 289 body / 182 uncertain;
+- 289/289 structural Sections persistidas;
+- projection gap/extra/unsafe/overflow/collision/repository error = 0;
+- generated anchor materialization failures = 0;
+- Golden post-level PASS;
+- p95 255.923 ms / max 299.911 ms;
+- editorial fingerprint equal;
+- zero runtime ASI dependency.
 
-**PARTIAL não é paridade.** Os três itens continuam blockers até:
-1. G-590 ambiental PASS;
-2. coverage audit sem gap bloqueante;
-3. Golden post-level permanecer PASS;
-4. section/deep-link probes passarem;
-5. performance/security budgets passarem;
-6. evidência ser versionada no repositório.
+Evidência versionada:
+- `evidence/g590-rc12-environmental-pass-review-20260928.json`;
+- `specs/005-search-lexical-golden-queries/g590-closeout-20260928.md`.
+
+ASI-003/004/005 foram promovidos de `PARTIAL` para `PARITY_VERIFIED`.
+
+Isso remove os três blockers de retrieval/identity/deep-link, mas **não autoriza ASI decommission**. G-585 e os demais blockers aplicáveis no Master Ledger continuam mandatórios.
+

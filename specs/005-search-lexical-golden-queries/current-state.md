@@ -289,71 +289,156 @@ Disposition:
 
 Review: `g590-rc9-r260c-environmental-review-20260925.md`.
 
-## R-260D1 / RC10
+## Evidência ambiental RC10 / R-260D1
 
-R-260D foi dividido:
-- **D1** — contextual anchor feasibility, diagnóstico read-only;
-- **D2** — runtime promotion, bloqueado até evidência D1.
+RC10 executou integralmente em WordPress 6.9.4 / PHP 8.5.10 / MariaDB 12.2.2.
 
-D1 usa:
-- título exato;
-- dois blocos corporais adjacentes derivados da fonte;
-- comparação exata e ordenada contra os blocos imediatamente posteriores a cada ocorrência renderizada.
+Gate:
+- T590-14 PASS;
+- T590-15 FAIL;
+- T590-16 PASS;
+- T590-17 PASS;
+- T590-18 PASS;
+- T590-19 FAIL / OPEN.
 
-Estados:
-- `title_unique`;
-- `context_unique`;
-- `context_ambiguous`;
-- `context_insufficient`;
-- `context_not_matched`;
-- `title_not_rendered`.
+R-260D1:
+- promotable_shadow: 211;
+- title_unique: 131;
+- context_unique: 66;
+- context_ambiguous: 0;
+- context_insufficient: 2;
+- context_not_matched: 12;
+- title_not_rendered: 0;
+- effective_unique: 197/211 = 93,3649%;
+- unresolved: 14.
 
-Contrato: `../004-content-extractor-knowledge-document/r260d-contextual-anchor-feasibility-contract-v1.md`.
+Performance:
+- p50 190.0358 ms;
+- p95 341.861 ms;
+- max 350.6229 ms;
+- technical failures 0.
 
-RC10 preparado:
-- Product Version `0.5.1-rc.10`;
-- Build ID `g590.10-cf1374fd85de`;
-- source commit `cf1374fd85de56c8d31192948a15d7e274eee1eb`;
-- runner blob `e9e9d05ffa13b141631ff29c236ae1192ee9fca3`;
-- R260D1 blob `c37380e1aa329c43289fcaa9959a448a8295fdbe`;
-- ZIP SHA-256 `456922cf831ef171a9d1ad8970bf3506294e1ac297e739bd690bc100ab603d5c`;
-- files 86;
-- PHP 73/73;
+Safety:
+- editorial fingerprint equal;
+- corpus IDs equal;
+- zero editorial write;
+- zero external network;
+- zero ASI runtime dependency;
+- parent ranker frozen.
+
+Disposition:
+- **R-260D1 PASS / DISCOVERY CLOSED**;
+- 66/80 ambiguidades do RC9 foram resolvidas deterministicamente;
+- nenhum target ficou `context_ambiguous`;
+- 14 permanecem fail-closed;
+- R-260D2 autorizado.
+
+Review: `g590-rc10-r260d1-environmental-review-20260928.md`.
+
+## R-260D2 — runtime promotion
+
+Arquitetura congelada:
+**Option C — Dedicated Structural Projection shared by consumers**.
+
+Contratos:
+- `../004-content-extractor-knowledge-document/r260d2-structural-runtime-promotion-contract-v1.md`;
+- `g590-deep-link-contract-v2.md`;
+- `g590-evidence-contract-addendum-v1.5.md`.
+
+Disposition estrutural:
+- deterministic candidates: 548;
+- TOC-like: 77 — suprimidos;
+- body-bearing: 289 — projetados;
+- uncertain: 182 — não promovidos;
+- body-bearing unique-label: 211;
+- body-bearing duplicate-label: 78 — continuam retrieval-eligible, com anchor fail-closed quando target não for comprovado.
+
+A nova Structural Projection:
+- versão `r260-structural-projection-v1.0.0`;
+- não altera Content Extractor;
+- não altera KD 2.1.0;
+- usa identity estável baseada em post/tipo/depth/token/título/occurrence;
+- não persiste offset DOM;
+- não escreve conteúdo editorial.
+
+Search:
+- Section Projection promovida para `search-section-projection-v1.1.0`;
+- Search Document permanece `search-document-v1.1.0`;
+- schema físico Search permanece `1.1.0`;
+- lexical-ranker-v1.0.0 permanece congelado.
+
+Deep-Link v2:
+- headings preservam resolução v1;
+- paragraph structural usa `title_unique` ou `context_unique`;
+- runtime revalida o target;
+- qualquer divergência falha fechado;
+- unresolved permanece pesquisável.
+
+## T590-15 — Evidence Contract v1.5
+
+`strong_numbered_without_heading_context` permanece telemetria obrigatória.
+
+O blocker deixa de ser o raw counter universal e passa a ser **perda de estrutura determinística body-bearing comprovada**.
+
+PASS exige, entre outros:
+- candidate/disposition reconciliation integral;
+- todo body-bearing projetado exatamente uma vez;
+- duplicate-label não eliminado do retrieval;
+- zero promoção unsafe de TOC/uncertain/ambiguous-confidence;
+- zero projection gap/extra;
+- zero overflow;
+- zero identity collision;
+- zero repository error;
+- todo generated structural anchor materializável;
+- texto visível inalterado.
+
+Isso não é waiver do T590-15; qualquer gap concreto continua bloqueante.
+
+## RC11 — candidato ambiental
+
+Source commit:
+`6952f6c29aca2ec0dec4ee4b19b0edf2e5a08563`.
+
+Package:
+- Product Version `0.5.1-rc.11`;
+- Build ID `g590.11-6952f6c29aca`;
+- ZIP SHA-256 `49c2a96bef202c5f866499539055d1f9b78b14fe2fc840c69cf3cc47f1b63e76`;
+- files 88;
+- PHP 75/75;
 - JS 3/3;
 - JSON 2/2;
-- active requires 69/69;
-- R260D1 unit behavior 15/15;
-- deterministic build 2/2;
-- delta vs RC9: 1 added / 2 modified / 0 deleted;
-- RC9 inherited byte-identical: 83/83.
+- active requires 71/71;
+- R-260D2 behavior 18/18;
+- Evidence Contract v1.5 fail-closed 13/13;
+- GitHub runtime blob parity 7/7;
+- deterministic build 2/2 byte-identical;
+- delta RC10 → RC11: +2 / ~6 / -0;
+- inherited byte-identical: 80/86.
 
-Protected runtime permanece byte-identical ao RC9:
-- Search Section Projector;
-- Anchor Manager;
+Protected runtime byte-identical ao RC10:
 - Content Extractor;
 - Knowledge Document;
 - parent Lexical Ranker;
 - Section Ranker;
 - Section Service;
-- Search Service.
+- Search Service;
+- Search Projection Repository.
 
 ## Próximo passo exato
 
-1. instalar RC10 em homologação;
+1. instalar RC11 em homologação;
 2. abrir **Base de Conhecimento → Section Retrieval G-590**;
 3. selecionar **Reiniciar evidência**;
 4. aguardar **Concluído — JSON disponível**;
 5. baixar o JSON;
-6. validar com `tools/homologation/spec005/validate-r260d-evidence.php`;
-7. medir `context_unique` e `unresolved_remaining_count`;
-8. somente então congelar ou rejeitar R-260D2 runtime promotion.
+6. validar com `tools/homologation/spec005/validate-g590-evidence.php`;
+7. somente se T590-14..18 = PASS e o validator retornar `failed=0`, fechar T590-15/T590-19 e promover ASI-003/004/005 no Master Parity Ledger.
 
-Durante D1:
-- T590-15 permanece FAIL por contrato;
-- T590-19 permanece OPEN;
+Até a evidência RC11:
+- G-590 permanece OPEN;
+- PR #9 permanece DRAFT / NO MERGE;
 - G-585 continua pausado;
-- G-595 e SPEC-006 permanecem bloqueados;
-- nenhum runtime structural promotion é autorizado.
+- G-595 e SPEC-006 permanecem bloqueados.
 
 ## Limites de escopo
 

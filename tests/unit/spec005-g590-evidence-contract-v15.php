@@ -10,7 +10,7 @@ namespace {
 
 namespace BDC\KnowledgeBase {
 	final class R260_Structural_Projector {
-		public const VERSION = 'r260-structural-projection-v1.0.0';
+		public const VERSION = 'r260-structural-projection-v1.0.1';
 	}
 
 	require_once dirname( __DIR__, 2 ) . '/plugin/base-conhecimento-inteligencia-integrada/includes/class-search-section-runner-g590.php';

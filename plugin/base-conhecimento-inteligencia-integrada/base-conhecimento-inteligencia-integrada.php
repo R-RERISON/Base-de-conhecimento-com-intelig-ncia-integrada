@@ -198,6 +198,8 @@ if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD' ) && BDC_KB_SPEC
 }
 if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-search-query-normalizer.php';
+	require_once BDC_KB_DIR . 'includes/class-r260-contextual-anchor-resolver.php';
+	require_once BDC_KB_DIR . 'includes/class-r260-structural-projector.php';
 	require_once BDC_KB_DIR . 'includes/class-search-section-projector.php';
 	require_once BDC_KB_DIR . 'includes/class-search-document-builder.php';
 	require_once BDC_KB_DIR . 'includes/class-search-projection-repository.php';

@@ -23,6 +23,7 @@ namespace BDC\KnowledgeBase {
 	require_once $root . 'class-numbered-hierarchy-resolver.php';
 	require_once $root . 'class-r260-contextual-anchor-resolver.php';
 	require_once $root . 'class-r260-structural-projector.php';
+	require_once $root . 'class-r260-hierarchy-profiler.php';
 	require_once $root . 'class-search-section-projector.php';
 	require_once $root . 'class-search-anchor-manager.php';
 
@@ -96,6 +97,37 @@ namespace BDC\KnowledgeBase {
 	$keys2 = array_map( static fn ( array $n ): string => (string) $n['section_key'], (array) $shifted_projection['nodes'] );
 	sort( $keys1 ); sort( $keys2 );
 	$checks['stable_identity_unrelated_insert'] = $keys1 === $keys2;
+
+
+	/*
+	 * Regression RC11: R-260A occurrence evidence must be collected from all
+	 * hierarchy nodes before the runtime candidate subset is filtered.
+	 */
+	$parity_fragments = array(
+		array( 'kind'=>'paragraph','text'=>'5 Parent','ordinal'=>0,'source'=>'legacy' ),
+		array( 'kind'=>'paragraph','text'=>'5.1 Repeat','ordinal'=>1,'source'=>'legacy' ),
+		array( 'kind'=>'paragraph','text'=>'5.2 Boundary','ordinal'=>2,'source'=>'legacy' ),
+		array( 'kind'=>'heading','text'=>'Real heading','ordinal'=>3,'meta'=>array( 'level'=>2 ),'source'=>'legacy' ),
+		array( 'kind'=>'paragraph','text'=>'5 Parent','ordinal'=>4,'source'=>'legacy' ),
+		array( 'kind'=>'paragraph','text'=>'5.1 Repeat','ordinal'=>5,'source'=>'legacy' ),
+		array( 'kind'=>'paragraph','text'=>'body one','ordinal'=>6,'source'=>'legacy' ),
+		array( 'kind'=>'paragraph','text'=>'body two','ordinal'=>7,'source'=>'legacy' ),
+	);
+	$parity_hierarchy = Numbered_Hierarchy_Resolver::resolve( $parity_fragments );
+	$parity_profile = R260_Hierarchy_Profiler::profile( 777, 'legacy_html', $parity_fragments, $parity_hierarchy );
+	$parity_runtime = R260_Structural_Projector::project( 777, 'legacy_html', $parity_fragments, '' );
+	$checks['r260a_runtime_candidate_count_parity'] =
+		(int) ( $parity_profile['summary']['candidate_count'] ?? -1 )
+		=== (int) ( $parity_runtime['candidate_count'] ?? -2 );
+	$checks['r260a_runtime_toc_parity'] =
+		(int) ( $parity_profile['summary']['toc_signal_count'] ?? -1 )
+		=== (int) ( $parity_runtime['states']['toc_suppressed'] ?? -2 );
+	$checks['r260a_runtime_body_parity'] =
+		(int) ( $parity_profile['summary']['body_signal_count'] ?? -1 )
+		=== (int) ( $parity_runtime['body_bearing_count'] ?? -2 );
+	$checks['r260a_runtime_uncertain_parity'] =
+		(int) ( $parity_profile['summary']['uncertain_count'] ?? -1 )
+		=== (int) ( $parity_runtime['states']['uncertain'] ?? -2 );
 
 	$failed = 0;
 	foreach ( $checks as $name => $pass ) {

@@ -1,6 +1,6 @@
 # Estado atual — SPEC-005
 
-**Status:** ATIVA — PREMIUM CONSOLIDATION / G-590 SECTION RETRIEVAL & DEEP-LINK  
+**Status:** ATIVA — G-590 CLOSED / G-585 DECOMMISSION READINESS  
 **Branch:** `spec005-section-retrieval-deeplink`  
 **Premium baseline:** `01508379f91a336b26b17268fb119458bd077f7e`
 
@@ -55,11 +55,12 @@ Este PASS é estrutural/local. Não equivale a G-590 PASS ambiental.
 
 ## Master Parity Ledger
 
-- ASI-003 item/section retrieval = PARTIAL;
-- ASI-004 stable item identity = PARTIAL;
-- ASI-005 anchors/deep-links = PARTIAL.
+Após RC12 ambiental PASS:
+- ASI-003 item/section retrieval = PARITY_VERIFIED;
+- ASI-004 stable item identity = PARITY_VERIFIED;
+- ASI-005 anchors/deep-links = PARITY_VERIFIED.
 
-PARTIAL continua blocker de cutover.
+Os três blockers específicos de G-590 foram removidos. Isso não autoriza ASI decommission; G-585 e demais blockers aplicáveis continuam mandatórios.
 
 ## Política de identidade do build
 
@@ -451,54 +452,78 @@ Classificação:
 
 Review: `g590-rc11-r260d2-environmental-review-20260928.md`.
 
-## RC12 — parity correction
+## RC12 — environmental PASS / G-590 CLOSED
 
-Structural Projection `r260-structural-projection-v1.0.1`:
-- occurrence population = todos os hierarchy nodes válidos;
-- candidate filtering ocorre depois;
-- sem mudança no conjunto dos 289 body-bearing;
-- regression R-260A ↔ runtime obrigatório para candidate/TOC/body/uncertain.
-
-Source commit:
-`61681200f1152d98caf949568cfd99810c83e57a`.
-
-Package:
+Identity:
 - Product Version `0.5.1-rc.12`;
 - Build ID `g590.12-61681200f115`;
-- ZIP SHA-256 `eeeb4222ed2e68ed6a488d088df8d3e61bd6313d87ace09f06f2cb8173b55026`;
-- files 88;
-- PHP 75/75;
-- JS 3/3;
-- JSON 2/2;
-- active requires 71/71;
-- R-260D2 behavior 23/23;
-- R-260A ↔ runtime parity 4/4;
-- Evidence Contract v1.5 fail-closed 13/13;
-- deterministic build 2/2 byte-identical;
-- delta RC11 → RC12: +0 / ~2 / -0;
-- inherited byte-identical: 86/88.
+- source commit `61681200f1152d98caf949568cfd99810c83e57a`;
+- raw evidence SHA-256 `3d2fc34bd542665d731c3687550857f791d0ecb9706f80a2ba1d44397ce78435`.
 
-Modified no ZIP:
-- bootstrap — somente Product Version / Build ID;
-- `class-r260-structural-projector.php` — occurrence parity fix.
+Gate:
+- T590-14 PASS;
+- T590-15 PASS;
+- T590-16 PASS;
+- T590-17 PASS;
+- T590-18 PASS;
+- T590-19 PASS / G-590 CLOSED;
+- next gate G-585.
 
-Todo o restante do runtime RC11 permanece byte-idêntico.
+R-260 final:
+- Structural Projection `r260-structural-projection-v1.0.1`;
+- 548 deterministic candidates;
+- 77 TOC suppressed;
+- 289 body-bearing projected;
+- 182 uncertain fail-closed;
+- 289 canonical / 289 runtime projected;
+- 78 duplicate-body retained;
+- 263 generated anchors;
+- 26 unresolved anchors;
+- projection gap/extra/unsafe = 0;
+- overflow/collision/repository errors = 0;
+- generated anchor materialization failure = 0;
+- visible text changes = 0.
 
-## Próximo passo exato
+Lifecycle:
+- 623/623;
+- pass1 623 NO_CHANGE;
+- pass2 623 NO_CHANGE;
+- determinism mismatch 0;
+- Projection ready.
 
-1. instalar RC12 em homologação;
-2. abrir **Base de Conhecimento → Section Retrieval G-590**;
-3. selecionar **Reiniciar evidência**;
-4. aguardar **Concluído — JSON disponível**;
-5. baixar o JSON;
-6. validar com `tools/homologation/spec005/validate-g590-evidence.php`;
-7. somente `failed=0` com T590-14..18 PASS autoriza T590-15/T590-19 PASS/CLOSED.
+Regression/performance/safety:
+- Golden post-level PASS;
+- p50 192.1129 ms;
+- p95 255.923 ms;
+- max 299.911 ms;
+- technical failures 0;
+- editorial fingerprint equal;
+- no ASI;
+- no network;
+- no editorial write;
+- parent ranker frozen.
 
-Até a evidência RC12:
-- G-590 permanece OPEN;
-- PR #9 permanece DRAFT / NO MERGE;
-- G-585 continua pausado;
-- G-595 e SPEC-006 permanecem bloqueados.
+Machine validation:
+- 57/57 PASS;
+- 0 FAIL.
+
+Evidence:
+- `../../evidence/g590-rc12-environmental-pass-review-20260928.json`;
+- `g590-closeout-20260928.md`.
+
+## Próximo passo — G-585
+
+G-585 deixa de estar pausado por G-590 e volta a ser o gate ativo de Decommission Readiness.
+
+G-590 não autoriza retirada do ASI. G-585 ainda deve comprovar:
+- ASI manualmente inativo;
+- zero runtime/storage dependency;
+- zero shortcode/template/page dependency bloqueante;
+- Home/candidate experience funcional;
+- Search/Golden/rebuild/lifecycle PASS sem ASI;
+- Master Functional Parity Ledger sem blocker aplicável ao cutover.
+
+A evidência histórica g585.1/g585.2 continua válida como diagnóstico, mas deve ser reavaliada sobre a baseline pós-G-590.
 
 ## Limites de escopo
 

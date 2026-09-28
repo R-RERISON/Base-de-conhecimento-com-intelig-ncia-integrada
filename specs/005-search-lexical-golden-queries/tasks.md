@@ -192,10 +192,10 @@
 - [x] T590-13 implementar Anchor Manager read-only/fail-closed.
 - [x] T590-13A adicionar schema contract físico (colunas+índices) e lifecycle degraded-safe.
 - [x] T590-14 unit/regression Search post-level + SPEC-001–004 — PASS ambiental preservado até RC9.
-- [ ] T590-15 coverage diagnostic ambiental — FAIL/OPEN; 1.294 strong gaps originaram R-260; R-260D1 contextual discovery em RC10.
+- [ ] T590-15 coverage ambiental — Evidence Contract v1.5 implementado; R-260D2 runtime candidate RC11 aguarda evidência ENV.
 - [x] T590-16 technical challenge/Golden section-level — PASS ambiental; source kinds cobertos, 0 section/deep-link failures.
 - [x] T590-17 lifecycle migration 1.0→1.1 + explicit rebuild — PASS ambiental; prepare sem reindex, rebuild determinístico.
-- [x] T590-18 performance/security — PASS ambiental; RC9 p95 305.8531 ms / max 341.8281 ms; safety íntegra.
+- [x] T590-18 performance/security — PASS ambiental preservado; RC10 p95 341.861 ms / max 350.6229 ms; safety íntegra.
 - [ ] T590-19 G-590 PASS/CLOSED.
 
 ### G-590 — execução ambiental resumível
@@ -269,5 +269,10 @@
 - [x] G590-ENV-47 dividir R-260D em D1 diagnóstico contextual e D2 runtime promotion evidence-gated.
 - [x] G590-ENV-48 congelar `r260d-contextual-anchor-feasibility-contract-v1.md` e implementar profiler + machine validator read-only.
 - [x] G590-ENV-49 gerar RC10 `0.5.1-rc.10/g590.10` — source `cf1374fd85de56c8d31192948a15d7e274eee1eb`; SHA-256 `456922cf831ef171a9d1ad8970bf3506294e1ac297e739bd690bc100ab603d5c`; 86 files; PHP 73/73; JS 3/3; JSON 2/2; active requires 69/69; D1 unit 15/15; deterministic 2/2.
-- [ ] G590-ENV-50 executar RC10 e baixar JSON.
-- [ ] G590-ENV-51 validar `validate-r260d-evidence.php` e decidir R-260D2 runtime promotion.
+- [x] G590-ENV-50 executar RC10 e baixar JSON — evidence `bdc-kb-spec005-g590-section-20260928-111102.json`.
+- [x] G590-ENV-51 validar R-260D1 — 211 promotable = 131 title_unique + 66 context_unique + 14 unresolved; D1 PASS/CLOSED; D2 autorizado.
+- [x] G590-ENV-52 congelar R-260D2 Structural Runtime Contract + Deep-Link v2 + Evidence Contract v1.5.
+- [x] G590-ENV-53 implementar Option C: Structural Projection compartilhada + Search Section Projection v1.1 + paragraph anchors fail-closed.
+- [x] G590-ENV-54 gerar RC11 `0.5.1-rc.11/g590.11` — source `6952f6c29aca2ec0dec4ee4b19b0edf2e5a08563`; SHA-256 `49c2a96bef202c5f866499539055d1f9b78b14fe2fc840c69cf3cc47f1b63e76`; 88 files; PHP 75/75; JS 3/3; JSON 2/2; active requires 71/71; D2 behavior 18/18; Evidence v1.5 13/13; deterministic 2/2.
+- [ ] G590-ENV-55 executar RC11 e baixar JSON.
+- [ ] G590-ENV-56 validar RC11 com `validate-g590-evidence.php`; somente `failed=0` autoriza T590-15/T590-19 PASS/CLOSED.

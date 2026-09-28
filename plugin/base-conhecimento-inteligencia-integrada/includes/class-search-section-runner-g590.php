@@ -621,7 +621,7 @@ final class Search_Section_Runner_G590 {
 
 		$coverage_complete = count( $post_ids ) === (int) ( $coverage['posts_analyzed'] ?? -1 )
 			&& 0 === (int) ( $coverage['extractor_error_count'] ?? -1 );
-		$no_uncontextual_numbered_gap = 0 === (int) ( $coverage['strong_numbered_without_heading_context'] ?? -1 );
+		$structural_coverage_pass = self::structural_coverage_pass( $coverage );
 		$probe_pass = (int) ( $probes['eligible_probe_count'] ?? 0 ) >= self::MIN_PROBES
 			&& empty( $coverage['unprobed_source_kinds'] ?? array() )
 			&& 0 === (int) ( $probes['section_query_failed'] ?? -1 )
@@ -636,7 +636,7 @@ final class Search_Section_Runner_G590 {
 		$t59014 = $golden_pass
 			&& ! empty( $source_safety['parent_ranker_version_frozen'] )
 			&& ! empty( $source_safety['candidate_query_does_not_load_sections'] );
-		$t59015 = $coverage_complete && $no_uncontextual_numbered_gap;
+		$t59015 = $coverage_complete && $structural_coverage_pass;
 		$t59016 = $probe_pass;
 		$t59017 = ! empty( $schema_contract['pass'] )
 			&& $prepare_did_not_reindex
@@ -670,10 +670,12 @@ final class Search_Section_Runner_G590 {
 			),
 			'contracts' => array(
 				'section' => 'g590-section-retrieval-contract-v1.md',
-				'deep_link' => 'g590-deep-link-contract-v1.md',
+				'deep_link' => 'g590-deep-link-contract-v2.md',
 				'regression' => 'g590-regression-contract-v1.md',
 				'g550_addendum' => 'g550-addendum-document-v1.1-compatibility.md',
 				'r260d_contextual_anchor' => 'r260d-contextual-anchor-feasibility-contract-v1.md',
+				'r260d2_structural_runtime' => 'r260d2-structural-runtime-promotion-contract-v1.md',
+				'evidence_addendum' => 'g590-evidence-contract-addendum-v1.5.md',
 				'orchestration' => self::JOB_VERSION,
 			),
 			'lifecycle' => array(
@@ -724,7 +726,7 @@ final class Search_Section_Runner_G590 {
 			),
 			'interpretation_rules' => array(
 				'Section Projection não pode alterar o ranking post-level fechado.',
-				'Número hierárquico forte sem heading contextual é blocker por potencial perda de navegabilidade.',
+				'Sinais numerados fortes permanecem telemetria; T590-15 bloqueia perda de estrutura determinística body-bearing comprovada segundo Evidence Contract v1.5.',
 				'Número hierárquico dentro de heading é reportado para revisão de granularidade, mas não é auto-falha.',
 				'Deep-link só passa quando o anchor é materializável e o texto visível permanece idêntico.',
 				'O runner ambiental é resumível; timeout HTTP do navegador/proxy não equivale a falha funcional do gate.',
@@ -809,7 +811,7 @@ final class Search_Section_Runner_G590 {
 		$coverage_complete = count( $post_ids ) === (int) ( $coverage['posts_analyzed'] ?? -1 )
 			&& 0 === (int) ( $coverage['extractor_error_count'] ?? -1 );
 
-		$no_uncontextual_numbered_gap = 0 === (int) ( $coverage['strong_numbered_without_heading_context'] ?? -1 );
+		$structural_coverage_pass = self::structural_coverage_pass( $coverage );
 
 		$probe_pass = (int) ( $probes['eligible_probe_count'] ?? 0 ) >= self::MIN_PROBES
 			&& empty( $coverage['unprobed_source_kinds'] ?? array() )
@@ -823,7 +825,7 @@ final class Search_Section_Runner_G590 {
 			&& ! empty( $source_safety['parent_ranker_version_frozen'] )
 			&& ! empty( $source_safety['candidate_query_does_not_load_sections'] );
 
-		$t59015 = $coverage_complete && $no_uncontextual_numbered_gap;
+		$t59015 = $coverage_complete && $structural_coverage_pass;
 		$t59016 = $probe_pass;
 		$t59017 = ! empty( $schema_contract['pass'] )
 			&& $prepare_did_not_reindex
@@ -856,10 +858,12 @@ final class Search_Section_Runner_G590 {
 			),
 			'contracts' => array(
 				'section' => 'g590-section-retrieval-contract-v1.md',
-				'deep_link' => 'g590-deep-link-contract-v1.md',
+				'deep_link' => 'g590-deep-link-contract-v2.md',
 				'regression' => 'g590-regression-contract-v1.md',
 				'g550_addendum' => 'g550-addendum-document-v1.1-compatibility.md',
 				'r260d_contextual_anchor' => 'r260d-contextual-anchor-feasibility-contract-v1.md',
+				'r260d2_structural_runtime' => 'r260d2-structural-runtime-promotion-contract-v1.md',
+				'evidence_addendum' => 'g590-evidence-contract-addendum-v1.5.md',
 			),
 			'lifecycle' => array(
 				'state_before' => $state_before,
@@ -903,7 +907,7 @@ final class Search_Section_Runner_G590 {
 			),
 			'interpretation_rules' => array(
 				'Section Projection não pode alterar o ranking post-level fechado.',
-				'Número hierárquico forte sem heading contextual é blocker por potencial perda de navegabilidade.',
+				'Sinais numerados fortes permanecem telemetria; T590-15 bloqueia perda de estrutura determinística body-bearing comprovada segundo Evidence Contract v1.5.',
 				'Número hierárquico dentro de heading é reportado para revisão de granularidade, mas não é auto-falha.',
 				'Deep-link só passa quando o anchor é materializável e o texto visível permanece idêntico.',
 				'G-590 PASS ainda não autoriza aposentadoria do ASI; G-585 e Master Parity Ledger continuam obrigatórios.',
@@ -949,6 +953,10 @@ final class Search_Section_Runner_G590 {
 			'r260c_anchor_samples' => array(),
 			'r260d_context_profiles' => array(),
 			'r260d_context_samples' => array(),
+			'r260_runtime_profiles' => array(),
+			'r260_runtime_samples' => array(),
+			'r260_runtime_repository_error_count' => 0,
+			'r260_runtime_repository_errors' => array(),
 			'hierarchy_node_source_counts' => array(),
 			'title_frequency' => array(),
 			'token_frequency' => array(),
@@ -962,6 +970,22 @@ final class Search_Section_Runner_G590 {
 	 * @return array<string,mixed>
 	 */
 	private static function coverage_accumulate( array $accumulator, array $post_ids ): array {
+		$persisted_by_post = array();
+		foreach ( array_chunk( array_values( array_map( 'intval', $post_ids ) ), Search_Projection_Repository::SECTION_PARENT_CAP ) as $chunk_ids ) {
+			$persisted_chunk = Search_Projection_Repository::sections_for_posts( $chunk_ids );
+			if ( $persisted_chunk instanceof \WP_Error ) {
+				++$accumulator['r260_runtime_repository_error_count'];
+				if ( count( (array) $accumulator['r260_runtime_repository_errors'] ) < 20 ) {
+					$accumulator['r260_runtime_repository_errors'][] = array(
+						'code' => $persisted_chunk->get_error_code(),
+						'post_ids' => array_values( array_map( 'intval', $chunk_ids ) ),
+					);
+				}
+				continue;
+			}
+			$persisted_by_post = array_replace( $persisted_by_post, (array) $persisted_chunk );
+		}
+
 		foreach ( $post_ids as $post_id ) {
 			$post_id = (int) $post_id;
 			$extraction = Content_Extractor::extract( $post_id );
@@ -988,7 +1012,153 @@ final class Search_Section_Runner_G590 {
 			$accumulator['post_status_by_source_kind'][ $source_kind ][ $post_status ] =
 				(int) ( $accumulator['post_status_by_source_kind'][ $source_kind ][ $post_status ] ?? 0 ) + 1;
 			$fragments = (array) ( $extraction['fragments'] ?? array() );
-			$sections = Search_Section_Projector::project( $post_id, $fragments );
+
+			$runtime_preview = R260_Structural_Projector::project(
+				$post_id,
+				$source_kind,
+				$fragments,
+				''
+			);
+			$rendered = '';
+			if ( (int) ( $runtime_preview['projected_count'] ?? 0 ) > 0 ) {
+				$post = get_post( $post_id );
+				if ( is_object( $post ) ) {
+					$previous_post = $GLOBALS['post'] ?? null;
+					$GLOBALS['post'] = $post;
+					setup_postdata( $post );
+					$rendered = (string) apply_filters( 'the_content', (string) ( $post->post_content ?? '' ) );
+					wp_reset_postdata();
+					if ( is_object( $previous_post ) ) {
+						$GLOBALS['post'] = $previous_post;
+					}
+				}
+			}
+			$runtime_structural = '' !== $rendered
+				? R260_Structural_Projector::project( $post_id, $source_kind, $fragments, $rendered )
+				: $runtime_preview;
+			$section_projection = Search_Section_Projector::project_with_diagnostics(
+				$post_id,
+				$fragments,
+				$source_kind,
+				$rendered,
+				$runtime_structural
+			);
+			$sections = (array) ( $section_projection['sections'] ?? array() );
+			$heading_sections_for_shadow = array_values(
+				array_filter(
+					$sections,
+					static fn ( mixed $row ): bool =>
+						is_array( $row ) && 'numbered_paragraph' !== (string) ( $row['structural_source'] ?? '' )
+				)
+			);
+
+			$expected_structural_keys = array();
+			foreach ( (array) ( $runtime_structural['nodes'] ?? array() ) as $node ) {
+				if ( is_array( $node ) && '' !== (string) ( $node['section_key'] ?? '' ) ) {
+					$expected_structural_keys[ (string) $node['section_key'] ] = true;
+				}
+			}
+			$persisted_sections = (array) ( $persisted_by_post[ $post_id ] ?? array() );
+			$persisted_structural = array_values(
+				array_filter(
+					$persisted_sections,
+					static fn ( mixed $row ): bool =>
+						is_array( $row ) && 'numbered_paragraph' === (string) ( $row['structural_source'] ?? '' )
+				)
+			);
+			$persisted_structural_keys = array();
+			foreach ( $persisted_structural as $section ) {
+				$key = (string) ( $section['section_key'] ?? '' );
+				if ( '' !== $key ) {
+					$persisted_structural_keys[ $key ] = true;
+				}
+			}
+			$missing_runtime_keys = array_values( array_diff( array_keys( $expected_structural_keys ), array_keys( $persisted_structural_keys ) ) );
+			$extra_runtime_keys = array_values( array_diff( array_keys( $persisted_structural_keys ), array_keys( $expected_structural_keys ) ) );
+
+			$generated_materialization_failed = 0;
+			$visible_text_changed = 0;
+			if ( '' !== $rendered && ! empty( $persisted_structural ) ) {
+				$before_visible = Search_Query_Normalizer::normalize_document_text( $rendered );
+				$anchored = Search_Anchor_Manager::inject_for_sections( $rendered, $persisted_structural );
+				$after_visible = Search_Query_Normalizer::normalize_document_text( $anchored );
+				if ( $before_visible !== $after_visible ) {
+					$visible_text_changed = 1;
+				}
+				foreach ( $persisted_structural as $section ) {
+					if ( 'generated' !== (string) ( $section['anchor_state'] ?? '' ) ) {
+						continue;
+					}
+					$anchor_id = (string) ( $section['anchor_id'] ?? '' );
+					if (
+						'' === $anchor_id
+						|| (
+							! str_contains( $anchored, 'id="' . $anchor_id . '"' )
+							&& ! str_contains( $anchored, "id='" . $anchor_id . "'" )
+						)
+					) {
+						++$generated_materialization_failed;
+					}
+				}
+			}
+
+			$runtime_profile = array(
+				'post_id' => $post_id,
+				'source_kind' => $source_kind,
+				'version' => (string) ( $runtime_structural['version'] ?? '' ),
+				'candidate_count' => (int) ( $runtime_structural['candidate_count'] ?? 0 ),
+				'states' => (array) ( $runtime_structural['states'] ?? array() ),
+				'body_bearing_count' => (int) ( $runtime_structural['body_bearing_count'] ?? 0 ),
+				'canonical_projected_count' => (int) ( $runtime_structural['projected_count'] ?? 0 ),
+				'duplicate_body_count' => (int) ( $runtime_structural['duplicate_body_count'] ?? 0 ),
+				'canonical_generated_anchor_count' => (int) ( $runtime_structural['generated_anchor_count'] ?? 0 ),
+				'canonical_unresolved_anchor_count' => (int) ( $runtime_structural['unresolved_anchor_count'] ?? 0 ),
+				'identity_collision_count' => (int) ( $runtime_structural['identity_collision_count'] ?? 0 ),
+				'persisted_structural_count' => count( $persisted_structural ),
+				'persisted_generated_anchor_count' => count(
+					array_filter(
+						$persisted_structural,
+						static fn ( array $row ): bool => 'generated' === (string) ( $row['anchor_state'] ?? '' )
+					)
+				),
+				'persisted_unresolved_anchor_count' => count(
+					array_filter(
+						$persisted_structural,
+						static fn ( array $row ): bool => 'generated' !== (string) ( $row['anchor_state'] ?? '' )
+					)
+				),
+				'projection_gap_count' => count( $missing_runtime_keys ),
+				'projection_extra_count' => count( $extra_runtime_keys ),
+				'unsafe_promotion_count' => count( $extra_runtime_keys ),
+				'overflow_by' => (int) ( $section_projection['overflow_by'] ?? 0 ),
+				'generated_anchor_materialization_failed' => $generated_materialization_failed,
+				'visible_text_changed' => $visible_text_changed,
+			);
+			if (
+				(int) ( $runtime_profile['candidate_count'] ?? 0 ) > 0
+				|| (int) ( $runtime_profile['projection_gap_count'] ?? 0 ) > 0
+				|| (int) ( $runtime_profile['projection_extra_count'] ?? 0 ) > 0
+				|| (int) ( $runtime_profile['overflow_by'] ?? 0 ) > 0
+				|| (int) ( $runtime_profile['generated_anchor_materialization_failed'] ?? 0 ) > 0
+				|| (int) ( $runtime_profile['visible_text_changed'] ?? 0 ) > 0
+			) {
+				$accumulator['r260_runtime_profiles'][] = $runtime_profile;
+			}
+
+			foreach ( array_slice( (array) ( $runtime_structural['classified_candidates'] ?? array() ), 0, 4 ) as $sample ) {
+				if ( count( (array) $accumulator['r260_runtime_samples'] ) >= 80 || ! is_array( $sample ) ) {
+					break;
+				}
+				$accumulator['r260_runtime_samples'][] = array(
+					'post_id' => $post_id,
+					'source_kind' => $source_kind,
+					'ordinal' => (int) ( $sample['ordinal'] ?? -1 ),
+					'token' => (string) ( $sample['token'] ?? '' ),
+					'state' => (string) ( $sample['state'] ?? '' ),
+					'title_hash' => hash( 'sha256', (string) ( $sample['title_norm'] ?? '' ) ),
+					'body_span' => (int) ( $sample['body_span'] ?? 0 ),
+				);
+			}
 
 			if ( empty( $sections ) ) {
 				++$accumulator['posts_without_sections'];
@@ -1146,7 +1316,7 @@ final class Search_Section_Runner_G590 {
 				$post_id,
 				$source_kind,
 				$fragments,
-				$sections,
+				$heading_sections_for_shadow,
 				$r260
 			);
 			if ( (int) ( $r260b['candidate_count'] ?? 0 ) > 0 ) {
@@ -1168,19 +1338,6 @@ final class Search_Section_Runner_G590 {
 
 			$promotable_shadow_count = (int) ( $r260b['promotable_shadow_count'] ?? 0 );
 			if ( $promotable_shadow_count > 0 ) {
-				$post = get_post( $post_id );
-				$rendered = '';
-				if ( is_object( $post ) ) {
-					$previous_post = $GLOBALS['post'] ?? null;
-					$GLOBALS['post'] = $post;
-					setup_postdata( $post );
-					$rendered = (string) apply_filters( 'the_content', (string) ( $post->post_content ?? '' ) );
-					wp_reset_postdata();
-					if ( is_object( $previous_post ) ) {
-						$GLOBALS['post'] = $previous_post;
-					}
-				}
-
 				$r260c = R260_Anchor_Feasibility_Profiler::profile(
 					$post_id,
 					$source_kind,
@@ -1544,6 +1701,75 @@ final class Search_Section_Runner_G590 {
 			? (float) $r260d_effective_unique_count / $r260d_promotable_count
 			: 0.0;
 
+		$r260_runtime_profiles = array_values(
+			array_filter(
+				(array) ( $accumulator['r260_runtime_profiles'] ?? array() ),
+				static fn ( mixed $row ): bool => is_array( $row )
+			)
+		);
+		$r260_runtime_states = array(
+			'toc_suppressed' => 0,
+			'body_projected' => 0,
+			'existing_heading_redundant' => 0,
+			'uncertain' => 0,
+		);
+		$r260_runtime_totals = array(
+			'deterministic_candidate_count' => 0,
+			'body_bearing_count' => 0,
+			'canonical_projected_count' => 0,
+			'runtime_projected_count' => 0,
+			'duplicate_body_count' => 0,
+			'runtime_generated_anchor_count' => 0,
+			'runtime_unresolved_anchor_count' => 0,
+			'identity_collision_count' => 0,
+			'projection_gap_count' => 0,
+			'projection_extra_count' => 0,
+			'unsafe_promotion_count' => 0,
+			'overflow_post_count' => 0,
+			'overflow_total' => 0,
+			'generated_anchor_materialization_failed' => 0,
+			'visible_text_changed' => 0,
+		);
+		$r260_runtime_by_source_kind = array();
+		foreach ( $r260_runtime_profiles as $profile ) {
+			$kind = (string) ( $profile['source_kind'] ?? 'unknown' );
+			if ( ! isset( $r260_runtime_by_source_kind[ $kind ] ) ) {
+				$r260_runtime_by_source_kind[ $kind ] = array(
+					'candidate_count' => 0,
+					'body_bearing_count' => 0,
+					'runtime_projected_count' => 0,
+					'generated_anchor_count' => 0,
+					'unresolved_anchor_count' => 0,
+				);
+			}
+			$r260_runtime_totals['deterministic_candidate_count'] += (int) ( $profile['candidate_count'] ?? 0 );
+			$r260_runtime_totals['body_bearing_count'] += (int) ( $profile['body_bearing_count'] ?? 0 );
+			$r260_runtime_totals['canonical_projected_count'] += (int) ( $profile['canonical_projected_count'] ?? 0 );
+			$r260_runtime_totals['runtime_projected_count'] += (int) ( $profile['persisted_structural_count'] ?? 0 );
+			$r260_runtime_totals['duplicate_body_count'] += (int) ( $profile['duplicate_body_count'] ?? 0 );
+			$r260_runtime_totals['runtime_generated_anchor_count'] += (int) ( $profile['persisted_generated_anchor_count'] ?? 0 );
+			$r260_runtime_totals['runtime_unresolved_anchor_count'] += (int) ( $profile['persisted_unresolved_anchor_count'] ?? 0 );
+			$r260_runtime_totals['identity_collision_count'] += (int) ( $profile['identity_collision_count'] ?? 0 );
+			$r260_runtime_totals['projection_gap_count'] += (int) ( $profile['projection_gap_count'] ?? 0 );
+			$r260_runtime_totals['projection_extra_count'] += (int) ( $profile['projection_extra_count'] ?? 0 );
+			$r260_runtime_totals['unsafe_promotion_count'] += (int) ( $profile['unsafe_promotion_count'] ?? 0 );
+			$r260_runtime_totals['overflow_total'] += (int) ( $profile['overflow_by'] ?? 0 );
+			$r260_runtime_totals['generated_anchor_materialization_failed'] += (int) ( $profile['generated_anchor_materialization_failed'] ?? 0 );
+			$r260_runtime_totals['visible_text_changed'] += (int) ( $profile['visible_text_changed'] ?? 0 );
+			if ( (int) ( $profile['overflow_by'] ?? 0 ) > 0 ) {
+				++$r260_runtime_totals['overflow_post_count'];
+			}
+			foreach ( array_keys( $r260_runtime_states ) as $state ) {
+				$r260_runtime_states[ $state ] += (int) ( ( (array) ( $profile['states'] ?? array() ) )[ $state ] ?? 0 );
+			}
+			$r260_runtime_by_source_kind[ $kind ]['candidate_count'] += (int) ( $profile['candidate_count'] ?? 0 );
+			$r260_runtime_by_source_kind[ $kind ]['body_bearing_count'] += (int) ( $profile['body_bearing_count'] ?? 0 );
+			$r260_runtime_by_source_kind[ $kind ]['runtime_projected_count'] += (int) ( $profile['persisted_structural_count'] ?? 0 );
+			$r260_runtime_by_source_kind[ $kind ]['generated_anchor_count'] += (int) ( $profile['persisted_generated_anchor_count'] ?? 0 );
+			$r260_runtime_by_source_kind[ $kind ]['unresolved_anchor_count'] += (int) ( $profile['persisted_unresolved_anchor_count'] ?? 0 );
+		}
+		ksort( $r260_runtime_by_source_kind, SORT_STRING );
+
 		ksort( $strong_by_source_kind, SORT_STRING );
 		ksort( $strong_without_heading_by_source_kind, SORT_STRING );
 		ksort( $strong_by_confidence, SORT_STRING );
@@ -1631,7 +1857,32 @@ final class Search_Section_Runner_G590 {
 					),
 					'interpretation' => 'shadow_only_no_runtime_promotion',
 				),
-				'interpretation' => 'diagnostic_only_no_runtime_promotion',
+				'runtime_structural_projection' => array(
+					'version' => R260_Structural_Projector::VERSION,
+					'deterministic_candidate_count' => (int) $r260_runtime_totals['deterministic_candidate_count'],
+					'disposition_counts' => $r260_runtime_states,
+					'body_bearing_count' => (int) $r260_runtime_totals['body_bearing_count'],
+					'canonical_projected_count' => (int) $r260_runtime_totals['canonical_projected_count'],
+					'runtime_projected_count' => (int) $r260_runtime_totals['runtime_projected_count'],
+					'duplicate_body_count' => (int) $r260_runtime_totals['duplicate_body_count'],
+					'runtime_generated_anchor_count' => (int) $r260_runtime_totals['runtime_generated_anchor_count'],
+					'runtime_unresolved_anchor_count' => (int) $r260_runtime_totals['runtime_unresolved_anchor_count'],
+					'unsafe_promotion_count' => (int) $r260_runtime_totals['unsafe_promotion_count'],
+					'projection_gap_count' => (int) $r260_runtime_totals['projection_gap_count'],
+					'projection_extra_count' => (int) $r260_runtime_totals['projection_extra_count'],
+					'identity_collision_count' => (int) $r260_runtime_totals['identity_collision_count'],
+					'overflow_post_count' => (int) $r260_runtime_totals['overflow_post_count'],
+					'overflow_total' => (int) $r260_runtime_totals['overflow_total'],
+					'generated_anchor_materialization_failed' => (int) $r260_runtime_totals['generated_anchor_materialization_failed'],
+					'visible_text_changed' => (int) $r260_runtime_totals['visible_text_changed'],
+					'repository_error_count' => (int) ( $accumulator['r260_runtime_repository_error_count'] ?? 0 ),
+					'repository_errors' => array_slice( (array) ( $accumulator['r260_runtime_repository_errors'] ?? array() ), 0, 20 ),
+					'by_source_kind' => $r260_runtime_by_source_kind,
+					'post_profiles' => $r260_runtime_profiles,
+					'samples' => array_slice( (array) ( $accumulator['r260_runtime_samples'] ?? array() ), 0, 80 ),
+					'interpretation' => 'runtime_structural_projection_evidence_v1',
+				),
+				'interpretation' => 'runtime_promotion_with_diagnostics',
 			),
 			'hierarchy_node_source_counts' => $hierarchy_node_source_counts,
 			'probe_candidate_count' => count( $probe_candidates ),
@@ -1640,6 +1891,55 @@ final class Search_Section_Runner_G590 {
 			'probe_candidates' => $probe_candidates,
 		);
 	}
+
+	/** @param array<string,mixed> $coverage */
+	private static function structural_coverage_pass( array $coverage ): bool {
+		$discovery = is_array( $coverage['r260_discovery'] ?? null ) ? $coverage['r260_discovery'] : array();
+		$runtime = is_array( $discovery['runtime_structural_projection'] ?? null )
+			? $discovery['runtime_structural_projection']
+			: array();
+		$totals = is_array( $discovery['totals'] ?? null ) ? $discovery['totals'] : array();
+		$shadow = is_array( $discovery['shadow_projection'] ?? null ) ? $discovery['shadow_projection'] : array();
+		$shadow_states = is_array( $shadow['states'] ?? null ) ? $shadow['states'] : array();
+		$states = is_array( $runtime['disposition_counts'] ?? null ) ? $runtime['disposition_counts'] : array();
+
+		$candidate_count = (int) ( $runtime['deterministic_candidate_count'] ?? -1 );
+		$state_partition = 0;
+		foreach ( array( 'toc_suppressed', 'body_projected', 'existing_heading_redundant', 'uncertain' ) as $state ) {
+			$state_partition += (int) ( $states[ $state ] ?? 0 );
+		}
+
+		$body_bearing = (int) ( $runtime['body_bearing_count'] ?? -1 );
+		$redundant = (int) ( $states['existing_heading_redundant'] ?? 0 );
+		$expected_runtime_count = max( 0, $body_bearing - $redundant );
+		$runtime_projected = (int) ( $runtime['runtime_projected_count'] ?? -1 );
+		$generated = (int) ( $runtime['runtime_generated_anchor_count'] ?? -1 );
+		$unresolved = (int) ( $runtime['runtime_unresolved_anchor_count'] ?? -1 );
+
+		return R260_Structural_Projector::VERSION === (string) ( $runtime['version'] ?? '' )
+			&& $candidate_count >= 0
+			&& $candidate_count === (int) ( $coverage['structural_recovery_candidate_count'] ?? -2 )
+			&& $candidate_count === (int) ( $totals['candidate_count'] ?? -3 )
+			&& $candidate_count === $state_partition
+			&& (int) ( $states['toc_suppressed'] ?? -1 ) === (int) ( $totals['toc_signal_count'] ?? -2 )
+			&& $body_bearing === (int) ( $totals['body_signal_count'] ?? -2 )
+			&& (int) ( $states['uncertain'] ?? -1 ) === (int) ( $totals['uncertain_count'] ?? -2 )
+			&& (int) ( $runtime['duplicate_body_count'] ?? -1 )
+				=== (int) ( $shadow_states['duplicate_candidate_ambiguous'] ?? -2 )
+			&& (int) ( $runtime['canonical_projected_count'] ?? -1 ) === $expected_runtime_count
+			&& $runtime_projected === $expected_runtime_count
+			&& $generated + $unresolved === $runtime_projected
+			&& 0 === (int) ( $runtime['projection_gap_count'] ?? -1 )
+			&& 0 === (int) ( $runtime['projection_extra_count'] ?? -1 )
+			&& 0 === (int) ( $runtime['unsafe_promotion_count'] ?? -1 )
+			&& 0 === (int) ( $runtime['overflow_post_count'] ?? -1 )
+			&& 0 === (int) ( $runtime['overflow_total'] ?? -1 )
+			&& 0 === (int) ( $runtime['identity_collision_count'] ?? -1 )
+			&& 0 === (int) ( $runtime['repository_error_count'] ?? -1 )
+			&& 0 === (int) ( $runtime['generated_anchor_materialization_failed'] ?? -1 )
+			&& 0 === (int) ( $runtime['visible_text_changed'] ?? -1 );
+	}
+
 
 	/** @return array<string,mixed> */
 	private static function coverage_audit( array $post_ids ): array {
@@ -1833,6 +2133,9 @@ final class Search_Section_Runner_G590 {
 			BDC_KB_DIR . 'includes/class-search-anchor-manager.php',
 			BDC_KB_DIR . 'includes/class-search-service.php',
 			BDC_KB_DIR . 'includes/class-search-section-runner-g590.php',
+			BDC_KB_DIR . 'includes/class-search-document-builder.php',
+			BDC_KB_DIR . 'includes/class-r260-contextual-anchor-resolver.php',
+			BDC_KB_DIR . 'includes/class-r260-structural-projector.php',
 			BDC_KB_DIR . 'includes/class-r260-contextual-anchor-feasibility-profiler.php',
 		);
 		$source = '';

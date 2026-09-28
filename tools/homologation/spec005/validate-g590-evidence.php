@@ -31,12 +31,24 @@ $get = static function ( array $source, array $path, mixed $default = null ): mi
 	return $current;
 };
 
+$runtime = (array) $get( $data, array( 'coverage', 'r260_discovery', 'runtime_structural_projection' ), array() );
+$dispositions = (array) ( $runtime['disposition_counts'] ?? array() );
+$r260_totals = (array) $get( $data, array( 'coverage', 'r260_discovery', 'totals' ), array() );
+$shadow_states = (array) $get( $data, array( 'coverage', 'r260_discovery', 'shadow_projection', 'states' ), array() );
+$disposition_sum = 0;
+foreach ( array( 'toc_suppressed', 'body_projected', 'existing_heading_redundant', 'uncertain' ) as $state ) {
+	$disposition_sum += (int) ( $dispositions[ $state ] ?? 0 );
+}
+$body_bearing = (int) ( $runtime['body_bearing_count'] ?? -1 );
+$redundant = (int) ( $dispositions['existing_heading_redundant'] ?? 0 );
+$expected_runtime = max( 0, $body_bearing - $redundant );
+
 $checks = array(
 	'gate_is_g590' => 'G-590' === (string) ( $data['gate'] ?? '' ),
 	'mode_is_environmental' => 'spec005_section_retrieval_deeplink_environmental' === (string) ( $data['mode'] ?? '' ),
-	'product_version_is_rc' => '0.5.1-rc.10' === (string) $get( $data, array( 'environment', 'plugin' ), '' ),
+	'product_version_is_rc' => '0.5.1-rc.11' === (string) $get( $data, array( 'environment', 'plugin' ), '' ),
 	'build_id_is_g590' => 1 === preg_match(
-		'/^g590\.10-[a-f0-9]{12}$/',
+		'/^g590\.11-[a-f0-9]{12}$/',
 		(string) $get( $data, array( 'environment', 'build_id' ), '' )
 	),
 	'schema_current' => true === (bool) $get( $data, array( 'lifecycle', 'schema_contract', 'pass' ), false ),
@@ -49,7 +61,31 @@ $checks = array(
 	'corpus_fully_analyzed' => (int) $get( $data, array( 'coverage', 'corpus_count' ), -1 )
 		=== (int) $get( $data, array( 'coverage', 'posts_analyzed' ), -2 ),
 	'no_extractor_errors' => 0 === (int) $get( $data, array( 'coverage', 'extractor_error_count' ), -1 ),
-	'no_uncontextual_numbered_gap' => 0 === (int) $get( $data, array( 'coverage', 'strong_numbered_without_heading_context' ), -1 ),
+	'deep_link_contract_v2' => 'g590-deep-link-contract-v2.md' === (string) $get( $data, array( 'contracts', 'deep_link' ), '' ),
+	'evidence_contract_v15' => 'g590-evidence-contract-addendum-v1.5.md' === (string) $get( $data, array( 'contracts', 'evidence_addendum' ), '' ),
+	'section_projection_v11' => 'search-section-projection-v1.1.0' === (string) $get( $data, array( 'lifecycle', 'explicit_rebuild', 'state_after', 'section_projection_version' ), '' ),
+	'runtime_structural_version' => 'r260-structural-projection-v1.0.0' === (string) ( $runtime['version'] ?? '' ),
+	'deterministic_candidate_reconciles' => (int) ( $runtime['deterministic_candidate_count'] ?? -1 )
+		=== (int) $get( $data, array( 'coverage', 'structural_recovery_candidate_count' ), -2 ),
+	'deterministic_disposition_partition' => (int) ( $runtime['deterministic_candidate_count'] ?? -1 ) === $disposition_sum,
+	'toc_reconciles' => (int) ( $dispositions['toc_suppressed'] ?? -1 ) === (int) ( $r260_totals['toc_signal_count'] ?? -2 ),
+	'body_bearing_reconciles' => $body_bearing === (int) ( $r260_totals['body_signal_count'] ?? -2 ),
+	'uncertain_reconciles' => (int) ( $dispositions['uncertain'] ?? -1 ) === (int) ( $r260_totals['uncertain_count'] ?? -2 ),
+	'duplicate_body_reconciles' => (int) ( $runtime['duplicate_body_count'] ?? -1 )
+		=== (int) ( $shadow_states['duplicate_candidate_ambiguous'] ?? -2 ),
+	'canonical_projection_complete' => (int) ( $runtime['canonical_projected_count'] ?? -1 ) === $expected_runtime,
+	'persisted_projection_complete' => (int) ( $runtime['runtime_projected_count'] ?? -1 ) === $expected_runtime,
+	'anchor_partition_complete' => (int) ( $runtime['runtime_generated_anchor_count'] ?? -1 )
+		+ (int) ( $runtime['runtime_unresolved_anchor_count'] ?? -1 ) === $expected_runtime,
+	'projection_gap_zero' => 0 === (int) ( $runtime['projection_gap_count'] ?? -1 ),
+	'projection_extra_zero' => 0 === (int) ( $runtime['projection_extra_count'] ?? -1 ),
+	'unsafe_promotion_zero' => 0 === (int) ( $runtime['unsafe_promotion_count'] ?? -1 ),
+	'overflow_zero' => 0 === (int) ( $runtime['overflow_post_count'] ?? -1 )
+		&& 0 === (int) ( $runtime['overflow_total'] ?? -1 ),
+	'identity_collision_zero' => 0 === (int) ( $runtime['identity_collision_count'] ?? -1 ),
+	'repository_errors_zero' => 0 === (int) ( $runtime['repository_error_count'] ?? -1 ),
+	'all_generated_structural_anchors_materialize' => 0 === (int) ( $runtime['generated_anchor_materialization_failed'] ?? -1 ),
+	'structural_visible_text_unchanged' => 0 === (int) ( $runtime['visible_text_changed'] ?? -1 ),
 	'all_generated_source_kinds_probed' => empty( $get( $data, array( 'coverage', 'unprobed_source_kinds' ), array( '__missing__' ) ) ),
 
 	'minimum_section_probes' => (int) $get( $data, array( 'section_deep_link_probes', 'eligible_probe_count' ), 0 )

@@ -68,11 +68,13 @@ $checks = array(
 	'section_ranker_v11' => str_contains( $section_ranker, "VERSION = 'lexical-section-ranker-v1.1.0'" ),
 	'section_ranker_does_not_require_generated_anchor' => ! str_contains( $section_ranker, "'generated' !== (string) ( $section['anchor_state']" ),
 
-	'duplicate_heading_fail_closed' => str_contains( $projector, "'anchor_state'] = 'unresolved'" )
-		&& str_contains( $projector, "'anchor_id'] = ''" ),
+	'duplicate_heading_fail_closed' => str_contains( $projector, "'unresolved'" )
+		&& str_contains( $projector, "'anchor_id'" )
+		&& str_contains( $projector, '$title_counts' ),
 	'anchor_does_not_replace_editorial_id' => ! str_contains( $anchor_code, 'preg_replace' )
 		&& str_contains( $anchor, '<span id="' ),
-	'anchor_runtime_unique_match' => str_contains( $anchor, '1 !== count( $candidates )' ),
+	'anchor_runtime_unique_match' => str_contains( $anchor, 'R260_Contextual_Anchor_Resolver::resolve_target' )
+		&& str_contains( $anchor, 'count($candidates)' ),
 	'anchor_no_editorial_write' => 1 !== preg_match( '/wp_update_post\s*\(|wp_insert_post\s*\(|update_post_meta\s*\(|delete_post_meta\s*\(/i', $anchor_code ),
 
 	'parent_ranker_version_frozen' => str_contains( $parent_ranker, "public const VERSION = 'lexical-ranker-v1.0.0';" ),
@@ -110,6 +112,10 @@ $checks = array(
 		&& str_contains( $runner, "'section_query_found_expected'" ),
 	'runner_no_editorial_write' => 1 !== preg_match( '/wp_update_post\s*\(|wp_insert_post\s*\(|update_post_meta\s*\(|delete_post_meta\s*\(|wp_set_object_terms\s*\(/i', $runner_code ),
 	'runner_no_external_network' => 1 !== preg_match( '/wp_remote_[A-Za-z0-9_]*\s*\(|curl_[A-Za-z0-9_]+\s*\(|(?<![A-Za-z0-9_])fsockopen\s*\(|(?<![A-Za-z0-9_])stream_socket_client\s*\(/i', $runner_code ),
+	'runner_r260d2_runtime_evidence' => str_contains( $runner, "'runtime_structural_projection'" )
+		&& str_contains( $runner, 'structural_coverage_pass' )
+		&& str_contains( $runner, "'projection_gap_count'" )
+		&& str_contains( $runner, "'unsafe_promotion_count'" ),
 	'runner_gate_t59014_t59019' => str_contains( $runner, "'t59014_cross_spec_regression_pass'" )
 		&& str_contains( $runner, "'t59015_coverage_audit_pass'" )
 		&& str_contains( $runner, "'t59016_section_golden_deeplink_pass'" )

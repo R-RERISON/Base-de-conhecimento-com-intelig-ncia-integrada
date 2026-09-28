@@ -192,11 +192,11 @@
 - [x] T590-13 implementar Anchor Manager read-only/fail-closed.
 - [x] T590-13A adicionar schema contract físico (colunas+índices) e lifecycle degraded-safe.
 - [x] T590-14 unit/regression Search post-level + SPEC-001–004 — PASS ambiental preservado até RC9.
-- [ ] T590-15 coverage ambiental — Evidence Contract v1.5 implementado; R-260D2 runtime candidate RC11 aguarda evidência ENV.
+- [x] T590-15 coverage ambiental — PASS RC12; 548 = 77 TOC + 289 body + 182 uncertain; 289/289 runtime; zero gaps/unsafe/overflow/collision.
 - [x] T590-16 technical challenge/Golden section-level — PASS ambiental; source kinds cobertos, 0 section/deep-link failures.
 - [x] T590-17 lifecycle migration 1.0→1.1 + explicit rebuild — PASS ambiental; prepare sem reindex, rebuild determinístico.
-- [x] T590-18 performance/security — PASS ambiental preservado; RC10 p95 341.861 ms / max 350.6229 ms; safety íntegra.
-- [ ] T590-19 G-590 PASS/CLOSED.
+- [x] T590-18 performance/security — PASS RC12; p95 255.923 ms / max 299.911 ms; safety íntegra.
+- [x] T590-19 G-590 PASS/CLOSED — RC12; next_gate=G-585.
 
 ### G-590 — execução ambiental resumível
 - [x] G590-ENV-01 RC1 `0.5.1-rc.1/g590.1` executado — FAIL CONTROLADO HTTP 504; nenhum JSON; funcionalidade não avaliada.
@@ -222,7 +222,7 @@
 - [ ] G590-ENV-16 validar evidence machine `failed=0` e decidir T590-15/T590-16.
 
 ## Pós G-590
-- [ ] retomar G-585 apenas como engine independence proof.
+- [x] retomar G-585 após fechamento G-590 — gate ativo novamente; decommission continua condicionado ao Master Ledger e Public Experience.
 - [ ] fechar boundary da SPEC-005 antes da SPEC-006.
 
 
@@ -279,5 +279,5 @@
 - [x] G590-ENV-57 identificar root cause — occurrence evidence runtime era calculada depois do candidate filter; R-260A usa todos os hierarchy nodes.
 - [x] G590-ENV-58 corrigir Structural Projection v1.0.1 + regression R-260A↔runtime candidate/TOC/body/uncertain.
 - [x] G590-ENV-59 gerar RC12 `0.5.1-rc.12/g590.12` — source `61681200f1152d98caf949568cfd99810c83e57a`; SHA-256 `eeeb4222ed2e68ed6a488d088df8d3e61bd6313d87ace09f06f2cb8173b55026`; 88 files; PHP 75/75; JS 3/3; JSON 2/2; D2 23/23; parity 4/4; Evidence v1.5 13/13; deterministic 2/2.
-- [ ] G590-ENV-60 executar RC12 e baixar JSON.
-- [ ] G590-ENV-61 validar RC12; somente `failed=0` autoriza T590-15/T590-19 PASS/CLOSED e atualização ASI-003/004/005.
+- [x] G590-ENV-60 executar RC12 e baixar JSON — `bdc-kb-spec005-g590-section-20260928-124850.json`.
+- [x] G590-ENV-61 validar RC12 — 57/57 PASS, 0 FAIL; T590-14..19 PASS; G-590 CLOSED; ASI-003/004/005 -> PARITY_VERIFIED.

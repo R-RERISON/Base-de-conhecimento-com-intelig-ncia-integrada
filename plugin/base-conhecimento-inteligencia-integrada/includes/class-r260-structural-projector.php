@@ -8,7 +8,7 @@ namespace BDC\KnowledgeBase;
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 final class R260_Structural_Projector {
-	public const VERSION = 'r260-structural-projection-v1.0.0';
+	public const VERSION = 'r260-structural-projection-v1.0.1';
 	private const BODY_KINDS = array('paragraph','list_item','table_caption','table_row','quote','code','image');
 
 	/** @param array<int,array<string,mixed>> $fragments @return array<string,mixed> */

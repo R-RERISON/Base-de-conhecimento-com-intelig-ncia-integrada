@@ -24,6 +24,28 @@ final class R260_Structural_Projector {
 			if(''!==$label){$heading_labels[$label]=(int)($heading_labels[$label]??0)+1;}
 		}
 
+		/*
+		 * R-260A semantics: occurrence evidence is collected from every hierarchy
+		 * node first, and only then is the runtime candidate subset filtered.
+		 *
+		 * This is intentional. An early deterministic paragraph can be TOC-like
+		 * because the same label appears later in a node that is not itself a
+		 * runtime candidate (for example, because it already has heading context
+		 * or its hierarchy confidence differs). Restricting occurrences to the
+		 * candidate subset silently changes the R-260A TOC/uncertain partition.
+		 */
+		$label_occurrences=array(); $token_occurrences=array();
+		foreach((array)($hierarchy['nodes']??array()) as $node){
+			if(!is_array($node)){continue;}
+			$ordinal=(int)($node['ordinal']??-1);
+			if($ordinal<0||!isset($fragments[$ordinal])||!is_array($fragments[$ordinal])){continue;}
+			$fragment=$fragments[$ordinal];
+			$title_norm=Search_Query_Normalizer::normalize_document_text((string)($fragment['text']??''));
+			$token=(string)($node['token']??'');
+			if(''!==$title_norm){$label_occurrences[$title_norm][]=$ordinal;}
+			if(''!==$token){$token_occurrences[$token][]=$ordinal;}
+		}
+
 		$candidates=array();
 		foreach((array)($hierarchy['nodes']??array()) as $node){
 			if(!is_array($node)){continue;}
@@ -48,10 +70,9 @@ final class R260_Structural_Projector {
 			);
 		}
 
-		$label_occurrences=array(); $token_occurrences=array(); $candidate_label_counts=array();
+		$candidate_label_counts=array();
 		foreach($candidates as $candidate){
-			$label=(string)$candidate['title_norm']; $token=(string)$candidate['token']; $ordinal=(int)$candidate['ordinal'];
-			$label_occurrences[$label][]=$ordinal; $token_occurrences[$token][]=$ordinal;
+			$label=(string)$candidate['title_norm'];
 			$candidate_label_counts[$label]=(int)($candidate_label_counts[$label]??0)+1;
 		}
 

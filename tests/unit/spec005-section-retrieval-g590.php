@@ -57,6 +57,9 @@ namespace BDC\KnowledgeBase {
 	$root = __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/';
 	require_once $root . 'class-search-query-normalizer.php';
 	require_once $root . 'class-lexical-ranker.php';
+	require_once $root . 'class-numbered-hierarchy-resolver.php';
+	require_once $root . 'class-r260-contextual-anchor-resolver.php';
+	require_once $root . 'class-r260-structural-projector.php';
 	require_once $root . 'class-search-section-projector.php';
 	require_once $root . 'class-search-section-ranker.php';
 	require_once $root . 'class-search-section-service.php';

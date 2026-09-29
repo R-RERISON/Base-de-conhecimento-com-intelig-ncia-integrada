@@ -686,3 +686,25 @@ G-595 disposition:
 
 SPEC-005 boundary is technically closed and ready for explicit human merge decision.  
 ASI retirement/public cutover remain blocked by the Master Functional Parity Ledger and SPEC-014.
+
+
+## ASI parity interpretation after G-595
+
+G-595 closes the SPEC-005 Search boundary, not global ASI parity.
+
+Master Ledger ASI coverage:
+- 22 total ASI capabilities;
+- 7 verified/improved in closed Search boundary;
+- 15 still not retirement-ready;
+- 12 GAP;
+- 3 PARTIAL.
+
+Remaining ownership:
+- SPEC-007: ASI-018 public live search + public environmental dependencies;
+- SPEC-008: ASI-007..017 except already closed core search — vocabulary, bindings, relevance, diagnostics, telemetry, outcomes, intelligence, privacy, Word Cloud;
+- SPEC-009: ASI-020..022 — durable operations, reconciliation, Site Health.
+
+Canonical map:
+- `asi-capability-closure-map-post-g595.md`.
+
+This distinction is mandatory: SPEC-005 CLOSED != ASI FULLY REPLACED.

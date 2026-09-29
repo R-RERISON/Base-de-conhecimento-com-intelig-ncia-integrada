@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-585",
+  "disposition": "INDEPENDENCE_PASS_DECOMMISSION_NOT_AUTHORIZED",
+  "date": "2026-09-29",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "db_server": "12.2.2",
+    "plugin": "0.5.1-rc.15"
+  },
+  "raw_evidence": {
+    "filename": "bdc-kb-spec005-g585-independence-20260929-110406.json",
+    "sha256": "8b67afccf2c39c8b366bb4049447e1cdf12eaf83b6fb80974c98101bd03e3f93"
+  },
+  "candidate_surface": {
+    "control_plane": "wp-admin/admin.php?page=bdc-kb-public-experience-preview",
+    "template": "templates/public-home-preview.php",
+    "dependency_zero": true,
+    "legacy_home_isolated": true,
+    "uses_the_content": false,
+    "uses_post_content": false
+  },
+  "legacy_production_home_inventory": {
+    "front_page_id": 41395,
+    "blocking": false,
+    "marker": "asi_search_form"
+  },
+  "independence": {
+    "active_legacy_plugins": 0,
+    "loaded_legacy_symbols": 0,
+    "loaded_legacy_hooks": 0
+  },
+  "rebuild": {
+    "status": "PASS",
+    "corpus_count": 623,
+    "row_count": 623,
+    "pass1_written": 0,
+    "pass1_no_change": 623,
+    "pass2_written": 0,
+    "pass2_no_change": 623,
+    "determinism_compared": 623,
+    "mismatch_count": 0
+  },
+  "search_probes": [
+    {
+      "query": "Windows 11",
+      "pass": true,
+      "count": 10
+    },
+    {
+      "query": "Pendrive",
+      "pass": true,
+      "count": 10
+    },
+    {
+      "query": "MSTeams",
+      "pass": true,
+      "count": 1
+    }
+  ],
+  "golden": {
+    "status": "PASS",
+    "result_count": 13,
+    "blocking_failed": 0,
+    "warning_failed": 0,
+    "technical_failed": 0,
+    "technical_error_count": 0,
+    "depends_on_legacy": false,
+    "calls_external_network": false,
+    "persists_query_log": false
+  },
+  "lifecycle": {
+    "status": "PASS",
+    "fallback": "wordpress_fallback/search_module_disabled",
+    "rows_retained": true,
+    "state_retained": true
+  },
+  "gate_result": {
+    "t585": true,
+    "t585_1": true,
+    "t586": true,
+    "t587": true,
+    "t588": true,
+    "t589": true,
+    "t589_1": true,
+    "t589_2": true,
+    "status": "PASS"
+  },
+  "decommission_authorization": {
+    "authorized": false,
+    "reason": "MASTER_LEDGER_PREFLIGHT_REQUIRED"
+  },
+  "next_gate": "SPEC005_BOUNDARY_REVIEW"
+}

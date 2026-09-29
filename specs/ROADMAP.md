@@ -1,74 +1,48 @@
-# Roadmap SpecKit — Base de Conhecimento com Inteligência Integrada
+# Roadmap Premium v2 — Base de Conhecimento com Inteligência Integrada
 
-> **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
+**Rebaseline:** 2026-09-21
 
-## Estado canônico — 2026-09-18
+## Consolidado
 
-1. **SPEC-000 — Inventário Profundo e Contratos** — CONCLUÍDA.
-2. **SPEC-001 — Core mínimo + Summary narrativo** — CONCLUÍDA.
-3. **SPEC-002 — Classificação de Conhecimento** — CONCLUÍDA.
-4. **UX-001/UX-002/UX-003** — CONCLUÍDAS / baseline visual vigente.
-5. **SPEC-003 — Review & Governança** — CONCLUÍDA.
-6. **SPEC-004 — Content Extractor + Knowledge Document + Canonical Block Normalization** — **CLOSED/main**.
-   - G-240 PASS/CLOSED;
-   - G-245 PASS/CLOSED;
-   - G-250 PASS/CLOSED;
-   - RC final `0.4.0-spec004-rc2`.
-7. **SPEC-005 — Search Lexical + Golden Queries** — **ATIVA / DISCOVERY** em `spec005-search-lexical-golden-queries`.
-8. **SPEC-006 — Telemetria / Inteligência de Busca** — planejada.
-9. **SPEC-007 — Operações / Jobs / Indexação** — planejada.
-10. **SPEC-008 — Semantic Search / Vetores / Hybrid Retrieval** — futura, condicionada a Golden Queries/métricas.
-11. **SPEC-009+ — IA / Foundry / RAG** — futura, assistiva e governada.
+1. SPEC-000 — Inventário Profundo — CLOSED histórico / addendum v2.
+2. SPEC-001 — Core + Summary — CLOSED.
+3. SPEC-002 — Classificação — CLOSED.
+4. SPEC-003 — Review & Governança — CLOSED.
+5. SPEC-004 — Content Extractor/KD/Canonicalization — CLOSED.
+6. SPEC-005 — Search Lexical + Golden — ACTIVE / scope refinado.
 
-## Fronteira da SPEC-005
+## Futuro
 
-A SPEC-005 começa sem engine própria.
+7. SPEC-006 — Premium Product Foundation, Domain Consolidation & Distribution.
+8. SPEC-007 — Public Knowledge Experience.
+9. SPEC-008 — Search Intelligence, Telemetry, Privacy & Governed Relevance.
+10. SPEC-009 — Operations, Indexing & Reliability.
+11. SPEC-010 — Semantic Search & Vectors.
+12. SPEC-011 — AI Platform, WordPress AI & Foundry.
+13. SPEC-012 — AI-Assisted Knowledge Governance.
+14. SPEC-013 — Evidence Resolution & RAG.
+15. SPEC-014 — Parity, Cutover & Legacy Retirement.
 
-Gate atual: **G-570 — Segurança/Performance**.
+## SPEC-005
 
-Concluídos: R-500 PASS/CLOSED e R-510 PASS/CLOSED. Golden Relevance v1.0.0 e Technical Challenge v1.0.0 estão congelados com hashes separados. A superfície inicial continua ADMIN-FIRST / Knowledge List.
+Search mantém lexical, Golden, item/section, anchors, lifecycle e fallback.
+Home/Reader -> SPEC-007.
+Telemetry/relevance governance -> SPEC-008.
+G-585 prova independência técnica, não retirement ASI.
 
-G-520 foi fechado em 2026-09-19:
-- Projection BDC própria aprovada;
-- sem FULLTEXT v1;
-- contratos normalizer/document/ranker/result/Golden runner congelados;
-- security + rollback fechados;
-- 25/25 contract checks PASS.
+## Regras
 
-G-530 foi fechado em 2026-09-19 com 17/17 testes, Projection/ranker/service próprios e zero write editorial. G-540 agora valida full-corpus, determinismo e idempotência em homologação.
-
-Referências: [estado atual](005-search-lexical-golden-queries/current-state.md) e [continuidade](005-search-lexical-golden-queries/CONTINUIDADE.md).
-
-Runtime lexical permanece bloqueado até **R-500 + R-510 + G-520**.
-
-## Dívidas que não entram na SPEC-005
-
-- AUTH-UX-001;
-- retirada Elementor;
-- telemetria detalhada;
-- durable queue;
-- item/deep-link sem evidência;
-- semantic/vector;
-- Foundry/IA.
-
-## Invariantes
-
-- sem big-bang;
 - WordPress-first;
-- baseline antes de mudança;
-- lexical antes de semantic;
-- Golden Query blocking fail = NO-GO;
-- projection nunca é autoridade;
-- nenhuma capacidade postergada implementada silenciosamente;
-- mesmo artefato testado deve ser o candidato de release;
-- GO de homologação != GO de produção.
+- plugin único modular;
+- sem regressão silenciosa;
+- paridade incremental;
+- PLANNED = GAP para cutover;
+- IA sugere, humano decide;
+- lexical funciona sem IA/vetor;
+- projections reconstruíveis;
+- zero writer editorial implícito;
+- package de produção não leva laboratório sem necessidade;
+- gates locais; GitHub Actions não são requisito;
+- 1.0.0 somente após SPEC-014.
 
-
-### SPEC-005 — avanço 2026-09-19
-
-- G-540 PASS/CLOSED;
-- G-550 PASS/CLOSED;
-- G-560 PASS/CLOSED;
-- desktop Search visual acceptance PASS;
-- mobile visual review explicitly deferred/non-blocking;
-- próximo gate: G-570 Security/Performance.
+Retirement é avaliado separadamente para ASI, GRE, KB2Ops e dependências ambientais.

@@ -1,19 +1,10 @@
-# SPEC-007 — Operações, Jobs, Indexação e Migrações
+# PLACEHOLDER HISTÓRICO — antiga SPEC-007 Operações / Jobs / Indexação
 
-**Status:** Planejada  
-**Pré-requisito:** SPEC-006 concluída.
+**Status:** SUPERSEDIDA PELO PREMIUM REBASELINE 2026-09-21.
 
-## Problema
-Indexação e processamento derivado precisam ser operáveis sem transformar WP-Cron em fila improvisada ou activation em processo pesado.
+Nova SPEC canônica:
+`specs/009-operations-indexing-reliability/`.
 
-## Resultado esperado
-Processamento incremental, jobs/fila apenas se comprovadamente necessários, migrações retomáveis, diagnóstico e rollback.
+O escopo foi ampliado para reliability, reconciliation, recovery drills, lifecycle e Site Health.
 
-## WordPress-first
-WP-Cron é disparador. Site Health deve ser avaliado para saúde. Infraestrutura própria entra apenas quando Core não oferece durabilidade/lease/retry necessários.
-
-## Princípio de negação
-Não recriar Post-Install Orchestrator/Fila ASI inteiros sem demanda comprovada.
-
-## Gate
-Mudança de post → trabalho derivado → projeção atualizada → erro retomável → saúde visível, sem impacto editorial.
+Não executar este diretório como SPEC ativa.

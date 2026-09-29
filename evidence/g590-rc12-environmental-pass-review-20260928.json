@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-590",
+  "disposition": "PASS_CLOSED",
+  "reviewed_at": "2026-09-28",
+  "source": {
+    "filename": "bdc-kb-spec005-g590-section-20260928-124850.json",
+    "sha256": "3d2fc34bd542665d731c3687550857f791d0ecb9706f80a2ba1d44397ce78435",
+    "size_bytes": 717138,
+    "generated_at": "2026-09-28T12:48:47+00:00"
+  },
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "db_server": "12.2.2",
+    "plugin": "0.5.1-rc.12",
+    "build_id": "g590.12-61681200f115"
+  },
+  "contracts": {
+    "section": "g590-section-retrieval-contract-v1.md",
+    "deep_link": "g590-deep-link-contract-v2.md",
+    "evidence": "g590-evidence-contract-addendum-v1.5.md",
+    "r260d2": "r260d2-structural-runtime-promotion-contract-v1.md"
+  },
+  "lifecycle": {
+    "corpus_count": 623,
+    "rows": 623,
+    "prepare_did_not_reindex": true,
+    "explicit_rebuild": "PASS",
+    "pass1_no_change": 623,
+    "pass2_no_change": 623,
+    "determinism_mismatch_count": 0,
+    "state_after": "ready",
+    "section_projection_version": "search-section-projection-v1.1.0"
+  },
+  "r260": {
+    "structural_projection_version": "r260-structural-projection-v1.0.1",
+    "deterministic_candidate_count": 548,
+    "dispositions": {
+      "toc_suppressed": 77,
+      "body_projected": 289,
+      "existing_heading_redundant": 0,
+      "uncertain": 182
+    },
+    "body_bearing_count": 289,
+    "canonical_projected_count": 289,
+    "runtime_projected_count": 289,
+    "duplicate_body_count": 78,
+    "generated_anchor_count": 263,
+    "unresolved_anchor_count": 26,
+    "projection_gap_count": 0,
+    "projection_extra_count": 0,
+    "unsafe_promotion_count": 0,
+    "identity_collision_count": 0,
+    "overflow_post_count": 0,
+    "overflow_total": 0,
+    "repository_error_count": 0,
+    "generated_anchor_materialization_failed": 0,
+    "visible_text_changed": 0
+  },
+  "probes": {
+    "eligible": 12,
+    "minimum": 5,
+    "section_query_failed": 0,
+    "deep_link_failed": 0,
+    "visible_text_changed": 0,
+    "unprobed_source_kinds": []
+  },
+  "performance": {
+    "sample_count": 30,
+    "p50_ms": 192.1129,
+    "p95_ms": 255.923,
+    "max_ms": 299.911,
+    "p95_budget_ms": 900,
+    "max_budget_ms": 1500,
+    "technical_failure_count": 0,
+    "pass": true
+  },
+  "golden": {
+    "status": "PASS",
+    "blocking_failed": 0,
+    "technical_failed": 0
+  },
+  "safety": {
+    "editorial_fingerprint_equal": true,
+    "corpus_ids_equal": true,
+    "no_asi": true,
+    "no_network": true,
+    "no_editorial_write": true,
+    "parent_ranker_version_frozen": true,
+    "candidate_query_does_not_load_sections": true
+  },
+  "gate_result": {
+    "t59014": true,
+    "t59015": true,
+    "t59016": true,
+    "t59017": true,
+    "t59018": true,
+    "t59019": true,
+    "next_gate": "G-585"
+  },
+  "validator": {
+    "contract": "validate-g590-evidence.php equivalent checks",
+    "passed": 57,
+    "failed": 0
+  },
+  "interpretation": [
+    "G-590 PASS/CLOSED.",
+    "ASI-003/004/005 capability blockers may be promoted in the Master Functional Parity Ledger.",
+    "This does not authorize ASI decommission; G-585 remains mandatory."
+  ]
+}

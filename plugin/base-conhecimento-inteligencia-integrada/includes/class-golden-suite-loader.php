@@ -15,7 +15,7 @@ final class Golden_Suite_Loader {
 
 	public const RUNNER_VERSION = 'golden-runner-v1.0.0';
 	public const EXPECTED_NORMALIZER_VERSION = 'search-normalizer-v1.0.0';
-	public const EXPECTED_DOCUMENT_VERSION = 'search-document-v1.0.0';
+	public const EXPECTED_DOCUMENT_VERSION = 'search-document-v1.1.0';
 	public const EXPECTED_ALGORITHM_VERSION = 'lexical-ranker-v1.0.0';
 	public const EXPECTED_RESULT_VERSION = 'search-result-v1.0.0';
 

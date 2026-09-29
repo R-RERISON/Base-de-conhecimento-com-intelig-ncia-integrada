@@ -79,13 +79,13 @@
 - [x] T583 uninstall retention — PASS ambiental; deactivation/uninstall não destrutivos por default.
 - [x] T584 G-580 PASS — CLOSED em 2026-09-20; evidence g580-environmental-review-20260920T173016Z.json; próximo gate G-585.
 
-## G-590 — RC
-- [ ] T590 deterministic build.
-- [ ] T591 manifest/checksum.
-- [ ] T592 regression SPEC-001–004.
-- [ ] T593 environmental RC smoke.
-- [ ] T594 final report.
-- [ ] T595 merge only after human approval.
+## G-595 — Boundary Closeout / RC técnico
+- [x] T595-01 deterministic build do artefato boundary G-590+G-585 — RC16 PASS.
+- [x] T595-02 manifest/checksum — PASS; ZIP SHA-256 `55776bc68f972ccd5aadc0af31fbb09d272e9791472f8a1d562a81ca1ceff42e`.
+- [x] T595-03 regressão SPEC-001–005 consolidada — 17 local gates + T100E PASS; source lint 122/122; ZIP lint 76/76.
+- [x] T595-04 environmental boundary smoke — RC16 PASS; G-585 + G-590 preservados no mesmo pacote.
+- [ ] T595-05 relatório final da fronteira Search.
+- [ ] T595-06 merge somente após aprovação humana.
 
 
 ## P-580A — ASI Functional Parity Rebaseline
@@ -115,21 +115,21 @@
 - [ ] UX005-A050 Astra Custom CSS não requerido.
 
 ## G-585 — ASI Independence / Decommission Readiness
-> PAUSED: G-585 não pode fechar antes de P-580A/UX-004 eliminarem perda funcional bloqueante.
-- [ ] T585 static scan runtime: zero `asi_*`, `asi4_*`, classes/functions/hooks ASI.
-- [ ] T586 desativar ASI em homologação.
-- [ ] T587 executar Search + Golden Suite com ASI ausente.
-- [ ] T588 rebuild do índice/projection própria com ASI ausente.
-- [ ] T589 comprovar rollback/lifecycle sem ASI.
-- [ ] T589.1 registrar evidência de dependency-zero.
-- [ ] T589.2 G-585 PASS antes de RC.
+> CLOSED: G-585 comprovou independência técnica do ASI. Decommission/cutover permanece NÃO AUTORIZADO até Master Functional Parity Ledger + boundary gate.
+- [x] T585 static scan/runtime dependency zero — PASS ambiental RC15.
+- [x] T586 ASI manualmente desativado em homologação — PASS.
+- [x] T587 Search + Golden Suite com ASI ausente — PASS; 3 probes PASS, Golden 13 resultados, 0 failures.
+- [x] T588 rebuild da Projection própria sem ASI — PASS; 623/623, pass1/pass2 NO_CHANGE, 0 mismatch.
+- [x] T589 lifecycle/rollback sem ASI — PASS; fallback honesto, rows/state retidos.
+- [x] T589.1 evidência dependency-zero gerada — PASS; schema 2.2.0.
+- [x] T589.2 G-585 PASS — INDEPENDENCE CLOSED; cutover_authorized=false.
 - [x] G585-PKG-01 contrato `g585-asi-independence-contract-v1.md` congelado.
 - [x] G585-PKG-02 runner nunca desativa/remove ASI automaticamente; bloqueia com `BLOCKED_LEGACY_ACTIVE`.
 - [x] G585-PKG-03 static runtime scan + loaded symbols/hooks + active plugin probe implementados.
 - [x] G585-PKG-04 Search + Golden + rebuild + lifecycle/rollback integrados ao runner.
 - [x] G585-PKG-05 29/29 checks locais; 59/59 PHP lint; 48/48 active requires.
 - [x] G585-PKG-06 build determinístico 2/2 — SHA-256 `cae86ef93572e9320efe89d8fed891e90be032e5d46e4aaccf6dca647bf62880`.
-- [ ] G585-ENV executar com ASI manualmente desativado e anexar JSON.
+- [x] G585-ENV RC15 executado com ASI manualmente desativado — PASS; evidence `bdc-kb-spec005-g585-independence-20260929-110406.json`; SHA-256 `8b67afccf2c39c8b366bb4049447e1cdf12eaf83b6fb80974c98101bd03e3f93`.
   - g585.1: FAIL CONTROLADO — ASI inativo, source BDC dependency-zero, porém símbolo carregado `BDC_KX_ASI_Adapter`; origem não atribuída.
   - g585.2: patch diagnóstico pronto; Reflection reporta source_scope/source_path; gate permanece bloqueante; reexecução requerida.
 
@@ -178,3 +178,120 @@
 - [x] G570-PKG-08 zero write editorial/Projection no runner; zero rede/ASI/FULLTEXT/query logging.
 - [x] G570-PKG-09 build determinístico 2/2 — SHA-256 `4cd915fc3be58166a354434bf9688f0a1509ca36d570697540dff9eace82ab62`.
 - [x] G570-ENV PASS — 45/45 checks; evidence `g570-environmental-review-20260920T164828Z.json`; upload SHA-256 `38d399cab1f466c1b919513b8cf3650dd3ae7b6a55d94b715efe5597c3b89ffd`.
+
+
+## G-590 — Section Retrieval & Deep-Link — Premium consolidation
+- [x] T590-01 rebaseline/ownership: ASI-003/004/005 confirmados como blockers.
+- [x] T590-02 ADR-005-004: uma Search Projection; sem segunda tabela.
+- [x] T590-03 congelar Section Retrieval Contract v1.
+- [x] T590-04 congelar Deep-Link Contract v1.
+- [x] T590-05 congelar Cross-SPEC Regression Contract.
+- [x] T590-10 implementar Section Projector determinístico.
+- [x] T590-11 evoluir Search Document/Projection schema para 1.1.0.
+- [x] T590-12 implementar Section Ranker/Service + fachada canônica `Search_Service::search_sections()`.
+- [x] T590-13 implementar Anchor Manager read-only/fail-closed.
+- [x] T590-13A adicionar schema contract físico (colunas+índices) e lifecycle degraded-safe.
+- [x] T590-14 unit/regression Search post-level + SPEC-001–004 — PASS ambiental preservado até RC9.
+- [x] T590-15 coverage ambiental — PASS RC12; 548 = 77 TOC + 289 body + 182 uncertain; 289/289 runtime; zero gaps/unsafe/overflow/collision.
+- [x] T590-16 technical challenge/Golden section-level — PASS ambiental; source kinds cobertos, 0 section/deep-link failures.
+- [x] T590-17 lifecycle migration 1.0→1.1 + explicit rebuild — PASS ambiental; prepare sem reindex, rebuild determinístico.
+- [x] T590-18 performance/security — PASS RC12; p95 255.923 ms / max 299.911 ms; safety íntegra.
+- [x] T590-19 G-590 PASS/CLOSED — RC12; next_gate=G-585.
+
+### G-590 — execução ambiental resumível
+- [x] G590-ENV-01 RC1 `0.5.1-rc.1/g590.1` executado — FAIL CONTROLADO HTTP 504; nenhum JSON; funcionalidade não avaliada.
+- [x] G590-ENV-02 causa raiz — runner monolítico síncrono.
+- [x] G590-ENV-03 arquitetura resumível implementada — AJAX + nonce + capability + Option autoload=false + lock.
+- [x] G590-ENV-04 fingerprint editorial chunked 50/posts.
+- [x] G590-ENV-05 coverage chunked 25/posts sem alterar semântica de probe.
+- [x] G590-ENV-06 rebuild core preservado; SPEC/G-580 não reaberto.
+- [x] G590-ENV-07 RC2 `0.5.1-rc.2/g590.2` gerado; execução ambiental encontrou FAIL CONTROLADO de UI bootstrap — botões sem JS por late enqueue em `render_page()`.
+- [x] G590-ENV-07A corrigir lifecycle de assets via `admin_enqueue_scripts` + asset dedicado + `wp_localize_script`.
+- [x] G590-ENV-07B gerar RC3 `0.5.1-rc.3/g590.3` — LOCAL PACKAGE PASS; SHA-256 `22f9caae295f30347676eb835dd879c78c8c7468915cfde272020a8b7911560d`.
+- [x] G590-ENV-08 RC3 executado até `Concluído — JSON disponível`; download bloqueado por dupla codificação `&amp;`/nonce — FAIL CONTROLADO de download, gate não reiniciado.
+- [x] G590-ENV-08A corrigir URL de download: `add_query_arg()` + `wp_create_nonce()` + escaping somente no render boundary.
+- [x] G590-ENV-08B gerar RC4 `0.5.1-rc.4/g590.4` — LOCAL PACKAGE PASS; SHA-256 `c05211f1db3ee568403b5f3b74abd8f8d3335d11865e9b77197afaf20e33b3ee`.
+- [ ] G590-ENV-08C instalar RC4 e baixar JSON do job já concluído, sem reiniciar evidência.
+- [x] G590-ENV-09 RC4 evidence analisada — T590-14 PASS, T590-15 FAIL, T590-16 FAIL, T590-17 PASS, T590-18 PASS; G-590 OPEN.
+- [x] G590-ENV-10 classificar T590-15 — evidence contract defect: contador incluía `explicit_dom` como strong hierarchy signal.
+- [x] G590-ENV-11 classificar T590-16 — probe selection gap: Gutenberg 17 generated anchors / 0 probe formulado no v1.2.
+- [x] G590-ENV-12 congelar Evidence Contract Addendum v1.3.
+- [x] G590-ENV-13 implementar strong hierarchy metric + samples + repeated-title runtime probe fallback.
+- [x] G590-ENV-14 gerar pacote RC5 `0.5.1-rc.5/g590.5` — LOCAL PACKAGE PASS; source `fea648a891f715fca2a081597d0529018f83b94f`; SHA-256 `eb0958461509817c1dfb5ebdead895d1e7b090891711927e3e9103752bf2a695`.
+- [ ] G590-ENV-15 executar RC5 e baixar JSON.
+- [ ] G590-ENV-16 validar evidence machine `failed=0` e decidir T590-15/T590-16.
+
+## Pós G-590
+- [x] retomar G-585 após fechamento G-590 — gate ativo novamente; decommission continua condicionado ao Master Ledger e Public Experience.
+- [ ] fechar boundary da SPEC-005 — G-595 ativo; T595-01..03 PASS, T595-04 pendente.
+
+
+### G-590 — RC5 review / R-260 discovery
+- [x] G590-ENV-17 analisar RC5 — strong hierarchy gap confirmado: 1294 sem heading context.
+- [x] G590-ENV-18 reabrir SPEC-004 em R-260 DISCOVERY/read-only sem invalidar G-250.
+- [x] G590-ENV-19 identificar divergência de probe authorization: runner publish-only vs Search canonical allowed statuses + edit_post.
+- [x] G590-ENV-20 implementar diagnostics por source kind/confidence/post + structural recovery candidates.
+- [x] G590-ENV-21 gerar RC6 `0.5.1-rc.6/g590.6` — LOCAL PACKAGE PASS; source `27223c6ce89e7fb25453086d0fe6a60c0cdeec36`; SHA-256 `cd4cd53eea5ba140c60accfaeaaf58c2f99b049c542fc36d3d244588afd82842`.
+- [ ] G590-ENV-22 executar RC6 e baixar JSON.
+- [ ] G590-ENV-23 decidir owner R-260 com base na distribuição completa.
+
+
+### RC6 → R-260A / RC7
+- [x] G590-ENV-24 analisar RC6 — T590-16 PASS; T590-15 único blocker.
+- [x] G590-ENV-25 confirmar 1.294 strong gaps / 189 posts; 548 deterministic candidates / 94 posts.
+- [x] G590-ENV-26 congelar R-260A read-only profiler; sem promoção runtime.
+- [x] G590-ENV-27 implementar `R260_Hierarchy_Profiler` puro e isolado.
+- [x] G590-ENV-28 gerar RC7 `0.5.1-rc.7/g590.7` — LOCAL PACKAGE PASS; SHA-256 `b826005d8ad777bfeac47e8b9a0743d42ef033b535ba59ae08f1bb1a4d8e8fbc`.
+- [ ] G590-ENV-29 executar RC7 e baixar JSON.
+- [ ] G590-ENV-30 decidir R-260B architecture owner a partir de TOC/body/uncertain distribution.
+
+
+### RC7 → R-260B / RC8
+- [x] G590-ENV-31 analisar RC7 — T590-16 PASS; T590-15 único blocker.
+- [x] G590-ENV-32 fechar R-260A discovery: 548 candidates = 77 TOC + 289 body + 182 uncertain.
+- [x] G590-ENV-33 congelar R-260B Structural Shadow Projection Contract v1.
+- [x] G590-ENV-34 implementar shadow projector read-only: heading collision / duplicate label / MAX_SECTIONS / anchor blocker.
+- [x] G590-ENV-35 manter Option C como arquitetura preferida, ainda não congelada.
+- [x] G590-ENV-36 gerar RC8 `0.5.1-rc.8/g590.8` — LOCAL PACKAGE PASS; source `5456389bc8632cb21cedfa5d758380fa7ca5e242`; SHA-256 `f237f2be921acc5bcdf5798a664f020d5b1ba0d24d1435f78cd638e0af61ad32`.
+- [ ] G590-ENV-37 executar RC8 e baixar JSON.
+- [ ] G590-ENV-38 decidir R-260C runtime architecture a partir de capacity/collision/anchor evidence.
+
+
+### RC8 → R-260C / RC9
+- [x] G590-ENV-39 analisar RC8 — T590-16 PASS; T590-15 único blocker.
+- [x] G590-ENV-40 fechar R-260B: 211 promotable / 78 duplicate / 77 TOC / 182 uncertain / 0 overflow / 0 heading collision.
+- [x] G590-ENV-41 congelar R-260C Anchor Feasibility Contract v1.
+- [x] G590-ENV-42 implementar profiler read-only de targets renderizados exatos.
+- [x] G590-ENV-43 preservar Anchor Manager/Search Section runtime sem alteração.
+- [x] G590-ENV-44 gerar RC9 `0.5.1-rc.9/g590.9` — LOCAL PACKAGE PASS; source `ea7203b6c2ab2e34438eb7b5d53c05ee877cac0a`; SHA-256 `8b56270a74b675d5601e93dc99553c11f0910017b3d2bf3a2c6aad3fe65c12f9`.
+- [x] G590-ENV-45 executar RC9 e baixar JSON — evidence `bdc-kb-spec005-g590-section-20260925-180631.json`.
+- [x] G590-ENV-46 analisar RC9 e fechar R-260C — 211 promotable = 131 paragraph_unique + 80 paragraph_ambiguous; 0 no-match; Deep-Link v2 viável fail-closed.
+- [x] G590-ENV-47 dividir R-260D em D1 diagnóstico contextual e D2 runtime promotion evidence-gated.
+- [x] G590-ENV-48 congelar `r260d-contextual-anchor-feasibility-contract-v1.md` e implementar profiler + machine validator read-only.
+- [x] G590-ENV-49 gerar RC10 `0.5.1-rc.10/g590.10` — source `cf1374fd85de56c8d31192948a15d7e274eee1eb`; SHA-256 `456922cf831ef171a9d1ad8970bf3506294e1ac297e739bd690bc100ab603d5c`; 86 files; PHP 73/73; JS 3/3; JSON 2/2; active requires 69/69; D1 unit 15/15; deterministic 2/2.
+- [x] G590-ENV-50 executar RC10 e baixar JSON — evidence `bdc-kb-spec005-g590-section-20260928-111102.json`.
+- [x] G590-ENV-51 validar R-260D1 — 211 promotable = 131 title_unique + 66 context_unique + 14 unresolved; D1 PASS/CLOSED; D2 autorizado.
+- [x] G590-ENV-52 congelar R-260D2 Structural Runtime Contract + Deep-Link v2 + Evidence Contract v1.5.
+- [x] G590-ENV-53 implementar Option C: Structural Projection compartilhada + Search Section Projection v1.1 + paragraph anchors fail-closed.
+- [x] G590-ENV-54 gerar RC11 `0.5.1-rc.11/g590.11` — source `6952f6c29aca2ec0dec4ee4b19b0edf2e5a08563`; SHA-256 `49c2a96bef202c5f866499539055d1f9b78b14fe2fc840c69cf3cc47f1b63e76`; 88 files; PHP 75/75; JS 3/3; JSON 2/2; active requires 71/71; D2 behavior 18/18; Evidence v1.5 13/13; deterministic 2/2.
+- [x] G590-ENV-55 executar RC11 e baixar JSON — evidence `bdc-kb-spec005-g590-section-20260928-121622.json`.
+- [x] G590-ENV-56 validar RC11 — FAIL CONTROLADO: 289/289 Sections íntegros, mas runtime classificou 62 TOC / 197 uncertain vs R-260A 77 / 182; T590-15 corretamente bloqueado.
+- [x] G590-ENV-57 identificar root cause — occurrence evidence runtime era calculada depois do candidate filter; R-260A usa todos os hierarchy nodes.
+- [x] G590-ENV-58 corrigir Structural Projection v1.0.1 + regression R-260A↔runtime candidate/TOC/body/uncertain.
+- [x] G590-ENV-59 gerar RC12 `0.5.1-rc.12/g590.12` — source `61681200f1152d98caf949568cfd99810c83e57a`; SHA-256 `eeeb4222ed2e68ed6a488d088df8d3e61bd6313d87ace09f06f2cb8173b55026`; 88 files; PHP 75/75; JS 3/3; JSON 2/2; D2 23/23; parity 4/4; Evidence v1.5 13/13; deterministic 2/2.
+- [x] G590-ENV-60 executar RC12 e baixar JSON — `bdc-kb-spec005-g590-section-20260928-124850.json`.
+- [x] G590-ENV-61 validar RC12 — 57/57 PASS, 0 FAIL; T590-14..19 PASS; G-590 CLOSED; ASI-003/004/005 -> PARITY_VERIFIED.
+
+
+### G-585 v2 — Decommission Readiness pós-G-590
+- [x] G585-V2-01 congelar addendum v2 separando independence, surface dependency e cutover.
+- [x] G585-V2-02 implementar Evidence Schema 2.0.0.
+- [x] G585-V2-03 implementar T585.1 Surface Dependency Zero.
+- [x] G585-V2-04 manter `cutover_authorized=false` por contrato.
+- [x] G585-V2-05 corrigir next gate pós-PASS para `SPEC005_BOUNDARY_REVIEW`.
+- [x] G585-V2-06 adicionar static contract test.
+- [x] G585-V2-07 preparar pacote determinístico de homologação sobre RC12 — PASS; 0.5.1-rc.13 / g585.3-476370c09797; SHA-256 a94a9e6ec3603bd4b3f6f2f96187159d2a1d26121c0b658a61504dcf96317951.
+- [x] G585-V2-08 executar em homologação com ASI manualmente desativado — RC15 PASS.
+- [x] G585-V2-09 validar evidência ambiental e fechar G-585 como INDEPENDENCE PASS / DECOMMISSION NOT AUTHORIZED — CLOSED em 2026-09-29.
+- [x] G585-V2-10 isolar Home legada 41395 como inventário não bloqueante; candidate surface = Public Experience Preview.
+- [ ] G585-V2-11 executar `SPEC005_BOUNDARY_REVIEW` / G-595 sem inferir autorização de cutover.

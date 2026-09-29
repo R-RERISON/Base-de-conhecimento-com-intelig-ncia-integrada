@@ -281,3 +281,15 @@
 - [x] G590-ENV-59 gerar RC12 `0.5.1-rc.12/g590.12` — source `61681200f1152d98caf949568cfd99810c83e57a`; SHA-256 `eeeb4222ed2e68ed6a488d088df8d3e61bd6313d87ace09f06f2cb8173b55026`; 88 files; PHP 75/75; JS 3/3; JSON 2/2; D2 23/23; parity 4/4; Evidence v1.5 13/13; deterministic 2/2.
 - [x] G590-ENV-60 executar RC12 e baixar JSON — `bdc-kb-spec005-g590-section-20260928-124850.json`.
 - [x] G590-ENV-61 validar RC12 — 57/57 PASS, 0 FAIL; T590-14..19 PASS; G-590 CLOSED; ASI-003/004/005 -> PARITY_VERIFIED.
+
+
+### G-585 v2 — Decommission Readiness pós-G-590
+- [x] G585-V2-01 congelar addendum v2 separando independence, surface dependency e cutover.
+- [x] G585-V2-02 implementar Evidence Schema 2.0.0.
+- [x] G585-V2-03 implementar T585.1 Surface Dependency Zero.
+- [x] G585-V2-04 manter `cutover_authorized=false` por contrato.
+- [x] G585-V2-05 corrigir next gate pós-PASS para `SPEC005_BOUNDARY_REVIEW`.
+- [x] G585-V2-06 adicionar static contract test.
+- [ ] G585-V2-07 preparar pacote determinístico de homologação sobre RC12.
+- [ ] G585-V2-08 executar em homologação com ASI manualmente desativado.
+- [ ] G585-V2-09 validar evidência ambiental e fechar G-585 como INDEPENDENCE PASS / DECOMMISSION NOT AUTHORIZED.

@@ -20,6 +20,8 @@ final class Knowledge_Facts_Contract {
 	public const MAX_BYTES = 8192;
 
 	/**
+	 * Return the canonical fact definitions.
+	 *
 	 * @return array<string,array{label:string,key:string,fallback_keys:array<int,string>}>
 	 */
 	public static function fields(): array {
@@ -34,17 +36,17 @@ final class Knowledge_Facts_Contract {
 				'key'           => '_bdc_es_systems_involved',
 				'fallback_keys' => array(),
 			),
-			'technologies' => array(
+			'technologies'     => array(
 				'label'         => 'Tecnologias',
 				'key'           => '_kb2ops_technologies',
 				'fallback_keys' => array(),
 			),
-			'keywords' => array(
+			'keywords'         => array(
 				'label'         => 'Palavras-chave',
 				'key'           => '_kb2ops_keywords',
 				'fallback_keys' => array(),
 			),
-			'versions' => array(
+			'versions'         => array(
 				'label'         => 'Versões',
 				'key'           => '_kb2ops_versions',
 				'fallback_keys' => array(),
@@ -81,9 +83,10 @@ final class Knowledge_Facts_Contract {
 	}
 
 	/**
-	 * Metadata API sanitizer.
+	 * Sanitize a value supplied by the Metadata API.
 	 *
 	 * @param mixed $value Value supplied by WordPress.
+	 * @return string Sanitized fact value.
 	 */
 	public static function sanitize_registered_value( mixed $value ): string {
 		if ( ! is_string( $value ) ) {

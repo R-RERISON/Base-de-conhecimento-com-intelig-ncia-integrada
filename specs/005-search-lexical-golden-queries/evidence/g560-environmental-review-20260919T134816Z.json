@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-560",
+  "phase": "ENVIRONMENTAL_AUTOMATED_VALIDATION",
+  "generated_at": "2026-09-19T13:48:16+00:00",
+  "upload_sha256": "9906bbecbd1d2c056a2a1e87d2b50d8d4885adc904621a8b1120ff49c40b1527",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.5.0-g560.1",
+    "multisite": false
+  },
+  "checks": {
+    "passed": 21,
+    "total": 21,
+    "failed": 0
+  },
+  "live_results": [
+    {
+      "id": "success_windows_11",
+      "query": "Windows 11",
+      "state": "success",
+      "mode": "projection_like",
+      "expected_post_id": 583,
+      "actual_rank": 1,
+      "pass": true
+    },
+    {
+      "id": "summary_semantic_case",
+      "query": "essencialmente",
+      "state": "success",
+      "mode": "projection_like",
+      "expected_post_id": 45070,
+      "actual_rank": 1,
+      "pass": true
+    },
+    {
+      "id": "zero_results_distinct",
+      "query": "bdczzzznomatch20260919",
+      "state": "zero_results",
+      "mode": "projection_like",
+      "actual_rank": 0,
+      "pass": true
+    },
+    {
+      "id": "invalid_query_distinct",
+      "query": "!!!",
+      "state": "invalid_query",
+      "mode": "none",
+      "actual_rank": 0,
+      "pass": true
+    }
+  ],
+  "safety": {
+    "editorial_fingerprint_before": "b2e38074a566083b39726f2a63248f4330846ae39a065c52fbbc7b5bf2d489ff",
+    "editorial_fingerprint_after": "b2e38074a566083b39726f2a63248f4330846ae39a065c52fbbc7b5bf2d489ff",
+    "editorial_fingerprint_equal": true,
+    "persists_query_log": false,
+    "calls_external_network": false,
+    "depends_on_asi": false
+  },
+  "errors": [],
+  "performance": {
+    "total_runtime_ms": 3674.3619,
+    "peak_memory_bytes": 56627200
+  },
+  "gate_result": {
+    "t560_visual_contract_source_pass": true,
+    "t561_responsive_contract_source_pass": true,
+    "t562_accessibility_contract_source_pass": true,
+    "t563_state_semantics_live_pass": true,
+    "t564_human_visual_acceptance": "NOT_RUN",
+    "g560_technical_ready": true,
+    "t565_g560_pass": false,
+    "next_gate": "G-560-HUMAN"
+  },
+  "note": "Canonical raw upload retained in conversation; this repository evidence is a lossless semantic transcription plus upload SHA-256."
+}

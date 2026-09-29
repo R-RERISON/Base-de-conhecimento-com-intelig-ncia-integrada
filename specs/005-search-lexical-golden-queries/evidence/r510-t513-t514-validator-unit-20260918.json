@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "R-510/T513-T514-UNIT",
+  "date": "2026-09-18",
+  "scope": "pure deterministic validators",
+  "tests": {
+    "passed": 9,
+    "failed": 0,
+    "cases": [
+      "normalize_is_deterministic",
+      "coverage_full",
+      "auto_pass_rank1_full_evidence",
+      "missing_expected_auto_fail",
+      "outside_max_rank_auto_fail",
+      "rank2_requires_review",
+      "incomplete_semantic_coverage_requires_review",
+      "diversity_detects_current_seed_classes",
+      "synthetic_variants_are_explicit"
+    ]
+  },
+  "defect_found_and_fixed": {
+    "issue": "MSTeams was not detected as product_token by first classifier implementation",
+    "fix": "single-token mixed-case classifier requires uppercase+lowercase and bounded token charset",
+    "regression_test": true
+  },
+  "result": {
+    "t513_validator_unit_pass": true,
+    "t514_validator_unit_pass": true,
+    "environmental_validation": "NOT_RUN"
+  }
+}

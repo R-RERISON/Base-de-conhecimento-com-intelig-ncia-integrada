@@ -373,26 +373,71 @@ final class Admin_Page {
 			? sanitize_text_field( wp_unslash( (string) $_GET['s'] ) )
 			: '';
 
-		$args = array(
-			'post_type'           => Meta_Contract::POST_TYPE,
-			'post_status'         => array( 'publish', 'draft', 'pending', 'private', 'future' ),
-			'posts_per_page'      => self::PER_PAGE,
-			'paged'               => $paged,
-			'orderby'             => 'modified',
-			'order'               => 'DESC',
-			'ignore_sticky_posts' => true,
-			'perm'                => 'editable',
-		);
-		if ( '' !== $search ) {
-			$args['s'] = $search;
-		}
-		$query = new \WP_Query( $args );
+		$is_search = '' !== $search;
+		$search_response = null;
+		$search_rows = array();
+		$posts = array();
+		$query = null;
 
-		echo '<form class="bdc-kb-toolbar" method="get" action="' . esc_url( admin_url( 'admin.php' ) ) . '">';
+		if ( $is_search && class_exists( Search_Service::class ) ) {
+			$search_response = Search_Service::search( $search, self::PER_PAGE );
+			foreach ( (array) ( $search_response['results'] ?? array() ) as $result ) {
+				if ( ! is_array( $result ) ) {
+					continue;
+				}
+				$post_id = (int) ( $result['post_id'] ?? 0 );
+				$post = $post_id > 0 ? get_post( $post_id ) : null;
+				if ( ! is_object( $post ) || ! current_user_can( 'edit_post', $post_id ) ) {
+					continue;
+				}
+				$posts[] = $post;
+				$search_rows[ $post_id ] = $result;
+			}
+		} else {
+			$args = array(
+				'post_type'           => Meta_Contract::POST_TYPE,
+				'post_status'         => array( 'publish', 'draft', 'pending', 'private', 'future' ),
+				'posts_per_page'      => self::PER_PAGE,
+				'paged'               => $paged,
+				'orderby'             => 'modified',
+				'order'               => 'DESC',
+				'ignore_sticky_posts' => true,
+				'perm'                => 'editable',
+			);
+			if ( $is_search ) {
+				$args['s'] = $search;
+			}
+			$query = new \WP_Query( $args );
+			$posts = (array) $query->posts;
+
+			if ( $is_search ) {
+				$search_response = array(
+					'state' => 'degraded',
+					'retrieval_mode' => 'wordpress_fallback',
+					'count' => count( $posts ),
+					'degraded_reason' => 'search_service_unavailable',
+				);
+			}
+		}
+
+		echo '<form class="bdc-kb-toolbar" method="get" action="' . esc_url( admin_url( 'admin.php' ) ) . '" role="search" aria-label="' . esc_attr__( 'Pesquisar artigos da Base de Conhecimento', 'bdc-knowledge-base' ) . '">';
 		echo '<input type="hidden" name="page" value="' . esc_attr( self::PAGE_SLUG ) . '">';
-		echo '<label class="bdc-kb-search"><span class="screen-reader-text">' . esc_html__( 'Pesquisar artigos', 'bdc-knowledge-base' ) . '</span><input type="search" name="s" value="' . esc_attr( $search ) . '" placeholder="' . esc_attr__( 'Pesquisar título ou conteúdo…', 'bdc-knowledge-base' ) . '"></label>';
-		echo '<button class="button bdc-kb-button-with-icon" type="submit"><span class="dashicons dashicons-search" aria-hidden="true"></span><span>' . esc_html__( 'Pesquisar', 'bdc-knowledge-base' ) . '</span></button>';
+		echo '<div class="bdc-kb-search-field">';
+		echo '<label class="bdc-kb-search-label" for="bdc-kb-search-input">' . esc_html__( 'Pesquisar artigos', 'bdc-knowledge-base' ) . '</label>';
+		echo '<input id="bdc-kb-search-input" type="search" name="s" value="' . esc_attr( $search ) . '" placeholder="' . esc_attr__( 'Ex.: Windows 11, SCCM ou uma frase do artigo', 'bdc-knowledge-base' ) . '" aria-describedby="bdc-kb-search-help">';
+		echo '<span id="bdc-kb-search-help" class="bdc-kb-search-helper">' . esc_html__( 'Pesquise por título, sumário, cabeçalhos e conteúdo disponível para sua conta.', 'bdc-knowledge-base' ) . '</span>';
+		echo '</div>';
+		echo '<div class="bdc-kb-search-actions">';
+		echo '<button class="button button-primary bdc-kb-button-with-icon" type="submit"><span class="dashicons dashicons-search" aria-hidden="true"></span><span>' . esc_html__( 'Pesquisar', 'bdc-knowledge-base' ) . '</span></button>';
+		if ( $is_search ) {
+			echo '<a class="button bdc-kb-button-with-icon" href="' . esc_url( admin_url( 'admin.php?page=' . self::PAGE_SLUG ) ) . '"><span class="dashicons dashicons-dismiss" aria-hidden="true"></span><span>' . esc_html__( 'Limpar', 'bdc-knowledge-base' ) . '</span></a>';
+		}
+		echo '</div>';
 		echo '</form>';
+
+		if ( $is_search && is_array( $search_response ) ) {
+			self::render_search_feedback( $search, $search_response );
+		}
 
 		$counts = wp_count_posts( Meta_Contract::POST_TYPE );
 		$total  = 0;
@@ -405,12 +450,13 @@ final class Admin_Page {
 		self::render_metric( (string) count( Classification_Contract::fields() ), 'conceitos de classificação' );
 		echo '</div>';
 
+		echo '<div class="bdc-kb-table-wrap">';
 		echo '<table class="widefat fixed bdc-kb-table">';
 		echo '<thead><tr><th>' . esc_html__( 'Artigo', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Sumário', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Classificação', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Ações', 'bdc-knowledge-base' ) . '</th></tr></thead><tbody>';
 
 		$rendered = 0;
-		foreach ( $query->posts as $post ) {
-			if ( ! current_user_can( 'edit_post', (int) $post->ID ) ) {
+		foreach ( $posts as $post ) {
+			if ( ! is_object( $post ) || ! current_user_can( 'edit_post', (int) $post->ID ) ) {
 				continue;
 			}
 			$status_object  = get_post_status_object( (string) $post->post_status );
@@ -423,9 +469,19 @@ final class Admin_Page {
 			$summary_class  = $filled === $summary_total ? 'bdc-kb-badge--success' : ( $filled > 0 ? 'bdc-kb-badge--info' : 'bdc-kb-badge--warning' );
 			$summary_label  = $filled === $summary_total ? 'Completo' : ( $filled > 0 ? $filled . '/' . $summary_total . ' preenchidos' : 'Pendente' );
 			$class_label    = $term_count > 0 ? $term_count . ' conceito(s)' : 'Sem termos';
+			$search_row     = $search_rows[ (int) $post->ID ] ?? null;
+
+			$row_meta = '#' . (string) $post->ID . ' · ' . $status_label;
+			if ( is_array( $search_row ) ) {
+				$row_meta .= ' · ' . sprintf(
+					/* translators: %d: position in search results. */
+					__( 'Relevância #%d', 'bdc-knowledge-base' ),
+					(int) ( $search_row['rank'] ?? 0 )
+				);
+			}
 
 			echo '<tr>';
-			echo '<td><a class="bdc-kb-article-link" href="' . esc_url( $workspace_url ) . '">' . esc_html( get_the_title( $post ) ) . '</a><span class="bdc-kb-row-meta">#' . esc_html( (string) $post->ID ) . ' · ' . esc_html( $status_label ) . '</span></td>';
+			echo '<td><a class="bdc-kb-article-link" href="' . esc_url( $workspace_url ) . '">' . esc_html( get_the_title( $post ) ) . '</a><span class="bdc-kb-row-meta">' . esc_html( $row_meta ) . '</span></td>';
 			echo '<td><span class="bdc-kb-badge ' . esc_attr( $summary_class ) . '">' . esc_html( $summary_label ) . '</span></td>';
 			echo '<td><span class="bdc-kb-badge' . ( $term_count > 0 ? ' bdc-kb-badge--info' : '' ) . '">' . esc_html( $class_label ) . '</span></td>';
 			echo '<td>' . esc_html( get_the_modified_date( '', $post ) ) . '</td>';
@@ -435,29 +491,106 @@ final class Admin_Page {
 		}
 
 		if ( 0 === $rendered ) {
-			echo '<tr><td colspan="5"><div class="bdc-kb-empty-state"><div><strong>' . esc_html__( 'Nenhum artigo encontrado', 'bdc-knowledge-base' ) . '</strong><p>' . esc_html__( 'Ajuste a pesquisa ou verifique suas permissões de edição.', 'bdc-knowledge-base' ) . '</p></div></div></td></tr>';
+			self::render_search_empty_row( $search, $search_response );
 		}
 		echo '</tbody></table>';
+		echo '</div>';
 
-		$base_args = array( 'page' => self::PAGE_SLUG, 'paged' => '%#%' );
-		if ( '' !== $search ) {
-			$base_args['s'] = $search;
+		if ( ! $is_search && $query instanceof \WP_Query ) {
+			$base_args = array( 'page' => self::PAGE_SLUG, 'paged' => '%#%' );
+			$pagination = paginate_links(
+				array(
+					'base'      => add_query_arg( $base_args, admin_url( 'admin.php' ) ),
+					'format'    => '',
+					'current'   => $paged,
+					'total'     => max( 1, (int) $query->max_num_pages ),
+					'type'      => 'list',
+					'prev_text' => __( 'Anterior', 'bdc-knowledge-base' ),
+					'next_text' => __( 'Próxima', 'bdc-knowledge-base' ),
+				)
+			);
+			if ( is_string( $pagination ) && '' !== $pagination ) {
+				echo '<nav class="bdc-kb-pagination" aria-label="' . esc_attr__( 'Paginação de artigos', 'bdc-knowledge-base' ) . '">' . wp_kses_post( $pagination ) . '</nav>';
+			}
 		}
-		$pagination = paginate_links(
-			array(
-				'base'      => add_query_arg( $base_args, admin_url( 'admin.php' ) ),
-				'format'    => '',
-				'current'   => $paged,
-				'total'     => max( 1, (int) $query->max_num_pages ),
-				'type'      => 'list',
-				'prev_text' => __( 'Anterior', 'bdc-knowledge-base' ),
-				'next_text' => __( 'Próxima', 'bdc-knowledge-base' ),
-			)
-		);
-		if ( is_string( $pagination ) && '' !== $pagination ) {
-			echo '<nav class="bdc-kb-pagination" aria-label="' . esc_attr__( 'Paginação de artigos', 'bdc-knowledge-base' ) . '">' . wp_kses_post( $pagination ) . '</nav>';
-		}
+
 		wp_reset_postdata();
+	}
+
+	/**
+	 * @param array<string,mixed> $response
+	 */
+	private static function render_search_feedback( string $search, array $response ): void {
+		$state = (string) ( $response['state'] ?? 'technical_error' );
+		$count = max( 0, (int) ( $response['count'] ?? 0 ) );
+		$mode  = (string) ( $response['retrieval_mode'] ?? 'none' );
+
+		$class = 'bdc-kb-search-feedback bdc-kb-search-feedback--info';
+		$role = 'status';
+		$title = __( 'Pesquisa concluída', 'bdc-knowledge-base' );
+		$message = sprintf(
+			/* translators: 1: result count, 2: query. */
+			_n( '%1$d resultado para “%2$s”.', '%1$d resultados para “%2$s”.', $count, 'bdc-knowledge-base' ),
+			$count,
+			$search
+		);
+
+		if ( 'degraded' === $state ) {
+			$class = 'bdc-kb-search-feedback bdc-kb-search-feedback--warning';
+			$title = __( 'Pesquisa em modo de compatibilidade', 'bdc-knowledge-base' );
+			$message = __( 'A projeção lexical não estava disponível. Os resultados abaixo usam a pesquisa nativa do WordPress e podem ter ordenação diferente.', 'bdc-knowledge-base' );
+		} elseif ( 'invalid_query' === $state ) {
+			$class = 'bdc-kb-search-feedback bdc-kb-search-feedback--warning';
+			$role = 'alert';
+			$title = __( 'Revise a pesquisa', 'bdc-knowledge-base' );
+			$message = isset( $response['message'] ) ? (string) $response['message'] : __( 'A consulta informada não pôde ser processada.', 'bdc-knowledge-base' );
+		} elseif ( 'technical_error' === $state ) {
+			$class = 'bdc-kb-search-feedback bdc-kb-search-feedback--error';
+			$role = 'alert';
+			$title = __( 'Não foi possível concluir a pesquisa', 'bdc-knowledge-base' );
+			$message = __( 'Nenhum conteúdo foi alterado. Tente novamente ou use a listagem normal enquanto o serviço é verificado.', 'bdc-knowledge-base' );
+		} elseif ( 'zero_results' === $state ) {
+			$title = __( 'Nenhum resultado encontrado', 'bdc-knowledge-base' );
+			$message = sprintf(
+				/* translators: %s: query. */
+				__( 'A pesquisa por “%s” foi concluída sem correspondências.', 'bdc-knowledge-base' ),
+				$search
+			);
+		}
+
+		echo '<div class="' . esc_attr( $class ) . '" role="' . esc_attr( $role ) . '" aria-live="polite">';
+		echo '<span class="bdc-kb-search-feedback__icon dashicons ' . esc_attr( 'technical_error' === $state ? 'dashicons-warning' : ( 'degraded' === $state || 'invalid_query' === $state ? 'dashicons-info-outline' : 'dashicons-search' ) ) . '" aria-hidden="true"></span>';
+		echo '<div><strong>' . esc_html( $title ) . '</strong><p>' . esc_html( $message ) . '</p>';
+		if ( in_array( $state, array( 'success', 'zero_results' ), true ) && 'projection_like' === $mode ) {
+			echo '<span class="bdc-kb-search-feedback__meta">' . esc_html__( 'Resultados ordenados pela relevância lexical da Base de Conhecimento.', 'bdc-knowledge-base' ) . '</span>';
+		}
+		echo '</div></div>';
+	}
+
+	/**
+	 * @param array<string,mixed>|null $response
+	 */
+	private static function render_search_empty_row( string $search, ?array $response ): void {
+		$state = is_array( $response ) ? (string) ( $response['state'] ?? '' ) : '';
+
+		$title = __( 'Nenhum artigo encontrado', 'bdc-knowledge-base' );
+		$message = __( 'Não há artigos editáveis disponíveis neste contexto.', 'bdc-knowledge-base' );
+
+		if ( '' !== $search && 'zero_results' === $state ) {
+			$title = __( 'Nenhuma correspondência', 'bdc-knowledge-base' );
+			$message = __( 'Tente um termo mais curto, outro nome do produto ou uma frase presente no artigo.', 'bdc-knowledge-base' );
+		} elseif ( '' !== $search && 'invalid_query' === $state ) {
+			$title = __( 'Pesquisa inválida', 'bdc-knowledge-base' );
+			$message = __( 'Ajuste os termos informados e pesquise novamente.', 'bdc-knowledge-base' );
+		} elseif ( '' !== $search && 'technical_error' === $state ) {
+			$title = __( 'Pesquisa temporariamente indisponível', 'bdc-knowledge-base' );
+			$message = __( 'A listagem permanece disponível. Limpe a pesquisa para continuar navegando pelos artigos.', 'bdc-knowledge-base' );
+		} elseif ( '' !== $search ) {
+			$title = __( 'Nenhum artigo encontrado', 'bdc-knowledge-base' );
+			$message = __( 'Ajuste a pesquisa ou verifique suas permissões de edição.', 'bdc-knowledge-base' );
+		}
+
+		echo '<tr><td colspan="5"><div class="bdc-kb-empty-state"><div><strong>' . esc_html( $title ) . '</strong><p>' . esc_html( $message ) . '</p></div></div></td></tr>';
 	}
 
 	private static function render_metric( string $value, string $label ): void {

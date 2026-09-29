@@ -1,0 +1,147 @@
+<?php
+/**
+ * Public Home read models for the preview/candidate surface.
+ *
+ * @package BDC_Knowledge_Base
+ */
+
+namespace BDC\KnowledgeBase;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+final class Public_Home_Read_Model {
+
+	/** @var array<string,string> */
+	private const CURATED_CATEGORIES = array(
+		'Email' => 'dashicons-email',
+		'Externo' => 'dashicons-external',
+		'Hardware' => 'dashicons-desktop',
+		'Rede' => 'dashicons-networking',
+		'Segurança' => 'dashicons-shield',
+		'Sistemas' => 'dashicons-admin-generic',
+		'Software' => 'dashicons-editor-code',
+	);
+
+	/**
+	 * @return array<int,array{id:int,name:string,icon:string}>
+	 */
+	public static function categories(): array {
+		$out = array();
+		foreach ( self::CURATED_CATEGORIES as $name => $icon ) {
+			$term = get_term_by( 'name', $name, 'category' );
+			if ( ! is_object( $term ) || ! isset( $term->term_id, $term->name ) ) {
+				continue;
+			}
+			$out[] = array(
+				'id' => (int) $term->term_id,
+				'name' => (string) $term->name,
+				'icon' => $icon,
+			);
+		}
+		return $out;
+	}
+
+
+	public static function published_count(): int {
+		$counts = wp_count_posts( 'post' );
+		return is_object( $counts ) && isset( $counts->publish ) ? max( 0, (int) $counts->publish ) : 0;
+	}
+
+	/**
+	 * @return array<int,array<string,mixed>>
+	 */
+	public static function latest( int $category_id = 0, int $limit = 4 ): array {
+		return self::query_posts(
+			$category_id,
+			$limit,
+			array(
+				'orderby' => array( 'date' => 'DESC', 'ID' => 'DESC' ),
+			)
+		);
+	}
+
+	/**
+	 * @return array<int,array<string,mixed>>
+	 */
+	public static function popular( int $category_id = 0, int $limit = 4 ): array {
+		return self::query_posts(
+			$category_id,
+			$limit,
+			array(
+				'orderby' => array( 'comment_count' => 'DESC', 'date' => 'DESC', 'ID' => 'DESC' ),
+			)
+		);
+	}
+
+	/**
+	 * Candidate/public lexical search through the authorization facade.
+	 *
+	 * @return array<string,mixed>|null
+	 */
+	public static function preview_search( string $query ): ?array {
+		$query = trim( $query );
+		if ( '' === $query ) {
+			return null;
+		}
+		return Public_Search_Facade::search( $query, 8 );
+	}
+
+	/**
+	 * BDC-owned Word Cloud snapshot for the candidate Home.
+	 *
+	 * Generation is never triggered by a public request. If no snapshot exists,
+	 * the Home remains functional and simply renders no suggested terms.
+	 *
+	 * @return array<int,array<string,mixed>>
+	 */
+	public static function preview_word_cloud(): array {
+		if ( ! class_exists( Word_Cloud_Service::class ) ) {
+			return array();
+		}
+		return Word_Cloud_Service::public_terms( 32 );
+	}
+
+	/**
+	 * @param array<string,mixed> $extra
+	 * @return array<int,array<string,mixed>>
+	 */
+	private static function query_posts( int $category_id, int $limit, array $extra ): array {
+		$args = array_merge(
+			array(
+				'post_type' => 'post',
+				'post_status' => 'publish',
+				'posts_per_page' => max( 1, min( 12, $limit ) ),
+				'ignore_sticky_posts' => true,
+				'no_found_rows' => true,
+				'suppress_filters' => false,
+			),
+			$extra
+		);
+
+		if ( $category_id > 0 ) {
+			$args['cat'] = $category_id;
+		}
+
+		$query = new \WP_Query( $args );
+		$rows = array();
+		foreach ( (array) $query->posts as $post ) {
+			if ( ! is_object( $post ) || 'publish' !== (string) ( $post->post_status ?? '' ) ) {
+				continue;
+			}
+			$post_id = (int) $post->ID;
+			$categories = get_the_category( $post_id );
+			$rows[] = array(
+				'post_id' => $post_id,
+				'title' => (string) $post->post_title,
+				'url' => (string) get_permalink( $post_id ),
+				'date' => get_the_date( 'd/m/Y', $post_id ),
+				'category' => ! empty( $categories ) && is_object( $categories[0] ) ? (string) $categories[0]->name : '',
+				'comment_count' => (int) ( $post->comment_count ?? 0 ),
+			);
+		}
+		wp_reset_postdata();
+		return $rows;
+	}
+}

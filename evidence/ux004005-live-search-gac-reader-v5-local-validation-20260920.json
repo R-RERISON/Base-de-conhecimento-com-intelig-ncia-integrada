@@ -1,0 +1,136 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "UX-004/H-020 + UX-005/A-020",
+  "mode": "live_search_gac_reader_rail_v5_local_validation",
+  "generated_at": "2026-09-20T21:35:00Z",
+  "version": "0.5.0-ux004005.5",
+  "trigger": {
+    "previous_version": "0.5.0-ux004005.4",
+    "human_findings": [
+      "Executive Summary did not follow viewport while scrolling",
+      "Reader title card remained larger than necessary",
+      "GAC content actions disappeared in candidate Reader",
+      "Article Search worked but lacked visual emphasis",
+      "ASI production Search demonstrates input-driven incremental results without Enter"
+    ]
+  },
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-ux004005.5.zip",
+    "sha256": "9b011563b24345139350fb0c7477050e7803ea51ef7aa912bf983b98e2b89cd9",
+    "size_bytes": 215878,
+    "files": 81,
+    "php_files": 69,
+    "js_files": 2,
+    "php_lint": {
+      "passed": 69,
+      "total": 69,
+      "failed": 0
+    },
+    "extracted_php_lint": {
+      "passed": 69,
+      "total": 69,
+      "failed": 0
+    },
+    "archive_integrity": "PASS",
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "contract_checks": {
+    "passed": 25,
+    "total": 25,
+    "failed": 0
+  },
+  "active_requires": {
+    "passed": 52,
+    "total": 52,
+    "changed_from_v4": false
+  },
+  "delta_from_v4": {
+    "added": [],
+    "deleted": [],
+    "modified": [
+      "assets/css/public-article.css",
+      "assets/css/public-foundation.css",
+      "assets/css/public-header.css",
+      "assets/css/public-home.css",
+      "assets/js/public-search.js",
+      "base-conhecimento-inteligencia-integrada.php",
+      "includes/class-public-article-content.php",
+      "includes/class-public-experience.php",
+      "templates/public-article-preview.php",
+      "templates/public-home-preview.php"
+    ]
+  },
+  "source_blob_parity": {
+    "base-conhecimento-inteligencia-integrada.php": "523f54a2145a50f0ca2c1e70e1806bee816bfe4f",
+    "includes/class-public-experience.php": "8b07bb89eff9ef8ab48f0785057502f293f39217",
+    "includes/class-public-article-content.php": "c88fdc4520bc785b002b544782438938aa896b62",
+    "templates/public-home-preview.php": "a77e8d6f195cfa3df2bcf026f072fc7ad74e5061",
+    "templates/public-article-preview.php": "5a5d9732f4bf092bce82cb7d51b69380ed69a9f9",
+    "assets/css/public-foundation.css": "d4c7e2f6dc9214775e12d884d7376bff980a8c66",
+    "assets/css/public-header.css": "1ec03995edacd2bd69eff96d32993370b74f9628",
+    "assets/css/public-home.css": "ac78176888da6247fb268205d5af1295a53c8ecf",
+    "assets/css/public-article.css": "3e11e31cc11568cf88bca87cdffba31177e8083a",
+    "assets/js/public-search.js": "2fb8e1f825b1ff6a7448274401e1add08517f9e2"
+  },
+  "live_search": {
+    "input_driven": true,
+    "requires_enter": false,
+    "min_chars": 2,
+    "debounce_ms": 180,
+    "abort_stale_requests": true,
+    "transport": "authenticated admin-ajax preview",
+    "engine": "existing BDC Search Service through Public_Home_Read_Model",
+    "result_enrichment": [
+      "title",
+      "category",
+      "excerpt",
+      "rank",
+      "candidate Reader URL"
+    ],
+    "section_level_results": "PENDING_ASI_PARITY_WORK"
+  },
+  "gac": {
+    "regression_cause": "candidate content rendering was outside the normal WordPress loop context",
+    "remediation": "capture canonical the_content() while main query is inside the loop, then run read-only duplicate chrome sanitizer",
+    "gac_callbacks_removed": false,
+    "wpui_callbacks_removed": false,
+    "environmental_confirmation_required": true
+  },
+  "reader": {
+    "title_card_reduced": true,
+    "title_font_px": 30,
+    "content_target_px": 1060,
+    "summary_target_px": 300,
+    "summary_slot": true,
+    "summary_scroll_mode": "JS clamped transform inside full-height summary slot",
+    "summary_stops_at_article_end": true,
+    "responsive_reflow_below_px": 1040,
+    "no_summary_single_column": true,
+    "article_search_visual_emphasis": true
+  },
+  "safety": {
+    "preview_only": true,
+    "route_cutover": false,
+    "editorial_write": false,
+    "meta_write": false,
+    "elementor_write": false,
+    "asi_decommission": false,
+    "gre_decommission": false
+  },
+  "frozen_core": {
+    "search_service_sha256": "32efc481bae00488e7e47913e69fa1e9c580cb64ee0f27fdceb04a7e12aafd38",
+    "rebuild_service_sha256": "8f9a2732c81afd653a4add93d0ad0b8bedecd781bfb45909b8e0926aaede1523",
+    "lifecycle_sha256": "325e8f9a03ddf9dbe8de3ceb5eb282a16c2ad8de72208ddcbd3d72d23f0f0b7e",
+    "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78"
+  },
+  "gate_state": {
+    "h020": "V5_LOCAL_PASS_ENV_HUMAN_PENDING",
+    "a020": "V5_LOCAL_PASS_ENV_HUMAN_PENDING",
+    "g585": "PAUSED",
+    "g590": "BLOCKED",
+    "next_action": "Install v5 in homologation. Validate incremental search on Home and Reader, GAC content actions, Summary follow-scroll on a long post, and reduced title/header density."
+  }
+}

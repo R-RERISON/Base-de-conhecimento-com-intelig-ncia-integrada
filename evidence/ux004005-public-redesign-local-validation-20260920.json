@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "UX-004/H-020 + UX-005/A-020",
+  "mode": "public_experience_redesign_candidate_local_validation",
+  "generated_at": "2026-09-20T19:45:00Z",
+  "trigger": {
+    "previous_version": "0.5.0-ux004005.1",
+    "human_visual_result": "REJECTED_AS_PRODUCT_DIRECTION",
+    "classification": "FUNCTIONAL_BASELINE_ONLY",
+    "findings": [
+      "Home too close to reorganized legacy composition",
+      "static WordPress identity replaced functional Entra integration",
+      "navigation targets could remain unresolved/disabled",
+      "technical Word Cloud copy leaked into consumer surface",
+      "Article Reader duplicated legacy article chrome",
+      "Helpful Tips fixed grid created dead space",
+      "Executive Summary Rail too cramped",
+      "surface lacked unified product feel"
+    ]
+  },
+  "version": "0.5.0-ux004005.2",
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-ux004005.2.zip",
+    "sha256": "24e96812189a7fdd1252714030a4b0341f9357170721c2aa94dbcc2d18c4181b",
+    "size_bytes": 212442,
+    "files": 80,
+    "php_files": 69,
+    "extracted_php_lint": {
+      "passed": 69,
+      "total": 69,
+      "failed": 0
+    },
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "validation": {
+    "php_lint": {
+      "passed": 69,
+      "total": 69,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 52,
+      "total": 52,
+      "missing": 0
+    },
+    "contract_suite": {
+      "passed": 33,
+      "total": 33,
+      "failed": 0
+    },
+    "source_package_parity": true
+  },
+  "delta_from_ux004005_1": {
+    "added": [
+      "includes/class-public-article-content.php",
+      "includes/class-public-auth-bridge.php",
+      "includes/class-public-navigation.php"
+    ],
+    "modified": [
+      "assets/css/public-article.css",
+      "assets/css/public-foundation.css",
+      "assets/css/public-header.css",
+      "assets/css/public-home.css",
+      "base-conhecimento-inteligencia-integrada.php",
+      "includes/class-public-experience.php",
+      "includes/class-public-home-read-model.php",
+      "templates/public-article-preview.php",
+      "templates/public-home-preview.php"
+    ],
+    "deleted": []
+  },
+  "redesign": {
+    "auth_bridge": {
+      "preferred_provider": "[bdc_entra_login]",
+      "protocol_ownership": "BDC Entra Gateway",
+      "wordpress_fallback": true,
+      "gateway_assets_primed_during_enqueue": true
+    },
+    "navigation": {
+      "wordpress_menus_first": true,
+      "page_slug_title_fallback": true,
+      "hardcoded_external_urls": false
+    },
+    "brand": {
+      "wordpress_custom_logo_first": true,
+      "bdc_fallback_mark": true
+    },
+    "home": {
+      "new_product_composition": true,
+      "dominant_search": true,
+      "published_metrics": true,
+      "featured_topics": true,
+      "visual_category_explorer": true,
+      "latest_feed": true,
+      "popular_panel": true,
+      "technical_cloud_copy_removed": true,
+      "word_cloud_cutover_ready": false
+    },
+    "article": {
+      "canonical_the_content_pipeline_preserved": true,
+      "compatibility_stage": "Public_Article_Content",
+      "duplicate_legacy_chrome_rule": "title + at least 2 metadata/chrome markers; fail-safe preserve on uncertainty",
+      "helpful_tips_grid": "auto-fit",
+      "summary_rail_desktop_px": 360,
+      "gac_removed": false,
+      "wpui_removed": false,
+      "gre_visual_blocks_suppressed_preview_only": true
+    }
+  },
+  "frozen_core": {
+    "search_service_sha256": "32efc481bae00488e7e47913e69fa1e9c580cb64ee0f27fdceb04a7e12aafd38",
+    "rebuild_service_sha256": "8f9a2732c81afd653a4add93d0ad0b8bedecd781bfb45909b8e0926aaede1523",
+    "lifecycle_sha256": "325e8f9a03ddf9dbe8de3ceb5eb282a16c2ad8de72208ddcbd3d72d23f0f0b7e",
+    "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78"
+  },
+  "gate_state": {
+    "h020": "REDESIGN_CANDIDATE_LOCAL_PASS_ENV_HUMAN_PENDING",
+    "a020": "REDESIGN_CANDIDATE_LOCAL_PASS_ENV_HUMAN_PENDING",
+    "cutover": false,
+    "g585": "PAUSED",
+    "g590": "BLOCKED",
+    "next_action": "Install ux004005.2 over ux004005.1 in homologation, review Home and Article Reader again. Confirm Entra Gateway markup/functionality and duplicate legacy chrome removal."
+  }
+}

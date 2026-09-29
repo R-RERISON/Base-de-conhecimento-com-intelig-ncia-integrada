@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "UX-004/H-020 + UX-005/A-020",
+  "mode": "search_first_public_experience_candidate_local_validation",
+  "generated_at": "2026-09-20T20:20:00Z",
+  "research_basis": [
+    "Material Design persistent search pattern",
+    "Zendesk Help Center search available on all pages",
+    "Intercom Modern Help Center quick search + clean docs layout",
+    "GitBook Ctrl/Cmd+K global search",
+    "Algolia DocSearch search-first documentation UX"
+  ],
+  "version": "0.5.0-ux004005.3",
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-ux004005.3.zip",
+    "sha256": "19bebb7b55015dac8b356f66390915c8a21659b362df2315f64a9f69905a2cea",
+    "size_bytes": 210722,
+    "files": 81,
+    "php_files": 69,
+    "js_files": 2,
+    "extracted_php_lint": {
+      "passed": 69,
+      "total": 69,
+      "failed": 0
+    },
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "validation": {
+    "php_lint": {
+      "passed": 69,
+      "total": 69,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 52,
+      "total": 52,
+      "missing": 0
+    },
+    "contract_suite": {
+      "passed": 40,
+      "total": 40,
+      "failed": 0
+    }
+  },
+  "delta_from_ux004005_2": {
+    "added": [
+      "assets/js/public-search.js"
+    ],
+    "modified": [
+      "base-conhecimento-inteligencia-integrada.php",
+      "includes/class-public-experience.php",
+      "templates/public-home-preview.php",
+      "templates/public-article-preview.php",
+      "assets/css/public-foundation.css",
+      "assets/css/public-header.css",
+      "assets/css/public-home.css",
+      "assets/css/public-article.css"
+    ],
+    "deleted": []
+  },
+  "ux": {
+    "home": {
+      "model": "SEARCH_FIRST_MINIMAL",
+      "dominant_search": true,
+      "metric_dashboard_removed": true,
+      "giant_marketing_hero_removed": true,
+      "frequent_topics_compact": true,
+      "secondary_capabilities_progressive_disclosure": true,
+      "latest_preserved": true,
+      "popular_preserved": true,
+      "categories_preserved": true,
+      "word_cloud_signal_preserved_as_compact_topics": true
+    },
+    "global_search": {
+      "article_header_search": true,
+      "home_primary_search": true,
+      "keyboard_shortcut": "Ctrl/Cmd+K",
+      "article_query_does_not_require_return_home": true,
+      "preview_results_link_to_new_reader": true,
+      "latest_popular_link_to_new_reader": true,
+      "instant_search": "PENDING_PUBLIC_SEARCH_FACADE"
+    },
+    "article": {
+      "marketing_hero_removed": true,
+      "breadcrumb": true,
+      "compact_title_metadata": true,
+      "clean_reading_column": true,
+      "helpful_tips_compact": true,
+      "summary_rail_sticky": true,
+      "canonical_content_pipeline_preserved": true,
+      "legacy_chrome_sanitizer_preserved": true
+    }
+  },
+  "safety": {
+    "admin_preview_only": true,
+    "route_takeover": false,
+    "editorial_write": false,
+    "meta_write": false,
+    "elementor_write": false,
+    "asi_decommission": false,
+    "gre_decommission": false
+  },
+  "frozen_core": {
+    "search_service_sha256": "32efc481bae00488e7e47913e69fa1e9c580cb64ee0f27fdceb04a7e12aafd38",
+    "rebuild_service_sha256": "8f9a2732c81afd653a4add93d0ad0b8bedecd781bfb45909b8e0926aaede1523",
+    "lifecycle_sha256": "325e8f9a03ddf9dbe8de3ceb5eb282a16c2ad8de72208ddcbd3d72d23f0f0b7e",
+    "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78"
+  },
+  "gate_state": {
+    "h020": "SEARCH_FIRST_CANDIDATE_LOCAL_PASS_ENV_HUMAN_PENDING",
+    "a020": "CLEAN_READER_CANDIDATE_LOCAL_PASS_ENV_HUMAN_PENDING",
+    "cutover": false,
+    "g585": "PAUSED",
+    "g590": "BLOCKED"
+  }
+}

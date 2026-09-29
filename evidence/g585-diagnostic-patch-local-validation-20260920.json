@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-585",
+  "mode": "diagnostic_patch_local_package_validation",
+  "generated_at": "2026-09-20T17:55:00Z",
+  "version": "0.5.0-g585.2",
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-g585.2.zip",
+    "sha256": "0db339e50e997bbc4211972173809ea71517fc242696b17345bf8d095146c915",
+    "size_bytes": 178539,
+    "files": 66,
+    "php_files": 59,
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    },
+    "archive_integrity": "PASS"
+  },
+  "validation": {
+    "php_lint": {
+      "passed": 59,
+      "total": 59,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 48,
+      "total": 48,
+      "missing": 0
+    },
+    "contract_suite": {
+      "passed": 31,
+      "total": 31,
+      "failed": 0
+    },
+    "source_blob_parity": {
+      "base-conhecimento-inteligencia-integrada.php": "82c509a5f6e9bae16a6d36117cce8cc4e8a49e22",
+      "includes/class-search-independence-runner-g585.php": "bdc91fc4b32ccfa9f414ac55784b98ae7a7aeaeb"
+    }
+  },
+  "delta_from_g585_1": {
+    "added": [],
+    "modified": [
+      "base-conhecimento-inteligencia-integrada.php",
+      "includes/class-search-independence-runner-g585.php"
+    ],
+    "deleted": []
+  },
+  "frozen_core": {
+    "search_service_sha256": "32efc481bae00488e7e47913e69fa1e9c580cb64ee0f27fdceb04a7e12aafd38",
+    "rebuild_service_sha256": "8f9a2732c81afd653a4add93d0ad0b8bedecd781bfb45909b8e0926aaede1523",
+    "lifecycle_sha256": "325e8f9a03ddf9dbe8de3ceb5eb282a16c2ad8de72208ddcbd3d72d23f0f0b7e",
+    "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78",
+    "ranker_version": "lexical-ranker-v1.0.0"
+  },
+  "safety": {
+    "gate_behavior_unchanged": true,
+    "automatic_legacy_deactivation": false,
+    "legacy_data_cleanup": false,
+    "search_core_changed": false,
+    "rebuild_logic_changed": false,
+    "lifecycle_logic_changed": false,
+    "ranker_changed": false,
+    "absolute_server_path_export": false
+  },
+  "diagnostic_delta": {
+    "loaded_legacy_symbols_now_include": [
+      "type",
+      "symbol",
+      "source_scope",
+      "source_path"
+    ],
+    "source_scope_allowlist": [
+      "bdc_plugin",
+      "mu_plugin",
+      "plugin",
+      "theme",
+      "wordpress_core",
+      "external_or_unknown",
+      "internal_or_unknown"
+    ],
+    "purpose": "Identify owner of BDC_KX_ASI_Adapter without weakening T585."
+  },
+  "gate_result": {
+    "package_local_pass": true,
+    "environmental_status": "RECHECK_REQUIRED",
+    "g585_status": "OPEN",
+    "g590_status": "BLOCKED",
+    "next_action": "Keep ASI disabled, install g585.2 and rerun G-585 to attribute BDC_KX_ASI_Adapter."
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "UX-004/H-020 + UX-005/A-020",
+  "mode": "header_parity_reader_rail_candidate_local_validation",
+  "generated_at": "2026-09-20T21:05:00Z",
+  "version": "0.5.0-ux004005.4",
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-ux004005.4.zip",
+    "sha256": "a07a518708b9ad92afbffacb6cd6527e944247e7084112851bc1e84c2c6ea300",
+    "size_bytes": 212236,
+    "files": 81,
+    "php_files": 69,
+    "js_files": 2,
+    "php_lint": {
+      "passed": 69,
+      "total": 69,
+      "failed": 0
+    },
+    "extracted_php_lint": {
+      "passed": 69,
+      "total": 69,
+      "failed": 0
+    },
+    "archive_integrity": "PASS",
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "static_contract_checks": {
+    "passed": 19,
+    "total": 19,
+    "failed": 0
+  },
+  "active_requires": {
+    "expected": 52,
+    "changed_from_v3": false
+  },
+  "delta_from_ux004005_3": {
+    "added": [],
+    "modified": [
+      "assets/css/public-article.css",
+      "assets/css/public-header.css",
+      "assets/js/public-search.js",
+      "base-conhecimento-inteligencia-integrada.php",
+      "includes/class-public-auth-bridge.php",
+      "includes/class-public-experience.php",
+      "templates/public-article-preview.php",
+      "templates/public-home-preview.php"
+    ],
+    "deleted": []
+  },
+  "header": {
+    "quick_links": [
+      "Página Inicial",
+      "Consulta Avançada",
+      "Telefones",
+      "Links Úteis",
+      "POSTI"
+    ],
+    "entra_shortcode_exact_attributes": true,
+    "mobile_toggle": true,
+    "article_search_second_row": true,
+    "quick_links_not_replaced_by_search": true
+  },
+  "article_reader": {
+    "application_canvas": "#f3f6fa",
+    "reading_surface": true,
+    "content_target_px": 980,
+    "summary_target_px": 350,
+    "gap_px": 48,
+    "workspace_target_px": 1420,
+    "summary_sticky": true,
+    "sticky_top_accounts_for_header": true,
+    "summary_reflows_below_1040": true,
+    "print_static": true
+  },
+  "home": {
+    "search_first_preserved": true
+  },
+  "safety": {
+    "preview_only": true,
+    "cutover": false,
+    "editorial_write": false,
+    "meta_write": false,
+    "elementor_write": false,
+    "asi_decommission": false,
+    "gre_decommission": false
+  },
+  "gate_state": {
+    "h020": "V4_LOCAL_PASS_ENV_HUMAN_PENDING",
+    "a020": "V4_LOCAL_PASS_ENV_HUMAN_PENDING",
+    "g585": "PAUSED",
+    "g590": "BLOCKED"
+  }
+}

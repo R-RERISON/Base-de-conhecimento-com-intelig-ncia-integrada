@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "R-510/T511-LOCAL",
+  "date": "2026-09-18",
+  "build": "0.5.0-r510-t511.1",
+  "artifact_sha256": "5cbcb79c4332e32d4b4e6fcbc334e6044df712073b374b3094ded182470f1d99",
+  "source_identity": {
+    "golden_baseline_runner_git_blob_sha": "e8af39513e5388680262ce5e58af05f15d045df9",
+    "bootstrap_git_blob_sha": "a037eb6b8c0cb21ad6cd570c3ee606f4cd34fd1d",
+    "local_git_blob_match": true
+  },
+  "package": {
+    "included_files": 45,
+    "php_files": 40,
+    "php_lint": {
+      "passed": 40,
+      "total": 40,
+      "failures": []
+    },
+    "active_requires": 39,
+    "missing_active_requires": [],
+    "zip_integrity": true,
+    "deterministic_rebuild": true,
+    "t510_in_artifact": false,
+    "t511_in_artifact": true
+  },
+  "safety_static": {
+    "forbidden_write_or_network_calls_found": [],
+    "creates_or_alters_schema": false,
+    "writes_legacy_asi": false,
+    "writes_wordpress": false,
+    "persists_results": false,
+    "changes_global_search_hooks": false
+  },
+  "result": {
+    "t511_local_validation_pass": true,
+    "environmental_validation": "NOT_RUN"
+  }
+}

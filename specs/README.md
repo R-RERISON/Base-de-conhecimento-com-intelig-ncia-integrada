@@ -4,27 +4,39 @@
 
 ## Estados
 
-- **Planejada** — existe no roadmap, ainda insuficiente para implementação.
-- **Rascunho** — em detalhamento.
-- **Pronta** — passou Definition of Ready e pode ser implementada.
-- **Em implementação** — trabalho ativo.
+- **Planejada** — existe no roadmap, insuficiente para implementação.
+- **Rascunho/Discovery** — contrato e baseline em construção; runtime ainda pode estar bloqueado.
+- **Pronta** — Definition of Ready PASS.
+- **Em implementação** — runtime ativo sob SPEC.
 - **Homologação** — runtime concluído, validando ambiente real.
-- **Concluída** — DoD e evidências fechadas.
+- **Concluída** — DoD/evidências fechadas e promovidas.
 - **Bloqueada** — impedimento explícito.
-- **Supersedida** — planejamento histórico substituído por decisão posterior; não executar.
+- **Supersedida** — substituída formalmente; não executar.
 
-## Estado canônico após T097 + DoR da SPEC-001
+## Estado canônico
 
-- `000-inventario-profundo-e-contratos` — **Concluída**.
-- `001-core-summary-narrativo` — **Pronta**; DoR documental PASS; runtime ainda não iniciado.
+- `000-inventario-profundo-e-contratos` — Concluída historicamente + addendum Premium v2.
+- `001-core-summary-narrativo` — Concluída.
+- `002-classificacao-conhecimento` — Concluída.
+- `003-review-governanca` — Concluída.
+- `004-content-extractor-knowledge-document` — CLOSED/main.
+- `005-search-lexical-golden-queries` — **ATIVA / scope refinado**.
+- `006-premium-product-foundation` — Planejada.
+- `007-public-knowledge-experience` — Planejada.
+- `008-search-intelligence-telemetry-governed-relevance` — Planejada.
+- `009-operations-indexing-reliability` — Planejada.
+- `010-semantic-search-vectors` — Planejada / evidence-gated.
+- `011-ai-platform-wordpress-foundry` — Planejada.
+- `012-ai-assisted-knowledge-governance` — Planejada.
+- `013-evidence-resolution-rag` — Planejada.
+- `014-parity-cutover-legacy-retirement` — Planejada / último gate pré-1.0.
 
-### Placeholders históricos
+Os antigos diretórios 006–012 permanecem como placeholders históricos e estão formalmente supersedidos.
 
-- `001-core-shell-design-system` — **Supersedida por T097**.
-- `002-resumo-executivo-integrado` — **Supersedida como plano anterior**; o Summary mínimo autorizado foi incorporado à nova SPEC-001.
+## SPEC ativa
 
-Os demais diretórios de roadmap (`003`–`012`) continuam como planejamento histórico/provisório e não ganham autorização por sua existência. Numeração e escopo futuros devem ser revalidados quando cada novo slice for formalmente aberto.
+A SPEC-005 possui estado detalhado em `005-search-lexical-golden-queries/current-state.md`. A engine lexical, Golden, lifecycle e experiências candidatas já possuem evidências relevantes; o Premium Rebaseline separa Search core, Public Experience e Search Intelligence em bounded contexts distintos. Produção continua não autorizada.
 
 ## Regra
 
-Apenas uma SPEC deve ser foco principal de implementação por domínio. Constituição, Manifesto e decisões formais mais recentes prevalecem sobre placeholders de roadmap.
+Apenas uma SPEC deve ser foco principal de implementação por domínio. Constituição, Manifesto e decisões formais mais recentes prevalecem sobre placeholders históricos.

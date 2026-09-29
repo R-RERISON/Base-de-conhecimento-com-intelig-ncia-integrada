@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "R-510/T511.2-LOCAL",
+  "date": "2026-09-18",
+  "build": "0.5.0-r510-t511.2",
+  "artifact_sha256": "f34cb1bdffb369efdfbdd886d86cd2798835b41829466da278436b002df7ffcb",
+  "package": {
+    "included_files": 46,
+    "php_files": 41,
+    "php_lint": {
+      "passed": 41,
+      "total": 41,
+      "failures": []
+    },
+    "active_requires": 40,
+    "missing_active_requires": [],
+    "deterministic_rebuild": true,
+    "candidate_seed_present": true,
+    "golden_runner_present": true,
+    "legacy_discovery_present": false
+  },
+  "flags": {
+    "BDC_KB_SPEC005_R500_DIAGNOSTIC_BUILD": false,
+    "BDC_KB_SPEC005_R510_LEGACY_GOLDEN_BUILD": false,
+    "BDC_KB_SPEC005_R510_GOLDEN_BASELINE_BUILD": true,
+    "BDC_KB_ELEMENTOR_WRITER_ENABLED": false
+  },
+  "independence_scan": {
+    "patterns": [
+      "asi_golden_queries",
+      "asi4_",
+      "ASI4_",
+      "\\\\basi_[A-Za-z0-9_]+"
+    ],
+    "forbidden_identifier_hits": [],
+    "pass": true
+  },
+  "result": {
+    "t511_2_local_validation_pass": true,
+    "asi_independent": true,
+    "environmental_validation": "NOT_RUN"
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "UX-004/H-020 + UX-005/A-020",
+  "mode": "premium_ui_polish_v6_local_validation",
+  "generated_at": "2026-09-20T21:55:00Z",
+  "version": "0.5.0-ux004005.6",
+  "baseline": "0.5.0-ux004005.5",
+  "scope": "VISUAL_PRODUCT_POLISH_ONLY",
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-ux004005.6.zip",
+    "sha256": "68b916b6eaf1281bc3b6208694dbaf7733831970bbcc970ae69de58fce5a1ad4",
+    "size_bytes": 217568,
+    "files": 81,
+    "php_files": 69,
+    "js_files": 2,
+    "php_lint": {
+      "passed": 69,
+      "total": 69,
+      "failed": 0
+    },
+    "extracted_php_lint": {
+      "passed": 69,
+      "total": 69,
+      "failed": 0
+    },
+    "javascript_syntax": "PASS",
+    "css_parse": {
+      "passed": 4,
+      "total": 4,
+      "failed": 0
+    },
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "validation": {
+    "static_contract_checks": {
+      "passed": 24,
+      "total": 24,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 52,
+      "total": 52,
+      "changed_from_v5": false
+    },
+    "repository_source_parity": {
+      "passed": 9,
+      "total": 9,
+      "failed": 0
+    }
+  },
+  "delta_from_v5": {
+    "added": [],
+    "deleted": [],
+    "modified": [
+      "assets/css/public-article.css",
+      "assets/css/public-foundation.css",
+      "assets/css/public-header.css",
+      "assets/css/public-home.css",
+      "assets/js/public-search.js",
+      "base-conhecimento-inteligencia-integrada.php",
+      "includes/class-public-experience.php",
+      "templates/public-article-preview.php",
+      "templates/public-home-preview.php"
+    ]
+  },
+  "functional_invariants": {
+    "live_search": true,
+    "search_requires_enter": false,
+    "stale_request_abort": true,
+    "gac_loop_pipeline": true,
+    "summary_follow_scroll": true,
+    "header_quicklinks": true,
+    "entra_profile_bridge": true,
+    "route_cutover": false
+  },
+  "premium_polish": {
+    "search": {
+      "loading_state": true,
+      "reduced_motion_fallback": true,
+      "category_metadata": true,
+      "two_line_excerpt": true,
+      "internal_scroll_max_px": 430,
+      "server_and_live_visual_hierarchy_aligned": true
+    },
+    "home": {
+      "search_first_preserved": true,
+      "result_panel_refined": true,
+      "no_metrics_dashboard": true,
+      "no_marketing_hero": true
+    },
+    "reader": {
+      "heading_decardified": true,
+      "article_surface_preserved": true,
+      "tips_integrated_callout": true,
+      "prose_target_max_ch": 82,
+      "summary_visual_weight_reduced": true,
+      "summary_follow_algorithm_changed": false,
+      "gac_behavior_changed": false
+    }
+  },
+  "frozen_core": {
+    "search_service_sha256": "32efc481bae00488e7e47913e69fa1e9c580cb64ee0f27fdceb04a7e12aafd38",
+    "rebuild_service_sha256": "8f9a2732c81afd653a4add93d0ad0b8bedecd781bfb45909b8e0926aaede1523",
+    "lifecycle_sha256": "325e8f9a03ddf9dbe8de3ceb5eb282a16c2ad8de72208ddcbd3d72d23f0f0b7e",
+    "ranker_sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78"
+  },
+  "gate_state": {
+    "h020": "V6_PREMIUM_LOCAL_PASS_ENV_HUMAN_PENDING",
+    "a020": "V6_PREMIUM_LOCAL_PASS_ENV_HUMAN_PENDING",
+    "cutover": false,
+    "g585": "PAUSED",
+    "g590": "BLOCKED"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-585-v2-DIAGNOSTIC-PACKAGE",
+  "status": "PASS",
+  "date": "2026-09-29",
+  "purpose": "Localizar de forma read-only o legacy_prefix da Home sem alterar o contrato T585.1.",
+  "plugin_version": "0.5.1-rc.14",
+  "build_id": "g585.4-a64793ece73e",
+  "source_commit": "a64793ece73e7037789aa41ddd086910e99ac5d4",
+  "workflow_run_id": 36553362229,
+  "workflow_artifact_id": 11025666457,
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.1-rc.14-g585.4.zip",
+    "sha256": "11587a0b2f17a63fad1d4bcba36005b1e6f70472a285c791bf708020455b3559",
+    "deterministic_equal": true
+  },
+  "validation": {
+    "source_php_lint": {
+      "checked": 122,
+      "failed": 0
+    },
+    "zip_php_lint": {
+      "checked": 71,
+      "failed": 0
+    },
+    "static_contract": true,
+    "search_engine": true,
+    "golden_gate": true,
+    "runtime_resources": true,
+    "g590_regression": true,
+    "t100e_regression": true,
+    "artifact_contract": true
+  },
+  "diagnostic_contract": {
+    "evidence_schema": "2.1.0",
+    "read_only": true,
+    "front_page_content_only": true,
+    "exposes": [
+      "marker",
+      "matched_token",
+      "occurrence",
+      "offset",
+      "line",
+      "column",
+      "context_type",
+      "shortcode_tag",
+      "safe_excerpt",
+      "context_sha256",
+      "front_page_content_sha256"
+    ],
+    "sanitization": [
+      "URL redaction",
+      "email redaction",
+      "long-number redaction",
+      "legacy marker labeling"
+    ],
+    "editorial_write": false,
+    "cutover_authorized": false
+  }
+}

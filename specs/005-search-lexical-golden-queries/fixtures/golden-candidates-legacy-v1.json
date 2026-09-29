@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0.0-candidate",
+  "status": "CANDIDATE / HUMAN REVIEW REQUIRED",
+  "source_evidence": "specs/005-search-lexical-golden-queries/evidence/r510-t510-environmental-20260918T211840Z.json",
+  "source_candidate_set_hash": "6fcd334175dfb6f637f684b4df240a2b1eaf45bfeb4312728e8131c24cbec299",
+  "legacy_last_run": {
+    "status": "pass",
+    "count": 6,
+    "blocking_failed": 0,
+    "warning_failed": 0,
+    "set_hash": "d885cdd0b428aee838253526507b9c658868d931fdfb5f40e4ffc2f376928507",
+    "algorithm_version": "4.5.0",
+    "item_algorithm_version": "4.5.0",
+    "ran_at_gmt": "2026-09-03 16:15:37"
+  },
+  "count": 6,
+  "candidates": [
+    {
+      "id": "GQ-LEGACY-001",
+      "legacy_id": 1,
+      "query": "pendrive",
+      "query_norm_legacy": "pendrive",
+      "expected_post_id": 527,
+      "max_rank": 3,
+      "legacy_severity": "warning",
+      "proposed_severity": "pending_human_review",
+      "active_candidate": true,
+      "source": "legacy_asi_manual",
+      "current_post": {
+        "exists": true,
+        "post_type": "post",
+        "post_status": "publish"
+      },
+      "review_flags": [],
+      "human_review_status": "pending",
+      "contract_version": "1.0.0-candidate"
+    },
+    {
+      "id": "GQ-LEGACY-002",
+      "legacy_id": 2,
+      "query": "MSTeams",
+      "query_norm_legacy": "msteams",
+      "expected_post_id": 579,
+      "max_rank": 3,
+      "legacy_severity": "warning",
+      "proposed_severity": "pending_human_review",
+      "active_candidate": true,
+      "source": "legacy_asi_manual",
+      "current_post": {
+        "exists": true,
+        "post_type": "post",
+        "post_status": "publish"
+      },
+      "review_flags": [],
+      "human_review_status": "pending",
+      "contract_version": "1.0.0-candidate"
+    },
+    {
+      "id": "GQ-LEGACY-003",
+      "legacy_id": 3,
+      "query": "Windows 11",
+      "query_norm_legacy": "windows 11",
+      "expected_post_id": 583,
+      "max_rank": 3,
+      "legacy_severity": "warning",
+      "proposed_severity": "pending_human_review",
+      "active_candidate": true,
+      "source": "legacy_asi_manual",
+      "current_post": {
+        "exists": true,
+        "post_type": "post",
+        "post_status": "publish"
+      },
+      "review_flags": [],
+      "human_review_status": "pending",
+      "contract_version": "1.0.0-candidate"
+    },
+    {
+      "id": "GQ-LEGACY-004",
+      "legacy_id": 4,
+      "query": "Termo de assinatura",
+      "query_norm_legacy": "termo de assinatura",
+      "expected_post_id": 45855,
+      "max_rank": 3,
+      "legacy_severity": "warning",
+      "proposed_severity": "pending_human_review",
+      "active_candidate": true,
+      "source": "legacy_asi_manual",
+      "current_post": {
+        "exists": true,
+        "post_type": "post",
+        "post_status": "publish"
+      },
+      "review_flags": [],
+      "human_review_status": "pending",
+      "contract_version": "1.0.0-candidate"
+    },
+    {
+      "id": "GQ-LEGACY-005",
+      "legacy_id": 5,
+      "query": "Estrutura",
+      "query_norm_legacy": "estrutura",
+      "expected_post_id": 36620,
+      "max_rank": 3,
+      "legacy_severity": "warning",
+      "proposed_severity": "pending_human_review",
+      "active_candidate": true,
+      "source": "legacy_asi_manual",
+      "current_post": {
+        "exists": true,
+        "post_type": "post",
+        "post_status": "publish"
+      },
+      "review_flags": [],
+      "human_review_status": "pending",
+      "contract_version": "1.0.0-candidate"
+    },
+    {
+      "id": "GQ-LEGACY-006",
+      "legacy_id": 6,
+      "query": "SCCM",
+      "query_norm_legacy": "sccm",
+      "expected_post_id": 412,
+      "max_rank": 3,
+      "legacy_severity": "warning",
+      "proposed_severity": "pending_human_review",
+      "active_candidate": true,
+      "source": "legacy_asi_manual",
+      "current_post": {
+        "exists": true,
+        "post_type": "post",
+        "post_status": "publish"
+      },
+      "review_flags": [],
+      "human_review_status": "pending",
+      "contract_version": "1.0.0-candidate"
+    }
+  ]
+}

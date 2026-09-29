@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-530",
+  "date": "2026-09-19",
+  "build": "0.5.0-g530.1",
+  "g520_base_commit": "f5f42f74a27216bf4eafe2501278f4bc1a10f95d",
+  "runtime_versions": {
+    "normalizer": "search-normalizer-v1.0.0",
+    "document": "search-document-v1.0.0",
+    "ranker": "lexical-ranker-v1.0.0",
+    "result": "search-result-v1.0.0",
+    "projection_schema": "1.0.0"
+  },
+  "source_identity": {
+    "bootstrap": "081d662f4504a4031989b66a5c69b67c64ac66fa",
+    "query_normalizer": "60eb7b7a1fdd85ff5a57a3d7d136e42d54eb15dd",
+    "document_builder": "a523201279e6caae52b78a433a66e247c64f0a7e",
+    "projection_repository": "f0c4e920f237965910442efca6cc4a0ceb043bed",
+    "lexical_ranker": "a17cd7bad11e5940cc0a5c2dd95201ac26e66f7f",
+    "search_service": "5ac65d3a15f0d5e59f0f9cb0d06b8bacc22e6fe4",
+    "tests": "30b447c6d82223e994436c87213ba79c8910e11c",
+    "local_git_blob_parity": "7/7"
+  },
+  "tests": {
+    "php_lint": {
+      "passed": 7,
+      "total": 7
+    },
+    "engine_suite": {
+      "passed": 17,
+      "failed": 0
+    },
+    "covered": [
+      "normalization accent/html/whitespace",
+      "query char/token bounds",
+      "token deduplication",
+      "exact phrase token boundaries",
+      "exact-title ranking",
+      "LIKE substring false-positive rejection",
+      "deterministic post_id tie-break",
+      "Search Document field mapping and hash determinism",
+      "degraded Search Document",
+      "Projection state version checks",
+      "permission revalidation before ranking",
+      "WP_Query degraded fallback without modified DESC",
+      "Projection NO_CHANGE idempotence",
+      "changed Projection write",
+      "Projection state allowlist",
+      "candidate cap/order/token-boundary SQL"
+    ]
+  },
+  "static_safety": {
+    "editorial_write_calls": 0,
+    "network_calls": 0,
+    "asi_runtime_identifiers": 0,
+    "fulltext_sql_usage": 0,
+    "bootstrap_implicit_schema_or_rebuild_calls": 0,
+    "derivative_writes": [
+      "update_option(bdc_kb_search_projection_state)",
+      "$wpdb->replace(bdc_kb_search_documents)"
+    ],
+    "elementor_writer_enabled": false,
+    "query_logging": false
+  },
+  "defects_prevented": [
+    {
+      "id": "G530-D01",
+      "issue": "LIKE substring candidate could survive as zero-score result",
+      "fix": "ranker rejects zero lexical coverage; repository uses token-boundary LIKE"
+    },
+    {
+      "id": "G530-D02",
+      "issue": "unchanged Projection row would be rewritten",
+      "fix": "upsert checks source/document/version hashes and returns NO_CHANGE"
+    }
+  ],
+  "scope_control": {
+    "runtime_files_since_g520": 6,
+    "test_files_since_g520": 1,
+    "ui_changes": 0,
+    "golden_runner_changes": 0,
+    "fulltext": false,
+    "telemetry": false,
+    "vector_or_ai": false
+  },
+  "result": {
+    "t530": true,
+    "t531": true,
+    "t532": true,
+    "t533": true,
+    "t534": true,
+    "t535": true,
+    "t536": true,
+    "t537": true,
+    "g530_status": "PASS_CLOSED",
+    "next_gate": "G-540"
+  }
+}

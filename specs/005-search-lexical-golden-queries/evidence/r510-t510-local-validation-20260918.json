@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "R-510/T510-LOCAL",
+  "date": "2026-09-18",
+  "branch": "spec005-search-lexical-golden-queries",
+  "build": "0.5.0-r510-t510.1",
+  "artifact_sha256": "3b4b4e0ec308c5914ce155e740228ff4b0f735fd76fd1b30b930bce384ce77d3",
+  "source_identity": {
+    "legacy_golden_discovery_git_blob_sha": "683c38d8b7dd84938e33588131d4f4cda2415e36",
+    "bootstrap_git_blob_sha": "93710fd775284971407ff3687b96b959a92a7385",
+    "local_git_blob_match": true
+  },
+  "package": {
+    "included_files": 45,
+    "php_files": 40,
+    "active_requires": 39,
+    "missing_active_requires": [],
+    "zip_integrity": true,
+    "php_lint_pre_zip": {
+      "passed": 40,
+      "total": 40,
+      "failures": []
+    },
+    "php_lint_post_zip": {
+      "passed": 40,
+      "total": 40,
+      "failures": []
+    },
+    "deterministic_rebuild": true,
+    "t502_in_artifact": false,
+    "t510_in_artifact": true
+  },
+  "safety_static": {
+    "forbidden_write_or_network_calls_found": [],
+    "db_read_calls": 3,
+    "manage_options": true,
+    "post_method": true,
+    "nonce": true,
+    "editorial_fingerprint": true,
+    "creates_or_alters_schema": false,
+    "writes_legacy_asi": false,
+    "writes_wordpress": false,
+    "executes_search_or_ranking": false,
+    "exports_user_identity": false
+  },
+  "result": {
+    "t510_local_validation_pass": true,
+    "environmental_validation": "NOT_RUN"
+  }
+}

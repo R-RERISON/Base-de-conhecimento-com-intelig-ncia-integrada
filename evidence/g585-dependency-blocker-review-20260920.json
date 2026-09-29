@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-585",
+  "review_type": "controlled_dependency_blocker",
+  "source_artifact": "bdc-kb-spec005-g585-independence-20260920-174342.json",
+  "source_sha256": "4e7ebdef00dd90d7141d34496549e6f41033dc9f97de91b69869039417b1ca42",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.5.0-g585.1",
+    "db_server": "12.2.2"
+  },
+  "findings": {
+    "static_runtime_scan_files": 48,
+    "static_runtime_matches": [],
+    "bdc_runtime_dependency_zero": true,
+    "legacy_active_plugins": [],
+    "legacy_inactive": true,
+    "loaded_legacy_symbols": [
+      "class:BDC_KX_ASI_Adapter"
+    ],
+    "loaded_legacy_hooks": [],
+    "t585": false,
+    "t586": true,
+    "later_tests_not_run": true,
+    "status": "FAIL_DEPENDENCY_FOUND"
+  },
+  "interpretation": {
+    "search_regression_proven": false,
+    "bdc_source_dependency_found": false,
+    "environment_loaded_symbol_requires_origin_attribution": true,
+    "gate_should_be_relaxed": false
+  },
+  "remediation": {
+    "version": "0.5.0-g585.2",
+    "scope": "diagnostic-only + version bump",
+    "change": "Report source_scope and source_path for loaded legacy classes/functions using Reflection without exposing absolute server paths.",
+    "gate_behavior_unchanged": true
+  },
+  "decision": {
+    "g585_status": "OPEN",
+    "g590_status": "BLOCKED",
+    "next_action": "Install g585.2 with ASI still disabled and re-run G-585 to identify the owner of BDC_KX_ASI_Adapter."
+  }
+}

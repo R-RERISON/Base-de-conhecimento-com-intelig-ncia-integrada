@@ -1,0 +1,141 @@
+{
+    "schema_version": "1.0.0",
+    "gate": "G-540",
+    "mode": "spec005_search_projection_full_corpus",
+    "generated_at": "2026-09-19T11:57:27+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.5.0-g540.1",
+        "multisite": false,
+        "db_server": "12.2.2"
+    },
+    "versions": {
+        "normalizer": "search-normalizer-v1.0.0",
+        "document": "search-document-v1.0.0",
+        "ranker": "lexical-ranker-v1.0.0",
+        "result": "search-result-v1.0.0",
+        "projection_schema": "1.0.0"
+    },
+    "safety": {
+        "editorial_write_design": false,
+        "derived_projection_write": true,
+        "calls_external_network": false,
+        "query_logging": false,
+        "editorial_fingerprint_before": "8484633b65268d040945217032a311510a523aebda25d172d3e3e4db83ec2143",
+        "editorial_fingerprint_after": "8484633b65268d040945217032a311510a523aebda25d172d3e3e4db83ec2143",
+        "editorial_fingerprint_equal": true,
+        "changed_posts_during_run": 0,
+        "corpus_ids_equal_before_after": true
+    },
+    "corpus": {
+        "count_before": 623,
+        "count_after": 623,
+        "statuses": {
+            "draft": 12,
+            "pending": 3,
+            "private": 2,
+            "publish": 606
+        }
+    },
+    "projection": {
+        "table": "wp_bdc_kb_search_documents",
+        "schema_exists": true,
+        "stale_rows_deleted": 0,
+        "row_count": 623,
+        "source_fingerprint": "6c4b861283faeab3841c2de8f7a841277d48dc300c812b7333ae03421f39128f",
+        "db_snapshot_mismatch_count": 0,
+        "db_snapshot_mismatch_post_ids": [],
+        "state_after": {
+            "schema_version": "1.0.0",
+            "status": "ready",
+            "document_version": "search-document-v1.0.0",
+            "normalizer_version": "search-normalizer-v1.0.0",
+            "corpus_count": 623,
+            "source_fingerprint": "6c4b861283faeab3841c2de8f7a841277d48dc300c812b7333ae03421f39128f",
+            "last_success_at_gmt": "2026-09-19 11:57:27",
+            "last_error_code": ""
+        }
+    },
+    "pass1": {
+        "name": "pass1",
+        "processed": 623,
+        "written": 623,
+        "no_change": 0,
+        "error_count": 0,
+        "throwable_count": 0,
+        "performance_ms": {
+            "count": 623,
+            "mean": 5.1409,
+            "p50": 4.0901,
+            "p95": 10.8771,
+            "max": 42.114
+        },
+        "runtime_ms": 3203.2871
+    },
+    "pass2": {
+        "name": "pass2",
+        "processed": 623,
+        "written": 0,
+        "no_change": 623,
+        "error_count": 0,
+        "throwable_count": 0,
+        "performance_ms": {
+            "count": 623,
+            "mean": 2.8006,
+            "p50": 1.878,
+            "p95": 7.755,
+            "max": 34.251
+        },
+        "runtime_ms": 1745.183
+    },
+    "determinism": {
+        "compared": 623,
+        "mismatch_count": 0,
+        "mismatch_post_ids": []
+    },
+    "coverage": {
+        "document_states": {
+            "ready": 623
+        },
+        "source_kinds": {
+            "elementor": 34,
+            "empty": 3,
+            "gutenberg": 5,
+            "legacy_html": 535,
+            "mixed": 5,
+            "plain_text": 41
+        },
+        "nonempty_fields": {
+            "title": 623,
+            "summary": 18,
+            "headings": 136,
+            "taxonomy": 0,
+            "body": 610
+        },
+        "extractor_warning_total": 426,
+        "extractor_error_codes": [],
+        "taxonomy_error_codes": []
+    },
+    "errors": [],
+    "throwables": [],
+    "performance": {
+        "total_runtime_ms": 7958.915,
+        "peak_memory_bytes": 54525952
+    },
+    "gate_result": {
+        "t540_full_corpus_pass": true,
+        "t541_two_pass_determinism_pass": true,
+        "t542_coverage_recorded": true,
+        "t543_idempotence_pass": true,
+        "t544_zero_fatal_throwable_pass": true,
+        "t545_g540_pass": true,
+        "next_gate": "G-550"
+    },
+    "interpretation_rules": [
+        "Projection fica building durante as duas passagens; Search deve usar wordpress_fallback nesse período.",
+        "Pass2 deve ser 100% NO_CHANGE; qualquer WRITTEN indica não determinismo ou fonte alterada.",
+        "Search Projection é derivada e pode ser reconstruída; WordPress continua fonte editorial e autoridade de acesso.",
+        "G-540 PASS não equivale a Golden PASS, UX PASS, performance PASS ou produção."
+    ]
+}

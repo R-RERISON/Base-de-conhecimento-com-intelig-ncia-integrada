@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-570",
+  "phase": "ENVIRONMENTAL_VALIDATION",
+  "generated_at": "2026-09-20T16:48:28+00:00",
+  "upload_sha256": "38d399cab1f466c1b919513b8cf3650dd3ae7b6a55d94b715efe5597c3b89ffd",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.5.0-g570.1",
+    "multisite": false,
+    "db_server": "12.2.2"
+  },
+  "projection": {
+    "ready": true,
+    "schema_version": "1.0.0",
+    "status": "ready",
+    "document_version": "search-document-v1.0.0",
+    "normalizer_version": "search-normalizer-v1.0.0",
+    "corpus_count": 623
+  },
+  "checks": {
+    "passed": 45,
+    "total": 45,
+    "failed": 0
+  },
+  "scope_capability": {
+    "edit_posts_denial": {
+      "state": "technical_error",
+      "mode": "none",
+      "error_code": "search_forbidden",
+      "count": 0
+    },
+    "object_denial": {
+      "denied_post_id": 583,
+      "denied_post_exported": false,
+      "state": "success",
+      "mode": "projection_like",
+      "count": 20
+    },
+    "live_results_authorized": true
+  },
+  "sql_bounds": {
+    "candidate_requested": 999,
+    "candidate_hard_cap": 200,
+    "candidate_returned": 200,
+    "result_requested": 5000,
+    "result_hard_cap": 50,
+    "result_returned": 19,
+    "minimum_requested": 0,
+    "minimum_returned": 1,
+    "sql_like_payload_state": "success",
+    "sql_like_payload_mode": "projection_like",
+    "sql_like_payload_count": 20
+  },
+  "abuse": {
+    "non_string": "PASS",
+    "punctuation_only": "PASS",
+    "chars_257": "PASS",
+    "tokens_17": "PASS",
+    "token_chars_129": "PASS",
+    "html_script_sanitized": "PASS",
+    "control_characters_removed": "PASS"
+  },
+  "performance": {
+    "sample_count": 30,
+    "mean_ms": 165.3279,
+    "p50_ms": 178.4739,
+    "p95_ms": 207.7448,
+    "max_ms": 212.9128,
+    "p95_budget_ms": 750,
+    "max_budget_ms": 1500,
+    "fallback_count": 0,
+    "technical_error_count": 0,
+    "budget_is_production_sla": false
+  },
+  "safety": {
+    "editorial_fingerprint_before": "b2e38074a566083b39726f2a63248f4330846ae39a065c52fbbc7b5bf2d489ff",
+    "editorial_fingerprint_after": "b2e38074a566083b39726f2a63248f4330846ae39a065c52fbbc7b5bf2d489ff",
+    "editorial_fingerprint_equal": true,
+    "persists_query_log": false,
+    "calls_external_network": false,
+    "depends_on_asi": false,
+    "uses_fulltext": false,
+    "runner_writes_projection": false,
+    "runner_writes_editorial": false
+  },
+  "errors": [],
+  "throwables": [],
+  "runner": {
+    "total_runtime_ms": 10235.6222,
+    "peak_memory_bytes": 54530048
+  },
+  "gate_result": {
+    "t570_scope_capability_pass": true,
+    "t571_sql_bounds_pass": true,
+    "t572_abuse_long_query_pass": true,
+    "t573_performance_pass": true,
+    "t574_g570_pass": true,
+    "next_gate": "G-580"
+  },
+  "note": "Canonical raw upload retained in conversation; repository evidence is a semantic transcription plus upload SHA-256."
+}

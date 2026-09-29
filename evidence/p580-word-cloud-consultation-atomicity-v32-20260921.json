@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "P-580A / UX-004 H-023",
+  "mode": "atomic_consultation_idempotency_v32_local_validation",
+  "generated_at": "2026-09-21T09:25:00Z",
+  "version": "0.5.0-p580wc.3.2",
+  "parent": "0.5.0-p580wc.3.1",
+  "trigger": {
+    "environmental_observation": "After explicit reset, a single Windows 10 topic click still incremented twice.",
+    "prior_patch_result": "Client gesture-id reuse and transient dedupe were insufficient.",
+    "root_cause": "TOCTOU race in get_transient()/set_transient(): two simultaneous requests can both observe a missing key before either writes it.",
+    "classification": "FAIL_CONTROLADO_ATOMICITY"
+  },
+  "remediation": {
+    "aggregate_version": "consultation-aggregate-v1.2.0",
+    "atomic_claim": {
+      "primitive": "WordPress add_option()",
+      "rationale": "wp_options option_name uniqueness makes claim insertion atomic across concurrent PHP requests",
+      "key": "bdc_kb_wc_evt_<sha1(event_id|canonical|source)>",
+      "ttl_seconds": 300,
+      "expired_retry": true
+    },
+    "cleanup": {
+      "hourly_opportunistic_gc": true,
+      "max_delete_per_gc": 500,
+      "reset_deletes_all_event_claims": true
+    },
+    "preserved": [
+      "per-gesture event_id",
+      "event id persisted on DOM node",
+      "client WeakSet guard",
+      "keepalive",
+      "explicit homologation counter reset",
+      "semantic ranking and Word Cloud quality profile"
+    ]
+  },
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-p580wc.3.2.zip",
+    "sha256": "06b0a03fd6c969b48eade9dfad20eac1882817adf33660b6a41df48287cef321",
+    "size_bytes": 232855,
+    "files": 86,
+    "php_files": 74,
+    "php_lint": {
+      "passed": 74,
+      "total": 74,
+      "failed": 0
+    },
+    "extracted_php_lint": {
+      "passed": 74,
+      "total": 74,
+      "failed": 0
+    },
+    "active_requires": {
+      "passed": 57,
+      "total": 57,
+      "changed_from_parent": false
+    },
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "validation": {
+    "static_atomicity_checks": {
+      "passed": 16,
+      "total": 16,
+      "failed": 0
+    },
+    "source_package_repository_parity": {
+      "passed": 2,
+      "total": 2,
+      "failed": 0,
+      "blobs": {
+        "base-conhecimento-inteligencia-integrada.php": "fb916b4a0e791f66e14f386d6428d19746214d1d",
+        "includes/class-word-cloud-consultations.php": "7cf1097f90f6632171cebb569813dcbc2d34586a"
+      }
+    }
+  },
+  "delta_from_p580wc31": {
+    "added": [],
+    "deleted": [],
+    "modified": [
+      "base-conhecimento-inteligencia-integrada.php",
+      "includes/class-word-cloud-consultations.php"
+    ]
+  },
+  "safety": {
+    "search_ranker_changed": false,
+    "semantic_snapshot_changed": false,
+    "editorial_write": false,
+    "asi_runtime_dependency": false,
+    "raw_query_log": false,
+    "identity_storage": false,
+    "automatic_counter_reset": false
+  },
+  "gate_state": {
+    "h023": "P580WC31_ENV_ATOMICITY_FAIL_CONTROLADO / P580WC32_LOCAL_PASS_ENV_RECHECK_REQUIRED",
+    "p580a": "ACTIVE",
+    "g585": "PAUSED",
+    "g590": "BLOCKED",
+    "next_action": "Install p580wc.3.2, reset homologation counters, then verify Windows 10 and at least two other topics increment exactly +1 per single click. No snapshot regeneration required."
+  }
+}

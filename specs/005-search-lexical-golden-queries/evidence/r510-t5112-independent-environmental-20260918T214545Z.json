@@ -1,0 +1,497 @@
+{
+    "schema_version": "1.1.0",
+    "gate": "R-510/T511",
+    "mode": "spec005_independent_golden_baseline",
+    "generated_at": "2026-09-18T21:45:45+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.5.0-r510-t511.2",
+        "multisite": false
+    },
+    "independence": {
+        "legacy_search_runtime_dependency": false,
+        "reads_legacy_search_tables": false,
+        "reads_legacy_search_options": false,
+        "calls_legacy_search_classes_or_functions": false,
+        "uses_legacy_search_hooks": false,
+        "candidate_source": "spec005_owned_fixture",
+        "candidate_fixture_version": "1.0.0-candidate",
+        "candidate_source_hash": "6fcd334175dfb6f637f684b4df240a2b1eaf45bfeb4312728e8131c24cbec299"
+    },
+    "safety": {
+        "read_only_design": true,
+        "creates_or_alters_schema": false,
+        "writes_wordpress": false,
+        "persists_results": false,
+        "changes_global_search_hooks": false,
+        "calls_external_network": false,
+        "editorial_fingerprint_before": "ed6775da58c80e40a0c9124973281f00549668ca9ca02177395655c656b43b6b",
+        "editorial_fingerprint_after": "ed6775da58c80e40a0c9124973281f00549668ca9ca02177395655c656b43b6b",
+        "editorial_fingerprint_equal": true,
+        "changed_posts_during_run": 0,
+        "corpus_count_before": 623,
+        "corpus_count_after": 623
+    },
+    "candidate_reference": {
+        "count": 6,
+        "version": "1.0.0-candidate",
+        "source_hash": "6fcd334175dfb6f637f684b4df240a2b1eaf45bfeb4312728e8131c24cbec299"
+    },
+    "baseline": {
+        "result_limit": 20,
+        "modes": {
+            "admin_current": {
+                "count": 6,
+                "pass": 2,
+                "fail": 4,
+                "found_top20": 5,
+                "missed_top20": 1,
+                "pass_percent": 33.33,
+                "latency_ms": {
+                    "count": 6,
+                    "mean": 118.2221,
+                    "p50": 117.08,
+                    "p95": 151.413,
+                    "max": 151.413
+                }
+            },
+            "admin_relevance": {
+                "count": 6,
+                "pass": 6,
+                "fail": 0,
+                "found_top20": 6,
+                "missed_top20": 0,
+                "pass_percent": 100,
+                "latency_ms": {
+                    "count": 6,
+                    "mean": 141.31,
+                    "p50": 117.6209,
+                    "p95": 182.8961,
+                    "max": 182.8961
+                }
+            },
+            "publish_native": {
+                "count": 6,
+                "pass": 6,
+                "fail": 0,
+                "found_top20": 6,
+                "missed_top20": 0,
+                "pass_percent": 100,
+                "latency_ms": {
+                    "count": 6,
+                    "mean": 154.7799,
+                    "p50": 163.2829,
+                    "p95": 182.0939,
+                    "max": 182.0939
+                }
+            }
+        },
+        "results": [
+            {
+                "id": "GQ-LEGACY-001",
+                "legacy_id": 1,
+                "query": "pendrive",
+                "expected_post_id": 527,
+                "max_rank": 3,
+                "legacy_severity": "warning",
+                "expected_item_key": "",
+                "modes": {
+                    "admin_current": {
+                        "actual_rank": 10,
+                        "pass_legacy_max_rank": false,
+                        "found_top20": true,
+                        "result_count_sampled": 12,
+                        "latency_ms": 75.2189,
+                        "top_post_ids": [
+                            36448,
+                            1337,
+                            1295,
+                            1167,
+                            1131,
+                            1132,
+                            1143,
+                            449,
+                            43305,
+                            527
+                        ]
+                    },
+                    "admin_relevance": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 12,
+                        "latency_ms": 115.3109,
+                        "top_post_ids": [
+                            527,
+                            1276,
+                            43305,
+                            449,
+                            1338,
+                            1337,
+                            1295,
+                            1167,
+                            36448,
+                            1143
+                        ]
+                    },
+                    "publish_native": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 12,
+                        "latency_ms": 163.2829,
+                        "top_post_ids": [
+                            527,
+                            1276,
+                            43305,
+                            449,
+                            1338,
+                            1337,
+                            1295,
+                            1167,
+                            36448,
+                            1143
+                        ]
+                    }
+                },
+                "baseline_classification": "ordering_ranking_gap"
+            },
+            {
+                "id": "GQ-LEGACY-002",
+                "legacy_id": 2,
+                "query": "MSTeams",
+                "expected_post_id": 579,
+                "max_rank": 3,
+                "legacy_severity": "warning",
+                "expected_item_key": "",
+                "modes": {
+                    "admin_current": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 1,
+                        "latency_ms": 113.41,
+                        "top_post_ids": [
+                            579
+                        ]
+                    },
+                    "admin_relevance": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 1,
+                        "latency_ms": 117.352,
+                        "top_post_ids": [
+                            579
+                        ]
+                    },
+                    "publish_native": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 1,
+                        "latency_ms": 117.3279,
+                        "top_post_ids": [
+                            579
+                        ]
+                    }
+                },
+                "baseline_classification": "already_passes_current_admin"
+            },
+            {
+                "id": "GQ-LEGACY-003",
+                "legacy_id": 3,
+                "query": "Windows 11",
+                "expected_post_id": 583,
+                "max_rank": 3,
+                "legacy_severity": "warning",
+                "expected_item_key": "",
+                "modes": {
+                    "admin_current": {
+                        "actual_rank": 0,
+                        "pass_legacy_max_rank": false,
+                        "found_top20": false,
+                        "result_count_sampled": 20,
+                        "latency_ms": 151.413,
+                        "top_post_ids": [
+                            45178,
+                            45031,
+                            36632,
+                            36562,
+                            36573,
+                            36557,
+                            36531,
+                            36503,
+                            36517,
+                            36518
+                        ]
+                    },
+                    "admin_relevance": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 20,
+                        "latency_ms": 134.409,
+                        "top_post_ids": [
+                            583,
+                            36632,
+                            629,
+                            624,
+                            36557,
+                            489,
+                            36590,
+                            1295,
+                            36523,
+                            14914
+                        ]
+                    },
+                    "publish_native": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 20,
+                        "latency_ms": 173.82,
+                        "top_post_ids": [
+                            583,
+                            36632,
+                            629,
+                            624,
+                            36557,
+                            489,
+                            36590,
+                            1295,
+                            36523,
+                            45178
+                        ]
+                    }
+                },
+                "baseline_classification": "ordering_ranking_gap"
+            },
+            {
+                "id": "GQ-LEGACY-004",
+                "legacy_id": 4,
+                "query": "Termo de assinatura",
+                "expected_post_id": 45855,
+                "max_rank": 3,
+                "legacy_severity": "warning",
+                "expected_item_key": "",
+                "modes": {
+                    "admin_current": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 9,
+                        "latency_ms": 128.8559,
+                        "top_post_ids": [
+                            45855,
+                            14543,
+                            1160,
+                            1144,
+                            44705,
+                            600,
+                            1307,
+                            1314,
+                            1321
+                        ]
+                    },
+                    "admin_relevance": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 9,
+                        "latency_ms": 182.8961,
+                        "top_post_ids": [
+                            45855,
+                            1160,
+                            44705,
+                            14543,
+                            600,
+                            1321,
+                            1314,
+                            1307,
+                            1144
+                        ]
+                    },
+                    "publish_native": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 9,
+                        "latency_ms": 182.0939,
+                        "top_post_ids": [
+                            45855,
+                            1160,
+                            44705,
+                            14543,
+                            600,
+                            1321,
+                            1314,
+                            1307,
+                            1144
+                        ]
+                    }
+                },
+                "baseline_classification": "already_passes_current_admin"
+            },
+            {
+                "id": "GQ-LEGACY-005",
+                "legacy_id": 5,
+                "query": "Estrutura",
+                "expected_post_id": 36620,
+                "max_rank": 3,
+                "legacy_severity": "warning",
+                "expected_item_key": "",
+                "modes": {
+                    "admin_current": {
+                        "actual_rank": 5,
+                        "pass_legacy_max_rank": false,
+                        "found_top20": true,
+                        "result_count_sampled": 20,
+                        "latency_ms": 117.08,
+                        "top_post_ids": [
+                            36431,
+                            45178,
+                            45382,
+                            36629,
+                            36620,
+                            36562,
+                            16163,
+                            16186,
+                            14537,
+                            14538
+                        ]
+                    },
+                    "admin_relevance": {
+                        "actual_rank": 2,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 20,
+                        "latency_ms": 117.6209,
+                        "top_post_ids": [
+                            516,
+                            36620,
+                            36485,
+                            45382,
+                            45178,
+                            45003,
+                            14554,
+                            36562,
+                            14538,
+                            14537
+                        ]
+                    },
+                    "publish_native": {
+                        "actual_rank": 2,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 20,
+                        "latency_ms": 167.6989,
+                        "top_post_ids": [
+                            516,
+                            36620,
+                            36485,
+                            45382,
+                            45178,
+                            14554,
+                            36562,
+                            14538,
+                            14537,
+                            625
+                        ]
+                    }
+                },
+                "baseline_classification": "ordering_ranking_gap"
+            },
+            {
+                "id": "GQ-LEGACY-006",
+                "legacy_id": 6,
+                "query": "SCCM",
+                "expected_post_id": 412,
+                "max_rank": 3,
+                "legacy_severity": "warning",
+                "expected_item_key": "",
+                "modes": {
+                    "admin_current": {
+                        "actual_rank": 7,
+                        "pass_legacy_max_rank": false,
+                        "found_top20": true,
+                        "result_count_sampled": 19,
+                        "latency_ms": 123.3549,
+                        "top_post_ids": [
+                            36557,
+                            14526,
+                            1337,
+                            1295,
+                            593,
+                            487,
+                            412,
+                            583,
+                            498,
+                            36555
+                        ]
+                    },
+                    "admin_relevance": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 19,
+                        "latency_ms": 180.2709,
+                        "top_post_ids": [
+                            412,
+                            367,
+                            1109,
+                            14526,
+                            36557,
+                            593,
+                            36555,
+                            583,
+                            527,
+                            498
+                        ]
+                    },
+                    "publish_native": {
+                        "actual_rank": 1,
+                        "pass_legacy_max_rank": true,
+                        "found_top20": true,
+                        "result_count_sampled": 19,
+                        "latency_ms": 124.4559,
+                        "top_post_ids": [
+                            412,
+                            367,
+                            1109,
+                            14526,
+                            36557,
+                            593,
+                            36555,
+                            583,
+                            527,
+                            498
+                        ]
+                    }
+                },
+                "baseline_classification": "ordering_ranking_gap"
+            }
+        ]
+    },
+    "errors": [],
+    "performance": {
+        "runtime_ms": 3509,
+        "peak_memory_bytes": 29360128
+    },
+    "interpretation_rules": [
+        "This runner uses only the SPEC-005-owned candidate fixture; ASI may be absent or disabled.",
+        "admin_current reproduces Knowledge List: editable statuses + modified DESC.",
+        "admin_relevance keeps the same admin scope but removes modified DESC.",
+        "publish_native uses publish-only native WordPress search as reference.",
+        "If admin_relevance fixes a failure, the gap is primarily ordering/ranking.",
+        "If all modes fail, the case remains a retrieval/coverage/normalization candidate for the new Search Document."
+    ],
+    "gate_result": {
+        "t511_read_only_safety_pass": true,
+        "legacy_search_independence_pass": true,
+        "golden_candidates_measured": 6,
+        "r510_ready": false,
+        "reason": "T511 measures candidate behavior only; human review/severity/diversity/set version remain required."
+    }
+}

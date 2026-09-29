@@ -1,0 +1,1000 @@
+{
+    "schema_version": "1.1.0",
+    "mode": "p580_public_experience_inventory",
+    "generated_at": "2026-09-20T18:59:20+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.5.0-p580a.2",
+        "multisite": false,
+        "db_server": "12.2.2"
+    },
+    "front_page_settings": {
+        "show_on_front": "page",
+        "page_on_front": {
+            "post_id": 41395,
+            "exists": true,
+            "post_type": "page",
+            "post_status": "publish",
+            "title": "Home",
+            "template_slug": "elementor_header_footer"
+        },
+        "page_for_posts": {
+            "post_id": 0,
+            "exists": false
+        }
+    },
+    "theme": {
+        "stylesheet": "astra",
+        "template": "astra",
+        "is_child_theme": false,
+        "theme_name": "Astra",
+        "theme_version": "4.13.3",
+        "parent_name": "",
+        "parent_version": "",
+        "custom_css": {
+            "present": true,
+            "bytes": 36804,
+            "sha256": "b44b57c6a86df6b35ec1df5dfcba86c60e17555ecc2dd7d836c81c36499303a2",
+            "content_exported": false
+        }
+    },
+    "plugin_inventory": {
+        "code_snippets": [
+            {
+                "basename": "code-snippets/code-snippets.php",
+                "name": "Code Snippets",
+                "version": "3.9.6",
+                "text_domain": "code-snippets",
+                "active": true,
+                "files_of_interest": []
+            }
+        ],
+        "gre": [
+            {
+                "basename": "gerenciador-resumo-executivo/gerenciador-resumo-executivo.php",
+                "name": "Gerenciador de Resumo Executivo da Base de Conhecimento",
+                "version": "0.8.0",
+                "text_domain": "bdc-executive-summary",
+                "active": true,
+                "files_of_interest": {
+                    "includes/class-frontend-renderer.php": {
+                        "bytes": 6378,
+                        "sha256": "062e4eb9564e9390ed45c4011694072fe7950113efd28e57dc1776efe7bef3ee"
+                    },
+                    "includes/class-helpful-tips-renderer.php": {
+                        "bytes": 4031,
+                        "sha256": "65913c0317a0820e2dafd4f733d73c03f4583c791dcf4a5af38b67405b9b3b8f"
+                    },
+                    "includes/class-helpful-tips-store.php": {
+                        "bytes": 3905,
+                        "sha256": "86df682678a8b4b0c26d4ebaf2a4f63864ce4c5e1d46afae0c31c75ae5ca25f7"
+                    }
+                }
+            }
+        ],
+        "gac": [
+            {
+                "basename": "gac-acompanhamento/gac-acompanhamento.php",
+                "name": "GAC Acompanhamento",
+                "version": "15.8.7-r2-b3.1.9.16",
+                "text_domain": "gac-acompanhamento",
+                "active": true,
+                "files_of_interest": []
+            }
+        ],
+        "wp_unified_indexer": [
+            {
+                "basename": "wp-unified-indexer/wp-unified-indexer.php",
+                "name": "WP Unified Indexer",
+                "version": "2.4.10",
+                "text_domain": "wp-unified-indexer",
+                "active": true,
+                "files_of_interest": []
+            }
+        ],
+        "entra_gateway": [
+            {
+                "basename": "bdc-entra-id-authentication-gateway/bdc-entra-id-authentication-gateway.php",
+                "name": "BdC Entra ID Authentication Gateway",
+                "version": "1.1.7",
+                "text_domain": "bdc-entra-id-authentication-gateway",
+                "active": true,
+                "files_of_interest": []
+            },
+            {
+                "basename": "login-azure/login-azure.php",
+                "name": "Login with Microsoft Entra ID",
+                "version": "1.0.0",
+                "text_domain": "login-azure",
+                "active": false,
+                "files_of_interest": []
+            }
+        ]
+    },
+    "code_snippets_inventory": {
+        "table_present": true,
+        "columns": [
+            "id",
+            "name",
+            "description",
+            "code",
+            "tags",
+            "scope",
+            "priority",
+            "active",
+            "modified",
+            "revision",
+            "cloud_id",
+            "condition_id"
+        ],
+        "matches": [
+            {
+                "id": 9,
+                "name": "BdC Home — Shortcodes, AJAX e Renderização Segura",
+                "scope": "global",
+                "priority": 10,
+                "active": true,
+                "code_bytes": 8507,
+                "code_sha256": "a465269e50c069dd945c55c3ba5488a32664589d8bdb79755cbcbe23c3c42c5a",
+                "matched_symbols": [
+                    "bdc_home_v270_config_shortcode",
+                    "bdc_home_v270_ultimas_shortcode",
+                    "bdc_home_v270_populares_shortcode",
+                    "bdc_home_v270_ajax_filter"
+                ],
+                "behavioral_signals": {
+                    "uses_wp_query": true,
+                    "uses_get_posts": false,
+                    "uses_get_terms": false,
+                    "uses_post_meta": false,
+                    "uses_comment_count": true,
+                    "uses_orderby_date": false,
+                    "uses_orderby_modified": false,
+                    "uses_orderby_meta": false,
+                    "uses_tax_query": false,
+                    "uses_category": true,
+                    "uses_nonce": false,
+                    "uses_capability_check": false,
+                    "uses_json_response": true
+                }
+            }
+        ],
+        "code_exported": false
+    },
+    "helpful_tips_profile": {
+        "meta_key": "_bdc_es_helpful_tips",
+        "post_count": 7,
+        "posts": [
+            {
+                "post_id": 36431,
+                "value_type": "array",
+                "json_bytes": 236,
+                "shape": {
+                    "kind": "list",
+                    "item_count": 2,
+                    "item_keys": [
+                        "title",
+                        "content"
+                    ],
+                    "item_key_types": {
+                        "title": [
+                            "string"
+                        ],
+                        "content": [
+                            "string"
+                        ]
+                    }
+                }
+            },
+            {
+                "post_id": 36492,
+                "value_type": "array",
+                "json_bytes": 86,
+                "shape": {
+                    "kind": "list",
+                    "item_count": 1,
+                    "item_keys": [
+                        "title",
+                        "content"
+                    ],
+                    "item_key_types": {
+                        "title": [
+                            "string"
+                        ],
+                        "content": [
+                            "string"
+                        ]
+                    }
+                }
+            },
+            {
+                "post_id": 36549,
+                "value_type": "array",
+                "json_bytes": 518,
+                "shape": {
+                    "kind": "list",
+                    "item_count": 4,
+                    "item_keys": [
+                        "title",
+                        "content"
+                    ],
+                    "item_key_types": {
+                        "title": [
+                            "string"
+                        ],
+                        "content": [
+                            "string"
+                        ]
+                    }
+                }
+            },
+            {
+                "post_id": 41383,
+                "value_type": "array",
+                "json_bytes": 61,
+                "shape": {
+                    "kind": "list",
+                    "item_count": 2,
+                    "item_keys": [
+                        "title",
+                        "content"
+                    ],
+                    "item_key_types": {
+                        "title": [
+                            "string"
+                        ],
+                        "content": [
+                            "string"
+                        ]
+                    }
+                }
+            },
+            {
+                "post_id": 45031,
+                "value_type": "array",
+                "json_bytes": 102,
+                "shape": {
+                    "kind": "list",
+                    "item_count": 2,
+                    "item_keys": [
+                        "title",
+                        "content"
+                    ],
+                    "item_key_types": {
+                        "title": [
+                            "string"
+                        ],
+                        "content": [
+                            "string"
+                        ]
+                    }
+                }
+            },
+            {
+                "post_id": 45178,
+                "value_type": "array",
+                "json_bytes": 109,
+                "shape": {
+                    "kind": "list",
+                    "item_count": 2,
+                    "item_keys": [
+                        "title",
+                        "content"
+                    ],
+                    "item_key_types": {
+                        "title": [
+                            "string"
+                        ],
+                        "content": [
+                            "string"
+                        ]
+                    }
+                }
+            },
+            {
+                "post_id": 45782,
+                "value_type": "array",
+                "json_bytes": 48,
+                "shape": {
+                    "kind": "list",
+                    "item_count": 1,
+                    "item_keys": [
+                        "title",
+                        "content"
+                    ],
+                    "item_key_types": {
+                        "title": [
+                            "string"
+                        ],
+                        "content": [
+                            "string"
+                        ]
+                    }
+                }
+            }
+        ],
+        "union_item_keys": [
+            "title",
+            "content"
+        ],
+        "item_key_types": {
+            "content": [
+                "string"
+            ],
+            "title": [
+                "string"
+            ]
+        },
+        "item_count_min": 1,
+        "item_count_max": 4,
+        "values_exported": false
+    },
+    "target_shortcodes": {
+        "bc_home_config": {
+            "registered": true,
+            "callback": {
+                "type": "function",
+                "callable": "bdc_home_v270_config_shortcode",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/snippet-ops.php(663) : eval()'d code"
+            }
+        },
+        "bc_ultimas": {
+            "registered": true,
+            "callback": {
+                "type": "function",
+                "callable": "bdc_home_v270_ultimas_shortcode",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/snippet-ops.php(663) : eval()'d code"
+            }
+        },
+        "bc_populares": {
+            "registered": true,
+            "callback": {
+                "type": "function",
+                "callable": "bdc_home_v270_populares_shortcode",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/snippet-ops.php(663) : eval()'d code"
+            }
+        },
+        "asi_search_form": {
+            "registered": false,
+            "callback": null
+        },
+        "bdc_word_cloud": {
+            "registered": false,
+            "callback": null
+        },
+        "bdc_entra_login": {
+            "registered": true,
+            "callback": {
+                "type": "method",
+                "callable": "BDC_Entra_Shortcodes::render_login_shortcode",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-shortcodes.php"
+            }
+        }
+    },
+    "public_hooks": {
+        "the_content": [
+            {
+                "type": "method",
+                "callable": "Elementor\\Modules\\ImageLoadingOptimization\\Module::flush_header_buffer",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/image-loading-optimization/module.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "apply_block_hooks_to_content_from_post_object",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/blocks.php",
+                "priority": 8,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Embed::run_shortcode",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-embed.php",
+                "priority": 8,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Embed::autoembed",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-embed.php",
+                "priority": 8,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "do_blocks",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/blocks.php",
+                "priority": 9,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wptexturize",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/formatting.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wpautop",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/formatting.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "shortcode_unautop",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/formatting.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "prepend_attachment",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/post-template.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_replace_insecure_home_url",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/https-migration.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "ewdufaqInit::alter_faq_content",
+                "source_scope": "plugin",
+                "source_path": "ultimate-faqs/ultimate-faqs.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "ewdufaqInit::add_faqs_content",
+                "source_scope": "plugin",
+                "source_path": "ultimate-faqs/ultimate-faqs.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "capital_P_dangit",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/formatting.php",
+                "priority": 11,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "do_shortcode",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/shortcodes.php",
+                "priority": 11,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_filter_content_tags",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/media.php",
+                "priority": 12,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "GAC\\V15\\PostActions\\PostActionsService::prepend_post_actions_panel",
+                "source_scope": "plugin",
+                "source_path": "gac-acompanhamento/src/PostActions/PostActionsService.php",
+                "priority": 12,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "GAC\\V15\\KnowledgeBridge\\AuthenticatedKnowledgeContributionBridge::append_bridge_panel",
+                "source_scope": "plugin",
+                "source_path": "gac-acompanhamento/src/KnowledgeBridge/AuthenticatedKnowledgeContributionBridge.php",
+                "priority": 13,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC\\ExecutiveSummary\\Helpful_Tips_Renderer::prepend_to_content",
+                "source_scope": "plugin",
+                "source_path": "gerenciador-resumo-executivo/includes/class-helpful-tips-renderer.php",
+                "priority": 15,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "convert_smilies",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/formatting.php",
+                "priority": 20,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WPUI_Frontend::inject_anchors",
+                "source_scope": "plugin",
+                "source_path": "wp-unified-indexer/includes/class-frontend.php",
+                "priority": 20,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC\\ExecutiveSummary\\Frontend_Renderer::append_side_panel",
+                "source_scope": "plugin",
+                "source_path": "gerenciador-resumo-executivo/includes/class-frontend-renderer.php",
+                "priority": 30,
+                "accepted_args": 1
+            }
+        ],
+        "wp_footer": [
+            {
+                "type": "function",
+                "callable": "wp_enqueue_global_styles",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/script-loader.php",
+                "priority": 1,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_enqueue_stored_styles",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/script-loader.php",
+                "priority": 1,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_maybe_inline_styles",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/script-loader.php",
+                "priority": 1,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\Modules\\Interactions\\Interactions_Frontend_Handler::print_interactions_data",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/interactions/interactions-frontend-handler.php",
+                "priority": 1,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "ewdufaqInit::assets_footer",
+                "source_scope": "plugin",
+                "source_path": "ultimate-faqs/ultimate-faqs.php",
+                "priority": 2,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_print_speculation_rules",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/speculative-loading.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "the_block_template_skip_link",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/deprecated.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Duotone::output_footer_assets",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-duotone.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "ewdufaqInit::output_ld_json_content",
+                "source_scope": "plugin",
+                "source_path": "ultimate-faqs/ultimate-faqs.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WprAddons\\Admin\\Includes\\WPR_Templates_Modal_Popups::render_popups",
+                "source_scope": "plugin",
+                "source_path": "royal-elementor-addons/admin/includes/wpr-templates-modal-popups.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "astra_render_header_svg_mask",
+                "source_scope": "theme",
+                "source_path": "astra/inc/markup-extras.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Astra_Customizer::style_guide_template",
+                "source_scope": "theme",
+                "source_path": "astra/inc/customizer/class-astra-customizer.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Astra_Scroll_To_Top_Loader::html_markup_loader",
+                "source_scope": "theme",
+                "source_path": "astra/inc/addons/scroll-to-top/classes/class-astra-scroll-to-top-loader.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Script_Modules::print_import_map",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-script-modules.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Script_Modules::print_enqueued_script_modules",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-script-modules.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Script_Modules::print_script_module_preloads",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-script-modules.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Script_Modules::print_script_module_data",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-script-modules.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "closure",
+                "callable": "Closure",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/floating-buttons/module.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\Core\\Common\\App::print_templates",
+                "source_scope": "plugin",
+                "source_path": "elementor/core/common/app.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Evaluation\\Evaluate_Content::load_footer_content",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/evaluation/class-evaluate-content.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "closure",
+                "callable": "Closure",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/lazyload/module.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\Modules\\AdminBar\\Module::enqueue_scripts",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/admin-bar/module.php",
+                "priority": 11,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_print_footer_scripts",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/script-loader.php",
+                "priority": 20,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Script_Modules::print_a11y_script_module_html",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-script-modules.php",
+                "priority": 20,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "upk_inject_footer_custom_code",
+                "source_scope": "plugin",
+                "source_path": "ultimate-post-kit/includes/helper.php",
+                "priority": 999,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_admin_bar_render",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/admin-bar.php",
+                "priority": 1000,
+                "accepted_args": 1
+            }
+        ],
+        "template_include": [
+            {
+                "type": "method",
+                "callable": "Elementor\\Modules\\PageTemplates\\Module::template_include",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/page-templates/module.php",
+                "priority": 11,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WprAddons\\Admin\\Includes\\WPR_Render_Templates::convert_to_canvas",
+                "source_scope": "plugin",
+                "source_path": "royal-elementor-addons/admin/includes/wpr-render-templates.php",
+                "priority": 12,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WprAddons\\Admin\\Includes\\WPR_Templates_Modal_Popups::set_post_type_template",
+                "source_scope": "plugin",
+                "source_path": "royal-elementor-addons/admin/includes/wpr-templates-modal-popups.php",
+                "priority": 9999,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "convert_to_canvas_template",
+                "source_scope": "plugin",
+                "source_path": "royal-elementor-addons/admin/mega-menu.php",
+                "priority": 9999,
+                "accepted_args": 1
+            }
+        ],
+        "single_template": [],
+        "template_redirect": [
+            {
+                "type": "function",
+                "callable": "_wp_admin_bar_init",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/admin-bar.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC_Entra_Auth_Controller::maybe_mark_logged_out",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-auth-controller.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC_Entra_Auth_Controller::maybe_start_local_login",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-auth-controller.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC_Entra_Auth_Controller::maybe_start_login",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-auth-controller.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC_Entra_Callback_Controller::maybe_handle_callback",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-callback-controller.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\Preview::init",
+                "source_scope": "plugin",
+                "source_path": "elementor/includes/preview.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "GAC\\V15\\Observation\\PostAccessObserver::capture",
+                "source_scope": "plugin",
+                "source_path": "gac-acompanhamento/src/Observation/PostAccessObserver.php",
+                "priority": 5,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_old_slug_redirect",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/query.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "redirect_canonical",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/canonical.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WPR_Templates_Library::block_template_frontend",
+                "source_scope": "plugin",
+                "source_path": "royal-elementor-addons/admin/includes/wpr-templates-library.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\Core\\Editor\\Editor::redirect_to_new_url",
+                "source_scope": "plugin",
+                "source_path": "elementor/core/editor/editor.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\TemplateLibrary\\Source_Local::block_template_frontend",
+                "source_scope": "plugin",
+                "source_path": "elementor/includes/template-library/sources/local.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\App\\Modules\\KitLibrary\\Module::handle_kit_screenshot_generation",
+                "source_scope": "plugin",
+                "source_path": "elementor/app/modules/kit-library/module.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Sitemaps::render_sitemaps",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/sitemaps/class-wp-sitemaps.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "rest_output_link_header",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/rest-api.php",
+                "priority": 11,
+                "accepted_args": 0
+            },
+            {
+                "type": "function",
+                "callable": "wp_shortlink_header",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/link-template.php",
+                "priority": 11,
+                "accepted_args": 0
+            },
+            {
+                "type": "method",
+                "callable": "BDC_Entra_Auto_SSO::maybe_start_auto_sso",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-auto-sso.php",
+                "priority": 20,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_redirect_admin_locations",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/canonical.php",
+                "priority": 1000,
+                "accepted_args": 1
+            }
+        ],
+        "wp_ajax_bdc_home_filter_v270": [
+            {
+                "type": "function",
+                "callable": "bdc_home_v270_ajax_filter",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/snippet-ops.php(663) : eval()'d code",
+                "priority": 10,
+                "accepted_args": 1
+            }
+        ],
+        "wp_ajax_nopriv_bdc_home_filter_v270": [
+            {
+                "type": "function",
+                "callable": "bdc_home_v270_ajax_filter",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/snippet-ops.php(663) : eval()'d code",
+                "priority": 10,
+                "accepted_args": 1
+            }
+        ]
+    },
+    "public_surfaces": {
+        "candidates_count": 2,
+        "candidates": [
+            {
+                "post_id": 87,
+                "post_type": "page",
+                "post_status": "private",
+                "title": "Home",
+                "template_slug": "",
+                "source_kind": "elementor",
+                "shortcodes": {
+                    "asi_search_form": 1
+                }
+            },
+            {
+                "post_id": 41395,
+                "post_type": "page",
+                "post_status": "publish",
+                "title": "Home",
+                "template_slug": "elementor_header_footer",
+                "source_kind": "elementor",
+                "shortcodes": {
+                    "bc_home_config": 1,
+                    "bc_ultimas": 1,
+                    "bc_populares": 1,
+                    "asi_search_form": 1,
+                    "bdc_word_cloud": 1
+                }
+            }
+        ],
+        "truncated": false
+    },
+    "corpus": {
+        "published_posts_scanned": 606,
+        "limit": 1000,
+        "possibly_truncated": false,
+        "source_kind_counts": {
+            "gutenberg": 3,
+            "legacy_html": 528,

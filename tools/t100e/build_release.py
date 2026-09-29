@@ -6,7 +6,8 @@ contains only:
 - the plugin bootstrap;
 - unconditional bootstrap dependencies;
 - dependencies behind currently-true build flags;
-- assets/css and assets/js files.
+- assets/css and assets/js files;
+- explicit runtime resource files required by active capabilities.
 
 No WordPress bootstrap, DB access, network access, or editorial write occurs.
 """
@@ -24,6 +25,28 @@ PLUGIN_REL = Path("plugin/base-conhecimento-inteligencia-integrada")
 BOOTSTRAP = "base-conhecimento-inteligencia-integrada.php"
 ZIP_ROOT = "base-conhecimento-inteligencia-integrada"
 FIXED_ZIP_TIME = (1980, 1, 1, 0, 0, 0)
+
+GOLDEN_RUNTIME_RESOURCES = (
+    "resources/search/golden-relevance-v1.0.0.json",
+    "resources/search/technical-challenge-v1.0.0.json",
+)
+
+PUBLIC_PREVIEW_RUNTIME_FILES = (
+    "templates/public-home-preview.php",
+    "templates/public-article-preview.php",
+)
+
+BASE_RUNTIME_FILES = (
+    "uninstall.php",
+)
+
+CONDITIONAL_RUNTIME_RESOURCES = {
+    "BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_SPEC005_G585_ASI_INDEPENDENCE_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_SPEC005_G590_SECTION_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_UX004_H030_TECHNICAL_BUILD": GOLDEN_RUNTIME_RESOURCES,
+    "BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD": PUBLIC_PREVIEW_RUNTIME_FILES,
+}
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -106,6 +129,9 @@ def main() -> int:
 
     source = bootstrap.read_text(encoding="utf-8")
     files: set[str] = {BOOTSTRAP}
+    for rel in BASE_RUNTIME_FILES:
+        if (plugin / rel).is_file():
+            files.add(rel)
 
     uncond = unconditional_requires(source)
     cond = conditional_requires(source)
@@ -119,6 +145,14 @@ def main() -> int:
         active_flags[flag] = value
         if value is True:
             files.update(paths)
+
+    active_runtime_resources: dict[str, list[str]] = {}
+    for flag, paths in CONDITIONAL_RUNTIME_RESOURCES.items():
+        value = flag_value(source, flag)
+        active_flags.setdefault(flag, value)
+        if value is True:
+            files.update(paths)
+            active_runtime_resources[flag] = list(paths)
 
     add_tree_files(plugin, "assets/css", files)
     add_tree_files(plugin, "assets/js", files)
@@ -134,6 +168,9 @@ def main() -> int:
     version_match = re.search(
         r"define\(\s*'BDC_KB_VERSION'\s*,\s*'([^']+)'\s*\)", source
     )
+    build_match = re.search(
+        r"define\(\s*'BDC_KB_BUILD_ID'\s*,\s*'([^']+)'\s*\)", source
+    )
     source_files = sorted(
         str(path.relative_to(plugin)).replace("\\", "/")
         for path in plugin.rglob("*")
@@ -145,10 +182,12 @@ def main() -> int:
         "schema_version": "1.0.0",
         "builder": "tools/t100e/build_release.py",
         "plugin_version": version_match.group(1) if version_match else "",
+        "build_id": build_match.group(1) if build_match else "",
         "zip_root": ZIP_ROOT,
         "zip_sha256": zip_hash,
         "active_conditional_flags": active_flags,
         "unconditional_requires": uncond,
+        "active_runtime_resources": active_runtime_resources,
         "included_file_count": len(files_sorted),
         "included_files": file_hashes,
         "excluded_source_file_count": len(excluded),

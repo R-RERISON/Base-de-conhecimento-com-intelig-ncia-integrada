@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-570",
+  "phase": "LOCAL_PACKAGE_VALIDATION",
+  "date": "2026-09-19",
+  "source_head": "382b5ad4ee4506e955f5e6f6d01c37d2d1ffa5cf",
+  "plugin_version": "0.5.0-g570.1",
+  "artifact": "base-conhecimento-inteligencia-integrada-0.5.0-g570.1.zip",
+  "artifact_sha256": "4cd915fc3be58166a354434bf9688f0a1509ca36d570697540dff9eace82ab62",
+  "package": {
+    "files": 61,
+    "php_files": 54,
+    "zip_integrity": true,
+    "deterministic_builds": 2,
+    "byte_equal": true,
+    "php_lint_passed": 54,
+    "php_lint_failed": 0,
+    "extracted_zip_php_lint_passed": 54,
+    "extracted_zip_php_lint_failed": 0
+  },
+  "source_parity": {
+    "g560_validated_base_inherited": true,
+    "changed_plugin_files": {
+      "base-conhecimento-inteligencia-integrada.php": "baac34ad16cb12cb7856615dbc288543ca70d8f7",
+      "includes/class-search-security-performance-runner-g570.php": "b7893a09012fc0ac47d961c0b36854ee2149c9ab"
+    },
+    "g570_test_blob": "95b80cb99596382e2109f681a7243fff5d6084f8",
+    "pass": true
+  },
+  "local_tests": {
+    "security_performance_contract_suite": {
+      "passed": 37,
+      "failed": 0
+    },
+    "active_requires": {
+      "count": 44,
+      "missing": 0,
+      "pass": true
+    }
+  },
+  "safety_scan": {
+    "editorial_write_calls": 0,
+    "network_calls": 0,
+    "asi_runtime_identifiers": 0,
+    "fulltext_sql_usage": 0,
+    "runner_projection_write_calls": 0,
+    "persists_query_log": false
+  },
+  "build_flags": {
+    "BDC_KB_SPEC004_G245_T100A_POST_WORKSPACE_BUILD": true,
+    "BDC_KB_SPEC004_G245_T100C_CORE_BLOCKS_ACTIVITY_BUILD": true,
+    "BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD": true,
+    "BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD": false,
+    "BDC_KB_SPEC005_G550_GOLDEN_RUNNER_BUILD": false,
+    "BDC_KB_SPEC005_G560_SEARCH_UX_RUNNER_BUILD": false,
+    "BDC_KB_SPEC005_G570_SECURITY_PERFORMANCE_BUILD": true
+  },
+  "contract": {
+    "reference": "specs/005-search-lexical-golden-queries/g570-security-performance-contract-v1.md",
+    "ranking_core_changed": false,
+    "candidate_cap": 200,
+    "result_default": 20,
+    "result_hard_cap": 50,
+    "query_max_chars": 256,
+    "query_max_bytes": 1024,
+    "query_max_tokens": 16,
+    "token_max_chars": 128,
+    "benchmark_queries": 6,
+    "benchmark_warmups_per_query": 1,
+    "benchmark_repeats_per_query": 5,
+    "benchmark_samples_expected": 30,
+    "p95_budget_ms": 750,
+    "max_budget_ms": 1500,
+    "budget_is_production_sla": false
+  },
+  "environmental_gate": "NOT_RUN",
+  "g570_status": "OPEN",
+  "next_action": "Install package over current homologation plugin; run Security & Performance G-570; upload JSON."
+}

@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0.0",
+  "workstream": "P-580A / UX-004 H-023",
+  "mode": "consultation_idempotency_patch_local_validation",
+  "generated_at": "2026-09-21T09:05:00Z",
+  "version": "0.5.0-p580wc.3.1",
+  "parent": "0.5.0-p580wc.3",
+  "trigger": {
+    "environmental_observation": "E-mail increments correctly, while Windows 10 duplicated a single cloud click",
+    "classification": "FAIL_CONTROLADO_EVENT_IDEMPOTENCY",
+    "root_cause_boundary": "aggregate endpoint accepted duplicate valid deliveries because no idempotency key existed; exact browser-level duplication mechanism not assumed"
+  },
+  "remediation": {
+    "frontend": [
+      "WeakSet blocks repeat handling by the same script instance",
+      "event_id generated per click gesture",
+      "event_id stored on clicked DOM element so duplicate listeners reuse the same id",
+      "keepalive preserved"
+    ],
+    "backend": [
+      "event_id required and bounded to 96 characters",
+      "server transient dedupe key = sha1(event_id|canonical|source)",
+      "5-minute dedupe window",
+      "duplicate request returns recorded=false, duplicate=true",
+      "failed/non-public records release dedupe key"
+    ],
+    "admin": [
+      "explicit Resetar consultas de homologação action",
+      "manage_options + existing admin nonce",
+      "existing counters preserved until operator explicitly resets"
+    ]
+  },
+  "package": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.0-p580wc.3.1.zip",
+    "sha256": "43a6ed6ac2bb6eac8d4ee1f9515d53e39b65acc19ca2f62c17b28da334224d64",
+    "size_bytes": 232408,
+    "files": 86,
+    "php_files": 74,
+    "js_files": 2,
+    "php_lint": {
+      "passed": 74,
+      "total": 74,
+      "failed": 0
+    },
+    "extracted_php_lint": {
+      "passed": 74,
+      "total": 74,
+      "failed": 0
+    },
+    "javascript_syntax": "PASS",
+    "deterministic_build": {
+      "runs": 2,
+      "sha256_equal": true
+    }
+  },
+  "validation": {
+    "static_idempotency_checks": {
+      "passed": 18,
+      "total": 18,
+      "failed": 0
+    },
+    "source_package_repository_parity": {
+      "passed": 4,
+      "total": 4,
+      "failed": 0,
+      "blobs": {
+        "base-conhecimento-inteligencia-integrada.php": "6318f9e9b1c95fb019746a48a57e0ba76eaa85d6",
+        "includes/class-word-cloud-consultations.php": "6746ef4b9f2ac3068625a37ee4f08ba83c9daf7d",
+        "includes/class-word-cloud-admin.php": "b6a9522b3e5a44adb019f4ca2d1541605536af59",
+        "assets/js/public-search.js": "65e7372aa94be2711313691d1c76c5ba77d72d57"
+      }
+    }
+  },
+  "delta_from_p580wc3": {
+    "added": [],
+    "deleted": [],
+    "modified": [
+      "assets/js/public-search.js",
+      "base-conhecimento-inteligencia-integrada.php",
+      "includes/class-word-cloud-admin.php",
+      "includes/class-word-cloud-consultations.php"
+    ]
+  },
+  "safety": {
+    "counter_reset_automatic": false,
+    "editorial_write": false,
+    "asi_runtime_dependency": false,
+    "search_ranker_changed": false,
+    "raw_query_log": false,
+    "identity_storage": false
+  },
+  "gate_state": {
+    "h023": "P580WC3_ENV_DUPLICATE_FAIL_CONTROLADO / P580WC3_1_LOCAL_PASS_ENV_RECHECK_REQUIRED",
+    "p580a": "ACTIVE",
+    "g585": "PAUSED",
+    "g590": "BLOCKED",
+    "next_action": "Install p580wc.3.1. Reset homologation counters explicitly, then verify one click increments exactly +1 for multiple topics including Windows 10. Repeat double/rapid click and confirm no duplicate increment."
+  }
+}

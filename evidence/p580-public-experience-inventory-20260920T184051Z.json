@@ -1,0 +1,924 @@
+{
+    "schema_version": "1.0.0",
+    "mode": "p580_public_experience_inventory",
+    "generated_at": "2026-09-20T18:40:51+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.5.0-p580a.1",
+        "multisite": false,
+        "db_server": "12.2.2"
+    },
+    "front_page_settings": {
+        "show_on_front": "page",
+        "page_on_front": {
+            "post_id": 41395,
+            "exists": true,
+            "post_type": "page",
+            "post_status": "publish",
+            "title": "Home",
+            "template_slug": "elementor_header_footer"
+        },
+        "page_for_posts": {
+            "post_id": 0,
+            "exists": false
+        }
+    },
+    "theme": {
+        "stylesheet": "astra",
+        "template": "astra",
+        "is_child_theme": false,
+        "theme_name": "Astra",
+        "theme_version": "4.13.3",
+        "parent_name": "",
+        "parent_version": "",
+        "custom_css": {
+            "present": true,
+            "bytes": 36804,
+            "sha256": "b44b57c6a86df6b35ec1df5dfcba86c60e17555ecc2dd7d836c81c36499303a2",
+            "content_exported": false
+        }
+    },
+    "target_shortcodes": {
+        "bc_home_config": {
+            "registered": true,
+            "callback": {
+                "type": "function",
+                "callable": "bdc_home_v270_config_shortcode",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/snippet-ops.php(663) : eval()'d code"
+            }
+        },
+        "bc_ultimas": {
+            "registered": true,
+            "callback": {
+                "type": "function",
+                "callable": "bdc_home_v270_ultimas_shortcode",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/snippet-ops.php(663) : eval()'d code"
+            }
+        },
+        "bc_populares": {
+            "registered": true,
+            "callback": {
+                "type": "function",
+                "callable": "bdc_home_v270_populares_shortcode",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/snippet-ops.php(663) : eval()'d code"
+            }
+        },
+        "asi_search_form": {
+            "registered": false,
+            "callback": null
+        },
+        "bdc_word_cloud": {
+            "registered": false,
+            "callback": null
+        },
+        "bdc_entra_login": {
+            "registered": true,
+            "callback": {
+                "type": "method",
+                "callable": "BDC_Entra_Shortcodes::render_login_shortcode",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-shortcodes.php"
+            }
+        }
+    },
+    "public_hooks": {
+        "the_content": [
+            {
+                "type": "method",
+                "callable": "Elementor\\Modules\\ImageLoadingOptimization\\Module::flush_header_buffer",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/image-loading-optimization/module.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "apply_block_hooks_to_content_from_post_object",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/blocks.php",
+                "priority": 8,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Embed::run_shortcode",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-embed.php",
+                "priority": 8,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Embed::autoembed",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-embed.php",
+                "priority": 8,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "do_blocks",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/blocks.php",
+                "priority": 9,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wptexturize",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/formatting.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wpautop",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/formatting.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "shortcode_unautop",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/formatting.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "prepend_attachment",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/post-template.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_replace_insecure_home_url",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/https-migration.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "ewdufaqInit::alter_faq_content",
+                "source_scope": "plugin",
+                "source_path": "ultimate-faqs/ultimate-faqs.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "ewdufaqInit::add_faqs_content",
+                "source_scope": "plugin",
+                "source_path": "ultimate-faqs/ultimate-faqs.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "capital_P_dangit",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/formatting.php",
+                "priority": 11,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "do_shortcode",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/shortcodes.php",
+                "priority": 11,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_filter_content_tags",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/media.php",
+                "priority": 12,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "GAC\\V15\\PostActions\\PostActionsService::prepend_post_actions_panel",
+                "source_scope": "plugin",
+                "source_path": "gac-acompanhamento/src/PostActions/PostActionsService.php",
+                "priority": 12,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "GAC\\V15\\KnowledgeBridge\\AuthenticatedKnowledgeContributionBridge::append_bridge_panel",
+                "source_scope": "plugin",
+                "source_path": "gac-acompanhamento/src/KnowledgeBridge/AuthenticatedKnowledgeContributionBridge.php",
+                "priority": 13,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC\\ExecutiveSummary\\Helpful_Tips_Renderer::prepend_to_content",
+                "source_scope": "plugin",
+                "source_path": "gerenciador-resumo-executivo/includes/class-helpful-tips-renderer.php",
+                "priority": 15,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "convert_smilies",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/formatting.php",
+                "priority": 20,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WPUI_Frontend::inject_anchors",
+                "source_scope": "plugin",
+                "source_path": "wp-unified-indexer/includes/class-frontend.php",
+                "priority": 20,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC\\ExecutiveSummary\\Frontend_Renderer::append_side_panel",
+                "source_scope": "plugin",
+                "source_path": "gerenciador-resumo-executivo/includes/class-frontend-renderer.php",
+                "priority": 30,
+                "accepted_args": 1
+            }
+        ],
+        "wp_footer": [
+            {
+                "type": "function",
+                "callable": "wp_enqueue_global_styles",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/script-loader.php",
+                "priority": 1,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_enqueue_stored_styles",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/script-loader.php",
+                "priority": 1,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_maybe_inline_styles",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/script-loader.php",
+                "priority": 1,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\Modules\\Interactions\\Interactions_Frontend_Handler::print_interactions_data",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/interactions/interactions-frontend-handler.php",
+                "priority": 1,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "ewdufaqInit::assets_footer",
+                "source_scope": "plugin",
+                "source_path": "ultimate-faqs/ultimate-faqs.php",
+                "priority": 2,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_print_speculation_rules",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/speculative-loading.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "the_block_template_skip_link",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/deprecated.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Duotone::output_footer_assets",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-duotone.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "ewdufaqInit::output_ld_json_content",
+                "source_scope": "plugin",
+                "source_path": "ultimate-faqs/ultimate-faqs.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WprAddons\\Admin\\Includes\\WPR_Templates_Modal_Popups::render_popups",
+                "source_scope": "plugin",
+                "source_path": "royal-elementor-addons/admin/includes/wpr-templates-modal-popups.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "astra_render_header_svg_mask",
+                "source_scope": "theme",
+                "source_path": "astra/inc/markup-extras.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Astra_Customizer::style_guide_template",
+                "source_scope": "theme",
+                "source_path": "astra/inc/customizer/class-astra-customizer.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Astra_Scroll_To_Top_Loader::html_markup_loader",
+                "source_scope": "theme",
+                "source_path": "astra/inc/addons/scroll-to-top/classes/class-astra-scroll-to-top-loader.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Script_Modules::print_import_map",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-script-modules.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Script_Modules::print_enqueued_script_modules",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-script-modules.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Script_Modules::print_script_module_preloads",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-script-modules.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Script_Modules::print_script_module_data",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-script-modules.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "closure",
+                "callable": "Closure",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/floating-buttons/module.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\Core\\Common\\App::print_templates",
+                "source_scope": "plugin",
+                "source_path": "elementor/core/common/app.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Evaluation\\Evaluate_Content::load_footer_content",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/evaluation/class-evaluate-content.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "closure",
+                "callable": "Closure",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/lazyload/module.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\Modules\\AdminBar\\Module::enqueue_scripts",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/admin-bar/module.php",
+                "priority": 11,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_print_footer_scripts",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/script-loader.php",
+                "priority": 20,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Script_Modules::print_a11y_script_module_html",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/class-wp-script-modules.php",
+                "priority": 20,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "upk_inject_footer_custom_code",
+                "source_scope": "plugin",
+                "source_path": "ultimate-post-kit/includes/helper.php",
+                "priority": 999,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_admin_bar_render",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/admin-bar.php",
+                "priority": 1000,
+                "accepted_args": 1
+            }
+        ],
+        "template_include": [
+            {
+                "type": "method",
+                "callable": "Elementor\\Modules\\PageTemplates\\Module::template_include",
+                "source_scope": "plugin",
+                "source_path": "elementor/modules/page-templates/module.php",
+                "priority": 11,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WprAddons\\Admin\\Includes\\WPR_Render_Templates::convert_to_canvas",
+                "source_scope": "plugin",
+                "source_path": "royal-elementor-addons/admin/includes/wpr-render-templates.php",
+                "priority": 12,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WprAddons\\Admin\\Includes\\WPR_Templates_Modal_Popups::set_post_type_template",
+                "source_scope": "plugin",
+                "source_path": "royal-elementor-addons/admin/includes/wpr-templates-modal-popups.php",
+                "priority": 9999,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "convert_to_canvas_template",
+                "source_scope": "plugin",
+                "source_path": "royal-elementor-addons/admin/mega-menu.php",
+                "priority": 9999,
+                "accepted_args": 1
+            }
+        ],
+        "single_template": [],
+        "template_redirect": [
+            {
+                "type": "function",
+                "callable": "_wp_admin_bar_init",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/admin-bar.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC_Entra_Auth_Controller::maybe_mark_logged_out",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-auth-controller.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC_Entra_Auth_Controller::maybe_start_local_login",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-auth-controller.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC_Entra_Auth_Controller::maybe_start_login",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-auth-controller.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "BDC_Entra_Callback_Controller::maybe_handle_callback",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-callback-controller.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\Preview::init",
+                "source_scope": "plugin",
+                "source_path": "elementor/includes/preview.php",
+                "priority": 0,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "GAC\\V15\\Observation\\PostAccessObserver::capture",
+                "source_scope": "plugin",
+                "source_path": "gac-acompanhamento/src/Observation/PostAccessObserver.php",
+                "priority": 5,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_old_slug_redirect",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/query.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "redirect_canonical",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/canonical.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WPR_Templates_Library::block_template_frontend",
+                "source_scope": "plugin",
+                "source_path": "royal-elementor-addons/admin/includes/wpr-templates-library.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\Core\\Editor\\Editor::redirect_to_new_url",
+                "source_scope": "plugin",
+                "source_path": "elementor/core/editor/editor.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\TemplateLibrary\\Source_Local::block_template_frontend",
+                "source_scope": "plugin",
+                "source_path": "elementor/includes/template-library/sources/local.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "Elementor\\App\\Modules\\KitLibrary\\Module::handle_kit_screenshot_generation",
+                "source_scope": "plugin",
+                "source_path": "elementor/app/modules/kit-library/module.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "method",
+                "callable": "WP_Sitemaps::render_sitemaps",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/sitemaps/class-wp-sitemaps.php",
+                "priority": 10,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "rest_output_link_header",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/rest-api.php",
+                "priority": 11,
+                "accepted_args": 0
+            },
+            {
+                "type": "function",
+                "callable": "wp_shortlink_header",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/link-template.php",
+                "priority": 11,
+                "accepted_args": 0
+            },
+            {
+                "type": "method",
+                "callable": "BDC_Entra_Auto_SSO::maybe_start_auto_sso",
+                "source_scope": "plugin",
+                "source_path": "bdc-entra-id-authentication-gateway/includes/class-bdc-entra-auto-sso.php",
+                "priority": 20,
+                "accepted_args": 1
+            },
+            {
+                "type": "function",
+                "callable": "wp_redirect_admin_locations",
+                "source_scope": "wordpress_core",
+                "source_path": "wp-includes/canonical.php",
+                "priority": 1000,
+                "accepted_args": 1
+            }
+        ],
+        "wp_ajax_bdc_home_filter_v270": [
+            {
+                "type": "function",
+                "callable": "bdc_home_v270_ajax_filter",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/snippet-ops.php(663) : eval()'d code",
+                "priority": 10,
+                "accepted_args": 1
+            }
+        ],
+        "wp_ajax_nopriv_bdc_home_filter_v270": [
+            {
+                "type": "function",
+                "callable": "bdc_home_v270_ajax_filter",
+                "source_scope": "plugin",
+                "source_path": "code-snippets/php/snippet-ops.php(663) : eval()'d code",
+                "priority": 10,
+                "accepted_args": 1
+            }
+        ]
+    },
+    "public_surfaces": {
+        "candidates_count": 2,
+        "candidates": [
+            {
+                "post_id": 87,
+                "post_type": "page",
+                "post_status": "private",
+                "title": "Home",
+                "template_slug": "",
+                "source_kind": "elementor",
+                "shortcodes": {
+                    "asi_search_form": 1
+                }
+            },
+            {
+                "post_id": 41395,
+                "post_type": "page",
+                "post_status": "publish",
+                "title": "Home",
+                "template_slug": "elementor_header_footer",
+                "source_kind": "elementor",
+                "shortcodes": {
+                    "bc_home_config": 1,
+                    "bc_ultimas": 1,
+                    "bc_populares": 1,
+                    "asi_search_form": 1,
+                    "bdc_word_cloud": 1
+                }
+            }
+        ],
+        "truncated": false
+    },
+    "corpus": {
+        "published_posts_scanned": 606,
+        "limit": 1000,
+        "possibly_truncated": false,
+        "source_kind_counts": {
+            "gutenberg": 3,
+            "legacy_html": 528,
+            "plain_text": 41,
+            "elementor": 31,
+            "mixed": 3,
+            "empty": 0,
+            "error": 0
+        },
+        "source_kind_sample_post_ids": {
+            "gutenberg": [
+                358,
+                606,
+                44283
+            ],
+            "legacy_html": [
+                359,
+                360,
+                362,
+                363,
+                364,
+                365,
+                368,
+                369
+            ],
+            "plain_text": [
+                367,
+                393,
+                1102,
+                1113,
+                1126,
+                14192,
+                14737,
+                14972
+            ],
+            "elementor": [
+                385,
+                464,
+                485,
+                572,
+                574,
+                579,
+                583,
+                586
+            ],
+            "mixed": [
+                515,
+                14523,
+                45782
+            ]
+        },
+        "warning_families": {
+            "ELEMENTOR_JSON_INVALID": 41,
+            "HTML_DIAG_EMPTY_HEADINGS": 35,
+            "HTML_DIAG_HEADINGS_IN_LIST": 9,
+            "HTML_DIAG_HEADINGS_IN_TABLE": 9,
+            "HTML_DIAG_LISTS_IN_TABLES": 2,
+            "HTML_DIAG_LIST_PARSER_UNREACHABLE": 1,
+            "HTML_DIAG_TABLE_IMAGE_ONLY": 2,
+            "HTML_DIAG_TABLE_NO_MATERIALIZABLE_TEXT": 3,
+            "HTML_DIAG_TABLE_PARSER_UNREACHABLE": 2,
+            "HTML_LOCAL_HEADING_FLATTENED": 19,
+            "HTML_NESTED_LIST_IN_TABLE_FLATTENED": 2,
+            "HTML_PARSE_RECOVERED": 55,
+            "HTML_SEMANTIC_EMPTY_HEADING_IGNORED": 35,
+            "HTML_STRUCTURAL_WRAPPER_TRAVERSED": 147,
+            "SHORTCODE_NOT_EXPANDED": 54
+        },
+        "structured_tips_discovery": {
+            "meta_keys": {
+                "_bdc_es_helpful_tips": {
+                    "posts": 7,
+                    "sample_post_ids": [
+                        36431,
+                        36492,
+                        36549,
+                        41383,
+                        45031,
+                        45178,
+                        45782
+                    ]
+                }
+            },
+            "post_content": {
+                "count": 0,
+                "sample_post_ids": []
+            },
+            "elementor_data": {
+                "count": 0,
+                "sample_post_ids": []
+            }
+        },
+        "gre_meta_coverage": {
+            "objective": {
+                "meta_key": "_bdc_es_objective",
+                "non_empty_posts": 16,
+                "sample_post_ids": [
+                    1344,
+                    36431,
+                    36492,
+                    36549,
+                    41376,
+                    41383,
+                    42842,
+                    44294
+                ]
+            },
+            "responsible_team": {
+                "meta_key": "_bdc_es_responsible_team",
+                "non_empty_posts": 9,
+                "sample_post_ids": [
+                    36431,
+                    36492,
+                    36549,
+                    41376,
+                    45070,
+                    45178,
+                    45382,
+                    45782
+                ]
+            },
+            "catalog_item": {
+                "meta_key": "_bdc_es_catalog_item",
+                "non_empty_posts": 8,
+                "sample_post_ids": [
+                    36431,
+                    36492,
+                    36549,
+                    45070,
+                    45178,
+                    45382,
+                    45782,
+                    45855
+                ]
+            },
+            "affected_service": {
+                "meta_key": "_bdc_es_affected_service",
+                "non_empty_posts": 7,
+                "sample_post_ids": [
+                    36431,
+                    36492,
+                    36549,
+                    45178,
+                    45382,
+                    45782,
+                    45855
+                ]
+            },
+            "systems_involved": {
+                "meta_key": "_bdc_es_systems_involved",
+                "non_empty_posts": 6,
+                "sample_post_ids": [
+                    36431,
+                    36492,
+                    45178,
+                    45382,
+                    45782,
+                    45855
+                ]
+            },
+            "target_audience": {
+                "meta_key": "_bdc_es_target_audience",
+                "non_empty_posts": 6,
+                "sample_post_ids": [
+                    36431,
+                    36549,
+                    45178,
+                    45382,
+                    45782,
+                    45855
+                ]
+            },
+            "escalation": {
+                "meta_key": "_bdc_es_escalation",
+                "non_empty_posts": 6,
+                "sample_post_ids": [
+                    36431,
+                    36549,
+                    45178,
+                    45382,
+                    45782,
+                    45855
+                ]
+            },
+            "important": {
+                "meta_key": "_bdc_es_important",
+                "non_empty_posts": 6,
+                "sample_post_ids": [
+                    36431,
+                    36492,
+                    45178,
+                    45382,
+                    45782,
+                    45855
+                ]
+            }
+        }
+    },
+    "safety": {
+        "read_only": true,
+        "writes_post_content": false,
+        "writes_post_meta": false,
+        "writes_elementor_data": false,
+        "executes_shortcodes": false,
+        "applies_the_content_filter": false,
+        "exports_editorial_content": false,
+        "exports_gre_values": false,
+        "exports_custom_css": false,
+        "calls_external_network": false
+    },
+    "errors": [],
+    "throwables": [],
+    "runner": {
+        "total_runtime_ms": 2089.267,
+        "peak_memory_bytes": 31457280
+    },
+    "next_action": "Use this artifact to close H-001/A-001 ownership and corpus discovery. Do not decommission ASI/GRE from this report alone."
+}

@@ -1,0 +1,209 @@
+{
+    "schema_version": "1.0.0",
+    "gate": "R-510/T510",
+    "mode": "spec005_read_only_legacy_golden_discovery",
+    "generated_at": "2026-09-18T21:18:40+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.5.0-r510-t510.1",
+        "multisite": false,
+        "db_server": "12.2.2"
+    },
+    "safety": {
+        "read_only_design": true,
+        "creates_or_alters_schema": false,
+        "writes_legacy_asi": false,
+        "writes_wordpress": false,
+        "persists_candidates": false,
+        "executes_search_or_ranking": false,
+        "calls_external_network": false,
+        "exports_user_identity": false,
+        "exports_legacy_golden_queries": true,
+        "editorial_fingerprint_before": "a6c004270fdc177ebca7d0834b84c785a8f4a503c0da18d0dd9360945d3e8996",
+        "editorial_fingerprint_after": "a6c004270fdc177ebca7d0834b84c785a8f4a503c0da18d0dd9360945d3e8996",
+        "editorial_fingerprint_equal": true,
+        "changed_posts_during_run": 0,
+        "corpus_count_before": 623,
+        "corpus_count_after": 623
+    },
+    "legacy": {
+        "expected_table_suffix": "asi_golden_queries",
+        "table_exists": true,
+        "table_name_safe": true,
+        "columns_detected": [
+            "id",
+            "query_text",
+            "query_norm",
+            "expected_post_id",
+            "expected_item_key",
+            "max_rank",
+            "severity",
+            "active",
+            "source",
+            "notes",
+            "created_by",
+            "updated_by",
+            "created_at_gmt",
+            "updated_at_gmt"
+        ],
+        "last_run_metadata": {
+            "status": "pass",
+            "count": 6,
+            "blocking_failed": 0,
+            "warning_failed": 0,
+            "set_hash": "d885cdd0b428aee838253526507b9c658868d931fdfb5f40e4ffc2f376928507",
+            "algorithm_version": "4.5.0",
+            "item_algorithm_version": "4.5.0",
+            "ran_at_gmt": "2026-09-03 16:15:37"
+        }
+    },
+    "candidates": {
+        "count": 6,
+        "set_hash": "6fcd334175dfb6f637f684b4df240a2b1eaf45bfeb4312728e8131c24cbec299",
+        "counts": {
+            "active": 6,
+            "inactive": 0,
+            "blocking": 0,
+            "warning": 6,
+            "expected_post_missing": 0,
+            "unsupported_post_type": 0,
+            "item_level": 0,
+            "clean_post_level_candidates": 6
+        },
+        "items": [
+            {
+                "legacy_id": 1,
+                "query": "pendrive",
+                "query_norm_legacy": "pendrive",
+                "expected_post_id": 527,
+                "expected_item_key": "",
+                "max_rank": 3,
+                "severity": "warning",
+                "active": true,
+                "source": "manual",
+                "notes": "",
+                "current_post": {
+                    "exists": true,
+                    "post_type": "post",
+                    "post_status": "publish"
+                },
+                "review_flags": [],
+                "requires_human_review": true
+            },
+            {
+                "legacy_id": 2,
+                "query": "MSTeams",
+                "query_norm_legacy": "msteams",
+                "expected_post_id": 579,
+                "expected_item_key": "",
+                "max_rank": 3,
+                "severity": "warning",
+                "active": true,
+                "source": "manual",
+                "notes": "",
+                "current_post": {
+                    "exists": true,
+                    "post_type": "post",
+                    "post_status": "publish"
+                },
+                "review_flags": [],
+                "requires_human_review": true
+            },
+            {
+                "legacy_id": 3,
+                "query": "Windows 11",
+                "query_norm_legacy": "windows 11",
+                "expected_post_id": 583,
+                "expected_item_key": "",
+                "max_rank": 3,
+                "severity": "warning",
+                "active": true,
+                "source": "manual",
+                "notes": "",
+                "current_post": {
+                    "exists": true,
+                    "post_type": "post",
+                    "post_status": "publish"
+                },
+                "review_flags": [],
+                "requires_human_review": true
+            },
+            {
+                "legacy_id": 4,
+                "query": "Termo de assinatura",
+                "query_norm_legacy": "termo de assinatura",
+                "expected_post_id": 45855,
+                "expected_item_key": "",
+                "max_rank": 3,
+                "severity": "warning",
+                "active": true,
+                "source": "manual",
+                "notes": "",
+                "current_post": {
+                    "exists": true,
+                    "post_type": "post",
+                    "post_status": "publish"
+                },
+                "review_flags": [],
+                "requires_human_review": true
+            },
+            {
+                "legacy_id": 5,
+                "query": "Estrutura",
+                "query_norm_legacy": "estrutura",
+                "expected_post_id": 36620,
+                "expected_item_key": "",
+                "max_rank": 3,
+                "severity": "warning",
+                "active": true,
+                "source": "manual",
+                "notes": "",
+                "current_post": {
+                    "exists": true,
+                    "post_type": "post",
+                    "post_status": "publish"
+                },
+                "review_flags": [],
+                "requires_human_review": true
+            },
+            {
+                "legacy_id": 6,
+                "query": "SCCM",
+                "query_norm_legacy": "sccm",
+                "expected_post_id": 412,
+                "expected_item_key": "",
+                "max_rank": 3,
+                "severity": "warning",
+                "active": true,
+                "source": "manual",
+                "notes": "",
+                "current_post": {
+                    "exists": true,
+                    "post_type": "post",
+                    "post_status": "publish"
+                },
+                "review_flags": [],
+                "requires_human_review": true
+            }
+        ]
+    },
+    "errors": [],
+    "performance": {
+        "runtime_ms": 1210,
+        "peak_memory_bytes": 29360128
+    },
+    "interpretation_rules": [
+        "Legacy rows are candidates, not automatically accepted Golden truth.",
+        "Inactive legacy rows remain visible for review but are not candidates for an active v1 suite unless explicitly re-approved.",
+        "Item-level expectations are preserved as evidence but remain outside the first post-level runtime scope.",
+        "A missing legacy table is a valid discovery result and does not justify inventing Golden expectations.",
+        "Any active v1 suite still requires human review in T513."
+    ],
+    "gate_result": {
+        "t510_read_only_safety_pass": true,
+        "legacy_candidates_found": true,
+        "r510_ready": false,
+        "reason": "T510 discovers candidates only; R-510 requires human review, diversity, suite hash/version and explicit acceptance."
+    }
+}

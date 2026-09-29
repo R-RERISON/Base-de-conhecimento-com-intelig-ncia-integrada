@@ -116,13 +116,7 @@ require_once BDC_KB_DIR . 'includes/class-admin-page.php';
 require_once BDC_KB_DIR . 'includes/class-visual-foundation.php';
 require_once BDC_KB_DIR . 'includes/class-runtime-module-registry.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
-if ( defined( 'BDC_KB_WORD_CLOUD_BUILD' ) && BDC_KB_WORD_CLOUD_BUILD ) {
-	require_once BDC_KB_DIR . 'includes/class-word-cloud-contract.php';
-	require_once BDC_KB_DIR . 'includes/class-word-cloud-quality.php';
-	require_once BDC_KB_DIR . 'includes/class-word-cloud-service.php';
-	require_once BDC_KB_DIR . 'includes/class-word-cloud-consultations.php';
-	require_once BDC_KB_DIR . 'includes/class-word-cloud-admin.php';
-}
+\BDC\KnowledgeBase\Runtime_Module_Registry::load( 'word_cloud' );
 
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-content-profile.php';
@@ -207,21 +201,7 @@ if ( defined( 'BDC_KB_SPEC005_R510_GOLDEN_AUTO_VALIDATOR_BUILD' ) && BDC_KB_SPEC
 	require_once BDC_KB_DIR . 'includes/class-golden-challenge-discovery.php';
 	require_once BDC_KB_DIR . 'includes/class-golden-auto-validation-runner.php';
 }
-if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD ) {
-	require_once BDC_KB_DIR . 'includes/class-search-query-normalizer.php';
-	require_once BDC_KB_DIR . 'includes/class-r260-contextual-anchor-resolver.php';
-	require_once BDC_KB_DIR . 'includes/class-r260-structural-projector.php';
-	require_once BDC_KB_DIR . 'includes/class-search-section-projector.php';
-	require_once BDC_KB_DIR . 'includes/class-search-document-builder.php';
-	require_once BDC_KB_DIR . 'includes/class-search-projection-repository.php';
-	require_once BDC_KB_DIR . 'includes/class-search-rebuild-service.php';
-	require_once BDC_KB_DIR . 'includes/class-search-lifecycle.php';
-	require_once BDC_KB_DIR . 'includes/class-lexical-ranker.php';
-	require_once BDC_KB_DIR . 'includes/class-search-section-ranker.php';
-	require_once BDC_KB_DIR . 'includes/class-search-section-service.php';
-	require_once BDC_KB_DIR . 'includes/class-search-anchor-manager.php';
-	require_once BDC_KB_DIR . 'includes/class-search-service.php';
-}
+\BDC\KnowledgeBase\Runtime_Module_Registry::load( 'search' );
 if ( defined( 'BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD' ) && BDC_KB_SPEC005_G540_CORPUS_RUNNER_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-search-corpus-runner-g540.php';
 }
@@ -263,30 +243,15 @@ if ( defined( 'BDC_KB_P580_PUBLIC_INVENTORY_BUILD' ) && BDC_KB_P580_PUBLIC_INVEN
 if ( defined( 'BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD' ) && BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-domain-closure-runner-p630.php';
 }
-if ( defined( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD' ) && BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD ) {
-	require_once BDC_KB_DIR . 'includes/class-public-search-facade.php';
-	require_once BDC_KB_DIR . 'includes/class-public-navigation.php';
-	require_once BDC_KB_DIR . 'includes/class-public-auth-bridge.php';
-	require_once BDC_KB_DIR . 'includes/class-public-home-read-model.php';
-	require_once BDC_KB_DIR . 'includes/class-public-article-read-model.php';
-	require_once BDC_KB_DIR . 'includes/class-public-article-content.php';
-	require_once BDC_KB_DIR . 'includes/class-public-experience.php';
-}
+\BDC\KnowledgeBase\Runtime_Module_Registry::load( 'public_experience_preview' );
 
 \BDC\KnowledgeBase\Plugin::register();
 if ( defined( 'BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD' ) && BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD ) {
 	\BDC\KnowledgeBase\Domain_Closure_Runner_P630::register();
 }
 \BDC\KnowledgeBase\Visual_Foundation::register();
-if ( defined( 'BDC_KB_WORD_CLOUD_BUILD' ) && BDC_KB_WORD_CLOUD_BUILD ) {
-	\BDC\KnowledgeBase\Word_Cloud_Service::register();
-	\BDC\KnowledgeBase\Word_Cloud_Consultations::register();
-	\BDC\KnowledgeBase\Word_Cloud_Admin::register();
-}
-if ( defined( 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD' ) && BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD ) {
-	\BDC\KnowledgeBase\Search_Lifecycle::register();
-	\BDC\KnowledgeBase\Search_Anchor_Manager::register();
-}
+\BDC\KnowledgeBase\Runtime_Module_Registry::register( 'word_cloud' );
+\BDC\KnowledgeBase\Runtime_Module_Registry::register( 'search' );
 if ( defined( 'BDC_KB_SPEC004_PROFILE_BUILD' ) && BDC_KB_SPEC004_PROFILE_BUILD ) {
 	\BDC\KnowledgeBase\Content_Profile::register();
 }
@@ -389,7 +354,4 @@ if ( defined( 'BDC_KB_UX004_H030_TECHNICAL_BUILD' ) && BDC_KB_UX004_H030_TECHNIC
 if ( defined( 'BDC_KB_P580_PUBLIC_INVENTORY_BUILD' ) && BDC_KB_P580_PUBLIC_INVENTORY_BUILD ) {
 	\BDC\KnowledgeBase\Public_Experience_Inventory_Runner_P580::register();
 }
-if ( defined( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD' ) && BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD ) {
-	\BDC\KnowledgeBase\Public_Search_Facade::register();
-	\BDC\KnowledgeBase\Public_Experience::register();
-}
+\BDC\KnowledgeBase\Runtime_Module_Registry::register( 'public_experience_preview' );

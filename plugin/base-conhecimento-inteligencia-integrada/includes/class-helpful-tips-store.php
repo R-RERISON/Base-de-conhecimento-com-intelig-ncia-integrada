@@ -80,7 +80,15 @@ final class Helpful_Tips_Store {
 			return $prepared;
 		}
 
-		$snapshot = get_post_meta( $id, self::META_KEY, true );
+		$snapshot            = get_post_meta( $id, self::META_KEY, true );
+		$normalized_snapshot = self::normalize_items( $snapshot );
+		if ( $normalized_snapshot === $prepared ) {
+			return array(
+				'status' => self::STATUS_SUCCESS,
+				'state'  => $normalized_snapshot,
+			);
+		}
+
 		update_post_meta( $id, self::META_KEY, $prepared );
 
 		$confirmed = self::read( $id );

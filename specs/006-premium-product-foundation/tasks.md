@@ -73,3 +73,15 @@ Disposition:
 
 Next active gate:
 - [ ] P-640 Modular Runtime.
+
+## P-640 modular runtime
+
+- [x] P640-01 baseline e contrato — `p640-modular-runtime-contract-v1.md`.
+- [ ] P640-02 implementar `Runtime_Module_Registry` mínimo.
+- [ ] P640-03 extrair módulos de produto do bootstrap.
+- [ ] P640-04 separar loaders de engenharia/homologação.
+- [ ] P640-05 reduzir bootstrap ao composition root.
+- [ ] P640-06 static contract + PHP lint + WPCS afetado.
+- [ ] P640-07 regressão das features habilitadas.
+- [ ] P640-08 package/runtime inventory para P-650.
+

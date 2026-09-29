@@ -1,17 +1,21 @@
 <?xml version="1.0"?>
 <ruleset name="BDC SPEC-006">
-	<description>Bounded WPCS baseline for the SPEC-006 product foundation.</description>
+	<description>Bounded WPCS baseline for new SPEC-006 PHP code.</description>
 	<config name="minimum_supported_wp_version" value="6.6"/>
 	<arg name="basepath" value="."/>
 	<arg name="extensions" value="php"/>
 	<arg value="p"/>
 
 	<file>tests/phpunit</file>
-	<file>tests/unit/spec006-p600-metadata-license.php</file>
 
 	<rule ref="WordPress-Core"/>
 	<rule ref="WordPress-Docs"/>
 	<rule ref="WordPress-Extra"/>
+
+	<!-- CLI test harness reads repository files directly; no HTTP resource is involved. -->
+	<rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
+		<exclude-pattern>tests/phpunit/*</exclude-pattern>
+	</rule>
 
 	<exclude-pattern>vendor/*</exclude-pattern>
 </ruleset>

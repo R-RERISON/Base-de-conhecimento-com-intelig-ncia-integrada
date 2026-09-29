@@ -66,7 +66,7 @@ $checks = array(
 	'section_text_cap_4000' => str_contains( $projector, 'public const MAX_TEXT_CHARS = 4000;' ),
 	'section_result_cap_5' => str_contains( $section_ranker, 'min( 5, $limit )' ),
 	'section_ranker_v11' => str_contains( $section_ranker, "VERSION = 'lexical-section-ranker-v1.1.0'" ),
-	'section_ranker_does_not_require_generated_anchor' => ! str_contains( $section_ranker, "'generated' !== (string) ( $section['anchor_state']" ),
+	'section_ranker_does_not_require_generated_anchor' => ! str_contains( $section_ranker, "'generated' !== (string) ( \$section['anchor_state']" ),
 
 	'duplicate_heading_fail_closed' => str_contains( $projector, "'unresolved'" )
 		&& str_contains( $projector, "'anchor_id'" )

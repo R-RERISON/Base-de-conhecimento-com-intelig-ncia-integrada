@@ -176,6 +176,7 @@ final class Admin_Page {
 		self::render_context_header( $post, $summary );
 		self::render_feedback();
 		Classification_Admin::render_feedback();
+		Knowledge_Details_Admin::render_feedback();
 		Review_Admin::render_feedback();
 		self::render_tabs( $post_id, $tab );
 
@@ -193,6 +194,9 @@ final class Admin_Page {
 				break;
 			case 'classification':
 				Classification_Admin::render_panel( $post_id );
+				break;
+			case 'details':
+				Knowledge_Details_Admin::render_panel( $post_id );
 				break;
 			case 'review':
 				Review_Admin::render_panel( $post_id );
@@ -245,6 +249,8 @@ final class Admin_Page {
 		$review        = Review_Store::read( $post_id );
 		$review_state  = is_wp_error( $review ) ? Review_Contract::STATE_UNREVIEWED : (string) ( $review['state'] ?? Review_Contract::STATE_UNREVIEWED );
 		$review_label  = Review_Contract::states()[ $review_state ] ?? $review_state;
+		$coverage      = Coverage_Read_Model::read( $post_id );
+		$coverage_text = is_wp_error( $coverage ) ? 'Indisponível' : (string) ( $coverage['filled'] ?? 0 ) . '/' . (string) ( $coverage['total'] ?? 8 ) . ' campos';
 
 		echo '<aside class="bdc-kb-context-panel" aria-label="' . esc_attr__( 'Contexto do artigo', 'bdc-knowledge-base' ) . '">';
 		echo '<div class="bdc-kb-domain-heading"><h3>' . esc_html__( 'Contexto do artigo', 'bdc-knowledge-base' ) . '</h3><p>' . esc_html__( 'Informação editorial e governança em leitura.', 'bdc-knowledge-base' ) . '</p></div>';
@@ -255,6 +261,7 @@ final class Admin_Page {
 		echo '<div><dt>' . esc_html__( 'Sumário', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $filled . '/' . count( Meta_Contract::fields() ) . ' campos preenchidos' ) . '</dd></div>';
 		echo '<div><dt>' . esc_html__( 'Classificação', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $term_count > 0 ? $term_count . ' conceito(s)' : 'Sem termos canônicos' ) . '</dd></div>';
 		echo '<div><dt>' . esc_html__( 'Revisão', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-state-badge bdc-kb-state-' . esc_attr( $review_state ) . '">' . esc_html( $review_label ) . '</span></dd></div>';
+		echo '<div><dt>' . esc_html__( 'Cobertura', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $coverage_text ) . '</dd></div>';
 		echo '<div><dt>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( get_the_modified_date( '', $post ) ) . '</dd></div>';
 		echo '</dl>';
 		echo '<p class="bdc-kb-context-note">' . esc_html__( 'Esta área reúne as informações de conhecimento e governança do artigo. A edição do conteúdo permanece no WordPress.', 'bdc-knowledge-base' ) . '</p>';
@@ -290,6 +297,8 @@ final class Admin_Page {
 		$review_label  = Review_Contract::states()[ $review_state ] ?? $review_state;
 		$source        = is_array( $context['source'] ?? null ) ? $context['source'] : array();
 		$core          = is_array( $context['core_blocks'] ?? null ) ? $context['core_blocks'] : array();
+		$coverage      = Coverage_Read_Model::read( $post_id );
+		$coverage_text = is_wp_error( $coverage ) ? 'Indisponível' : (string) ( $coverage['filled'] ?? 0 ) . ' de ' . (string) ( $coverage['total'] ?? 8 ) . ' campos';
 
 		echo '<section class="bdc-kb-overview" aria-labelledby="bdc-kb-overview-title">';
 		echo '<div class="bdc-kb-domain-heading">';
@@ -302,6 +311,7 @@ final class Admin_Page {
 		self::render_overview_status( 'Conteúdo', (string) ( $source['label'] ?? 'Indisponível' ), 'Origem editorial identificada.', 'text-page' );
 		self::render_overview_status( 'Sumário', $filled . ' de ' . $total_fields . ' campos preenchidos', 'Completude das informações resumidas.', 'media-text' );
 		self::render_overview_status( 'Classificação', $term_count > 0 ? $term_count . ' conceito(s)' : 'Ainda não classificado', 'Organização por conceitos padronizados.', 'tag' );
+		self::render_overview_status( 'Cobertura', $coverage_text, 'Cobertura dos oito campos estruturados herdados do GRE.', 'chart-pie' );
 		self::render_overview_status( 'Revisão', $review_label, 'Estado atual de revisão e governança.', 'yes' );
 		self::render_overview_status( 'Blocos do WordPress', self::overview_core_status( (string) ( $core['operational_status'] ?? '' ) ), 'Situação da estrutura editorial.', 'block-default' );
 		echo '</div>';
@@ -671,6 +681,9 @@ final class Admin_Page {
 		}
 		if ( isset( $_GET['bdc_classification_status'] ) ) {
 			return 'classification';
+		}
+		if ( isset( $_GET['bdc_details_status'] ) ) {
+			return 'details';
 		}
 		if ( isset( $_GET['bdc_review_status'] ) ) {
 			return 'review';

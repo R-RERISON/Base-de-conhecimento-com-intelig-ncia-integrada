@@ -607,7 +607,7 @@ final class Search_Independence_Runner_G585 {
 	}
 
 	private static function sanitize_legacy_excerpt( string $excerpt, string $marker, string $label ): string {
-		$excerpt = preg_replace( '#https?://[^\\s<>\"\\']+#iu', '[url-redacted]', $excerpt );
+		$excerpt = preg_replace( "#https?://[^\\s<>\\\"']+#iu", '[url-redacted]', $excerpt );
 		$excerpt = preg_replace( '/[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}/iu', '[email-redacted]', (string) $excerpt );
 		$excerpt = preg_replace( '/\\b\\d{4,}\\b/u', '[number-redacted]', (string) $excerpt );
 		$excerpt = str_ireplace( $marker, '<legacy:' . $label . '>', (string) $excerpt );

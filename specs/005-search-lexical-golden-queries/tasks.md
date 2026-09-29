@@ -83,7 +83,7 @@
 - [x] T595-01 deterministic build do artefato boundary G-590+G-585 — RC16 PASS.
 - [x] T595-02 manifest/checksum — PASS; ZIP SHA-256 `55776bc68f972ccd5aadc0af31fbb09d272e9791472f8a1d562a81ca1ceff42e`.
 - [x] T595-03 regressão SPEC-001–005 consolidada — 17 local gates + T100E PASS; source lint 122/122; ZIP lint 76/76.
-- [ ] T595-04 environmental boundary smoke — próximo passo ativo no RC16.
+- [x] T595-04 environmental boundary smoke — RC16 PASS; G-585 + G-590 preservados no mesmo pacote.
 - [ ] T595-05 relatório final da fronteira Search.
 - [ ] T595-06 merge somente após aprovação humana.
 

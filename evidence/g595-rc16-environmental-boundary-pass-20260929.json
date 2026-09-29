@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-595",
+  "phase": "ENVIRONMENTAL_BOUNDARY_SMOKE",
+  "status": "PASS",
+  "date": "2026-09-29",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "db_server": "12.2.2",
+    "plugin": "0.5.1-rc.16",
+    "build_id": "g595.1-844e9f7516a1"
+  },
+  "g585": {
+    "file": "bdc-kb-spec005-g585-independence-20260929-112127.json",
+    "sha256": "09f8f6eedf5ca5317919a4a0282eb681106b4a28d0336803a525d44682e9d3b3",
+    "status": "PASS",
+    "t585": true,
+    "t585_1": true,
+    "t586": true,
+    "t587": true,
+    "t588": true,
+    "t589": true,
+    "t589_1": true,
+    "t589_2": true,
+    "cutover_authorized": false,
+    "next_gate": "SPEC005_BOUNDARY_REVIEW"
+  },
+  "g590": {
+    "file": "bdc-kb-spec005-g590-section-20260929-112255.json",
+    "sha256": "92e8e05a0710d0a0314cb17caf776fa66620ae9ae2e2994c4e0fcf0141ad38d2",
+    "t59014": true,
+    "t59015": true,
+    "t59016": true,
+    "t59017": true,
+    "t59018": true,
+    "t59019": true,
+    "corpus_count": 623,
+    "posts_analyzed": 623,
+    "extractor_error_count": 0,
+    "section_count": 1061,
+    "generated_anchor_count": 883,
+    "unresolved_anchor_count": 178,
+    "eligible_probe_count": 12,
+    "section_query_failed": 0,
+    "deep_link_failed": 0,
+    "visible_text_changed": 0,
+    "performance": {
+      "p50_ms": 151.1369,
+      "p95_ms": 243.4819,
+      "max_ms": 246.3799,
+      "p95_budget_ms": 900,
+      "max_budget_ms": 1500,
+      "pass": true
+    },
+    "golden": {
+      "status": "PASS",
+      "blocking_failed": 0,
+      "warning_failed": 0,
+      "technical_failed": 0
+    },
+    "safety": {
+      "editorial_fingerprint_equal": true,
+      "corpus_ids_equal": true
+    }
+  },
+  "disposition": {
+    "t595_01": true,
+    "t595_02": true,
+    "t595_03": true,
+    "t595_04": true,
+    "t595_05": true,
+    "t595_06": false,
+    "spec005_boundary": "PASS_READY_FOR_HUMAN_MERGE_GATE",
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "next_action": "HUMAN_MERGE_DECISION_FOR_SPEC005_ONLY"
+  }
+}

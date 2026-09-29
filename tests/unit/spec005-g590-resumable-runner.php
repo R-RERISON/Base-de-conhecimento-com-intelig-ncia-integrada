@@ -8,8 +8,10 @@ declare(strict_types=1);
 $root = dirname( __DIR__, 2 );
 $runner_path = $root . '/plugin/base-conhecimento-inteligencia-integrada/includes/class-search-section-runner-g590.php';
 $runner = file_get_contents( $runner_path );
+$asset_path = $root . '/plugin/base-conhecimento-inteligencia-integrada/assets/js/search-section-g590.js';
+$asset = file_get_contents( $asset_path );
 
-if ( ! is_string( $runner ) ) {
+if ( ! is_string( $runner ) || ! is_string( $asset ) ) {
 	fwrite( STDERR, "Falha ao ler runner G-590.\n" );
 	exit( 1 );
 }
@@ -34,8 +36,8 @@ $checks = array(
 		&& str_contains( $runner, 'get_transient( $lock )' )
 		&& str_contains( $runner, 'set_transient( $lock' )
 		&& str_contains( $runner, 'delete_transient( $lock )' ),
-	'resume_after_network_failure' => str_contains( $runner, 'Consultando estado persistido para retomar sem duplicar trabalho' )
-		&& str_contains( $runner, 'return recover(jobId)' ),
+	'resume_after_network_failure' => str_contains( $asset, 'Consultando estado persistido para retomar sem duplicar trabalho' )
+		&& str_contains( $asset, 'return recover(jobId)' ),
 	'synchronous_admin_post_not_registered' => ! str_contains(
 		$runner,
 		"add_action( 'admin_post_' . self::ACTION, array( self::class, 'handle_run' ) )"

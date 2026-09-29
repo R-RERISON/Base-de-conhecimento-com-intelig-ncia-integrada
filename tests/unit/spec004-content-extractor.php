@@ -87,6 +87,7 @@ namespace BDC\KnowledgeBase {
 	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-shortcode-inspector.php';
 	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-legacy-html-adapter.php';
 	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-content-source.php';
+	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-semantic-dom-expectation.php';
 	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-elementor-adapter.php';
 	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-gutenberg-adapter.php';
 	require_once __DIR__ . '/../../plugin/base-conhecimento-inteligencia-integrada/includes/class-content-extractor.php';

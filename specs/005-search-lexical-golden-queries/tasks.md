@@ -80,10 +80,10 @@
 - [x] T584 G-580 PASS — CLOSED em 2026-09-20; evidence g580-environmental-review-20260920T173016Z.json; próximo gate G-585.
 
 ## G-595 — Boundary Closeout / RC técnico
-- [ ] T595-01 deterministic build do artefato que fechou G-590/G-585.
-- [ ] T595-02 manifest/checksum.
-- [ ] T595-03 regressão SPEC-001–005 consolidada.
-- [ ] T595-04 environmental boundary smoke.
+- [x] T595-01 deterministic build do artefato boundary G-590+G-585 — RC16 PASS.
+- [x] T595-02 manifest/checksum — PASS; ZIP SHA-256 `55776bc68f972ccd5aadc0af31fbb09d272e9791472f8a1d562a81ca1ceff42e`.
+- [x] T595-03 regressão SPEC-001–005 consolidada — 17 local gates + T100E PASS; source lint 122/122; ZIP lint 76/76.
+- [x] T595-04 environmental boundary smoke — RC16 PASS; G-585 + G-590 preservados no mesmo pacote.
 - [ ] T595-05 relatório final da fronteira Search.
 - [ ] T595-06 merge somente após aprovação humana.
 
@@ -223,7 +223,7 @@
 
 ## Pós G-590
 - [x] retomar G-585 após fechamento G-590 — gate ativo novamente; decommission continua condicionado ao Master Ledger e Public Experience.
-- [ ] fechar boundary da SPEC-005 antes da SPEC-006.
+- [ ] fechar boundary da SPEC-005 — G-595 ativo; T595-01..03 PASS, T595-04 pendente.
 
 
 ### G-590 — RC5 review / R-260 discovery

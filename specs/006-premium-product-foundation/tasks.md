@@ -6,8 +6,8 @@
 - [x] P-600 Plugin Metadata/License — PASS
 - [x] P-610 Tooling/WPCS/PHPUnit — PASS / legacy debt inventoried
 - [x] P-620 Plugin Check — PASS inventory/disposition; production package still not clean
-- [ ] P-630 Domain Closure
-- [ ] P-640 Modular Runtime
+- [x] P-630 Domain Closure — PASS / environmental acceptance + Master Ledger disposition
+- [ ] P-640 Modular Runtime — next active gate
 - [ ] P-650 Packaging/Install/Upgrade
 - [ ] P-660 Security/Privacy baseline
 - [ ] P-670 Premium Foundation Acceptance
@@ -31,7 +31,7 @@
 - [x] full-plugin WPCS debt measured — 11,718 errors / 7,118 warnings / 121 files.
 - [x] bulk PHPCBF explicitly forbidden.
 - [x] evidence: `evidence/spec006-p610-tooling-pass-20260929.json`.
-- [ ] P-620 Plugin Check — next active gate.
+- [x] P-620 Plugin Check — completed after P-610.
 
 ## P-620 closeout
 
@@ -45,7 +45,7 @@
 - [x] Update URI documented as private-distribution waiver.
 - [x] UPGRADE.md routed to P-650 package pruning.
 - [x] Evidence: `evidence/spec006-p620-plugin-check-disposition-20260929.json`.
-- [ ] P-630 Domain Closure — next active gate.
+- [x] P-630 Domain Closure — completed after P-620.
 
 ## P-630 closeout
 
@@ -56,9 +56,20 @@
 - [x] P630-05 Public Article Reader consumes canonical facts owner.
 - [x] P630-06 Knowledge Workspace editing surface.
 - [x] P630-07 local regression/security — static contract + full PHP lint + WPCS new production classes + PHPUnit PASS.
-- [ ] P630-08 environmental acceptance — P630.2 homologation package READY; execute runner and attach JSON.
-- [ ] P630-09 Master Ledger disposition after environmental evidence.
+- [x] P630-08 environmental acceptance — PASS on WordPress 6.9.4 / PHP 8.5.10 / 606 posts.
+- [x] P630-09 Master Ledger disposition after environmental evidence.
 
 Evidence:
 - `evidence/spec006-p630-local-domain-closure-pass-20260929.json`;
-- `evidence/spec006-p630-environmental-package-20260929.json`.
+- `evidence/spec006-p630-environmental-package-20260929.json`;
+- `evidence/spec006-p630-domain-closure-pass-20260929.json`;
+- `specs/006-premium-product-foundation/p630-closeout-20260929.md`.
+
+Disposition:
+- GRE-001 -> PARITY_VERIFIED;
+- GRE-004 -> PARITY_VERIFIED;
+- KB2-005 -> SUPERSEDED_WITH_EVIDENCE;
+- GRE-003/GRE-005/KB2-002/KB2-006 remain open by scope.
+
+Next active gate:
+- [ ] P-640 Modular Runtime.

@@ -235,7 +235,7 @@ final class Search_Independence_Runner_G585 {
 	/** @return array<string,mixed> */
 	private static function base_report( array $static_scan, array $environment_probe, array $surface_probe ): array {
 		return array(
-			'schema_version' => '2.1.0',
+			'schema_version' => '2.2.0',
 			'gate' => 'G-585',
 			'mode' => 'spec005_independence_decommission_environmental',
 			'generated_at' => gmdate( 'c' ),
@@ -343,6 +343,12 @@ final class Search_Independence_Runner_G585 {
 		}
 		sort( $shortcodes, SORT_STRING );
 
+		/*
+		 * The currently configured page_on_front is legacy production inventory only.
+		 * G-585 must not require editorial cleanup of the old Home to prove independence
+		 * of the candidate public experience. The candidate Home is the preview route
+		 * implemented by Public_Experience + templates/public-home-preview.php.
+		 */
 		$front_page_id = (int) get_option( 'page_on_front', 0 );
 		$front_page = $front_page_id > 0 ? get_post( $front_page_id ) : null;
 		$front_page_markers = array();
@@ -353,27 +359,60 @@ final class Search_Independence_Runner_G585 {
 			$front_page_evidence = self::legacy_marker_evidence( $front_page_content );
 		}
 
-		$template_candidates = array();
-		foreach ( array( 'template_include', 'single_template', 'page_template' ) as $hook_name ) {
-			if ( self::looks_like_legacy_symbol( $hook_name ) ) {
-				$template_candidates[] = $hook_name;
-			}
-		}
+		$candidate_template = wp_normalize_path( BDC_KB_DIR . 'templates/public-home-preview.php' );
+		$candidate_template_exists = is_file( $candidate_template );
+		$candidate_source = $candidate_template_exists ? file_get_contents( $candidate_template ) : false;
+		$candidate_source = is_string( $candidate_source ) ? $candidate_source : '';
+		$candidate_markers = self::legacy_marker_labels( $candidate_source );
+		$candidate_evidence = self::legacy_marker_evidence( $candidate_source );
+		$candidate_uses_the_content = str_contains( $candidate_source, 'the_content(' );
+		$candidate_uses_post_content = str_contains( $candidate_source, 'post_content' );
+
+		$public_experience_path = wp_normalize_path( BDC_KB_DIR . 'includes/class-public-experience.php' );
+		$public_experience_source = is_file( $public_experience_path ) ? file_get_contents( $public_experience_path ) : false;
+		$public_experience_source = is_string( $public_experience_source ) ? $public_experience_source : '';
+		$preview_route_declared = str_contains( $public_experience_source, "private const QUERY_KEY = 'bdc_kb_preview'" )
+			&& str_contains( $public_experience_source, "add_filter( 'template_include'" )
+			&& str_contains( $public_experience_source, "templates/public-home-preview.php" );
+
+		$legacy_home_isolated = $candidate_template_exists
+			&& $preview_route_declared
+			&& ! $candidate_uses_the_content
+			&& ! $candidate_uses_post_content;
+
+		$candidate_dependency_zero = $candidate_template_exists
+			&& $legacy_home_isolated
+			&& empty( $candidate_markers );
 
 		return array(
+			'candidate_surface' => array(
+				'control_plane' => 'wp-admin/admin.php?page=bdc-kb-public-experience-preview',
+				'preview_query_key' => 'bdc_kb_preview',
+				'preview_kind' => 'home',
+				'template' => 'templates/public-home-preview.php',
+				'template_exists' => $candidate_template_exists,
+				'template_sha256' => $candidate_template_exists ? hash( 'sha256', $candidate_source ) : '',
+				'legacy_markers' => $candidate_markers,
+				'legacy_evidence' => $candidate_evidence,
+				'uses_the_content' => $candidate_uses_the_content,
+				'uses_post_content' => $candidate_uses_post_content,
+				'preview_route_declared' => $preview_route_declared,
+				'legacy_home_isolated' => $legacy_home_isolated,
+				'dependency_zero' => $candidate_dependency_zero,
+			),
+			'legacy_production_home_inventory' => array(
+				'blocking' => false,
+				'front_page_id' => $front_page_id,
+				'legacy_markers' => $front_page_markers,
+				'legacy_evidence' => $front_page_evidence,
+				'content_sha256' => $front_page instanceof \WP_Post ? hash( 'sha256', (string) $front_page->post_content ) : '',
+				'interpretation' => 'Inventário da Home atualmente publicada. Não participa do PASS/FAIL de T585.1 enquanto a nova Home permanecer isolada no Public Experience Preview.',
+			),
 			'registered_legacy_shortcodes' => $shortcodes,
-			'front_page_id' => $front_page_id,
-			'front_page_legacy_markers' => $front_page_markers,
-			'front_page_legacy_evidence' => $front_page_evidence,
-			'front_page_content_sha256' => $front_page instanceof \WP_Post ? hash( 'sha256', (string) $front_page->post_content ) : '',
-			'legacy_template_hook_names' => $template_candidates,
 			'physical_legacy_storage_is_not_dependency' => true,
-			'dependency_zero' => empty( $shortcodes )
-				&& empty( $front_page_markers )
-				&& empty( $template_candidates ),
+			'dependency_zero' => $candidate_dependency_zero,
 		);
 	}
-
 
 	/** @return array<string,mixed> */
 	private static function legacy_environment_probe(): array {

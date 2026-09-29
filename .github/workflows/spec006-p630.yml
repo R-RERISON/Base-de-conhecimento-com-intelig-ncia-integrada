@@ -1,0 +1,53 @@
+name: SPEC006 P630 Domain Closure
+
+on:
+  push:
+    branches:
+      - spec006-premium-product-foundation
+    paths:
+      - ".github/workflows/spec006-p630.yml"
+      - "plugin/base-conhecimento-inteligencia-integrada/includes/class-knowledge-facts-contract.php"
+      - "plugin/base-conhecimento-inteligencia-integrada/includes/class-knowledge-facts-store.php"
+      - "plugin/base-conhecimento-inteligencia-integrada/includes/class-helpful-tips-store.php"
+      - "plugin/base-conhecimento-inteligencia-integrada/includes/class-coverage-read-model.php"
+      - "plugin/base-conhecimento-inteligencia-integrada/includes/class-knowledge-details-admin.php"
+      - "plugin/base-conhecimento-inteligencia-integrada/includes/class-public-article-read-model.php"
+      - "plugin/base-conhecimento-inteligencia-integrada/includes/class-admin-page.php"
+      - "plugin/base-conhecimento-inteligencia-integrada/includes/class-plugin.php"
+      - "plugin/base-conhecimento-inteligencia-integrada/includes/class-post-activity-registry.php"
+      - "plugin/base-conhecimento-inteligencia-integrada/base-conhecimento-inteligencia-integrada.php"
+      - "tests/unit/spec006-p630-domain-closure.php"
+      - "specs/006-premium-product-foundation/p630-domain-closure-contract-v1.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer:v2
+          coverage: none
+
+      - name: Install quality tooling
+        run: composer install --no-interaction --prefer-dist
+
+      - name: P630 static contract
+        run: php tests/unit/spec006-p630-domain-closure.php
+
+      - name: Plugin PHP lint
+        run: find plugin/base-conhecimento-inteligencia-integrada -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: WPCS new P630 production classes
+        run: |
+          vendor/bin/phpcs --standard=WordPress             plugin/base-conhecimento-inteligencia-integrada/includes/class-knowledge-facts-contract.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-knowledge-facts-store.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-helpful-tips-store.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-coverage-read-model.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-knowledge-details-admin.php
+
+      - name: PHPUnit foundation regression
+        run: composer test:phpunit

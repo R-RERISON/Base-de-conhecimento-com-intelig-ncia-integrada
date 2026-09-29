@@ -44,7 +44,12 @@ jobs:
 
       - name: WPCS affected P640 runtime
         run: |
-          vendor/bin/phpcs             plugin/base-conhecimento-inteligencia-integrada/base-conhecimento-inteligencia-integrada.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-core-runtime-loader.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-runtime-module-registry.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-engineering-module-loader.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-modular-runtime-runner-p640.php             tests/unit/spec006-p640-runtime-module-registry.php             tests/unit/spec006-p640-modular-runtime.php
+          vendor/bin/phpcs \
+            plugin/base-conhecimento-inteligencia-integrada/base-conhecimento-inteligencia-integrada.php \
+            plugin/base-conhecimento-inteligencia-integrada/includes/class-core-runtime-loader.php \
+            plugin/base-conhecimento-inteligencia-integrada/includes/class-runtime-module-registry.php \
+            plugin/base-conhecimento-inteligencia-integrada/includes/class-engineering-module-loader.php \
+            plugin/base-conhecimento-inteligencia-integrada/includes/class-modular-runtime-runner-p640.php
 
       - name: PHPUnit foundation
         run: vendor/bin/phpunit -c phpunit.xml.dist

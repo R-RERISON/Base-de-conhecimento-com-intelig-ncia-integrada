@@ -20,7 +20,7 @@ SOURCE = ROOT / "plugin" / "base-conhecimento-inteligencia-integrada"
 DIST = ROOT / "dist"
 PACKAGE_ROOT = "base-conhecimento-inteligencia-integrada"
 VERSION = "0.6.0-dev"
-BUILD = "p630.1"
+BUILD = "p630.2"
 ZIP_PATH = DIST / f"base-conhecimento-inteligencia-integrada-{VERSION}-{BUILD}.zip"
 MANIFEST_PATH = DIST / f"base-conhecimento-inteligencia-integrada-{VERSION}-{BUILD}.manifest.json"
 VALIDATION_PATH = DIST / "p630-local-package-validation.json"
@@ -64,6 +64,8 @@ def validate_source(files: list[pathlib.Path]) -> dict:
         "class-helpful-tips-store.php",
         "class-coverage-read-model.php",
         "class-knowledge-details-admin.php",
+        "class-domain-closure-runner-p630.php",
+        "BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD",
     ]
     missing = [token for token in required if token not in text]
 
@@ -109,7 +111,13 @@ def build_zip(files: list[pathlib.Path], output: pathlib.Path) -> None:
             info = zipfile.ZipInfo(f"{PACKAGE_ROOT}/{rel}", FIXED_TIME)
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
-            archive.writestr(info, source.read_bytes())
+            data = source.read_bytes()
+            if rel == "base-conhecimento-inteligencia-integrada.php":
+                data = data.replace(
+                    b"define( 'BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD', false );",
+                    b"define( 'BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD', true );",
+                )
+            archive.writestr(info, data)
 
 
 def zip_file_manifest(zip_path: pathlib.Path) -> list[dict]:

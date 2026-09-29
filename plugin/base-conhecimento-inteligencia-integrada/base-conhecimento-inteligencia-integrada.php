@@ -59,6 +59,7 @@ define( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD', true );
 define( 'BDC_KB_UX004_H030_TECHNICAL_BUILD', true );
 define( 'BDC_KB_WORD_CLOUD_BUILD', true );
 define( 'BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD', false );
+define( 'BDC_KB_SPEC006_P640_ENVIRONMENTAL_BUILD', false );
 if ( ! defined( 'BDC_KB_SEARCH_ENABLED' ) ) {
 	define( 'BDC_KB_SEARCH_ENABLED', true );
 }

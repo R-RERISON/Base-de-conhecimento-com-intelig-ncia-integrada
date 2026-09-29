@@ -27,6 +27,9 @@ final class Post_Activity_Registry {
 			'classification' => array(
 				'label' => 'Classificação', 'icon' => 'tag', 'renderer' => 'legacy', 'mode' => 'existing_writer',
 			),
+			'details' => array(
+				'label' => 'Detalhes de conhecimento', 'icon' => 'info-outline', 'renderer' => 'legacy', 'mode' => 'existing_writer',
+			),
 			'intelligence' => array(
 				'label' => 'Inteligência', 'icon' => 'lightbulb', 'renderer' => 'post_management', 'mode' => 'read_only',
 			),

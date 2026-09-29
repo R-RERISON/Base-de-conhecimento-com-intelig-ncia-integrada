@@ -69,3 +69,14 @@ P-620 fecha quando:
 - não executar PHPCBF global;
 - não autorizar ASI retirement;
 - não declarar Plugin Check clean se o pacote atual ainda contiver findings.
+
+
+## Canonical distribution slug
+
+- source directory may remain `base-conhecimento-inteligencia-integrada` during development;
+- canonical production/distribution slug = `bdc-knowledge-base`;
+- Text Domain remains `bdc-knowledge-base`;
+- Plugin Check must use `slug=bdc-knowledge-base`;
+- P-650 is responsible for making the production ZIP root match the canonical slug.
+
+This prevents a mass text-domain rewrite that would provide no product value.

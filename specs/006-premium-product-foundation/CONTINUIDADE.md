@@ -240,3 +240,39 @@ Diagnóstico atual:
 
 Regra operacional explícita:
 - NÃO usar GitHub Actions como executor de gate neste projeto.
+
+
+## P-650 — implementação iniciada sem fechar P-640
+
+Contrato:
+- `specs/006-premium-product-foundation/p650-packaging-install-upgrade-contract-v1.md`.
+
+Implementado:
+- `tools/homologation/spec006/build-p650-production.py`;
+- `tests/unit/spec006-p650-package-contract.php`;
+- `tools/homologation/spec006/validate-p650-local.py`.
+
+Arquitetura de distribuição:
+- source permanece homologável e conserva ferramentas de engenharia;
+- package candidato remove fisicamente o Engineering_Module_Loader e os arquivos declarados por ele;
+- bootstrap do ZIP não contém flags/calls de engenharia;
+- Search/Public Preview/Word Cloud permanecem;
+- build duplo obrigatório;
+- root único;
+- manifest + checksum;
+- specs/evidence/tests/tools/vendor proibidos no ZIP;
+- classes históricas Elementor permanecem até disposition com evidência.
+
+Gate fail-closed:
+- P650 local validator exige `evidence/spec006-p640-local-validation-current.json` com `status=PASS` e `execution_mode=LOCAL_ONLY`;
+- sem esse artefato P650 retorna `BLOCKED_P640`;
+- portanto P650 não contorna P640-06.
+
+Próximo passo:
+1. obter ambiente local com Composer deps;
+2. executar `python tools/homologation/spec006/validate-p640-local.py`;
+3. após PASS, executar `python tools/homologation/spec006/validate-p650-local.py`;
+4. instalar exatamente o ZIP p650.1 em homologação;
+5. validar fresh install, upgrade sobre 0.5.x/0.6.0-dev, preservação de dados e rollback;
+6. executar Plugin Check no mesmo ZIP;
+7. somente então fechar P650 e atualizar PROD-005/PROD-006 conforme evidência.

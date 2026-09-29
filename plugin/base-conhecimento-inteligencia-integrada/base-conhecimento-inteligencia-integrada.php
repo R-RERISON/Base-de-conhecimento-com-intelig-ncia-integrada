@@ -73,6 +73,7 @@ require_once BDC_KB_DIR . 'includes/class-summary-store.php';
 require_once BDC_KB_DIR . 'includes/class-knowledge-facts-contract.php';
 require_once BDC_KB_DIR . 'includes/class-knowledge-facts-store.php';
 require_once BDC_KB_DIR . 'includes/class-helpful-tips-store.php';
+require_once BDC_KB_DIR . 'includes/class-knowledge-details-admin.php';
 require_once BDC_KB_DIR . 'includes/class-coverage-read-model.php';
 require_once BDC_KB_DIR . 'includes/class-classification-contract.php';
 require_once BDC_KB_DIR . 'includes/class-classification-store.php';

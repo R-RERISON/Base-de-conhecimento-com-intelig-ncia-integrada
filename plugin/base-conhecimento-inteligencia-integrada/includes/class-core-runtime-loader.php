@@ -17,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Core_Runtime_Loader {
 
 	/**
+	 * Lista os arquivos permanentes do core.
+	 *
 	 * @return array<int,string>
 	 */
 	private static function files(): array {
@@ -66,11 +68,21 @@ final class Core_Runtime_Loader {
 		);
 	}
 
+	/**
+	 * Carrega o runtime permanente.
+	 *
+	 * @throws \RuntimeException Quando um arquivo obrigatório não existe.
+	 */
 	public static function load(): void {
 		foreach ( self::files() as $relative_path ) {
 			$path = BDC_KB_DIR . $relative_path;
 			if ( ! is_file( $path ) ) {
-				throw new \RuntimeException( 'Arquivo obrigatório do core ausente: ' . $relative_path );
+				throw new \RuntimeException(
+					sprintf(
+						'Arquivo obrigatório do core ausente: %s',
+						esc_html( $relative_path )
+					)
+				);
 			}
 
 			require_once $path;

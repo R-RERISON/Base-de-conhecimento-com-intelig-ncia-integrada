@@ -81,7 +81,7 @@ Next active gate:
 - [x] P640-03 extrair módulos de produto do bootstrap.
 - [x] P640-04 separar loaders de engenharia/homologação.
 - [x] P640-05 reduzir bootstrap ao composition root.
-- [x] P640-06 static contract + PHP lint + WPCS afetado — PASS.
+- [ ] P640-06 static contract + PHP lint + WPCS afetado — REABERTO.
 - [ ] P640-07 regressão/environmental acceptance das features habilitadas — pacote p640.1 READY.
 - [ ] P640-08 package/runtime inventory para P-650.
 

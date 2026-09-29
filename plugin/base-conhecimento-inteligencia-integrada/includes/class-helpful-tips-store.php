@@ -43,6 +43,9 @@ final class Helpful_Tips_Store {
 	}
 
 	/**
+	 * Read the ordered Helpful Tips snapshot.
+	 *
+	 * @param mixed $post_id Post ID candidate.
 	 * @return array<int,array{title:string,content:string}>|\WP_Error
 	 */
 	public static function read( mixed $post_id ): array|\WP_Error {
@@ -55,7 +58,10 @@ final class Helpful_Tips_Store {
 	}
 
 	/**
-	 * @param array<int,mixed> $items Ordered tips.
+	 * Replace the ordered Helpful Tips snapshot and confirm persistence.
+	 *
+	 * @param mixed            $post_id Post ID candidate.
+	 * @param array<int,mixed> $items   Ordered tips.
 	 * @return array{status:string,state:array<int,array{title:string,content:string}>}|\WP_Error
 	 */
 	public static function update( mixed $post_id, array $items ): array|\WP_Error {
@@ -129,6 +135,8 @@ final class Helpful_Tips_Store {
 	}
 
 	/**
+	 * Validate and sanitize all tips before the first write.
+	 *
 	 * @param array<int,mixed> $items Raw items.
 	 * @return array<int,array{title:string,content:string}>|\WP_Error
 	 */
@@ -167,6 +175,8 @@ final class Helpful_Tips_Store {
 	}
 
 	/**
+	 * Normalize an existing stored snapshot for safe reads.
+	 *
 	 * @param mixed $raw Raw stored value.
 	 * @return array<int,array{title:string,content:string}>
 	 */
@@ -201,6 +211,12 @@ final class Helpful_Tips_Store {
 		return $items;
 	}
 
+	/**
+	 * Validate the target article.
+	 *
+	 * @param mixed $post_id Post ID candidate.
+	 * @return object WP_Post-like object or WP_Error; inspect with is_wp_error().
+	 */
 	private static function validate_post( mixed $post_id ): object {
 		$id = is_int( $post_id ) || ( is_string( $post_id ) && ctype_digit( $post_id ) )
 			? (int) $post_id

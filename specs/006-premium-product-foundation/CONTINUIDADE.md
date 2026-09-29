@@ -4,155 +4,173 @@
 
 - repositório: `R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada`;
 - branch ativa: `spec006-premium-product-foundation`;
-- commit de referência: `4de05a0ea200419ed7dc890585326296435f53c4`;
-- versão source: `0.6.0-dev`.
+- versão source: `0.6.0-dev`;
+- runtime P640 validado em: `de1a051a876e514c5545756c08bcb734b448335a`;
+- o HEAD documental é posterior ao commit validado; confirmar o HEAD antes de escrever.
 
 ## Estado comprovado
 
 - SPEC-005: CLOSED/main.
 - P-600: PASS.
-- P-610: PASS / dívida WPCS histórica inventariada.
-- P-620: PASS de inventory/disposition; package production ainda não clean.
+- P-610: PASS / legacy WPCS debt inventoried.
+- P-620: PASS inventory/disposition; production package ainda não clean.
 - P-630: PASS completo.
-- P-640: ACTIVE; P640-01 baseline/contract concluído.
+- P-640: ACTIVE.
+  - P640-01: PASS.
+  - P640-02: PASS — Runtime_Module_Registry.
+  - P640-03: PASS — módulos de produto extraídos.
+  - P640-04: PASS — Engineering_Module_Loader.
+  - P640-05: PASS — Core_Runtime_Loader/composition root.
+  - P640-06: PASS — quality/local validation.
+  - P640-07: READY — environmental acceptance.
+  - P640-08: pendente após evidência ambiental.
 - P-650/P-660/P-670: pendentes.
 
 ## P-630 fechado
 
-Implementado e comprovado:
+Owners canônicos:
 
-- `Knowledge_Facts_Store` como owner canônico;
-- affected_service em `_bdc_es_affected_service`, com `_kb2ops_service` apenas como fallback read-only;
-- systems_involved em `_bdc_es_systems_involved`;
-- technologies/keywords/versions adotam chaves históricas sem dependência runtime KB2Ops;
-- `Helpful_Tips_Store` read/write canônico;
-- `Coverage_Read_Model` com oito campos;
-- Public Article Reader consome owner canônico;
-- Knowledge Workspace possui writer governado.
+- `Knowledge_Facts_Store`;
+- affected_service: `_bdc_es_affected_service`;
+- fallback read-only: `_kb2ops_service`;
+- systems_involved: `_bdc_es_systems_involved`;
+- technologies/keywords/versions: chaves históricas adotadas pelo BDC;
+- `Helpful_Tips_Store`;
+- `Coverage_Read_Model` oito campos.
 
-Homologação ambiental:
+Homologação P-630:
 
 - WordPress 6.9.4;
 - PHP 8.5.10;
 - 606 posts;
-- 20 amostras;
-- store errors = 0;
-- noop writers PASS;
-- domain hash preservado;
-- public reader alignment PASS;
-- cutover não autorizado;
-- retirement não autorizado.
+- errors = 0;
+- no-op writers PASS;
+- public reader alignment PASS.
 
-Evidências:
-
-- `evidence/spec006-p630-local-domain-closure-pass-20260929.json`;
-- `evidence/spec006-p630-environmental-package-20260929.json`;
-- `evidence/spec006-p630-domain-closure-pass-20260929.json`;
-- `specs/006-premium-product-foundation/p630-closeout-20260929.md`.
-
-Master Ledger disposition:
+Ledger P-630:
 
 - GRE-001 -> PARITY_VERIFIED;
 - GRE-004 -> PARITY_VERIFIED;
 - KB2-005 -> SUPERSEDED_WITH_EVIDENCE;
 - GRE-003/GRE-005/KB2-002/KB2-006 permanecem abertas.
 
-## P-640 ativo
+## P-640 implementação
 
-Contrato criado:
+Arquivos centrais:
 
-- `specs/006-premium-product-foundation/p640-modular-runtime-contract-v1.md`.
+- `includes/class-core-runtime-loader.php`;
+- `includes/class-runtime-module-registry.php`;
+- `includes/class-engineering-module-loader.php`;
+- `includes/class-modular-runtime-runner-p640.php`.
 
-Baseline:
+Bootstrap:
 
-- `base-conhecimento-inteligencia-integrada.php` ainda concentra flags, requires e registrations de produto + engenharia;
-- `class-plugin.php` já é pequeno e deve permanecer como orquestrador de hooks permanentes;
-- não existe `Runtime_Module_Registry`.
+- composition root reduzido;
+- quatro requires diretos;
+- Search/Public Preview/Word Cloud passam pelo registry;
+- runners/smokes/profilers passam pelo Engineering_Module_Loader;
+- Elementor adapter read-only preservado;
+- Core Blocks activity preservado.
 
-Princípio de negação aplicado:
+Princípio de negação preservado:
 
 - sem DI container;
 - sem framework externo;
 - sem filesystem discovery;
 - sem service locator;
-- sem banco/options para feature flags;
-- sem Composer obrigatório em runtime.
+- sem banco/options para estado de módulos;
+- sem Composer obrigatório em runtime;
+- sem endpoint novo.
+
+## P640-06 — evidência
+
+Workflow transitório executado e removido após uso.
+
+Run PASS:
+
+- workflow run: `36594052314`;
+- workflow job: `109494263490`;
+- source commit: `de1a051a876e514c5545756c08bcb734b448335a`;
+- artifact ID: `11044918410`.
+
+Resultados:
+
+- static registry contract: 14/14 PASS;
+- modular runtime contract: 15/15 PASS;
+- PHP lint: 131/131 PASS;
+- WPCS affected runtime: PASS;
+- PHPUnit foundation: PASS;
+- deterministic build: PASS;
+- bootstrap direct requires: 4.
+
+Evidência:
+
+- `evidence/spec006-p640-local-validation-pass-20260929.json`.
+
+## Pacote P640-07
+
+- build: `0.6.0-dev-p640.1`;
+- arquivo: `base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.1.zip`;
+- SHA-256: `e22e599ae8ae212c8e9c87a522e4f04a63fe187344798191c7f2fe8051f2ef9a`;
+- manifest SHA-256: `3588e95412216dc4d24c741e8a3072a86d308e963bfe03955c6297c387798fa4`;
+- production_package: false;
+- runner P640 habilitado somente no artefato de homologação.
+
+Instruções:
+
+- `specs/006-premium-product-foundation/p640-environmental-acceptance-20260929.md`.
 
 ## Próximo passo exato
 
-Implementar P640-02:
+P640-07:
 
-1. criar `includes/class-runtime-module-registry.php`;
-2. modelar apenas os módulos de produto atualmente necessários;
-3. preservar exatamente as flags e comportamento existentes;
-4. não mover runners de engenharia ainda além do mínimo necessário;
-5. criar teste estático/unitário do registry;
-6. executar PHP lint e WPCS nos arquivos afetados;
-7. só então seguir para P640-03.
+1. instalar/substituir o plugin no ambiente de homologação com o ZIP `p640.1`;
+2. acessar **Base de Conhecimento → P-640 Modular Runtime**;
+3. executar **Executar P-640 e baixar JSON**;
+4. anexar o JSON gerado.
 
-## Critério de conclusão do próximo passo
+Após receber o JSON:
 
-P640-02 termina quando:
+1. validar `status=PASS` e assertions;
+2. versionar a evidência ambiental;
+3. fechar P640-07;
+4. executar P640-08 package/runtime inventory;
+5. atualizar Master Functional Parity Ledger somente com evidência;
+6. fechar P-640 e ativar P-650.
 
-- registry existe e é pequeno/coeso;
-- nenhuma feature habilitada muda de estado;
-- módulos desabilitados continuam sem carregar;
-- bootstrap ainda funciona;
-- nenhum dado, ranking, conteúdo editorial ou endpoint muda;
-- lint/WPCS/teste do slice passam.
-
-## Invariantes
+## Invariantes obrigatórios
 
 - sem cutover;
 - sem retirement;
 - sem bulk migration;
 - sem legacy delete;
 - sem alteração de Search ranking;
-- sem escrita em `post_content`;
+- sem alteração de `post_content`;
 - sem escrita em `_elementor_data`;
-- sem mudança de versão pública.
+- sem endpoint novo;
+- sem mudança de versão pública;
+- package P640 é somente homologação.
 
-## Instrução para novo chat
+## Prompt para novo chat
 
-Antes de modificar runtime, reler:
+Continuar a SPEC-006 no repositório `R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada`, branch `spec006-premium-product-foundation`.
 
-1. `AGENTS.md`;
-2. `.specify/memory/constitution.md`;
-3. `docs/PREMIUM-PLUGIN-PRODUCT-STANDARD.md`;
-4. `docs/DEFINITION-OF-DONE.md`;
-5. `specs/006-premium-product-foundation/spec.md`;
-6. `specs/006-premium-product-foundation/tasks.md`;
-7. `specs/006-premium-product-foundation/p640-modular-runtime-contract-v1.md`;
-8. `specs/MASTER-FUNCTIONAL-PARITY-LEDGER.md`.
+Antes de qualquer alteração:
 
-Confirmar o HEAD da branch no GitHub antes de escrever.
+1. confirmar o HEAD atual no GitHub;
+2. ler `AGENTS.md`;
+3. ler `.specify/memory/constitution.md`;
+4. ler `docs/PREMIUM-PLUGIN-PRODUCT-STANDARD.md`;
+5. ler `docs/DEFINITION-OF-DONE.md`;
+6. ler `specs/006-premium-product-foundation/spec.md`;
+7. ler `specs/006-premium-product-foundation/tasks.md`;
+8. ler `specs/006-premium-product-foundation/p640-modular-runtime-contract-v1.md`;
+9. ler `specs/006-premium-product-foundation/p640-environmental-acceptance-20260929.md`;
+10. ler `specs/MASTER-FUNCTIONAL-PARITY-LEDGER.md`;
+11. ler este `CONTINUIDADE.md`.
 
+Estado: P640-06 PASS. Próximo gate é P640-07 environmental acceptance. O pacote `0.6.0-dev-p640.1` já foi construído deterministicamente e validado. Não reimplementar P640-02..06.
 
-## Atualização P-640 — 2026-09-29
+Se o usuário anexar o JSON P640 ambiental, validar o artefato como fonte de verdade, fechar P640-07 somente se todas as assertions aplicáveis passarem, executar P640-08 inventory, atualizar o Master Ledger com evidência e então avançar para P-650.
 
-Implementação concluída até P640-05:
-
-- `Runtime_Module_Registry` criado;
-- Search, Public Experience Preview e Word Cloud roteados pelo registry;
-- `Engineering_Module_Loader` criado;
-- runners/smokes/profilers removidos do bootstrap;
-- `Core_Runtime_Loader` criado;
-- bootstrap reduzido para 89 linhas e quatro requires diretos;
-- flags de Search/Public Preview/Word Cloud/H-030 preservadas;
-- nenhum runner removido do source/package ainda;
-- nenhuma mudança em dados, ranking, conteúdo editorial, endpoint, cutover ou retirement.
-
-Testes adicionados:
-
-- `tests/unit/spec006-p640-runtime-module-registry.php`;
-- `tests/unit/spec006-p640-modular-runtime.php`.
-
-Validação disponível nesta sessão:
-
-- PHP lint + smoke independente do Runtime_Module_Registry: PASS;
-- inspeção estrutural do bootstrap/ownership: PASS;
-- WPCS/PHPUnit completos: NOT_RUN nesta sessão por ausência local das dependências e ausência de workflow ativo no branch.
-
-Próximo passo exato:
-
-P640-06 — executar static contracts, full plugin PHP lint, WPCS nos arquivos alterados e PHPUnit foundation. Somente após PASS avançar para P640-07 e considerar atualização de PROD-005.
+Nunca autorizar cutover ou retirement por inferência.

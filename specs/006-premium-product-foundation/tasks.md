@@ -3,7 +3,7 @@
 ## Estado
 
 - [x] Pré-requisito: SPEC-005 CLOSED/main.
-- [ ] P-600 Plugin Metadata/License
+- [x] P-600 Plugin Metadata/License — PASS
 - [ ] P-610 Tooling/WPCS/PHPUnit
 - [ ] P-620 Plugin Check
 - [ ] P-630 Domain Closure
@@ -19,5 +19,5 @@
 - [x] P600-03 completar plugin header.
 - [x] P600-04 adicionar readme/license/changelog/upgrade/security/contributing.
 - [x] P600-05 adicionar teste estático.
-- [ ] P600-06 executar validação local consolidada.
-- [ ] P600-07 registrar evidência e fechar P-600.
+- [x] P600-06 executar validação local consolidada — PASS.
+- [x] P600-07 registrar evidência e fechar P-600 — `evidence/spec006-p600-metadata-license-pass-20260929.json`.

@@ -43,7 +43,14 @@ $checks = array(
 	'tips_has_update' => str_contains( $tips, 'public static function update(' ),
 	'tips_read_after_write' => str_contains( $tips, '$confirmed = self::read( $id );' ),
 	'tips_rollback' => str_contains( $tips, 'update_post_meta( $id, self::META_KEY, $snapshot );' ),
-	'coverage_has_eight_fields' => 8 === preg_match_all( "/\n\t\t\t'[a-z_]+'.*=>/", $coverage ),
+	'coverage_has_eight_fields' => str_contains( $coverage, "'objective'" )
+		&& str_contains( $coverage, "'responsible_team'" )
+		&& str_contains( $coverage, "'catalog_item'" )
+		&& str_contains( $coverage, "'affected_service'" )
+		&& str_contains( $coverage, "'systems_involved'" )
+		&& str_contains( $coverage, "'audience'" )
+		&& str_contains( $coverage, "'escalation'" )
+		&& str_contains( $coverage, "'important'" ),
 	'coverage_states' => str_contains( $coverage, "public const STATE_EMPTY    = 'EMPTY';" )
 		&& str_contains( $coverage, "public const STATE_PARTIAL  = 'PARTIAL';" )
 		&& str_contains( $coverage, "public const STATE_COMPLETE = 'COMPLETE';" ),

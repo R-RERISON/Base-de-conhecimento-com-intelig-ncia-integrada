@@ -58,6 +58,7 @@ define( 'BDC_KB_P580_PUBLIC_INVENTORY_BUILD', false );
 define( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD', true );
 define( 'BDC_KB_UX004_H030_TECHNICAL_BUILD', true );
 define( 'BDC_KB_WORD_CLOUD_BUILD', true );
+define( 'BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD', false );
 if ( ! defined( 'BDC_KB_SEARCH_ENABLED' ) ) {
 	define( 'BDC_KB_SEARCH_ENABLED', true );
 }
@@ -258,6 +259,9 @@ if ( defined( 'BDC_KB_UX004_H030_TECHNICAL_BUILD' ) && BDC_KB_UX004_H030_TECHNIC
 if ( defined( 'BDC_KB_P580_PUBLIC_INVENTORY_BUILD' ) && BDC_KB_P580_PUBLIC_INVENTORY_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-public-experience-inventory-runner-p580.php';
 }
+if ( defined( 'BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD' ) && BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD ) {
+	require_once BDC_KB_DIR . 'includes/class-domain-closure-runner-p630.php';
+}
 if ( defined( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD' ) && BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-public-search-facade.php';
 	require_once BDC_KB_DIR . 'includes/class-public-navigation.php';
@@ -269,6 +273,9 @@ if ( defined( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD' ) && BDC_KB_PUBLIC_EXPERI
 }
 
 \BDC\KnowledgeBase\Plugin::register();
+if ( defined( 'BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD' ) && BDC_KB_SPEC006_P630_ENVIRONMENTAL_BUILD ) {
+	\BDC\KnowledgeBase\Domain_Closure_Runner_P630::register();
+}
 \BDC\KnowledgeBase\Visual_Foundation::register();
 if ( defined( 'BDC_KB_WORD_CLOUD_BUILD' ) && BDC_KB_WORD_CLOUD_BUILD ) {
 	\BDC\KnowledgeBase\Word_Cloud_Service::register();

@@ -16,10 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 final class Knowledge_Details_Admin {
 
-	public const ACTION       = 'bdc_kb_save_knowledge_details';
-	private const NONCE_FIELD = 'bdc_kb_knowledge_details_nonce';
+	public const ACTION        = 'bdc_kb_save_knowledge_details';
+	private const NONCE_FIELD  = 'bdc_kb_knowledge_details_nonce';
 	private const NONCE_PREFIX = 'bdc_kb_save_knowledge_details_';
-	private const UI_TIP_ROWS = 8;
+	private const UI_TIP_ROWS  = 8;
 
 	/**
 	 * Handle the canonical writer.
@@ -54,12 +54,11 @@ final class Knowledge_Details_Admin {
 			self::redirect( $post_id, 'invalid_nonce' );
 		}
 
-		$facts_raw = isset( $_POST['facts'] ) && is_array( $_POST['facts'] )
-			? wp_unslash( $_POST['facts'] )
-			: null;
-		$tips_raw  = isset( $_POST['tips'] ) && is_array( $_POST['tips'] )
-			? wp_unslash( $_POST['tips'] )
-			: null;
+		// Raw arrays are unslashed here; canonical stores validate and sanitize every field before writing.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized field-by-field by Knowledge_Facts_Store.
+		$facts_raw = isset( $_POST['facts'] ) && is_array( $_POST['facts'] ) ? wp_unslash( $_POST['facts'] ) : null;
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized item-by-item by Helpful_Tips_Store.
+		$tips_raw = isset( $_POST['tips'] ) && is_array( $_POST['tips'] ) ? wp_unslash( $_POST['tips'] ) : null;
 
 		if ( ! is_array( $facts_raw ) || ! is_array( $tips_raw ) ) {
 			self::redirect( $post_id, 'invalid_payload' );
@@ -103,6 +102,8 @@ final class Knowledge_Details_Admin {
 
 	/**
 	 * Render the details panel.
+	 *
+	 * @param int $post_id Post ID.
 	 */
 	public static function render_panel( int $post_id ): void {
 		$facts = Knowledge_Facts_Store::read( $post_id );
@@ -152,12 +153,16 @@ final class Knowledge_Details_Admin {
 
 		$row_count = max( self::UI_TIP_ROWS, min( Helpful_Tips_Store::MAX_ITEMS, count( $tips ) + 1 ) );
 		for ( $index = 0; $index < $row_count; ++$index ) {
-			$row     = $tips[ $index ] ?? array( 'title' => '', 'content' => '' );
+			$row     = $tips[ $index ] ?? array(
+				'title'   => '',
+				'content' => '',
+			);
 			$title   = (string) ( $row['title'] ?? '' );
 			$content = (string) ( $row['content'] ?? '' );
 			$number  = $index + 1;
 
 			echo '<fieldset class="bdc-kb-field">';
+			/* translators: %d: Helpful Tip position in the ordered list. */
 			echo '<legend><strong>' . esc_html( sprintf( __( 'Dica %d', 'bdc-knowledge-base' ), $number ) ) . '</strong></legend>';
 			echo '<label for="bdc-kb-tip-title-' . esc_attr( (string) $index ) . '">' . esc_html__( 'Título', 'bdc-knowledge-base' ) . '</label>';
 			echo '<input class="regular-text" id="bdc-kb-tip-title-' . esc_attr( (string) $index ) . '" type="text" name="tips[' . esc_attr( (string) $index ) . '][title]" maxlength="' . esc_attr( (string) Helpful_Tips_Store::MAX_TITLE_BYTES ) . '" value="' . esc_attr( $title ) . '">';
@@ -175,9 +180,13 @@ final class Knowledge_Details_Admin {
 	 * Render feedback for the details writer.
 	 */
 	public static function render_feedback(): void {
-		$status = isset( $_GET['bdc_details_status'] ) && is_scalar( $_GET['bdc_details_status'] )
-			? sanitize_key( wp_unslash( (string) $_GET['bdc_details_status'] ) )
-			: '';
+		$status = '';
+		// Read-only redirect status; no state mutation occurs on this request.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['bdc_details_status'] ) && is_scalar( $_GET['bdc_details_status'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$status = sanitize_key( wp_unslash( (string) $_GET['bdc_details_status'] ) );
+		}
 
 		$messages = array(
 			'saved'           => array( 'success', 'Detalhes de conhecimento salvos e confirmados.' ),
@@ -197,6 +206,12 @@ final class Knowledge_Details_Admin {
 		echo '<div class="notice notice-' . esc_attr( $type ) . ' is-dismissible"><p>' . esc_html( $message ) . '</p></div>';
 	}
 
+	/**
+	 * Redirect back to the bounded details activity.
+	 *
+	 * @param int    $post_id Post ID.
+	 * @param string $status  Safe status key.
+	 */
 	private static function redirect( int $post_id, string $status ): never {
 		$args = array(
 			'page'               => Admin_Page::PAGE_SLUG,

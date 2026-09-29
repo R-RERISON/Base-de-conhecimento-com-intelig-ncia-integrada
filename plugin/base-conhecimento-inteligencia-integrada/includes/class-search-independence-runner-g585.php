@@ -235,7 +235,7 @@ final class Search_Independence_Runner_G585 {
 	/** @return array<string,mixed> */
 	private static function base_report( array $static_scan, array $environment_probe, array $surface_probe ): array {
 		return array(
-			'schema_version' => '2.0.0',
+			'schema_version' => '2.1.0',
 			'gate' => 'G-585',
 			'mode' => 'spec005_independence_decommission_environmental',
 			'generated_at' => gmdate( 'c' ),
@@ -346,8 +346,11 @@ final class Search_Independence_Runner_G585 {
 		$front_page_id = (int) get_option( 'page_on_front', 0 );
 		$front_page = $front_page_id > 0 ? get_post( $front_page_id ) : null;
 		$front_page_markers = array();
+		$front_page_evidence = array();
 		if ( $front_page instanceof \WP_Post ) {
-			$front_page_markers = self::legacy_marker_labels( (string) $front_page->post_content );
+			$front_page_content = (string) $front_page->post_content;
+			$front_page_markers = self::legacy_marker_labels( $front_page_content );
+			$front_page_evidence = self::legacy_marker_evidence( $front_page_content );
 		}
 
 		$template_candidates = array();
@@ -361,6 +364,8 @@ final class Search_Independence_Runner_G585 {
 			'registered_legacy_shortcodes' => $shortcodes,
 			'front_page_id' => $front_page_id,
 			'front_page_legacy_markers' => $front_page_markers,
+			'front_page_legacy_evidence' => $front_page_evidence,
+			'front_page_content_sha256' => $front_page instanceof \WP_Post ? hash( 'sha256', (string) $front_page->post_content ) : '',
 			'legacy_template_hook_names' => $template_candidates,
 			'physical_legacy_storage_is_not_dependency' => true,
 			'dependency_zero' => empty( $shortcodes )
@@ -536,22 +541,110 @@ final class Search_Independence_Runner_G585 {
 			|| str_contains( $lower, $long_slug );
 	}
 
-	/** @return array<int,string> */
-	private static function legacy_marker_labels( string $source ): array {
-		$lower = strtolower( $source );
-		$markers = array(
+	/** @return array<string,string> */
+	private static function legacy_marker_definitions(): array {
+		return array(
 			'legacy_prefix' => 'a' . 'si_',
 			'legacy_v4_prefix' => 'a' . 'si4_',
 			'legacy_symbol' => 'advanced' . '_search_' . 'intelligence',
 			'legacy_slug' => 'advanced' . '-search-' . 'intelligence',
 		);
+	}
+
+	/** @return array<int,string> */
+	private static function legacy_marker_labels( string $source ): array {
+		$lower = strtolower( $source );
 		$found = array();
-		foreach ( $markers as $label => $marker ) {
+		foreach ( self::legacy_marker_definitions() as $label => $marker ) {
 			if ( str_contains( $lower, $marker ) ) {
 				$found[] = $label;
 			}
 		}
 		return $found;
+	}
+
+	/** @return array<int,array<string,mixed>> */
+	private static function legacy_marker_evidence( string $source ): array {
+		$lower = strtolower( $source );
+		$rows = array();
+
+		foreach ( self::legacy_marker_definitions() as $label => $marker ) {
+			$offset = 0;
+			$occurrence = 0;
+			while ( false !== ( $found_at = strpos( $lower, $marker, $offset ) ) ) {
+				$occurrence++;
+				$prefix = substr( $source, 0, $found_at );
+				$line = substr_count( $prefix, "\n" ) + 1;
+				$last_newline = strrpos( $prefix, "\n" );
+				$column = false === $last_newline ? $found_at + 1 : $found_at - $last_newline;
+
+				$excerpt_start = max( 0, $found_at - 80 );
+				$excerpt_length = strlen( $marker ) + 160;
+				$excerpt = substr( $source, $excerpt_start, $excerpt_length );
+				$excerpt = self::sanitize_legacy_excerpt( $excerpt, $marker, $label );
+
+				$rows[] = array(
+					'marker' => $label,
+					'matched_token' => $marker,
+					'occurrence' => $occurrence,
+					'offset' => $found_at,
+					'line' => $line,
+					'column' => $column,
+					'context_type' => self::legacy_context_type( $source, $found_at ),
+					'shortcode_tag' => self::legacy_shortcode_tag_at_offset( $source, $found_at ),
+					'safe_excerpt' => $excerpt,
+					'context_sha256' => hash( 'sha256', substr( $source, $excerpt_start, $excerpt_length ) ),
+				);
+
+				if ( $occurrence >= 20 ) {
+					break;
+				}
+				$offset = $found_at + max( 1, strlen( $marker ) );
+			}
+		}
+
+		return $rows;
+	}
+
+	private static function sanitize_legacy_excerpt( string $excerpt, string $marker, string $label ): string {
+		$excerpt = preg_replace( '#https?://[^\\s<>\"\\']+#iu', '[url-redacted]', $excerpt );
+		$excerpt = preg_replace( '/[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}/iu', '[email-redacted]', (string) $excerpt );
+		$excerpt = preg_replace( '/\\b\\d{4,}\\b/u', '[number-redacted]', (string) $excerpt );
+		$excerpt = str_ireplace( $marker, '<legacy:' . $label . '>', (string) $excerpt );
+		$excerpt = preg_replace( '/\\s+/u', ' ', (string) $excerpt );
+		return trim( (string) $excerpt );
+	}
+
+	private static function legacy_context_type( string $source, int $offset ): string {
+		$open = strrpos( substr( $source, 0, $offset + 1 ), '[' );
+		$close = false === $open ? false : strpos( $source, ']', $open );
+		if ( false !== $open && false !== $close && $offset >= $open && $offset <= $close ) {
+			return 'shortcode_or_bracket_context';
+		}
+
+		$tag_open = strrpos( substr( $source, 0, $offset + 1 ), '<' );
+		$tag_close = false === $tag_open ? false : strpos( $source, '>', $tag_open );
+		if ( false !== $tag_open && false !== $tag_close && $offset >= $tag_open && $offset <= $tag_close ) {
+			return 'html_tag_context';
+		}
+
+		return 'text_context';
+	}
+
+	private static function legacy_shortcode_tag_at_offset( string $source, int $offset ): string {
+		$open = strrpos( substr( $source, 0, $offset + 1 ), '[' );
+		if ( false === $open ) {
+			return '';
+		}
+		$close = strpos( $source, ']', $open );
+		if ( false === $close || $offset > $close ) {
+			return '';
+		}
+		$fragment = substr( $source, $open + 1, $close - $open - 1 );
+		if ( preg_match( '/^\\/?([A-Za-z0-9_-]+)/', ltrim( $fragment ), $matches ) ) {
+			return sanitize_key( (string) ( $matches[1] ?? '' ) );
+		}
+		return '';
 	}
 
 	private static function strip_php_comments( string $source ): string {

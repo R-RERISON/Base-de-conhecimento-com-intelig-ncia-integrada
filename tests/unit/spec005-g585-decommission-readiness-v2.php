@@ -12,8 +12,12 @@ if ( ! is_string( $runner ) ) {
 }
 
 $checks = array(
-	'schema v2' => str_contains( $runner, "'schema_version' => '2.0.0'" ),
+	'schema v2.1' => str_contains( $runner, "'schema_version' => '2.1.0'" ),
 	'surface probe' => str_contains( $runner, 'legacy_surface_dependency_probe' ),
+	'safe front page evidence' => str_contains( $runner, "'front_page_legacy_evidence'" ),
+	'source fingerprint' => str_contains( $runner, "'front_page_content_sha256'" ),
+	'context sanitizer' => str_contains( $runner, 'sanitize_legacy_excerpt' ),
+	'shortcode locator' => str_contains( $runner, 'legacy_shortcode_tag_at_offset' ),
 	't585.1' => str_contains( $runner, "'t585_1_surface_dependency_zero'" ),
 	'cutover false' => str_contains( $runner, "'cutover_authorized' => false" ),
 	'master ledger preflight' => str_contains( $runner, 'MASTER_LEDGER_PREFLIGHT_REQUIRED' ),

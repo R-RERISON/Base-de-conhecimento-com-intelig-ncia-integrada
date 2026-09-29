@@ -126,3 +126,33 @@ Antes de modificar runtime, reler:
 8. `specs/MASTER-FUNCTIONAL-PARITY-LEDGER.md`.
 
 Confirmar o HEAD da branch no GitHub antes de escrever.
+
+
+## Atualização P-640 — 2026-09-29
+
+Implementação concluída até P640-05:
+
+- `Runtime_Module_Registry` criado;
+- Search, Public Experience Preview e Word Cloud roteados pelo registry;
+- `Engineering_Module_Loader` criado;
+- runners/smokes/profilers removidos do bootstrap;
+- `Core_Runtime_Loader` criado;
+- bootstrap reduzido para 89 linhas e quatro requires diretos;
+- flags de Search/Public Preview/Word Cloud/H-030 preservadas;
+- nenhum runner removido do source/package ainda;
+- nenhuma mudança em dados, ranking, conteúdo editorial, endpoint, cutover ou retirement.
+
+Testes adicionados:
+
+- `tests/unit/spec006-p640-runtime-module-registry.php`;
+- `tests/unit/spec006-p640-modular-runtime.php`.
+
+Validação disponível nesta sessão:
+
+- PHP lint + smoke independente do Runtime_Module_Registry: PASS;
+- inspeção estrutural do bootstrap/ownership: PASS;
+- WPCS/PHPUnit completos: NOT_RUN nesta sessão por ausência local das dependências e ausência de workflow ativo no branch.
+
+Próximo passo exato:
+
+P640-06 — executar static contracts, full plugin PHP lint, WPCS nos arquivos alterados e PHPUnit foundation. Somente após PASS avançar para P640-07 e considerar atualização de PROD-005.

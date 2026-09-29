@@ -4,7 +4,7 @@
 
 - [x] Pré-requisito: SPEC-005 CLOSED/main.
 - [x] P-600 Plugin Metadata/License — PASS
-- [ ] P-610 Tooling/WPCS/PHPUnit
+- [x] P-610 Tooling/WPCS/PHPUnit — PASS / legacy debt inventoried
 - [ ] P-620 Plugin Check
 - [ ] P-630 Domain Closure
 - [ ] P-640 Modular Runtime
@@ -21,3 +21,14 @@
 - [x] P600-05 adicionar teste estático.
 - [x] P600-06 executar validação local consolidada — PASS.
 - [x] P600-07 registrar evidência e fechar P-600 — `evidence/spec006-p600-metadata-license-pass-20260929.json`.
+
+## P-610 closeout
+
+- [x] Composer validate/install on PHP 8.1.
+- [x] PHPUnit 10.5 baseline — 2 tests / 6 assertions PASS.
+- [x] WPCS 3.4 bounded baseline PASS.
+- [x] PHPStan 2.2 level 5 bounded baseline PASS.
+- [x] full-plugin WPCS debt measured — 11,718 errors / 7,118 warnings / 121 files.
+- [x] bulk PHPCBF explicitly forbidden.
+- [x] evidence: `evidence/spec006-p610-tooling-pass-20260929.json`.
+- [ ] P-620 Plugin Check — next active gate.

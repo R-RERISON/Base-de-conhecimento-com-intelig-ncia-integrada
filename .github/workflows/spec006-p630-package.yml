@@ -35,6 +35,6 @@ jobs:
           retention-days: 7
           if-no-files-found: error
           path: |
-            dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-p630.1.zip
-            dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-p630.1.manifest.json
+            dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-p630.2.zip
+            dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-p630.2.manifest.json
             dist/p630-local-package-validation.json

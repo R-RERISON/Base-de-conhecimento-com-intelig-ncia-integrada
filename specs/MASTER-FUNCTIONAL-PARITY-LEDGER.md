@@ -8,10 +8,10 @@ PARITY_VERIFIED | IMPROVED_VERIFIED | SUPERSEDED_WITH_EVIDENCE | PARTIAL | GAP |
 
 | ID | Referência | Capability | Estado BDC | Destino | Blocker |
 |---|---|---|---|---|---|
-| GRE-001 | GRE 0.8 | oito campos estruturados | PARTIAL | SPEC-006 | SIM |
+| GRE-001 | GRE 0.8 | oito campos estruturados | PARITY_VERIFIED | SPEC-006 / P-630 | NÃO |
 | GRE-002 | GRE 0.8 | Objective Provider/evento | SUPERSEDED_WITH_EVIDENCE | serviços internos | NÃO |
 | GRE-003 | GRE 0.8 | Summary Provider | PARTIAL | SPEC-006 | SIM |
-| GRE-004 | GRE 0.8 | Helpful Tips read/write | PARTIAL | SPEC-006 | SIM |
+| GRE-004 | GRE 0.8 | Helpful Tips read/write | PARITY_VERIFIED | SPEC-006 / P-630 | NÃO |
 | GRE-005 | GRE 0.8 | Coverage Dashboard | GAP | SPEC-006/007 | SIM |
 | GRE-006 | GRE 0.8 | rail público | PARTIAL | SPEC-007 | SIM |
 | GRE-007 | GRE 0.8 | shortcode/fallback | UNKNOWN_ENVIRONMENTAL | SPEC-007/014 | CONDICIONAL |
@@ -19,7 +19,7 @@ PARITY_VERIFIED | IMPROVED_VERIFIED | SUPERSEDED_WITH_EVIDENCE | PARTIAL | GAP |
 | KB2-002 | KB2Ops 0.2.1 | Knowledge Studio | PARTIAL | SPEC-006/007 | SIM |
 | KB2-003 | KB2Ops 0.2.1 | Review/Governança | IMPROVED_VERIFIED | SPEC-003 | NÃO |
 | KB2-004 | KB2Ops 0.2.1 | AI READY/include_ai | GAP | SPEC-012 | CONDICIONAL |
-| KB2-005 | KB2Ops 0.2.1 | service/technologies/keywords/versions | PARTIAL | SPEC-006 | SIM |
+| KB2-005 | KB2Ops 0.2.1 | service/technologies/keywords/versions | SUPERSEDED_WITH_EVIDENCE | SPEC-006 / P-630 | NÃO |
 | KB2-006 | KB2Ops 0.2.1 | pre-analysis/checklist | PARTIAL | SPEC-006/012 | SIM |
 | KB2-007 | KB2Ops 0.2.1 | reports/top viewed/searches | PARTIAL | SPEC-008 | CONDICIONAL |
 | KB2-008 | KB2Ops 0.2.1 | Search/Portal aliases | UNKNOWN_ENVIRONMENTAL | SPEC-007/014 | CONDICIONAL |
@@ -125,3 +125,39 @@ Evidence:
 - `evidence/spec006-p620-plugin-check-disposition-20260929.json`.
 
 PARTIAL remains a cutover/release blocker.
+
+### SPEC-006 P-630 Domain Closure status — 2026-09-29
+
+Environmental acceptance:
+- WordPress 6.9.4;
+- PHP 8.5.10;
+- plugin 0.6.0-dev;
+- 606 posts;
+- 20 sampled posts;
+- store errors = 0;
+- facts/tips noop writers PASS;
+- public reader canonical alignment PASS;
+- domain state unchanged.
+
+Corpus observations:
+- affected_service canonical = 7;
+- affected_service legacy fallback = 0;
+- systems_involved = 6;
+- technologies/keywords/versions = 0;
+- Helpful Tips = 7 posts / 14 items;
+- Coverage = 590 EMPTY / 16 PARTIAL / 0 COMPLETE.
+
+Ledger disposition:
+- GRE-001 -> `PARITY_VERIFIED`: eight-field Coverage read model is implemented over canonical owners. Corpus completeness is tracked separately from capability parity.
+- GRE-004 -> `PARITY_VERIFIED`: canonical Helpful Tips read/write, validation, read-after-write and rollback are established.
+- KB2-005 -> `SUPERSEDED_WITH_EVIDENCE`: BDC owns affected_service and adopts technologies/keywords/versions physical keys without runtime KB2Ops dependency; `_kb2ops_service` remains read-only fallback only.
+- GRE-003, GRE-005, KB2-002 and KB2-006 remain open by scope and continue to block their applicable cutover paths.
+
+Evidence:
+- `evidence/spec006-p630-local-domain-closure-pass-20260929.json`;
+- `evidence/spec006-p630-environmental-package-20260929.json`;
+- `evidence/spec006-p630-domain-closure-pass-20260929.json`;
+- `specs/006-premium-product-foundation/p630-closeout-20260929.md`.
+
+P-630 does **not** authorize public cutover or GRE/KB2Ops retirement. Those decisions remain gated by the remaining Ledger rows and SPEC-014.
+

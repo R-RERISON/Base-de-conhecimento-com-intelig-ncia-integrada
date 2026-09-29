@@ -25,20 +25,20 @@ $checks = array(
 	'no_filesystem_discovery' => ! str_contains( $registry, 'glob(' ) && ! str_contains( $registry, 'RecursiveDirectoryIterator' ),
 	'no_reflection' => ! str_contains( $registry, 'ReflectionClass' ),
 	'no_database_state' => ! str_contains( $registry, 'get_option(' ) && ! str_contains( $registry, 'update_option(' ),
-	'search_module' => str_contains( $registry, "'search' => array(" )
-		&& str_contains( $registry, "'flag' => 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD'" )
+	'search_module' => str_contains( $registry, "\$definitions['search'] = self::module(" )
+		&& str_contains( $registry, "'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD'" )
 		&& str_contains( $registry, 'Search_Lifecycle::class' )
 		&& str_contains( $registry, 'Search_Anchor_Manager::class' ),
-	'public_preview_module' => str_contains( $registry, "'public_experience_preview' => array(" )
-		&& str_contains( $registry, "'flag' => 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD'" )
+	'public_preview_module' => str_contains( $registry, "\$definitions['public_experience_preview'] = self::module(" )
+		&& str_contains( $registry, "'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD'" )
 		&& str_contains( $registry, 'Public_Search_Facade::class' )
 		&& str_contains( $registry, 'Public_Experience::class' ),
-	'word_cloud_module' => str_contains( $registry, "'word_cloud' => array(" )
-		&& str_contains( $registry, "'flag' => 'BDC_KB_WORD_CLOUD_BUILD'" )
+	'word_cloud_module' => str_contains( $registry, "\$definitions['word_cloud'] = self::module(" )
+		&& str_contains( $registry, "'BDC_KB_WORD_CLOUD_BUILD'" )
 		&& str_contains( $registry, 'Word_Cloud_Service::class' )
 		&& str_contains( $registry, 'Word_Cloud_Admin::class' ),
-	'explicit_missing_file_failure' => str_contains( $registry, "throw new \\RuntimeException( 'Arquivo obrigatório do módulo ausente:" ),
-	'unknown_module_failure' => str_contains( $registry, "throw new \\InvalidArgumentException( 'Módulo de runtime desconhecido:" ),
+	'explicit_missing_file_failure' => str_contains( $registry, 'Arquivo obrigatório do módulo ausente: %s' ),
+	'unknown_module_failure' => str_contains( $registry, 'Módulo de runtime desconhecido: %s' ),
 	'bootstrap_loads_registry' => str_contains( $bootstrap, "require_once BDC_KB_DIR . 'includes/class-runtime-module-registry.php';" ),
 	'bootstrap_routes_search' => str_contains( $bootstrap, "\\BDC\\KnowledgeBase\\Runtime_Module_Registry::load( 'search' );" )
 		&& str_contains( $bootstrap, "\\BDC\\KnowledgeBase\\Runtime_Module_Registry::register( 'search' );" ),

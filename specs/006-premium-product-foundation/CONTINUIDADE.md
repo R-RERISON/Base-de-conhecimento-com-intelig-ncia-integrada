@@ -6,7 +6,7 @@
 - branch ativa: `spec006-premium-product-foundation`;
 - versão source: `0.6.0-dev`;
 - runtime P640 validado em: `de1a051a876e514c5545756c08bcb734b448335a`;
-- o HEAD documental é posterior ao commit validado; confirmar o HEAD antes de escrever.
+- confirmar o HEAD antes de qualquer nova alteração; gates P640 devem ser executados LOCALMENTE, nunca por GitHub Actions.
 
 ## Estado comprovado
 
@@ -21,9 +21,9 @@
   - P640-03: PASS — módulos de produto extraídos.
   - P640-04: PASS — Engineering_Module_Loader.
   - P640-05: PASS — Core_Runtime_Loader/composition root.
-  - P640-06: REABERTO — executar localmente; evidência anterior invalidada.
-  - P640-07: resultado ambiental funcional PASS recebido; fechamento bloqueado até package local conforme.
-  - P640-08: pendente após evidência ambiental.
+  - P640-06: REABERTO — executor local canônico implementado; static/lint local parcial PASS, WPCS/PHPUnit bloqueados por tooling ausente nesta sessão.
+  - P640-07: resultado ambiental funcional PASS recebido e versionado; fechamento bloqueado até package reconstruído/validado localmente.
+  - P640-08: ferramenta de inventory implementada; fechamento aguarda P640-06/P640-07 conformes.
 - P-650/P-660/P-670: pendentes.
 
 ## P-630 fechado
@@ -82,7 +82,26 @@ Princípio de negação preservado:
 - sem Composer obrigatório em runtime;
 - sem endpoint novo.
 
-## P640-06 — correção de governança
+## P640-06 — execução local obrigatória
+
+Executor canônico:
+
+- `tools/homologation/spec006/validate-p640-local.py`;
+- falha fechado se `vendor/bin/phpcs` ou `vendor/bin/phpunit` não existirem;
+- executa contratos estáticos, lint completo, WPCS afetado, PHPUnit e build determinístico;
+- grava evidência local;
+- não usa GitHub Actions.
+
+Evidência parcial real desta sessão:
+
+- `evidence/spec006-p640-local-revalidation-partial-20260929.json`;
+- registry static contract: 14/14 PASS;
+- modular runtime contract: 15/15 PASS;
+- PHP lint: 131/131 PASS;
+- Composer/PHPCS/PHPUnit: indisponíveis neste runtime;
+- P640-06 permanece ABERTO.
+
+## Correção de governança
 
 A execução anterior via workflow remoto foi invalidada. O padrão do projeto exige gates locais, reproduzíveis e com evidência.
 
@@ -105,6 +124,22 @@ Resultados:
 Evidência:
 
 - `evidence/spec006-p640-local-validation-pass-20260929.json`.
+
+## P640-07 — ambiental
+
+JSON recebido do ambiente:
+
+- `evidence/spec006-p640-environmental-functional-pass-pending-local-package-20260929.json`;
+- WordPress 6.9.4;
+- PHP 8.5.10;
+- plugin 0.6.0-dev;
+- Search/Public Preview/Word Cloud PASS;
+- todas as assertions true;
+- content_mutation=false;
+- data_migration=false;
+- cutover/retirement=false.
+
+Esse resultado é funcionalmente PASS, mas o gate não fecha até reconciliar com package construído pelo executor local.
 
 ## Pacote P640-07 — NÃO CONFORME PARA FECHAMENTO
 
@@ -174,3 +209,34 @@ Estado: P640-02..05 implementados. P640-06 REABERTO por não conformidade do mec
 Se o usuário anexar o JSON P640 ambiental, validar o artefato como fonte de verdade, fechar P640-07 somente se todas as assertions aplicáveis passarem, executar P640-08 inventory, atualizar o Master Ledger com evidência e então avançar para P-650.
 
 Nunca autorizar cutover ou retirement por inferência.
+
+
+## P640-08 — inventory preparado
+
+Ferramenta:
+- `tools/homologation/spec006/inventory-p640-package-runtime.py`.
+
+Diagnóstico atual:
+- 150 arquivos no plugin;
+- 131 PHP;
+- 42 PHP core declarados;
+- 25 PHP de módulos de produto;
+- 46 PHP de engenharia/homologação;
+- zero arquivos de engenharia ausentes;
+- zero overlap core/product/engineering;
+- 15 PHP fora das três fronteiras, agora classificados para disposition em P-650;
+- nenhuma exclusão física autorizada em P-640.
+
+## Próximo passo exato atualizado
+
+1. em um checkout local com Composer dependencies instaladas, executar:
+   `python tools/homologation/spec006/validate-p640-local.py`;
+2. exigir status PASS e JSON local;
+3. usar o ZIP gerado localmente para reconciliar/repetir P640-07;
+4. executar:
+   `python tools/homologation/spec006/inventory-p640-package-runtime.py`;
+5. fechar P640-08 apenas após PASS;
+6. somente então considerar promoção de PROD-005 e ativar P-650.
+
+Regra operacional explícita:
+- NÃO usar GitHub Actions como executor de gate neste projeto.

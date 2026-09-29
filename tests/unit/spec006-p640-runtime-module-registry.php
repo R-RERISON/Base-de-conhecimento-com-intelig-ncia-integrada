@@ -1,0 +1,56 @@
+<?php
+/**
+ * Contrato estático do Runtime Module Registry / P640-02.
+ *
+ * @package BDC_Knowledge_Base
+ */
+
+declare(strict_types=1);
+
+$root = dirname( __DIR__, 2 );
+$plugin = $root . '/plugin/base-conhecimento-inteligencia-integrada';
+$registry_path = $plugin . '/includes/class-runtime-module-registry.php';
+$bootstrap_path = $plugin . '/base-conhecimento-inteligencia-integrada.php';
+
+$registry = file_get_contents( $registry_path );
+$bootstrap = file_get_contents( $bootstrap_path );
+
+if ( ! is_string( $registry ) || ! is_string( $bootstrap ) ) {
+	fwrite( STDERR, 'Unable to read P640-02 files.' . PHP_EOL );
+	exit( 1 );
+}
+
+$checks = array(
+	'registry_class' => str_contains( $registry, 'final class Runtime_Module_Registry' ),
+	'no_filesystem_discovery' => ! str_contains( $registry, 'glob(' ) && ! str_contains( $registry, 'RecursiveDirectoryIterator' ),
+	'no_reflection' => ! str_contains( $registry, 'ReflectionClass' ),
+	'no_database_state' => ! str_contains( $registry, 'get_option(' ) && ! str_contains( $registry, 'update_option(' ),
+	'search_module' => str_contains( $registry, "'search' => array(" )
+		&& str_contains( $registry, "'flag' => 'BDC_KB_SPEC005_G530_SEARCH_ENGINE_BUILD'" )
+		&& str_contains( $registry, 'Search_Lifecycle::class' )
+		&& str_contains( $registry, 'Search_Anchor_Manager::class' ),
+	'public_preview_module' => str_contains( $registry, "'public_experience_preview' => array(" )
+		&& str_contains( $registry, "'flag' => 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD'" )
+		&& str_contains( $registry, 'Public_Search_Facade::class' )
+		&& str_contains( $registry, 'Public_Experience::class' ),
+	'word_cloud_module' => str_contains( $registry, "'word_cloud' => array(" )
+		&& str_contains( $registry, "'flag' => 'BDC_KB_WORD_CLOUD_BUILD'" )
+		&& str_contains( $registry, 'Word_Cloud_Service::class' )
+		&& str_contains( $registry, 'Word_Cloud_Admin::class' ),
+	'explicit_missing_file_failure' => str_contains( $registry, "throw new \\RuntimeException( 'Arquivo obrigatório do módulo ausente:" ),
+	'unknown_module_failure' => str_contains( $registry, "throw new \\InvalidArgumentException( 'Módulo de runtime desconhecido:" ),
+	'bootstrap_loads_registry' => str_contains( $bootstrap, "require_once BDC_KB_DIR . 'includes/class-runtime-module-registry.php';" ),
+	'bootstrap_not_migrated_yet' => str_contains( $bootstrap, "require_once BDC_KB_DIR . 'includes/class-search-query-normalizer.php';" )
+		&& str_contains( $bootstrap, "require_once BDC_KB_DIR . 'includes/class-public-experience.php';" ),
+);
+
+$failed = 0;
+foreach ( $checks as $name => $pass ) {
+	echo ( $pass ? 'PASS ' : 'FAIL ' ) . $name . PHP_EOL;
+	if ( ! $pass ) {
+		++$failed;
+	}
+}
+
+echo PHP_EOL . 'RESULT passed=' . ( count( $checks ) - $failed ) . ' failed=' . $failed . PHP_EOL;
+exit( $failed > 0 ? 1 : 0 );

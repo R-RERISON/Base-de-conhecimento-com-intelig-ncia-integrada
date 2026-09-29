@@ -186,7 +186,7 @@ final class Modular_Runtime_Runner_P640 {
 			'content_mutation'     => false,
 			'data_migration'       => false,
 			'cutover_authorized'   => false,
-			'retiirement_authorized' => false,
+			'retirement_authorized' => false,
 			'next_gate_on_pass'    => 'P640_PACKAGE_RUNTIME_INVENTORY',
 		);
 	}

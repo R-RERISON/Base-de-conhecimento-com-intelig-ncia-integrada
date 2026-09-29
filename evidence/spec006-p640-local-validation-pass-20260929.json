@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "gate": "P-640",
   "phase": "LOCAL_VALIDATION_AND_PACKAGE",
-  "status": "PASS",
+  "status": "INVALIDATED",
   "date": "2026-09-29",
   "source_branch": "spec006-premium-product-foundation",
   "source_commit": "de1a051a876e514c5545756c08bcb734b448335a",
@@ -42,5 +42,12 @@
     "cutover_authorized": false,
     "retirement_authorized": false
   },
-  "next_gate": "P640_ENVIRONMENTAL_ACCEPTANCE"
+  "next_gate": "P640_ENVIRONMENTAL_ACCEPTANCE",
+  "reason": "P640-06 must be executed locally per project governance; prior remote workflow evidence is not admissible for gate closure.",
+  "may_be_used_to_close_gate": false,
+  "required_remediation": [
+    "Re-run P640-06 locally",
+    "Rebuild p640 package locally",
+    "Generate local reproducible evidence"
+  ]
 }

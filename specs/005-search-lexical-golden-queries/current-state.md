@@ -1,6 +1,6 @@
 # Estado atual — SPEC-005
 
-**Status:** ATIVA — G-590 CLOSED / G-585 DECOMMISSION READINESS  
+**Status:** ATIVA — G-590 CLOSED / G-585 INDEPENDENCE PASS / SPEC005_BOUNDARY_REVIEW  
 **Branch:** `spec005-section-retrieval-deeplink`  
 **Premium baseline:** `01508379f91a336b26b17268fb119458bd077f7e`
 
@@ -511,19 +511,68 @@ Evidence:
 - `../../evidence/g590-rc12-environmental-pass-review-20260928.json`;
 - `g590-closeout-20260928.md`.
 
-## Próximo passo — G-585
+## G-585 — environmental PASS / independence CLOSED
 
-G-585 deixa de estar pausado por G-590 e volta a ser o gate ativo de Decommission Readiness.
+RC15 executou em WordPress 6.9.4 / PHP 8.5.10 / MariaDB 12.2.2 com ASI manualmente desativado.
 
-G-590 não autoriza retirada do ASI. G-585 ainda deve comprovar:
-- ASI manualmente inativo;
-- zero runtime/storage dependency;
-- zero shortcode/template/page dependency bloqueante;
-- Home/candidate experience funcional;
-- Search/Golden/rebuild/lifecycle PASS sem ASI;
-- Master Functional Parity Ledger sem blocker aplicável ao cutover.
+Identity:
+- Product Version `0.5.1-rc.15`;
+- Evidence Schema `2.2.0`;
+- raw evidence SHA-256 `8b67afccf2c39c8b366bb4049447e1cdf12eaf83b6fb80974c98101bd03e3f93`.
 
-A evidência histórica g585.1/g585.2 continua válida como diagnóstico, mas deve ser reavaliada sobre a baseline pós-G-590.
+Candidate Public Experience:
+- control plane `wp-admin/admin.php?page=bdc-kb-public-experience-preview`;
+- template `templates/public-home-preview.php`;
+- template exists = true;
+- legacy markers = [];
+- does not use `the_content()`;
+- does not use `post_content`;
+- preview route declared = true;
+- legacy Home isolated = true;
+- candidate dependency zero = true.
+
+Legacy production Home:
+- page_on_front ID 41395 remains inventoried;
+- legacy marker `[asi_search_form]` remains detectable;
+- `blocking=false`;
+- legacy Home does not participate in T585.1 while candidate Public Experience remains isolated.
+
+Independence:
+- ASI active plugins = [];
+- loaded legacy symbols = [];
+- loaded legacy hooks = [];
+- T585 PASS;
+- T585.1 PASS;
+- T586 PASS.
+
+Search / rebuild / Golden / lifecycle:
+- corpus 623 / rows 623;
+- rebuild pass1 623 NO_CHANGE / 0 writes;
+- rebuild pass2 623 NO_CHANGE / 0 writes;
+- determinism 623 compared / 0 mismatch;
+- Search probes Windows 11, Pendrive, MSTeams = PASS;
+- Golden = PASS / 0 blocking / 0 warning / 0 technical failure;
+- depends_on_legacy=false;
+- external network=false;
+- query log=false;
+- lifecycle schema PASS;
+- disabled-module fallback = `wordpress_fallback/search_module_disabled`;
+- deactivation retains 623 rows and state.
+
+Gate:
+- T587 PASS;
+- T588 PASS;
+- T589 PASS;
+- T589.1 PASS;
+- T589.2 PASS;
+- status `PASS`;
+- G-585 = **INDEPENDENCE PASS / CLOSED**.
+
+Cutover:
+- `cutover_authorized=false`;
+- reason `MASTER_LEDGER_PREFLIGHT_REQUIRED`;
+- G-585 does not authorize physical ASI removal;
+- next gate `SPEC005_BOUNDARY_REVIEW`.
 
 ## Limites de escopo
 

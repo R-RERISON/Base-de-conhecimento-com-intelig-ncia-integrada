@@ -3,6 +3,8 @@ includes:
 
 parameters:
     level: 5
+    bootstrapFiles:
+        - tests/phpunit/bootstrap.php
     paths:
         - tests/phpunit
     excludePaths:

@@ -229,5 +229,4 @@ final class Modular_Runtime_Runner_P640 {
 	private static function put( array &$target, string $key, mixed $value ): void {
 		$target[ $key ] = $value;
 	}
-
 }

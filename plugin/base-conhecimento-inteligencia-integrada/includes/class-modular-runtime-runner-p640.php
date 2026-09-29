@@ -17,15 +17,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Modular_Runtime_Runner_P640 {
 
 	public const PAGE_SLUG = 'bdc-kb-p640-modular-runtime';
-	public const ACTION = 'bdc_kb_p640_export';
-	private const NONCE_ACTION = 'bdc_kb_p640_export';
-	private const NONCE_FIELD = 'bdc_kb_p640_nonce';
+	public const ACTION    = 'bdc_kb_p640_export';
 
+	private const NONCE_ACTION = 'bdc_kb_p640_export';
+	private const NONCE_FIELD  = 'bdc_kb_p640_nonce';
+
+	/**
+	 * Registra a superfície temporária de homologação.
+	 */
 	public static function register(): void {
 		add_action( 'admin_menu', array( self::class, 'register_menu' ) );
 		add_action( 'admin_post_' . self::ACTION, array( self::class, 'handle_export' ) );
 	}
 
+	/**
+	 * Registra o submenu temporário.
+	 */
 	public static function register_menu(): void {
 		add_submenu_page(
 			Admin_Page::PAGE_SLUG,
@@ -37,6 +44,9 @@ final class Modular_Runtime_Runner_P640 {
 		);
 	}
 
+	/**
+	 * Renderiza o gate P-640.
+	 */
 	public static function render(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'Você não tem permissão para executar este gate.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
@@ -53,6 +63,9 @@ final class Modular_Runtime_Runner_P640 {
 		echo '</div>';
 	}
 
+	/**
+	 * Executa o gate e baixa o JSON.
+	 */
 	public static function handle_export(): never {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'Você não tem permissão para executar este gate.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
@@ -64,18 +77,20 @@ final class Modular_Runtime_Runner_P640 {
 		nocache_headers();
 		header( 'Content-Type: application/json; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="bdc-kb-spec006-p640-modular-runtime-' . gmdate( 'Ymd-His' ) . '.json"' );
-		echo wp_json_encode( $report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		echo wp_json_encode( $report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Download JSON.
 		exit;
 	}
 
 	/**
+	 * Executa as verificações ambientais.
+	 *
 	 * @return array<string,mixed>
 	 */
 	public static function run(): array {
 		$definitions = Runtime_Module_Registry::definitions();
 
 		$modules = array(
-			'search' => self::module_state(
+			'search'                    => self::module_state(
 				'search',
 				array(
 					Search_Query_Normalizer::class,
@@ -94,7 +109,7 @@ final class Modular_Runtime_Runner_P640 {
 					Public_Experience::class,
 				)
 			),
-			'word_cloud' => self::module_state(
+			'word_cloud'                => self::module_state(
 				'word_cloud',
 				array(
 					Word_Cloud_Contract::class,
@@ -134,55 +149,58 @@ final class Modular_Runtime_Runner_P640 {
 			}
 		}
 
-		$core_pass = ! in_array( false, $core, true );
+		$core_pass           = ! in_array( false, $core, true );
 		$registry_shape_pass = array_keys( $definitions ) === array( 'search', 'public_experience_preview', 'word_cloud' );
 
 		$assertions = array(
-			'core_classes_loaded' => $core_pass,
-			'known_product_modules_exact' => $registry_shape_pass,
-			'enabled_product_modules_loaded' => $module_pass,
-			'search_enabled' => Runtime_Module_Registry::is_enabled( 'search' ),
-			'public_preview_enabled' => Runtime_Module_Registry::is_enabled( 'public_experience_preview' ),
-			'word_cloud_enabled' => Runtime_Module_Registry::is_enabled( 'word_cloud' ),
-			'engineering_gate_enabled' => defined( 'BDC_KB_SPEC006_P640_ENVIRONMENTAL_BUILD' ) && BDC_KB_SPEC006_P640_ENVIRONMENTAL_BUILD,
-			'legacy_elementor_reader_available' => class_exists( Elementor_Adapter::class ),
-			'editorial_writer_unchanged' => ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) || false === BDC_KB_ELEMENTOR_WRITER_ENABLED,
+			'core_classes_loaded'                  => $core_pass,
+			'known_product_modules_exact'          => $registry_shape_pass,
+			'enabled_product_modules_loaded'       => $module_pass,
+			'search_enabled'                       => Runtime_Module_Registry::is_enabled( 'search' ),
+			'public_preview_enabled'               => Runtime_Module_Registry::is_enabled( 'public_experience_preview' ),
+			'word_cloud_enabled'                   => Runtime_Module_Registry::is_enabled( 'word_cloud' ),
+			'engineering_gate_enabled'             => defined( 'BDC_KB_SPEC006_P640_ENVIRONMENTAL_BUILD' ) && BDC_KB_SPEC006_P640_ENVIRONMENTAL_BUILD,
+			'legacy_elementor_reader_available'    => class_exists( Elementor_Adapter::class ),
+			'editorial_writer_unchanged'           => ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) || false === BDC_KB_ELEMENTOR_WRITER_ENABLED,
 		);
 
 		$status = ! in_array( false, $assertions, true ) ? 'PASS' : 'FAIL';
 
 		return array(
-			'schema_version' => '1.0.0',
-			'gate' => 'P-640',
-			'status' => $status,
-			'generated_at' => gmdate( 'c' ),
-			'environment' => array(
+			'schema_version'       => '1.0.0',
+			'gate'                 => 'P-640',
+			'status'               => $status,
+			'generated_at'         => gmdate( 'c' ),
+			'environment'          => array(
 				'wordpress' => get_bloginfo( 'version' ),
-				'php' => PHP_VERSION,
-				'plugin' => BDC_KB_VERSION,
+				'php'       => PHP_VERSION,
+				'plugin'    => BDC_KB_VERSION,
 			),
-			'bootstrap' => array(
-				'composition_root' => 'Core_Runtime_Loader + Runtime_Module_Registry + Engineering_Module_Loader + Plugin',
+			'bootstrap'            => array(
+				'composition_root'     => 'Core_Runtime_Loader + Runtime_Module_Registry + Engineering_Module_Loader + Plugin',
 				'product_module_count' => count( $definitions ),
 			),
-			'core' => $core,
-			'modules' => $modules,
-			'assertions' => $assertions,
-			'content_mutation' => false,
-			'data_migration' => false,
-			'cutover_authorized' => false,
-			'retirement_authorized' => false,
-			'next_gate_on_pass' => 'P640_PACKAGE_RUNTIME_INVENTORY',
+			'core'                 => $core,
+			'modules'              => $modules,
+			'assertions'           => $assertions,
+			'content_mutation'     => false,
+			'data_migration'       => false,
+			'cutover_authorized'   => false,
+			'retiirement_authorized' => false,
+			'next_gate_on_pass'    => 'P640_PACKAGE_RUNTIME_INVENTORY',
 		);
 	}
 
 	/**
-	 * @param array<int,string> $classes Classes esperadas no módulo.
+	 * Avalia o estado de um módulo obrigatório neste gate.
+	 *
+	 * @param string            $module  Nome do módulo.
+	 * @param array<int,string> $classes Classes esperadas.
 	 * @return array<string,mixed>
 	 */
 	private static function module_state( string $module, array $classes ): array {
 		$enabled = Runtime_Module_Registry::is_enabled( $module );
-		$loaded = array();
+		$loaded  = array();
 
 		foreach ( $classes as $class_name ) {
 			$loaded[ $class_name ] = class_exists( $class_name );
@@ -193,7 +211,7 @@ final class Modular_Runtime_Runner_P640 {
 		return array(
 			'enabled' => $enabled,
 			'classes' => $loaded,
-			'pass' => $enabled && $classes_pass,
+			'pass'    => $enabled && $classes_pass,
 		);
 	}
 }

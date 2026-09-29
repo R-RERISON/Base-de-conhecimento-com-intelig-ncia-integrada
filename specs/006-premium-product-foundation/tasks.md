@@ -46,3 +46,18 @@
 - [x] UPGRADE.md routed to P-650 package pruning.
 - [x] Evidence: `evidence/spec006-p620-plugin-check-disposition-20260929.json`.
 - [ ] P-630 Domain Closure — next active gate.
+
+## P-630 closeout
+
+- [x] P630-01 contract/ownership.
+- [x] P630-02 Knowledge Facts canonical store.
+- [x] P630-03 Helpful Tips canonical read/write.
+- [x] P630-04 eight-field Coverage read model.
+- [x] P630-05 Public Article Reader consumes canonical facts owner.
+- [x] P630-06 Knowledge Workspace editing surface.
+- [x] P630-07 local regression/security — static contract + full PHP lint + WPCS new production classes + PHPUnit PASS.
+- [ ] P630-08 environmental acceptance — next active step.
+- [ ] P630-09 Master Ledger disposition after environmental evidence.
+
+Evidence:
+- `evidence/spec006-p630-local-domain-closure-pass-20260929.json`.

@@ -56,8 +56,9 @@
 - [x] P630-05 Public Article Reader consumes canonical facts owner.
 - [x] P630-06 Knowledge Workspace editing surface.
 - [x] P630-07 local regression/security — static contract + full PHP lint + WPCS new production classes + PHPUnit PASS.
-- [ ] P630-08 environmental acceptance — next active step.
+- [ ] P630-08 environmental acceptance — P630.2 homologation package READY; execute runner and attach JSON.
 - [ ] P630-09 Master Ledger disposition after environmental evidence.
 
 Evidence:
-- `evidence/spec006-p630-local-domain-closure-pass-20260929.json`.
+- `evidence/spec006-p630-local-domain-closure-pass-20260929.json`;
+- `evidence/spec006-p630-environmental-package-20260929.json`.

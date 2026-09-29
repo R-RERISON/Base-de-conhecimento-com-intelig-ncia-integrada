@@ -193,6 +193,10 @@ final class Engineering_Module_Loader {
 				'files' => array( 'includes/class-domain-closure-runner-p630.php' ),
 				'register' => array( Domain_Closure_Runner_P630::class ),
 			),
+			'BDC_KB_SPEC006_P640_ENVIRONMENTAL_BUILD' => array(
+				'files' => array( 'includes/class-modular-runtime-runner-p640.php' ),
+				'register' => array( Modular_Runtime_Runner_P640::class ),
+			),
 		);
 	}
 

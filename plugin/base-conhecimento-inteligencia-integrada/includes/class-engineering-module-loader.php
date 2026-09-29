@@ -175,10 +175,10 @@ final class Engineering_Module_Loader {
 	/**
 	 * Adiciona uma definição explícita.
 	 *
-	 * @param array $definitions Definições acumuladas.
+	 * @param array  $definitions Definições acumuladas.
 	 * @param string $flag Flag canônica.
-	 * @param array $files Arquivos do módulo.
-	 * @param array $register Entrypoints.
+	 * @param array  $files Arquivos do módulo.
+	 * @param array  $register Entrypoints.
 	 */
 	private static function add( array &$definitions, string $flag, array $files, array $register ): void {
 		$definitions[ $flag ] = array(

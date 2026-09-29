@@ -290,6 +290,6 @@
 - [x] G585-V2-04 manter `cutover_authorized=false` por contrato.
 - [x] G585-V2-05 corrigir next gate pós-PASS para `SPEC005_BOUNDARY_REVIEW`.
 - [x] G585-V2-06 adicionar static contract test.
-- [ ] G585-V2-07 preparar pacote determinístico de homologação sobre RC12.
+- [x] G585-V2-07 preparar pacote determinístico de homologação sobre RC12 — PASS; 0.5.1-rc.13 / g585.3-476370c09797; SHA-256 a94a9e6ec3603bd4b3f6f2f96187159d2a1d26121c0b658a61504dcf96317951.
 - [ ] G585-V2-08 executar em homologação com ASI manualmente desativado.
 - [ ] G585-V2-09 validar evidência ambiental e fechar G-585 como INDEPENDENCE PASS / DECOMMISSION NOT AUTHORIZED.

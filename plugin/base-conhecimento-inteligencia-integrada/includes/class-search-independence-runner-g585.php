@@ -97,17 +97,19 @@ final class Search_Independence_Runner_G585 {
 
 		$static_scan = self::runtime_static_scan();
 		$environment_probe = self::legacy_environment_probe();
+		$surface_probe = self::legacy_surface_dependency_probe();
 
 		$t585 = empty( $static_scan['matches'] )
 			&& empty( $environment_probe['loaded_symbols'] )
 			&& empty( $environment_probe['loaded_hooks'] );
+		$t585_1 = true === (bool) ( $surface_probe['dependency_zero'] ?? false );
 		$t586 = empty( $environment_probe['active_plugins'] );
 
-		$base = self::base_report( $static_scan, $environment_probe );
+		$base = self::base_report( $static_scan, $environment_probe, $surface_probe );
 
-		if ( ! $t585 || ! $t586 ) {
+		if ( ! $t585 || ! $t585_1 || ! $t586 ) {
 			$base['status'] = $t586 ? 'FAIL_DEPENDENCY_FOUND' : 'BLOCKED_LEGACY_ACTIVE';
-			$base['gate_result'] = self::gate_result( $t585, $t586, false, false, false, false );
+			$base['gate_result'] = self::gate_result( $t585, $t585_1, $t586, false, false, false, false );
 			$base['runner']['total_runtime_ms'] = round( ( microtime( true ) - $started ) * 1000, 4 );
 			return $base;
 		}
@@ -203,6 +205,7 @@ final class Search_Independence_Runner_G585 {
 			&& true === (bool) ( $deactivation['state_retained'] ?? false );
 
 		$t589_2 = $t585
+			&& $t585_1
 			&& $t586
 			&& $t587
 			&& $t588
@@ -222,7 +225,7 @@ final class Search_Independence_Runner_G585 {
 		);
 		$base['errors'] = $errors;
 		$base['throwables'] = $throwables;
-		$base['gate_result'] = self::gate_result( $t585, $t586, $t587, $t588, $t589, $t589_2 );
+		$base['gate_result'] = self::gate_result( $t585, $t585_1, $t586, $t587, $t588, $t589, $t589_2 );
 		$base['runner']['total_runtime_ms'] = round( ( microtime( true ) - $started ) * 1000, 4 );
 		$base['runner']['peak_memory_bytes'] = memory_get_peak_usage( true );
 
@@ -230,9 +233,9 @@ final class Search_Independence_Runner_G585 {
 	}
 
 	/** @return array<string,mixed> */
-	private static function base_report( array $static_scan, array $environment_probe ): array {
+	private static function base_report( array $static_scan, array $environment_probe, array $surface_probe ): array {
 		return array(
-			'schema_version' => '1.0.0',
+			'schema_version' => '2.0.0',
 			'gate' => 'G-585',
 			'mode' => 'spec005_independence_decommission_environmental',
 			'generated_at' => gmdate( 'c' ),
@@ -252,6 +255,12 @@ final class Search_Independence_Runner_G585 {
 			),
 			'static_runtime_scan' => $static_scan,
 			'legacy_environment' => $environment_probe,
+			'legacy_surface_dependencies' => $surface_probe,
+			'decommission_authorization' => array(
+				'authorized' => false,
+				'reason' => 'MASTER_LEDGER_PREFLIGHT_REQUIRED',
+				'interpretation' => 'G-585 prova independência técnica. Retirada física/cutover depende do Master Functional Parity Ledger e de gate explícito posterior.',
+			),
 			'rebuild' => array(),
 			'search_probes' => array(),
 			'golden' => array(),
@@ -270,7 +279,7 @@ final class Search_Independence_Runner_G585 {
 				'total_runtime_ms' => 0.0,
 				'peak_memory_bytes' => memory_get_peak_usage( true ),
 			),
-			'gate_result' => self::gate_result( false, false, false, false, false, false ),
+			'gate_result' => self::gate_result( false, false, false, false, false, false, false ),
 		);
 	}
 
@@ -320,6 +329,46 @@ final class Search_Independence_Runner_G585 {
 			'dependency_zero' => empty( $matches ),
 		);
 	}
+
+
+	/** @return array<string,mixed> */
+	private static function legacy_surface_dependency_probe(): array {
+		global $shortcode_tags;
+
+		$shortcodes = array();
+		foreach ( array_keys( is_array( $shortcode_tags ) ? $shortcode_tags : array() ) as $tag ) {
+			if ( self::looks_like_legacy_symbol( (string) $tag ) ) {
+				$shortcodes[] = (string) $tag;
+			}
+		}
+		sort( $shortcodes, SORT_STRING );
+
+		$front_page_id = (int) get_option( 'page_on_front', 0 );
+		$front_page = $front_page_id > 0 ? get_post( $front_page_id ) : null;
+		$front_page_markers = array();
+		if ( $front_page instanceof \WP_Post ) {
+			$front_page_markers = self::legacy_marker_labels( (string) $front_page->post_content );
+		}
+
+		$template_candidates = array();
+		foreach ( array( 'template_include', 'single_template', 'page_template' ) as $hook_name ) {
+			if ( self::looks_like_legacy_symbol( $hook_name ) ) {
+				$template_candidates[] = $hook_name;
+			}
+		}
+
+		return array(
+			'registered_legacy_shortcodes' => $shortcodes,
+			'front_page_id' => $front_page_id,
+			'front_page_legacy_markers' => $front_page_markers,
+			'legacy_template_hook_names' => $template_candidates,
+			'physical_legacy_storage_is_not_dependency' => true,
+			'dependency_zero' => empty( $shortcodes )
+				&& empty( $front_page_markers )
+				&& empty( $template_candidates ),
+		);
+	}
+
 
 	/** @return array<string,mixed> */
 	private static function legacy_environment_probe(): array {
@@ -577,6 +626,7 @@ final class Search_Independence_Runner_G585 {
 	/** @return array<string,bool|string> */
 	private static function gate_result(
 		bool $t585,
+		bool $t585_1,
 		bool $t586,
 		bool $t587,
 		bool $t588,
@@ -585,13 +635,15 @@ final class Search_Independence_Runner_G585 {
 	): array {
 		return array(
 			't585_static_runtime_dependency_zero' => $t585,
+			't585_1_surface_dependency_zero' => $t585_1,
 			't586_legacy_inactive' => $t586,
 			't587_search_golden_without_legacy' => $t587,
 			't588_rebuild_without_legacy' => $t588,
 			't589_lifecycle_rollback_without_legacy' => $t589,
 			't589_1_dependency_zero_evidence_generated' => true,
 			't589_2_g585_pass' => $t589_2,
-			'next_gate' => $t589_2 ? 'G-590' : 'G-585',
+			'cutover_authorized' => false,
+			'next_gate' => $t589_2 ? 'SPEC005_BOUNDARY_REVIEW' : 'G-585',
 		);
 	}
 

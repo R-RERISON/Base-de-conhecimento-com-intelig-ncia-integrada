@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-595",
+  "phase": "LOCAL_BOUNDARY_PACKAGE",
+  "status": "PASS",
+  "date": "2026-09-29",
+  "plugin_version": "0.5.1-rc.16",
+  "build_id": "g595.1-844e9f7516a1",
+  "source_commit": "844e9f7516a17b2bc5d094a508e3f699668eabbc",
+  "workflow_run_id": 36560701523,
+  "workflow_artifact_id": 11030155111,
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.5.1-rc.16-g595.1.zip",
+    "sha256": "55776bc68f972ccd5aadc0af31fbb09d272e9791472f8a1d562a81ca1ceff42e",
+    "deterministic_equal": true
+  },
+  "validation": {
+    "local_gate_count": 17,
+    "all_local_gates_pass": true,
+    "source_php_lint": {
+      "checked": 122,
+      "failed": 0
+    },
+    "zip_php_lint": {
+      "checked": 76,
+      "failed": 0
+    },
+    "t100e_regression": true,
+    "artifact_contract": true,
+    "g590_and_g585_co_packaged": true
+  },
+  "disposition": {
+    "t595_01_deterministic_build": true,
+    "t595_02_manifest_checksum": true,
+    "t595_03_spec001_005_regression": true,
+    "t595_04_environmental_boundary_smoke": false,
+    "t595_05_final_boundary_report": false,
+    "t595_06_human_merge_gate": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false
+  }
+}

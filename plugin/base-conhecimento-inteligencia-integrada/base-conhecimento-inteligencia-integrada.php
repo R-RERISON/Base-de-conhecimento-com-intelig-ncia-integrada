@@ -2,10 +2,14 @@
 /**
  * Plugin Name: Base de Conhecimento com Inteligência Integrada
  * Description: Base de Conhecimento com sumário, classificação, revisão, governança, estrutura editorial e recursos de inteligência integrados.
- * Version: 0.5.0-h030.1
+ * Plugin URI: https://github.com/R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
+ * Version: 0.6.0-dev
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: BDC
+ * License: GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Update URI: https://github.com/R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
  * Text Domain: bdc-knowledge-base
  */
 
@@ -13,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BDC_KB_VERSION', '0.5.0-h030.1' );
+define( 'BDC_KB_VERSION', '0.6.0-dev' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );

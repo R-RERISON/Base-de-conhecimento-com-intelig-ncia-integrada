@@ -1,0 +1,64 @@
+name: SPEC006 P640 Validation
+
+on:
+  push:
+    branches:
+      - spec006-premium-product-foundation
+    paths:
+      - ".github/workflows/spec006-p640-validation.yml"
+      - "tools/homologation/spec006/build-p640.py"
+      - "plugin/base-conhecimento-inteligencia-integrada/**"
+      - "tests/unit/spec006-p640-*.php"
+      - "tests/phpunit/**"
+      - "composer.json"
+      - "composer.lock"
+      - "phpcs.xml.dist"
+      - "phpunit.xml.dist"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: PHP version
+        run: php -v
+
+      - name: Install quality dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: P640 static contracts
+        run: |
+          php tests/unit/spec006-p640-runtime-module-registry.php
+          php tests/unit/spec006-p640-modular-runtime.php
+
+      - name: Full plugin PHP lint
+        run: |
+          find plugin/base-conhecimento-inteligencia-integrada -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: WPCS affected P640 runtime
+        run: |
+          vendor/bin/phpcs             plugin/base-conhecimento-inteligencia-integrada/base-conhecimento-inteligencia-integrada.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-core-runtime-loader.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-runtime-module-registry.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-engineering-module-loader.php             plugin/base-conhecimento-inteligencia-integrada/includes/class-modular-runtime-runner-p640.php             tests/unit/spec006-p640-runtime-module-registry.php             tests/unit/spec006-p640-modular-runtime.php
+
+      - name: PHPUnit foundation
+        run: vendor/bin/phpunit -c phpunit.xml.dist
+
+      - name: Build deterministic P640 package
+        run: python3 tools/homologation/spec006/build-p640.py
+
+      - name: Upload P640 homologation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spec006-p640-homologation
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.1.zip
+            dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.1.manifest.json
+            dist/p640-local-package-validation.json

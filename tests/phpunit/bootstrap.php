@@ -1,4 +1,7 @@
 <?php
+/**
+ * PHPUnit bootstrap for the BDC product foundation.
+ */
 
 declare(strict_types=1);
 

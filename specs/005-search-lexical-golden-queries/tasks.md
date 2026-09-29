@@ -115,21 +115,21 @@
 - [ ] UX005-A050 Astra Custom CSS não requerido.
 
 ## G-585 — ASI Independence / Decommission Readiness
-> PAUSED: G-585 não pode fechar antes de P-580A/UX-004 eliminarem perda funcional bloqueante.
-- [ ] T585 static scan runtime: zero `asi_*`, `asi4_*`, classes/functions/hooks ASI.
-- [ ] T586 desativar ASI em homologação.
-- [ ] T587 executar Search + Golden Suite com ASI ausente.
-- [ ] T588 rebuild do índice/projection própria com ASI ausente.
-- [ ] T589 comprovar rollback/lifecycle sem ASI.
-- [ ] T589.1 registrar evidência de dependency-zero.
-- [ ] T589.2 G-585 PASS antes de RC.
+> CLOSED: G-585 comprovou independência técnica do ASI. Decommission/cutover permanece NÃO AUTORIZADO até Master Functional Parity Ledger + boundary gate.
+- [x] T585 static scan/runtime dependency zero — PASS ambiental RC15.
+- [x] T586 ASI manualmente desativado em homologação — PASS.
+- [x] T587 Search + Golden Suite com ASI ausente — PASS; 3 probes PASS, Golden 13 resultados, 0 failures.
+- [x] T588 rebuild da Projection própria sem ASI — PASS; 623/623, pass1/pass2 NO_CHANGE, 0 mismatch.
+- [x] T589 lifecycle/rollback sem ASI — PASS; fallback honesto, rows/state retidos.
+- [x] T589.1 evidência dependency-zero gerada — PASS; schema 2.2.0.
+- [x] T589.2 G-585 PASS — INDEPENDENCE CLOSED; cutover_authorized=false.
 - [x] G585-PKG-01 contrato `g585-asi-independence-contract-v1.md` congelado.
 - [x] G585-PKG-02 runner nunca desativa/remove ASI automaticamente; bloqueia com `BLOCKED_LEGACY_ACTIVE`.
 - [x] G585-PKG-03 static runtime scan + loaded symbols/hooks + active plugin probe implementados.
 - [x] G585-PKG-04 Search + Golden + rebuild + lifecycle/rollback integrados ao runner.
 - [x] G585-PKG-05 29/29 checks locais; 59/59 PHP lint; 48/48 active requires.
 - [x] G585-PKG-06 build determinístico 2/2 — SHA-256 `cae86ef93572e9320efe89d8fed891e90be032e5d46e4aaccf6dca647bf62880`.
-- [ ] G585-ENV executar com ASI manualmente desativado e anexar JSON.
+- [x] G585-ENV RC15 executado com ASI manualmente desativado — PASS; evidence `bdc-kb-spec005-g585-independence-20260929-110406.json`; SHA-256 `8b67afccf2c39c8b366bb4049447e1cdf12eaf83b6fb80974c98101bd03e3f93`.
   - g585.1: FAIL CONTROLADO — ASI inativo, source BDC dependency-zero, porém símbolo carregado `BDC_KX_ASI_Adapter`; origem não atribuída.
   - g585.2: patch diagnóstico pronto; Reflection reporta source_scope/source_path; gate permanece bloqueante; reexecução requerida.
 
@@ -291,5 +291,7 @@
 - [x] G585-V2-05 corrigir next gate pós-PASS para `SPEC005_BOUNDARY_REVIEW`.
 - [x] G585-V2-06 adicionar static contract test.
 - [x] G585-V2-07 preparar pacote determinístico de homologação sobre RC12 — PASS; 0.5.1-rc.13 / g585.3-476370c09797; SHA-256 a94a9e6ec3603bd4b3f6f2f96187159d2a1d26121c0b658a61504dcf96317951.
-- [ ] G585-V2-08 executar em homologação com ASI manualmente desativado.
-- [ ] G585-V2-09 validar evidência ambiental e fechar G-585 como INDEPENDENCE PASS / DECOMMISSION NOT AUTHORIZED.
+- [x] G585-V2-08 executar em homologação com ASI manualmente desativado — RC15 PASS.
+- [x] G585-V2-09 validar evidência ambiental e fechar G-585 como INDEPENDENCE PASS / DECOMMISSION NOT AUTHORIZED — CLOSED em 2026-09-29.
+- [x] G585-V2-10 isolar Home legada 41395 como inventário não bloqueante; candidate surface = Public Experience Preview.
+- [ ] G585-V2-11 executar `SPEC005_BOUNDARY_REVIEW` / G-595 sem inferir autorização de cutover.

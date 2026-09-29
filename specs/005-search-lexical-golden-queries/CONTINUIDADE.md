@@ -1188,3 +1188,68 @@ If ASI is still active:
 
 Do not run G-585 yet. First close H-030 from environmental evidence.
 
+
+
+## Continuidade G-585 v2 — 2026-09-29
+
+Branch:
+- `spec005-g585-decommission-readiness-v2`;
+- base: `spec005-section-retrieval-deeplink @ 1ca6fa7df3cb81180364012b6b1e4a3fbfa1d5a2`.
+
+Estado comprovado:
+- G-590 PASS/CLOSED;
+- G-585 ativo novamente;
+- runner G-585 atualizado para Evidence Schema 2.0.0;
+- T585.1 Surface Dependency Zero implementado;
+- cutover explicitamente NÃO autorizado pelo runner;
+- próximo gate técnico após PASS: `SPEC005_BOUNDARY_REVIEW`.
+
+Arquivos principais:
+- `plugin/base-conhecimento-inteligencia-integrada/includes/class-search-independence-runner-g585.php`;
+- `g585-decommission-readiness-addendum-v2.md`;
+- `tests/unit/spec005-g585-decommission-readiness-v2.php`.
+
+Invariantes:
+- parent `lexical-ranker-v1.0.0` congelado;
+- nenhuma desativação automática do ASI;
+- nenhuma limpeza de storage legado;
+- nenhuma alteração editorial;
+- PASS de independência não equivale a decommission.
+
+Próximo passo exato:
+1. gerar pacote G-585 v2 pós-RC12;
+2. ASI deve ser desativado manualmente em homologação;
+3. executar Base de Conhecimento → Independência G-585;
+4. baixar JSON;
+5. exigir T585/T585.1/T586/T587/T588/T589/T589.2=true e errors/throwables vazios;
+6. manter `cutover_authorized=false`.
+
+
+### Pacote de homologação G-585 v2 — PASS local
+
+- Product Version: `0.5.1-rc.13`;
+- Build ID: `g585.3-476370c09797`;
+- source commit do build: `476370c09797f0f34c2ffbc1de8b5f9f06b29842`;
+- ZIP: `base-conhecimento-inteligencia-integrada-0.5.1-rc.13-g585.3.zip`;
+- SHA-256: `a94a9e6ec3603bd4b3f6f2f96187159d2a1d26121c0b658a61504dcf96317951`;
+- source PHP lint: 122/122;
+- ZIP PHP lint: 71/71;
+- static G-585 v2: PASS;
+- Search engine: PASS;
+- Golden: PASS;
+- runtime resources: PASS;
+- G-590 section regression: PASS;
+- T100E regression: PASS;
+- deterministic build: PASS.
+
+Evidência versionada:
+`evidence/g585-v2-local-package-validation-20260929.json`.
+
+Próxima ação humana:
+1. desativar manualmente o Advanced Search Intelligence em homologação;
+2. instalar/atualizar para `0.5.1-rc.13`;
+3. abrir **Base de Conhecimento → Independência G-585**;
+4. executar e baixar o JSON;
+5. anexar a evidência ambiental.
+
+G-585 continua OPEN até a execução ambiental.

@@ -116,6 +116,10 @@ namespace {
 	}
 	function wp_reset_postdata(): void {}
 	function is_wp_error( mixed $value ): bool { return $value instanceof WP_Error; }
+	function apply_filters( string $hook_name, mixed $value, mixed ...$args ): mixed {
+		unset( $hook_name, $args );
+		return $value;
+	}
 }
 
 namespace BDC\KnowledgeBase {

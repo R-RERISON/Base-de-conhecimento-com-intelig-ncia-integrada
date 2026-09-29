@@ -48,7 +48,7 @@ $checks = array(
 	'no_rewrite' => str_contains( $contract, "'rewrite'             => false" ),
 	'assign_cap_edit_posts' => str_contains( $contract, "'assign_terms' => 'edit_posts'" ),
 
-	'update_requires_object_capability' => str_contains( $store, "current_user_can( 'edit_post', $id )" ),
+	'update_requires_object_capability' => str_contains( $store, "current_user_can( 'edit_post', \$id )" ),
 	'unknown_field_rejected' => str_contains( $store, 'bdc_kb_classification_unknown_field' ),
 	'non_array_rejected' => str_contains( $store, 'bdc_kb_classification_invalid_value' ),
 	'too_many_terms_rejected' => str_contains( $store, 'bdc_kb_classification_too_many_terms' ),

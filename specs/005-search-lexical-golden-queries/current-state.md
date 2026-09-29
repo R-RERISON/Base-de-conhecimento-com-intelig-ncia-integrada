@@ -1,6 +1,6 @@
 # Estado atual — SPEC-005
 
-**Status:** ATIVA — G-590 CLOSED / G-585 DECOMMISSION READINESS  
+**Status:** G-595 PASS — SPEC-005 READY FOR HUMAN MERGE GATE  
 **Branch:** `spec005-section-retrieval-deeplink`  
 **Premium baseline:** `01508379f91a336b26b17268fb119458bd077f7e`
 
@@ -511,19 +511,68 @@ Evidence:
 - `../../evidence/g590-rc12-environmental-pass-review-20260928.json`;
 - `g590-closeout-20260928.md`.
 
-## Próximo passo — G-585
+## G-585 — environmental PASS / independence CLOSED
 
-G-585 deixa de estar pausado por G-590 e volta a ser o gate ativo de Decommission Readiness.
+RC15 executou em WordPress 6.9.4 / PHP 8.5.10 / MariaDB 12.2.2 com ASI manualmente desativado.
 
-G-590 não autoriza retirada do ASI. G-585 ainda deve comprovar:
-- ASI manualmente inativo;
-- zero runtime/storage dependency;
-- zero shortcode/template/page dependency bloqueante;
-- Home/candidate experience funcional;
-- Search/Golden/rebuild/lifecycle PASS sem ASI;
-- Master Functional Parity Ledger sem blocker aplicável ao cutover.
+Identity:
+- Product Version `0.5.1-rc.15`;
+- Evidence Schema `2.2.0`;
+- raw evidence SHA-256 `8b67afccf2c39c8b366bb4049447e1cdf12eaf83b6fb80974c98101bd03e3f93`.
 
-A evidência histórica g585.1/g585.2 continua válida como diagnóstico, mas deve ser reavaliada sobre a baseline pós-G-590.
+Candidate Public Experience:
+- control plane `wp-admin/admin.php?page=bdc-kb-public-experience-preview`;
+- template `templates/public-home-preview.php`;
+- template exists = true;
+- legacy markers = [];
+- does not use `the_content()`;
+- does not use `post_content`;
+- preview route declared = true;
+- legacy Home isolated = true;
+- candidate dependency zero = true.
+
+Legacy production Home:
+- page_on_front ID 41395 remains inventoried;
+- legacy marker `[asi_search_form]` remains detectable;
+- `blocking=false`;
+- legacy Home does not participate in T585.1 while candidate Public Experience remains isolated.
+
+Independence:
+- ASI active plugins = [];
+- loaded legacy symbols = [];
+- loaded legacy hooks = [];
+- T585 PASS;
+- T585.1 PASS;
+- T586 PASS.
+
+Search / rebuild / Golden / lifecycle:
+- corpus 623 / rows 623;
+- rebuild pass1 623 NO_CHANGE / 0 writes;
+- rebuild pass2 623 NO_CHANGE / 0 writes;
+- determinism 623 compared / 0 mismatch;
+- Search probes Windows 11, Pendrive, MSTeams = PASS;
+- Golden = PASS / 0 blocking / 0 warning / 0 technical failure;
+- depends_on_legacy=false;
+- external network=false;
+- query log=false;
+- lifecycle schema PASS;
+- disabled-module fallback = `wordpress_fallback/search_module_disabled`;
+- deactivation retains 623 rows and state.
+
+Gate:
+- T587 PASS;
+- T588 PASS;
+- T589 PASS;
+- T589.1 PASS;
+- T589.2 PASS;
+- status `PASS`;
+- G-585 = **INDEPENDENCE PASS / CLOSED**.
+
+Cutover:
+- `cutover_authorized=false`;
+- reason `MASTER_LEDGER_PREFLIGHT_REQUIRED`;
+- G-585 does not authorize physical ASI removal;
+- next gate `SPEC005_BOUNDARY_REVIEW`.
 
 ## Limites de escopo
 
@@ -535,3 +584,127 @@ Não entram em G-590:
 - AI/Foundry — SPEC-011+.
 
 Histórico detalhado dos gates fechados permanece nos respectivos closeouts e em `evidence/`; este arquivo representa apenas o estado canônico atual.
+
+
+## G-585 v2 — Decommission Readiness
+
+Em 2026-09-29 o G-585 foi rebaselineado sobre G-590 RC12.
+
+Contrato adicional:
+- `g585-decommission-readiness-addendum-v2.md`.
+
+Mudança central:
+- G-585 continua provando independência técnica do ASI;
+- adiciona T585.1 para dependências de superfície;
+- Evidence Schema passa a 2.0.0;
+- `cutover_authorized=false` permanece obrigatório mesmo em PASS;
+- retirada física do ASI depende de Master Functional Parity Ledger/preflight posterior;
+- próximo gate após PASS é `SPEC005_BOUNDARY_REVIEW`, não G-590.
+
+Branch de implementação:
+`spec005-g585-decommission-readiness-v2`.
+
+Próximo passo:
+preparar pacote de homologação pós-G590, executar com ASI manualmente inativo e validar T585/T585.1/T586/T587/T588/T589/T589.2.
+
+
+## G-595 — Boundary Review / RC16
+
+Boundary contract:
+- `g595-boundary-review-20260929.md`.
+
+RC16 local:
+- Product Version `0.5.1-rc.16`;
+- Build ID `g595.1-844e9f7516a1`;
+- source commit `844e9f7516a17b2bc5d094a508e3f699668eabbc`;
+- ZIP SHA-256 `55776bc68f972ccd5aadc0af31fbb09d272e9791472f8a1d562a81ca1ceff42e`;
+- G-590 + G-585 engineering runners co-packaged;
+- 17 local gates PASS;
+- T100E PASS;
+- source PHP lint 122/122;
+- ZIP PHP lint 76/76;
+- deterministic build PASS;
+- artifact contract PASS.
+
+Disposition:
+- T595-01 PASS;
+- T595-02 PASS;
+- T595-03 PASS;
+- T595-04 environmental boundary smoke = PENDING;
+- T595-05 final boundary report = PENDING;
+- T595-06 human merge gate = PENDING.
+
+Master Ledger:
+- SPEC-005 Search ownership pode fechar se o environmental smoke passar;
+- ASI retirement/cutover global permanece bloqueado por PARTIAL/GAP/UNKNOWN_ENVIRONMENTAL fora da SPEC-005;
+- `cutover_authorized=false` e `retirement_authorized=false` permanecem invariantes.
+
+Evidence:
+- `evidence/g595-rc16-local-boundary-package-20260929.json`.
+
+
+## G-595 — Environmental Boundary PASS
+
+RC16 homologation evidence confirmed G-590 + G-585 in the same package:
+
+### G-585
+- status PASS;
+- T585/T585.1/T586/T587/T588/T589/T589.1/T589.2 = true;
+- candidate surface dependency zero;
+- ASI inactive;
+- Search/Golden/rebuild/lifecycle PASS;
+- cutover_authorized=false.
+
+### G-590
+- T590-14..T590-19 = true;
+- corpus/posts 623/623;
+- extractor errors 0;
+- section count 1061;
+- generated anchors 883;
+- eligible probes 12;
+- section query failures 0;
+- deep-link failures 0;
+- visible text changes 0;
+- p50 151.1369 ms;
+- p95 243.4819 ms;
+- max 246.3799 ms;
+- post-level Golden PASS;
+- editorial fingerprint equal;
+- corpus IDs equal.
+
+Raw evidence SHA-256:
+- G-585: `09f8f6eedf5ca5317919a4a0282eb681106b4a28d0336803a525d44682e9d3b3`;
+- G-590: `92e8e05a0710d0a0314cb17caf776fa66620ae9ae2e2994c4e0fcf0141ad38d2`.
+
+G-595 disposition:
+- T595-01 PASS;
+- T595-02 PASS;
+- T595-03 PASS;
+- T595-04 PASS;
+- T595-05 PASS;
+- T595-06 HUMAN MERGE GATE = PENDING.
+
+SPEC-005 boundary is technically closed and ready for explicit human merge decision.  
+ASI retirement/public cutover remain blocked by the Master Functional Parity Ledger and SPEC-014.
+
+
+## ASI parity interpretation after G-595
+
+G-595 closes the SPEC-005 Search boundary, not global ASI parity.
+
+Master Ledger ASI coverage:
+- 22 total ASI capabilities;
+- 7 verified/improved in closed Search boundary;
+- 15 still not retirement-ready;
+- 12 GAP;
+- 3 PARTIAL.
+
+Remaining ownership:
+- SPEC-007: ASI-018 public live search + public environmental dependencies;
+- SPEC-008: ASI-007..017 except already closed core search — vocabulary, bindings, relevance, diagnostics, telemetry, outcomes, intelligence, privacy, Word Cloud;
+- SPEC-009: ASI-020..022 — durable operations, reconciliation, Site Health.
+
+Canonical map:
+- `asi-capability-closure-map-post-g595.md`.
+
+This distinction is mandatory: SPEC-005 CLOSED != ASI FULLY REPLACED.

@@ -77,11 +77,20 @@ Next active gate:
 ## P-640 modular runtime
 
 - [x] P640-01 baseline e contrato — `p640-modular-runtime-contract-v1.md`.
-- [ ] P640-02 implementar `Runtime_Module_Registry` mínimo.
-- [ ] P640-03 extrair módulos de produto do bootstrap.
-- [ ] P640-04 separar loaders de engenharia/homologação.
-- [ ] P640-05 reduzir bootstrap ao composition root.
-- [ ] P640-06 static contract + PHP lint + WPCS afetado.
+- [x] P640-02 implementar `Runtime_Module_Registry` mínimo.
+- [x] P640-03 extrair módulos de produto do bootstrap.
+- [x] P640-04 separar loaders de engenharia/homologação.
+- [x] P640-05 reduzir bootstrap ao composition root.
+- [ ] P640-06 static contract + PHP lint + WPCS afetado — ACTIVE.
 - [ ] P640-07 regressão das features habilitadas.
 - [ ] P640-08 package/runtime inventory para P-650.
 
+
+Implementation notes P640-02..05:
+- bootstrap reduzido para 89 linhas;
+- 4 requires diretos: Core_Runtime_Loader, Runtime_Module_Registry, Engineering_Module_Loader e Plugin;
+- Search/Public Preview/Word Cloud roteados pelo Runtime_Module_Registry;
+- 71 blocos condicionais de laboratório removidos do bootstrap e centralizados no Engineering_Module_Loader;
+- flags funcionais preservadas;
+- sem mudança de persistência, ranking, endpoint, cutover ou retirement;
+- contratos estáticos: `tests/unit/spec006-p640-runtime-module-registry.php` e `tests/unit/spec006-p640-modular-runtime.php`.

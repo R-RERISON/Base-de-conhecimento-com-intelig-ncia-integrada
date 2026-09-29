@@ -106,13 +106,14 @@ Evidência:
 
 - `evidence/spec006-p640-local-validation-pass-20260929.json`.
 
-## Pacote P640-07
+## Pacote P640-07 — NÃO CONFORME PARA FECHAMENTO
 
 - build: `0.6.0-dev-p640.1`;
 - arquivo: `base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.1.zip`;
 - SHA-256: `e22e599ae8ae212c8e9c87a522e4f04a63fe187344798191c7f2fe8051f2ef9a`;
 - manifest SHA-256: `3588e95412216dc4d24c741e8a3072a86d308e963bfe03955c6297c387798fa4`;
 - production_package: false;
+- proveniência: não conforme para gate; reconstruir localmente;
 - runner P640 habilitado somente no artefato de homologação.
 
 Instruções:
@@ -121,12 +122,12 @@ Instruções:
 
 ## Próximo passo exato
 
-P640-07:
+P640-06/P640-07:
 
-1. instalar/substituir o plugin no ambiente de homologação com o ZIP `p640.1`;
-2. acessar **Base de Conhecimento → P-640 Modular Runtime**;
-3. executar **Executar P-640 e baixar JSON**;
-4. anexar o JSON gerado.
+1. refazer P640-06 localmente;
+2. reconstruir o ZIP P640 localmente;
+3. reconciliar/repetir a homologação ambiental sobre o package local;
+4. somente então fechar P640-07.
 
 Após receber o JSON:
 

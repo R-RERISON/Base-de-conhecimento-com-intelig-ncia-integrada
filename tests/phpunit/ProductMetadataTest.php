@@ -1,6 +1,8 @@
 <?php
 /**
  * Product metadata contract tests.
+ *
+ * @package BDC_Knowledge_Base
  */
 
 declare(strict_types=1);
@@ -22,8 +24,8 @@ final class ProductMetadataTest extends TestCase {
 	 * Load the bootstrap source without booting WordPress.
 	 */
 	protected function setUp(): void {
-		$path              = BDC_TEST_ROOT . '/plugin/base-conhecimento-inteligencia-integrada/base-conhecimento-inteligencia-integrada.php';
-		$content           = file_get_contents( $path );
+		$path    = BDC_TEST_ROOT . '/plugin/base-conhecimento-inteligencia-integrada/base-conhecimento-inteligencia-integrada.php';
+		$content = file_get_contents( $path );
 		self::assertIsString( $content );
 		$this->bootstrap = $content;
 	}

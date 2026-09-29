@@ -21,8 +21,8 @@
   - P640-03: PASS — módulos de produto extraídos.
   - P640-04: PASS — Engineering_Module_Loader.
   - P640-05: PASS — Core_Runtime_Loader/composition root.
-  - P640-06: PASS — quality/local validation.
-  - P640-07: READY — environmental acceptance.
+  - P640-06: REABERTO — executar localmente; evidência anterior invalidada.
+  - P640-07: resultado ambiental funcional PASS recebido; fechamento bloqueado até package local conforme.
   - P640-08: pendente após evidência ambiental.
 - P-650/P-660/P-670: pendentes.
 
@@ -82,16 +82,15 @@ Princípio de negação preservado:
 - sem Composer obrigatório em runtime;
 - sem endpoint novo.
 
-## P640-06 — evidência
+## P640-06 — correção de governança
 
-Workflow transitório executado e removido após uso.
+A execução anterior via workflow remoto foi invalidada. O padrão do projeto exige gates locais, reproduzíveis e com evidência.
 
 Run PASS:
 
-- workflow run: `36594052314`;
-- workflow job: `109494263490`;
-- source commit: `de1a051a876e514c5545756c08bcb734b448335a`;
-- artifact ID: `11044918410`.
+- a evidência anterior não pode fechar P640-06;
+- source commit afetado: `de1a051a876e514c5545756c08bcb734b448335a`;
+- é obrigatório refazer static contracts, lint, WPCS, PHPUnit e build localmente.
 
 Resultados:
 
@@ -169,7 +168,7 @@ Antes de qualquer alteração:
 10. ler `specs/MASTER-FUNCTIONAL-PARITY-LEDGER.md`;
 11. ler este `CONTINUIDADE.md`.
 
-Estado: P640-06 PASS. Próximo gate é P640-07 environmental acceptance. O pacote `0.6.0-dev-p640.1` já foi construído deterministicamente e validado. Não reimplementar P640-02..06.
+Estado: P640-02..05 implementados. P640-06 REABERTO por não conformidade do mecanismo de execução; refazer localmente. O JSON ambiental P640 recebido indica PASS funcional, mas P640-07 não deve ser fechado até existir package local conforme. Não reimplementar P640-02..05.
 
 Se o usuário anexar o JSON P640 ambiental, validar o artefato como fonte de verdade, fechar P640-07 somente se todas as assertions aplicáveis passarem, executar P640-08 inventory, atualizar o Master Ledger com evidência e então avançar para P-650.
 

@@ -49,10 +49,10 @@ PARITY_VERIFIED | IMPROVED_VERIFIED | SUPERSEDED_WITH_EVIDENCE | PARTIAL | GAP |
 | ENV-002 | ambiente | Astra Additional CSS | PARTIAL | SPEC-007 | SIM |
 | ENV-003 | ambiente | Entra integration | PARTIAL | SPEC-007 | SIM |
 | ENV-004 | ambiente | GAC/WP Unified Indexer | UNKNOWN_ENVIRONMENTAL | SPEC-007/014 | SIM |
-| PROD-001 | BDC | metadata/license/update | GAP | SPEC-006 | SIM 1.0 |
-| PROD-002 | BDC | readme/license/changelog/security/contributing | GAP | SPEC-006 | SIM 1.0 |
-| PROD-003 | BDC | Composer/WPCS/PHPUnit/static | GAP | SPEC-006 | SIM 1.0 |
-| PROD-004 | BDC | Plugin Check | GAP | SPEC-006 | SIM RC |
+| PROD-001 | BDC | metadata/license/update | IMPROVED_VERIFIED | SPEC-006 / P-600 | NÃO |
+| PROD-002 | BDC | readme/license/changelog/security/contributing | IMPROVED_VERIFIED | SPEC-006 / P-600 | NÃO |
+| PROD-003 | BDC | Composer/WPCS/PHPUnit/static | PARTIAL | SPEC-006 / P-610/P-670 | SIM 1.0 |
+| PROD-004 | BDC | Plugin Check | PARTIAL | SPEC-006 / P-620/P-650/P-670 | SIM RC |
 | PROD-005 | BDC | modular production bootstrap | PARTIAL | SPEC-006 | SIM 1.0 |
 | PROD-006 | BDC | ZIP sem laboratório indevido | PARTIAL | SPEC-006 | SIM 1.0 |
 
@@ -96,3 +96,32 @@ ASI-003/004/005 foram promovidos de `PARTIAL` para `PARITY_VERIFIED`.
 
 Isso remove os três blockers de retrieval/identity/deep-link, mas **não autoriza ASI decommission**. G-585 e os demais blockers aplicáveis no Master Ledger continuam mandatórios.
 
+
+
+### SPEC-006 P-600 / P-610 / P-620 status — 2026-09-29
+
+P-600:
+- product source version `0.6.0-dev`;
+- metadata/license/update identity established;
+- readme/license/changelog/upgrade/security/contributing established;
+- PROD-001 and PROD-002 promoted to `IMPROVED_VERIFIED`.
+
+P-610:
+- Composer/PHPUnit/WPCS/PHPStan toolchain operational on PHP 8.1;
+- bounded quality baseline PASS;
+- full-plugin WPCS debt remains material;
+- PROD-003 promoted only to `PARTIAL`.
+
+P-620:
+- official WordPress Plugin Check executed;
+- identity/readme blockers remediated;
+- remaining findings explicitly routed to P-640/P-650/P-660;
+- production package is not Plugin Check clean;
+- PROD-004 promoted only to `PARTIAL`.
+
+Evidence:
+- `evidence/spec006-p600-metadata-license-pass-20260929.json`;
+- `evidence/spec006-p610-tooling-pass-20260929.json`;
+- `evidence/spec006-p620-plugin-check-disposition-20260929.json`.
+
+PARTIAL remains a cutover/release blocker.

@@ -7,8 +7,8 @@ from pathlib import Path
 
 PLUGIN_REL=Path("plugin/base-conhecimento-inteligencia-integrada")
 BOOTSTRAP="base-conhecimento-inteligencia-integrada.php"
-VERSION="0.5.1-rc.14"
-BUILD_LABEL="g585.4"
+VERSION="0.5.1-rc.15"
+BUILD_LABEL="g585.5"
 
 FLAGS_FALSE=(
 "BDC_KB_SPEC004_PROFILE_BUILD","BDC_KB_SPEC004_G220_SMOKE_BUILD","BDC_KB_SPEC004_G230_SMOKE_BUILD",

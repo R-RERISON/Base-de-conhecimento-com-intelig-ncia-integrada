@@ -104,7 +104,6 @@ final class Runtime_Module_Registry {
 	 * Carrega os arquivos declarados de um módulo habilitado.
 	 *
 	 * @param string $module Nome do módulo.
-	 * @throws \InvalidArgumentException Quando o módulo não é conhecido.
 	 * @throws \RuntimeException Quando um arquivo obrigatório não existe.
 	 */
 	public static function load( string $module ): void {
@@ -132,7 +131,6 @@ final class Runtime_Module_Registry {
 	 * Registra entrypoints de um módulo já carregado.
 	 *
 	 * @param string $module Nome do módulo.
-	 * @throws \InvalidArgumentException Quando o módulo não é conhecido.
 	 * @throws \RuntimeException Quando o entrypoint não é registrável.
 	 */
 	public static function register( string $module ): void {

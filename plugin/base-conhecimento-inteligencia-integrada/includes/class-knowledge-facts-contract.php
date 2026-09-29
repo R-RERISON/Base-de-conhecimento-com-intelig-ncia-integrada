@@ -77,6 +77,9 @@ final class Knowledge_Facts_Contract {
 
 	/**
 	 * Sanitize a canonical fact.
+	 *
+	 * @param string $value Raw fact value.
+	 * @return string Sanitized fact value.
 	 */
 	public static function sanitize_text( string $value ): string {
 		return trim( sanitize_textarea_field( $value ) );

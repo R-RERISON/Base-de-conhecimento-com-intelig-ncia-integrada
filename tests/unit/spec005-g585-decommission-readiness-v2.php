@@ -12,10 +12,14 @@ if ( ! is_string( $runner ) ) {
 }
 
 $checks = array(
-	'schema v2.1' => str_contains( $runner, "'schema_version' => '2.1.0'" ),
+	'schema v2.2' => str_contains( $runner, "'schema_version' => '2.2.0'" ),
 	'surface probe' => str_contains( $runner, 'legacy_surface_dependency_probe' ),
-	'safe front page evidence' => str_contains( $runner, "'front_page_legacy_evidence'" ),
-	'source fingerprint' => str_contains( $runner, "'front_page_content_sha256'" ),
+	'candidate public home' => str_contains( $runner, "'candidate_surface'" ),
+	'legacy home inventory' => str_contains( $runner, "'legacy_production_home_inventory'" ),
+	'legacy home non-blocking' => str_contains( $runner, "'blocking' => false" ),
+	'preview route isolation' => str_contains( $runner, "'legacy_home_isolated'" ),
+	'candidate dependency zero' => str_contains( $runner, 'candidate_dependency_zero' ),
+	'safe legacy evidence' => str_contains( $runner, 'legacy_marker_evidence' ),
 	'context sanitizer' => str_contains( $runner, 'sanitize_legacy_excerpt' ),
 	'shortcode locator' => str_contains( $runner, 'legacy_shortcode_tag_at_offset' ),
 	't585.1' => str_contains( $runner, "'t585_1_surface_dependency_zero'" ),

@@ -7,8 +7,8 @@
 |---|---|---|---|
 | Public Search | live search/as-you-type/cancel stale/loading/zero/error | IMPROVED_CANDIDATE | UX-004 v5/v6; environmental acceptance continues |
 | Public Search | public authorization facade | PLANNED_BLOCKING_CUTOVER | UX-004 H-030/H-050 |
-| Public Search | item/section results | PLANNED | SPEC-005 future retrieval gate; ASI parity tracked |
-| Public Search | exact anchor/deep-link | PLANNED | section/item retrieval gate |
+| Public Search | item/section results | PARITY_VERIFIED | G-590 RC12 environmental PASS; Search Section Projection v1.1 |
+| Public Search | exact anchor/deep-link | PARITY_VERIFIED | G-590 Deep-Link v2; generated/unresolved fail-closed; RC12 probes PASS |
 | Public Search | progressive disclosure/full-page continuity | PARITY_CANDIDATE | Public Experience candidate |
 | Home | plugin-owned portal/header | IMPROVED_CANDIDATE | UX-004 v6 human accepted |
 | Home | categories/latest/popular | PARITY_CANDIDATE | Public Home read models |
@@ -17,6 +17,7 @@
 | Word Cloud | search-event/interactions signals | PLANNED | telemetry/search-intelligence phase |
 | Word Cloud | governed vocabulary source | PLANNED | vocabulary/governance phase |
 | Retrieval | post-level lexical index/ranker | PARITY_IMPROVED | G-530..G-580 closed |
+| Retrieval | stable section identity | PARITY_VERIFIED | G-590 RC12; deterministic `section_key`; identity collisions 0 |
 | Query | bounded normalization | PARITY_IMPROVED | search-normalizer-v1.0.0 |
 | Query | aliases/vocabulary/bindings | PLANNED | governed relevance/vocabulary work |
 | Ranking | mutable explicit relevance controls | PLANNED | only with simulation/guardrails |

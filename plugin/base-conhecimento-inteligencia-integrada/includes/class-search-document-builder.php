@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Search_Document_Builder {
 
-	public const VERSION = 'search-document-v1.0.0';
+	public const VERSION = 'search-document-v1.1.0';
 
 	/** @var array<int,string> */
 	private const ALLOWED_STATUSES = array( 'publish', 'draft', 'pending', 'private', 'future' );
@@ -58,6 +58,25 @@ final class Search_Document_Builder {
 		$source_kind = $extractor_error ? 'unknown' : sanitize_key( (string) ( $extraction['source_kind'] ?? 'unknown' ) );
 		$fragments = $extractor_error ? array() : (array) ( $extraction['fragments'] ?? array() );
 
+		$structural_projection = array();
+		if ( ! $extractor_error && ! empty( $fragments ) ) {
+			$structural_projection = R260_Structural_Projector::project(
+				$post_id,
+				$source_kind,
+				$fragments,
+				''
+			);
+			if ( ! empty( $structural_projection['nodes'] ?? array() ) ) {
+				$rendered_html = self::rendered_content( $post );
+				$structural_projection = R260_Structural_Projector::project(
+					$post_id,
+					$source_kind,
+					$fragments,
+					$rendered_html
+				);
+			}
+		}
+
 		$material = $extractor_error
 			? self::raw_source_material( $post_id, (string) $post->post_content )
 			: (array) ( $extraction['source_material'] ?? self::raw_source_material( $post_id, (string) $post->post_content ) );
@@ -70,6 +89,7 @@ final class Search_Document_Builder {
 			'taxonomy_rows' => $taxonomy_rows,
 			'fragments' => $fragments,
 			'source_kind' => $source_kind,
+			'structural_projection' => $structural_projection,
 			'source_material' => $material,
 			'extractor_error' => $extractor_error,
 			'taxonomy_error' => $taxonomy_error,
@@ -77,6 +97,10 @@ final class Search_Document_Builder {
 
 		$document = self::compose( $components );
 		$document['diagnostics'] = array(
+			'section_count' => count( (array) ( $document['sections'] ?? array() ) ),
+			'structural_section_count' => (int) ( $structural_projection['projected_count'] ?? 0 ),
+			'structural_generated_anchor_count' => (int) ( $structural_projection['generated_anchor_count'] ?? 0 ),
+			'structural_unresolved_anchor_count' => (int) ( $structural_projection['unresolved_anchor_count'] ?? 0 ),
 			'extractor_error_code' => $extractor_error ? $extraction->get_error_code() : '',
 			'taxonomy_error_code' => $taxonomy_error ? $taxonomy->get_error_code() : '',
 			'extractor_warning_count' => $extractor_error ? 0 : count( (array) ( $extraction['warnings'] ?? array() ) ),
@@ -100,6 +124,9 @@ final class Search_Document_Builder {
 		$source_kind = sanitize_key( (string) ( $components['source_kind'] ?? 'unknown' ) );
 		$extractor_error = true === ( $components['extractor_error'] ?? false );
 		$taxonomy_error = true === ( $components['taxonomy_error'] ?? false );
+		$structural_projection = is_array( $components['structural_projection'] ?? null )
+			? $components['structural_projection']
+			: null;
 
 		$summary_raw = implode(
 			' ',
@@ -130,6 +157,14 @@ final class Search_Document_Builder {
 			}
 		}
 
+		$sections = Search_Section_Projector::project(
+			$post_id,
+			$fragments,
+			$source_kind,
+			'',
+			$structural_projection
+		);
+
 		$taxonomy_raw_parts = array();
 		foreach ( $taxonomy_rows as $row ) {
 			if ( ! is_array( $row ) ) {
@@ -156,6 +191,8 @@ final class Search_Document_Builder {
 			'headings_norm' => Search_Query_Normalizer::normalize_document_text( implode( ' ', $headings ) ),
 			'taxonomy_norm' => Search_Query_Normalizer::normalize_document_text( implode( ' ', $taxonomy_raw_parts ) ),
 			'body_norm' => Search_Query_Normalizer::normalize_document_text( implode( ' ', $body ) ),
+			'sections' => $sections,
+			'section_projection_version' => Search_Section_Projector::VERSION,
 			'document_version' => self::VERSION,
 			'normalizer_version' => Search_Query_Normalizer::VERSION,
 			'post_modified_gmt' => (string) ( $components['post_modified_gmt'] ?? '' ),
@@ -187,6 +224,8 @@ final class Search_Document_Builder {
 				'headings_norm' => $document['headings_norm'],
 				'taxonomy_norm' => $document['taxonomy_norm'],
 				'body_norm' => $document['body_norm'],
+				'sections' => $document['sections'],
+				'section_projection_version' => $document['section_projection_version'],
 				'document_state' => $document['document_state'],
 				'source_kind' => $document['source_kind'],
 				'document_version' => self::VERSION,
@@ -195,6 +234,27 @@ final class Search_Document_Builder {
 		);
 
 		return $document;
+	}
+
+	/**
+	 * Render somente para resolução de anchors estruturais durante rebuild explícito.
+	 * Não altera fonte editorial.
+	 */
+	private static function rendered_content( object $post ): string {
+		$previous_post = $GLOBALS['post'] ?? null;
+		$GLOBALS['post'] = $post;
+		setup_postdata( $post );
+
+		try {
+			return (string) apply_filters( 'the_content', (string) ( $post->post_content ?? '' ) );
+		} finally {
+			wp_reset_postdata();
+			if ( is_object( $previous_post ) ) {
+				$GLOBALS['post'] = $previous_post;
+			} else {
+				unset( $GLOBALS['post'] );
+			}
+		}
 	}
 
 	/**

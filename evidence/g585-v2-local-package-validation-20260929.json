@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "G-585-v2-PACKAGE",
+  "reviewed_at": "2026-09-29",
+  "disposition": "PASS_LOCAL_PACKAGE",
+  "product_version": "0.5.1-rc.13",
+  "build_id": "g585.3-476370c09797",
+  "source_commit": "476370c09797f0f34c2ffbc1de8b5f9f06b29842",
+  "artifact": {
+    "filename": "base-conhecimento-inteligencia-integrada-0.5.1-rc.13-g585.3.zip",
+    "sha256": "a94a9e6ec3603bd4b3f6f2f96187159d2a1d26121c0b658a61504dcf96317951",
+    "deterministic_equal": true,
+    "size_bytes": 206671
+  },
+  "validation": {
+    "source_php_lint": {"passed": 122, "failed": 0},
+    "zip_php_lint": {"passed": 71, "failed": 0},
+    "g585_v2_static_contract": "PASS",
+    "search_engine": "PASS",
+    "golden_gate": "PASS",
+    "runtime_resources": "PASS",
+    "g590_section_regression": "PASS",
+    "t100e_regression": "PASS",
+    "artifact_contract": "PASS"
+  },
+  "package_contract": {
+    "g585_runner_present": true,
+    "golden_resources_present": true,
+    "public_preview_runtime_present": true,
+    "g590_runner_absent": true,
+    "g570_runner_absent": true,
+    "g580_runner_absent": true,
+    "h030_runner_absent": true,
+    "p580_inventory_runner_absent": true
+  },
+  "interpretation": [
+    "Pacote local G-585 v2 aprovado para homologação.",
+    "Aprovação do pacote não fecha G-585.",
+    "Execução ambiental com ASI manualmente desativado continua obrigatória.",
+    "Mesmo com G-585 PASS, cutover_authorized deve permanecer false."
+  ]
+}

@@ -81,8 +81,8 @@ Next active gate:
 - [x] P640-03 extrair módulos de produto do bootstrap.
 - [x] P640-04 separar loaders de engenharia/homologação.
 - [x] P640-05 reduzir bootstrap ao composition root.
-- [ ] P640-06 static contract + PHP lint + WPCS afetado — ACTIVE.
-- [ ] P640-07 regressão das features habilitadas.
+- [x] P640-06 static contract + PHP lint + WPCS afetado — PASS.
+- [ ] P640-07 regressão/environmental acceptance das features habilitadas — pacote p640.1 READY.
 - [ ] P640-08 package/runtime inventory para P-650.
 
 
@@ -94,3 +94,14 @@ Implementation notes P640-02..05:
 - flags funcionais preservadas;
 - sem mudança de persistência, ranking, endpoint, cutover ou retirement;
 - contratos estáticos: `tests/unit/spec006-p640-runtime-module-registry.php` e `tests/unit/spec006-p640-modular-runtime.php`.
+
+P640-06 evidence:
+- workflow run `36594052314` — SUCCESS;
+- static registry contract: 14/14 PASS;
+- modular runtime contract: 15/15 PASS;
+- full plugin PHP lint: 131/131 PASS;
+- WPCS affected runtime: PASS;
+- PHPUnit foundation: PASS;
+- deterministic package: PASS;
+- package SHA-256: `e22e599ae8ae212c8e9c87a522e4f04a63fe187344798191c7f2fe8051f2ef9a`;
+- evidence: `evidence/spec006-p640-local-validation-pass-20260929.json`.

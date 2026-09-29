@@ -1223,3 +1223,33 @@ Próximo passo exato:
 4. baixar JSON;
 5. exigir T585/T585.1/T586/T587/T588/T589/T589.2=true e errors/throwables vazios;
 6. manter `cutover_authorized=false`.
+
+
+### Pacote de homologação G-585 v2 — PASS local
+
+- Product Version: `0.5.1-rc.13`;
+- Build ID: `g585.3-476370c09797`;
+- source commit do build: `476370c09797f0f34c2ffbc1de8b5f9f06b29842`;
+- ZIP: `base-conhecimento-inteligencia-integrada-0.5.1-rc.13-g585.3.zip`;
+- SHA-256: `a94a9e6ec3603bd4b3f6f2f96187159d2a1d26121c0b658a61504dcf96317951`;
+- source PHP lint: 122/122;
+- ZIP PHP lint: 71/71;
+- static G-585 v2: PASS;
+- Search engine: PASS;
+- Golden: PASS;
+- runtime resources: PASS;
+- G-590 section regression: PASS;
+- T100E regression: PASS;
+- deterministic build: PASS.
+
+Evidência versionada:
+`evidence/g585-v2-local-package-validation-20260929.json`.
+
+Próxima ação humana:
+1. desativar manualmente o Advanced Search Intelligence em homologação;
+2. instalar/atualizar para `0.5.1-rc.13`;
+3. abrir **Base de Conhecimento → Independência G-585**;
+4. executar e baixar o JSON;
+5. anexar a evidência ambiental.
+
+G-585 continua OPEN até a execução ambiental.

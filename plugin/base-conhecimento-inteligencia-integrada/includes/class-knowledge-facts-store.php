@@ -20,6 +20,9 @@ final class Knowledge_Facts_Store {
 	public const STATUS_FAIL_SAFE = 'FAIL_SAFE';
 
 	/**
+	 * Read the canonical fact snapshot.
+	 *
+	 * @param mixed $post_id Post ID candidate.
 	 * @return array{post_id:int,values:array<string,string>,sources:array<string,string>}|\WP_Error
 	 */
 	public static function read( mixed $post_id ): array|\WP_Error {
@@ -58,6 +61,9 @@ final class Knowledge_Facts_Store {
 	}
 
 	/**
+	 * Update canonical fact values and confirm the final state.
+	 *
+	 * @param mixed               $post_id Post ID candidate.
 	 * @param array<string,mixed> $changes Canonical changes.
 	 * @return array{status:string,state:array<string,mixed>,changed_fields:array<int,string>}|\WP_Error
 	 */
@@ -127,6 +133,8 @@ final class Knowledge_Facts_Store {
 	}
 
 	/**
+	 * Validate and sanitize all requested changes before the first write.
+	 *
 	 * @param array<string,mixed> $changes Raw changes.
 	 * @return array<string,string>|\WP_Error
 	 */
@@ -150,11 +158,24 @@ final class Knowledge_Facts_Store {
 		return $prepared;
 	}
 
+	/**
+	 * Read and normalize one physical metadata key.
+	 *
+	 * @param int    $post_id Post ID.
+	 * @param string $key     Metadata key.
+	 * @return string Normalized value.
+	 */
 	private static function read_key( int $post_id, string $key ): string {
 		$value = get_post_meta( $post_id, $key, true );
 		return is_scalar( $value ) ? trim( sanitize_textarea_field( (string) $value ) ) : '';
 	}
 
+	/**
+	 * Validate the target article.
+	 *
+	 * @param mixed $post_id Post ID candidate.
+	 * @return object WP_Post-like object or WP_Error; inspect with is_wp_error().
+	 */
 	private static function validate_post( mixed $post_id ): object {
 		$id = is_int( $post_id ) || ( is_string( $post_id ) && ctype_digit( $post_id ) )
 			? (int) $post_id
@@ -172,7 +193,12 @@ final class Knowledge_Facts_Store {
 	}
 
 	/**
-	 * @param array<string,mixed> $data Context.
+	 * Build a domain error.
+	 *
+	 * @param string              $code    Error code.
+	 * @param string              $message Human-readable message.
+	 * @param array<string,mixed> $data    Safe technical context.
+	 * @return \WP_Error Error instance.
 	 */
 	private static function error( string $code, string $message, array $data = array() ): \WP_Error {
 		return new \WP_Error( $code, $message, $data );

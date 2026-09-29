@@ -69,54 +69,12 @@ define( 'BDC_KB_FILE', __FILE__ );
 define( 'BDC_KB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
 
-require_once BDC_KB_DIR . 'includes/class-meta-contract.php';
-require_once BDC_KB_DIR . 'includes/class-summary-store.php';
-require_once BDC_KB_DIR . 'includes/class-knowledge-facts-contract.php';
-require_once BDC_KB_DIR . 'includes/class-knowledge-facts-store.php';
-require_once BDC_KB_DIR . 'includes/class-helpful-tips-store.php';
-require_once BDC_KB_DIR . 'includes/class-knowledge-details-admin.php';
-require_once BDC_KB_DIR . 'includes/class-coverage-read-model.php';
-require_once BDC_KB_DIR . 'includes/class-classification-contract.php';
-require_once BDC_KB_DIR . 'includes/class-classification-store.php';
-require_once BDC_KB_DIR . 'includes/class-classification-admin.php';
-require_once BDC_KB_DIR . 'includes/class-review-contract.php';
-require_once BDC_KB_DIR . 'includes/class-review-store.php';
-require_once BDC_KB_DIR . 'includes/class-review-admin.php';
-require_once BDC_KB_DIR . 'includes/class-content-normalizer.php';
-require_once BDC_KB_DIR . 'includes/class-shortcode-inspector.php';
-require_once BDC_KB_DIR . 'includes/class-hierarchy-relationships.php';
-require_once BDC_KB_DIR . 'includes/class-numbered-hierarchy-resolver.php';
-require_once BDC_KB_DIR . 'includes/class-legacy-html-adapter.php';
-require_once BDC_KB_DIR . 'includes/class-semantic-dom-expectation.php';
-require_once BDC_KB_DIR . 'includes/class-content-source.php';
-require_once BDC_KB_DIR . 'includes/class-elementor-adapter.php';
-require_once BDC_KB_DIR . 'includes/class-gutenberg-adapter.php';
-require_once BDC_KB_DIR . 'includes/class-content-extractor.php';
-require_once BDC_KB_DIR . 'includes/class-canonical-json.php';
-require_once BDC_KB_DIR . 'includes/class-semantic-structure.php';
-require_once BDC_KB_DIR . 'includes/class-knowledge-document.php';
-require_once BDC_KB_DIR . 'includes/class-block-projection-plan.php';
-require_once BDC_KB_DIR . 'includes/class-migration-fidelity-source.php';
-require_once BDC_KB_DIR . 'includes/class-core-block-lossless-serializer.php';
-require_once BDC_KB_DIR . 'includes/class-block-migration-stale-source-guard.php';
-require_once BDC_KB_DIR . 'includes/class-core-block-editorial-parity.php';
-require_once BDC_KB_DIR . 'includes/class-block-migration-journal.php';
-require_once BDC_KB_DIR . 'includes/class-block-migration-journal-store.php';
-require_once BDC_KB_DIR . 'includes/class-block-migration-dry-run.php';
-require_once BDC_KB_DIR . 'includes/class-block-migration-batch-plan.php';
-require_once BDC_KB_DIR . 'includes/class-block-migration-lock.php';
-require_once BDC_KB_DIR . 'includes/class-post-activity-registry.php';
-require_once BDC_KB_DIR . 'includes/class-post-management-context.php';
-require_once BDC_KB_DIR . 'includes/class-post-management-activities.php';
-require_once BDC_KB_DIR . 'includes/class-post-core-blocks-activity.php';
-// Historical Elementor migration contracts remain in source/evidence only.
-// The product runtime keeps Elementor_Adapter for legacy reads, but no longer
-// loads the obsolete Elementor-target migration family.
-require_once BDC_KB_DIR . 'includes/class-admin-page.php';
-require_once BDC_KB_DIR . 'includes/class-visual-foundation.php';
+require_once BDC_KB_DIR . 'includes/class-core-runtime-loader.php';
 require_once BDC_KB_DIR . 'includes/class-runtime-module-registry.php';
 require_once BDC_KB_DIR . 'includes/class-engineering-module-loader.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
+
+\BDC\KnowledgeBase\Core_Runtime_Loader::load();
 \BDC\KnowledgeBase\Runtime_Module_Registry::load( 'word_cloud' );
 
 \BDC\KnowledgeBase\Runtime_Module_Registry::load( 'search' );

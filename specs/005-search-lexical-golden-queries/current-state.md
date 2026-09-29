@@ -1,6 +1,6 @@
 # Estado atual — SPEC-005
 
-**Status:** ATIVA — G-590 CLOSED / G-585 INDEPENDENCE PASS / SPEC005_BOUNDARY_REVIEW  
+**Status:** ATIVA — G-590 CLOSED / G-585 CLOSED / G-595 BOUNDARY REVIEW  
 **Branch:** `spec005-section-retrieval-deeplink`  
 **Premium baseline:** `01508379f91a336b26b17268fb119458bd077f7e`
 
@@ -606,3 +606,38 @@ Branch de implementação:
 
 Próximo passo:
 preparar pacote de homologação pós-G590, executar com ASI manualmente inativo e validar T585/T585.1/T586/T587/T588/T589/T589.2.
+
+
+## G-595 — Boundary Review / RC16
+
+Boundary contract:
+- `g595-boundary-review-20260929.md`.
+
+RC16 local:
+- Product Version `0.5.1-rc.16`;
+- Build ID `g595.1-844e9f7516a1`;
+- source commit `844e9f7516a17b2bc5d094a508e3f699668eabbc`;
+- ZIP SHA-256 `55776bc68f972ccd5aadc0af31fbb09d272e9791472f8a1d562a81ca1ceff42e`;
+- G-590 + G-585 engineering runners co-packaged;
+- 17 local gates PASS;
+- T100E PASS;
+- source PHP lint 122/122;
+- ZIP PHP lint 76/76;
+- deterministic build PASS;
+- artifact contract PASS.
+
+Disposition:
+- T595-01 PASS;
+- T595-02 PASS;
+- T595-03 PASS;
+- T595-04 environmental boundary smoke = PENDING;
+- T595-05 final boundary report = PENDING;
+- T595-06 human merge gate = PENDING.
+
+Master Ledger:
+- SPEC-005 Search ownership pode fechar se o environmental smoke passar;
+- ASI retirement/cutover global permanece bloqueado por PARTIAL/GAP/UNKNOWN_ENVIRONMENTAL fora da SPEC-005;
+- `cutover_authorized=false` e `retirement_authorized=false` permanecem invariantes.
+
+Evidence:
+- `evidence/g595-rc16-local-boundary-package-20260929.json`.

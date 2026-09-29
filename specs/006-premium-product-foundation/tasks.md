@@ -5,7 +5,7 @@
 - [x] Pré-requisito: SPEC-005 CLOSED/main.
 - [x] P-600 Plugin Metadata/License — PASS
 - [x] P-610 Tooling/WPCS/PHPUnit — PASS / legacy debt inventoried
-- [ ] P-620 Plugin Check
+- [x] P-620 Plugin Check — PASS inventory/disposition; production package still not clean
 - [ ] P-630 Domain Closure
 - [ ] P-640 Modular Runtime
 - [ ] P-650 Packaging/Install/Upgrade
@@ -32,3 +32,17 @@
 - [x] bulk PHPCBF explicitly forbidden.
 - [x] evidence: `evidence/spec006-p610-tooling-pass-20260929.json`.
 - [ ] P-620 Plugin Check — next active gate.
+
+## P-620 closeout
+
+- [x] Official Plugin Check executed with no global ignores.
+- [x] Initial: 743 findings / 449 errors / 294 warnings.
+- [x] Canonical distribution slug fixed to `bdc-knowledge-base`.
+- [x] Readme blockers corrected.
+- [x] Re-run: 343 findings / 52 errors / 291 warnings.
+- [x] 191 findings routed to P-640/P-650 engineering surface.
+- [x] 150 findings routed to P-660 production remediation.
+- [x] Update URI documented as private-distribution waiver.
+- [x] UPGRADE.md routed to P-650 package pruning.
+- [x] Evidence: `evidence/spec006-p620-plugin-check-disposition-20260929.json`.
+- [ ] P-630 Domain Closure — next active gate.

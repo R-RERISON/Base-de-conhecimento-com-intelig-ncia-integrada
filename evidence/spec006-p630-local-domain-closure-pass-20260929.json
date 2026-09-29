@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-630",
+  "phase": "LOCAL_DOMAIN_CLOSURE",
+  "status": "PASS",
+  "date": "2026-09-29",
+  "workflow_run_id": 36586591742,
+  "source_commit": "cef42301646e87654e52275ba2404349c0391c49",
+  "validation": {
+    "static_contract": true,
+    "plugin_php_lint": true,
+    "new_production_classes_wpcs": true,
+    "foundation_phpunit": true
+  },
+  "domain": {
+    "knowledge_facts_owner": true,
+    "affected_service_canonical_key": "_bdc_es_affected_service",
+    "affected_service_legacy_read_fallback": "_kb2ops_service",
+    "systems_involved_key": "_bdc_es_systems_involved",
+    "technologies_key": "_kb2ops_technologies",
+    "keywords_key": "_kb2ops_keywords",
+    "versions_key": "_kb2ops_versions",
+    "dual_write": false,
+    "helpful_tips_read_write": true,
+    "helpful_tips_key": "_bdc_es_helpful_tips",
+    "coverage_read_model": "8_fields",
+    "public_reader_uses_canonical_owner": true,
+    "workspace_writer": true
+  },
+  "invariants": {
+    "search_ranker_unchanged": true,
+    "editorial_content_unchanged": true,
+    "bulk_migration": false,
+    "legacy_delete": false,
+    "asi_retirement_authorized": false
+  },
+  "next_gate": "P630_ENVIRONMENTAL_ACCEPTANCE"
+}

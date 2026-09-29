@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-620",
+  "status": "PASS_INVENTORY_AND_DISPOSITION",
+  "date": "2026-09-29",
+  "official_tool": "wordpress/plugin-check-action@v1",
+  "initial": {
+    "run_id": 36582124130,
+    "artifact_id": 11040800303,
+    "files": 60,
+    "findings": 743,
+    "errors": 449,
+    "warnings": 294,
+    "text_domain_mismatch": 394
+  },
+  "remediated": {
+    "run_id": 36583019202,
+    "artifact_id": 11041080897,
+    "canonical_slug": "bdc-knowledge-base",
+    "files": 58,
+    "findings": 343,
+    "errors": 52,
+    "warnings": 291,
+    "text_domain_mismatch": 0,
+    "readme_blockers": 0
+  },
+  "disposition": {
+    "p640_p650_engineering_surface": {
+      "findings": 191,
+      "errors": 21,
+      "warnings": 170
+    },
+    "p660_production_remediation": {
+      "findings": 150,
+      "errors": 30,
+      "warnings": 120
+    },
+    "private_distribution_update_uri_waiver": {
+      "findings": 1,
+      "errors": 1,
+      "code": "plugin_updater_detected"
+    },
+    "p650_package_pruning": {
+      "findings": 1,
+      "warnings": 1,
+      "code": "unexpected_markdown_file"
+    }
+  },
+  "top_codes": {
+    "WordPress.Security.ValidatedSanitizedInput.InputNotSanitized": 105,
+    "WordPress.Security.ValidatedSanitizedInput.MissingUnslash": 44,
+    "WordPress.Security.NonceVerification.Missing": 40,
+    "WordPress.Security.NonceVerification.Recommended": 39,
+    "WordPress.DB.DirectDatabaseQuery.DirectQuery": 23,
+    "WordPress.DB.DirectDatabaseQuery.NoCaching": 23,
+    "WordPress.DB.PreparedSQL.NotPrepared": 21,
+    "WordPress.Security.EscapeOutput.OutputNotEscaped": 15,
+    "WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters": 9
+  },
+  "assertions": {
+    "no_global_ignore_codes": true,
+    "no_ignore_errors": true,
+    "no_ignore_warnings": true,
+    "plugin_check_clean": false,
+    "production_zip_ready": false,
+    "asi_retirement_authorized": false
+  },
+  "next_gate": "P-630"
+}

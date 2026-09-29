@@ -1,6 +1,6 @@
 # Estado atual — SPEC-005
 
-**Status:** G-595 PASS — SPEC-005 READY FOR HUMAN MERGE GATE  
+**Status:** CLOSED — G-595 PASS / HUMAN MERGE GATE APPROVED  
 **Branch:** `spec005-section-retrieval-deeplink`  
 **Premium baseline:** `01508379f91a336b26b17268fb119458bd077f7e`
 
@@ -682,9 +682,9 @@ G-595 disposition:
 - T595-03 PASS;
 - T595-04 PASS;
 - T595-05 PASS;
-- T595-06 HUMAN MERGE GATE = PENDING.
+- T595-06 HUMAN MERGE GATE = PASS — explicit human continuation approved on 2026-09-29.
 
-SPEC-005 boundary is technically closed and ready for explicit human merge decision.  
+SPEC-005 boundary is CLOSED and approved for merge.  
 ASI retirement/public cutover remain blocked by the Master Functional Parity Ledger and SPEC-014.
 
 

@@ -535,3 +535,25 @@ Não entram em G-590:
 - AI/Foundry — SPEC-011+.
 
 Histórico detalhado dos gates fechados permanece nos respectivos closeouts e em `evidence/`; este arquivo representa apenas o estado canônico atual.
+
+
+## G-585 v2 — Decommission Readiness
+
+Em 2026-09-29 o G-585 foi rebaselineado sobre G-590 RC12.
+
+Contrato adicional:
+- `g585-decommission-readiness-addendum-v2.md`.
+
+Mudança central:
+- G-585 continua provando independência técnica do ASI;
+- adiciona T585.1 para dependências de superfície;
+- Evidence Schema passa a 2.0.0;
+- `cutover_authorized=false` permanece obrigatório mesmo em PASS;
+- retirada física do ASI depende de Master Functional Parity Ledger/preflight posterior;
+- próximo gate após PASS é `SPEC005_BOUNDARY_REVIEW`, não G-590.
+
+Branch de implementação:
+`spec005-g585-decommission-readiness-v2`.
+
+Próximo passo:
+preparar pacote de homologação pós-G590, executar com ASI manualmente inativo e validar T585/T585.1/T586/T587/T588/T589/T589.2.

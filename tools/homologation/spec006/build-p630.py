@@ -124,6 +124,7 @@ def zip_file_manifest(zip_path: pathlib.Path) -> list[dict]:
 def main() -> int:
     files = source_files()
     validation = validate_source(files)
+    DIST.mkdir(parents=True, exist_ok=True)
 
     with tempfile.TemporaryDirectory(prefix="bdc-p630-") as temp:
         first = pathlib.Path(temp) / "first.zip"

@@ -114,6 +114,7 @@ require_once BDC_KB_DIR . 'includes/class-post-core-blocks-activity.php';
 // loads the obsolete Elementor-target migration family.
 require_once BDC_KB_DIR . 'includes/class-admin-page.php';
 require_once BDC_KB_DIR . 'includes/class-visual-foundation.php';
+require_once BDC_KB_DIR . 'includes/class-runtime-module-registry.php';
 require_once BDC_KB_DIR . 'includes/class-plugin.php';
 if ( defined( 'BDC_KB_WORD_CLOUD_BUILD' ) && BDC_KB_WORD_CLOUD_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-word-cloud-contract.php';

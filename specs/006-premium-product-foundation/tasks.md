@@ -82,7 +82,7 @@ Next active gate:
 - [x] P640-04 separar loaders de engenharia/homologação.
 - [x] P640-05 reduzir bootstrap ao composition root.
 - [ ] P640-06 static contract + PHP lint + WPCS afetado — REABERTO.
-- [ ] P640-07 regressão/environmental acceptance das features habilitadas — pacote p640.1 READY.
+- [ ] P640-07 regressão/environmental acceptance — resultado funcional recebido; fechamento bloqueado até package local conforme.
 - [ ] P640-08 package/runtime inventory para P-650.
 
 
@@ -95,8 +95,8 @@ Implementation notes P640-02..05:
 - sem mudança de persistência, ranking, endpoint, cutover ou retirement;
 - contratos estáticos: `tests/unit/spec006-p640-runtime-module-registry.php` e `tests/unit/spec006-p640-modular-runtime.php`.
 
-P640-06 evidence:
-- workflow run `36594052314` — SUCCESS;
+P640-06 evidence — INVALIDADA:
+- execução remota não é válida para fechamento do gate;
 - static registry contract: 14/14 PASS;
 - modular runtime contract: 15/15 PASS;
 - full plugin PHP lint: 131/131 PASS;
@@ -104,4 +104,4 @@ P640-06 evidence:
 - PHPUnit foundation: PASS;
 - deterministic package: PASS;
 - package SHA-256: `e22e599ae8ae212c8e9c87a522e4f04a63fe187344798191c7f2fe8051f2ef9a`;
-- evidence: `evidence/spec006-p640-local-validation-pass-20260929.json`.
+- evidence marcada como `INVALIDATED`: `evidence/spec006-p640-local-validation-pass-20260929.json`.

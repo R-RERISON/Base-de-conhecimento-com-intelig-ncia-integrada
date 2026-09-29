@@ -27,3 +27,4 @@ jobs:
           wp-version: 'latest'
           include-experimental: 'false'
           strict: 'false'
+          slug: 'bdc-knowledge-base'

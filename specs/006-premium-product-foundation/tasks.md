@@ -83,7 +83,7 @@ Next active gate:
 - [x] P640-05 reduzir bootstrap ao composition root.
 - [ ] P640-06 static contract + PHP lint + WPCS afetado — REABERTO.
 - [ ] P640-07 regressão/environmental acceptance — resultado funcional recebido; fechamento bloqueado até package local conforme.
-- [ ] P640-08 package/runtime inventory para P-650.
+- [ ] P640-08 package/runtime inventory para P-650 — ferramenta implementada; fechamento aguarda P640-06/P640-07 conformes.
 
 
 Implementation notes P640-02..05:
@@ -105,3 +105,13 @@ P640-06 evidence — INVALIDADA:
 - deterministic package: PASS;
 - package SHA-256: `e22e599ae8ae212c8e9c87a522e4f04a63fe187344798191c7f2fe8051f2ef9a`;
 - evidence marcada como `INVALIDATED`: `evidence/spec006-p640-local-validation-pass-20260929.json`.
+
+
+P640 local-only remediation:
+- canonical executor: `tools/homologation/spec006/validate-p640-local.py`;
+- executor fails closed when `vendor/bin/phpcs` or `vendor/bin/phpunit` is unavailable;
+- current session local diagnostics: static registry 14/14 PASS; modular runtime 15/15 PASS; PHP lint 131/131 PASS;
+- current session tooling blocker: Composer/PHPCS/PHPUnit unavailable, therefore P640-06 remains OPEN;
+- P640-08 inventory tool implemented: `tools/homologation/spec006/inventory-p640-package-runtime.py`;
+- observed diagnostic inventory on current artifact: 150 plugin files / 131 PHP / 42 core / 25 product / 46 engineering; zero missing engineering declarations and zero core/product/engineering overlaps;
+- 15 PHP remain outside declared runtime ownership and require P-650 disposition, including loader infrastructure, public templates and historical Elementor migration classes.

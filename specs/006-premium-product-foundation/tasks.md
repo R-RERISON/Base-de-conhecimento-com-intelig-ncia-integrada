@@ -115,3 +115,24 @@ P640 local-only remediation:
 - P640-08 inventory tool implemented: `tools/homologation/spec006/inventory-p640-package-runtime.py`;
 - observed diagnostic inventory on current artifact: 150 plugin files / 131 PHP / 42 core / 25 product / 46 engineering; zero missing engineering declarations and zero core/product/engineering overlaps;
 - 15 PHP remain outside declared runtime ownership and require P-650 disposition, including loader infrastructure, public templates and historical Elementor migration classes.
+
+
+## P-650 packaging / install / upgrade
+
+- [x] P650-01 contrato — `p650-packaging-install-upgrade-contract-v1.md`.
+- [x] P650-02 builder local determinístico — `tools/homologation/spec006/build-p650-production.py`.
+- [x] P650-03 contrato estático do package — `tests/unit/spec006-p650-package-contract.php`.
+- [x] P650-04 validador local fail-closed — `tools/homologation/spec006/validate-p650-local.py`.
+- [ ] P650-05 build local e package integrity — BLOCKED por P640-06 local PASS.
+- [ ] P650-06 install/upgrade/rollback environmental.
+- [ ] P650-07 Plugin Check do ZIP final + closeout/Ledger.
+
+P650 decisions:
+- source checkout continua contendo engenharia/homologação;
+- ZIP de produção candidato exclui `Engineering_Module_Loader` e todos os arquivos explicitamente declarados por ele;
+- bootstrap do ZIP é transformado somente na distribuição para remover flags/require/calls de engenharia;
+- Core/Search/Public Experience/Word Cloud são preservados;
+- classes históricas Elementor não são removidas por inferência;
+- builder gera raiz única, manifest, SHA-256 e prova deterministicidade;
+- `validate-p650-local.py` exige evidência P640 `LOCAL_ONLY PASS` antes de permitir packaging;
+- sem GitHub Actions como executor de gate.

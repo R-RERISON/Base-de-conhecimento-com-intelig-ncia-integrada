@@ -40,8 +40,15 @@ $checks = array(
 	'explicit_missing_file_failure' => str_contains( $registry, "throw new \\RuntimeException( 'Arquivo obrigatório do módulo ausente:" ),
 	'unknown_module_failure' => str_contains( $registry, "throw new \\InvalidArgumentException( 'Módulo de runtime desconhecido:" ),
 	'bootstrap_loads_registry' => str_contains( $bootstrap, "require_once BDC_KB_DIR . 'includes/class-runtime-module-registry.php';" ),
-	'bootstrap_not_migrated_yet' => str_contains( $bootstrap, "require_once BDC_KB_DIR . 'includes/class-search-query-normalizer.php';" )
-		&& str_contains( $bootstrap, "require_once BDC_KB_DIR . 'includes/class-public-experience.php';" ),
+	'bootstrap_routes_search' => str_contains( $bootstrap, "\\BDC\\KnowledgeBase\\Runtime_Module_Registry::load( 'search' );" )
+		&& str_contains( $bootstrap, "\\BDC\\KnowledgeBase\\Runtime_Module_Registry::register( 'search' );" ),
+	'bootstrap_routes_public_preview' => str_contains( $bootstrap, "\\BDC\\KnowledgeBase\\Runtime_Module_Registry::load( 'public_experience_preview' );" )
+		&& str_contains( $bootstrap, "\\BDC\\KnowledgeBase\\Runtime_Module_Registry::register( 'public_experience_preview' );" ),
+	'bootstrap_routes_word_cloud' => str_contains( $bootstrap, "\\BDC\\KnowledgeBase\\Runtime_Module_Registry::load( 'word_cloud' );" )
+		&& str_contains( $bootstrap, "\\BDC\\KnowledgeBase\\Runtime_Module_Registry::register( 'word_cloud' );" ),
+	'bootstrap_no_direct_product_requires' => ! str_contains( $bootstrap, "require_once BDC_KB_DIR . 'includes/class-search-query-normalizer.php';" )
+		&& ! str_contains( $bootstrap, "require_once BDC_KB_DIR . 'includes/class-public-experience.php';" )
+		&& ! str_contains( $bootstrap, "require_once BDC_KB_DIR . 'includes/class-word-cloud-service.php';" ),
 );
 
 $failed = 0;

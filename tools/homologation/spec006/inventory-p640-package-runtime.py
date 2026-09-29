@@ -67,6 +67,30 @@ def main() -> int:
         "uninstall.php",
     }
     unclassified_php = sorted(set(php_files) - owned_php)
+    infrastructure_php = sorted(
+        path for path in unclassified_php
+        if path in {
+            "includes/class-core-runtime-loader.php",
+            "includes/class-runtime-module-registry.php",
+            "includes/class-engineering-module-loader.php",
+        }
+    )
+    template_php = sorted(path for path in unclassified_php if path.startswith("templates/"))
+    legacy_elementor_candidates = sorted(
+        path for path in unclassified_php
+        if path.startswith("includes/class-elementor-")
+    )
+    historical_acceptance_candidates = sorted(
+        path for path in unclassified_php
+        if path in {"includes/class-real-content-acceptance.php"}
+    )
+    categorized = (
+        set(infrastructure_php)
+        | set(template_php)
+        | set(legacy_elementor_candidates)
+        | set(historical_acceptance_candidates)
+    )
+    other_unclassified_php = sorted(set(unclassified_php) - categorized)
 
     report = {
         "schema_version": "1.0.0",
@@ -83,18 +107,26 @@ def main() -> int:
             "engineering_existing_php": len(engineering_existing),
             "engineering_missing_php": len(engineering_missing),
             "unclassified_php": len(unclassified_php),
+            "legacy_elementor_candidates": len(legacy_elementor_candidates),
+            "other_unclassified_php": len(other_unclassified_php),
         },
         "ownership": {
             "core": sorted(core),
             "product_modules": sorted(product),
             "engineering_homologation": engineering_existing,
+            "infrastructure": infrastructure_php,
+            "templates": template_php,
+            "legacy_elementor_candidates": legacy_elementor_candidates,
+            "historical_acceptance_candidates": historical_acceptance_candidates,
+            "other_unclassified_php": other_unclassified_php,
             "unclassified_php": unclassified_php,
         },
         "overlaps": overlaps,
         "p650_handoff": {
             "production_exclusion_candidates": engineering_existing,
+            "legacy_disposition_candidates": legacy_elementor_candidates + historical_acceptance_candidates,
             "remove_now": False,
-            "reason": "P-640 apenas inventaria. Exclusão física do ZIP pertence ao P-650.",
+            "reason": "P-640 apenas inventaria. Exclusão física ou retirement pertence ao P-650/P-014 conforme contrato.",
         },
         "invariants": {
             "files_deleted": False,

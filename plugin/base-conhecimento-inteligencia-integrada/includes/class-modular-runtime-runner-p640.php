@@ -152,43 +152,47 @@ final class Modular_Runtime_Runner_P640 {
 		$core_pass           = ! in_array( false, $core, true );
 		$registry_shape_pass = array_keys( $definitions ) === array( 'search', 'public_experience_preview', 'word_cloud' );
 
-		$assertions = array(
-			'core_classes_loaded'                  => $core_pass,
-			'known_product_modules_exact'          => $registry_shape_pass,
-			'enabled_product_modules_loaded'       => $module_pass,
-			'search_enabled'                       => Runtime_Module_Registry::is_enabled( 'search' ),
-			'public_preview_enabled'               => Runtime_Module_Registry::is_enabled( 'public_experience_preview' ),
-			'word_cloud_enabled'                   => Runtime_Module_Registry::is_enabled( 'word_cloud' ),
-			'engineering_gate_enabled'             => defined( 'BDC_KB_SPEC006_P640_ENVIRONMENTAL_BUILD' ) && BDC_KB_SPEC006_P640_ENVIRONMENTAL_BUILD,
-			'legacy_elementor_reader_available'    => class_exists( Elementor_Adapter::class ),
-			'editorial_writer_unchanged'           => ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) || false === BDC_KB_ELEMENTOR_WRITER_ENABLED,
-		);
+		$assertions = array();
+		self::put( $assertions, 'core_classes_loaded', $core_pass );
+		self::put( $assertions, 'known_product_modules_exact', $registry_shape_pass );
+		self::put( $assertions, 'enabled_product_modules_loaded', $module_pass );
+		self::put( $assertions, 'search_enabled', Runtime_Module_Registry::is_enabled( 'search' ) );
+		self::put( $assertions, 'public_preview_enabled', Runtime_Module_Registry::is_enabled( 'public_experience_preview' ) );
+		self::put( $assertions, 'word_cloud_enabled', Runtime_Module_Registry::is_enabled( 'word_cloud' ) );
+		self::put( $assertions, 'engineering_gate_enabled', defined( 'BDC_KB_SPEC006_P640_ENVIRONMENTAL_BUILD' ) && BDC_KB_SPEC006_P640_ENVIRONMENTAL_BUILD );
+		self::put( $assertions, 'legacy_elementor_reader_available', class_exists( Elementor_Adapter::class ) );
+		self::put( $assertions, 'editorial_writer_unchanged', ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) || false === BDC_KB_ELEMENTOR_WRITER_ENABLED );
 
 		$status = ! in_array( false, $assertions, true ) ? 'PASS' : 'FAIL';
 
-		return array(
-			'schema_version'       => '1.0.0',
-			'gate'                 => 'P-640',
-			'status'               => $status,
-			'generated_at'         => gmdate( 'c' ),
-			'environment'          => array(
-				'wordpress' => get_bloginfo( 'version' ),
-				'php'       => PHP_VERSION,
-				'plugin'    => BDC_KB_VERSION,
-			),
-			'bootstrap'            => array(
-				'composition_root'     => 'Core_Runtime_Loader + Runtime_Module_Registry + Engineering_Module_Loader + Plugin',
-				'product_module_count' => count( $definitions ),
-			),
-			'core'                 => $core,
-			'modules'              => $modules,
-			'assertions'           => $assertions,
-			'content_mutation'     => false,
-			'data_migration'       => false,
-			'cutover_authorized'   => false,
-			'retirement_authorized' => false,
-			'next_gate_on_pass'    => 'P640_PACKAGE_RUNTIME_INVENTORY',
+		$environment = array(
+			'wordpress' => get_bloginfo( 'version' ),
+			'php'       => PHP_VERSION,
+			'plugin'    => BDC_KB_VERSION,
 		);
+
+		$bootstrap = array(
+			'composition_root'     => 'Core_Runtime_Loader + Runtime_Module_Registry + Engineering_Module_Loader + Plugin',
+			'product_module_count' => count( $definitions ),
+		);
+
+		$report = array();
+		self::put( $report, 'schema_version', '1.0.0' );
+		self::put( $report, 'gate', 'P-640' );
+		self::put( $report, 'status', $status );
+		self::put( $report, 'generated_at', gmdate( 'c' ) );
+		self::put( $report, 'environment', $environment );
+		self::put( $report, 'bootstrap', $bootstrap );
+		self::put( $report, 'core', $core );
+		self::put( $report, 'modules', $modules );
+		self::put( $report, 'assertions', $assertions );
+		self::put( $report, 'content_mutation', false );
+		self::put( $report, 'data_migration', false );
+		self::put( $report, 'cutover_authorized', false );
+		self::put( $report, 'retirement_authorized', false );
+		self::put( $report, 'next_gate_on_pass', 'P640_PACKAGE_RUNTIME_INVENTORY' );
+
+		return $report;
 	}
 
 	/**
@@ -214,4 +218,16 @@ final class Modular_Runtime_Runner_P640 {
 			'pass'    => $enabled && $classes_pass,
 		);
 	}
+
+	/**
+	 * Adiciona um valor a um payload sem exigir alinhamento artificial.
+	 *
+	 * @param array<string,mixed> $target Payload em construção.
+	 * @param string              $key    Chave.
+	 * @param mixed               $value  Valor.
+	 */
+	private static function put( array &$target, string $key, mixed $value ): void {
+		$target[ $key ] = $value;
+	}
+
 }

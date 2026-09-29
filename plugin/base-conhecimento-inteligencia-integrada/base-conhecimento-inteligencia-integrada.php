@@ -70,6 +70,10 @@ define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
 
 require_once BDC_KB_DIR . 'includes/class-meta-contract.php';
 require_once BDC_KB_DIR . 'includes/class-summary-store.php';
+require_once BDC_KB_DIR . 'includes/class-knowledge-facts-contract.php';
+require_once BDC_KB_DIR . 'includes/class-knowledge-facts-store.php';
+require_once BDC_KB_DIR . 'includes/class-helpful-tips-store.php';
+require_once BDC_KB_DIR . 'includes/class-coverage-read-model.php';
 require_once BDC_KB_DIR . 'includes/class-classification-contract.php';
 require_once BDC_KB_DIR . 'includes/class-classification-store.php';
 require_once BDC_KB_DIR . 'includes/class-classification-admin.php';
@@ -255,7 +259,6 @@ if ( defined( 'BDC_KB_P580_PUBLIC_INVENTORY_BUILD' ) && BDC_KB_P580_PUBLIC_INVEN
 }
 if ( defined( 'BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD' ) && BDC_KB_PUBLIC_EXPERIENCE_PREVIEW_BUILD ) {
 	require_once BDC_KB_DIR . 'includes/class-public-search-facade.php';
-	require_once BDC_KB_DIR . 'includes/class-helpful-tips-store.php';
 	require_once BDC_KB_DIR . 'includes/class-public-navigation.php';
 	require_once BDC_KB_DIR . 'includes/class-public-auth-bridge.php';
 	require_once BDC_KB_DIR . 'includes/class-public-home-read-model.php';

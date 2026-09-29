@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-640",
+  "phase": "LOCAL_VALIDATION_AND_PACKAGE",
+  "status": "PASS",
+  "date": "2026-09-29",
+  "source_branch": "spec006-premium-product-foundation",
+  "source_commit": "de1a051a876e514c5545756c08bcb734b448335a",
+  "workflow_run_id": 36594052314,
+  "workflow_job_id": 109494263490,
+  "workflow_artifact_id": 11044918410,
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.1.zip",
+    "sha256": "e22e599ae8ae212c8e9c87a522e4f04a63fe187344798191c7f2fe8051f2ef9a",
+    "manifest": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.1.manifest.json",
+    "manifest_sha256": "3588e95412216dc4d24c741e8a3072a86d308e963bfe03955c6297c387798fa4",
+    "deterministic_equal": true,
+    "production_package": false
+  },
+  "validation": {
+    "static_contract_registry": {
+      "passed": 14,
+      "failed": 0
+    },
+    "static_contract_modular_runtime": {
+      "passed": 15,
+      "failed": 0
+    },
+    "source_file_count": 150,
+    "php_lint_checked": 131,
+    "php_lint_failed": 0,
+    "bootstrap_direct_require_count": 4,
+    "wpcs_affected_runtime": true,
+    "phpunit_foundation": true,
+    "deterministic_package": true
+  },
+  "invariants": {
+    "content_mutation": false,
+    "data_migration": false,
+    "search_ranking_changed": false,
+    "endpoint_changed": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false
+  },
+  "next_gate": "P640_ENVIRONMENTAL_ACCEPTANCE"
+}

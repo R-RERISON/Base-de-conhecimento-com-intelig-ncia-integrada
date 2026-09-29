@@ -21,6 +21,9 @@ final class Coverage_Read_Model {
 	public const STATE_COMPLETE = 'COMPLETE';
 
 	/**
+	 * Build the derived eight-field coverage snapshot.
+	 *
+	 * @param int $post_id Post ID.
 	 * @return array{post_id:int,filled:int,total:int,state:string,missing:array<int,string>,fields:array<string,bool>}|\WP_Error
 	 */
 	public static function read( int $post_id ): array|\WP_Error {
@@ -43,14 +46,14 @@ final class Coverage_Read_Model {
 		$values = (array) ( $facts['values'] ?? array() );
 
 		$fields = array(
-			'objective'         => '' !== trim( (string) ( $summary['objective'] ?? '' ) ),
-			'responsible_team'  => ! empty( $terms['responsible_team'] ),
-			'catalog_item'      => ! empty( $terms['catalog_item'] ),
-			'affected_service'  => '' !== trim( (string) ( $values['affected_service'] ?? '' ) ),
-			'systems_involved'  => '' !== trim( (string) ( $values['systems_involved'] ?? '' ) ),
-			'audience'          => ! empty( $terms['audience'] ),
-			'escalation'        => '' !== trim( (string) ( $summary['escalation'] ?? '' ) ),
-			'important'         => '' !== trim( (string) ( $summary['important'] ?? '' ) ),
+			'objective'        => '' !== trim( (string) ( $summary['objective'] ?? '' ) ),
+			'responsible_team' => ! empty( $terms['responsible_team'] ),
+			'catalog_item'     => ! empty( $terms['catalog_item'] ),
+			'affected_service' => '' !== trim( (string) ( $values['affected_service'] ?? '' ) ),
+			'systems_involved' => '' !== trim( (string) ( $values['systems_involved'] ?? '' ) ),
+			'audience'         => ! empty( $terms['audience'] ),
+			'escalation'       => '' !== trim( (string) ( $summary['escalation'] ?? '' ) ),
+			'important'        => '' !== trim( (string) ( $summary['important'] ?? '' ) ),
 		);
 
 		$filled  = count( array_filter( $fields ) );

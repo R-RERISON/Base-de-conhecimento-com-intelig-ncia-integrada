@@ -18,6 +18,8 @@ final class Plugin {
 
 	public static function register(): void {
 		add_action( 'init', array( Meta_Contract::class, 'register' ) );
+		add_action( 'init', array( Knowledge_Facts_Contract::class, 'register' ) );
+		add_action( 'init', array( Helpful_Tips_Store::class, 'register' ) );
 		add_action( 'init', array( Classification_Contract::class, 'register' ) );
 		add_action( 'admin_menu', array( Admin_Page::class, 'register_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( Admin_Page::class, 'enqueue_assets' ) );

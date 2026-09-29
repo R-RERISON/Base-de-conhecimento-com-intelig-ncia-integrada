@@ -36,7 +36,7 @@ $checks = array(
 	'facts_contract_technologies_owner' => str_contains( $contract, "'key'           => '_kb2ops_technologies'" ),
 	'facts_contract_keywords_owner' => str_contains( $contract, "'key'           => '_kb2ops_keywords'" ),
 	'facts_contract_versions_owner' => str_contains( $contract, "'key'           => '_kb2ops_versions'" ),
-	'facts_store_no_kb2ops_service_write' => ! str_contains( $store, "update_post_meta( $id, '_kb2ops_service'" ),
+	'facts_store_no_kb2ops_service_write' => ! str_contains( $store, "update_post_meta( \$id, '_kb2ops_service'" ),
 	'facts_store_read_after_write' => str_contains( $store, 'self::read_key( $id, $definitions[ $field ][\'key\'] ) !== $value' ),
 	'facts_store_rollback' => str_contains( $store, 'O estado anterior foi restaurado.' ),
 	'tips_owner_physical_key' => str_contains( $tips, "public const META_KEY          = '_bdc_es_helpful_tips';" ),
@@ -48,7 +48,7 @@ $checks = array(
 		&& str_contains( $coverage, "public const STATE_PARTIAL  = 'PARTIAL';" )
 		&& str_contains( $coverage, "public const STATE_COMPLETE = 'COMPLETE';" ),
 	'details_nonce' => str_contains( $details, 'wp_verify_nonce' ),
-	'details_capability' => str_contains( $details, "current_user_can( 'edit_post', $post_id )" ),
+	'details_capability' => str_contains( $details, "current_user_can( 'edit_post', \$post_id )" ),
 	'details_writes_facts' => str_contains( $details, 'Knowledge_Facts_Store::update' ),
 	'details_writes_tips' => str_contains( $details, 'Helpful_Tips_Store::update' ),
 	'public_reader_uses_facts_owner' => str_contains( $public, 'Knowledge_Facts_Store::read( $post_id )' ),

@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-640",
+  "status": "PASS",
+  "generated_at": "2026-09-29T16:08:51+00:00",
+  "evidence_role": "ENVIRONMENTAL_FUNCTIONAL_PASS_PENDING_LOCAL_PACKAGE_PROVENANCE",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "plugin": "0.6.0-dev"
+  },
+  "bootstrap": {
+    "composition_root": "Core_Runtime_Loader + Runtime_Module_Registry + Engineering_Module_Loader + Plugin",
+    "product_module_count": 3
+  },
+  "modules": {
+    "search": {"enabled": true, "pass": true},
+    "public_experience_preview": {"enabled": true, "pass": true},
+    "word_cloud": {"enabled": true, "pass": true}
+  },
+  "assertions": {
+    "core_classes_loaded": true,
+    "known_product_modules_exact": true,
+    "enabled_product_modules_loaded": true,
+    "search_enabled": true,
+    "public_preview_enabled": true,
+    "word_cloud_enabled": true,
+    "engineering_gate_enabled": true,
+    "legacy_elementor_reader_available": true,
+    "editorial_writer_unchanged": true
+  },
+  "content_mutation": false,
+  "data_migration": false,
+  "cutover_authorized": false,
+  "retirement_authorized": false,
+  "next_gate_on_pass": "P640_PACKAGE_RUNTIME_INVENTORY",
+  "closure_blocker": "P640-06 must be re-executed with local-only tooling and the environmental result reconciled against the locally built package."
+}

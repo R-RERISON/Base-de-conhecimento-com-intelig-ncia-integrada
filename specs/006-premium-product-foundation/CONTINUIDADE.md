@@ -757,3 +757,42 @@ Próxima ação exata:
 3. clicar **Executar validação completa** novamente;
 4. confirmar o rollback quando solicitado;
 5. baixar o JSON final e retornar para review/closeout.
+
+
+## Click-runner 1.0.1 — diagnóstico de transporte Plugin Check
+
+Primeira execução completa do runner 1.0.0:
+- installed integrity PASS;
+- modular runtime PASS;
+- Plugin Check stage falhou com `Unexpected end of JSON input`;
+- rollback não iniciou;
+- não há evidência de regressão BDC;
+- não há finding Plugin Check ainda;
+- root cause exato não pode ser inferido porque 1.0.0 fazia `response.json()` diretamente.
+
+Patch 1.0.1:
+- robust parsing via `response.text()` + `JSON.parse`;
+- registra action/stage/check;
+- registra HTTP status/status text;
+- registra Content-Type;
+- registra body length/body preview;
+- registra parse error;
+- salva transport failure no report;
+- habilita download do JSON parcial em BLOCKED;
+- não faz retry silencioso;
+- não altera p650.3.
+
+Artifact:
+- `bdc-spec006-final-gates-runner-1.0.1.zip`;
+- SHA-256 `e497465f1d4dbea2bd5ac548b8c008f357cad173501a9b15dc5b04033cac5982`.
+
+Evidence:
+- `evidence/spec006-click-runner-plugin-check-transport-incident-20260930.json`;
+- `evidence/spec006-wordpress-click-runner-package-1.0.1-20260930.json`.
+
+Próxima ação:
+1. substituir somente o companion 1.0.0 por 1.0.1;
+2. manter BDC p650.3 e Plugin Check como estão;
+3. executar validação completa;
+4. se bloquear, baixar JSON parcial e retornar;
+5. se prosseguir, confirmar rollback e baixar JSON final.

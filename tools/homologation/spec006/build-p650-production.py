@@ -12,6 +12,7 @@ import json
 import pathlib
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import zipfile
@@ -56,6 +57,21 @@ def sha256_file(path: pathlib.Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def git_revision(spec: str) -> str | None:
+    git = shutil.which("git")
+    if not git or not (ROOT / ".git").exists():
+        return None
+    proc = subprocess.run(
+        [git, "rev-parse", spec],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+        check=False,
+    )
+    return proc.stdout.strip() if proc.returncode == 0 else None
 
 
 def engineering_contract() -> tuple[set[str], set[str]]:
@@ -244,10 +260,19 @@ def main() -> int:
         DIST.mkdir(parents=True, exist_ok=True)
         shutil.copy2(first, ZIP_PATH)
 
+    source_commit = git_revision("HEAD")
+    plugin_tree_sha = git_revision("HEAD:plugin/base-conhecimento-inteligencia-integrada")
+    if not source_commit or not plugin_tree_sha:
+        raise SystemExit("P-650 requires Git provenance in a local checkout.")
+
     manifest = {
         "schema_version": "1.0.0",
+        "source_commit": source_commit,
+        "plugin_tree_sha": plugin_tree_sha,
         "purpose": "SPEC-006 P-650 production package candidate",
         "production_package_candidate": True,
+        "source_commit": source_commit,
+        "plugin_tree_sha": plugin_tree_sha,
         "version": VERSION,
         "build": BUILD,
         "root": PACKAGE_ROOT,

@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-LOCAL-GATES",
+  "phase": "EXECUTION_ATTEMPT",
+  "status": "BLOCKED_EXTERNAL_ENVIRONMENT",
+  "date": "2026-09-30",
+  "source": {
+    "branch": "spec006-premium-product-foundation",
+    "head": "d488ad60f2f15c6ce21af94d9fdc6f70482a93b2",
+    "plugin_tree_sha": "2a205aa5ef1804f4f3da30f3f9832709d25bc800",
+    "runtime_unchanged": true
+  },
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip",
+    "sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231",
+    "files": 102,
+    "php_files": 83
+  },
+  "checks_completed_in_current_runtime": {
+    "artifact_sha256_match": true,
+    "single_root": true,
+    "forbidden_repo_paths": 0,
+    "engineering_named_files": 0,
+    "engineering_loader_in_bootstrap": false,
+    "engineering_loader_file_present": false,
+    "php_lint_checked": 83,
+    "php_lint_failed": 0,
+    "p640_environmental_flag_present_in_package": false,
+    "required_runtime_files_missing": 0,
+    "search_flag_enabled": true,
+    "public_experience_flag_enabled": true,
+    "word_cloud_flag_enabled": true
+  },
+  "tooling": {
+    "php": {
+      "available": true,
+      "path": "/usr/bin/php"
+    },
+    "python": {
+      "available": true,
+      "path": "/opt/pyvenv/bin/python"
+    },
+    "git": {
+      "available": true,
+      "path": "/usr/bin/git"
+    },
+    "composer": {
+      "available": false
+    },
+    "phpcs": {
+      "available": false
+    },
+    "phpunit": {
+      "available": false
+    },
+    "wp_cli": {
+      "available": false
+    },
+    "wordpress_checkout_or_runtime": {
+      "available": false
+    },
+    "repository_checkout_in_container": {
+      "available": false
+    },
+    "external_git_dns": {
+      "available": false,
+      "observed_error": "Could not resolve host: github.com"
+    }
+  },
+  "blocked_gates": {
+    "p640_local_wpcs_phpunit": true,
+    "p640_environmental_runtime_reconciliation": true,
+    "official_plugin_check": true,
+    "rollback": true,
+    "p670_preflight": true
+  },
+  "reason": "The current execution environment does not expose the user's WordPress/WP-CLI environment and lacks Composer/PHPCS/PHPUnit. Those gates cannot be executed legitimately here.",
+  "invariants": {
+    "github_actions_used_as_gate_executor": false,
+    "artifact_rebuilt": false,
+    "plugin_runtime_modified": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "version_1_0_authorized": false
+  },
+  "next_action": "Run tools/homologation/spec006/run-spec006-final-gates.ps1 in a workstation that has the project checkout, WordPress/WP-CLI and local Composer tooling, then version the generated evidence."
+}

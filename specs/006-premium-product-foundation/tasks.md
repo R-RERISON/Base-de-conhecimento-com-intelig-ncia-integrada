@@ -299,3 +299,13 @@ WordPress click-to-run companion — 2026-09-30:
 - PHPCS/WPCS + PHPUnit remain external tooling;
 - contract: `spec006-wordpress-click-runner-contract-v1.md`;
 - evidence: `evidence/spec006-wordpress-click-runner-package-20260930.json`.
+
+
+Click-runner 1.0.1 — Plugin Check transport diagnostics:
+- first full execution reached native integrity/runtime PASS then failed with `Unexpected end of JSON input`;
+- classified as controlled transport/server-completion incident, not BDC regression;
+- runner 1.0.1 captures endpoint/stage/check, HTTP status, Content-Type, body length/preview and parse error;
+- partial JSON can now be downloaded even when blocked;
+- package: `bdc-spec006-final-gates-runner-1.0.1.zip`;
+- SHA-256: `e497465f1d4dbea2bd5ac548b8c008f357cad173501a9b15dc5b04033cac5982`;
+- p650.3 remains unchanged.

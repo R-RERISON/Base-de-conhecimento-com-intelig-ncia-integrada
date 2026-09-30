@@ -327,3 +327,50 @@ Instalar exatamente o ZIP `p650.1` e registrar:
 10. comportamento de rollback, se executado.
 
 Não reconstruir o ZIP antes da homologação; o SHA acima identifica o artefato sob teste.
+
+
+## P-660 iniciado — security/privacy baseline (2026-09-30)
+
+Contrato:
+- `specs/006-premium-product-foundation/p660-security-privacy-baseline-contract-v1.md`.
+
+Tooling:
+- `tools/homologation/spec006/inventory-p660-security-privacy.py`;
+- `tests/unit/spec006-p660-security-baseline.php`.
+
+Baseline sobre o ZIP p650.1:
+- 84 PHP;
+- 25 arquivos sinalizados para revisão;
+- SECRET_CRITICAL=0;
+- NETWORK_HIGH=0;
+- MUTATION_HIGH=0;
+- DB_HIGH=0;
+- mutation/admin handlers principais possuem POST + capability + nonce + unslash/sanitization;
+- Search/Word Cloud dynamic SQL revisado usa prepare quando há parâmetros.
+
+Correções:
+1. `Public_Auth_Bridge::current_url()` não usa mais `HTTP_HOST`; usa `home_url()` + path/query derivados de `REQUEST_URI`.
+2. `class-real-content-acceptance.php`, ferramenta temporária G-240 não referenciada, foi classificada como engineering orphan e excluída do package.
+
+Novo pacote:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.2.zip`;
+- SHA-256 `1d48ecc25d2f1bbe173ab83e6368f46306c5de054cdd19b411945c328b6051f7`;
+- 102 arquivos;
+- 83 PHP;
+- lint 83/83 PASS;
+- deterministic_equal=true;
+- single root PASS;
+- engineering loader absent;
+- orphan acceptance absent;
+- repo-only paths absent;
+- HTTP_HOST trust absent.
+
+Próximo passo:
+1. instalar exatamente p650.2 em homologação;
+2. validar login/fallback público, Search, Workspace, Public Preview e Word Cloud;
+3. confirmar ausência de erro;
+4. executar Plugin Check oficial no mesmo ZIP quando tooling local estiver disponível;
+5. continuar disposition P660 dos sinais review-level;
+6. não promover PROD-004/005/006 antes das evidências completas.
+
+GitHub Actions continua proibido como executor de gate.

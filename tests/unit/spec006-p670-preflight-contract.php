@@ -21,6 +21,8 @@ $checks = array(
 	'frozen_p6503_name' => str_contains( $source, 'base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip' ),
 	'frozen_p6503_sha' => str_contains( $source, '985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231' ),
 	'requires_p640_current' => str_contains( $source, 'spec006-p640-local-validation-current.json' ),
+	'requires_p640_environmental_reconciliation' => str_contains( $source, 'spec006-p640-environmental-reconciliation-current.json' )
+		&& str_contains( $source, 'p640_environmental_runtime_reconciled' ),
 	'requires_p650_current' => str_contains( $source, 'spec006-p650-local-package-validation-current.json' ),
 	'requires_p660_current' => str_contains( $source, 'spec006-p660-local-validation-current.json' ),
 	'requires_plugin_check' => str_contains( $source, 'spec006-p650-p660-plugin-check-current.json' ),

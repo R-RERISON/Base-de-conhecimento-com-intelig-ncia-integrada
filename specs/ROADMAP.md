@@ -9,12 +9,15 @@
 3. SPEC-002 — Classificação — CLOSED.
 4. SPEC-003 — Review & Governança — CLOSED.
 5. SPEC-004 — Content Extractor/KD/Canonicalization — CLOSED.
-6. SPEC-005 — Search Lexical + Golden — ACTIVE / scope refinado.
+6. SPEC-005 — Search Lexical + Golden — CLOSED / boundary aprovado.
+
+## Atual
+
+7. SPEC-006 — Premium Product Foundation, Domain Consolidation & Distribution — ACTIVE / FINAL GATES.
 
 ## Futuro
 
-7. SPEC-006 — Premium Product Foundation, Domain Consolidation & Distribution.
-8. SPEC-007 — Public Knowledge Experience.
+8. SPEC-007 — Public Knowledge Experience — NEXT / NOT ACTIVE.
 9. SPEC-008 — Search Intelligence, Telemetry, Privacy & Governed Relevance.
 10. SPEC-009 — Operations, Indexing & Reliability.
 11. SPEC-010 — Semantic Search & Vectors.
@@ -46,3 +49,12 @@ G-585 prova independência técnica, não retirement ASI.
 - 1.0.0 somente após SPEC-014.
 
 Retirement é avaliado separadamente para ASI, GRE, KB2Ops e dependências ambientais.
+
+
+## Atualização 2026-09-30
+
+SPEC-005 foi fechada no G-595 com boundary review aprovado. Isso fecha o ownership de Search da SPEC-005, mas não autoriza retirement global do ASI.
+
+SPEC-006 é a frente ativa e está em closeout. Seu artefato corrente é o p650.3 congelado; nenhuma nova capability deve entrar enquanto P640/P650/P660/P670 não forem concluídos.
+
+SPEC-007 permanece próxima na fila. Discovery/handoff documental pode ser preparado, mas runtime só inicia após o fechamento formal da SPEC-006.

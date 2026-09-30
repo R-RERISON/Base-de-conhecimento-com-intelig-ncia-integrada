@@ -431,3 +431,57 @@ P-670 está apenas PREPARED. Não pode fechar enquanto:
 - Master Ledger não for atualizado por evidência.
 
 O contrato já consolida DoD, Premium Product Standard, package integrity, security/privacy, runtime modular, editorial invariants e limites de cutover.
+
+
+## P650.3 — request-boundary hardening (2026-09-30)
+
+Motivo:
+- revisão residual P660 identificou request boundaries que estavam funcionalmente protegidos, porém sem sanitização explícita suficiente para WPCS/Plugin Check;
+- o mesmo ciclo corrigiu o runner local do Plugin Check para o modo oficial com runtime checks.
+
+Alterações de runtime:
+- Admin Page: REQUEST_METHOD e nonce sanitizados;
+- Classification Admin: REQUEST_METHOD e nonce sanitizados;
+- Review Admin: REQUEST_METHOD e nonce sanitizados;
+- Core Blocks Authorization: REQUEST_METHOD/nonce sanitizados e JSON output documentado;
+- Public Experience: preview nonce sanitizado;
+- Public Search: preview flag sanitizada; REMOTE_ADDR sanitizado e limitado antes do HMAC transient;
+- Word Cloud Admin: textarea é unslashed explicitamente no request boundary.
+
+Artefato:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip`;
+- SHA-256: `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`;
+- 102 arquivos / 83 PHP;
+- deterministic build PASS;
+- PHP lint 83/83 PASS;
+- repo-only paths = 0;
+- engineering/lab named files = 0;
+- bootstrap engineering tokens = 0;
+- changed runtime blob provenance = MATCH com source GitHub.
+
+P660 inventory p650.3:
+- status PASS;
+- 83 PHP scanned;
+- 24 arquivos review-level;
+- MUTATION_REVIEW=9;
+- OUTPUT_MEDIUM=21;
+- DB_REVIEW=4;
+- READ_MEDIUM=3;
+- SECRET_CRITICAL=0;
+- NETWORK_HIGH=0;
+- MUTATION_HIGH=0;
+- DB_HIGH=0.
+
+Plugin Check runner:
+- `tools/homologation/spec006/run-p650-p660-plugin-check-local.py`;
+- target passa a ser o caminho do ZIP diretamente;
+- `--format=strict-json`;
+- `--mode=update`;
+- `--require=.../plugin-check/cli.php` para habilitar runtime checks;
+- GitHub Actions continua proibido.
+
+Importante:
+- p650.2 permanece evidência histórica de smoke PASS;
+- como runtime mudou, p650.3 exige novo smoke ambiental antes do Plugin Check final;
+- depois do PASS ambiental, o Plugin Check deve usar exatamente o SHA do p650.3;
+- P650/P660 continuam abertos até Plugin Check + rollback/evidências restantes.

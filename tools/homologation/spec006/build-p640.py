@@ -21,7 +21,7 @@ SOURCE = ROOT / "plugin" / "base-conhecimento-inteligencia-integrada"
 DIST = ROOT / "dist"
 PACKAGE_ROOT = "base-conhecimento-inteligencia-integrada"
 VERSION = "0.6.0-dev"
-BUILD = "p640.1"
+BUILD = "p640.2"
 ZIP_PATH = DIST / f"base-conhecimento-inteligencia-integrada-{VERSION}-{BUILD}.zip"
 MANIFEST_PATH = DIST / f"base-conhecimento-inteligencia-integrada-{VERSION}-{BUILD}.manifest.json"
 VALIDATION_PATH = DIST / "p640-local-package-validation.json"
@@ -41,6 +41,21 @@ def sha256_file(path: pathlib.Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def git_revision(spec: str) -> str | None:
+    git = shutil.which("git")
+    if not git or not (ROOT / ".git").exists():
+        return None
+    proc = subprocess.run(
+        [git, "rev-parse", spec],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+        check=False,
+    )
+    return proc.stdout.strip() if proc.returncode == 0 else None
 
 
 def source_files() -> list[pathlib.Path]:
@@ -180,10 +195,19 @@ def main() -> int:
             raise SystemExit("P-640 homologation package is not deterministic.")
         shutil.copy2(first, ZIP_PATH)
 
+    source_commit = git_revision("HEAD")
+    plugin_tree_sha = git_revision("HEAD:plugin/base-conhecimento-inteligencia-integrada")
+    if not source_commit or not plugin_tree_sha:
+        raise SystemExit("P-640 requires Git provenance in a local checkout.")
+
     manifest = {
         "schema_version": "1.0.0",
+        "source_commit": source_commit,
+        "plugin_tree_sha": plugin_tree_sha,
         "purpose": "SPEC-006 P-640 environmental homologation",
         "production_package": False,
+        "source_commit": source_commit,
+        "plugin_tree_sha": plugin_tree_sha,
         "version": VERSION,
         "build": BUILD,
         "root": PACKAGE_ROOT,

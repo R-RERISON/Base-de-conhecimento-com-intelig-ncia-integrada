@@ -123,7 +123,7 @@ P640 local-only remediation:
 - [x] P650-02 builder local determinístico — `tools/homologation/spec006/build-p650-production.py`.
 - [x] P650-03 contrato estático do package — `tests/unit/spec006-p650-package-contract.php`.
 - [x] P650-04 validador local fail-closed — `tools/homologation/spec006/validate-p650-local.py`.
-- [ ] P650-05 build local e package integrity — BLOCKED por P640-06 local PASS.
+- [ ] P650-05 build local e package integrity — package p650.1 preparado para homologação; fechamento do gate ainda bloqueado pelo P640-06 local completo.
 - [ ] P650-06 install/upgrade/rollback environmental.
 - [ ] P650-07 Plugin Check do ZIP final + closeout/Ledger.
 
@@ -136,3 +136,17 @@ P650 decisions:
 - builder gera raiz única, manifest, SHA-256 e prova deterministicidade;
 - `validate-p650-local.py` exige evidência P640 `LOCAL_ONLY PASS` antes de permitir packaging;
 - sem GitHub Actions como executor de gate.
+
+
+P650 homologation package — 2026-09-30:
+- artifact: `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.1.zip`;
+- SHA-256: `503234ece2620d01bb556e5810a374f07e2153221171f21755bbe7c1b4f5b926`;
+- source plugin tree SHA verified against HEAD: `ddb30b150b78c08e9163f7324c5f911c4ead13d0`;
+- deterministic build: PASS;
+- single root: PASS;
+- engineering files in package: 0;
+- forbidden repository paths: 0;
+- declared Core/Product runtime files missing: 0;
+- PHP lint inside ZIP: 84/84 PASS;
+- authorized for environmental homologation only, not production release;
+- evidence: `evidence/spec006-p650-homologation-package-20260930.json`.

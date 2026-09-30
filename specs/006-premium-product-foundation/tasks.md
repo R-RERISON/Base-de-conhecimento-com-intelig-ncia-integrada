@@ -207,11 +207,12 @@ P650.2 / P660 environmental smoke — 2026-09-30:
 ## P-670 premium foundation acceptance
 
 - [x] P670-01 acceptance contract preparado — `p670-premium-foundation-acceptance-contract-v1.md`.
-- [ ] P670-02 preflight consolidado — BLOCKED por P640/P650/P660 pendentes.
-- [ ] P670-03 quality gate consolidado.
-- [ ] P670-04 security/privacy closeout.
-- [ ] P670-05 Ledger disposition.
-- [ ] P670-06 closeout SPEC-006.
+- [x] P670-02 preflight fail-closed implementado — `tools/homologation/spec006/validate-p670-preflight.py`; execução permanece bloqueada até as evidências finais existirem.
+- [x] P670-03 contrato estático do preflight — `tests/unit/spec006-p670-preflight-contract.php`.
+- [x] P670-04 plano de Master Ledger preparado — `p670-master-ledger-disposition-plan.md`; NÃO aplicado.
+- [x] P670-05 gerador de closeout candidate preparado — `generate-p670-closeout-candidate.py`.
+- [ ] P670-06 executar preflight real — depende de P640/P650/P660/Plugin Check/rollback PASS.
+- [ ] P670-07 revisão humana do Ledger e closeout SPEC-006.
 
 P670 não autoriza 1.0.0, cutover, retirement ou bulk migration.
 

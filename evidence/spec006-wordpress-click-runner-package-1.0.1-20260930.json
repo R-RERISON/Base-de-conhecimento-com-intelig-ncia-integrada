@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-WORDPRESS-GATES",
+  "phase": "CLICK_RUNNER_DIAGNOSTIC_PATCH",
+  "status": "PASS_PACKAGE_READY",
+  "date": "2026-09-30",
+  "artifact": {
+    "name": "bdc-spec006-final-gates-runner-1.0.1.zip",
+    "sha256": "e497465f1d4dbea2bd5ac548b8c008f357cad173501a9b15dc5b04033cac5982",
+    "zip_integrity": true,
+    "php_lint": "2/2 PASS"
+  },
+  "scope": [
+    "robust AJAX response parsing",
+    "Plugin Check stage/check transport diagnostics",
+    "HTTP status and content-type capture",
+    "empty/non-JSON response capture",
+    "partial evidence download on blocked execution"
+  ],
+  "embedded_candidate_sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231",
+  "embedded_previous_sha256": "1d48ecc25d2f1bbe173ab83e6368f46306c5de054cdd19b411945c328b6051f7",
+  "bdc_runtime_modified": false,
+  "gate_closure_authorized": false,
+  "next_action": "Replace companion runner 1.0.0 with 1.0.1 and rerun; download partial/final JSON."
+}

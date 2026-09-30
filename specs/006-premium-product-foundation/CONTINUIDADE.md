@@ -732,3 +732,28 @@ Contrato:
 
 Evidence de package:
 - `evidence/spec006-wordpress-click-runner-package-20260930.json`.
+
+
+## Click-runner ambiental — primeira execução real
+
+Resultado no WordPress de homologação:
+- p650.3 installed integrity: PASS;
+- expected_files=102 / checked_files=102;
+- missing=[] / mismatched=[] / extra=[];
+- modular runtime: PASS;
+- version/core loader/module registry/plugin/Search/Public Experience/Word Cloud/hooks/plugin active: todos PASS;
+- Engineering_Module_Loader ausente como esperado;
+- Plugin Check oficial: NOT_INSTALLED;
+- execução completa: BLOCKED somente por Plugin Check não pronto;
+- rollback ainda NOT_RUN;
+- PHPCS/WPCS + PHPUnit continuam EXTERNAL_TOOLING_REQUIRED.
+
+Evidence:
+- `evidence/spec006-click-runner-environmental-partial-20260930.json`.
+
+Próxima ação exata:
+1. clicar **Instalar/ativar Plugin Check oficial** na tela SPEC-006 Final Gates;
+2. confirmar que o status passa para pronto/ativo;
+3. clicar **Executar validação completa** novamente;
+4. confirmar o rollback quando solicitado;
+5. baixar o JSON final e retornar para review/closeout.

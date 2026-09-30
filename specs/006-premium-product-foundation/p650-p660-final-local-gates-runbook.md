@@ -100,3 +100,46 @@ Então:
 3. atualizar PROD-004/005/006 apenas se a evidência suportar;
 4. executar P670 Premium Foundation Acceptance;
 5. não autorizar cutover/retirement/1.0.0.
+
+
+## 4. Executor único no Windows
+
+Para executar a cadeia completa em uma workstation Windows com WordPress/WP-CLI:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/homologation/spec006/run-spec006-final-gates.ps1 `
+  -WpPath "C:\caminho\wordpress" `
+  -PreviousZip "C:\caminho\base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.2.zip" `
+  -CandidateZip "C:\caminho\base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
+```
+
+Ordem executada:
+
+1. valida Git/plugin tree;
+2. exige tooling Composer já materializado em `vendor` por padrão;
+3. P640 local completo, gerando `p640.2`;
+4. P650 local package quality, preso ao SHA do p650.3;
+5. P660 local security/privacy quality;
+6. Plugin Check oficial no p650.3;
+7. rollback p650.2 -> p650.3 com fingerprints;
+8. gera `evidence/spec006-final-local-gates-summary-current.json`.
+
+### Composer
+
+O repositório atualmente não versiona `composer.lock`.
+
+Por isso o executor **não** resolve dependências automaticamente por padrão.
+
+Se for necessário bootstrap explícito:
+
+```powershell
+... -BootstrapComposerDependencies
+```
+
+Essa opção deve ser tratada como bootstrap de tooling e o lock gerado deve ser revisado antes de ser usado como base de reprodutibilidade futura.
+
+### Proveniência
+
+P650 não aceita mais apenas um JSON P640 com PASS. O `plugin_tree_sha` do P640 deve ser idêntico ao source atual do plugin.
+
+Mudanças apenas em docs/tools não invalidam a evidência; mudanças no subtree do plugin invalidam.

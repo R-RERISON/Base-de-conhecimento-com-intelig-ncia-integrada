@@ -135,8 +135,10 @@ final class Word_Cloud_Admin {
 			'max_public_terms' => isset( $_POST['max_public_terms'] ) ? max( 6, min( 60, absint( wp_unslash( $_POST['max_public_terms'] ) ) ) ) : $defaults['max_public_terms'],
 			'stale_after_seconds' => $defaults['stale_after_seconds'],
 		);
-		$allow = self::parse_textarea( $_POST['allowlist'] ?? '' );
-		$block = self::parse_textarea( $_POST['blocklist'] ?? '' );
+		$allow_raw = isset( $_POST['allowlist'] ) && is_scalar( $_POST['allowlist'] ) ? wp_unslash( (string) $_POST['allowlist'] ) : '';
+		$block_raw = isset( $_POST['blocklist'] ) && is_scalar( $_POST['blocklist'] ) ? wp_unslash( (string) $_POST['blocklist'] ) : '';
+		$allow = self::parse_textarea( $allow_raw );
+		$block = self::parse_textarea( $block_raw );
 		update_option( Word_Cloud_Contract::SETTINGS_OPTION, $settings, false );
 		update_option( Word_Cloud_Contract::ALLOWLIST_OPTION, $allow, false );
 		update_option( Word_Cloud_Contract::BLOCKLIST_OPTION, $block, false );
@@ -153,7 +155,7 @@ final class Word_Cloud_Admin {
 
 	/** @return array<int,string> */
 	private static function parse_textarea( mixed $value ): array {
-		$value = is_scalar( $value ) ? wp_unslash( (string) $value ) : '';
+		$value = is_scalar( $value ) ? (string) $value : '';
 		$rows = preg_split( '/[\r\n,]+/', $value ) ?: array();
 		$out = array();
 		foreach ( $rows as $row ) {

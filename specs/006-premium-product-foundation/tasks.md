@@ -168,8 +168,8 @@ P650 environmental acceptance — 2026-09-30:
 - [x] P660-03 static baseline contract — `tests/unit/spec006-p660-security-baseline.php`.
 - [x] P660-04 first remediation — removed Host header trust from public login redirect.
 - [x] P660-05 package hygiene correction — orphan G-240 acceptance harness removed from distribution.
-- [ ] P660-06 environmental smoke on hardened package.
-- [ ] P660-07 official Plugin Check / residual security disposition.
+- [x] P660-06 environmental smoke on hardened package — p650.2 PASS.
+- [ ] P660-07 official Plugin Check / residual security disposition — residual disposition concluída; Plugin Check pendente.
 - [ ] P660-08 closeout.
 
 P660 baseline inventory on p650.1:
@@ -190,3 +190,15 @@ Hardened package:
 - `class-real-content-acceptance.php`: excluded;
 - HTTP_HOST trust: removed;
 - evidence: `evidence/spec006-p650-p660-hardened-package-p6502-20260930.json`.
+
+
+P650.2 / P660 environmental smoke — 2026-09-30:
+- exact artifact SHA-256: `1d48ecc25d2f1bbe173ab83e6368f46306c5de054cdd19b411945c328b6051f7`;
+- user report: testado, tudo funcionando aparentemente sem problemas;
+- hardened runtime smoke: PASS;
+- P660-06: PASS;
+- P650 rollback: still NOT EXECUTED;
+- official Plugin Check: still PENDING;
+- evidence: `evidence/spec006-p6502-environmental-smoke-pass-20260930.json`;
+- residual security disposition: `p660-residual-security-disposition-20260930.md`;
+- local official Plugin Check runner: `tools/homologation/spec006/run-p650-p660-plugin-check-local.py`.

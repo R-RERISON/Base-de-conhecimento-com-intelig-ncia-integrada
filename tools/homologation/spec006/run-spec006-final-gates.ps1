@@ -194,10 +194,21 @@ try {
     & $python $p670Script
     $p670Exit = $LASTEXITCODE
 
+    $closeoutCandidateExit = 1
+    if ($p670Exit -eq 0 -and $p670ContractExit -eq 0) {
+        $closeoutGenerator = Join-Path $Root "tools\homologation\spec006\generate-p670-closeout-candidate.py"
+        Write-Host ""
+        Write-Host "=== P670 closeout candidate ==="
+        & $python $closeoutGenerator
+        $closeoutCandidateExit = $LASTEXITCODE
+    }
+
     $summary.p670 = [ordered]@{
         static_contract_exit_code = $p670ContractExit
         preflight_exit_code = $p670Exit
+        closeout_candidate_exit_code = $closeoutCandidateExit
         evidence = "evidence/spec006-p670-preflight-current.json"
+        closeout_candidate = "evidence/spec006-p670-closeout-candidate-current.json"
     }
     $summary | ConvertTo-Json -Depth 8 | Set-Content -Encoding UTF8 $summaryPath
 
@@ -210,9 +221,10 @@ try {
     Write-Host "Rollback exit: $rollbackExit"
     Write-Host "P670 contract exit: $p670ContractExit"
     Write-Host "P670 preflight exit: $p670Exit"
+    Write-Host "P670 closeout candidate exit: $closeoutCandidateExit"
     Write-Host "Summary: $summaryPath"
 
-    if ($pluginCheckExit -ne 0 -or $rollbackExit -ne 0 -or $p670ContractExit -ne 0 -or $p670Exit -ne 0) {
+    if ($pluginCheckExit -ne 0 -or $rollbackExit -ne 0 -or $p670ContractExit -ne 0 -or $p670Exit -ne 0 -or $closeoutCandidateExit -ne 0) {
         exit 1
     }
 

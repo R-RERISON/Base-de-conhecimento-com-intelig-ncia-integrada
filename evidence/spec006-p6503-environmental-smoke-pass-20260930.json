@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-650/P-660",
+  "phase": "P6503_ENVIRONMENTAL_SMOKE",
+  "status": "PASS",
+  "date": "2026-09-30",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip",
+    "sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+  },
+  "acceptance_source": "human_homologation_report",
+  "reported_result": "Tudo continua funcionando aparentemente",
+  "validated_scope": {
+    "installation_or_upgrade": true,
+    "runtime_smoke": true,
+    "workspace": true,
+    "search": true,
+    "public_experience": true,
+    "word_cloud": true,
+    "security_hardening_regression": true
+  },
+  "limitations": {
+    "official_plugin_check_same_zip": "PENDING",
+    "rollback": "PENDING",
+    "p640_local_composer_phpcs_phpunit": "PENDING"
+  },
+  "artifact_frozen_for_next_gates": true,
+  "gate_closure_authorized": false,
+  "cutover_authorized": false,
+  "retirement_authorized": false,
+  "next_gate": "P6503_OFFICIAL_PLUGIN_CHECK_AND_ROLLBACK"
+}

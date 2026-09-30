@@ -6,6 +6,7 @@ Pré-condição: P640 local PASS. Este programa não usa CI remoto.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import pathlib
 import shutil
@@ -23,6 +24,30 @@ P650_BUILDER = ROOT / "tools" / "homologation" / "spec006" / "build-p650-product
 P650_STATIC = ROOT / "tests" / "unit" / "spec006-p650-package-contract.php"
 PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
 PACKAGE_REPORT = DIST / "p650-package-validation.json"
+EXPECTED_PACKAGE_SHA256 = "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+
+
+def sha256(path: pathlib.Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def git_revision(spec: str) -> str | None:
+    git = shutil.which("git")
+    if not git or not (ROOT / ".git").exists():
+        return None
+    proc = subprocess.run(
+        [git, "rev-parse", spec],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+        check=False,
+    )
+    return proc.stdout.strip() if proc.returncode == 0 else None
 
 
 def run(name: str, command: list[str], cwd: pathlib.Path = ROOT) -> dict:
@@ -65,6 +90,23 @@ def require_p640_pass() -> dict:
                     "gate": "P-650",
                     "status": "BLOCKED_P640",
                     "reason": "P640 evidence exists but is not LOCAL_ONLY PASS.",
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+
+    current_plugin_tree = git_revision("HEAD:plugin/base-conhecimento-inteligencia-integrada")
+    evidence_plugin_tree = data.get("plugin_tree_sha")
+    if not current_plugin_tree or not evidence_plugin_tree or current_plugin_tree != evidence_plugin_tree:
+        raise SystemExit(
+            json.dumps(
+                {
+                    "gate": "P-650",
+                    "status": "BLOCKED_STALE_P640_EVIDENCE",
+                    "reason": "P640 PASS does not match the current plugin source tree.",
+                    "p640_plugin_tree_sha": evidence_plugin_tree,
+                    "current_plugin_tree_sha": current_plugin_tree,
                 },
                 ensure_ascii=False,
                 indent=2,
@@ -120,6 +162,15 @@ def main() -> int:
 
     if all(step["pass"] for step in steps) and PACKAGE.is_file():
         steps.append(lint_package(php))
+        actual_sha = sha256(PACKAGE)
+        steps.append(
+            {
+                "name": "frozen_package_sha256",
+                "pass": actual_sha == EXPECTED_PACKAGE_SHA256,
+                "expected_sha256": EXPECTED_PACKAGE_SHA256,
+                "actual_sha256": actual_sha,
+            }
+        )
     else:
         steps.append(
             {
@@ -149,6 +200,11 @@ def main() -> int:
             "status": p640.get("status"),
             "execution_mode": p640.get("execution_mode"),
             "source_commit": p640.get("source_commit"),
+            "plugin_tree_sha": p640.get("plugin_tree_sha"),
+        },
+        "current_source": {
+            "source_commit": git_revision("HEAD"),
+            "plugin_tree_sha": git_revision("HEAD:plugin/base-conhecimento-inteligencia-integrada"),
         },
         "steps": steps,
         "package_report": package_report,

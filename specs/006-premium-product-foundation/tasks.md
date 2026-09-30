@@ -124,7 +124,7 @@ P640 local-only remediation:
 - [x] P650-03 contrato estático do package — `tests/unit/spec006-p650-package-contract.php`.
 - [x] P650-04 validador local fail-closed — `tools/homologation/spec006/validate-p650-local.py`.
 - [ ] P650-05 build local e package integrity — package p650.1 preparado para homologação; fechamento do gate ainda bloqueado pelo P640-06 local completo.
-- [ ] P650-06 install/upgrade/rollback environmental.
+- [ ] P650-06 install/upgrade/rollback environmental — install/runtime PASS; rollback ainda não executado.
 - [ ] P650-07 Plugin Check do ZIP final + closeout/Ledger.
 
 P650 decisions:
@@ -150,3 +150,12 @@ P650 homologation package — 2026-09-30:
 - PHP lint inside ZIP: 84/84 PASS;
 - authorized for environmental homologation only, not production release;
 - evidence: `evidence/spec006-p650-homologation-package-20260930.json`.
+
+
+P650 environmental acceptance — 2026-09-30:
+- user installed exactly `p650.1`;
+- reported result: sem erros, tudo funcionando;
+- install/runtime smoke: PASS;
+- rollback: NOT EXECUTED;
+- official Plugin Check on same ZIP: PENDING;
+- evidence: `evidence/spec006-p650-environmental-install-runtime-pass-20260930.json`.

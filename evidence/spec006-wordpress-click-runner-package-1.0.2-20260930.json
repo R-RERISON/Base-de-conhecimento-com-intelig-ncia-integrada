@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-WORDPRESS-GATES",
+  "phase": "CLICK_RUNNER_RUNTIME_SETUP_PROBE_PATCH",
+  "status": "PASS_PACKAGE_READY",
+  "date": "2026-09-30",
+  "artifact": {
+    "name": "bdc-spec006-final-gates-runner-1.0.2.zip",
+    "sha256": "3fb06eee21b7b01d791486c968e37569bf3a114912682ec9a5b4f5a3d211f43c",
+    "bytes": 488501,
+    "zip_integrity": true,
+    "php_lint": "2/2 PASS",
+    "javascript_syntax": "PASS"
+  },
+  "scope": [
+    "server-side Plugin Check Runtime_Environment_Setup probe",
+    "can_set_up/is_set_up diagnostics",
+    "filesystem method diagnostics",
+    "object-cache drop-in state diagnostics",
+    "temporary pc_ table count",
+    "safe continuation only when test tables exist and Plugin Check drop-in is active",
+    "post-cleanup runtime probe"
+  ],
+  "safety": {
+    "blind_setup_bypass": false,
+    "runtime_isolation_required": true,
+    "nopriv_ajax": false,
+    "bdc_runtime_modified": false
+  },
+  "candidate_sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231",
+  "previous_sha256": "1d48ecc25d2f1bbe173ab83e6368f46306c5de054cdd19b411945c328b6051f7",
+  "next_action": "Replace companion with 1.0.2 and rerun. If setup response is still empty, return the downloaded JSON containing plugin_check_runtime_probe."
+}

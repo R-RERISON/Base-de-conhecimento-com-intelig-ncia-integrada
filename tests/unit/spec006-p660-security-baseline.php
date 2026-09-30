@@ -43,6 +43,10 @@ $checks = array(
 	'word_cloud_dynamic_delete_prepared' => str_contains( $word_cloud, '$wpdb->prepare(' ),
 	'search_dynamic_queries_prepared' => str_contains( $search_repo, '$wpdb->prepare(' ),
 	'no_curl_runtime' => ! str_contains( implode( "\n", array_map( 'strval', $files ) ), 'curl_' ),
+	'public_search_preview_sanitized' => str_contains( $search_repo = file_get_contents( $plugin . '/includes/class-public-search-facade.php' ), "sanitize_key( wp_unslash( (string) $_POST['preview'] ) )" ),
+	'public_search_remote_addr_sanitized' => is_string( $search_repo ) && str_contains( $search_repo, "sanitize_text_field( wp_unslash( (string) $_SERVER['REMOTE_ADDR'] ) )" ),
+	'public_preview_nonce_sanitized' => str_contains( file_get_contents( $plugin . '/includes/class-public-experience.php' ), "sanitize_text_field( wp_unslash( (string) $_GET[ self::NONCE_KEY ] ) )" ),
+	'core_blocks_nonce_sanitized' => str_contains( file_get_contents( $plugin . '/includes/class-post-core-blocks-activity.php' ), "sanitize_text_field( wp_unslash( (string) $_POST[ self::NONCE_FIELD ] ) )" ),
 );
 
 $failed = 0;

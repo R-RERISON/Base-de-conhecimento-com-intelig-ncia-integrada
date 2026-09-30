@@ -21,7 +21,7 @@ SOURCE = ROOT / "plugin" / "base-conhecimento-inteligencia-integrada"
 DIST = ROOT / "dist"
 PACKAGE_ROOT = "base-conhecimento-inteligencia-integrada"
 VERSION = "0.6.0-dev"
-BUILD = "p650.1"
+BUILD = "p650.2"
 ZIP_PATH = DIST / f"base-conhecimento-inteligencia-integrada-{VERSION}-{BUILD}.zip"
 MANIFEST_PATH = DIST / f"base-conhecimento-inteligencia-integrada-{VERSION}-{BUILD}.manifest.json"
 VALIDATION_PATH = DIST / "p650-package-validation.json"
@@ -30,6 +30,7 @@ FIXED_TIME = (2026, 9, 29, 0, 0, 0)
 BOOTSTRAP = "base-conhecimento-inteligencia-integrada.php"
 ENGINEERING_LOADER = SOURCE / "includes" / "class-engineering-module-loader.php"
 ENGINEERING_LOADER_REL = "includes/class-engineering-module-loader.php"
+LEGACY_ENGINEERING_ORPHANS = {"includes/class-real-content-acceptance.php"}
 
 REQUIRED_DIST_FILES = {
     "LICENSE",
@@ -223,7 +224,7 @@ def zip_manifest(zip_path: pathlib.Path) -> list[dict]:
 
 def main() -> int:
     engineering_files, engineering_flags = engineering_contract()
-    exclusions = set(engineering_files) | {ENGINEERING_LOADER_REL}
+    exclusions = set(engineering_files) | {ENGINEERING_LOADER_REL} | LEGACY_ENGINEERING_ORPHANS
     files = source_files(exclusions)
 
     with tempfile.TemporaryDirectory(prefix="bdc-p650-") as temp:

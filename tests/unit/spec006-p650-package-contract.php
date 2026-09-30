@@ -42,6 +42,9 @@ $checks = array(
 	'no_source_mutation' => str_contains( $source, '"source_checkout_modified": False' ),
 	'no_cutover' => str_contains( $source, '"cutover_authorized": False' ),
 	'no_retirement' => str_contains( $source, '"retirement_authorized": False' ),
+	'git_source_commit_provenance' => str_contains( $source, 'git_revision("HEAD")' ),
+	'git_plugin_tree_provenance' => str_contains( $source, 'HEAD:plugin/base-conhecimento-inteligencia-integrada' )
+		&& str_contains( $source, '"plugin_tree_sha"' ),
 );
 
 $failed = 0;

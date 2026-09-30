@@ -516,3 +516,47 @@ Próximos blockers:
 2. rollback local com fingerprints PASS;
 3. P640 local Composer/PHPCS/PHPUnit admissível;
 4. então P650/P660 closeout e P670.
+
+
+## Final local gates — executor e proveniência endurecidos
+
+Alterações:
+- novo build P640 admissível: `p640.2`;
+- `p640.1` permanece somente como histórico invalidado;
+- P640 grava `source_commit` + `plugin_tree_sha`;
+- P650 exige o mesmo `plugin_tree_sha` do P640 e falha `BLOCKED_STALE_P640_EVIDENCE` em divergência;
+- P650 exige SHA congelado do p650.3: `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`;
+- P660 local validator: `tools/homologation/spec006/validate-p660-local.py`;
+- executor Windows: `tools/homologation/spec006/run-spec006-final-gates.ps1`.
+
+Executor Windows roda:
+1. P640 local completo / p640.2;
+2. P650 local package quality / p650.3;
+3. P660 local security/privacy quality;
+4. Plugin Check oficial;
+5. rollback;
+6. summary JSON.
+
+Preflight deste runtime:
+- PHP 8.4.23 disponível;
+- Composer ausente;
+- PHPCS ausente;
+- PHPUnit ausente;
+- WP-CLI ausente;
+- portanto gates ambientais/quality finais não podem ser legitimamente executados aqui;
+- evidência: `evidence/spec006-final-local-gates-preflight-blocked-runtime-20260930.json`.
+
+Composer:
+- `composer.lock` não está versionado;
+- bootstrap de dependências no executor é opt-in;
+- não resolver dependências silenciosamente.
+
+Próxima evidência esperada:
+- `evidence/spec006-p640-local-validation-current.json` = PASS;
+- `evidence/spec006-p650-local-package-validation-current.json` = PASS;
+- `evidence/spec006-p660-local-validation-current.json` = PASS;
+- `evidence/spec006-p650-p660-plugin-check-current.json`;
+- `evidence/spec006-p650-rollback-current.json`;
+- `evidence/spec006-final-local-gates-summary-current.json`.
+
+Somente depois reconciliar P650/P660, Master Ledger e P670.

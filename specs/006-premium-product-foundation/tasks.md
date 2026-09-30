@@ -202,3 +202,15 @@ P650.2 / P660 environmental smoke — 2026-09-30:
 - evidence: `evidence/spec006-p6502-environmental-smoke-pass-20260930.json`;
 - residual security disposition: `p660-residual-security-disposition-20260930.md`;
 - local official Plugin Check runner: `tools/homologation/spec006/run-p650-p660-plugin-check-local.py`.
+
+
+## P-670 premium foundation acceptance
+
+- [x] P670-01 acceptance contract preparado — `p670-premium-foundation-acceptance-contract-v1.md`.
+- [ ] P670-02 preflight consolidado — BLOCKED por P640/P650/P660 pendentes.
+- [ ] P670-03 quality gate consolidado.
+- [ ] P670-04 security/privacy closeout.
+- [ ] P670-05 Ledger disposition.
+- [ ] P670-06 closeout SPEC-006.
+
+P670 não autoriza 1.0.0, cutover, retirement ou bulk migration.

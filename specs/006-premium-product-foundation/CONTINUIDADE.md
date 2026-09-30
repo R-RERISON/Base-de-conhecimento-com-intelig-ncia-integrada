@@ -796,3 +796,36 @@ Próxima ação:
 3. executar validação completa;
 4. se bloquear, baixar JSON parcial e retornar;
 5. se prosseguir, confirmar rollback e baixar JSON final.
+
+
+## Click-runner 1.0.2 — Plugin Check runtime setup probe
+
+Evidence from 1.0.1:
+- setup-runtime = HTTP 200 OK;
+- Content-Type = text/html;
+- body_length = 0;
+- exact failure occurs inside Plugin Check `Runtime_Environment_Setup::set_up()` before JSON success response.
+
+Official runtime setup behavior reviewed:
+- creates temporary WordPress tables under `pc_` prefix;
+- executes isolated WordPress install;
+- prepares Plugin Check object-cache drop-in;
+- runtime checks later use those isolated tables/theme/plugin context.
+
+Decision:
+- do NOT skip setup-runtime blindly;
+- 1.0.2 runs server-side probe after empty setup response;
+- records can_set_up/is_set_up, FS method, CUSTOM_USER_TABLE, object-cache/drop-in state and pc_ table count;
+- continue only when tables exist AND Plugin Check drop-in is active in the new request;
+- otherwise BLOCKED with objective environmental disposition;
+- post-cleanup probe ensures runtime environment does not remain prepared.
+
+Artifact:
+- `bdc-spec006-final-gates-runner-1.0.2.zip`;
+- SHA-256 `3fb06eee21b7b01d791486c968e37569bf3a114912682ec9a5b4f5a3d211f43c`.
+
+Next:
+1. replace companion 1.0.1 with 1.0.2;
+2. rerun final validation;
+3. if blocked, download JSON and return `plugin_check_runtime_probe`;
+4. if safe_to_continue is true, runner proceeds to official checks and rollback.

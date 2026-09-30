@@ -271,8 +271,6 @@ def main() -> int:
         "plugin_tree_sha": plugin_tree_sha,
         "purpose": "SPEC-006 P-650 production package candidate",
         "production_package_candidate": True,
-        "source_commit": source_commit,
-        "plugin_tree_sha": plugin_tree_sha,
         "version": VERSION,
         "build": BUILD,
         "root": PACKAGE_ROOT,

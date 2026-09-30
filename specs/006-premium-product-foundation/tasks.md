@@ -309,3 +309,13 @@ Click-runner 1.0.1 — Plugin Check transport diagnostics:
 - package: `bdc-spec006-final-gates-runner-1.0.1.zip`;
 - SHA-256: `e497465f1d4dbea2bd5ac548b8c008f357cad173501a9b15dc5b04033cac5982`;
 - p650.3 remains unchanged.
+
+
+Click-runner 1.0.2 — Runtime_Environment_Setup probe:
+- Plugin Check setup-runtime returned HTTP 200 with empty body in homologation;
+- official code path confirmed: temporary WordPress tables + object-cache drop-in preparation;
+- runner 1.0.2 probes `can_set_up()`, `is_set_up()`, filesystem method, custom user-table constants, object-cache/drop-in state and temporary `pc_` tables;
+- automatic continuation is allowed only when runtime isolation is objectively complete (temporary tables + active Plugin Check drop-in);
+- no blind bypass of setup-runtime;
+- post-cleanup probe added;
+- artifact SHA-256: `3fb06eee21b7b01d791486c968e37569bf3a114912682ec9a5b4f5a3d211f43c`.

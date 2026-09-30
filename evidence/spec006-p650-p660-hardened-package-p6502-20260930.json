@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-650/P-660",
+  "phase": "HARDENED_HOMOLOGATION_PACKAGE",
+  "status": "PASS",
+  "execution_mode": "LOCAL_ONLY",
+  "date": "2026-09-30",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.2.zip",
+    "sha256": "1d48ecc25d2f1bbe173ab83e6368f46306c5de054cdd19b411945c328b6051f7",
+    "files": 102,
+    "php_files": 83
+  },
+  "changes_from_p650_1": [
+    "Removed orphan class-real-content-acceptance.php from distribution package.",
+    "Removed HTTP_HOST trust from Public_Auth_Bridge login redirect construction."
+  ],
+  "validation": {
+    "deterministic_equal": true,
+    "php_lint_checked": 83,
+    "php_lint_failed": 0,
+    "single_root": true,
+    "engineering_loader_absent": true,
+    "orphan_acceptance_absent": true,
+    "forbidden_repository_paths_absent": true,
+    "http_host_trust_absent": true
+  },
+  "security_inventory": {
+    "previous_package_php_scanned": 84,
+    "flagged_files": 25,
+    "critical_secret_files": 0,
+    "network_high": 0,
+    "mutation_high": 0,
+    "db_high": 0
+  },
+  "gate_closure_authorized": false,
+  "cutover_authorized": false,
+  "retirement_authorized": false,
+  "next_gate": "P660_ENVIRONMENTAL_SMOKE_AND_P650_OFFICIAL_PLUGIN_CHECK"
+}

@@ -697,3 +697,38 @@ Evidência:
 Nenhum novo ZIP foi gerado e o runtime do plugin não foi alterado.
 
 Próxima execução admissível continua sendo `run-spec006-final-gates.ps1` em workstation com checkout + Composer tooling + WordPress/WP-CLI.
+
+
+## Click-to-run WordPress para final gates
+
+Companion temporário criado:
+- `bdc-spec006-final-gates-runner-1.0.0.zip`;
+- SHA-256 `3e34569d1eb60eae5c2fd89e14dd07b5b683d5c744bbff9cff664c4d6e5ba531`;
+- NÃO substitui nem modifica o BDC p650.3.
+
+Fluxo no WordPress:
+1. manter p650.3 instalado/ativo;
+2. instalar/ativar o companion;
+3. abrir Base de Conhecimento -> SPEC-006 Final Gates;
+4. preparar Plugin Check oficial se necessário;
+5. Executar validação completa;
+6. confirmar rollback controlado;
+7. baixar JSON e retornar para closeout.
+
+O companion:
+- verifica p650.3 byte-a-byte por manifest;
+- valida runtime Search/Public/Word Cloud;
+- usa Plugin Check oficial via WP Admin AJAX;
+- não usa AI/experimental/PCP Ignore;
+- executa rollback resumível p650.3 -> p650.2 -> p650.3;
+- compara hashes de post_content e metas BDC;
+- valida identidade final do p650.3.
+
+Limite:
+- PHPCS/WPCS e PHPUnit permanecem EXTERNAL_TOOLING_REQUIRED.
+
+Contrato:
+- `specs/006-premium-product-foundation/spec006-wordpress-click-runner-contract-v1.md`.
+
+Evidence de package:
+- `evidence/spec006-wordpress-click-runner-package-20260930.json`.

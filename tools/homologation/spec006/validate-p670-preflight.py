@@ -33,6 +33,7 @@ PATHS = {
     "p640": EVIDENCE / "spec006-p640-local-validation-current.json",
     "p650": EVIDENCE / "spec006-p650-local-package-validation-current.json",
     "p650_env": EVIDENCE / "spec006-p6503-environmental-smoke-pass-20260930.json",
+    "p640_env": EVIDENCE / "spec006-p640-environmental-reconciliation-current.json",
     "p660": EVIDENCE / "spec006-p660-local-validation-current.json",
     "plugin_check": EVIDENCE / "spec006-p650-p660-plugin-check-current.json",
     "rollback": EVIDENCE / "spec006-p650-rollback-current.json",
@@ -164,6 +165,20 @@ def main() -> int:
         )
     )
 
+    p640_env = loaded["p640_env"]
+    checks.append(
+        step(
+            "p640_environmental_runtime_reconciled",
+            status_is(p640_env, "PASS")
+            and nested(p640_env, "execution_mode") == "LOCAL_ONLY"
+            and nested(p640_env, "artifact", "sha256") == EXPECTED_PACKAGE_SHA256
+            and nested(p640_env, "runtime_probe", "payload", "pass") is True
+            and nested(p640_env, "invariants", "github_actions_used") is False,
+            status=nested(p640_env, "status"),
+            package_sha256=nested(p640_env, "artifact", "sha256"),
+        )
+    )
+
     p650 = loaded["p650"]
     checks.append(
         step(
@@ -290,7 +305,7 @@ def main() -> int:
     )
 
     # Explicitly preserve product-governance boundaries.
-    boundary_sources = [p640, p650, p660, env, plugin_check, rollback, summary]
+    boundary_sources = [p640, p640_env, p650, p660, env, plugin_check, rollback, summary]
     forbidden_true: list[str] = []
     for idx, data in enumerate(boundary_sources):
         if not isinstance(data, dict):
@@ -331,6 +346,7 @@ def main() -> int:
             "p600_p610_p620_are_historical": True,
             "material_claims_reproved_locally_by": [
                 "P640 local WPCS/PHPUnit/build",
+                "P640 environmental runtime reconciliation on frozen p650.3",
                 "P650 local deterministic package and checksum",
                 "P660 local security WPCS/inventory",
                 "Official Plugin Check on frozen p650.3",

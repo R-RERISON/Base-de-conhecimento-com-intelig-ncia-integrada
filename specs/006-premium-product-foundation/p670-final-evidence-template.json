@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-670",
+  "phase": "PREMIUM_FOUNDATION_CLOSEOUT",
+  "status": "TEMPLATE_NOT_EVIDENCE",
+  "date": "YYYY-MM-DD",
+  "source_commit": null,
+  "plugin_tree_sha": null,
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip",
+    "sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+  },
+  "gates": {
+    "p640_local": null,
+    "p640_environmental_reconciliation": null,
+    "p650_local_package": null,
+    "p650_environmental_smoke": null,
+    "p650_rollback": null,
+    "p660_local_security": null,
+    "official_plugin_check": null,
+    "p670_preflight": null
+  },
+  "quality": {
+    "php_lint": null,
+    "wpcs_p640": null,
+    "phpunit": null,
+    "wpcs_p660": null,
+    "static_contracts": null,
+    "deterministic_package": null,
+    "package_integrity": null
+  },
+  "security_privacy": {
+    "secret_critical": null,
+    "network_high": null,
+    "mutation_high": null,
+    "db_high": null,
+    "plugin_check_residual_disposition_complete": null
+  },
+  "rollback": {
+    "status": null,
+    "data_preserved": null,
+    "post_content_hash_equal": null,
+    "bdc_meta_hash_equal": null
+  },
+  "ledger": {
+    "PROD-003": null,
+    "PROD-004": null,
+    "PROD-005": null,
+    "PROD-006": null,
+    "other_ids_changed": false
+  },
+  "known_debt": [],
+  "invariants": {
+    "github_actions_used_as_final_gate_executor": false,
+    "version_1_0_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "bulk_migration_authorized": false
+  },
+  "next_gate": "TEMPLATE_ONLY"
+}

@@ -67,9 +67,19 @@ def fingerprint(wp_cli: str, wp_path: pathlib.Path) -> dict:
     code = r'''<?php
 global $wpdb;
 
-$post_count = (int) $wpdb->get_var(
-    "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = 'post'"
+$posts = $wpdb->get_results(
+    "SELECT ID, post_content FROM {$wpdb->posts} WHERE post_type = 'post' ORDER BY ID ASC",
+    ARRAY_A
 );
+$post_count = count( $posts );
+$post_hash_context = hash_init( 'sha256' );
+foreach ( $posts as $row ) {
+    hash_update(
+        $post_hash_context,
+        (string) $row['ID'] . "\0" . (string) $row['post_content'] . "\0"
+    );
+}
+$post_content_sha256 = hash_final( $post_hash_context );
 
 $meta_keys = array(
     '_bdc_es_objective',
@@ -80,19 +90,33 @@ $meta_keys = array(
 );
 
 $meta_counts = array();
+$meta_hash_context = hash_init( 'sha256' );
 foreach ( $meta_keys as $meta_key ) {
-    $meta_counts[ $meta_key ] = (int) $wpdb->get_var(
+    $rows = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = %s",
+            "SELECT post_id, meta_key, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s ORDER BY post_id ASC, meta_id ASC",
             $meta_key
-        )
+        ),
+        ARRAY_A
     );
+    $meta_counts[ $meta_key ] = count( $rows );
+    foreach ( $rows as $row ) {
+        hash_update(
+            $meta_hash_context,
+            (string) $row['post_id'] . "\0" .
+            (string) $row['meta_key'] . "\0" .
+            (string) $row['meta_value'] . "\0"
+        );
+    }
 }
+$bdc_meta_sha256 = hash_final( $meta_hash_context );
 
 echo wp_json_encode(
     array(
         'post_count' => $post_count,
+        'post_content_sha256' => $post_content_sha256,
         'meta_counts' => $meta_counts,
+        'bdc_meta_sha256' => $bdc_meta_sha256,
         'plugin_version' => defined( 'BDC_KB_VERSION' ) ? BDC_KB_VERSION : null,
     )
 );
@@ -181,7 +205,9 @@ def main() -> int:
     preserved = (
         comparable
         and before["payload"]["post_count"] == rollback_fingerprint["payload"]["post_count"] == after["payload"]["post_count"]
+        and before["payload"]["post_content_sha256"] == rollback_fingerprint["payload"]["post_content_sha256"] == after["payload"]["post_content_sha256"]
         and before["payload"]["meta_counts"] == rollback_fingerprint["payload"]["meta_counts"] == after["payload"]["meta_counts"]
+        and before["payload"]["bdc_meta_sha256"] == rollback_fingerprint["payload"]["bdc_meta_sha256"] == after["payload"]["bdc_meta_sha256"]
     )
     operational = all(step.get("pass", False) for step in steps if step["name"] not in {"fingerprint_before", "fingerprint_previous", "fingerprint_after"})
     passed = operational and preserved and after["pass"]

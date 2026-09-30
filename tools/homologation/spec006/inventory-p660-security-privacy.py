@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 DIST = ROOT / "dist"
-DEFAULT_PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.1.zip"
+DEFAULT_PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
 OUTPUT = DIST / "p660-security-privacy-inventory.json"
 
 SUPERGLOBAL_RE = re.compile(r"\$_(POST|GET|REQUEST|SERVER|FILES|COOKIE)")

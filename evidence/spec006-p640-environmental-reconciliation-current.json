@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-640",
+  "phase": "ENVIRONMENTAL_RUNTIME_RECONCILIATION",
+  "status": "PASS",
+  "execution_mode": "WORDPRESS_CLICK_RUNNER",
+  "date": "2026-09-30",
+  "acceptance_source": "human_homologation_report",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip",
+    "sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231",
+    "product_version": "0.6.0-dev"
+  },
+  "installed_identity": {
+    "pass": true,
+    "expected_files": 102,
+    "checked_files": 102,
+    "missing": [],
+    "mismatched": [],
+    "extra": []
+  },
+  "runtime_probe": {
+    "pass": true,
+    "checks": {
+      "version": true,
+      "core_loader": true,
+      "module_registry": true,
+      "plugin": true,
+      "engineering_loader_absent": true,
+      "engineering_loader_file_absent": true,
+      "search_service": true,
+      "public_experience": true,
+      "word_cloud_service": true,
+      "search_hook": true,
+      "public_template_hook": true,
+      "word_cloud_hook": true,
+      "plugin_active": true
+    },
+    "failed": []
+  },
+  "reconciliation_policy": {
+    "technical_p640_package_install_required": false,
+    "production_candidate_used_as_runtime_proof": true
+  },
+  "invariants": {
+    "content_mutation_requested": false,
+    "data_migration_requested": false,
+    "github_actions_used": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false
+  },
+  "remaining_p640_blocker": "LOCAL_WPCS_PHPUNIT_TOOLING",
+  "next_gate": "P640_LOCAL_QUALITY_CLOSEOUT"
+}

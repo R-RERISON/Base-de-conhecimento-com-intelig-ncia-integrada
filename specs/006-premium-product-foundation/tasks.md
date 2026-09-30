@@ -286,3 +286,16 @@ Final gate execution attempt — 2026-09-30:
 - external Git DNS unavailable;
 - therefore P640 WPCS/PHPUnit, P640 environmental reconciliation, official Plugin Check, rollback and P670 remain BLOCKED_ENVIRONMENTAL, not failed;
 - evidence: `evidence/spec006-final-gates-execution-attempt-20260930.json`.
+
+
+WordPress click-to-run companion — 2026-09-30:
+- artifact: `bdc-spec006-final-gates-runner-1.0.0.zip`;
+- SHA-256: `3e34569d1eb60eae5c2fd89e14dd07b5b683d5c744bbff9cff664c4d6e5ba531`;
+- separate temporary plugin; p650.3 remains unchanged;
+- native package/runtime identity + fingerprint;
+- official Plugin Check via WP Admin AJAX;
+- resumable rollback p650.3 -> p650.2 -> p650.3;
+- final JSON download;
+- PHPCS/WPCS + PHPUnit remain external tooling;
+- contract: `spec006-wordpress-click-runner-contract-v1.md`;
+- evidence: `evidence/spec006-wordpress-click-runner-package-20260930.json`.

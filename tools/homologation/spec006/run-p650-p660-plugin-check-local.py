@@ -85,12 +85,23 @@ def main() -> int:
 
     # O Plugin Check oficial opera sobre plugin instalado. A instalação deste ZIP deve
     # ocorrer no mesmo WordPress antes desta execução para preservar o artefato testado.
+    plugin_check_cli = wp / "wp-content" / "plugins" / "plugin-check" / "cli.php"
+    if not plugin_check_cli.is_file():
+        print(json.dumps({
+            "status": "BLOCKED_PLUGIN_CHECK_CLI_MISSING",
+            "required": str(plugin_check_cli),
+            "instruction": "Plugin Check oficial deve estar instalado no WordPress informado.",
+        }, ensure_ascii=False, indent=2))
+        return 2
+
     checks.append(run([
         wp_cli,
         "plugin",
         "check",
-        "base-conhecimento-inteligencia-integrada",
-        "--format=json",
+        str(package),
+        "--format=strict-json",
+        "--mode=update",
+        f"--require={plugin_check_cli}",
         f"--path={wp}",
     ]))
 
@@ -104,6 +115,10 @@ def main() -> int:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "package": package.name,
         "package_sha256": package_sha,
+        "plugin_check_target": "ZIP_PATH_DIRECT",
+        "runtime_checks_enabled": True,
+        "format": "strict-json",
+        "mode": "update",
         "wp_path": str(wp),
         "checks": checks,
         "invariants": {

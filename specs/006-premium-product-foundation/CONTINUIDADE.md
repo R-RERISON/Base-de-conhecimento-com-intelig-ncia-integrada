@@ -276,3 +276,54 @@ Próximo passo:
 5. validar fresh install, upgrade sobre 0.5.x/0.6.0-dev, preservação de dados e rollback;
 6. executar Plugin Check no mesmo ZIP;
 7. somente então fechar P650 e atualizar PROD-005/PROD-006 conforme evidência.
+
+
+## P650.1 — pacote pronto para homologação ambiental (2026-09-30)
+
+Artefato:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.1.zip`;
+- SHA-256: `503234ece2620d01bb556e5810a374f07e2153221171f21755bbe7c1b4f5b926`;
+- 103 arquivos / 84 PHP;
+- manifest SHA-256: `4df8aaf2142d1572cfae4c67fbe54d763d56a8256c4b78bc4b2b73a9303086f4`.
+
+Proveniência:
+- source HEAD usado para equivalência: `b45386a4f173bdafd7b44d2a56c43f4883c49e55`;
+- plugin subtree SHA esperado: `ddb30b150b78c08e9163f7324c5f911c4ead13d0`;
+- snapshot local reconstruído confirmou exatamente o mesmo Git tree SHA;
+- build executado localmente;
+- GitHub Actions não foi usado como executor de gate/package.
+
+Validação local do ZIP:
+- deterministic build PASS;
+- single root PASS;
+- engineering files = 0;
+- engineering bootstrap tokens = 0;
+- forbidden repository paths = 0;
+- missing declared Core/Product runtime files = 0;
+- PHP lint dentro do ZIP = 84/84 PASS.
+
+Status:
+- autorizado para HOMOLOGAÇÃO AMBIENTAL;
+- NÃO autorizado para produção;
+- P640-06 completo ainda depende de Composer/PHPCS/PHPUnit local;
+- P650 install/upgrade/rollback e Plugin Check ainda pendentes.
+
+Evidência:
+- `evidence/spec006-p650-homologation-package-20260930.json`.
+
+### Próxima ação no ambiente
+
+Instalar exatamente o ZIP `p650.1` e registrar:
+
+1. versão WordPress/PHP;
+2. instalação/upgrade sem fatal error;
+3. Knowledge Workspace acessível;
+4. Search funcional;
+5. Public Experience Preview funcional;
+6. Word Cloud funcional;
+7. ausência dos menus/runners de engenharia;
+8. ausência de alteração automática de `post_content`;
+9. ausência de escrita em `_elementor_data`;
+10. comportamento de rollback, se executado.
+
+Não reconstruir o ZIP antes da homologação; o SHA acima identifica o artefato sob teste.

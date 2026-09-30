@@ -374,3 +374,46 @@ Próximo passo:
 6. não promover PROD-004/005/006 antes das evidências completas.
 
 GitHub Actions continua proibido como executor de gate.
+
+
+## P650.2 environmental PASS / P660-06 fechado
+
+Aceite humano:
+- package testado: `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.2.zip`;
+- SHA-256: `1d48ecc25d2f1bbe173ab83e6368f46306c5de054cdd19b411945c328b6051f7`;
+- resultado reportado: tudo funcionando aparentemente sem problemas;
+- P660 hardened environmental smoke: PASS.
+
+Evidência:
+- `evidence/spec006-p6502-environmental-smoke-pass-20260930.json`.
+
+Residual P660:
+- `specs/006-premium-product-foundation/p660-residual-security-disposition-20260930.md`;
+- SECRET_CRITICAL=0;
+- NETWORK_HIGH=0;
+- MUTATION_HIGH=0;
+- DB_HIGH=0;
+- sinais restantes classificados como REVIEW/JUSTIFIED até Plugin Check oficial;
+- nenhum waiver global criado.
+
+Plugin Check:
+- executor local: `tools/homologation/spec006/run-p650-p660-plugin-check-local.py`;
+- deve operar sobre o MESMO ZIP p650.2;
+- GitHub Actions não é permitido;
+- não gerar p650.3 antes do resultado do Plugin Check, salvo correção concreta necessária.
+
+Estado:
+- P660-06 PASS;
+- P660-07 pendente Plugin Check oficial;
+- P650-06 ainda não fecha porque rollback não foi executado;
+- P650-07 pendente Plugin Check;
+- P640-06 continua pendente pelo tooling Composer/PHPCS/PHPUnit local completo.
+
+Próximo passo lógico:
+1. executar Plugin Check oficial local sobre p650.2;
+2. versionar JSON do resultado;
+3. corrigir somente findings reais de produção;
+4. se houver alteração de código, gerar novo package e repetir smoke ambiental;
+5. se não houver blocker, executar/registrar rollback P650;
+6. fechar P650/P660 somente após evidências completas;
+7. então preparar P670 Premium Foundation Acceptance.

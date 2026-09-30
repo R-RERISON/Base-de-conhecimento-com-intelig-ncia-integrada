@@ -21,7 +21,7 @@ P640_EVIDENCE = ROOT / "evidence" / "spec006-p640-local-validation-current.json"
 P650_EVIDENCE = ROOT / "evidence" / "spec006-p650-local-package-validation-current.json"
 P650_BUILDER = ROOT / "tools" / "homologation" / "spec006" / "build-p650-production.py"
 P650_STATIC = ROOT / "tests" / "unit" / "spec006-p650-package-contract.php"
-PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.1.zip"
+PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.2.zip"
 PACKAGE_REPORT = DIST / "p650-package-validation.json"
 
 

@@ -657,3 +657,43 @@ Fluxo final:
 11. materializar evidence/closeout final;
 12. fechar SPEC-006;
 13. somente então ativar SPEC-007.
+
+
+## Execução real dos final gates — tentativa deste runtime
+
+Foi feita a tentativa de execução dos gates finais no runtime atual.
+
+Checks que puderam ser executados:
+- p650.3 SHA-256 = `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`;
+- root único PASS;
+- 102 arquivos / 83 PHP;
+- PHP lint 83/83 PASS;
+- forbidden repository paths = 0;
+- engineering/lab named files = 0;
+- Engineering_Module_Loader ausente;
+- flag P640 ambiental ausente do package;
+- Search/Public Experience/Word Cloud habilitados;
+- required runtime files missing = 0;
+- plugin tree atual = `2a205aa5ef1804f4f3da30f3f9832709d25bc800`, sem mudança desde homologação.
+
+Blockers reais do runtime atual:
+- Composer ausente;
+- PHPCS ausente;
+- PHPUnit ausente;
+- WP-CLI ausente;
+- WordPress runtime não exposto;
+- checkout do repositório não montado;
+- clone externo bloqueado por DNS (`Could not resolve host: github.com`).
+
+Classificação:
+- `BLOCKED_EXTERNAL_ENVIRONMENT`;
+- não é FAIL funcional;
+- não fecha P640/P650/P660/P670;
+- não autoriza simular Plugin Check/rollback.
+
+Evidência:
+- `evidence/spec006-final-gates-execution-attempt-20260930.json`.
+
+Nenhum novo ZIP foi gerado e o runtime do plugin não foi alterado.
+
+Próxima execução admissível continua sendo `run-spec006-final-gates.ps1` em workstation com checkout + Composer tooling + WordPress/WP-CLI.

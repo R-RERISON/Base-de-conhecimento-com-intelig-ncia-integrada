@@ -261,3 +261,10 @@ P640 environmental reconciliation decision — 2026-09-30:
 - valida classes/módulos/hooks e ausência de Engineering_Module_Loader;
 - read-only probe; nenhuma mutation/migration;
 - evidence esperada: `evidence/spec006-p640-environmental-reconciliation-current.json`.
+
+
+P670 final closeout artifacts prepared — 2026-09-30:
+- `p670-final-closeout-template.md`;
+- `p670-final-evidence-template.json`;
+- both are TEMPLATE/NOT EVIDENCE until final gates PASS;
+- SPEC007 handoff plan prepared but SPEC007 remains NOT ACTIVE.

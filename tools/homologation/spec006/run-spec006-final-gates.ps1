@@ -182,6 +182,25 @@ try {
     $summaryPath = Join-Path $Evidence "spec006-final-local-gates-summary-current.json"
     $summary | ConvertTo-Json -Depth 8 | Set-Content -Encoding UTF8 $summaryPath
 
+    $p670Contract = Join-Path $Root "tests\unit\spec006-p670-preflight-contract.php"
+    Write-Host ""
+    Write-Host "=== P670 static preflight contract ==="
+    & $php $p670Contract
+    $p670ContractExit = $LASTEXITCODE
+
+    $p670Script = Join-Path $Root "tools\homologation\spec006\validate-p670-preflight.py"
+    Write-Host ""
+    Write-Host "=== P670 Premium Foundation preflight ==="
+    & $python $p670Script
+    $p670Exit = $LASTEXITCODE
+
+    $summary.p670 = [ordered]@{
+        static_contract_exit_code = $p670ContractExit
+        preflight_exit_code = $p670Exit
+        evidence = "evidence/spec006-p670-preflight-current.json"
+    }
+    $summary | ConvertTo-Json -Depth 8 | Set-Content -Encoding UTF8 $summaryPath
+
     Write-Host ""
     Write-Host "=== FINAL LOCAL GATE SUMMARY ==="
     Write-Host "P640: PASS"
@@ -189,9 +208,11 @@ try {
     Write-Host "P660 local security/privacy: PASS"
     Write-Host "Plugin Check exit: $pluginCheckExit"
     Write-Host "Rollback exit: $rollbackExit"
+    Write-Host "P670 contract exit: $p670ContractExit"
+    Write-Host "P670 preflight exit: $p670Exit"
     Write-Host "Summary: $summaryPath"
 
-    if ($pluginCheckExit -ne 0 -or $rollbackExit -ne 0) {
+    if ($pluginCheckExit -ne 0 -or $rollbackExit -ne 0 -or $p670ContractExit -ne 0 -or $p670Exit -ne 0) {
         exit 1
     }
 

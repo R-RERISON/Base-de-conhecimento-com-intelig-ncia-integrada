@@ -130,6 +130,15 @@ try {
         (Join-Path $Root "tools\homologation\spec006\validate-p660-local.py")
     )
 
+    Invoke-Gate "P640 environmental runtime reconciliation / p650.3" @(
+        $python,
+        (Join-Path $Root "tools\homologation\spec006\run-p640-environmental-reconciliation-local.py"),
+        "--wp-path",
+        $WpPath,
+        "--zip",
+        $CandidateZip
+    )
+
     $pluginCheckScript = Join-Path $Root "tools\homologation\spec006\run-p650-p660-plugin-check-local.py"
     Write-Host ""
     Write-Host "=== P650/P660 official Plugin Check ==="
@@ -164,6 +173,10 @@ try {
         }
         p660_local = [ordered]@{
             evidence = "evidence/spec006-p660-local-validation-current.json"
+            completed = $true
+        }
+        p640_environmental = [ordered]@{
+            evidence = "evidence/spec006-p640-environmental-reconciliation-current.json"
             completed = $true
         }
         plugin_check = [ordered]@{
@@ -217,6 +230,7 @@ try {
     Write-Host "P640: PASS"
     Write-Host "P650 local quality: PASS"
     Write-Host "P660 local security/privacy: PASS"
+    Write-Host "P640 environmental runtime reconciliation: PASS"
     Write-Host "Plugin Check exit: $pluginCheckExit"
     Write-Host "Rollback exit: $rollbackExit"
     Write-Host "P670 contract exit: $p670ContractExit"

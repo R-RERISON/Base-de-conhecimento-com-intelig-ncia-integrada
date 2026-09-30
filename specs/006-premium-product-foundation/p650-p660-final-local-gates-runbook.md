@@ -143,3 +143,30 @@ Essa opção deve ser tratada como bootstrap de tooling e o lock gerado deve ser
 P650 não aceita mais apenas um JSON P640 com PASS. O `plugin_tree_sha` do P640 deve ser idêntico ao source atual do plugin.
 
 Mudanças apenas em docs/tools não invalidam a evidência; mudanças no subtree do plugin invalidam.
+
+
+## 5. P670 no mesmo executor
+
+Após P640/P650/P660, Plugin Check e rollback, o executor também roda:
+
+1. `tests/unit/spec006-p670-preflight-contract.php`;
+2. `tools/homologation/spec006/validate-p670-preflight.py`;
+3. se e somente se o preflight retornar `PASS_PRECONDITIONS`, executa `generate-p670-closeout-candidate.py`.
+
+Outputs adicionais:
+
+- `evidence/spec006-p670-preflight-current.json`;
+- `evidence/spec006-p670-closeout-candidate-current.json`;
+- `specs/006-premium-product-foundation/p670-closeout-candidate-current.md`.
+
+O closeout candidate é uma proposta. O Master Ledger não é alterado automaticamente.
+
+### Critério para revisão final
+
+Somente abrir a revisão final do P670 quando:
+
+- P670 preflight = `PASS_PRECONDITIONS`;
+- closeout candidate = `READY_FOR_HUMAN_LEDGER_REVIEW`;
+- Plugin Check e rollback estiverem PASS;
+- o mesmo `plugin_tree_sha` for mantido;
+- o artifact SHA continuar igual ao p650.3 congelado.

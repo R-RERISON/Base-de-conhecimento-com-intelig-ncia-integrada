@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-650",
+  "phase": "ENVIRONMENTAL_INSTALL_RUNTIME_ACCEPTANCE",
+  "status": "PASS_WITH_PENDING_ROLLBACK_AND_PLUGIN_CHECK",
+  "date": "2026-09-30",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.1.zip",
+    "sha256": "503234ece2620d01bb556e5810a374f07e2153221171f21755bbe7c1b4f5b926"
+  },
+  "acceptance_source": "human_homologation_report",
+  "reported_result": "Sem erros, tudo funcionando.",
+  "validated_scope": {
+    "install_or_upgrade_completed_without_reported_error": true,
+    "runtime_operational": true,
+    "functional_smoke_reported_ok": true
+  },
+  "not_explicitly_validated": {
+    "rollback": true,
+    "official_plugin_check_on_same_zip": true,
+    "full_fingerprint_diff": true
+  },
+  "gate_closure_authorized": false,
+  "cutover_authorized": false,
+  "retirement_authorized": false,
+  "next_gate": "P650_PLUGIN_CHECK_AND_ROLLBACK_EVIDENCE"
+}

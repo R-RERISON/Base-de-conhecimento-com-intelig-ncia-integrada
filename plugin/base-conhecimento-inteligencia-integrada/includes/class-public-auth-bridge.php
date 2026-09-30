@@ -89,14 +89,17 @@ final class Public_Auth_Bridge {
 	}
 
 	private static function current_url(): string {
-		$scheme = is_ssl() ? 'https://' : 'http://';
-		$host = isset( $_SERVER['HTTP_HOST'] ) && is_scalar( $_SERVER['HTTP_HOST'] )
-			? sanitize_text_field( wp_unslash( (string) $_SERVER['HTTP_HOST'] ) )
-			: '';
 		$uri = isset( $_SERVER['REQUEST_URI'] ) && is_scalar( $_SERVER['REQUEST_URI'] )
 			? wp_unslash( (string) $_SERVER['REQUEST_URI'] )
 			: '/';
-		return '' !== $host ? $scheme . $host . $uri : home_url( '/' );
+
+		$path = wp_parse_url( $uri, PHP_URL_PATH );
+		$path = is_string( $path ) && '' !== $path ? $path : '/';
+
+		$query = wp_parse_url( $uri, PHP_URL_QUERY );
+		$query = is_string( $query ) && '' !== $query ? '?' . $query : '';
+
+		return home_url( $path . $query );
 	}
 
 	private static function initials( string $name ): string {

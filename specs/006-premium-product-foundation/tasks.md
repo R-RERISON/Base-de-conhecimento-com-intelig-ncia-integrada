@@ -82,7 +82,7 @@ Next active gate:
 - [x] P640-04 separar loaders de engenharia/homologação.
 - [x] P640-05 reduzir bootstrap ao composition root.
 - [ ] P640-06 static contract + PHP lint + WPCS afetado — REABERTO.
-- [ ] P640-07 regressão/environmental acceptance — resultado funcional recebido; fechamento bloqueado até package local conforme.
+- [ ] P640-07 regressão/environmental acceptance — runner de reconciliação implementado para provar o runtime modular diretamente no p650.3 congelado; execução WP-CLI pendente.
 - [ ] P640-08 package/runtime inventory para P-650 — ferramenta implementada; fechamento aguarda P640-06/P640-07 conformes.
 
 
@@ -251,3 +251,13 @@ Final local gate hardening — 2026-09-30:
 - current assistant runtime remains BLOCKED_LOCAL_TOOLING (Composer/PHPCS/PHPUnit/WP-CLI absent);
 - `composer.lock` is not versioned; automatic dependency bootstrap is therefore explicit, not silent;
 - evidence: `evidence/spec006-final-local-gates-preflight-blocked-runtime-20260930.json`.
+
+
+P640 environmental reconciliation decision — 2026-09-30:
+- não exigir instalação de um package técnico p640.2 somente para runtime proof;
+- local quality continua gerando p640.2 para proveniência/gate;
+- runtime ambiental é reconciliado no próprio p650.3 já homologado;
+- runner: `tools/homologation/spec006/run-p640-environmental-reconciliation-local.py`;
+- valida classes/módulos/hooks e ausência de Engineering_Module_Loader;
+- read-only probe; nenhuma mutation/migration;
+- evidence esperada: `evidence/spec006-p640-environmental-reconciliation-current.json`.

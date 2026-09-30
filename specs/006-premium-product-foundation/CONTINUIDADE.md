@@ -560,3 +560,46 @@ Próxima evidência esperada:
 - `evidence/spec006-final-local-gates-summary-current.json`.
 
 Somente depois reconciliar P650/P660, Master Ledger e P670.
+
+
+## P670 — preflight e closeout candidate automatizados
+
+Implementado:
+- `tools/homologation/spec006/validate-p670-preflight.py`;
+- `tests/unit/spec006-p670-preflight-contract.php`;
+- `tools/homologation/spec006/generate-p670-closeout-candidate.py`;
+- `specs/006-premium-product-foundation/p670-master-ledger-disposition-plan.md`.
+
+O executor Windows agora continua após Plugin Check/rollback:
+1. grava summary local;
+2. executa contrato estático P670;
+3. executa P670 preflight;
+4. somente com `PASS_PRECONDITIONS`, gera closeout candidate;
+5. closeout candidate permanece `READY_FOR_HUMAN_LEDGER_REVIEW`.
+
+P670 exige coerência de:
+- P640 LOCAL_ONLY PASS;
+- P640 plugin_tree_sha = source atual;
+- P640 build p640.2;
+- P650 LOCAL_ONLY PASS;
+- frozen SHA p650.3;
+- P660 LOCAL_ONLY PASS;
+- smoke ambiental p650.3;
+- Plugin Check oficial LOCAL_ONLY no mesmo SHA;
+- rollback PASS + data_preserved=true;
+- final local summary no mesmo source/package.
+
+Política histórica:
+- P600/P610/P620 remotos são preservados como histórico;
+- não fecham os gates atuais;
+- claims materiais são reprovadas pelos gates locais P640/P650/P660/Plugin Check.
+
+Master Ledger:
+- nenhum update automático;
+- candidatos condicionais após PASS_PRECONDITIONS: PROD-003/004/005/006 -> IMPROVED_VERIFIED;
+- aplicar somente após revisão explícita das evidências;
+- nenhuma promoção GRE/KB2/ASI/ENV por inferência.
+
+Próximo passo externo indispensável:
+- executar `run-spec006-final-gates.ps1` em checkout Windows com tooling + WP-CLI + WordPress;
+- retornar os JSONs gerados para revisão e closeout final.

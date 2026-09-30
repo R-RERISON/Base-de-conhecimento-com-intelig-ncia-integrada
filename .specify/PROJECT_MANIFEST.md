@@ -8,7 +8,7 @@
 
 **Idioma:** Português do Brasil
 
-**Estado:** SPEC-000 histórica concluída + Premium Rebaseline v2; SPEC-001/002/003/004 concluídas; SPEC-005 ATIVA com scope refinado; roadmap futuro reestruturado em SPEC-006–014.
+**Estado:** SPEC-000 histórica concluída + Premium Rebaseline v2; SPEC-001/002/003/004/005 concluídas; SPEC-006 ATIVA em closeout de foundation; SPEC-007 é a próxima SPEC, ainda NÃO ATIVA; roadmap segue até SPEC-014.
 
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
@@ -227,9 +227,9 @@ T096 deve comprovar, usando `serialize_blocks()`/`parse_blocks()` reais do Core 
 2. Classificação — concluída;
 3. Review & Governança — concluída;
 4. Content Extractor/KD/Canonicalization — concluída;
-5. Search Lexical + Golden — ativa, scope refinado;
-6. Premium Product Foundation, Domain Consolidation & Distribution;
-7. Public Knowledge Experience;
+5. Search Lexical + Golden — concluída / boundary CLOSED;
+6. Premium Product Foundation, Domain Consolidation & Distribution — ATIVA / closeout;
+7. Public Knowledge Experience — NEXT / NOT ACTIVE;
 8. Search Intelligence, Telemetry, Privacy & Governed Relevance;
 9. Operations, Indexing & Reliability;
 10. Semantic Search & Vectors — evidence-gated;
@@ -505,3 +505,30 @@ Aceita em 2026-09-18:
 - errors/throwables: 0;
 - G-570 CLOSED;
 - next gate: G-580 Lifecycle.
+
+
+## Atualização operacional — 2026-09-30
+
+Estado canônico atual:
+- SPEC-005 Search Lexical + Golden: **CLOSED / boundary aprovado**;
+- SPEC-006 Premium Product Foundation: **ACTIVE / FINAL GATES**;
+- SPEC-007 Public Knowledge Experience: **NEXT / NOT ACTIVE**.
+
+Artefato funcional congelado da SPEC-006:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip`;
+- SHA-256 `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`;
+- runtime homologado e sem alteração posterior.
+
+Gates finais da SPEC-006:
+1. P640 local quality / `p640.2`;
+2. P650 local package quality;
+3. P660 local security/privacy;
+4. P640 environmental runtime reconciliation no próprio `p650.3`;
+5. Plugin Check oficial local;
+6. rollback com fingerprints;
+7. P670 preflight;
+8. revisão humana do Master Ledger e closeout.
+
+Regra:
+- SPEC-007 pode ter handoff/documentação preparada;
+- nenhuma implementação runtime SPEC-007 começa antes do closeout formal da SPEC-006.

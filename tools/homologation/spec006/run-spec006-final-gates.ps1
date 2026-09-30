@@ -120,6 +120,11 @@ try {
         (Join-Path $Root "tools\homologation\spec006\validate-p650-local.py")
     )
 
+    Invoke-Gate "P660 local security/privacy quality" @(
+        $python,
+        (Join-Path $Root "tools\homologation\spec006\validate-p660-local.py")
+    )
+
     $pluginCheckScript = Join-Path $Root "tools\homologation\spec006\run-p650-p660-plugin-check-local.py"
     Write-Host ""
     Write-Host "=== P650/P660 official Plugin Check ==="
@@ -152,6 +157,10 @@ try {
             evidence = "evidence/spec006-p650-local-package-validation-current.json"
             completed = $true
         }
+        p660_local = [ordered]@{
+            evidence = "evidence/spec006-p660-local-validation-current.json"
+            completed = $true
+        }
         plugin_check = [ordered]@{
             exit_code = $pluginCheckExit
             evidence = "evidence/spec006-p650-p660-plugin-check-current.json"
@@ -172,6 +181,7 @@ try {
     Write-Host "=== FINAL LOCAL GATE SUMMARY ==="
     Write-Host "P640: PASS"
     Write-Host "P650 local quality: PASS"
+    Write-Host "P660 local security/privacy: PASS"
     Write-Host "Plugin Check exit: $pluginCheckExit"
     Write-Host "Rollback exit: $rollbackExit"
     Write-Host "Summary: $summaryPath"

@@ -485,3 +485,34 @@ Importante:
 - como runtime mudou, p650.3 exige novo smoke ambiental antes do Plugin Check final;
 - depois do PASS ambiental, o Plugin Check deve usar exatamente o SHA do p650.3;
 - P650/P660 continuam abertos até Plugin Check + rollback/evidências restantes.
+
+
+## p650.3 — environmental PASS confirmado
+
+Aceite humano:
+- artefato: `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip`;
+- SHA-256: `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`;
+- resultado: tudo continua funcionando aparentemente;
+- runtime smoke: PASS.
+
+Estado do artefato:
+- FROZEN para os gates finais;
+- não gerar p650.4 sem finding concreto;
+- Plugin Check runner rejeita SHA diferente;
+- P650 local validator atualizado para p650.3.
+
+Rollback:
+- runner: `tools/homologation/spec006/run-p650-rollback-local.py`;
+- fluxo previous -> p650.3;
+- compara contagem e SHA-256 determinístico de post_content;
+- compara contagens e SHA-256 das metas BDC;
+- não exporta conteúdo editorial.
+
+Runbook final:
+- `specs/006-premium-product-foundation/p650-p660-final-local-gates-runbook.md`.
+
+Próximos blockers:
+1. Plugin Check oficial local do p650.3;
+2. rollback local com fingerprints PASS;
+3. P640 local Composer/PHPCS/PHPUnit admissível;
+4. então P650/P660 closeout e P670.

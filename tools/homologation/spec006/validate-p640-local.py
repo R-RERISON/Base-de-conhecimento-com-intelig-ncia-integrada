@@ -35,8 +35,8 @@ WPCS_FILES = (
 )
 
 BUILD_SCRIPT = ROOT / "tools" / "homologation" / "spec006" / "build-p640.py"
-PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.1.zip"
-MANIFEST = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.1.manifest.json"
+PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.2.zip"
+MANIFEST = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.2.manifest.json"
 PACKAGE_VALIDATION = DIST / "p640-local-package-validation.json"
 
 
@@ -108,12 +108,12 @@ def require_local_tools() -> tuple[str, pathlib.Path, pathlib.Path]:
     return php, phpcs, phpunit
 
 
-def source_commit() -> str | None:
+def git_revision(spec: str) -> str | None:
     git = shutil.which("git")
     if not git or not (ROOT / ".git").exists():
         return None
     result = subprocess.run(
-        [git, "rev-parse", "HEAD"],
+        [git, "rev-parse", spec],
         cwd=ROOT,
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
@@ -121,6 +121,14 @@ def source_commit() -> str | None:
         check=False,
     )
     return result.stdout.strip() if result.returncode == 0 else None
+
+
+def source_commit() -> str | None:
+    return git_revision("HEAD")
+
+
+def plugin_tree_sha() -> str | None:
+    return git_revision("HEAD:plugin/base-conhecimento-inteligencia-integrada")
 
 
 def main() -> int:
@@ -192,6 +200,16 @@ def main() -> int:
             }
         )
 
+    if passed and not plugin_tree_sha():
+        passed = False
+        steps.append(
+            {
+                "name": "plugin_tree_provenance",
+                "pass": False,
+                "reason": "Unable to resolve Git plugin subtree SHA.",
+            }
+        )
+
     report = {
         "schema_version": "1.0.0",
         "gate": "P-640",
@@ -200,6 +218,7 @@ def main() -> int:
         "execution_mode": "LOCAL_ONLY",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source_commit": source_commit(),
+        "plugin_tree_sha": plugin_tree_sha(),
         "environment": {
             "python": sys.version.split()[0],
             "platform": sys.platform,

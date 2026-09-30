@@ -42,7 +42,12 @@ function Invoke-Gate {
 
     Write-Host ""
     Write-Host "=== $Name ==="
-    & $Command[0] $Command[1..($Command.Length - 1)]
+    $exe = $Command[0]
+    $argsList = @()
+    if ($Command.Length -gt 1) {
+        $argsList = $Command[1..($Command.Length - 1)]
+    }
+    & $exe @argsList
     $code = $LASTEXITCODE
     if ($code -ne 0) {
         throw "$Name failed with exit code $code."

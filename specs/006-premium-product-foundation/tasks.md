@@ -159,3 +159,34 @@ P650 environmental acceptance — 2026-09-30:
 - rollback: NOT EXECUTED;
 - official Plugin Check on same ZIP: PENDING;
 - evidence: `evidence/spec006-p650-environmental-install-runtime-pass-20260930.json`.
+
+
+## P-660 security / privacy baseline
+
+- [x] P660-01 contrato — `p660-security-privacy-baseline-contract-v1.md`.
+- [x] P660-02 inventory tool — `tools/homologation/spec006/inventory-p660-security-privacy.py`.
+- [x] P660-03 static baseline contract — `tests/unit/spec006-p660-security-baseline.php`.
+- [x] P660-04 first remediation — removed Host header trust from public login redirect.
+- [x] P660-05 package hygiene correction — orphan G-240 acceptance harness removed from distribution.
+- [ ] P660-06 environmental smoke on hardened package.
+- [ ] P660-07 official Plugin Check / residual security disposition.
+- [ ] P660-08 closeout.
+
+P660 baseline inventory on p650.1:
+- 84 PHP scanned;
+- 25 files flagged for review;
+- SECRET_CRITICAL = 0;
+- NETWORK_HIGH = 0;
+- MUTATION_HIGH = 0;
+- DB_HIGH = 0;
+- remaining signals are review-level, not proven vulnerabilities.
+
+Hardened package:
+- build: `p650.2`;
+- SHA-256: `1d48ecc25d2f1bbe173ab83e6368f46306c5de054cdd19b411945c328b6051f7`;
+- 102 files / 83 PHP;
+- PHP lint: 83/83 PASS;
+- deterministic build: PASS;
+- `class-real-content-acceptance.php`: excluded;
+- HTTP_HOST trust: removed;
+- evidence: `evidence/spec006-p650-p660-hardened-package-p6502-20260930.json`.

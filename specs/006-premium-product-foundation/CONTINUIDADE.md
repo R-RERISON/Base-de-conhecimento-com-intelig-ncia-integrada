@@ -417,3 +417,17 @@ Próximo passo lógico:
 5. se não houver blocker, executar/registrar rollback P650;
 6. fechar P650/P660 somente após evidências completas;
 7. então preparar P670 Premium Foundation Acceptance.
+
+
+## P-670 preparado
+
+Contrato:
+- `specs/006-premium-product-foundation/p670-premium-foundation-acceptance-contract-v1.md`.
+
+P-670 está apenas PREPARED. Não pode fechar enquanto:
+- P640 local admissível não fechar;
+- P650 rollback + Plugin Check não fecharem;
+- P660 Plugin Check/disposition final não fechar;
+- Master Ledger não for atualizado por evidência.
+
+O contrato já consolida DoD, Premium Product Standard, package integrity, security/privacy, runtime modular, editorial invariants e limites de cutover.

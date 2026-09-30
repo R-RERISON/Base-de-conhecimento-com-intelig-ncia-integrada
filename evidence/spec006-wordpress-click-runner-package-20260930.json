@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-WORDPRESS-GATES",
+  "phase": "CLICK_RUNNER_PACKAGE",
+  "status": "PASS_PACKAGE_READY",
+  "date": "2026-09-30",
+  "artifact": {
+    "name": "bdc-spec006-final-gates-runner-1.0.0.zip",
+    "sha256": "3e34569d1eb60eae5c2fd89e14dd07b5b683d5c744bbff9cff664c4d6e5ba531",
+    "bytes": 450692,
+    "files": 9,
+    "php_lint": "2/2 PASS",
+    "zip_integrity": true
+  },
+  "embedded_packages": {
+    "p650.2": "1d48ecc25d2f1bbe173ab83e6368f46306c5de054cdd19b411945c328b6051f7",
+    "p650.3": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+  },
+  "static_contract": {
+    "nonce_all_ajax": true,
+    "manage_options": true,
+    "rollback_update_plugins": true,
+    "plugincheck_install_cap": true,
+    "no_nopriv_ajax": true,
+    "candidate_sha_pinned": true,
+    "previous_sha_pinned": true,
+    "plugincheck_no_ai": true,
+    "plugincheck_no_experimental": true,
+    "plugincheck_no_ignore": true,
+    "rollback_resume": true,
+    "final_identity": true,
+    "external_tooling_explicit": true
+  },
+  "production_artifact_modified": false,
+  "production_artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip",
+    "sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+  },
+  "gate_closure_authorized": false,
+  "cutover_authorized": false,
+  "retirement_authorized": false,
+  "next_action": "Install companion in homologation WordPress, run click-to-run validation, download JSON."
+}

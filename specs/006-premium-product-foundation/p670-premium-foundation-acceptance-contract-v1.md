@@ -121,3 +121,56 @@ Gerar:
 - atualização do Master Ledger;
 - atualização final do `CONTINUIDADE.md`.
 
+
+
+## Automação fail-closed preparada
+
+Ferramentas:
+
+- `tools/homologation/spec006/validate-p670-preflight.py`;
+- `tests/unit/spec006-p670-preflight-contract.php`;
+- `tools/homologation/spec006/generate-p670-closeout-candidate.py`;
+- `specs/006-premium-product-foundation/p670-master-ledger-disposition-plan.md`.
+
+### Política de evidência histórica
+
+P600/P610/P620 permanecem como histórico da evolução da SPEC, inclusive com execuções remotas antigas.
+
+O P670 não usa essas execuções remotas para fechar os gates atuais. As propriedades materiais são reprovadas localmente por:
+
+- P640: WPCS/PHPUnit/static/build/proveniência;
+- P650: deterministic package/package integrity/checksum;
+- P660: WPCS/security inventory/static;
+- Plugin Check oficial local sobre o p650.3 congelado;
+- rollback local com fingerprints de dados.
+
+Assim, a evidência histórica é preservada sem transformar GitHub Actions em executor admissível dos gates finais.
+
+### Resultado automático permitido
+
+O validator P670 pode produzir somente:
+
+- `PASS_PRECONDITIONS`; ou
+- `BLOCKED`.
+
+`PASS_PRECONDITIONS` não é fechamento automático da SPEC.
+
+O gerador posterior pode produzir somente:
+
+- `READY_FOR_HUMAN_LEDGER_REVIEW`.
+
+Nem validator nem generator:
+
+- alteram o Master Ledger;
+- fecham SPEC-006;
+- autorizam 1.0.0;
+- autorizam cutover;
+- autorizam retirement;
+- autorizam bulk migration.
+
+### Artefato congelado
+
+P670 exige:
+
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip`;
+- SHA-256 `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`.

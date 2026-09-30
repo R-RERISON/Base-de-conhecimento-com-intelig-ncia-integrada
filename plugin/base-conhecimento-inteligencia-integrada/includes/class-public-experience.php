@@ -300,7 +300,7 @@ final class Public_Experience {
 		if ( is_admin() || ! current_user_can( 'manage_options' ) ) { return null; }
 		$kind = isset( $_GET[ self::QUERY_KEY ] ) && is_scalar( $_GET[ self::QUERY_KEY ] ) ? sanitize_key( wp_unslash( (string) $_GET[ self::QUERY_KEY ] ) ) : '';
 		if ( ! in_array( $kind, array( 'home', 'article' ), true ) ) { return null; }
-		$nonce = isset( $_GET[ self::NONCE_KEY ] ) && is_scalar( $_GET[ self::NONCE_KEY ] ) ? wp_unslash( (string) $_GET[ self::NONCE_KEY ] ) : '';
+		$nonce = isset( $_GET[ self::NONCE_KEY ] ) && is_scalar( $_GET[ self::NONCE_KEY ] ) ? sanitize_text_field( wp_unslash( (string) $_GET[ self::NONCE_KEY ] ) ) : '';
 		return wp_verify_nonce( $nonce, 'bdc_kb_public_preview_' . $kind ) ? $kind : null;
 	}
 }

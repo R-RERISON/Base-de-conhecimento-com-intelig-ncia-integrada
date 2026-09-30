@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-WORDPRESS-GATES",
+  "phase": "CLICK_RUNNER_ENVIRONMENTAL_PARTIAL",
+  "status": "PASS_WITH_PLUGIN_CHECK_BLOCKER",
+  "date": "2026-09-30",
+  "acceptance_source": "human_homologation_report",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip",
+    "sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231",
+    "product_version": "0.6.0-dev"
+  },
+  "installed_integrity": {
+    "status": "PASS",
+    "expected_files": 102,
+    "checked_files": 102,
+    "missing": [],
+    "mismatched": [],
+    "extra": []
+  },
+  "modular_runtime": {
+    "status": "PASS",
+    "checks": {
+      "version": true,
+      "core_loader": true,
+      "module_registry": true,
+      "plugin": true,
+      "engineering_loader_absent": true,
+      "engineering_loader_file_absent": true,
+      "search_service": true,
+      "public_experience": true,
+      "word_cloud_service": true,
+      "search_hook": true,
+      "public_template_hook": true,
+      "word_cloud_hook": true,
+      "plugin_active": true
+    },
+    "failed": []
+  },
+  "plugin_check": {
+    "status": "NOT_INSTALLED",
+    "blocking_reason": "Official Plugin Check is not installed/active in the homologation WordPress."
+  },
+  "rollback": {
+    "status": "NOT_RUN",
+    "blocked_by": "plugin_check_not_ready"
+  },
+  "external_tooling": {
+    "phpcs_wpcs": "EXTERNAL_TOOLING_REQUIRED",
+    "phpunit": "EXTERNAL_TOOLING_REQUIRED"
+  },
+  "gate_closure_authorized": false,
+  "cutover_authorized": false,
+  "retirement_authorized": false,
+  "next_action": "Install/activate official Plugin Check using the companion runner, then rerun full validation."
+}

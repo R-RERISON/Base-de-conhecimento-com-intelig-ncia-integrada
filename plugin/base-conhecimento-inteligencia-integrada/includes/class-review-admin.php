@@ -26,7 +26,8 @@ final class Review_Admin {
 	}
 
 	public static function handle_save(): void {
-		if ( 'POST' !== strtoupper( (string) ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) {
+		$request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_key( wp_unslash( (string) $_SERVER['REQUEST_METHOD'] ) ) : '';
+		if ( 'POST' !== strtoupper( $request_method ) ) {
 			wp_die( esc_html__( 'Método HTTP não permitido.', 'bdc-knowledge-base' ), '', array( 'response' => 405 ) );
 		}
 
@@ -44,7 +45,7 @@ final class Review_Admin {
 		}
 
 		$nonce = isset( $_POST[ self::NONCE_FIELD ] ) && is_scalar( $_POST[ self::NONCE_FIELD ] )
-			? wp_unslash( (string) $_POST[ self::NONCE_FIELD ] )
+			? sanitize_text_field( wp_unslash( (string) $_POST[ self::NONCE_FIELD ] ) )
 			: '';
 
 		if ( ! wp_verify_nonce( $nonce, self::nonce_action( $post_id ) ) ) {

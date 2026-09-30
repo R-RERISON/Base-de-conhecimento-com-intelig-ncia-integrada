@@ -214,3 +214,16 @@ P650.2 / P660 environmental smoke — 2026-09-30:
 - [ ] P670-06 closeout SPEC-006.
 
 P670 não autoriza 1.0.0, cutover, retirement ou bulk migration.
+
+
+P650.3 hardening — 2026-09-30:
+- artifact: `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip`;
+- SHA-256: `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`;
+- request boundary hardening applied to admin/public handlers;
+- PHP lint: 83/83 PASS;
+- deterministic build: PASS;
+- engineering/lab files: 0;
+- P660 heuristic inventory: SECRET_CRITICAL=0 / NETWORK_HIGH=0 / MUTATION_HIGH=0 / DB_HIGH=0;
+- environmental smoke: PENDING because runtime code changed from p650.2;
+- official Plugin Check must target p650.3 after environmental PASS;
+- evidence: `evidence/spec006-p650-p660-hardened-package-p6503-20260930.json`.

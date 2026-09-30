@@ -206,8 +206,6 @@ def main() -> int:
         "plugin_tree_sha": plugin_tree_sha,
         "purpose": "SPEC-006 P-640 environmental homologation",
         "production_package": False,
-        "source_commit": source_commit,
-        "plugin_tree_sha": plugin_tree_sha,
         "version": VERSION,
         "build": BUILD,
         "root": PACKAGE_ROOT,

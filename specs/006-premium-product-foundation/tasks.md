@@ -124,7 +124,7 @@ P640 local-only remediation:
 - [x] P650-03 contrato estático do package — `tests/unit/spec006-p650-package-contract.php`.
 - [x] P650-04 validador local fail-closed — `tools/homologation/spec006/validate-p650-local.py`.
 - [ ] P650-05 build local e package integrity — package p650.1 preparado para homologação; fechamento do gate ainda bloqueado pelo P640-06 local completo.
-- [ ] P650-06 install/upgrade/rollback environmental — install/runtime PASS; rollback ainda não executado.
+- [ ] P650-06 install/upgrade/rollback environmental — p650.3 install/runtime PASS; rollback runner preparado, execução pendente.
 - [ ] P650-07 Plugin Check do ZIP final + closeout/Ledger.
 
 P650 decisions:
@@ -169,7 +169,7 @@ P650 environmental acceptance — 2026-09-30:
 - [x] P660-04 first remediation — removed Host header trust from public login redirect.
 - [x] P660-05 package hygiene correction — orphan G-240 acceptance harness removed from distribution.
 - [x] P660-06 environmental smoke on hardened package — p650.2 PASS.
-- [ ] P660-07 official Plugin Check / residual security disposition — residual disposition concluída; Plugin Check pendente.
+- [ ] P660-07 official Plugin Check / residual security disposition — residual disposition concluída; runner oficial preso ao SHA do p650.3, execução pendente.
 - [ ] P660-08 closeout.
 
 P660 baseline inventory on p650.1:
@@ -227,3 +227,13 @@ P650.3 hardening — 2026-09-30:
 - environmental smoke: PENDING because runtime code changed from p650.2;
 - official Plugin Check must target p650.3 after environmental PASS;
 - evidence: `evidence/spec006-p650-p660-hardened-package-p6503-20260930.json`.
+
+
+P650.3 environmental acceptance — 2026-09-30:
+- exact artifact SHA-256: `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`;
+- user report: tudo continua funcionando aparentemente;
+- runtime smoke: PASS;
+- p650.3 is now FROZEN for Plugin Check/rollback;
+- Plugin Check runner rejects SHA mismatch;
+- rollback runner compares post_content and BDC meta SHA-256 fingerprints without exporting content;
+- runbook: `p650-p660-final-local-gates-runbook.md`.

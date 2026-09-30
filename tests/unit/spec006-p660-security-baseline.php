@@ -17,8 +17,11 @@ $details = file_get_contents( $plugin . '/includes/class-knowledge-details-admin
 $review = file_get_contents( $plugin . '/includes/class-review-admin.php' );
 $word_cloud = file_get_contents( $plugin . '/includes/class-word-cloud-consultations.php' );
 $search_repo = file_get_contents( $plugin . '/includes/class-search-projection-repository.php' );
+$public_search = file_get_contents( $plugin . '/includes/class-public-search-facade.php' );
+$public_experience = file_get_contents( $plugin . '/includes/class-public-experience.php' );
+$core_blocks = file_get_contents( $plugin . '/includes/class-post-core-blocks-activity.php' );
 
-$files = array( $auth, $admin, $classify, $details, $review, $word_cloud, $search_repo );
+$files = array( $auth, $admin, $classify, $details, $review, $word_cloud, $search_repo, $public_search, $public_experience, $core_blocks );
 if ( in_array( false, $files, true ) ) {
 	fwrite( STDERR, 'Unable to read P660 baseline files.' . PHP_EOL );
 	exit( 1 );
@@ -35,7 +38,7 @@ foreach ( $mutation_files as $source ) {
 }
 
 $checks = array(
-	'no_http_host_trust_in_public_auth' => ! str_contains( $auth, "$_SERVER['HTTP_HOST']" ),
+	'no_http_host_trust_in_public_auth' => ! str_contains( $auth, "\$_SERVER['HTTP_HOST']" ),
 	'public_auth_uses_home_url' => str_contains( $auth, 'return home_url( $path . $query );' ),
 	'core_mutations_post_capability_nonce_unslash' => $mutation_contract,
 	'word_cloud_ajax_nonce_capability' => str_contains( $word_cloud, 'check_ajax_referer' )
@@ -43,10 +46,10 @@ $checks = array(
 	'word_cloud_dynamic_delete_prepared' => str_contains( $word_cloud, '$wpdb->prepare(' ),
 	'search_dynamic_queries_prepared' => str_contains( $search_repo, '$wpdb->prepare(' ),
 	'no_curl_runtime' => ! str_contains( implode( "\n", array_map( 'strval', $files ) ), 'curl_' ),
-	'public_search_preview_sanitized' => str_contains( $search_repo = file_get_contents( $plugin . '/includes/class-public-search-facade.php' ), "sanitize_key( wp_unslash( (string) $_POST['preview'] ) )" ),
-	'public_search_remote_addr_sanitized' => is_string( $search_repo ) && str_contains( $search_repo, "sanitize_text_field( wp_unslash( (string) $_SERVER['REMOTE_ADDR'] ) )" ),
-	'public_preview_nonce_sanitized' => str_contains( file_get_contents( $plugin . '/includes/class-public-experience.php' ), "sanitize_text_field( wp_unslash( (string) $_GET[ self::NONCE_KEY ] ) )" ),
-	'core_blocks_nonce_sanitized' => str_contains( file_get_contents( $plugin . '/includes/class-post-core-blocks-activity.php' ), "sanitize_text_field( wp_unslash( (string) $_POST[ self::NONCE_FIELD ] ) )" ),
+	'public_search_preview_sanitized' => str_contains( $public_search, "sanitize_key( wp_unslash( (string) \$_POST['preview'] ) )" ),
+	'public_search_remote_addr_sanitized' => str_contains( $public_search, "sanitize_text_field( wp_unslash( (string) \$_SERVER['REMOTE_ADDR'] ) )" ),
+	'public_preview_nonce_sanitized' => str_contains( $public_experience, "sanitize_text_field( wp_unslash( (string) \$_GET[ self::NONCE_KEY ] ) )" ),
+	'core_blocks_nonce_sanitized' => str_contains( $core_blocks, "sanitize_text_field( wp_unslash( (string) \$_POST[ self::NONCE_FIELD ] ) )" ),
 );
 
 $failed = 0;

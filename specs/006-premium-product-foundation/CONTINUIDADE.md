@@ -603,3 +603,57 @@ Master Ledger:
 Próximo passo externo indispensável:
 - executar `run-spec006-final-gates.ps1` em checkout Windows com tooling + WP-CLI + WordPress;
 - retornar os JSONs gerados para revisão e closeout final.
+
+
+## P640 environmental reconciliation sem novo ZIP
+
+Novo runner:
+- `tools/homologation/spec006/run-p640-environmental-reconciliation-local.py`.
+
+Decisão:
+- não instalar p640.2 apenas para provar runtime;
+- p640.2 continua artefato local de quality/proveniência;
+- runtime P640 será provado no próprio p650.3 congelado via WP-CLI read-only;
+- valida Core_Runtime_Loader, Runtime_Module_Registry, Plugin, Search, Public Experience, Word Cloud, hooks registrados e ausência da Engineering_Module_Loader;
+- nenhuma mutation/migration;
+- evidence: `evidence/spec006-p640-environmental-reconciliation-current.json`.
+
+P670 foi endurecido para exigir essa reconciliação antes de PASS_PRECONDITIONS.
+
+## Estado macro corrigido
+
+- SPEC-005: CLOSED / boundary aprovado;
+- SPEC-006: ACTIVE / FINAL GATES;
+- SPEC-007: NEXT / NOT ACTIVE.
+
+Atualizados:
+- `.specify/PROJECT_MANIFEST.md`;
+- `specs/ROADMAP.md`.
+
+Handoff preparado:
+- `specs/006-premium-product-foundation/spec006-to-spec007-handoff-plan.md`.
+
+SPEC-007 não pode iniciar runtime até closeout formal da SPEC-006.
+
+## Artefatos finais de closeout preparados
+
+Templates:
+- `specs/006-premium-product-foundation/p670-final-closeout-template.md`;
+- `specs/006-premium-product-foundation/p670-final-evidence-template.json`.
+
+Ambos são TEMPLATE/NOT EVIDENCE.
+
+Fluxo final:
+1. executar `run-spec006-final-gates.ps1`;
+2. P640 local PASS;
+3. P650 local PASS;
+4. P660 local PASS;
+5. P640 environmental reconciliation PASS sobre p650.3;
+6. Plugin Check PASS/disposition;
+7. rollback PASS/data preserved;
+8. P670 PASS_PRECONDITIONS;
+9. closeout candidate READY_FOR_HUMAN_LEDGER_REVIEW;
+10. revisar/aplicar Master Ledger;
+11. materializar evidence/closeout final;
+12. fechar SPEC-006;
+13. somente então ativar SPEC-007.

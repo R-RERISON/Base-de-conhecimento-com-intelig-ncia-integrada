@@ -237,3 +237,16 @@ P650.3 environmental acceptance — 2026-09-30:
 - Plugin Check runner rejects SHA mismatch;
 - rollback runner compares post_content and BDC meta SHA-256 fingerprints without exporting content;
 - runbook: `p650-p660-final-local-gates-runbook.md`.
+
+
+Final local gate hardening — 2026-09-30:
+- P640 admissible local package advanced to `p640.2`; historical p640.1 remains invalidated/non-admissible;
+- P640 evidence now records `plugin_tree_sha`;
+- P650 local validator rejects stale P640 evidence when plugin tree differs;
+- P650 local validator enforces frozen p650.3 SHA-256;
+- P660 canonical local validator added: `tools/homologation/spec006/validate-p660-local.py`;
+- P660 local gate executes static security contract, affected PHP lint, affected WPCS, security inventory and high-risk contract;
+- Windows final orchestrator added: `tools/homologation/spec006/run-spec006-final-gates.ps1`;
+- current assistant runtime remains BLOCKED_LOCAL_TOOLING (Composer/PHPCS/PHPUnit/WP-CLI absent);
+- `composer.lock` is not versioned; automatic dependency bootstrap is therefore explicit, not silent;
+- evidence: `evidence/spec006-final-local-gates-preflight-blocked-runtime-20260930.json`.

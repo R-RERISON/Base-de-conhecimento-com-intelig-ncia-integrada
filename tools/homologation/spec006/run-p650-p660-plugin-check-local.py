@@ -17,7 +17,8 @@ import sys
 from datetime import datetime, timezone
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
-DEFAULT_ZIP = ROOT / "dist" / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.2.zip"
+DEFAULT_ZIP = ROOT / "dist" / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
+EXPECTED_SHA256 = "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
 OUTPUT = ROOT / "evidence" / "spec006-p650-p660-plugin-check-current.json"
 
 
@@ -82,6 +83,15 @@ def main() -> int:
         return 1
 
     package_sha = sha256(package)
+    if package_sha != EXPECTED_SHA256:
+        print(json.dumps({
+            "status": "FAIL_ARTIFACT_MISMATCH",
+            "package": package.name,
+            "expected_sha256": EXPECTED_SHA256,
+            "actual_sha256": package_sha,
+            "instruction": "Use exatamente o artefato p650.3 homologado; não reconstrua o ZIP.",
+        }, ensure_ascii=False, indent=2))
+        return 3
 
     # O Plugin Check oficial opera sobre plugin instalado. A instalação deste ZIP deve
     # ocorrer no mesmo WordPress antes desta execução para preservar o artefato testado.
@@ -115,6 +125,8 @@ def main() -> int:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "package": package.name,
         "package_sha256": package_sha,
+        "expected_sha256": EXPECTED_SHA256,
+        "artifact_identity_match": True,
         "plugin_check_target": "ZIP_PATH_DIRECT",
         "runtime_checks_enabled": True,
         "format": "strict-json",

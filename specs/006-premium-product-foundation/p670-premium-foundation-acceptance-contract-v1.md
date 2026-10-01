@@ -176,3 +176,24 @@ P670 exige:
 
 - `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip`;
 - SHA-256 `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`.
+
+
+## Addendum — exceção de tooling aceita em 2026-10-01
+
+Decisão explícita do Product Owner:
+- PHPCS/WPCS no source atual: NOT_RUN_ACCEPTED_TOOLING_EXCEPTION;
+- PHPUnit no source atual: NOT_RUN_ACCEPTED_TOOLING_EXCEPTION.
+
+Regras:
+- nenhum dos dois pode ser representado como PASS;
+- P640 pode encerrar como CLOSED_WITH_ACCEPTED_TOOLING_EXCEPTION;
+- P650 e P660 podem encerrar com a exceção herdada quando suas próprias evidências estiverem completas;
+- P670 pode encerrar como PASS_WITH_ACCEPTED_TOOLING_EXCEPTION.
+
+Consequências obrigatórias:
+- PROD-003 permanece PARTIAL e blocker para 1.0/Premium Done;
+- PROD-004/005/006 podem ser promovidos somente por evidência própria;
+- não autoriza versão 1.0.0, cutover, retirement ou bulk migration.
+
+Evidência da decisão:
+- `evidence/spec006-accepted-tooling-exception-20261001.json`.

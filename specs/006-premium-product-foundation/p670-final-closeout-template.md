@@ -2,8 +2,8 @@
 
 **Status:** TEMPLATE / NÃO USAR COMO PASS SEM EVIDÊNCIA  
 **Data:** YYYY-MM-DD  
-**Artifact:** `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip`  
-**SHA-256:** `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`
+**Artifact:** `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip`  
+**SHA-256:** `0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77`
 
 ## 1. Preconditions
 
@@ -29,7 +29,7 @@ Preencher somente a partir das evidências finais:
 - engineering/lab files:
 - forbidden repo-only paths:
 
-PASS exige identidade coerente entre source/plugin tree/evidências e o p650.3 congelado.
+PASS exige identidade coerente entre source/plugin tree/evidências e o p650.4 congelado.
 
 ## 3. Quality
 
@@ -51,7 +51,7 @@ Registrar:
 
 - WordPress version;
 - PHP version;
-- p650.3 smoke;
+- p650.4 smoke;
 - Workspace;
 - Search;
 - Public Experience;

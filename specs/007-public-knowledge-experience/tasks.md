@@ -37,3 +37,13 @@ Planned:
 - PX-770 Performance;
 - PX-780 Human Product Acceptance;
 - PX-790 Cutover Readiness.
+
+
+PX-700 click-to-run runner prepared — 2026-10-01:
+- artifact: `bdc-spec007-px700-inventory-runner-1.0.0.zip`;
+- SHA-256: `1cea9cab8e846883b8b476c11166061a740b48e8851b59cf752e2c1189a87fa9`;
+- ZIP integrity PASS;
+- PHP lint 1/1 PASS;
+- read-only static contract 12/12 PASS;
+- BDC p650.4 is not modified by this companion;
+- [ ] execute runner in homologation WordPress and return JSON.

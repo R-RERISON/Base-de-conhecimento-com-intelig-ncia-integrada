@@ -25,16 +25,17 @@ $checks = array(
 		&& str_contains( $source, 'p640_environmental_runtime_reconciled' ),
 	'requires_p650_current' => str_contains( $source, 'spec006-p650-local-package-validation-current.json' ),
 	'requires_p660_current' => str_contains( $source, 'spec006-p660-local-validation-current.json' ),
-	'requires_plugin_check' => str_contains( $source, 'spec006-p650-p660-plugin-check-current.json' ),
-	'requires_rollback' => str_contains( $source, 'spec006-p650-rollback-current.json' ),
-	'requires_environmental_smoke' => str_contains( $source, 'spec006-p6504-wordpress-final-gates-current.json' ),
-	'requires_plugin_tree_provenance' => str_contains( $source, 'HEAD:plugin/base-conhecimento-inteligencia-integrada' )
-		&& str_contains( $source, 'p640_current_plugin_tree' )
-		&& str_contains( $source, 'p650_current_plugin_tree' ),
-	'requires_plugin_check_local' => str_contains( $source, 'official_plugin_check_local_pass' )
-		&& str_contains( $source, '"github_actions_used"' ),
-	'requires_data_preservation' => str_contains( $source, 'rollback_pass_and_data_preserved' )
-		&& str_contains( $source, '"data_preserved"' ),
+	'requires_wordpress_final' => str_contains( $source, 'spec006-p6504-wordpress-final-gates-current.json' )
+		&& str_contains( $source, 'wordpress_final_same_artifact' ),
+	'requires_plugin_disposition' => str_contains( $source, 'spec006-p6504-plugin-check-disposition-current.json' )
+		&& str_contains( $source, 'PASS_WITH_EXPLICIT_DISPOSITION' ),
+	'requires_complete_rollback' => str_contains( $source, '"rollback", "pass"' )
+		&& str_contains( $source, '"rollback", "data_preserved"' ),
+	'requires_native_runtime' => str_contains( $source, '"native_preflight", "runtime", "pass"' ),
+	'official_static_required' => str_contains( $source, '"official_static_required": True' ),
+	'no_global_ignore' => str_contains( $source, '"global_ignore_allowed": False' ),
+	'runtime_limitation_explicit' => str_contains( $source, '"runtime_environment_limitation_allowed_only_with_explicit_disposition": True' ),
+	'git_plugin_tree_provenance' => str_contains( $source, 'HEAD:plugin/base-conhecimento-inteligencia-integrada' ),
 	'no_automatic_ledger_update' => str_contains( $source, '"updated_by_validator": False' ),
 	'no_cutover' => str_contains( $source, '"cutover_authorized": False' ),
 	'no_retirement' => str_contains( $source, '"retirement_authorized": False' ),

@@ -17,8 +17,8 @@ import sys
 from datetime import datetime, timezone
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
-DEFAULT_ZIP = ROOT / "dist" / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
-EXPECTED_SHA256 = "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+DEFAULT_ZIP = ROOT / "dist" / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
+EXPECTED_SHA256 = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
 OUTPUT = ROOT / "evidence" / "spec006-p650-p660-plugin-check-current.json"
 
 
@@ -89,7 +89,7 @@ def main() -> int:
             "package": package.name,
             "expected_sha256": EXPECTED_SHA256,
             "actual_sha256": package_sha,
-            "instruction": "Use exatamente o artefato p650.3 homologado; não reconstrua o ZIP.",
+            "instruction": "Use exatamente o artefato p650.4 candidato; não reconstrua o ZIP.",
         }, ensure_ascii=False, indent=2))
         return 3
 

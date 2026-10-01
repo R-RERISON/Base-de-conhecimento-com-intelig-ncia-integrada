@@ -28,7 +28,7 @@ final class Review_Admin {
 	public static function handle_save(): void {
 		$request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_key( wp_unslash( (string) $_SERVER['REQUEST_METHOD'] ) ) : '';
 		if ( 'POST' !== strtoupper( $request_method ) ) {
-			wp_die( esc_html__( 'Método HTTP não permitido.', 'bdc-knowledge-base' ), '', array( 'response' => 405 ) );
+			wp_die( esc_html__( 'Método HTTP não permitido.', 'base-conhecimento-inteligencia-integrada' ), '', array( 'response' => 405 ) );
 		}
 
 		$post_id = isset( $_POST['post_id'] ) && is_scalar( $_POST['post_id'] )
@@ -132,7 +132,7 @@ final class Review_Admin {
 	public static function render_panel( int $post_id ): void {
 		$snapshot = Review_Store::read( $post_id );
 		if ( is_wp_error( $snapshot ) ) {
-			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar o estado de revisão e governança.', 'bdc-knowledge-base' ) . '</p></div>';
+			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar o estado de revisão e governança.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 			return;
 		}
 
@@ -147,31 +147,31 @@ final class Review_Admin {
 
 		echo '<section class="bdc-kb-review" aria-labelledby="bdc-kb-review-title">';
 		echo '<div class="bdc-kb-domain-heading">';
-		echo '<h3 id="bdc-kb-review-title">' . esc_html__( 'Revisão e governança', 'bdc-knowledge-base' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Decisões humanas de governança. O estado editorial do WordPress permanece independente.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h3 id="bdc-kb-review-title">' . esc_html__( 'Revisão e governança', 'base-conhecimento-inteligencia-integrada' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Decisões humanas de governança. O estado editorial do WordPress permanece independente.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 
 		echo '<div class="bdc-kb-review-status-card">';
 		echo '<div class="bdc-kb-review-status-row">';
-		echo '<span class="bdc-kb-review-label">' . esc_html__( 'Estado atual', 'bdc-knowledge-base' ) . '</span>';
+		echo '<span class="bdc-kb-review-label">' . esc_html__( 'Estado atual', 'base-conhecimento-inteligencia-integrada' ) . '</span>';
 		echo '<strong class="bdc-kb-state-badge bdc-kb-state-' . esc_attr( $state ) . '">' . esc_html( $state_label ) . '</strong>';
 		echo '</div>';
 
 		if ( (int) ( $snapshot['last_event_id'] ?? 0 ) > 0 ) {
 			echo '<dl class="bdc-kb-review-meta">';
-			echo '<div><dt>' . esc_html__( 'Última decisão', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $actor_label ) . '</dd></div>';
-			echo '<div><dt>' . esc_html__( 'Data', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $decision_at ) . '</dd></div>';
+			echo '<div><dt>' . esc_html__( 'Última decisão', 'base-conhecimento-inteligencia-integrada' ) . '</dt><dd>' . esc_html( $actor_label ) . '</dd></div>';
+			echo '<div><dt>' . esc_html__( 'Data', 'base-conhecimento-inteligencia-integrada' ) . '</dt><dd>' . esc_html( $decision_at ) . '</dd></div>';
 			echo '</dl>';
 			if ( '' !== $last_note ) {
-				echo '<div class="bdc-kb-last-note"><strong>' . esc_html__( 'Nota da última decisão', 'bdc-knowledge-base' ) . '</strong><p>' . nl2br( esc_html( $last_note ) ) . '</p></div>';
+				echo '<div class="bdc-kb-last-note"><strong>' . esc_html__( 'Nota da última decisão', 'base-conhecimento-inteligencia-integrada' ) . '</strong><p>' . nl2br( esc_html( $last_note ) ) . '</p></div>';
 			}
 		} else {
-			echo '<p class="description">' . esc_html__( 'Nenhuma decisão de governança foi registrada ainda.', 'bdc-knowledge-base' ) . '</p>';
+			echo '<p class="description">' . esc_html__( 'Nenhuma decisão de governança foi registrada ainda.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		}
 		echo '</div>';
 
 		if ( empty( $targets ) ) {
-			echo '<div class="notice notice-info inline"><p>' . esc_html__( 'Não há transições de governança disponíveis para o seu usuário neste estado.', 'bdc-knowledge-base' ) . '</p></div>';
+			echo '<div class="notice notice-info inline"><p>' . esc_html__( 'Não há transições de governança disponíveis para o seu usuário neste estado.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 			echo '</section>';
 			return;
 		}
@@ -182,24 +182,24 @@ final class Review_Admin {
 		wp_nonce_field( self::nonce_action( $post_id ), self::NONCE_FIELD );
 
 		echo '<div class="bdc-kb-field">';
-		echo '<label for="bdc-kb-review-target"><strong>' . esc_html__( 'Nova decisão', 'bdc-knowledge-base' ) . '</strong></label>';
+		echo '<label for="bdc-kb-review-target"><strong>' . esc_html__( 'Nova decisão', 'base-conhecimento-inteligencia-integrada' ) . '</strong></label>';
 		echo '<select id="bdc-kb-review-target" name="review[target_state]" class="regular-text bdc-kb-term-select" required>';
-		echo '<option value="">' . esc_html__( '— Selecione uma transição —', 'bdc-knowledge-base' ) . '</option>';
+		echo '<option value="">' . esc_html__( '— Selecione uma transição —', 'base-conhecimento-inteligencia-integrada' ) . '</option>';
 		foreach ( $targets as $target ) {
 			$label = Review_Contract::states()[ $target ] ?? $target;
 			echo '<option value="' . esc_attr( $target ) . '">' . esc_html( $label ) . '</option>';
 		}
 		echo '</select>';
-		echo '<p class="description">' . esc_html__( 'São exibidas apenas as decisões compatíveis com o estado atual e com as permissões do usuário. A validação é repetida ao salvar.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'São exibidas apenas as decisões compatíveis com o estado atual e com as permissões do usuário. A validação é repetida ao salvar.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 
 		echo '<div class="bdc-kb-field">';
-		echo '<label for="bdc-kb-review-note"><strong>' . esc_html__( 'Nota da decisão', 'bdc-knowledge-base' ) . '</strong></label>';
+		echo '<label for="bdc-kb-review-note"><strong>' . esc_html__( 'Nota da decisão', 'base-conhecimento-inteligencia-integrada' ) . '</strong></label>';
 		echo '<textarea id="bdc-kb-review-note" name="review[note]" rows="5" maxlength="' . esc_attr( (string) Review_Contract::MAX_NOTE_BYTES ) . '"></textarea>';
-		echo '<p class="description">' . esc_html__( 'Obrigatória para “Requer ajustes” e “Excluído da base governada”. Máximo de 2000 bytes.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Obrigatória para “Requer ajustes” e “Excluído da base governada”. Máximo de 2000 bytes.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 
-		submit_button( __( 'Registrar decisão', 'bdc-knowledge-base' ), 'primary' );
+		submit_button( __( 'Registrar decisão', 'base-conhecimento-inteligencia-integrada' ), 'primary' );
 		echo '</form>';
 		echo '</section>';
 	}
@@ -207,20 +207,20 @@ final class Review_Admin {
 	public static function render_history_panel( int $post_id ): void {
 		$history = Review_Store::history( $post_id, 50, 0 );
 		if ( is_wp_error( $history ) ) {
-			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar o histórico de revisão e governança.', 'bdc-knowledge-base' ) . '</p></div>';
+			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar o histórico de revisão e governança.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 			return;
 		}
 
 		echo '<section class="bdc-kb-history" aria-labelledby="bdc-kb-history-title">';
 		echo '<div class="bdc-kb-domain-heading">';
-		echo '<h3 id="bdc-kb-history-title">' . esc_html__( 'Histórico de Governança', 'bdc-knowledge-base' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Histórico das decisões de revisão e governança. Esta área é somente para consulta.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h3 id="bdc-kb-history-title">' . esc_html__( 'Histórico de Governança', 'base-conhecimento-inteligencia-integrada' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Histórico das decisões de revisão e governança. Esta área é somente para consulta.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 
 		if ( empty( $history ) ) {
 			echo '<div class="bdc-kb-empty-state">';
-			echo '<strong>' . esc_html__( 'Nenhuma decisão registrada', 'bdc-knowledge-base' ) . '</strong>';
-			echo '<p>' . esc_html__( 'Quando uma decisão de governança for registrada, ela aparecerá aqui em ordem cronológica reversa.', 'bdc-knowledge-base' ) . '</p>';
+			echo '<strong>' . esc_html__( 'Nenhuma decisão registrada', 'base-conhecimento-inteligencia-integrada' ) . '</strong>';
+			echo '<p>' . esc_html__( 'Quando uma decisão de governança for registrada, ela aparecerá aqui em ordem cronológica reversa.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 			echo '</div>';
 			echo '</section>';
 			return;
@@ -250,7 +250,7 @@ final class Review_Admin {
 			echo '</li>';
 		}
 		echo '</ol>';
-		echo '<p class="description">' . esc_html__( 'São exibidas até 50 decisões recentes. O histórico completo permanece preservado.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'São exibidas até 50 decisões recentes. O histórico completo permanece preservado.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</section>';
 	}
 

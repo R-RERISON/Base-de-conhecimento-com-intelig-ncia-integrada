@@ -88,3 +88,31 @@ Portanto um PASS do companion fecha a parcela WordPress/environmental/Plugin Che
 ## Uso
 
 Somente homologação. O companion deve ser removido após gerar e versionar o JSON final.
+
+
+## Evolução 1.0.5 — p650.4 / 2026-10-01
+
+O contrato original acima permanece como histórico do primeiro ciclo p650.3.
+
+Candidato atual:
+- p650.4;
+- SHA-256 `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`;
+- previous de rollback: p650.3;
+- ciclo: `p650.4 -> p650.3 -> p650.4`.
+
+O runner 1.0.5 preserva:
+- identidade byte-a-byte;
+- runtime modular nativo;
+- Plugin Check oficial estático quando o sandbox runtime 2.1.0 não finaliza no ambiente corporativo;
+- cleanup obrigatório do sandbox parcial;
+- rollback resumível;
+- JSON consolidado.
+
+Fingerprints obrigatórios:
+- `post_content`;
+- cinco metas editoriais BDC;
+- `_elementor_data`;
+- `bdc_kb_search_documents`;
+- `bdc_kb_search_projection_state`.
+
+A indisponibilidade do runtime oficial do Plugin Check não pode ser convertida em PASS. Ela permanece `ENVIRONMENT_LIMITATION` e exige runtime nativo PASS + disposition explícita.

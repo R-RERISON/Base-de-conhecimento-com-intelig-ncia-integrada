@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-WORDPRESS-GATES",
+  "phase": "RUNNER_1_0_4_FINAL_REVIEW",
+  "status": "REMEDIATION_REQUIRED",
+  "date": "2026-10-01",
+  "source": "human_uploaded_runner_json",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip",
+    "sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+  },
+  "passes": {
+    "installed_identity_102_of_102": true,
+    "native_modular_runtime": true,
+    "plugin_check_static_checks_completed": 29,
+    "plugin_check_runtime_environment_cleanup": true,
+    "rollback_complete": true,
+    "rollback_data_preserved": true,
+    "candidate_restored_byte_exact": true,
+    "post_content_preserved": true,
+    "bdc_meta_preserved": true,
+    "elementor_data_preserved": true,
+    "search_projection_preserved": true,
+    "search_projection_state_preserved": true
+  },
+  "plugin_check": {
+    "version": "2.1.0",
+    "mode": "OFFICIAL_STATIC_WITH_NATIVE_RUNTIME_EVIDENCE",
+    "official_runtime_checks": false,
+    "runtime_disposition": "UPSTREAM_SETUP_ABORTED_BEFORE_ACTIVE_PLUGINS_FINALIZATION",
+    "error_count": 170,
+    "warning_count": 96,
+    "dominant_errors": {
+      "WordPress.WP.I18n.TextDomainMismatch": 140,
+      "WordPress.DB.PreparedSQL.NotPrepared": 20,
+      "WordPress.Security.EscapeOutput.OutputNotEscaped": 4,
+      "WordPress.WP.AlternativeFunctions.strip_tags_strip_tags": 3,
+      "PluginCheck.Security.DirectDB.UnescapedDBParameter": 1,
+      "WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters": 1,
+      "plugin_updater_detected": 1
+    },
+    "dominant_warnings": {
+      "WordPress.Security.NonceVerification.Recommended": 37,
+      "WordPress.DB.DirectDatabaseQuery.DirectQuery": 14,
+      "WordPress.DB.DirectDatabaseQuery.NoCaching": 14,
+      "WordPress.Security.NonceVerification.Missing": 12,
+      "WordPress.Security.ValidatedSanitizedInput.InputNotSanitized": 8,
+      "WordPress.PHP.DevelopmentFunctions.error_log_error_log": 5
+    }
+  },
+  "decision": {
+    "p6503_superseded_as_candidate": true,
+    "reason": "Concrete Plugin Check production findings require remediation.",
+    "next_candidate": "p650.4",
+    "update_uri_private_distribution_waiver_preserved": true,
+    "global_ignore_used": false
+  },
+  "cutover_authorized": false,
+  "retirement_authorized": false
+}

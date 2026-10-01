@@ -869,3 +869,47 @@ Artifact:
 - 21/21 static recovery/safety contracts PASS.
 
 BDC p650.3 remains unchanged.
+
+
+## Runner 1.0.4 — Plugin Check estático oficial + runtime nativo separado
+
+JSON real de 1.0.3 confirmou:
+- p650.3 installed identity PASS, 102/102;
+- modular runtime PASS;
+- WordPress 6.9.4 / PHP 8.5.10 / DB 12.2.2;
+- Plugin Check 2.1.0;
+- setup-runtime HTTP 200 com body vazio;
+- 12 tabelas core temporárias criadas;
+- `active_plugins` temporário existe porém vazio;
+- object-cache/drop-in oficial não foi finalizado;
+- cleanup posterior PASS: temp tables=0, object-cache ausente, is_set_up=false.
+
+Correção de diagnóstico:
+- `wp_pc_snippets` é tabela customizada, não tabela core obrigatória do sandbox;
+- runner 1.0.3 tinha falso requisito de 13 tabelas;
+- 1.0.4 usa contrato explícito das 12 tabelas core WordPress no ambiente single-site.
+
+Decisão:
+- não completar à força o sandbox runtime oficial quando `active_plugins` não foi finalizado;
+- cleanup do setup parcial;
+- enumerar checks TYPE_STATIC diretamente do `Default_Check_Repository` oficial;
+- executar checks estáticos pelo endpoint Admin AJAX oficial;
+- runtime oficial fica explicitamente `ENVIRONMENT_LIMITATION`;
+- runtime BDC continua sustentado pelo native preflight já PASS;
+- não chamar essa combinação de runtime Plugin Check PASS.
+
+Rollback 1.0.4:
+- mantém hash de post_content;
+- mantém cinco metas BDC;
+- adiciona hash/count de `_elementor_data`;
+- adiciona existência/count/hash de `wp_bdc_kb_search_documents` (prefixo dinâmico);
+- adiciona hash raw da option `bdc_kb_search_projection_state`;
+- before/previous/after devem ser idênticos.
+
+Artifact:
+- `bdc-spec006-final-gates-runner-1.0.4.zip`;
+- SHA-256 `dcf56d59c384b6f3e0180d0a4a77083f8e0efe24375e1973846a094f9d5027b1`.
+
+Evidences:
+- `evidence/spec006-click-runner-1.0.3-environmental-diagnosis-20261001.json`;
+- `evidence/spec006-wordpress-click-runner-package-1.0.4-20261001.json`.

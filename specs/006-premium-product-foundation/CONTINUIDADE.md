@@ -1009,3 +1009,39 @@ Use the existing canonical validators:
 - `tests/unit/spec006-p670-preflight-contract.php`;
 - `tools/homologation/spec006/validate-p670-preflight.py`;
 - `tools/homologation/spec006/generate-p670-closeout-candidate.py`.
+
+
+## FINAL CLOSEOUT — SPEC-006
+
+Date: 2026-10-01
+
+Final status:
+- `CLOSED_WITH_ACCEPTED_TOOLING_EXCEPTION`.
+
+Final artifact:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip`;
+- SHA-256 `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`.
+
+P670:
+- `PASS_WITH_ACCEPTED_TOOLING_EXCEPTION`;
+- closeout: `p670-closeout-20261001.md`;
+- evidence: `evidence/spec006-p670-premium-foundation-pass-20261001.json`.
+
+Tooling exception:
+- PHPCS/WPCS = NOT_RUN_ACCEPTED_TOOLING_EXCEPTION;
+- PHPUnit = NOT_RUN_ACCEPTED_TOOLING_EXCEPTION;
+- never represent these as PASS;
+- PROD-003 remains PARTIAL / 1.0 blocker.
+
+Ledger final:
+- PROD-003 PARTIAL;
+- PROD-004 IMPROVED_VERIFIED;
+- PROD-005 IMPROVED_VERIFIED;
+- PROD-006 IMPROVED_VERIFIED.
+
+Handoff:
+- SPEC-007 Public Knowledge Experience is authorized to enter DISCOVERY;
+- first gate PX-700 Environmental Inventory;
+- SPEC-006 runtime should not be changed further unless a concrete regression is found;
+- p650.4 is the inherited foundation baseline;
+- no 1.0, cutover or retirement authorization.

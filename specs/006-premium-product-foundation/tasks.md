@@ -335,3 +335,19 @@ Click-runner 1.0.3 — safe Plugin Check runtime recovery:
 - package: `bdc-spec006-final-gates-runner-1.0.3.zip`;
 - SHA-256: `9693a83970c46fbb88201c3f835ea651b99bc489011f8806708ac597f65a56e9`;
 - static contract 21/21 PASS.
+
+
+Click-runner 1.0.4 — official static fallback + stronger rollback evidence:
+- runner 1.0.3 JSON confirmed BDC identity PASS and modular runtime PASS;
+- Plugin Check 2.1.0 runtime setup creates the 12 core temporary tables but aborts before finalizing temporary active_plugins/drop-in;
+- previous 13-table contract incorrectly treated custom `wp_pc_snippets` as core; fixed;
+- upstream Plugin Check runtime sandbox incompatibility with active plugins/custom tables documented (WordPress/plugin-check#1127);
+- decision: do not force or patch the official runtime sandbox;
+- when runtime setup aborts, cleanup partial sandbox and enumerate TYPE_STATIC checks from the official Default_Check_Repository;
+- execute those static checks through official Plugin Check Admin AJAX;
+- record official runtime as ENVIRONMENT_LIMITATION and keep native BDC runtime PASS as separate evidence;
+- persisted report runner version is refreshed to the installed companion version;
+- rollback fingerprints now include `_elementor_data`, `bdc_kb_search_documents`, and `bdc_kb_search_projection_state`;
+- artifact: `bdc-spec006-final-gates-runner-1.0.4.zip`;
+- SHA-256: `dcf56d59c384b6f3e0180d0a4a77083f8e0efe24375e1973846a094f9d5027b1`;
+- static contract 18/18 PASS.

@@ -18,8 +18,8 @@ if ( ! is_string( $source ) ) {
 
 $checks = array(
 	'local_only' => str_contains( $source, '"execution_mode": "LOCAL_ONLY"' ),
-	'frozen_p6503_name' => str_contains( $source, 'base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip' ),
-	'frozen_p6503_sha' => str_contains( $source, '985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231' ),
+	'frozen_p6504_name' => str_contains( $source, 'base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip' ),
+	'frozen_p6504_sha' => str_contains( $source, '0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77' ),
 	'requires_p640_current' => str_contains( $source, 'spec006-p640-local-validation-current.json' ),
 	'requires_p640_environmental_reconciliation' => str_contains( $source, 'spec006-p640-environmental-reconciliation-current.json' )
 		&& str_contains( $source, 'p640_environmental_runtime_reconciled' ),
@@ -27,7 +27,7 @@ $checks = array(
 	'requires_p660_current' => str_contains( $source, 'spec006-p660-local-validation-current.json' ),
 	'requires_plugin_check' => str_contains( $source, 'spec006-p650-p660-plugin-check-current.json' ),
 	'requires_rollback' => str_contains( $source, 'spec006-p650-rollback-current.json' ),
-	'requires_environmental_smoke' => str_contains( $source, 'spec006-p6503-environmental-smoke-pass-20260930.json' ),
+	'requires_environmental_smoke' => str_contains( $source, 'spec006-p6504-wordpress-final-gates-current.json' ),
 	'requires_plugin_tree_provenance' => str_contains( $source, 'HEAD:plugin/base-conhecimento-inteligencia-integrada' )
 		&& str_contains( $source, 'p640_current_plugin_tree' )
 		&& str_contains( $source, 'p650_current_plugin_tree' ),

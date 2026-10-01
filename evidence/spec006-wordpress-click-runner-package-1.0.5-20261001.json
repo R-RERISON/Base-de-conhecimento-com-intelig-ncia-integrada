@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-WORDPRESS-GATES",
+  "phase": "CLICK_RUNNER_1_0_5_PACKAGE",
+  "status": "PASS_PACKAGE_READY",
+  "date": "2026-10-01",
+  "artifact": {
+    "name": "bdc-spec006-final-gates-runner-1.0.5.zip",
+    "sha256": "62ec1d025b65bf26390549fdafb1ee2483fd119b7c668ca7dfbe10d20dd1b348",
+    "files": 9,
+    "php_lint": "2/2 PASS",
+    "javascript_syntax": "PASS",
+    "zip_integrity": true
+  },
+  "candidate": {
+    "build": "p650.4",
+    "sha256": "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2"
+  },
+  "previous": {
+    "build": "p650.3",
+    "sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+  },
+  "rollback_cycle": "p650.4 -> p650.3 -> p650.4",
+  "fingerprints": [
+    "post_content",
+    "bdc_editorial_meta",
+    "_elementor_data",
+    "bdc_kb_search_documents",
+    "bdc_kb_search_projection_state"
+  ],
+  "bdc_runtime_modified_by_runner": false,
+  "gate_closure_authorized": false
+}

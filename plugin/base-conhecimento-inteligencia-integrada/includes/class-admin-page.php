@@ -73,7 +73,7 @@ final class Admin_Page {
 
 	public static function render(): void {
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			wp_die( esc_html__( 'Você não tem permissão para acessar esta página.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Você não tem permissão para acessar esta página.', 'base-conhecimento-inteligencia-integrada' ), '', array( 'response' => 403 ) );
 		}
 
 		$post_id = self::get_request_post_id();
@@ -95,7 +95,7 @@ final class Admin_Page {
 	public static function handle_save(): void {
 		$request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_key( wp_unslash( (string) $_SERVER['REQUEST_METHOD'] ) ) : '';
 		if ( 'POST' !== strtoupper( $request_method ) ) {
-			wp_die( esc_html__( 'Método HTTP não permitido.', 'bdc-knowledge-base' ), '', array( 'response' => 405 ) );
+			wp_die( esc_html__( 'Método HTTP não permitido.', 'base-conhecimento-inteligencia-integrada' ), '', array( 'response' => 405 ) );
 		}
 
 		$post_id = isset( $_POST['post_id'] ) && is_scalar( $_POST['post_id'] )
@@ -123,7 +123,7 @@ final class Admin_Page {
 			self::redirect( $post_id, 'invalid_payload' );
 		}
 
-		$changes = wp_unslash( $_POST['summary'] );
+		$changes = map_deep( wp_unslash( $_POST['summary'] ), 'sanitize_textarea_field' );
 		$result  = Summary_Store::update( $post_id, $changes );
 
 		if ( ! is_wp_error( $result ) ) {
@@ -225,17 +225,17 @@ final class Admin_Page {
 
 		echo '<header class="bdc-kb-context bdc-kb-workspace-header">';
 		echo '<div class="bdc-kb-hero-copy">';
-		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Base de Conhecimento / Artigo', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Base de Conhecimento / Artigo', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '<h1>' . esc_html( (string) $summary['title'] ) . '</h1>';
 		echo '<div class="bdc-kb-context-meta">';
-		echo '<span><strong>' . esc_html__( 'Artigo:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( (string) $post->ID ) . '</span>';
-		echo '<span><strong>' . esc_html__( 'Situação:', 'bdc-knowledge-base' ) . '</strong> ' . esc_html( $status_label ) . '</span>';
+		echo '<span><strong>' . esc_html__( 'Artigo:', 'base-conhecimento-inteligencia-integrada' ) . '</strong> ' . esc_html( (string) $post->ID ) . '</span>';
+		echo '<span><strong>' . esc_html__( 'Situação:', 'base-conhecimento-inteligencia-integrada' ) . '</strong> ' . esc_html( $status_label ) . '</span>';
 		echo '</div>';
 		echo '</div>';
 		echo '<div class="bdc-kb-hero-actions">';
-		echo '<a class="button bdc-kb-button-with-icon" href="' . esc_url( admin_url( 'admin.php?page=' . self::PAGE_SLUG ) ) . '"><span class="dashicons dashicons-arrow-left-alt2" aria-hidden="true"></span><span>' . esc_html__( 'Artigos', 'bdc-knowledge-base' ) . '</span></a>';
+		echo '<a class="button bdc-kb-button-with-icon" href="' . esc_url( admin_url( 'admin.php?page=' . self::PAGE_SLUG ) ) . '"><span class="dashicons dashicons-arrow-left-alt2" aria-hidden="true"></span><span>' . esc_html__( 'Artigos', 'base-conhecimento-inteligencia-integrada' ) . '</span></a>';
 		if ( is_string( $edit_url ) && '' !== $edit_url ) {
-			echo '<a class="button button-primary bdc-kb-button-with-icon" href="' . esc_url( $edit_url ) . '"><span class="dashicons dashicons-edit" aria-hidden="true"></span><span>' . esc_html__( 'Abrir no WordPress', 'bdc-knowledge-base' ) . '</span></a>';
+			echo '<a class="button button-primary bdc-kb-button-with-icon" href="' . esc_url( $edit_url ) . '"><span class="dashicons dashicons-edit" aria-hidden="true"></span><span>' . esc_html__( 'Abrir no WordPress', 'base-conhecimento-inteligencia-integrada' ) . '</span></a>';
 		}
 		echo '</div>';
 		echo '</header>';
@@ -253,31 +253,34 @@ final class Admin_Page {
 		$coverage      = Coverage_Read_Model::read( $post_id );
 		$coverage_text = is_wp_error( $coverage ) ? 'Indisponível' : (string) ( $coverage['filled'] ?? 0 ) . '/' . (string) ( $coverage['total'] ?? 8 ) . ' campos';
 
-		echo '<aside class="bdc-kb-context-panel" aria-label="' . esc_attr__( 'Contexto do artigo', 'bdc-knowledge-base' ) . '">';
-		echo '<div class="bdc-kb-domain-heading"><h3>' . esc_html__( 'Contexto do artigo', 'bdc-knowledge-base' ) . '</h3><p>' . esc_html__( 'Informação editorial e governança em leitura.', 'bdc-knowledge-base' ) . '</p></div>';
+		echo '<aside class="bdc-kb-context-panel" aria-label="' . esc_attr__( 'Contexto do artigo', 'base-conhecimento-inteligencia-integrada' ) . '">';
+		echo '<div class="bdc-kb-domain-heading"><h3>' . esc_html__( 'Contexto do artigo', 'base-conhecimento-inteligencia-integrada' ) . '</h3><p>' . esc_html__( 'Informação editorial e governança em leitura.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 		echo '<dl class="bdc-kb-context-list">';
-		echo '<div><dt>' . esc_html__( 'Situação editorial', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-badge bdc-kb-badge--success">' . esc_html( $status_label ) . '</span></dd></div>';
+		echo '<div><dt>' . esc_html__( 'Situação editorial', 'base-conhecimento-inteligencia-integrada' ) . '</dt><dd><span class="bdc-kb-badge bdc-kb-badge--success">' . esc_html( $status_label ) . '</span></dd></div>';
 		$source_context = is_array( $context['source'] ?? null ) ? $context['source'] : array();
-		echo '<div><dt>' . esc_html__( 'Fonte editorial', 'bdc-knowledge-base' ) . '</dt><dd><strong>' . esc_html( (string) ( $source_context['label'] ?? 'Indisponível' ) ) . '</strong></dd></div>';
-		echo '<div><dt>' . esc_html__( 'Sumário', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $filled . '/' . count( Meta_Contract::fields() ) . ' campos preenchidos' ) . '</dd></div>';
-		echo '<div><dt>' . esc_html__( 'Classificação', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $term_count > 0 ? $term_count . ' conceito(s)' : 'Sem termos canônicos' ) . '</dd></div>';
-		echo '<div><dt>' . esc_html__( 'Revisão', 'bdc-knowledge-base' ) . '</dt><dd><span class="bdc-kb-state-badge bdc-kb-state-' . esc_attr( $review_state ) . '">' . esc_html( $review_label ) . '</span></dd></div>';
-		echo '<div><dt>' . esc_html__( 'Cobertura', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( $coverage_text ) . '</dd></div>';
-		echo '<div><dt>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</dt><dd>' . esc_html( get_the_modified_date( '', $post ) ) . '</dd></div>';
+		echo '<div><dt>' . esc_html__( 'Fonte editorial', 'base-conhecimento-inteligencia-integrada' ) . '</dt><dd><strong>' . esc_html( (string) ( $source_context['label'] ?? 'Indisponível' ) ) . '</strong></dd></div>';
+		echo '<div><dt>' . esc_html__( 'Sumário', 'base-conhecimento-inteligencia-integrada' ) . '</dt><dd>' . esc_html( $filled . '/' . count( Meta_Contract::fields() ) . ' campos preenchidos' ) . '</dd></div>';
+		echo '<div><dt>' . esc_html__( 'Classificação', 'base-conhecimento-inteligencia-integrada' ) . '</dt><dd>' . esc_html( $term_count > 0 ? $term_count . ' conceito(s)' : 'Sem termos canônicos' ) . '</dd></div>';
+		echo '<div><dt>' . esc_html__( 'Revisão', 'base-conhecimento-inteligencia-integrada' ) . '</dt><dd><span class="bdc-kb-state-badge bdc-kb-state-' . esc_attr( $review_state ) . '">' . esc_html( $review_label ) . '</span></dd></div>';
+		echo '<div><dt>' . esc_html__( 'Cobertura', 'base-conhecimento-inteligencia-integrada' ) . '</dt><dd>' . esc_html( $coverage_text ) . '</dd></div>';
+		echo '<div><dt>' . esc_html__( 'Atualizado', 'base-conhecimento-inteligencia-integrada' ) . '</dt><dd>' . esc_html( get_the_modified_date( '', $post ) ) . '</dd></div>';
 		echo '</dl>';
-		echo '<p class="bdc-kb-context-note">' . esc_html__( 'Esta área reúne as informações de conhecimento e governança do artigo. A edição do conteúdo permanece no WordPress.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="bdc-kb-context-note">' . esc_html__( 'Esta área reúne as informações de conhecimento e governança do artigo. A edição do conteúdo permanece no WordPress.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</aside>';
 	}
 
 	private static function render_tabs( int $post_id, string $active_tab ): void {
 		$tabs = Post_Activity_Registry::definitions();
 
-		echo '<nav class="bdc-kb-tabs" aria-label="' . esc_attr__( 'Áreas do artigo', 'bdc-knowledge-base' ) . '" data-bdc-workspace-tabs>';
+		echo '<nav class="bdc-kb-tabs" aria-label="' . esc_attr__( 'Áreas do artigo', 'base-conhecimento-inteligencia-integrada' ) . '" data-bdc-workspace-tabs>';
 		foreach ( $tabs as $tab => $definition ) {
 			$url = self::workspace_url( $post_id, $tab );
 			$class = 'bdc-kb-tab' . ( $tab === $active_tab ? ' is-active' : '' );
-			$current = $tab === $active_tab ? ' aria-current="page"' : '';
-			echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '"' . $current . '><span class="dashicons dashicons-' . esc_attr( (string) $definition['icon'] ) . '" aria-hidden="true"></span><span>' . esc_html( (string) $definition['label'] ) . '</span></a>';
+			echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '"';
+			if ( $tab === $active_tab ) {
+				echo ' aria-current="page"';
+			}
+			echo '><span class="dashicons dashicons-' . esc_attr( (string) $definition['icon'] ) . '" aria-hidden="true"></span><span>' . esc_html( (string) $definition['label'] ) . '</span></a>';
 		}
 		echo '</nav>';
 	}
@@ -303,8 +306,8 @@ final class Admin_Page {
 
 		echo '<section class="bdc-kb-overview" aria-labelledby="bdc-kb-overview-title">';
 		echo '<div class="bdc-kb-domain-heading">';
-		echo '<h3 id="bdc-kb-overview-title">' . esc_html__( 'Visão geral', 'bdc-knowledge-base' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Acompanhe a situação atual do artigo sem repetir a navegação disponível acima.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h3 id="bdc-kb-overview-title">' . esc_html__( 'Visão geral', 'base-conhecimento-inteligencia-integrada' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Acompanhe a situação atual do artigo sem repetir a navegação disponível acima.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 
 		echo '<div class="bdc-kb-overview-status-grid">';
@@ -342,8 +345,8 @@ final class Admin_Page {
 	private static function render_summary_panel( int $post_id, array $snapshot ): void {
 		echo '<section class="bdc-kb-domain-panel" aria-labelledby="bdc-kb-summary-title">';
 		echo '<div class="bdc-kb-domain-heading">';
-		echo '<h3 id="bdc-kb-summary-title">' . esc_html__( 'Sumário', 'bdc-knowledge-base' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Informações resumidas que ajudam a compreender rapidamente o objetivo e os pontos essenciais do artigo.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h3 id="bdc-kb-summary-title">' . esc_html__( 'Sumário', 'base-conhecimento-inteligencia-integrada' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Informações resumidas que ajudam a compreender rapidamente o objetivo e os pontos essenciais do artigo.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 
 		echo '<form class="bdc-kb-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
@@ -356,11 +359,11 @@ final class Admin_Page {
 			echo '<div class="bdc-kb-field">';
 			echo '<label for="' . esc_attr( $field_id ) . '"><strong>' . esc_html( $definition['label'] ) . '</strong></label>';
 			echo '<textarea class="large-text" rows="5" id="' . esc_attr( $field_id ) . '" name="summary[' . esc_attr( $field ) . ']" maxlength="32768">' . esc_textarea( (string) $snapshot[ $field ] ) . '</textarea>';
-			echo '<p class="description">' . esc_html__( 'Preencha com texto objetivo. Deixe em branco para remover o conteúdo deste campo.', 'bdc-knowledge-base' ) . '</p>';
+			echo '<p class="description">' . esc_html__( 'Preencha com texto objetivo. Deixe em branco para remover o conteúdo deste campo.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 			echo '</div>';
 		}
 
-		submit_button( __( 'Salvar sumário', 'bdc-knowledge-base' ) );
+		submit_button( __( 'Salvar sumário', 'base-conhecimento-inteligencia-integrada' ) );
 		echo '</form>';
 		echo '</section>';
 	}
@@ -368,11 +371,11 @@ final class Admin_Page {
 	private static function render_list_header(): void {
 		echo '<header class="bdc-kb-list-hero">';
 		echo '<div class="bdc-kb-hero-copy">';
-		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Base de Conhecimento', 'bdc-knowledge-base' ) . '</p>';
-		echo '<h1>' . esc_html__( 'Artigos da Base de Conhecimento', 'bdc-knowledge-base' ) . '</h1>';
-		echo '<p>' . esc_html__( 'Localize artigos e acompanhe conteúdo, sumário, classificação, inteligência e governança em um único lugar.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="bdc-kb-eyebrow">' . esc_html__( 'Base de Conhecimento', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
+		echo '<h1>' . esc_html__( 'Artigos da Base de Conhecimento', 'base-conhecimento-inteligencia-integrada' ) . '</h1>';
+		echo '<p>' . esc_html__( 'Localize artigos e acompanhe conteúdo, sumário, classificação, inteligência e governança em um único lugar.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
-		echo '<div class="bdc-kb-hero-actions"><a class="button button-primary bdc-kb-button-with-icon" href="' . esc_url( admin_url( 'post-new.php' ) ) . '"><span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><span>' . esc_html__( 'Abrir novo artigo no WordPress', 'bdc-knowledge-base' ) . '</span></a></div>';
+		echo '<div class="bdc-kb-hero-actions"><a class="button button-primary bdc-kb-button-with-icon" href="' . esc_url( admin_url( 'post-new.php' ) ) . '"><span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><span>' . esc_html__( 'Abrir novo artigo no WordPress', 'base-conhecimento-inteligencia-integrada' ) . '</span></a></div>';
 		echo '</header>';
 	}
 
@@ -431,17 +434,17 @@ final class Admin_Page {
 			}
 		}
 
-		echo '<form class="bdc-kb-toolbar" method="get" action="' . esc_url( admin_url( 'admin.php' ) ) . '" role="search" aria-label="' . esc_attr__( 'Pesquisar artigos da Base de Conhecimento', 'bdc-knowledge-base' ) . '">';
+		echo '<form class="bdc-kb-toolbar" method="get" action="' . esc_url( admin_url( 'admin.php' ) ) . '" role="search" aria-label="' . esc_attr__( 'Pesquisar artigos da Base de Conhecimento', 'base-conhecimento-inteligencia-integrada' ) . '">';
 		echo '<input type="hidden" name="page" value="' . esc_attr( self::PAGE_SLUG ) . '">';
 		echo '<div class="bdc-kb-search-field">';
-		echo '<label class="bdc-kb-search-label" for="bdc-kb-search-input">' . esc_html__( 'Pesquisar artigos', 'bdc-knowledge-base' ) . '</label>';
-		echo '<input id="bdc-kb-search-input" type="search" name="s" value="' . esc_attr( $search ) . '" placeholder="' . esc_attr__( 'Ex.: Windows 11, SCCM ou uma frase do artigo', 'bdc-knowledge-base' ) . '" aria-describedby="bdc-kb-search-help">';
-		echo '<span id="bdc-kb-search-help" class="bdc-kb-search-helper">' . esc_html__( 'Pesquise por título, sumário, cabeçalhos e conteúdo disponível para sua conta.', 'bdc-knowledge-base' ) . '</span>';
+		echo '<label class="bdc-kb-search-label" for="bdc-kb-search-input">' . esc_html__( 'Pesquisar artigos', 'base-conhecimento-inteligencia-integrada' ) . '</label>';
+		echo '<input id="bdc-kb-search-input" type="search" name="s" value="' . esc_attr( $search ) . '" placeholder="' . esc_attr__( 'Ex.: Windows 11, SCCM ou uma frase do artigo', 'base-conhecimento-inteligencia-integrada' ) . '" aria-describedby="bdc-kb-search-help">';
+		echo '<span id="bdc-kb-search-help" class="bdc-kb-search-helper">' . esc_html__( 'Pesquise por título, sumário, cabeçalhos e conteúdo disponível para sua conta.', 'base-conhecimento-inteligencia-integrada' ) . '</span>';
 		echo '</div>';
 		echo '<div class="bdc-kb-search-actions">';
-		echo '<button class="button button-primary bdc-kb-button-with-icon" type="submit"><span class="dashicons dashicons-search" aria-hidden="true"></span><span>' . esc_html__( 'Pesquisar', 'bdc-knowledge-base' ) . '</span></button>';
+		echo '<button class="button button-primary bdc-kb-button-with-icon" type="submit"><span class="dashicons dashicons-search" aria-hidden="true"></span><span>' . esc_html__( 'Pesquisar', 'base-conhecimento-inteligencia-integrada' ) . '</span></button>';
 		if ( $is_search ) {
-			echo '<a class="button bdc-kb-button-with-icon" href="' . esc_url( admin_url( 'admin.php?page=' . self::PAGE_SLUG ) ) . '"><span class="dashicons dashicons-dismiss" aria-hidden="true"></span><span>' . esc_html__( 'Limpar', 'bdc-knowledge-base' ) . '</span></a>';
+			echo '<a class="button bdc-kb-button-with-icon" href="' . esc_url( admin_url( 'admin.php?page=' . self::PAGE_SLUG ) ) . '"><span class="dashicons dashicons-dismiss" aria-hidden="true"></span><span>' . esc_html__( 'Limpar', 'base-conhecimento-inteligencia-integrada' ) . '</span></a>';
 		}
 		echo '</div>';
 		echo '</form>';
@@ -455,7 +458,7 @@ final class Admin_Page {
 		foreach ( array( 'publish', 'draft', 'pending', 'private', 'future' ) as $status ) {
 			$total += isset( $counts->{$status} ) ? (int) $counts->{$status} : 0;
 		}
-		echo '<div class="bdc-kb-metrics" aria-label="' . esc_attr__( 'Resumo da Base de Conhecimento', 'bdc-knowledge-base' ) . '">';
+		echo '<div class="bdc-kb-metrics" aria-label="' . esc_attr__( 'Resumo da Base de Conhecimento', 'base-conhecimento-inteligencia-integrada' ) . '">';
 		self::render_metric( (string) $total, 'artigos no escopo editorial' );
 		self::render_metric( (string) count( Meta_Contract::fields() ), 'campos do sumário' );
 		self::render_metric( (string) count( Classification_Contract::fields() ), 'conceitos de classificação' );
@@ -463,7 +466,7 @@ final class Admin_Page {
 
 		echo '<div class="bdc-kb-table-wrap">';
 		echo '<table class="widefat fixed bdc-kb-table">';
-		echo '<thead><tr><th>' . esc_html__( 'Artigo', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Sumário', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Classificação', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Atualizado', 'bdc-knowledge-base' ) . '</th><th>' . esc_html__( 'Ações', 'bdc-knowledge-base' ) . '</th></tr></thead><tbody>';
+		echo '<thead><tr><th>' . esc_html__( 'Artigo', 'base-conhecimento-inteligencia-integrada' ) . '</th><th>' . esc_html__( 'Sumário', 'base-conhecimento-inteligencia-integrada' ) . '</th><th>' . esc_html__( 'Classificação', 'base-conhecimento-inteligencia-integrada' ) . '</th><th>' . esc_html__( 'Atualizado', 'base-conhecimento-inteligencia-integrada' ) . '</th><th>' . esc_html__( 'Ações', 'base-conhecimento-inteligencia-integrada' ) . '</th></tr></thead><tbody>';
 
 		$rendered = 0;
 		foreach ( $posts as $post ) {
@@ -486,7 +489,7 @@ final class Admin_Page {
 			if ( is_array( $search_row ) ) {
 				$row_meta .= ' · ' . sprintf(
 					/* translators: %d: position in search results. */
-					__( 'Relevância #%d', 'bdc-knowledge-base' ),
+					__( 'Relevância #%d', 'base-conhecimento-inteligencia-integrada' ),
 					(int) ( $search_row['rank'] ?? 0 )
 				);
 			}
@@ -496,7 +499,7 @@ final class Admin_Page {
 			echo '<td><span class="bdc-kb-badge ' . esc_attr( $summary_class ) . '">' . esc_html( $summary_label ) . '</span></td>';
 			echo '<td><span class="bdc-kb-badge' . ( $term_count > 0 ? ' bdc-kb-badge--info' : '' ) . '">' . esc_html( $class_label ) . '</span></td>';
 			echo '<td>' . esc_html( get_the_modified_date( '', $post ) ) . '</td>';
-			echo '<td><a class="button bdc-kb-button-with-icon" href="' . esc_url( $workspace_url ) . '"><span class="dashicons dashicons-edit-page" aria-hidden="true"></span><span>' . esc_html__( 'Gerenciar', 'bdc-knowledge-base' ) . '</span></a></td>';
+			echo '<td><a class="button bdc-kb-button-with-icon" href="' . esc_url( $workspace_url ) . '"><span class="dashicons dashicons-edit-page" aria-hidden="true"></span><span>' . esc_html__( 'Gerenciar', 'base-conhecimento-inteligencia-integrada' ) . '</span></a></td>';
 			echo '</tr>';
 			++$rendered;
 		}
@@ -516,12 +519,12 @@ final class Admin_Page {
 					'current'   => $paged,
 					'total'     => max( 1, (int) $query->max_num_pages ),
 					'type'      => 'list',
-					'prev_text' => __( 'Anterior', 'bdc-knowledge-base' ),
-					'next_text' => __( 'Próxima', 'bdc-knowledge-base' ),
+					'prev_text' => __( 'Anterior', 'base-conhecimento-inteligencia-integrada' ),
+					'next_text' => __( 'Próxima', 'base-conhecimento-inteligencia-integrada' ),
 				)
 			);
 			if ( is_string( $pagination ) && '' !== $pagination ) {
-				echo '<nav class="bdc-kb-pagination" aria-label="' . esc_attr__( 'Paginação de artigos', 'bdc-knowledge-base' ) . '">' . wp_kses_post( $pagination ) . '</nav>';
+				echo '<nav class="bdc-kb-pagination" aria-label="' . esc_attr__( 'Paginação de artigos', 'base-conhecimento-inteligencia-integrada' ) . '">' . wp_kses_post( $pagination ) . '</nav>';
 			}
 		}
 
@@ -538,33 +541,33 @@ final class Admin_Page {
 
 		$class = 'bdc-kb-search-feedback bdc-kb-search-feedback--info';
 		$role = 'status';
-		$title = __( 'Pesquisa concluída', 'bdc-knowledge-base' );
+		$title = __( 'Pesquisa concluída', 'base-conhecimento-inteligencia-integrada' );
 		$message = sprintf(
 			/* translators: 1: result count, 2: query. */
-			_n( '%1$d resultado para “%2$s”.', '%1$d resultados para “%2$s”.', $count, 'bdc-knowledge-base' ),
+			_n( '%1$d resultado para “%2$s”.', '%1$d resultados para “%2$s”.', $count, 'base-conhecimento-inteligencia-integrada' ),
 			$count,
 			$search
 		);
 
 		if ( 'degraded' === $state ) {
 			$class = 'bdc-kb-search-feedback bdc-kb-search-feedback--warning';
-			$title = __( 'Pesquisa em modo de compatibilidade', 'bdc-knowledge-base' );
-			$message = __( 'A projeção lexical não estava disponível. Os resultados abaixo usam a pesquisa nativa do WordPress e podem ter ordenação diferente.', 'bdc-knowledge-base' );
+			$title = __( 'Pesquisa em modo de compatibilidade', 'base-conhecimento-inteligencia-integrada' );
+			$message = __( 'A projeção lexical não estava disponível. Os resultados abaixo usam a pesquisa nativa do WordPress e podem ter ordenação diferente.', 'base-conhecimento-inteligencia-integrada' );
 		} elseif ( 'invalid_query' === $state ) {
 			$class = 'bdc-kb-search-feedback bdc-kb-search-feedback--warning';
 			$role = 'alert';
-			$title = __( 'Revise a pesquisa', 'bdc-knowledge-base' );
-			$message = isset( $response['message'] ) ? (string) $response['message'] : __( 'A consulta informada não pôde ser processada.', 'bdc-knowledge-base' );
+			$title = __( 'Revise a pesquisa', 'base-conhecimento-inteligencia-integrada' );
+			$message = isset( $response['message'] ) ? (string) $response['message'] : __( 'A consulta informada não pôde ser processada.', 'base-conhecimento-inteligencia-integrada' );
 		} elseif ( 'technical_error' === $state ) {
 			$class = 'bdc-kb-search-feedback bdc-kb-search-feedback--error';
 			$role = 'alert';
-			$title = __( 'Não foi possível concluir a pesquisa', 'bdc-knowledge-base' );
-			$message = __( 'Nenhum conteúdo foi alterado. Tente novamente ou use a listagem normal enquanto o serviço é verificado.', 'bdc-knowledge-base' );
+			$title = __( 'Não foi possível concluir a pesquisa', 'base-conhecimento-inteligencia-integrada' );
+			$message = __( 'Nenhum conteúdo foi alterado. Tente novamente ou use a listagem normal enquanto o serviço é verificado.', 'base-conhecimento-inteligencia-integrada' );
 		} elseif ( 'zero_results' === $state ) {
-			$title = __( 'Nenhum resultado encontrado', 'bdc-knowledge-base' );
+			$title = __( 'Nenhum resultado encontrado', 'base-conhecimento-inteligencia-integrada' );
 			$message = sprintf(
 				/* translators: %s: query. */
-				__( 'A pesquisa por “%s” foi concluída sem correspondências.', 'bdc-knowledge-base' ),
+				__( 'A pesquisa por “%s” foi concluída sem correspondências.', 'base-conhecimento-inteligencia-integrada' ),
 				$search
 			);
 		}
@@ -573,7 +576,7 @@ final class Admin_Page {
 		echo '<span class="bdc-kb-search-feedback__icon dashicons ' . esc_attr( 'technical_error' === $state ? 'dashicons-warning' : ( 'degraded' === $state || 'invalid_query' === $state ? 'dashicons-info-outline' : 'dashicons-search' ) ) . '" aria-hidden="true"></span>';
 		echo '<div><strong>' . esc_html( $title ) . '</strong><p>' . esc_html( $message ) . '</p>';
 		if ( in_array( $state, array( 'success', 'zero_results' ), true ) && 'projection_like' === $mode ) {
-			echo '<span class="bdc-kb-search-feedback__meta">' . esc_html__( 'Resultados ordenados pela relevância lexical da Base de Conhecimento.', 'bdc-knowledge-base' ) . '</span>';
+			echo '<span class="bdc-kb-search-feedback__meta">' . esc_html__( 'Resultados ordenados pela relevância lexical da Base de Conhecimento.', 'base-conhecimento-inteligencia-integrada' ) . '</span>';
 		}
 		echo '</div></div>';
 	}
@@ -584,21 +587,21 @@ final class Admin_Page {
 	private static function render_search_empty_row( string $search, ?array $response ): void {
 		$state = is_array( $response ) ? (string) ( $response['state'] ?? '' ) : '';
 
-		$title = __( 'Nenhum artigo encontrado', 'bdc-knowledge-base' );
-		$message = __( 'Não há artigos editáveis disponíveis neste contexto.', 'bdc-knowledge-base' );
+		$title = __( 'Nenhum artigo encontrado', 'base-conhecimento-inteligencia-integrada' );
+		$message = __( 'Não há artigos editáveis disponíveis neste contexto.', 'base-conhecimento-inteligencia-integrada' );
 
 		if ( '' !== $search && 'zero_results' === $state ) {
-			$title = __( 'Nenhuma correspondência', 'bdc-knowledge-base' );
-			$message = __( 'Tente um termo mais curto, outro nome do produto ou uma frase presente no artigo.', 'bdc-knowledge-base' );
+			$title = __( 'Nenhuma correspondência', 'base-conhecimento-inteligencia-integrada' );
+			$message = __( 'Tente um termo mais curto, outro nome do produto ou uma frase presente no artigo.', 'base-conhecimento-inteligencia-integrada' );
 		} elseif ( '' !== $search && 'invalid_query' === $state ) {
-			$title = __( 'Pesquisa inválida', 'bdc-knowledge-base' );
-			$message = __( 'Ajuste os termos informados e pesquise novamente.', 'bdc-knowledge-base' );
+			$title = __( 'Pesquisa inválida', 'base-conhecimento-inteligencia-integrada' );
+			$message = __( 'Ajuste os termos informados e pesquise novamente.', 'base-conhecimento-inteligencia-integrada' );
 		} elseif ( '' !== $search && 'technical_error' === $state ) {
-			$title = __( 'Pesquisa temporariamente indisponível', 'bdc-knowledge-base' );
-			$message = __( 'A listagem permanece disponível. Limpe a pesquisa para continuar navegando pelos artigos.', 'bdc-knowledge-base' );
+			$title = __( 'Pesquisa temporariamente indisponível', 'base-conhecimento-inteligencia-integrada' );
+			$message = __( 'A listagem permanece disponível. Limpe a pesquisa para continuar navegando pelos artigos.', 'base-conhecimento-inteligencia-integrada' );
 		} elseif ( '' !== $search ) {
-			$title = __( 'Nenhum artigo encontrado', 'bdc-knowledge-base' );
-			$message = __( 'Ajuste a pesquisa ou verifique suas permissões de edição.', 'bdc-knowledge-base' );
+			$title = __( 'Nenhum artigo encontrado', 'base-conhecimento-inteligencia-integrada' );
+			$message = __( 'Ajuste a pesquisa ou verifique suas permissões de edição.', 'base-conhecimento-inteligencia-integrada' );
 		}
 
 		echo '<tr><td colspan="5"><div class="bdc-kb-empty-state"><div><strong>' . esc_html( $title ) . '</strong><p>' . esc_html( $message ) . '</p></div></div></td></tr>';
@@ -661,7 +664,7 @@ final class Admin_Page {
 
 	private static function render_back_link(): void {
 		$url = admin_url( 'admin.php?page=' . self::PAGE_SLUG );
-		echo '<p class="bdc-kb-back"><a href="' . esc_url( $url ) . '">&larr; ' . esc_html__( 'Voltar para artigos', 'bdc-knowledge-base' ) . '</a></p>';
+		echo '<p class="bdc-kb-back"><a href="' . esc_url( $url ) . '">&larr; ' . esc_html__( 'Voltar para artigos', 'base-conhecimento-inteligencia-integrada' ) . '</a></p>';
 	}
 
 	private static function get_request_post_id(): int {
@@ -674,7 +677,7 @@ final class Admin_Page {
 
 	private static function get_request_tab(): string {
 		if ( isset( $_GET['tab'] ) && is_scalar( $_GET['tab'] ) ) {
-			return Post_Activity_Registry::normalize( wp_unslash( (string) $_GET['tab'] ) );
+			return Post_Activity_Registry::normalize( sanitize_key( wp_unslash( (string) $_GET['tab'] ) ) );
 		}
 
 		if ( isset( $_GET['bdc_summary_status'] ) ) {

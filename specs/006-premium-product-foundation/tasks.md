@@ -319,3 +319,19 @@ Click-runner 1.0.2 — Runtime_Environment_Setup probe:
 - no blind bypass of setup-runtime;
 - post-cleanup probe added;
 - artifact SHA-256: `3fb06eee21b7b01d791486c968e37569bf3a114912682ec9a5b4f5a3d211f43c`.
+
+
+Click-runner 1.0.3 — safe Plugin Check runtime recovery:
+- observed 1.0.2: Plugin Check 2.1.0 setup created 12 temp tables but did not leave official object-cache drop-in;
+- recovery does not bypass runtime isolation;
+- requires complete expected temp table set;
+- requires temp active_plugins option with BDC + Plugin Check;
+- requires FS direct, no CUSTOM_USER_TABLE/META, no DISALLOW_FILE_MODS, no existing object-cache;
+- copies only installed Plugin Check official `drop-ins/object-cache.copy.php`;
+- requires byte-exact SHA equality after copy;
+- new request must observe Plugin Check drop-in constant before runtime checks continue;
+- companion emergency cleanup uses official `Runtime_Environment_Setup::clean_up()`;
+- residual drop-in may be removed only when byte-exact to official source;
+- package: `bdc-spec006-final-gates-runner-1.0.3.zip`;
+- SHA-256: `9693a83970c46fbb88201c3f835ea651b99bc489011f8806708ac597f65a56e9`;
+- static contract 21/21 PASS.

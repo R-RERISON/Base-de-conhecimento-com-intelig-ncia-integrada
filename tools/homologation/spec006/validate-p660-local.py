@@ -24,7 +24,7 @@ STATIC_CONTRACT = ROOT / "tests" / "unit" / "spec006-p660-security-baseline.php"
 INVENTORY = ROOT / "tools" / "homologation" / "spec006" / "inventory-p660-security-privacy.py"
 INVENTORY_OUTPUT = DIST / "p660-security-privacy-inventory.json"
 PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
-EXPECTED_PACKAGE_SHA256 = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
+EXPECTED_PACKAGE_SHA256 = "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2"
 
 AFFECTED_FILES = (
     PLUGIN / "base-conhecimento-inteligencia-integrada.php",

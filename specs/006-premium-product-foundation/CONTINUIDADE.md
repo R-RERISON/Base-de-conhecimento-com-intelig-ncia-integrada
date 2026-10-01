@@ -913,3 +913,63 @@ Artifact:
 Evidences:
 - `evidence/spec006-click-runner-1.0.3-environmental-diagnosis-20261001.json`;
 - `evidence/spec006-wordpress-click-runner-package-1.0.4-20261001.json`.
+
+
+## p650.4 — current candidate after real Plugin Check findings
+
+Source of decision:
+- user/environment JSON from runner 1.0.4;
+- p650.3 identity/runtime PASS;
+- 29/29 official static Plugin Check checks completed;
+- 170 errors / 96 warnings;
+- rollback/data preservation PASS.
+
+Dominant p650.3 errors:
+- TextDomainMismatch=140;
+- PreparedSQL.NotPrepared=20;
+- EscapeOutput.OutputNotEscaped=4;
+- strip_tags alternative=3;
+- DirectDB.UnescapedDBParameter=1;
+- suppress_filters=1;
+- plugin_updater_detected=1.
+
+Remediation implemented in source:
+- distributed Text Domain normalized;
+- request array/text boundaries sanitized;
+- raw structural output removed where appropriate;
+- strip_tags replaced by WordPress primitive;
+- Search Projection SQL reviewed with localized dispositions for internal identifiers / placeholder-bound values;
+- deterministic corpus suppress_filters has localized justification;
+- no global Plugin Check ignore.
+
+Canonical p650.4:
+- SHA-256 `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`;
+- 102 files / 83 PHP;
+- PHP lint 83/83 PASS;
+- fixed deterministic ZIP time = 2026-09-29 00:00:00;
+- 15/15 changed non-bootstrap runtime blobs match GitHub;
+- package is READY_FOR_ENVIRONMENTAL_VALIDATION, not approved.
+
+Companion 1.0.5:
+- SHA-256 `62ec1d025b65bf26390549fdafb1ee2483fd119b7c668ca7dfbe10d20dd1b348`;
+- embeds p650.3 previous + p650.4 candidate;
+- rollback p650.4 -> p650.3 -> p650.4;
+- full editorial/Elementor/Search fingerprints.
+
+P670 policy updated:
+- p650.4 only;
+- fresh WordPress final gates evidence required;
+- fresh Plugin Check disposition required;
+- official static checks are mandatory;
+- official runtime is preferred, but the known sandbox limitation can only be accepted with explicit disposition + native runtime PASS;
+- global ignore remains forbidden;
+- stale p650.3 environmental evidence cannot close p650.4.
+
+Next exact action:
+1. install p650.4 replacing p650.3;
+2. replace companion with runner 1.0.5;
+3. execute complete validation;
+4. confirm rollback;
+5. download/send JSON;
+6. review residual findings and version disposition;
+7. external PHPCS/WPCS + PHPUnit remain required before P670.

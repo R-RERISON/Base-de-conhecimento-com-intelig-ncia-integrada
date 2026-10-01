@@ -18,7 +18,7 @@ $Root = (Resolve-Path (Join-Path $ScriptDir "..\..\..")).Path
 $Dist = Join-Path $Root "dist"
 $Evidence = Join-Path $Root "evidence"
 
-$ExpectedCandidateSha = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
+$ExpectedCandidateSha = "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2"
 $ExpectedCandidateName = "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
 
 if ([string]::IsNullOrWhiteSpace($CandidateZip)) {

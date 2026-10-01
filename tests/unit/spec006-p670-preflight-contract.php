@@ -19,7 +19,7 @@ if ( ! is_string( $source ) ) {
 $checks = array(
 	'local_only' => str_contains( $source, '"execution_mode": "LOCAL_ONLY"' ),
 	'frozen_p6504_name' => str_contains( $source, 'base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip' ),
-	'frozen_p6504_sha' => str_contains( $source, '0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77' ),
+	'frozen_p6504_sha' => str_contains( $source, 'a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2' ),
 	'requires_p640_current' => str_contains( $source, 'spec006-p640-local-validation-current.json' ),
 	'requires_p640_environmental_reconciliation' => str_contains( $source, 'spec006-p640-environmental-reconciliation-current.json' )
 		&& str_contains( $source, 'p640_environmental_runtime_reconciled' ),

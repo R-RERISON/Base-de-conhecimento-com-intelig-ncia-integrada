@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-650/P-660",
+  "phase": "P6504_PLUGIN_CHECK_REMEDIATION_PACKAGE",
+  "status": "PASS_PACKAGE_READY_FOR_ENVIRONMENTAL_VALIDATION",
+  "date": "2026-10-01",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip",
+    "sha256": "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2",
+    "files": 102,
+    "php_files": 83,
+    "php_lint": "83/83 PASS",
+    "single_root": true,
+    "engineering_lab_files": 0,
+    "deterministic_timestamp": "2026-09-29T00:00:00",
+    "zip_integrity": true
+  },
+  "remediation": {
+    "text_domain_normalized": true,
+    "request_payload_sanitization_hardened": true,
+    "output_escaping_structuralized": true,
+    "strip_tags_replaced_with_wp_primitive": true,
+    "search_projection_sql_dispositions_localized": true,
+    "suppress_filters_disposition_localized": true,
+    "global_plugin_check_ignore_added": false,
+    "update_uri_private_distribution_waiver_preserved": true
+  },
+  "provenance": {
+    "changed_non_bootstrap_runtime_blobs_checked": 15,
+    "changed_non_bootstrap_runtime_blobs_matching_github": 15,
+    "bootstrap_distribution_transform_preserved": true
+  },
+  "invariants": {
+    "schema_change": false,
+    "ranking_change": false,
+    "editorial_migration": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false
+  },
+  "gate_closure_authorized": false,
+  "next_action": "Install p650.4 in homologation and run companion 1.0.5."
+}

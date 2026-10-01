@@ -1,7 +1,7 @@
 # P-650 / P-660 — Final Local Gates Runbook
 
-**Artefato congelado:** `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip`  
-**SHA-256:** `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`
+**Artefato congelado:** `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip`  
+**SHA-256:** `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`
 
 ## Regra
 
@@ -16,19 +16,19 @@ Pré-requisitos locais:
 - WordPress funcional;
 - WP-CLI;
 - plugin oficial Plugin Check instalado;
-- exatamente o ZIP p650.3.
+- exatamente o ZIP p650.4.
 
 Executar:
 
 ```bash
 python tools/homologation/spec006/run-p650-p660-plugin-check-local.py \
   --wp-path=/caminho/do/wordpress \
-  --zip=/caminho/base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip
+  --zip=/caminho/base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip
 ```
 
 O runner:
 
-- valida o SHA do p650.3;
+- valida o SHA do p650.4;
 - usa o ZIP diretamente como target;
 - executa `--format=strict-json`;
 - executa `--mode=update`;
@@ -45,15 +45,15 @@ Não criar waiver global.
 
 ## 2. Rollback
 
-Usar como pacote anterior um ZIP previamente homologado, preferencialmente p650.2, e como candidato exatamente p650.3.
+Usar como pacote anterior um ZIP previamente homologado, preferencialmente p650.2, e como candidato exatamente p650.4.
 
 Executar:
 
 ```bash
 python tools/homologation/spec006/run-p650-rollback-local.py \
   --wp-path=/caminho/do/wordpress \
-  --previous-zip=/caminho/base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.2.zip \
-  --candidate-zip=/caminho/base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip \
+  --previous-zip=/caminho/base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip \
+  --candidate-zip=/caminho/base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip \
   --output=evidence/spec006-p650-rollback-current.json
 ```
 
@@ -63,7 +63,7 @@ Fluxo:
 2. reinstala pacote anterior;
 3. confirma plugin ativo;
 4. fingerprint após rollback;
-5. reinstala p650.3;
+5. reinstala p650.4;
 6. confirma plugin ativo;
 7. fingerprint final.
 
@@ -72,14 +72,17 @@ Fingerprints não exportam conteúdo. Comparam:
 - quantidade de posts;
 - SHA-256 determinístico de `post_content`;
 - contagens das metas BDC relevantes;
-- SHA-256 determinístico dos valores dessas metas.
+- SHA-256 determinístico dos valores dessas metas;
+- count/hash de `_elementor_data`;
+- count/hash de `bdc_kb_search_documents`;
+- hash da option `bdc_kb_search_projection_state`.
 
 ### PASS
 
 PASS exige:
 
 - pacote anterior instalável/ativo;
-- p650.3 restaurável/ativo;
+- p650.4 restaurável/ativo;
 - contagens iguais;
 - hash editorial igual;
 - hash das metas BDC igual.
@@ -109,8 +112,8 @@ Para executar a cadeia completa em uma workstation Windows com WordPress/WP-CLI:
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/homologation/spec006/run-spec006-final-gates.ps1 `
   -WpPath "C:\caminho\wordpress" `
-  -PreviousZip "C:\caminho\base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.2.zip" `
-  -CandidateZip "C:\caminho\base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
+  -PreviousZip "C:\caminho\base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip" `
+  -CandidateZip "C:\caminho\base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
 ```
 
 Ordem executada:
@@ -118,10 +121,10 @@ Ordem executada:
 1. valida Git/plugin tree;
 2. exige tooling Composer já materializado em `vendor` por padrão;
 3. P640 local completo, gerando `p640.2`;
-4. P650 local package quality, preso ao SHA do p650.3;
+4. P650 local package quality, preso ao SHA do p650.4;
 5. P660 local security/privacy quality;
-6. Plugin Check oficial no p650.3;
-7. rollback p650.2 -> p650.3 com fingerprints;
+6. Plugin Check oficial no p650.4;
+7. rollback p650.3 -> p650.4 com fingerprints;
 8. gera `evidence/spec006-final-local-gates-summary-current.json`.
 
 ### Composer
@@ -169,4 +172,4 @@ Somente abrir a revisão final do P670 quando:
 - closeout candidate = `READY_FOR_HUMAN_LEDGER_REVIEW`;
 - Plugin Check e rollback estiverem PASS;
 - o mesmo `plugin_tree_sha` for mantido;
-- o artifact SHA continuar igual ao p650.3 congelado.
+- o artifact SHA continuar igual ao p650.4 congelado.

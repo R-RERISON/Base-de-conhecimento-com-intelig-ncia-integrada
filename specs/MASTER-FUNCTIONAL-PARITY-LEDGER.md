@@ -51,10 +51,10 @@ PARITY_VERIFIED | IMPROVED_VERIFIED | SUPERSEDED_WITH_EVIDENCE | PARTIAL | GAP |
 | ENV-004 | ambiente | GAC/WP Unified Indexer | UNKNOWN_ENVIRONMENTAL | SPEC-007/014 | SIM |
 | PROD-001 | BDC | metadata/license/update | IMPROVED_VERIFIED | SPEC-006 / P-600 | NÃO |
 | PROD-002 | BDC | readme/license/changelog/security/contributing | IMPROVED_VERIFIED | SPEC-006 / P-600 | NÃO |
-| PROD-003 | BDC | Composer/WPCS/PHPUnit/static | PARTIAL | SPEC-006 / P-610/P-670 | SIM 1.0 |
-| PROD-004 | BDC | Plugin Check | PARTIAL | SPEC-006 / P-620/P-650/P-670 | SIM RC |
-| PROD-005 | BDC | modular production bootstrap | PARTIAL | SPEC-006 | SIM 1.0 |
-| PROD-006 | BDC | ZIP sem laboratório indevido | PARTIAL | SPEC-006 | SIM 1.0 |
+| PROD-003 | BDC | Composer/WPCS/PHPUnit/static | PARTIAL | SPEC-014 / dívida aceita da SPEC-006 | SIM 1.0 |
+| PROD-004 | BDC | Plugin Check | IMPROVED_VERIFIED | SPEC-006 / P-620/P-650/P-670 | NÃO |
+| PROD-005 | BDC | modular production bootstrap | IMPROVED_VERIFIED | SPEC-006 / P-640 | NÃO |
+| PROD-006 | BDC | ZIP sem laboratório indevido | IMPROVED_VERIFIED | SPEC-006 / P-650 | NÃO |
 
 ## Atualização obrigatória
 
@@ -161,3 +161,19 @@ Evidence:
 
 P-630 does **not** authorize public cutover or GRE/KB2Ops retirement. Those decisions remain gated by the remaining Ledger rows and SPEC-014.
 
+
+
+### SPEC-006 P-670 closeout — 2026-10-01
+
+Final artifact:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip`;
+- SHA-256 `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`.
+
+Final disposition:
+- PROD-003 remains PARTIAL because current-tree PHPCS/WPCS and PHPUnit were not run; explicit Product Owner exception recorded and routed forward;
+- PROD-004 -> IMPROVED_VERIFIED from official Plugin Check static 29/29 plus explicit residual disposition and native runtime PASS;
+- PROD-005 -> IMPROVED_VERIFIED from modular runtime evidence on the exact production candidate;
+- PROD-006 -> IMPROVED_VERIFIED from clean deterministic package, exact identity and rollback/data preservation evidence.
+
+SPEC-006 is CLOSED_WITH_ACCEPTED_TOOLING_EXCEPTION.
+This is not Premium Done and does not authorize version 1.0.0, cutover or retirement.

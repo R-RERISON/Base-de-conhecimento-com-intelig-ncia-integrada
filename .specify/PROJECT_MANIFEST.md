@@ -514,16 +514,17 @@ Estado canônico atual:
 - SPEC-006 Premium Product Foundation: **ACTIVE / FINAL GATES**;
 - SPEC-007 Public Knowledge Experience: **NEXT / NOT ACTIVE**.
 
-Artefato funcional congelado da SPEC-006:
-- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip`;
-- SHA-256 `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`;
-- runtime homologado e sem alteração posterior.
+Artefato candidato atual da SPEC-006:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip`;
+- SHA-256 `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`;
+- deriva de findings concretos do Plugin Check sobre p650.3;
+- requer nova homologação ambiental; p650.3 permanece histórico com rollback PASS.
 
 Gates finais da SPEC-006:
 1. P640 local quality / `p640.2`;
 2. P650 local package quality;
 3. P660 local security/privacy;
-4. P640 environmental runtime reconciliation no próprio `p650.3`;
+4. P640 environmental runtime reconciliation no próprio `p650.4`;
 5. Plugin Check oficial local;
 6. rollback com fingerprints;
 7. P670 preflight;

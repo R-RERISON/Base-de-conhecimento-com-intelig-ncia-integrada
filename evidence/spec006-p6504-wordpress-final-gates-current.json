@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-WORDPRESS-GATES",
+  "phase": "P6504_WORDPRESS_FINAL_GATES",
+  "status": "PASS_WITH_PLUGIN_CHECK_DISPOSITION_REQUIRED",
+  "execution_mode": "WORDPRESS_CLICK_RUNNER",
+  "date": "2026-10-01",
+  "runner": {
+    "name": "BDC SPEC-006 Final Gates Runner",
+    "version": "1.0.5"
+  },
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip",
+    "sha256": "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2",
+    "file_count": 102
+  },
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "database": "12.2.2",
+    "multisite": false,
+    "plugin_check_version": "2.1.0"
+  },
+  "native_preflight": {
+    "identity": {
+      "pass": true,
+      "checked_files": 102,
+      "missing": [],
+      "mismatched": [],
+      "extra": []
+    },
+    "runtime": {
+      "pass": true,
+      "failed": []
+    }
+  },
+  "plugin_check": {
+    "official": true,
+    "mode": "OFFICIAL_STATIC_WITH_NATIVE_RUNTIME_EVIDENCE",
+    "checks_requested": 29,
+    "checks_completed": 29,
+    "error_count": 2,
+    "warning_count": 84,
+    "official_runtime_checks": false,
+    "runtime_disposition": "UPSTREAM_SETUP_ABORTED_BEFORE_ACTIVE_PLUGINS_FINALIZATION",
+    "native_runtime_validation": "PASS",
+    "runtime_cleanup_pass": true
+  },
+  "rollback": {
+    "previous": "p650.3",
+    "candidate": "p650.4",
+    "cycle": "p650.4 -> p650.3 -> p650.4",
+    "pass": true,
+    "data_preserved": true,
+    "post_content_preserved": true,
+    "bdc_meta_preserved": true,
+    "elementor_data_preserved": true,
+    "search_projection_preserved": true,
+    "search_projection_state_preserved": true
+  },
+  "final_identity": {
+    "pass": true,
+    "checked_files": 102,
+    "missing": [],
+    "mismatched": [],
+    "extra": []
+  },
+  "gate_scope": {
+    "wordpress_environmental": true,
+    "official_plugin_check_admin": true,
+    "official_plugin_check_static": true,
+    "official_plugin_check_runtime": false,
+    "native_runtime_validation": true,
+    "rollback": true,
+    "phpcs_wpcs": false,
+    "phpunit": false
+  },
+  "invariants": {
+    "production_candidate_modified_by_runner": false,
+    "candidate_restored_after_rollback": true,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "version_1_0_authorized": false
+  },
+  "source_evidence": "spec006-final-gates-20261001-121039.json",
+  "next_gate": "P6504_PLUGIN_CHECK_DISPOSITION"
+}

@@ -17,7 +17,7 @@ import subprocess
 import tempfile
 from datetime import datetime, timezone
 
-EXPECTED_CANDIDATE_SHA256 = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
+EXPECTED_CANDIDATE_SHA256 = "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2"
 PLUGIN_SLUG = "base-conhecimento-inteligencia-integrada"
 OUTPUT_NAME = "spec006-p650-rollback-current.json"
 

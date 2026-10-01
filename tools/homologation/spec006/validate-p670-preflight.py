@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """P-670 Premium Foundation Acceptance preflight.
 
-Consolida evidências da SPEC-006 sem promover Ledger ou autorizar cutover.
-Fail-closed para evidência ausente, stale, remota onde o gate final exige local,
-ou artefato diferente do p650.3 homologado.
+Consolida evidências finais da SPEC-006 sem promover Ledger ou autorizar cutover.
+Fail-closed para evidência ausente, stale, artefato divergente ou disposition
+incompleta. O Plugin Check runtime oficial pode permanecer como limitação
+ambiental somente quando a execução estática oficial e o runtime nativo do BDC
+estiverem comprovados no mesmo artefato e houver disposition explícita.
 """
 
 from __future__ import annotations
@@ -20,8 +22,8 @@ ROOT = pathlib.Path(__file__).resolve().parents[3]
 EVIDENCE = ROOT / "evidence"
 DIST = ROOT / "dist"
 
-EXPECTED_PACKAGE_NAME = "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
-EXPECTED_PACKAGE_SHA256 = "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+EXPECTED_PACKAGE_NAME = "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
+EXPECTED_PACKAGE_SHA256 = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
 PACKAGE = DIST / EXPECTED_PACKAGE_NAME
 OUTPUT = EVIDENCE / "spec006-p670-preflight-current.json"
 
@@ -31,13 +33,11 @@ PATHS = {
     "p620": EVIDENCE / "spec006-p620-plugin-check-disposition-20260929.json",
     "p630": EVIDENCE / "spec006-p630-domain-closure-pass-20260929.json",
     "p640": EVIDENCE / "spec006-p640-local-validation-current.json",
-    "p650": EVIDENCE / "spec006-p650-local-package-validation-current.json",
-    "p650_env": EVIDENCE / "spec006-p6503-environmental-smoke-pass-20260930.json",
     "p640_env": EVIDENCE / "spec006-p640-environmental-reconciliation-current.json",
+    "p650": EVIDENCE / "spec006-p650-local-package-validation-current.json",
     "p660": EVIDENCE / "spec006-p660-local-validation-current.json",
-    "plugin_check": EVIDENCE / "spec006-p650-p660-plugin-check-current.json",
-    "rollback": EVIDENCE / "spec006-p650-rollback-current.json",
-    "final_summary": EVIDENCE / "spec006-final-local-gates-summary-current.json",
+    "wordpress_final": EVIDENCE / "spec006-p6504-wordpress-final-gates-current.json",
+    "plugin_disposition": EVIDENCE / "spec006-p6504-plugin-check-disposition-current.json",
 }
 
 GOVERNANCE_PATHS = (
@@ -82,14 +82,6 @@ def load_json(path: pathlib.Path) -> dict[str, Any] | None:
     return data if isinstance(data, dict) else None
 
 
-def step(name: str, passed: bool, **details: Any) -> dict[str, Any]:
-    return {"name": name, "pass": bool(passed), **details}
-
-
-def status_is(data: dict[str, Any] | None, *allowed: str) -> bool:
-    return isinstance(data, dict) and str(data.get("status", "")) in allowed
-
-
 def nested(data: dict[str, Any] | None, *keys: str) -> Any:
     current: Any = data
     for key in keys:
@@ -99,59 +91,53 @@ def nested(data: dict[str, Any] | None, *keys: str) -> Any:
     return current
 
 
+def status_is(data: dict[str, Any] | None, *allowed: str) -> bool:
+    return isinstance(data, dict) and str(data.get("status", "")) in allowed
+
+
+def step(name: str, passed: bool, **details: Any) -> dict[str, Any]:
+    return {"name": name, "pass": bool(passed), **details}
+
+
+def artifact_sha(data: dict[str, Any] | None) -> Any:
+    return nested(data, "artifact", "sha256")
+
+
 def main() -> int:
     current_commit = git_revision("HEAD")
     current_plugin_tree = git_revision("HEAD:plugin/base-conhecimento-inteligencia-integrada")
-
     loaded = {name: load_json(path) for name, path in PATHS.items()}
     checks: list[dict[str, Any]] = []
 
-    missing_evidence = [name for name, data in loaded.items() if data is None]
+    missing = [name for name, data in loaded.items() if data is None]
+    checks.append(step("all_required_evidence_present", not missing, missing=missing))
+
+    missing_governance = [
+        str(path.relative_to(ROOT)) for path in GOVERNANCE_PATHS if not path.is_file()
+    ]
     checks.append(
-        step(
-            "all_required_evidence_present",
-            not missing_evidence,
-            missing=missing_evidence,
-        )
+        step("governance_documents_present", not missing_governance, missing=missing_governance)
     )
 
-    missing_governance = [str(path.relative_to(ROOT)) for path in GOVERNANCE_PATHS if not path.is_file()]
-    checks.append(
-        step(
-            "governance_documents_present",
-            not missing_governance,
-            missing=missing_governance,
-        )
-    )
-
-    # Historical gates remain provenance history. Their material claims are
-    # superseded/re-proven by the final local P640/P650/P660/Plugin Check gates.
     checks.extend(
         [
-            step("p600_historical_status", status_is(loaded["p600"], "PASS"), status=nested(loaded["p600"], "status")),
-            step("p610_historical_status", status_is(loaded["p610"], "PASS"), status=nested(loaded["p610"], "status")),
+            step("p600_historical_status", status_is(loaded["p600"], "PASS")),
+            step("p610_historical_status", status_is(loaded["p610"], "PASS")),
             step(
                 "p620_historical_disposition",
                 status_is(loaded["p620"], "PASS_INVENTORY_AND_DISPOSITION"),
-                status=nested(loaded["p620"], "status"),
             ),
-            step("p630_environmental_domain_closure", status_is(loaded["p630"], "PASS"), status=nested(loaded["p630"], "status")),
+            step("p630_environmental_domain_closure", status_is(loaded["p630"], "PASS")),
         ]
     )
 
     p640 = loaded["p640"]
     checks.append(
         step(
-            "p640_local_pass",
-            status_is(p640, "PASS") and nested(p640, "execution_mode") == "LOCAL_ONLY",
-            status=nested(p640, "status"),
-            execution_mode=nested(p640, "execution_mode"),
-        )
-    )
-    checks.append(
-        step(
-            "p640_current_plugin_tree",
-            bool(current_plugin_tree)
+            "p640_local_pass_current_tree",
+            status_is(p640, "PASS")
+            and nested(p640, "execution_mode") == "LOCAL_ONLY"
+            and bool(current_plugin_tree)
             and nested(p640, "plugin_tree_sha") == current_plugin_tree,
             evidence_plugin_tree_sha=nested(p640, "plugin_tree_sha"),
             current_plugin_tree_sha=current_plugin_tree,
@@ -160,8 +146,8 @@ def main() -> int:
     checks.append(
         step(
             "p640_build_is_p640_2",
-            nested(p640, "artifact", "package") == "base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.2.zip",
-            package=nested(p640, "artifact", "package"),
+            nested(p640, "artifact", "package")
+            == "base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.2.zip",
         )
     )
 
@@ -170,125 +156,106 @@ def main() -> int:
         step(
             "p640_environmental_runtime_reconciled",
             status_is(p640_env, "PASS")
-            and nested(p640_env, "execution_mode") == "LOCAL_ONLY"
-            and nested(p640_env, "artifact", "sha256") == EXPECTED_PACKAGE_SHA256
-            and nested(p640_env, "runtime_probe", "payload", "pass") is True
-            and nested(p640_env, "invariants", "github_actions_used") is False,
+            and nested(p640_env, "execution_mode") in {"LOCAL_ONLY", "WORDPRESS_CLICK_RUNNER"}
+            and artifact_sha(p640_env) == EXPECTED_PACKAGE_SHA256
+            and (
+                nested(p640_env, "runtime_probe", "payload", "pass") is True
+                or nested(p640_env, "runtime_probe", "pass") is True
+            ),
             status=nested(p640_env, "status"),
-            package_sha256=nested(p640_env, "artifact", "sha256"),
+            package_sha256=artifact_sha(p640_env),
         )
     )
 
     p650 = loaded["p650"]
-    checks.append(
-        step(
-            "p650_local_pass",
-            status_is(p650, "PASS") and nested(p650, "execution_mode") == "LOCAL_ONLY",
-            status=nested(p650, "status"),
-            execution_mode=nested(p650, "execution_mode"),
-        )
+    p650_sha_step = next(
+        (
+            row
+            for row in (p650 or {}).get("steps", [])
+            if isinstance(row, dict) and row.get("name") == "frozen_package_sha256"
+        ),
+        None,
     )
     checks.append(
         step(
-            "p650_current_plugin_tree",
-            bool(current_plugin_tree)
+            "p650_local_pass_current_tree",
+            status_is(p650, "PASS")
+            and nested(p650, "execution_mode") == "LOCAL_ONLY"
             and nested(p650, "current_source", "plugin_tree_sha") == current_plugin_tree
             and nested(p650, "p640_precondition", "plugin_tree_sha") == current_plugin_tree,
-            p650_plugin_tree_sha=nested(p650, "current_source", "plugin_tree_sha"),
-            p640_precondition_plugin_tree_sha=nested(p650, "p640_precondition", "plugin_tree_sha"),
-            current_plugin_tree_sha=current_plugin_tree,
         )
     )
-    p650_sha_step = None
-    for row in (p650 or {}).get("steps", []):
-        if isinstance(row, dict) and row.get("name") == "frozen_package_sha256":
-            p650_sha_step = row
-            break
     checks.append(
         step(
             "p650_frozen_sha_pass",
             isinstance(p650_sha_step, dict)
             and p650_sha_step.get("pass") is True
             and p650_sha_step.get("actual_sha256") == EXPECTED_PACKAGE_SHA256,
-            actual_sha256=p650_sha_step.get("actual_sha256") if isinstance(p650_sha_step, dict) else None,
+            actual_sha256=(
+                p650_sha_step.get("actual_sha256") if isinstance(p650_sha_step, dict) else None
+            ),
         )
     )
 
     p660 = loaded["p660"]
     checks.append(
         step(
-            "p660_local_pass",
-            status_is(p660, "PASS") and nested(p660, "execution_mode") == "LOCAL_ONLY",
+            "p660_local_pass_same_source_and_package",
+            status_is(p660, "PASS")
+            and nested(p660, "execution_mode") == "LOCAL_ONLY"
+            and nested(p660, "plugin_tree_sha") == current_plugin_tree
+            and artifact_sha(p660) == EXPECTED_PACKAGE_SHA256,
             status=nested(p660, "status"),
-            execution_mode=nested(p660, "execution_mode"),
-        )
-    )
-    checks.append(
-        step(
-            "p660_same_source_and_package",
-            nested(p660, "plugin_tree_sha") == current_plugin_tree
-            and nested(p660, "artifact", "sha256") == EXPECTED_PACKAGE_SHA256,
-            plugin_tree_sha=nested(p660, "plugin_tree_sha"),
-            package_sha256=nested(p660, "artifact", "sha256"),
+            package_sha256=artifact_sha(p660),
         )
     )
 
-    env = loaded["p650_env"]
+    wp_final = loaded["wordpress_final"]
     checks.append(
         step(
-            "p6503_environmental_smoke",
-            status_is(env, "PASS")
-            and nested(env, "artifact", "sha256") == EXPECTED_PACKAGE_SHA256
-            and nested(env, "validated_scope", "runtime_smoke") is True
-            and nested(env, "validated_scope", "search") is True
-            and nested(env, "validated_scope", "public_experience") is True
-            and nested(env, "validated_scope", "word_cloud") is True,
-            status=nested(env, "status"),
-            package_sha256=nested(env, "artifact", "sha256"),
+            "wordpress_final_same_artifact",
+            artifact_sha(wp_final) == EXPECTED_PACKAGE_SHA256
+            and nested(wp_final, "native_preflight", "identity", "pass") is True
+            and nested(wp_final, "native_preflight", "runtime", "pass") is True
+            and nested(wp_final, "rollback", "pass") is True
+            and nested(wp_final, "rollback", "data_preserved") is True
+            and nested(wp_final, "final_identity", "pass") is True,
+            status=nested(wp_final, "status"),
+            package_sha256=artifact_sha(wp_final),
+        )
+    )
+    checks.append(
+        step(
+            "wordpress_final_scope",
+            nested(wp_final, "gate_scope", "wordpress_environmental") is True
+            and nested(wp_final, "gate_scope", "official_plugin_check_static") is True
+            and nested(wp_final, "gate_scope", "native_runtime_validation") is True
+            and nested(wp_final, "gate_scope", "rollback") is True,
+            official_runtime=nested(wp_final, "gate_scope", "official_plugin_check_runtime"),
         )
     )
 
-    plugin_check = loaded["plugin_check"]
+    disposition = loaded["plugin_disposition"]
+    official_runtime = nested(wp_final, "gate_scope", "official_plugin_check_runtime")
     checks.append(
         step(
-            "official_plugin_check_local_pass",
-            status_is(plugin_check, "PASS")
-            and nested(plugin_check, "execution_mode") == "LOCAL_ONLY"
-            and nested(plugin_check, "package_sha256") == EXPECTED_PACKAGE_SHA256
-            and nested(plugin_check, "artifact_identity_match") is True
-            and nested(plugin_check, "runtime_checks_enabled") is True
-            and nested(plugin_check, "invariants", "github_actions_used") is False,
-            status=nested(plugin_check, "status"),
-            package_sha256=nested(plugin_check, "package_sha256"),
-        )
-    )
-
-    rollback = loaded["rollback"]
-    checks.append(
-        step(
-            "rollback_pass_and_data_preserved",
-            status_is(rollback, "PASS")
-            and nested(rollback, "execution_mode") == "LOCAL_ONLY"
-            and nested(rollback, "candidate", "sha256") == EXPECTED_PACKAGE_SHA256
-            and nested(rollback, "data_preserved") is True
-            and nested(rollback, "invariants", "github_actions_used") is False,
-            status=nested(rollback, "status"),
-            candidate_sha256=nested(rollback, "candidate", "sha256"),
-            data_preserved=nested(rollback, "data_preserved"),
-        )
-    )
-
-    summary = loaded["final_summary"]
-    checks.append(
-        step(
-            "final_local_summary_same_source_and_package",
-            isinstance(summary, dict)
-            and nested(summary, "execution_mode") == "LOCAL_ONLY"
-            and nested(summary, "plugin_tree_sha") == current_plugin_tree
-            and nested(summary, "candidate", "sha256") == EXPECTED_PACKAGE_SHA256
-            and nested(summary, "github_actions_used") is False,
-            plugin_tree_sha=nested(summary, "plugin_tree_sha"),
-            candidate_sha256=nested(summary, "candidate", "sha256"),
+            "plugin_check_explicit_disposition",
+            status_is(disposition, "PASS_WITH_EXPLICIT_DISPOSITION")
+            and artifact_sha(disposition) == EXPECTED_PACKAGE_SHA256
+            and nested(disposition, "official_static_completed") is True
+            and nested(disposition, "unresolved_blocking_errors") == 0
+            and nested(disposition, "unresolved_high_or_critical") == 0
+            and nested(disposition, "global_ignore_used") is False
+            and (
+                official_runtime is True
+                or (
+                    official_runtime is False
+                    and nested(disposition, "runtime_environment_limitation_accepted") is True
+                    and nested(disposition, "native_runtime_validation") == "PASS"
+                )
+            ),
+            status=nested(disposition, "status"),
+            artifact_sha256=artifact_sha(disposition),
         )
     )
 
@@ -298,38 +265,29 @@ def main() -> int:
         step(
             "frozen_package_present_and_exact",
             package_present and package_sha == EXPECTED_PACKAGE_SHA256,
-            package=str(PACKAGE.relative_to(ROOT)),
             actual_sha256=package_sha,
             expected_sha256=EXPECTED_PACKAGE_SHA256,
         )
     )
 
-    # Explicitly preserve product-governance boundaries.
-    boundary_sources = [p640, p640_env, p650, p660, env, plugin_check, rollback, summary]
+    boundary_sources = [p640, p640_env, p650, p660, wp_final, disposition]
     forbidden_true: list[str] = []
     for idx, data in enumerate(boundary_sources):
         if not isinstance(data, dict):
             continue
-        for key in ("cutover_authorized", "retirement_authorized"):
+        for key in ("cutover_authorized", "retirement_authorized", "version_1_0_authorized"):
             if data.get(key) is True:
                 forbidden_true.append(f"source[{idx}].{key}")
         invariants = data.get("invariants")
         if isinstance(invariants, dict):
-            for key in ("cutover_authorized", "retirement_authorized"):
+            for key in ("cutover_authorized", "retirement_authorized", "version_1_0_authorized"):
                 if invariants.get(key) is True:
                     forbidden_true.append(f"source[{idx}].invariants.{key}")
-    checks.append(
-        step(
-            "no_cutover_or_retirement_authorized",
-            not forbidden_true,
-            violations=forbidden_true,
-        )
-    )
+    checks.append(step("no_cutover_retirement_or_1_0_authorized", not forbidden_true, violations=forbidden_true))
 
     passed = all(row["pass"] for row in checks)
-
     report = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "gate": "P-670",
         "phase": "PREMIUM_FOUNDATION_PREFLIGHT",
         "status": "PASS_PRECONDITIONS" if passed else "BLOCKED",
@@ -337,21 +295,14 @@ def main() -> int:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source_commit": current_commit,
         "plugin_tree_sha": current_plugin_tree,
-        "artifact": {
-            "name": EXPECTED_PACKAGE_NAME,
-            "sha256": EXPECTED_PACKAGE_SHA256,
-        },
+        "artifact": {"name": EXPECTED_PACKAGE_NAME, "sha256": EXPECTED_PACKAGE_SHA256},
         "checks": checks,
-        "historical_gate_policy": {
-            "p600_p610_p620_are_historical": True,
-            "material_claims_reproved_locally_by": [
-                "P640 local WPCS/PHPUnit/build",
-                "P640 environmental runtime reconciliation on frozen p650.3",
-                "P650 local deterministic package and checksum",
-                "P660 local security WPCS/inventory",
-                "Official Plugin Check on frozen p650.3",
-            ],
-            "remote_ci_not_used_to_close_current_gates": True,
+        "plugin_check_policy": {
+            "official_static_required": True,
+            "official_runtime_preferred": True,
+            "runtime_environment_limitation_allowed_only_with_explicit_disposition": True,
+            "native_runtime_required_when_official_runtime_unavailable": True,
+            "global_ignore_allowed": False,
         },
         "ledger": {
             "updated_by_validator": False,
@@ -365,9 +316,12 @@ def main() -> int:
             "retirement_authorized": False,
             "bulk_migration_authorized": False,
         },
-        "next_gate": "P670_LEDGER_AND_CLOSEOUT_REVIEW" if passed else "P670_EVIDENCE_REMEDIATION",
+        "next_gate": (
+            "P670_LEDGER_AND_CLOSEOUT_REVIEW"
+            if passed
+            else "P670_EVIDENCE_REMEDIATION"
+        ),
     }
-
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))

@@ -973,3 +973,39 @@ Next exact action:
 5. download/send JSON;
 6. review residual findings and version disposition;
 7. external PHPCS/WPCS + PHPUnit remain required before P670.
+
+
+## Estado após runner 1.0.5
+
+p650.4 WordPress/environmental:
+- PASS identity/runtime;
+- Plugin Check official static: 29/29 completed;
+- 2 errors / 84 warnings;
+- explicit disposition versioned;
+- unresolved blocking errors after disposition = 0;
+- unresolved high/critical after disposition = 0;
+- official runtime sandbox remains ENVIRONMENT_LIMITATION, not PASS;
+- native runtime PASS;
+- rollback p650.4 -> p650.3 -> p650.4 PASS;
+- full editorial/Elementor/Search fingerprints preserved;
+- final identity PASS.
+
+Decision:
+- keep p650.4 frozen;
+- do NOT generate p650.5 from current findings;
+- do NOT repeat WordPress final gates unless plugin runtime changes again.
+
+Only remaining executable blockers:
+1. P640 local PHPCS/WPCS + PHPUnit on the current plugin tree;
+2. P650 local package validation;
+3. P660 local security/privacy validation;
+4. P670 preflight;
+5. human Ledger/closeout review.
+
+Use the existing canonical validators:
+- `tools/homologation/spec006/validate-p640-local.py`;
+- `tools/homologation/spec006/validate-p650-local.py`;
+- `tools/homologation/spec006/validate-p660-local.py`;
+- `tests/unit/spec006-p670-preflight-contract.php`;
+- `tools/homologation/spec006/validate-p670-preflight.py`;
+- `tools/homologation/spec006/generate-p670-closeout-candidate.py`.

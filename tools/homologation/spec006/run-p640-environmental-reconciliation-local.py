@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Reconciliação ambiental P-640 sobre o p650.3 já homologado.
+"""Reconciliação ambiental P-640 sobre o p650.4 já homologado.
 
 Não instala package técnico P640 e não executa mutation.
 Valida o runtime modular efetivamente carregado no WordPress com o mesmo
-artefato p650.3 congelado que segue para os gates de distribuição.
+artefato p650.4 congelado que segue para os gates de distribuição.
 """
 
 from __future__ import annotations
@@ -19,8 +19,8 @@ from datetime import datetime, timezone
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 OUTPUT = ROOT / "evidence" / "spec006-p640-environmental-reconciliation-current.json"
-EXPECTED_ZIP = "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
-EXPECTED_SHA256 = "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+EXPECTED_ZIP = "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
+EXPECTED_SHA256 = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
 PLUGIN_SLUG = "base-conhecimento-inteligencia-integrada"
 
 

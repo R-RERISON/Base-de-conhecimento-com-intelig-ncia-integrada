@@ -39,7 +39,7 @@ final class Word_Cloud_Admin {
 
 	public static function render(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Permissão insuficiente.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Permissão insuficiente.', 'base-conhecimento-inteligencia-integrada' ), '', array( 'response' => 403 ) );
 		}
 		$health = Word_Cloud_Service::health();
 		$settings = Word_Cloud_Service::settings();
@@ -135,8 +135,8 @@ final class Word_Cloud_Admin {
 			'max_public_terms' => isset( $_POST['max_public_terms'] ) ? max( 6, min( 60, absint( wp_unslash( $_POST['max_public_terms'] ) ) ) ) : $defaults['max_public_terms'],
 			'stale_after_seconds' => $defaults['stale_after_seconds'],
 		);
-		$allow_raw = isset( $_POST['allowlist'] ) && is_scalar( $_POST['allowlist'] ) ? wp_unslash( (string) $_POST['allowlist'] ) : '';
-		$block_raw = isset( $_POST['blocklist'] ) && is_scalar( $_POST['blocklist'] ) ? wp_unslash( (string) $_POST['blocklist'] ) : '';
+		$allow_raw = isset( $_POST['allowlist'] ) && is_scalar( $_POST['allowlist'] ) ? sanitize_textarea_field( wp_unslash( (string) $_POST['allowlist'] ) ) : '';
+		$block_raw = isset( $_POST['blocklist'] ) && is_scalar( $_POST['blocklist'] ) ? sanitize_textarea_field( wp_unslash( (string) $_POST['blocklist'] ) ) : '';
 		$allow = self::parse_textarea( $allow_raw );
 		$block = self::parse_textarea( $block_raw );
 		update_option( Word_Cloud_Contract::SETTINGS_OPTION, $settings, false );
@@ -148,7 +148,7 @@ final class Word_Cloud_Admin {
 
 	private static function guard(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Permissão insuficiente.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Permissão insuficiente.', 'base-conhecimento-inteligencia-integrada' ), '', array( 'response' => 403 ) );
 		}
 		check_admin_referer( self::NONCE, 'bdc_kb_word_cloud_nonce' );
 	}

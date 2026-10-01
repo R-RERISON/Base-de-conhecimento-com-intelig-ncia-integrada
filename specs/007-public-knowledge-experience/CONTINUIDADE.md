@@ -94,3 +94,34 @@ After reviewing that JSON:
 2. reconcile UX-004/UX-005 contracts against the current environment;
 3. start PX-710 Information Architecture;
 4. only after PX-710 open the first runtime vertical slice.
+
+
+## PX-700 click-to-run companion
+
+Prepared:
+- `bdc-spec007-px700-inventory-runner-1.0.0.zip`;
+- SHA-256 `1cea9cab8e846883b8b476c11166061a740b48e8851b59cf752e2c1189a87fa9`;
+- PHP source snapshot SHA-256 `4322e958d80870f09a687f5d113f3a8abe65b775017da356a25bd4dde29595c0`;
+- ZIP integrity PASS;
+- PHP lint PASS;
+- static read-only contract 12/12 PASS.
+
+Safety verified:
+- no post write;
+- no option write;
+- no theme change;
+- no plugin activation/deactivation;
+- no shortcode execution;
+- no the_content execution;
+- no callback removal;
+- no external network;
+- POST + nonce + manage_options.
+
+Next exact action:
+1. keep BDC p650.4 installed/active;
+2. old SPEC-006 Final Gates Runner may be deactivated/removed;
+3. install/activate PX-700 companion;
+4. open Base de Conhecimento -> SPEC-007 PX-700 (fallback: Tools);
+5. click Executar inventário e baixar JSON;
+6. return the JSON for PX-700 review;
+7. do not change Home/Astra/snippets/GRE/ASI before review.

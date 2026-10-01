@@ -829,3 +829,43 @@ Next:
 2. rerun final validation;
 3. if blocked, download JSON and return `plugin_check_runtime_probe`;
 4. if safe_to_continue is true, runner proceeds to official checks and rollback.
+
+
+## Click-runner 1.0.3 — safe completion of Plugin Check setup
+
+1.0.2 evidence:
+- Plugin Check 2.1.0 ready;
+- setup-runtime HTTP 200 / empty body;
+- can_set_up=true;
+- is_set_up=true;
+- 12 temporary tables present;
+- filesystem=direct;
+- object-cache.php absent;
+- Plugin Check drop-in constant absent;
+- disposition PARTIAL_SETUP_TABLES_PRESENT_CACHE_ISOLATION_NOT_ACTIVE.
+
+Official Plugin Check 2.1.0 source confirms the final setup step is copying:
+`plugin-check/drop-ins/object-cache.copy.php -> wp-content/object-cache.php`.
+
+1.0.3 adds fail-closed recovery:
+- validate complete expected temporary core tables;
+- validate temp `active_plugins` includes BDC + Plugin Check;
+- require Plugin Check exactly 2.1.0;
+- require direct filesystem and no file-mod restrictions/custom user tables;
+- require object-cache target absent;
+- copy only the installed official Plugin Check drop-in;
+- verify source/target SHA-256 byte equality;
+- require a NEW request to observe `WP_PLUGIN_CHECK_OBJECT_CACHE_DROPIN_VERSION`;
+- only then proceed with runtime checks.
+
+Cleanup:
+- official Runtime_Environment_Setup::clean_up();
+- residual drop-in deletion only if byte-identical to official source;
+- post-cleanup temp tables=0 and object-cache absent required.
+
+Artifact:
+- `bdc-spec006-final-gates-runner-1.0.3.zip`;
+- SHA-256 `9693a83970c46fbb88201c3f835ea651b99bc489011f8806708ac597f65a56e9`;
+- 21/21 static recovery/safety contracts PASS.
+
+BDC p650.3 remains unchanged.

@@ -24,7 +24,7 @@ P650_BUILDER = ROOT / "tools" / "homologation" / "spec006" / "build-p650-product
 P650_STATIC = ROOT / "tests" / "unit" / "spec006-p650-package-contract.php"
 PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
 PACKAGE_REPORT = DIST / "p650-package-validation.json"
-EXPECTED_PACKAGE_SHA256 = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
+EXPECTED_PACKAGE_SHA256 = "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2"
 
 
 def sha256(path: pathlib.Path) -> str:

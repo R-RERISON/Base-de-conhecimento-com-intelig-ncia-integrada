@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-WORDPRESS-GATES",
+  "phase": "CLICK_RUNNER_SAFE_RUNTIME_RECOVERY_PATCH",
+  "status": "PASS_PACKAGE_READY",
+  "date": "2026-10-01",
+  "artifact": {
+    "name": "bdc-spec006-final-gates-runner-1.0.3.zip",
+    "sha256": "9693a83970c46fbb88201c3f835ea651b99bc489011f8806708ac597f65a56e9",
+    "bytes": 455911,
+    "files": 9,
+    "zip_integrity": true,
+    "php_lint": "2/2 PASS",
+    "javascript_syntax": "PASS",
+    "static_contract": "21/21 PASS"
+  },
+  "observed_environment_before_patch": {
+    "plugin_check_version": "2.1.0",
+    "setup_runtime_http": 200,
+    "setup_runtime_body_length": 0,
+    "runtime_is_set_up": true,
+    "runtime_can_set_up": true,
+    "temporary_table_count": 12,
+    "filesystem_method": "direct",
+    "object_cache_exists": false,
+    "plugin_check_dropin_active": false,
+    "disposition": "PARTIAL_SETUP_TABLES_PRESENT_CACHE_ISOLATION_NOT_ACTIVE"
+  },
+  "recovery_contract": {
+    "plugin_check_version_must_equal": "2.1.0",
+    "all_expected_temporary_tables_required": true,
+    "temporary_active_plugins_option_required": true,
+    "target_plugin_required_in_temp_active_plugins": true,
+    "plugin_check_required_in_temp_active_plugins": true,
+    "filesystem_direct_required": true,
+    "custom_user_tables_forbidden": true,
+    "disallow_file_mods_forbidden": true,
+    "existing_object_cache_must_be_absent": true,
+    "source_dropin_must_be_official_installed_copy": true,
+    "copied_dropin_byte_exact_sha256_required": true,
+    "new_request_must_observe_dropin_constant": true,
+    "blind_setup_bypass": false
+  },
+  "cleanup_contract": {
+    "uses_official_runtime_environment_cleanup": true,
+    "residual_dropin_deleted_only_if_byte_exact_to_official_source": true,
+    "post_cleanup_temp_tables_must_equal_zero": true,
+    "post_cleanup_object_cache_must_be_absent": true
+  },
+  "candidate_sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231",
+  "previous_sha256": "1d48ecc25d2f1bbe173ab83e6368f46306c5de054cdd19b411945c328b6051f7",
+  "bdc_runtime_modified": false,
+  "gate_closure_authorized": false,
+  "next_action": "Replace only the companion with 1.0.3 and rerun full validation."
+}

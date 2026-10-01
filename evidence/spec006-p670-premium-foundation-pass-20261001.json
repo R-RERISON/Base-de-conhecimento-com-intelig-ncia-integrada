@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-670",
+  "phase": "PREMIUM_FOUNDATION_CLOSEOUT",
+  "status": "PASS_WITH_ACCEPTED_TOOLING_EXCEPTION",
+  "spec_status": "CLOSED_WITH_ACCEPTED_TOOLING_EXCEPTION",
+  "date": "2026-10-01",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip",
+    "sha256": "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2",
+    "files": 102,
+    "php_files": 83
+  },
+  "gates": {
+    "p630": "PASS",
+    "p640": "CLOSED_WITH_ACCEPTED_TOOLING_EXCEPTION",
+    "p650": "PASS_WITH_ACCEPTED_TOOLING_EXCEPTION",
+    "p660": "PASS_WITH_ACCEPTED_TOOLING_EXCEPTION",
+    "plugin_check_static": "PASS_WITH_EXPLICIT_DISPOSITION",
+    "native_runtime": "PASS",
+    "rollback": "PASS",
+    "final_identity": "PASS"
+  },
+  "tooling_exception": {
+    "phpcs_wpcs": "NOT_RUN_ACCEPTED_TOOLING_EXCEPTION",
+    "phpunit": "NOT_RUN_ACCEPTED_TOOLING_EXCEPTION",
+    "product_owner_accepted": true,
+    "evidence": "evidence/spec006-accepted-tooling-exception-20261001.json"
+  },
+  "plugin_check": {
+    "official_static_checks_completed": 29,
+    "reported_errors": 2,
+    "reported_warnings": 84,
+    "unresolved_blocking_errors": 0,
+    "unresolved_high_or_critical": 0,
+    "global_ignore_used": false,
+    "official_runtime": "ENVIRONMENT_LIMITATION",
+    "native_runtime": "PASS"
+  },
+  "rollback": {
+    "cycle": "p650.4 -> p650.3 -> p650.4",
+    "data_preserved": true,
+    "post_content": true,
+    "bdc_meta": true,
+    "elementor_data": true,
+    "search_projection": true,
+    "search_projection_state": true
+  },
+  "ledger": {
+    "PROD-003": "PARTIAL",
+    "PROD-004": "IMPROVED_VERIFIED",
+    "PROD-005": "IMPROVED_VERIFIED",
+    "PROD-006": "IMPROVED_VERIFIED"
+  },
+  "premium_done": false,
+  "invariants": {
+    "version_1_0_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "bulk_migration_authorized": false
+  },
+  "next_spec": "SPEC-007"
+}

@@ -12,8 +12,8 @@ Pré-condição absoluta:
 - `evidence/spec006-p670-preflight-current.json`;
 - `status=PASS_PRECONDITIONS`;
 - mesmo `plugin_tree_sha` do source atual;
-- mesmo SHA-256 congelado do p650.3;
-- Plugin Check oficial local PASS;
+- mesmo SHA-256 congelado do p650.4;
+- Plugin Check estático oficial concluído + disposition explícita;
 - rollback PASS com `data_preserved=true`.
 
 Se qualquer condição falhar, nenhuma promoção abaixo pode ser aplicada.
@@ -47,9 +47,9 @@ Evidência necessária:
 
 - Plugin Check oficial;
 - execução `LOCAL_ONLY`;
-- target direto = p650.3;
-- SHA exato do p650.3;
-- runtime checks habilitados;
+- target direto = p650.4;
+- SHA exato do p650.4;
+- runtime oficial preferido; quando indisponível por limitação ambiental comprovada, runtime nativo PASS + disposition explícita são obrigatórios;
 - nenhum ignore global;
 - PASS final ou disposition explícita e versionada compatível com o contrato P660.
 
@@ -75,7 +75,7 @@ Candidato após P670 preflight: `IMPROVED_VERIFIED`.
 
 Evidência necessária:
 
-- p650.3 deterministic package;
+- p650.4 deterministic package;
 - single root;
 - engineering/lab files = 0 conforme contrato de distribuição;
 - repo-only paths = 0;

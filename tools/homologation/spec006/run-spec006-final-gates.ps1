@@ -18,8 +18,8 @@ $Root = (Resolve-Path (Join-Path $ScriptDir "..\..\..")).Path
 $Dist = Join-Path $Root "dist"
 $Evidence = Join-Path $Root "evidence"
 
-$ExpectedCandidateSha = "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
-$ExpectedCandidateName = "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
+$ExpectedCandidateSha = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
+$ExpectedCandidateName = "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
 
 if ([string]::IsNullOrWhiteSpace($CandidateZip)) {
     $CandidateZip = Join-Path $Dist $ExpectedCandidateName
@@ -120,7 +120,7 @@ try {
         (Join-Path $Root "tools\homologation\spec006\validate-p640-local.py")
     )
 
-    Invoke-Gate "P650 local package quality / p650.3" @(
+    Invoke-Gate "P650 local package quality / p650.4" @(
         $python,
         (Join-Path $Root "tools\homologation\spec006\validate-p650-local.py")
     )
@@ -130,7 +130,7 @@ try {
         (Join-Path $Root "tools\homologation\spec006\validate-p660-local.py")
     )
 
-    Invoke-Gate "P640 environmental runtime reconciliation / p650.3" @(
+    Invoke-Gate "P640 environmental runtime reconciliation / p650.4" @(
         $python,
         (Join-Path $Root "tools\homologation\spec006\run-p640-environmental-reconciliation-local.py"),
         "--wp-path",

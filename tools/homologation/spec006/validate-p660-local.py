@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validação local canônica do P-660 Security/Privacy.
 
-Executa somente sobre o source atual e o ZIP p650.3 congelado.
+Executa somente sobre o source atual e o ZIP p650.4 congelado.
 Não substitui o Plugin Check oficial; prepara sua entrada com WPCS e contratos locais.
 """
 
@@ -23,17 +23,27 @@ P640_EVIDENCE = ROOT / "evidence" / "spec006-p640-local-validation-current.json"
 STATIC_CONTRACT = ROOT / "tests" / "unit" / "spec006-p660-security-baseline.php"
 INVENTORY = ROOT / "tools" / "homologation" / "spec006" / "inventory-p660-security-privacy.py"
 INVENTORY_OUTPUT = DIST / "p660-security-privacy-inventory.json"
-PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
-EXPECTED_PACKAGE_SHA256 = "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
+EXPECTED_PACKAGE_SHA256 = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
 
 AFFECTED_FILES = (
+    PLUGIN / "base-conhecimento-inteligencia-integrada.php",
     PLUGIN / "includes" / "class-admin-page.php",
+    PLUGIN / "includes" / "class-block-migration-journal-store.php",
     PLUGIN / "includes" / "class-classification-admin.php",
-    PLUGIN / "includes" / "class-review-admin.php",
+    PLUGIN / "includes" / "class-content-source.php",
+    PLUGIN / "includes" / "class-elementor-migration-journal-store.php",
+    PLUGIN / "includes" / "class-knowledge-details-admin.php",
+    PLUGIN / "includes" / "class-legacy-html-adapter.php",
+    PLUGIN / "includes" / "class-post-management-activities.php",
     PLUGIN / "includes" / "class-post-core-blocks-activity.php",
     PLUGIN / "includes" / "class-public-auth-bridge.php",
     PLUGIN / "includes" / "class-public-experience.php",
     PLUGIN / "includes" / "class-public-search-facade.php",
+    PLUGIN / "includes" / "class-review-admin.php",
+    PLUGIN / "includes" / "class-search-projection-repository.php",
+    PLUGIN / "includes" / "class-search-rebuild-service.php",
+    PLUGIN / "includes" / "class-visual-foundation.php",
     PLUGIN / "includes" / "class-word-cloud-admin.php",
 )
 

@@ -19,8 +19,8 @@ SPEC = ROOT / "specs" / "006-premium-product-foundation"
 PREFLIGHT = EVIDENCE / "spec006-p670-preflight-current.json"
 OUTPUT_JSON = EVIDENCE / "spec006-p670-closeout-candidate-current.json"
 OUTPUT_MD = SPEC / "p670-closeout-candidate-current.md"
-EXPECTED_PACKAGE = "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
-EXPECTED_SHA = "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+EXPECTED_PACKAGE = "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
+EXPECTED_SHA = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
 
 
 def git_revision(spec: str) -> str | None:
@@ -67,9 +67,9 @@ def main() -> int:
 
     promotions = {
         "PROD-003": {"from": "PARTIAL", "candidate": "IMPROVED_VERIFIED", "basis": "P640/P660 local WPCS, PHPUnit/static contracts and local quality evidence.", "limitation": "Does not claim the entire historical plugin is WPCS-clean."},
-        "PROD-004": {"from": "PARTIAL", "candidate": "IMPROVED_VERIFIED", "basis": "Official local Plugin Check on the exact frozen p650.3 artifact.", "limitation": "Any residual warning requires explicit disposition before application."},
+        "PROD-004": {"from": "PARTIAL", "candidate": "IMPROVED_VERIFIED", "basis": "Official local Plugin Check on the exact frozen p650.4 artifact.", "limitation": "Any residual warning requires explicit disposition before application."},
         "PROD-005": {"from": "PARTIAL", "candidate": "IMPROVED_VERIFIED", "basis": "P640 modular runtime + same-tree evidence + environmental runtime smoke.", "limitation": "No cutover or legacy retirement implied."},
-        "PROD-006": {"from": "PARTIAL", "candidate": "IMPROVED_VERIFIED", "basis": "Deterministic p650.3 ZIP, lab pruning, checksum, environmental smoke and rollback.", "limitation": "Production release remains a later product/release decision."},
+        "PROD-006": {"from": "PARTIAL", "candidate": "IMPROVED_VERIFIED", "basis": "Deterministic p650.4 ZIP, lab pruning, checksum, environmental smoke and rollback.", "limitation": "Production release remains a later product/release decision."},
     }
 
     report = {
@@ -106,9 +106,9 @@ def main() -> int:
         "- P640 local quality: required PASS;",
         "- P650 local package quality: required PASS;",
         "- P660 local security/privacy: required PASS;",
-        "- official Plugin Check on frozen p650.3: required PASS;",
+        "- official Plugin Check on frozen p650.4: required PASS;",
         "- rollback with data fingerprints: required PASS;",
-        "- environmental smoke p650.3: PASS.",
+        "- environmental smoke p650.4: PASS.",
         "",
         "## Proposed Master Ledger disposition",
         "",

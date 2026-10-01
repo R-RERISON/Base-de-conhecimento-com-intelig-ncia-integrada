@@ -17,7 +17,7 @@ import subprocess
 import tempfile
 from datetime import datetime, timezone
 
-EXPECTED_CANDIDATE_SHA256 = "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+EXPECTED_CANDIDATE_SHA256 = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
 PLUGIN_SLUG = "base-conhecimento-inteligencia-integrada"
 OUTPUT_NAME = "spec006-p650-rollback-current.json"
 
@@ -111,18 +111,70 @@ foreach ( $meta_keys as $meta_key ) {
 }
 $bdc_meta_sha256 = hash_final( $meta_hash_context );
 
+$elementor_rows = $wpdb->get_results(
+    $wpdb->prepare(
+        "SELECT post_id, meta_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s ORDER BY post_id ASC, meta_id ASC",
+        '_elementor_data'
+    ),
+    ARRAY_A
+);
+$elementor_hash_context = hash_init( 'sha256' );
+foreach ( $elementor_rows as $row ) {
+    hash_update(
+        $elementor_hash_context,
+        (string) $row['post_id'] . "\0" .
+        (string) $row['meta_id'] . "\0" .
+        (string) $row['meta_value'] . "\0"
+    );
+}
+$elementor_data_sha256 = hash_final( $elementor_hash_context );
+
+$search_table = $wpdb->prefix . 'bdc_kb_search_documents';
+$search_table_exists = $search_table === $wpdb->get_var(
+    $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $search_table ) )
+);
+$search_rows = array();
+if ( $search_table_exists ) {
+    $search_rows = $wpdb->get_results(
+        "SELECT * FROM {$search_table} ORDER BY post_id ASC",
+        ARRAY_A
+    );
+}
+$search_hash_context = hash_init( 'sha256' );
+foreach ( $search_rows as $row ) {
+    hash_update( $search_hash_context, (string) wp_json_encode( $row ) . "\0" );
+}
+$search_hash_sha256 = hash_final( $search_hash_context );
+
+$state_raw = $wpdb->get_var(
+    $wpdb->prepare(
+        "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s LIMIT 1",
+        'bdc_kb_search_projection_state'
+    )
+);
+$state_exists = null !== $state_raw;
+$state_sha256 = $state_exists ? hash( 'sha256', (string) $state_raw ) : null;
+
 echo wp_json_encode(
     array(
         'post_count' => $post_count,
         'post_content_sha256' => $post_content_sha256,
         'meta_counts' => $meta_counts,
         'bdc_meta_sha256' => $bdc_meta_sha256,
+        'elementor_data_count' => count( $elementor_rows ),
+        'elementor_data_sha256' => $elementor_data_sha256,
+        'search_projection' => array(
+            'table_exists' => $search_table_exists,
+            'row_count' => count( $search_rows ),
+            'hash_sha256' => $search_hash_sha256,
+            'state_option_exists' => $state_exists,
+            'state_option_sha256' => $state_sha256,
+        ),
         'plugin_version' => defined( 'BDC_KB_VERSION' ) ? BDC_KB_VERSION : null,
     )
 );
 '''
     return wp_eval_file(wp_cli, wp_path, code)
-
 
 def plugin_status(wp_cli: str, wp_path: pathlib.Path) -> dict:
     result = run([wp_cli, "plugin", "status", PLUGIN_SLUG, f"--path={wp_path}"])
@@ -208,6 +260,9 @@ def main() -> int:
         and before["payload"]["post_content_sha256"] == rollback_fingerprint["payload"]["post_content_sha256"] == after["payload"]["post_content_sha256"]
         and before["payload"]["meta_counts"] == rollback_fingerprint["payload"]["meta_counts"] == after["payload"]["meta_counts"]
         and before["payload"]["bdc_meta_sha256"] == rollback_fingerprint["payload"]["bdc_meta_sha256"] == after["payload"]["bdc_meta_sha256"]
+        and before["payload"]["elementor_data_count"] == rollback_fingerprint["payload"]["elementor_data_count"] == after["payload"]["elementor_data_count"]
+        and before["payload"]["elementor_data_sha256"] == rollback_fingerprint["payload"]["elementor_data_sha256"] == after["payload"]["elementor_data_sha256"]
+        and before["payload"]["search_projection"] == rollback_fingerprint["payload"]["search_projection"] == after["payload"]["search_projection"]
     )
     operational = all(step.get("pass", False) for step in steps if step["name"] not in {"fingerprint_before", "fingerprint_previous", "fingerprint_after"})
     passed = operational and preserved and after["pass"]

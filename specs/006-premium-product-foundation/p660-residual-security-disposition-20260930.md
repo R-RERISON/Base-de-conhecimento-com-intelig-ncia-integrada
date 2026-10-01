@@ -97,3 +97,34 @@ Ainda obrigatório:
 4. evidência final versionada.
 
 Nenhum cutover ou retirement é autorizado.
+
+
+## Addendum — p650.4 / 2026-10-01
+
+A execução real do companion 1.0.4 sobre p650.3 completou os 29 checks estáticos oficiais do Plugin Check 2.1.0 e confirmou runtime nativo/rollback, porém retornou 170 erros e 96 warnings.
+
+Concentração dos erros:
+- 140 `WordPress.WP.I18n.TextDomainMismatch`;
+- 20 `WordPress.DB.PreparedSQL.NotPrepared`;
+- 4 `WordPress.Security.EscapeOutput.OutputNotEscaped`;
+- 3 `WordPress.WP.AlternativeFunctions.strip_tags_strip_tags`;
+- 1 `PluginCheck.Security.DirectDB.UnescapedDBParameter`;
+- 1 `WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters`;
+- 1 `plugin_updater_detected`.
+
+Disposition:
+- Text Domain: REMEDIATED no p650.4 para o slug distribuído `base-conhecimento-inteligencia-integrada`;
+- escaping/input/WordPress primitive: REMEDIATED pontualmente;
+- Search Projection SQL: identifiers são internos e valores permanecem placeholder-bound; comments PHPCS localizados adicionados somente nos trechos revisados;
+- `suppress_filters=true`: JUSTIFIED/LOCALIZED para seleção determinística do corpus canônico;
+- `plugin_updater_detected`: waiver de distribuição privada já existente;
+- `UPGRADE.md`: warning conhecido, arquivo exigido pelo contrato de distribuição P650;
+- nenhum ignore global foi criado.
+
+Novo candidato:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip`;
+- SHA-256 `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`;
+- 102 arquivos / 83 PHP;
+- PHP lint 83/83 PASS;
+- 15/15 blobs de runtime alterados (não-bootstrap) correspondem ao source GitHub;
+- exige nova execução ambiental/Plugin Check/rollback antes de qualquer closeout.

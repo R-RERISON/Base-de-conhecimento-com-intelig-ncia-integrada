@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-650/P-660",
+  "phase": "PLUGIN_CHECK_FINAL_DISPOSITION",
+  "status": "PASS_WITH_EXPLICIT_DISPOSITION",
+  "date": "2026-10-01",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip",
+    "sha256": "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2"
+  },
+  "official_static_completed": true,
+  "official_static_checks": 29,
+  "official_runtime_checks": false,
+  "runtime_environment_limitation_accepted": true,
+  "runtime_environment_limitation": "Plugin Check 2.1.0 runtime setup creates the 12 temporary core tables but aborts before active_plugins/drop-in finalization in this environment. Cleanup PASS. This is not represented as official runtime PASS.",
+  "native_runtime_validation": "PASS",
+  "findings": {
+    "errors_total": 2,
+    "warnings_total": 84,
+    "errors": {
+      "WordPress.DB.PreparedSQL.NotPrepared": {
+        "count": 1,
+        "file": "includes/class-search-projection-repository.php",
+        "disposition": "FALSE_POSITIVE_PREPARED_QUERY",
+        "blocking": false,
+        "basis": "schema_exists() builds $sql exclusively with $wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($table)) immediately before $wpdb->get_var($sql). The table pattern derives internally from the WordPress prefix; no request/user value is interpolated."
+      },
+      "plugin_updater_detected": {
+        "count": 1,
+        "file": "base-conhecimento-inteligencia-integrada.php",
+        "disposition": "PRIVATE_DISTRIBUTION_WAIVER",
+        "blocking": false,
+        "basis": "Update URI intentionally points to the private GitHub repository to avoid WordPress.org update namespace collision. This package is not being submitted to WordPress.org."
+      }
+    },
+    "warnings_by_code": {
+      "WordPress.Security.NonceVerification.Recommended": 37,
+      "WordPress.DB.DirectDatabaseQuery.DirectQuery": 14,
+      "WordPress.DB.DirectDatabaseQuery.NoCaching": 14,
+      "WordPress.Security.NonceVerification.Missing": 12,
+      "WordPress.PHP.DevelopmentFunctions.error_log_error_log": 5,
+      "unexpected_markdown_file": 1,
+      "WordPress.Security.ValidatedSanitizedInput.InputNotSanitized": 1
+    },
+    "warning_disposition": {
+      "nonce_recommended": "READ_ONLY_OR_ALREADY_GUARDED",
+      "nonce_missing_word_cloud": "FALSE_POSITIVE_GUARD_METHOD_CALLS_check_admin_referer_BEFORE_POST_READS",
+      "direct_db": "JUSTIFIED_PLUGIN_OWNED_REBUILDABLE_STORAGE_OR_JOURNAL_READS",
+      "no_caching": "JUSTIFIED_ADMIN_OR_REBUILDABLE_PROJECTION_OPERATIONS",
+      "error_log": "JUSTIFIED_CRITICAL_FAIL_SAFE_DIAGNOSTICS_NO_SECRET_PAYLOAD",
+      "unexpected_markdown_file": "P650_DISTRIBUTION_CONTRACT_REQUIRES_UPGRADE_MD",
+      "review_input_not_sanitized": "SANITIZED_IN_CANONICAL_REVIEW_STORE_BEFORE_VALIDATION_OR_PERSISTENCE"
+    }
+  },
+  "unresolved_blocking_errors": 0,
+  "unresolved_high_or_critical": 0,
+  "global_ignore_used": false,
+  "plugin_check_ignore_plugin_used": false,
+  "runtime_code_change_required": false,
+  "new_package_required": false,
+  "invariants": {
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "version_1_0_authorized": false
+  },
+  "next_gate": "P640_P650_P660_LOCAL_TOOLING_REFRESH"
+}

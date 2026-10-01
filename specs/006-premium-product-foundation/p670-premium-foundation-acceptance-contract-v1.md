@@ -141,8 +141,10 @@ O P670 não usa essas execuções remotas para fechar os gates atuais. As propri
 - P640: WPCS/PHPUnit/static/build/proveniência;
 - P650: deterministic package/package integrity/checksum;
 - P660: WPCS/security inventory/static;
-- Plugin Check oficial local sobre o p650.3 congelado;
-- rollback local com fingerprints de dados.
+- Plugin Check estático oficial sobre o p650.4, sem ignores globais;
+- runtime nativo WordPress no mesmo p650.4;
+- quando o sandbox runtime oficial estiver indisponível por limitação ambiental comprovada, disposition explícita é obrigatória;
+- rollback local/WordPress com fingerprints editoriais, Elementor e Search Projection.
 
 Assim, a evidência histórica é preservada sem transformar GitHub Actions em executor admissível dos gates finais.
 
@@ -172,5 +174,5 @@ Nem validator nem generator:
 
 P670 exige:
 
-- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip`;
-- SHA-256 `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`.
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip`;
+- SHA-256 `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`.

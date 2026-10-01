@@ -351,3 +351,50 @@ Click-runner 1.0.4 — official static fallback + stronger rollback evidence:
 - artifact: `bdc-spec006-final-gates-runner-1.0.4.zip`;
 - SHA-256: `dcf56d59c384b6f3e0180d0a4a77083f8e0efe24375e1973846a094f9d5027b1`;
 - static contract 18/18 PASS.
+
+
+## p650.3 final WordPress gates -> p650.4 remediation — 2026-10-01
+
+Runner 1.0.4 / p650.3:
+- installed identity 102/102 PASS;
+- modular runtime PASS;
+- Plugin Check 2.1.0: 29 official static checks completed;
+- official runtime sandbox: ENVIRONMENT_LIMITATION / abort before temporary active_plugins finalization;
+- native runtime remains PASS;
+- Plugin Check: 170 errors / 96 warnings;
+- 140/170 errors = TextDomainMismatch;
+- rollback p650.3 -> p650.2 -> p650.3: PASS;
+- post_content, BDC metas, _elementor_data, Search Projection table/state: preserved;
+- final p650.3 identity: PASS.
+
+Decision:
+- p650.3 is superseded as current candidate because concrete production findings require remediation;
+- historical p650.3 smoke/rollback evidence remains valid for that artifact;
+- no cutover/retirement authorization.
+
+p650.4:
+- canonical artifact: `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip`;
+- SHA-256: `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`;
+- 102 files / 83 PHP;
+- PHP lint 83/83 PASS;
+- deterministic timestamp contract aligned with canonical P650 builder;
+- engineering/lab files = 0;
+- 15/15 changed non-bootstrap runtime blobs match current GitHub source;
+- Text Domain normalized to distributed slug;
+- input/output/WordPress primitive findings remediated;
+- Search Projection SQL dispositions are localized, not global ignores;
+- Update URI private-distribution waiver retained.
+
+Runner 1.0.5:
+- artifact: `bdc-spec006-final-gates-runner-1.0.5.zip`;
+- SHA-256: `62ec1d025b65bf26390549fdafb1ee2483fd119b7c668ca7dfbe10d20dd1b348`;
+- cycle: p650.4 -> p650.3 -> p650.4;
+- fingerprints: post_content + BDC metas + _elementor_data + Search Projection table + Search state option.
+
+Open:
+- [ ] install/homologate p650.4;
+- [ ] execute runner 1.0.5 and return JSON;
+- [ ] disposition residual Plugin Check findings on p650.4;
+- [ ] rerun P640 LOCAL_ONLY WPCS/PHPUnit on current plugin tree;
+- [ ] rerun P650/P660 local quality on p650.4;
+- [ ] P670 PASS_PRECONDITIONS.

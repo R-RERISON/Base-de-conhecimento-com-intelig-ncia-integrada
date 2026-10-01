@@ -10,7 +10,7 @@
  * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Update URI: https://github.com/R-RERISON/Base-de-conhecimento-com-intelig-ncia-integrada
- * Text Domain: bdc-knowledge-base
+ * Text Domain: base-conhecimento-inteligencia-integrada
  *
  * @package BDC_Knowledge_Base
  */

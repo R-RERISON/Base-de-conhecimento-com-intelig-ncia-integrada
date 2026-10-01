@@ -1,6 +1,6 @@
 # SPEC-007 — Public Knowledge Experience
 
-**Status:** PLANEJADA
+**Status:** ATIVA / DISCOVERY
 
 Os candidatos UX-004/UX-005 existentes serão reutilizados; não serão reescritos por princípio.
 
@@ -51,3 +51,33 @@ PX-760 Accessibility/Responsive
 PX-770 Performance  
 PX-780 Human Product Acceptance  
 PX-790 Cutover Readiness
+
+
+## Activation baseline — 2026-10-01
+
+SPEC-007 was activated after the formal closeout of SPEC-006.
+
+Inherited foundation:
+- artifact: `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip`;
+- SHA-256: `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`;
+- SPEC-006 status: `CLOSED_WITH_ACCEPTED_TOOLING_EXCEPTION`;
+- PROD-003 remains PARTIAL and must not be represented as solved;
+- PROD-004/005/006 are IMPROVED_VERIFIED.
+
+Existing product assets to reuse:
+- current BDC Public Experience Preview;
+- UX-004 Search-first Home contracts/addenda;
+- UX-005 Article Reader contracts/addenda;
+- Public Search facade;
+- Word Cloud;
+- Helpful Tips canonical storage;
+- modular Search/Public Experience/Word Cloud foundation.
+
+Historical environmental baseline:
+- P580 deep inventory from 2026-09-20 is REFERENCE_ONLY for PX-700;
+- environmental dependency state must be refreshed before implementation/cutover conclusions.
+
+First active gate:
+- `PX-700 Environmental Inventory`.
+
+No public cutover is authorized by SPEC-007 activation.

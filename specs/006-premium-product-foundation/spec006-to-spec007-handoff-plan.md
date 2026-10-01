@@ -24,8 +24,8 @@ SPEC-007 só pode passar de NEXT para ACTIVE quando:
 A SPEC-007 deve partir do artefato/source homologado da foundation:
 
 - product version: `0.6.0-dev`;
-- package baseline: `p650.3`;
-- SHA-256: `985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231`;
+- package baseline: `p650.4`;
+- SHA-256: `0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77`;
 - Search lexical/G-590 preservados;
 - Public Experience Preview preservada;
 - Word Cloud preservada como capability atual, mas intelligence/governance permanece SPEC-008;

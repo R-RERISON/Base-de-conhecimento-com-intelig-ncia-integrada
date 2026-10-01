@@ -172,11 +172,13 @@ final class Search_Projection_Repository {
 			return new \WP_Error( 'search_projection_invalid_document', 'Search Document inválido para persistência.' );
 		}
 
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- Internal table identifier derives only from the WordPress prefix; values remain placeholder-bound.
 		$existing_sql = $wpdb->prepare(
 			'SELECT source_hash, document_hash, document_version, normalizer_version, section_projection_version FROM ' . self::table_name() . ' WHERE post_id = %d LIMIT 1',
 			$data['post_id']
 		);
-		$existing = $wpdb->get_row( $existing_sql, ARRAY_A );
+		$existing = $wpdb->get_row( $existing_sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Prepared immediately above.
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( '' !== (string) $wpdb->last_error ) {
 			return new \WP_Error( 'search_projection_read_failed', 'Falha ao verificar Search Document existente.' );
@@ -281,8 +283,10 @@ final class Search_Projection_Repository {
 			ORDER BY post_id ASC
 			LIMIT %d";
 
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL shape is built only from fixed internal field names/table name; every user token/limit is placeholder-bound.
 		$prepared = $wpdb->prepare( $sql, ...$args );
 		$rows = $wpdb->get_results( $prepared, ARRAY_A );
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		if ( '' !== (string) $wpdb->last_error ) {
 			return new \WP_Error( 'search_projection_read_failed', 'Falha ao consultar Search Projection.' );
@@ -318,11 +322,13 @@ final class Search_Projection_Repository {
 		}
 
 		$placeholders = implode( ',', array_fill( 0, count( $post_ids ), '%d' ) );
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Placeholder list is generated internally from validated integer IDs; table identifier is internal.
 		$sql = $wpdb->prepare(
 			'SELECT post_id, sections_json, section_projection_version FROM ' . self::table_name() . " WHERE post_id IN ({$placeholders}) ORDER BY post_id ASC",
 			...$post_ids
 		);
 		$rows = $wpdb->get_results( $sql, ARRAY_A );
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
 		if ( '' !== (string) $wpdb->last_error ) {
 			return new \WP_Error( 'search_projection_sections_read_failed', 'Falha ao consultar Section Projection.' );
@@ -367,7 +373,7 @@ final class Search_Projection_Repository {
 		}
 
 		$table = self::table_name();
-		$column_rows = $wpdb->get_results( 'SHOW COLUMNS FROM ' . $table, ARRAY_A );
+		$column_rows = $wpdb->get_results( 'SHOW COLUMNS FROM ' . $table, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Internal table identifier only.
 		if ( '' !== (string) $wpdb->last_error ) {
 			return new \WP_Error( 'search_projection_schema_columns_failed', 'Falha ao inspecionar colunas da Search Projection.' );
 		}
@@ -380,7 +386,7 @@ final class Search_Projection_Repository {
 			}
 		}
 
-		$index_rows = $wpdb->get_results( 'SHOW INDEX FROM ' . $table, ARRAY_A );
+		$index_rows = $wpdb->get_results( 'SHOW INDEX FROM ' . $table, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Internal table identifier only.
 		if ( '' !== (string) $wpdb->last_error ) {
 			return new \WP_Error( 'search_projection_schema_indexes_failed', 'Falha ao inspecionar índices da Search Projection.' );
 		}
@@ -426,7 +432,7 @@ final class Search_Projection_Repository {
 	public static function count_rows(): int|\WP_Error {
 		global $wpdb;
 
-		$count = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::table_name() );
+		$count = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::table_name() ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Internal table identifier only.
 		if ( '' !== (string) $wpdb->last_error ) {
 			return new \WP_Error( 'search_projection_count_failed', 'Falha ao contar Search Documents.' );
 		}
@@ -441,7 +447,7 @@ final class Search_Projection_Repository {
 		global $wpdb;
 
 		$rows = $wpdb->get_results(
-			'SELECT post_id, source_hash, document_hash, document_state, source_kind FROM ' . self::table_name() . ' ORDER BY post_id ASC',
+			'SELECT post_id, source_hash, document_hash, document_state, source_kind FROM ' . self::table_name() . ' ORDER BY post_id ASC', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Internal table identifier only.
 			ARRAY_A
 		);
 
@@ -489,11 +495,13 @@ final class Search_Projection_Repository {
 		}
 
 		$placeholders = implode( ',', array_fill( 0, count( $valid_post_ids ), '%d' ) );
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Placeholder list is generated internally from validated integer IDs; table identifier is internal.
 		$sql = $wpdb->prepare(
 			'DELETE FROM ' . self::table_name() . " WHERE post_id NOT IN ({$placeholders})",
 			...$valid_post_ids
 		);
 		$result = $wpdb->query( $sql );
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
 		if ( false === $result || '' !== (string) $wpdb->last_error ) {
 			return new \WP_Error( 'search_projection_stale_cleanup_failed', 'Falha ao remover Search Documents stale.' );

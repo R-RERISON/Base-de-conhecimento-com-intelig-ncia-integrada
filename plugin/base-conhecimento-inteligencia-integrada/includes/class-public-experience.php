@@ -45,11 +45,11 @@ final class Public_Experience {
 
 	public static function render_admin_page(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Permissão insuficiente.', 'bdc-knowledge-base' ), '', array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Permissão insuficiente.', 'base-conhecimento-inteligencia-integrada' ), '', array( 'response' => 403 ) );
 		}
 		echo '<div class="wrap bdc-kb-admin">';
-		echo '<h1>' . esc_html__( 'Prévia da Experiência Pública', 'bdc-knowledge-base' ) . '</h1>';
-		echo '<p>' . esc_html__( 'Exploração visual em homologação. A Home e os artigos públicos atuais permanecem intactos até aceite explícito.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h1>' . esc_html__( 'Prévia da Experiência Pública', 'base-conhecimento-inteligencia-integrada' ) . '</h1>';
+		echo '<p>' . esc_html__( 'Exploração visual em homologação. A Home e os artigos públicos atuais permanecem intactos até aceite explícito.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '<div class="bdc-kb-overview-grid">';
 		echo '<section class="bdc-kb-overview-card"><span class="bdc-kb-card-icon"><span class="dashicons dashicons-search" aria-hidden="true"></span></span><h4>Home Search-first</h4><p>Home minimalista, busca como ação principal e navegação secundária sob demanda.</p><a class="button button-primary bdc-kb-button-with-icon" target="_blank" rel="noopener" href="' . esc_url( self::home_preview_url() ) . '"><span class="dashicons dashicons-visibility" aria-hidden="true"></span><span>Abrir Home</span></a></section>';
 		echo '<section class="bdc-kb-overview-card"><span class="bdc-kb-card-icon"><span class="dashicons dashicons-media-document" aria-hidden="true"></span></span><h4>Article Reader</h4><p>Leitura limpa com busca persistente, Dicas úteis, Resumo Executivo e pipeline legado preservado.</p><div class="bdc-kb-vocabulary-actions">';
@@ -223,8 +223,11 @@ final class Public_Experience {
 
 	private static function render_global_search_results(): void {
 		$search = self::global_search_results();
-		$hidden = is_array( $search ) ? '' : ' hidden';
-		echo '<div class="bdc-global-search-panel" data-bdc-live-search-panel' . $hidden . '><div class="bdc-global-search-panel__inner">';
+		echo '<div class="bdc-global-search-panel" data-bdc-live-search-panel';
+		if ( ! is_array( $search ) ) {
+			echo ' hidden';
+		}
+		echo '><div class="bdc-global-search-panel__inner">';
 		echo '<div class="bdc-global-search-panel__head"><strong data-bdc-live-search-title>Resultados</strong><a href="' . esc_url( self::article_preview_url( (int) get_queried_object_id() ) ) . '" data-bdc-live-search-clear>Limpar</a></div>';
 		echo '<div data-bdc-live-search-results>';
 		if ( is_array( $search ) ) {

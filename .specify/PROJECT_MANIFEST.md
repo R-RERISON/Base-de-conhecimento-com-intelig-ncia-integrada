@@ -8,7 +8,7 @@
 
 **Idioma:** Português do Brasil
 
-**Estado:** SPEC-000 histórica concluída + Premium Rebaseline v2; SPEC-001/002/003/004/005 concluídas; SPEC-006 ATIVA em closeout de foundation; SPEC-007 é a próxima SPEC, ainda NÃO ATIVA; roadmap segue até SPEC-014.
+**Estado:** SPEC-000 histórica concluída + Premium Rebaseline v2; SPEC-001/002/003/004/005 concluídas; SPEC-006 CLOSED_WITH_ACCEPTED_TOOLING_EXCEPTION; SPEC-007 Public Knowledge Experience ATIVA / DISCOVERY; roadmap segue até SPEC-014.
 
 **Mantra:** “Quem não sabe onde está, não sabe para onde quer ir”.
 
@@ -228,8 +228,8 @@ T096 deve comprovar, usando `serialize_blocks()`/`parse_blocks()` reais do Core 
 3. Review & Governança — concluída;
 4. Content Extractor/KD/Canonicalization — concluída;
 5. Search Lexical + Golden — concluída / boundary CLOSED;
-6. Premium Product Foundation, Domain Consolidation & Distribution — ATIVA / closeout;
-7. Public Knowledge Experience — NEXT / NOT ACTIVE;
+6. Premium Product Foundation, Domain Consolidation & Distribution — CLOSED_WITH_ACCEPTED_TOOLING_EXCEPTION;
+7. Public Knowledge Experience — ATIVA / DISCOVERY;
 8. Search Intelligence, Telemetry, Privacy & Governed Relevance;
 9. Operations, Indexing & Reliability;
 10. Semantic Search & Vectors — evidence-gated;
@@ -533,3 +533,21 @@ Gates finais da SPEC-006:
 Regra:
 - SPEC-007 pode ter handoff/documentação preparada;
 - nenhuma implementação runtime SPEC-007 começa antes do closeout formal da SPEC-006.
+
+
+## Fechamento SPEC-006 / ativação SPEC-007 — 2026-10-01
+
+SPEC-006:
+- status: `CLOSED_WITH_ACCEPTED_TOOLING_EXCEPTION`;
+- final artifact: `base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip`;
+- SHA-256: `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`;
+- p650.4 WordPress/runtime/Plugin Check static/rollback: accepted;
+- PHPCS/WPCS + PHPUnit current-tree: NOT_RUN_ACCEPTED_TOOLING_EXCEPTION;
+- PROD-003 remains PARTIAL and blocks 1.0/Premium Done;
+- PROD-004/005/006 = IMPROVED_VERIFIED.
+
+SPEC-007:
+- canonical directory: `specs/007-public-knowledge-experience/`;
+- status: ACTIVE / DISCOVERY;
+- first gate: PX-700 Environmental Inventory;
+- no public cutover is implied by activation.

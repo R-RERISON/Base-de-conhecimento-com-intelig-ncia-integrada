@@ -30,7 +30,7 @@ final class Knowledge_Details_Admin {
 			: '';
 
 		if ( 'post' !== strtolower( $request_method ) ) {
-			wp_die( esc_html__( 'Método HTTP não permitido.', 'bdc-knowledge-base' ), '', array( 'response' => 405 ) );
+			wp_die( esc_html__( 'Método HTTP não permitido.', 'base-conhecimento-inteligencia-integrada' ), '', array( 'response' => 405 ) );
 		}
 
 		$post_id = isset( $_POST['post_id'] ) && is_scalar( $_POST['post_id'] )
@@ -110,7 +110,7 @@ final class Knowledge_Details_Admin {
 		$tips  = Helpful_Tips_Store::read( $post_id );
 
 		if ( is_wp_error( $facts ) || is_wp_error( $tips ) ) {
-			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar os detalhes de conhecimento.', 'bdc-knowledge-base' ) . '</p></div>';
+			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar os detalhes de conhecimento.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 			return;
 		}
 
@@ -119,8 +119,8 @@ final class Knowledge_Details_Admin {
 
 		echo '<section class="bdc-kb-domain-panel" aria-labelledby="bdc-kb-knowledge-details-title">';
 		echo '<div class="bdc-kb-domain-heading">';
-		echo '<h3 id="bdc-kb-knowledge-details-title">' . esc_html__( 'Detalhes de conhecimento', 'bdc-knowledge-base' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Informações operacionais e dicas estruturadas usadas pela experiência pública e pela curadoria.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h3 id="bdc-kb-knowledge-details-title">' . esc_html__( 'Detalhes de conhecimento', 'base-conhecimento-inteligencia-integrada' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Informações operacionais e dicas estruturadas usadas pela experiência pública e pela curadoria.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 
 		self::render_feedback();
@@ -130,7 +130,7 @@ final class Knowledge_Details_Admin {
 		echo '<input type="hidden" name="post_id" value="' . esc_attr( (string) $post_id ) . '">';
 		wp_nonce_field( self::NONCE_PREFIX . $post_id, self::NONCE_FIELD );
 
-		echo '<div class="bdc-kb-domain-heading"><h4>' . esc_html__( 'Contexto operacional', 'bdc-knowledge-base' ) . '</h4></div>';
+		echo '<div class="bdc-kb-domain-heading"><h4>' . esc_html__( 'Contexto operacional', 'base-conhecimento-inteligencia-integrada' ) . '</h4></div>';
 		foreach ( Knowledge_Facts_Contract::fields() as $field => $definition ) {
 			$field_id = 'bdc-kb-fact-' . $field;
 			$value    = (string) ( $values[ $field ] ?? '' );
@@ -141,15 +141,15 @@ final class Knowledge_Details_Admin {
 			echo '<textarea class="large-text" rows="3" id="' . esc_attr( $field_id ) . '" name="facts[' . esc_attr( $field ) . ']" maxlength="' . esc_attr( (string) Knowledge_Facts_Contract::MAX_BYTES ) . '">' . esc_textarea( $value ) . '</textarea>';
 
 			if ( $source !== $definition['key'] && '' !== $value ) {
-				echo '<p class="description">' . esc_html__( 'Valor carregado de uma chave legada compatível. Ao salvar, o BDC passa a gravar somente no owner canônico.', 'bdc-knowledge-base' ) . '</p>';
+				echo '<p class="description">' . esc_html__( 'Valor carregado de uma chave legada compatível. Ao salvar, o BDC passa a gravar somente no owner canônico.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 			} else {
-				echo '<p class="description">' . esc_html__( 'Owner canônico BDC. Deixe em branco para remover o valor.', 'bdc-knowledge-base' ) . '</p>';
+				echo '<p class="description">' . esc_html__( 'Owner canônico BDC. Deixe em branco para remover o valor.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 			}
 			echo '</div>';
 		}
 
 		echo '<hr>';
-		echo '<div class="bdc-kb-domain-heading"><h4>' . esc_html__( 'Helpful Tips', 'bdc-knowledge-base' ) . '</h4><p>' . esc_html__( 'Dicas ordenadas exibidas na experiência pública do artigo.', 'bdc-knowledge-base' ) . '</p></div>';
+		echo '<div class="bdc-kb-domain-heading"><h4>' . esc_html__( 'Helpful Tips', 'base-conhecimento-inteligencia-integrada' ) . '</h4><p>' . esc_html__( 'Dicas ordenadas exibidas na experiência pública do artigo.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 
 		$row_count = max( self::UI_TIP_ROWS, min( Helpful_Tips_Store::MAX_ITEMS, count( $tips ) + 1 ) );
 		for ( $index = 0; $index < $row_count; ++$index ) {
@@ -163,15 +163,15 @@ final class Knowledge_Details_Admin {
 
 			echo '<fieldset class="bdc-kb-field">';
 			/* translators: %d: Helpful Tip position in the ordered list. */
-			echo '<legend><strong>' . esc_html( sprintf( __( 'Dica %d', 'bdc-knowledge-base' ), $number ) ) . '</strong></legend>';
-			echo '<label for="bdc-kb-tip-title-' . esc_attr( (string) $index ) . '">' . esc_html__( 'Título', 'bdc-knowledge-base' ) . '</label>';
+			echo '<legend><strong>' . esc_html( sprintf( __( 'Dica %d', 'base-conhecimento-inteligencia-integrada' ), $number ) ) . '</strong></legend>';
+			echo '<label for="bdc-kb-tip-title-' . esc_attr( (string) $index ) . '">' . esc_html__( 'Título', 'base-conhecimento-inteligencia-integrada' ) . '</label>';
 			echo '<input class="regular-text" id="bdc-kb-tip-title-' . esc_attr( (string) $index ) . '" type="text" name="tips[' . esc_attr( (string) $index ) . '][title]" maxlength="' . esc_attr( (string) Helpful_Tips_Store::MAX_TITLE_BYTES ) . '" value="' . esc_attr( $title ) . '">';
-			echo '<label for="bdc-kb-tip-content-' . esc_attr( (string) $index ) . '">' . esc_html__( 'Conteúdo', 'bdc-knowledge-base' ) . '</label>';
+			echo '<label for="bdc-kb-tip-content-' . esc_attr( (string) $index ) . '">' . esc_html__( 'Conteúdo', 'base-conhecimento-inteligencia-integrada' ) . '</label>';
 			echo '<textarea class="large-text" rows="3" id="bdc-kb-tip-content-' . esc_attr( (string) $index ) . '" name="tips[' . esc_attr( (string) $index ) . '][content]" maxlength="' . esc_attr( (string) Helpful_Tips_Store::MAX_CONTENT_BYTES ) . '">' . esc_textarea( $content ) . '</textarea>';
 			echo '</fieldset>';
 		}
 
-		submit_button( __( 'Salvar detalhes de conhecimento', 'bdc-knowledge-base' ) );
+		submit_button( __( 'Salvar detalhes de conhecimento', 'base-conhecimento-inteligencia-integrada' ) );
 		echo '</form>';
 		echo '</section>';
 	}

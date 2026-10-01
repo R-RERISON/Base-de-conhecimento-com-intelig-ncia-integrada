@@ -65,15 +65,15 @@ final class Visual_Foundation {
 
 		echo '<div class="bdc-kb-vocabulary-hero">';
 		echo '<div class="bdc-kb-vocabulary-hero__copy">';
-		echo '<p class="bdc-kb-vocabulary-eyebrow">' . esc_html__( 'Base de Conhecimento / Vocabulários', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="bdc-kb-vocabulary-eyebrow">' . esc_html__( 'Base de Conhecimento / Vocabulários', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '<h1>' . esc_html( (string) $definition['label'] ) . '</h1>';
-		echo '<p>' . esc_html__( 'Gerencie os termos padronizados usando os recursos nativos de taxonomia do WordPress. As alterações afetam somente este vocabulário.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p>' . esc_html__( 'Gerencie os termos padronizados usando os recursos nativos de taxonomia do WordPress. As alterações afetam somente este vocabulário.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 		$return_post_id = self::return_post_id();
 		$return_url     = $return_post_id > 0
 			? Admin_Page::workspace_url( $return_post_id, 'classification' )
 			: admin_url( 'admin.php?page=' . Admin_Page::PAGE_SLUG );
-		$return_label   = $return_post_id > 0 ? __( 'Voltar à Classificação', 'bdc-knowledge-base' ) : __( 'Base de Conhecimento', 'bdc-knowledge-base' );
+		$return_label   = $return_post_id > 0 ? __( 'Voltar à Classificação', 'base-conhecimento-inteligencia-integrada' ) : __( 'Base de Conhecimento', 'base-conhecimento-inteligencia-integrada' );
 
 		echo '<div class="bdc-kb-vocabulary-hero__actions"><a class="button bdc-kb-button-with-icon" href="' . esc_url( $return_url ) . '"><span class="dashicons dashicons-arrow-left-alt2" aria-hidden="true"></span><span>' . esc_html( $return_label ) . '</span></a></div>';
 		echo '</div>';

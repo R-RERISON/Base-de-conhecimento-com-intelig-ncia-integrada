@@ -398,3 +398,33 @@ Open:
 - [ ] rerun P640 LOCAL_ONLY WPCS/PHPUnit on current plugin tree;
 - [ ] rerun P650/P660 local quality on p650.4;
 - [ ] P670 PASS_PRECONDITIONS.
+
+
+## p650.4 WordPress final gates — PASS WITH EXPLICIT DISPOSITION
+
+Evidence:
+- `evidence/spec006-p6504-wordpress-final-gates-current.json`;
+- `evidence/spec006-p6504-plugin-check-disposition-current.json`;
+- `evidence/spec006-p640-environmental-reconciliation-current.json`.
+
+Result:
+- candidate identity 102/102 PASS;
+- native modular runtime PASS;
+- official Plugin Check static checks 29/29 completed;
+- findings reduced from 170 errors / 96 warnings to 2 errors / 84 warnings;
+- remaining SQL error = prepared-query false positive;
+- updater finding = existing private-distribution waiver;
+- unresolved blocking errors after disposition = 0;
+- unresolved high/critical after disposition = 0;
+- global ignore = false;
+- rollback p650.4 -> p650.3 -> p650.4 PASS;
+- post_content / BDC metas / _elementor_data / Search Projection / state option preserved;
+- final p650.4 identity PASS.
+
+Remaining blockers are external tooling only:
+- [ ] refresh P640 LOCAL_ONLY on current plugin_tree with PHPCS/WPCS + PHPUnit;
+- [ ] P650 local package validator on current tree;
+- [ ] P660 local security/privacy validator on current tree;
+- [ ] P670 preflight + closeout candidate.
+
+Do not generate p650.5 from the current findings.

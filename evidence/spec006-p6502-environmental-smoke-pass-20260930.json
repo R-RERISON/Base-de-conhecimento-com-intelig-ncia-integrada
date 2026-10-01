@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-650/P-660",
+  "phase": "HARDENED_ENVIRONMENTAL_SMOKE",
+  "status": "PASS",
+  "date": "2026-09-30",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.2.zip",
+    "sha256": "1d48ecc25d2f1bbe173ab83e6368f46306c5de054cdd19b411945c328b6051f7"
+  },
+  "acceptance_source": "human_homologation_report",
+  "reported_result": "testado, tudo funcionando aparentemente sem problemas",
+  "validated_scope": {
+    "installation_or_upgrade": true,
+    "runtime_smoke": true,
+    "security_hardening_regression": true
+  },
+  "not_explicitly_validated": {
+    "rollback": true,
+    "official_plugin_check_same_zip": true,
+    "full_data_fingerprint_comparison": true
+  },
+  "gate_closure_authorized": false,
+  "cutover_authorized": false,
+  "retirement_authorized": false,
+  "next_gate": "P660_RESIDUAL_DISPOSITION_AND_OFFICIAL_PLUGIN_CHECK"
+}

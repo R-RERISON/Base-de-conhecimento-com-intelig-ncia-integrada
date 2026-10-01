@@ -1,0 +1,59 @@
+{
+    "schema_version": "1.0.0",
+    "gate": "P-630",
+    "status": "PASS",
+    "generated_at": "2026-09-29T15:08:35+00:00",
+    "environment": {
+        "wordpress": "6.9.4",
+        "php": "8.5.10",
+        "plugin": "0.6.0-dev"
+    },
+    "counts": {
+        "posts": 606,
+        "affected_service_canonical": 7,
+        "affected_service_legacy_fallback": 0,
+        "systems_involved": 6,
+        "technologies": 0,
+        "keywords": 0,
+        "versions": 0,
+        "helpful_tips_posts": 7,
+        "helpful_tips_items": 14,
+        "coverage_empty": 590,
+        "coverage_partial": 16,
+        "coverage_complete": 0
+    },
+    "sample_count": 20,
+    "samples": [
+        {"post_id":358,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":359,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":360,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":362,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":363,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":364,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":365,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":367,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":368,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":369,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":370,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":373,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":374,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":376,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":380,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":382,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":383,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":385,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":386,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"},
+        {"post_id":387,"facts_noop_pass":true,"tips_noop_pass":true,"domain_hash_equal":true,"public_service_equal":true,"public_systems_equal":true,"coverage_state":"EMPTY","coverage_filled":0,"affected_service_source":"_bdc_es_affected_service"}
+    ],
+    "errors": [],
+    "assertions": {
+        "store_errors_zero": true,
+        "sample_noop_writers_pass": true,
+        "samples_present": true,
+        "public_reader_canonical_alignment": true,
+        "domain_state_unchanged": true
+    },
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "next_gate_on_pass": "P630_LEDGER_DISPOSITION"
+}

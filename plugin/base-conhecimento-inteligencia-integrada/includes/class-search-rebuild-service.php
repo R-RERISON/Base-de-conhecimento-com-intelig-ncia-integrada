@@ -262,7 +262,7 @@ final class Search_Rebuild_Service {
 				'orderby' => 'ID',
 				'order' => 'ASC',
 				'no_found_rows' => true,
-				'suppress_filters' => true,
+				'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- Canonical rebuild intentionally bypasses ambient query filters for deterministic corpus selection.
 			)
 		);
 

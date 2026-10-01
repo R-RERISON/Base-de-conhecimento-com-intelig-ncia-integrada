@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-LOCAL-GATES",
+  "phase": "CURRENT_RUNTIME_PREFLIGHT",
+  "status": "BLOCKED_LOCAL_TOOLING",
+  "date": "2026-09-30",
+  "environment": {
+    "php": {
+      "available": true,
+      "version": "8.4.23"
+    },
+    "composer": {
+      "available": false
+    },
+    "phpcs": {
+      "available": false
+    },
+    "phpunit": {
+      "available": false
+    },
+    "wp_cli": {
+      "available": false
+    }
+  },
+  "repository_observation": {
+    "composer_lock_versioned": false
+  },
+  "implications": [
+    "P640 local WPCS/PHPUnit cannot be executed in this runtime.",
+    "Official Plugin Check cannot be executed in this runtime.",
+    "Rollback runner cannot be executed without WP-CLI and a WordPress environment."
+  ],
+  "remediation_prepared": {
+    "p640_build": "p640.2",
+    "p640_plugin_tree_provenance": true,
+    "p650_stale_p640_guard": true,
+    "p650_frozen_sha_guard": true,
+    "p660_local_validator": "tools/homologation/spec006/validate-p660-local.py",
+    "final_windows_orchestrator": "tools/homologation/spec006/run-spec006-final-gates.ps1"
+  },
+  "github_actions_used_as_gate_executor": false,
+  "gate_closure_authorized": false,
+  "cutover_authorized": false,
+  "retirement_authorized": false
+}

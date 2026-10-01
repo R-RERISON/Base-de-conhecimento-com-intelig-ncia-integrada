@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-640",
+  "phase": "ENVIRONMENTAL_RUNTIME_RECONCILIATION",
+  "status": "PASS",
+  "execution_mode": "WORDPRESS_CLICK_RUNNER",
+  "date": "2026-10-01",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip",
+    "sha256": "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2"
+  },
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "database": "12.2.2"
+  },
+  "runtime_probe": {
+    "pass": true,
+    "checks": {
+      "version": true,
+      "core_loader": true,
+      "module_registry": true,
+      "plugin": true,
+      "engineering_loader_absent": true,
+      "engineering_loader_file_absent": true,
+      "search_service": true,
+      "public_experience": true,
+      "word_cloud_service": true,
+      "search_hook": true,
+      "public_template_hook": true,
+      "word_cloud_hook": true,
+      "plugin_active": true
+    },
+    "failed": []
+  },
+  "reconciliation_policy": {
+    "technical_p640_package_install_required": false,
+    "production_candidate_used_as_runtime_proof": true,
+    "reason": "The exact p650.4 production candidate was validated in the homologation WordPress by companion 1.0.5."
+  },
+  "invariants": {
+    "github_actions_used": false,
+    "content_mutation_requested": false,
+    "data_migration_requested": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false
+  },
+  "source_evidence": "spec006-final-gates-20261001-121039.json",
+  "next_gate": "P640_LOCAL_TOOLING_CURRENT_TREE"
+}

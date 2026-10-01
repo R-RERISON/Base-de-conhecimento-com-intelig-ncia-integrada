@@ -23,7 +23,7 @@ final class Post_Management_Activities {
 				self::render_core_blocks( $post_id, $context );
 				break;
 			default:
-				echo '<div class="notice notice-error"><p>' . esc_html__( 'Esta área não está disponível.', 'bdc-knowledge-base' ) . '</p></div>';
+				echo '<div class="notice notice-error"><p>' . esc_html__( 'Esta área não está disponível.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 		}
 	}
 
@@ -35,8 +35,8 @@ final class Post_Management_Activities {
 
 		echo '<section class="bdc-kb-domain-panel" aria-labelledby="bdc-kb-content-title">';
 		echo '<div class="bdc-kb-domain-heading">';
-		echo '<h3 id="bdc-kb-content-title">' . esc_html__( 'Conteúdo e estrutura', 'bdc-knowledge-base' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Informações sobre a origem e a preservação do conteúdo deste artigo.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h3 id="bdc-kb-content-title">' . esc_html__( 'Conteúdo e estrutura', 'base-conhecimento-inteligencia-integrada' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Informações sobre a origem e a preservação do conteúdo deste artigo.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 
 		self::table(
@@ -50,7 +50,7 @@ final class Post_Management_Activities {
 			)
 		);
 
-		echo '<p class="bdc-kb-context-note">' . esc_html__( 'Esta área é somente para consulta e não altera o conteúdo do artigo.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<p class="bdc-kb-context-note">' . esc_html__( 'Esta área é somente para consulta e não altera o conteúdo do artigo.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</section>';
 	}
 
@@ -60,8 +60,8 @@ final class Post_Management_Activities {
 
 		echo '<section class="bdc-kb-domain-panel" aria-labelledby="bdc-kb-intelligence-title">';
 		echo '<div class="bdc-kb-domain-heading">';
-		echo '<h3 id="bdc-kb-intelligence-title">' . esc_html__( 'Inteligência', 'bdc-knowledge-base' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Área destinada a análises e sugestões assistidas para este artigo.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h3 id="bdc-kb-intelligence-title">' . esc_html__( 'Inteligência', 'base-conhecimento-inteligencia-integrada' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Área destinada a análises e sugestões assistidas para este artigo.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 
 		self::table(
@@ -73,7 +73,7 @@ final class Post_Management_Activities {
 		);
 
 		if ( empty( $knowledge['intelligence_execution_enabled'] ) ) {
-			echo '<div class="notice notice-info inline"><p>' . esc_html__( 'Os recursos de inteligência artificial serão incorporados nesta mesma área após a conclusão das etapas de segurança e validação.', 'bdc-knowledge-base' ) . '</p></div>';
+			echo '<div class="notice notice-info inline"><p>' . esc_html__( 'Os recursos de inteligência artificial serão incorporados nesta mesma área após a conclusão das etapas de segurança e validação.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 		}
 
 		echo '</section>';
@@ -96,8 +96,8 @@ final class Post_Management_Activities {
 
 		echo '<section class="bdc-kb-domain-panel" aria-labelledby="bdc-kb-core-blocks-title">';
 		echo '<div class="bdc-kb-domain-heading">';
-		echo '<h3 id="bdc-kb-core-blocks-title">' . esc_html__( 'Blocos do WordPress', 'bdc-knowledge-base' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Situação da estrutura editorial do artigo e disponibilidade de migração, quando necessária.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h3 id="bdc-kb-core-blocks-title">' . esc_html__( 'Blocos do WordPress', 'base-conhecimento-inteligencia-integrada' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Situação da estrutura editorial do artigo e disponibilidade de migração, quando necessária.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 
 		$migration_needed = 'no_action_required' === $status ? 'Não' : ( 'ready_for_authorization' === $status ? 'Sim' : 'Em avaliação' );
@@ -120,7 +120,7 @@ final class Post_Management_Activities {
 		);
 
 		if ( 'no_action_required' === $status ) {
-			echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Este artigo já utiliza Blocos do WordPress. Nenhuma ação é necessária.', 'bdc-knowledge-base' ) . '</p></div>';
+			echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Este artigo já utiliza Blocos do WordPress. Nenhuma ação é necessária.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 		} elseif ( ! empty( $reasons ) ) {
 			$messages = array_values( array_filter( array_map( array( self::class, 'reason_label' ), $reasons ) ) );
 			if ( ! empty( $messages ) ) {
@@ -134,7 +134,7 @@ final class Post_Management_Activities {
 			echo '<input type="hidden" name="action" value="' . esc_attr( Post_Core_Blocks_Activity::ACTION ) . '">';
 			echo '<input type="hidden" name="post_id" value="' . esc_attr( (string) $post_id ) . '">';
 			wp_nonce_field( Post_Core_Blocks_Activity::nonce_action( $post_id ), Post_Core_Blocks_Activity::NONCE_FIELD );
-			submit_button( __( 'Baixar autorização de migração', 'bdc-knowledge-base' ), 'secondary', 'submit', false );
+			submit_button( __( 'Baixar autorização de migração', 'base-conhecimento-inteligencia-integrada' ), 'secondary', 'submit', false );
 			echo '</form>';
 
 			if ( $t100d_enabled ) {
@@ -143,14 +143,14 @@ final class Post_Management_Activities {
 				echo '<input type="hidden" name="post_id" value="' . esc_attr( (string) $post_id ) . '">';
 				echo '<input type="hidden" name="' . esc_attr( Post_Core_Blocks_Executor_T100D::AUTH_FIELD ) . '" value="' . esc_attr( $authorization_id ) . '">';
 				wp_nonce_field( Post_Core_Blocks_Executor_T100D::nonce_action(), Post_Core_Blocks_Executor_T100D::NONCE_FIELD );
-				submit_button( __( 'Migrar este artigo para Blocos do WordPress', 'bdc-knowledge-base' ), 'primary', 'submit', false );
+				submit_button( __( 'Migrar este artigo para Blocos do WordPress', 'base-conhecimento-inteligencia-integrada' ), 'primary', 'submit', false );
 				echo '</form>';
 			}
 			echo '</div>';
 		}
 
 		if ( $authorization_ready && ! $t100d_enabled ) {
-			echo '<p class="bdc-kb-context-note">' . esc_html__( 'A preparação está disponível, mas a migração permanece bloqueada até autorização específica.', 'bdc-knowledge-base' ) . '</p>';
+			echo '<p class="bdc-kb-context-note">' . esc_html__( 'A preparação está disponível, mas a migração permanece bloqueada até autorização específica.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		}
 
 		echo '</section>';

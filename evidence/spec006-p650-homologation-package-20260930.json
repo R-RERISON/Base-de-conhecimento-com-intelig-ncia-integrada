@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-650",
+  "phase": "PACKAGE_BUILD_FOR_ENVIRONMENTAL_HOMOLOGATION",
+  "status": "PASS",
+  "execution_mode": "LOCAL_ONLY",
+  "date": "2026-09-30",
+  "gate_closure_authorized": false,
+  "source": {
+    "head": "b45386a4f173bdafd7b44d2a56c43f4883c49e55",
+    "plugin_tree_sha": "ddb30b150b78c08e9163f7324c5f911c4ead13d0",
+    "source_equivalence_verified": true
+  },
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.1.zip",
+    "sha256": "503234ece2620d01bb556e5810a374f07e2153221171f21755bbe7c1b4f5b926",
+    "manifest_sha256": "4df8aaf2142d1572cfae4c67fbe54d763d56a8256c4b78bc4b2b73a9303086f4",
+    "production_package_candidate": true,
+    "file_count": 103,
+    "php_file_count": 84
+  },
+  "validation": {
+    "deterministic_equal": true,
+    "single_root": true,
+    "engineering_files_present": 0,
+    "bootstrap_engineering_tokens": 0,
+    "forbidden_repository_paths": 0,
+    "missing_declared_runtime_files": 0,
+    "php_lint_checked": 84,
+    "php_lint_failed": 0
+  },
+  "invariants": {
+    "content_mutation": false,
+    "data_migration": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false
+  },
+  "limitations": [
+    "P640 local Composer/PHPCS/PHPUnit gate remains open.",
+    "This package is authorized for environmental homologation, not production release.",
+    "P650 install/upgrade/rollback and Plugin Check are still pending."
+  ],
+  "next_gate": "P650_INSTALL_UPGRADE_ROLLBACK_ENVIRONMENTAL"
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-WORDPRESS-GATES",
+  "phase": "PLUGIN_CHECK_TRANSPORT_INCIDENT",
+  "status": "FAIL_CONTROLLED_TRANSPORT_DIAGNOSTIC_REQUIRED",
+  "date": "2026-09-30",
+  "acceptance_source": "human_homologation_report",
+  "observed_error": "Unexpected end of JSON input",
+  "confirmed_pass": {
+    "installed_integrity": true,
+    "expected_files": 102,
+    "checked_files": 102,
+    "missing": [],
+    "mismatched": [],
+    "extra": [],
+    "modular_runtime": true,
+    "runtime_failed_checks": []
+  },
+  "interpretation": {
+    "bdc_runtime_regression_proven": false,
+    "plugin_check_finding_proven": false,
+    "transport_or_server_completion_failure": true,
+    "exact_stage_unknown_in_runner_1_0_0": true
+  },
+  "remediation": {
+    "runner_version": "1.0.1",
+    "captures_http_status": true,
+    "captures_content_type": true,
+    "captures_body_length": true,
+    "captures_body_preview": true,
+    "captures_parse_error": true,
+    "captures_plugin_check_stage_and_check": true,
+    "partial_json_download_on_block": true
+  },
+  "production_artifact_modified": false,
+  "candidate_sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231",
+  "gate_closure_authorized": false
+}

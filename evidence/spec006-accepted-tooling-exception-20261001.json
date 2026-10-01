@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "decision": "SPEC006_ACCEPTED_TOOLING_EXCEPTION",
+  "status": "ACCEPTED",
+  "date": "2026-10-01",
+  "decision_source": "PRODUCT_OWNER_EXPLICIT_DECISION",
+  "scope": {
+    "phpcs_wpcs": "NOT_RUN_ACCEPTED_TOOLING_EXCEPTION",
+    "phpunit": "NOT_RUN_ACCEPTED_TOOLING_EXCEPTION"
+  },
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip",
+    "sha256": "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2"
+  },
+  "proven_elsewhere": {
+    "php_lint_83_of_83": true,
+    "package_identity_102_of_102": true,
+    "native_runtime": true,
+    "official_plugin_check_static_29_of_29": true,
+    "plugin_check_explicit_disposition": true,
+    "rollback": true,
+    "data_preserved": true,
+    "final_identity": true
+  },
+  "ledger": {
+    "PROD-003": "PARTIAL",
+    "PROD-004": "ELIGIBLE_FOR_IMPROVED_VERIFIED",
+    "PROD-005": "ELIGIBLE_FOR_IMPROVED_VERIFIED",
+    "PROD-006": "ELIGIBLE_FOR_IMPROVED_VERIFIED"
+  },
+  "invariants": {
+    "phpcs_wpcs_claimed_pass": false,
+    "phpunit_claimed_pass": false,
+    "premium_done_claimed": false,
+    "version_1_0_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "bulk_migration_authorized": false
+  }
+}

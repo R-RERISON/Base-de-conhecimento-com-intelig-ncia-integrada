@@ -1,0 +1,32 @@
+{
+  "name": "bdc/base-conhecimento-inteligencia-integrada",
+  "description": "Base de Conhecimento com Inteligência Integrada para WordPress.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=8.1"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.2.1",
+    "phpunit/phpunit": "^10.5",
+    "phpstan/phpstan": "^2.2.14",
+    "szepeviktor/phpstan-wordpress": "^2.0.4",
+    "wp-coding-standards/wpcs": "^3.4.1"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "sort-packages": true
+  },
+  "scripts": {
+    "test:phpunit": "phpunit -c phpunit.xml.dist",
+    "lint:wpcs": "phpcs -q",
+    "analyse": "phpstan analyse -c phpstan.neon.dist --no-progress",
+    "quality": [
+      "@test:phpunit",
+      "@lint:wpcs",
+      "@analyse"
+    ]
+  }
+}

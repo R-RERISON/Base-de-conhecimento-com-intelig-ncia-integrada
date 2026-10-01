@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-630",
+  "phase": "ENVIRONMENTAL_PACKAGE",
+  "status": "PASS",
+  "date": "2026-09-29",
+  "source_branch": "spec006-premium-product-foundation",
+  "source_commit": "297928f408031ce296ac8837f7af13ae26333d1f",
+  "workflow_run_id": 36587468110,
+  "workflow_artifact_id": 11041674054,
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p630.2.zip",
+    "sha256": "0a59a3ec2653104230dd4ed5e4758c6bda0fed36c02822a84d256cd30b0b84ad",
+    "manifest": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p630.2.manifest.json",
+    "manifest_sha256": "88ea178330bad873d2daa812b8c53c3f3dd24398592b75f88951b7650aafd3c2",
+    "deterministic_equal": true,
+    "production_package": false
+  },
+  "validation": {
+    "source_file_count": 146,
+    "php_lint_checked": 127,
+    "php_lint_failed": 0,
+    "required_contract_tokens": 8,
+    "environmental_runner_packaged": true,
+    "environmental_flag_source": false,
+    "environmental_flag_package": true
+  },
+  "next_gate": "P630_ENVIRONMENTAL_ACCEPTANCE"
+}

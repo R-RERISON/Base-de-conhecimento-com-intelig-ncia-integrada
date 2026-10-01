@@ -54,7 +54,7 @@ final class Content_Source {
 
 		$has_blocks = function_exists( 'has_blocks' ) ? (bool) has_blocks( $content ) : str_contains( $content, '<!-- wp:' );
 		$has_html = 1 === preg_match( '/<\s*[a-z][^>]*>/i', $content );
-		$plain = function_exists( 'wp_strip_all_tags' ) ? (string) wp_strip_all_tags( $content ) : strip_tags( $content );
+		$plain = (string) wp_strip_all_tags( $content );
 		$has_plain_text = '' !== trim( $plain );
 		$shortcodes = Shortcode_Inspector::inspect( $content );
 

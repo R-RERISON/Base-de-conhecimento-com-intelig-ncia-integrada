@@ -1,0 +1,13 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 5
+    bootstrapFiles:
+        - tests/phpunit/bootstrap.php
+    paths:
+        - tests/phpunit
+    excludePaths:
+        analyse:
+            - vendor/*
+    treatPhpDocTypesAsCertain: false

@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-600",
+  "status": "PASS",
+  "date": "2026-09-29",
+  "source_branch": "spec006-premium-product-foundation",
+  "plugin_version": "0.6.0-dev",
+  "validation": {
+    "workflow_run_id": 36580493491,
+    "metadata_license_contract": true,
+    "plugin_php_lint": true
+  },
+  "metadata": {
+    "plugin_uri": true,
+    "version_header": true,
+    "version_constant": true,
+    "requires_wp": "6.6",
+    "requires_php": "8.1",
+    "license": "GPL-2.0-or-later",
+    "license_uri": true,
+    "update_uri": true,
+    "text_domain": "bdc-knowledge-base"
+  },
+  "distribution_docs": [
+    "readme.txt",
+    "LICENSE",
+    "CHANGELOG.md",
+    "UPGRADE.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md"
+  ],
+  "invariants": {
+    "search_service_unchanged": true,
+    "lexical_ranker_unchanged": true,
+    "database_unchanged": true,
+    "editorial_content_unchanged": true,
+    "asi_retirement_authorized": false
+  }
+}

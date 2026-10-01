@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-640",
+  "phase": "LOCAL_REVALIDATION_PARTIAL",
+  "status": "BLOCKED_LOCAL_TOOLING",
+  "generated_at": "2026-09-29",
+  "execution_mode": "LOCAL_CONTAINER",
+  "input_artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p640.1.zip",
+    "sha256": "e22e599ae8ae212c8e9c87a522e4f04a63fe187344798191c7f2fe8051f2ef9a",
+    "provenance": "NONCONFORMING_FOR_GATE_CLOSURE"
+  },
+  "results": {
+    "static_registry_contract": {"passed": 14, "failed": 0},
+    "static_modular_runtime_contract": {"passed": 15, "failed": 0},
+    "php_lint": {"checked": 131, "failed": 0},
+    "bootstrap_direct_require_count": 4,
+    "package_environmental_flag": true
+  },
+  "blocked": {
+    "composer": "UNAVAILABLE",
+    "phpcs": "UNAVAILABLE",
+    "phpunit": "UNAVAILABLE"
+  },
+  "inventory_diagnostic": {
+    "plugin_files": 150,
+    "plugin_php_files": 131,
+    "core_declared_php": 42,
+    "product_declared_php": 25,
+    "engineering_declared_php": 46,
+    "engineering_missing": 0,
+    "core_product_overlap": 0,
+    "core_engineering_overlap": 0,
+    "product_engineering_overlap": 0,
+    "unclassified_php": 15
+  },
+  "may_be_used_to_close_gate": false,
+  "next_action": "Run tools/homologation/spec006/validate-p640-local.py in a local checkout with Composer dependencies installed."
+}

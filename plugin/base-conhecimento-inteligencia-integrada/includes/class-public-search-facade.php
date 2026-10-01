@@ -170,7 +170,10 @@ final class Public_Search_Facade {
 
 		$search = self::search( $query, self::DEFAULT_LIMIT );
 		$rows = array();
-		$preview = ! empty( $_POST['preview'] ) && current_user_can( 'manage_options' );
+		$preview_value = isset( $_POST['preview'] ) && is_scalar( $_POST['preview'] )
+			? sanitize_key( wp_unslash( (string) $_POST['preview'] ) )
+			: '';
+		$preview = in_array( $preview_value, array( '1', 'true', 'yes' ), true ) && current_user_can( 'manage_options' );
 
 		foreach ( (array) ( $search['results'] ?? array() ) as $result ) {
 			$post_id = (int) ( $result['post_id'] ?? 0 );
@@ -369,8 +372,9 @@ final class Public_Search_Facade {
 
 	private static function rate_limit_pass(): bool {
 		$remote = isset( $_SERVER['REMOTE_ADDR'] ) && is_scalar( $_SERVER['REMOTE_ADDR'] )
-			? (string) $_SERVER['REMOTE_ADDR']
+			? sanitize_text_field( wp_unslash( (string) $_SERVER['REMOTE_ADDR'] ) )
 			: 'unknown';
+		$remote = substr( $remote, 0, 64 );
 		$fingerprint = hash_hmac( 'sha256', $remote, wp_salt( 'nonce' ) );
 		$key = 'bdc_kb_ps_rl_' . substr( $fingerprint, 0, 32 );
 		$count = absint( get_transient( $key ) );

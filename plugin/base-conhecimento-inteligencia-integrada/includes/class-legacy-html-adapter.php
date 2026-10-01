@@ -691,7 +691,7 @@ final class Legacy_HTML_Adapter {
 			} elseif ( 'pre' === $tag || 'code' === $tag ) {
 				$kind = 'code';
 				$preserve = true;
-				$text = html_entity_decode( strip_tags( preg_replace( '#<br\s*/?>#i', "\n", $inner ) ?? $inner ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+				$text = html_entity_decode( wp_strip_all_tags( preg_replace( '#<br\s*/?>#i', "\n", $inner ) ?? $inner ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 			} elseif ( 'blockquote' === $tag ) {
 				$kind = 'quote';
 			}
@@ -707,7 +707,7 @@ final class Legacy_HTML_Adapter {
 	private static function fallback_visible_text( string $html ): string {
 		$html = preg_replace( '#<br\s*/?>#i', "\n", $html ) ?? $html;
 		$html = preg_replace( '#</?(div|section|article|main|header|footer|aside|nav|ul|ol|table|thead|tbody|tfoot)>#i', "\n", $html ) ?? $html;
-		return html_entity_decode( strip_tags( $html ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		return html_entity_decode( wp_strip_all_tags( $html ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 	}
 
 	/** @param array<int,array<string,mixed>> $fragments */

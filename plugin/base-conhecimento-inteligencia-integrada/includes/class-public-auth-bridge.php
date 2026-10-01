@@ -64,7 +64,7 @@ final class Public_Auth_Bridge {
 		if ( ! is_user_logged_in() ) {
 			echo '<a class="bdc-public-auth__login" href="' . esc_url( wp_login_url( self::current_url() ) ) . '">';
 			echo '<span class="dashicons dashicons-admin-users" aria-hidden="true"></span>';
-			echo '<span>' . esc_html__( 'Entrar', 'bdc-knowledge-base' ) . '</span>';
+			echo '<span>' . esc_html__( 'Entrar', 'base-conhecimento-inteligencia-integrada' ) . '</span>';
 			echo '</a>';
 			return;
 		}
@@ -72,7 +72,7 @@ final class Public_Auth_Bridge {
 		$user = wp_get_current_user();
 		$name = $user instanceof \WP_User ? (string) $user->display_name : '';
 		if ( '' === trim( $name ) ) {
-			$name = __( 'Usuário', 'bdc-knowledge-base' );
+			$name = __( 'Usuário', 'base-conhecimento-inteligencia-integrada' );
 		}
 
 		echo '<details class="bdc-public-account">';
@@ -82,21 +82,24 @@ final class Public_Auth_Bridge {
 		echo '<span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>';
 		echo '</summary>';
 		echo '<div class="bdc-public-account__menu">';
-		echo '<a href="' . esc_url( admin_url( 'profile.php' ) ) . '">' . esc_html__( 'Meu perfil', 'bdc-knowledge-base' ) . '</a>';
-		echo '<a href="' . esc_url( wp_logout_url( home_url( '/' ) ) ) . '">' . esc_html__( 'Sair', 'bdc-knowledge-base' ) . '</a>';
+		echo '<a href="' . esc_url( admin_url( 'profile.php' ) ) . '">' . esc_html__( 'Meu perfil', 'base-conhecimento-inteligencia-integrada' ) . '</a>';
+		echo '<a href="' . esc_url( wp_logout_url( home_url( '/' ) ) ) . '">' . esc_html__( 'Sair', 'base-conhecimento-inteligencia-integrada' ) . '</a>';
 		echo '</div>';
 		echo '</details>';
 	}
 
 	private static function current_url(): string {
-		$scheme = is_ssl() ? 'https://' : 'http://';
-		$host = isset( $_SERVER['HTTP_HOST'] ) && is_scalar( $_SERVER['HTTP_HOST'] )
-			? sanitize_text_field( wp_unslash( (string) $_SERVER['HTTP_HOST'] ) )
-			: '';
 		$uri = isset( $_SERVER['REQUEST_URI'] ) && is_scalar( $_SERVER['REQUEST_URI'] )
-			? wp_unslash( (string) $_SERVER['REQUEST_URI'] )
+			? sanitize_text_field( wp_unslash( (string) $_SERVER['REQUEST_URI'] ) )
 			: '/';
-		return '' !== $host ? $scheme . $host . $uri : home_url( '/' );
+
+		$path = wp_parse_url( $uri, PHP_URL_PATH );
+		$path = is_string( $path ) && '' !== $path ? $path : '/';
+
+		$query = wp_parse_url( $uri, PHP_URL_QUERY );
+		$query = is_string( $query ) && '' !== $query ? '?' . $query : '';
+
+		return home_url( $path . $query );
 	}
 
 	private static function initials( string $name ): string {

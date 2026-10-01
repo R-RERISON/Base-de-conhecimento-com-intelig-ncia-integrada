@@ -32,6 +32,11 @@ final class Public_Article_Read_Model {
 			$classification = array( 'terms' => array() );
 		}
 
+		$facts = Knowledge_Facts_Store::read( $post_id );
+		if ( is_wp_error( $facts ) ) {
+			$facts = array( 'values' => array() );
+		}
+
 		$tips = Helpful_Tips_Store::read( $post_id );
 		if ( is_wp_error( $tips ) ) {
 			$tips = array();
@@ -50,7 +55,7 @@ final class Public_Article_Read_Model {
 			'published' => get_the_date( 'd/m/Y', $post_id ),
 			'updated' => get_the_modified_date( 'd/m/Y', $post_id ),
 			'tips' => $tips,
-			'summary_items' => self::summary_items( $post_id, $summary, $classification ),
+			'summary_items' => self::summary_items( $summary, $classification, $facts ),
 			'source_kind' => self::source_kind( $post_id ),
 		);
 	}
@@ -58,27 +63,19 @@ final class Public_Article_Read_Model {
 	/**
 	 * @param array<string,mixed> $summary
 	 * @param array<string,mixed> $classification
+	 * @param array<string,mixed> $facts
 	 * @return array<int,array{label:string,value:string,kind:string}>
 	 */
-	private static function summary_items( int $post_id, array $summary, array $classification ): array {
+	private static function summary_items( array $summary, array $classification, array $facts ): array {
 		$items = array();
 
 		self::append( $items, 'Objetivo', (string) ( $summary['objective'] ?? '' ), 'objective' );
 		self::append_terms( $items, 'Equipe responsável', $classification, 'responsible_team' );
 		self::append_terms( $items, 'Item de Catálogo', $classification, 'catalog_item' );
 
-		self::append(
-			$items,
-			'Serviço Afetado',
-			self::legacy_meta_string( $post_id, '_bdc_es_affected_service' ),
-			'fact'
-		);
-		self::append(
-			$items,
-			'Sistemas envolvidos',
-			self::legacy_meta_string( $post_id, '_bdc_es_systems_involved' ),
-			'fact'
-		);
+		$fact_values = (array) ( $facts['values'] ?? array() );
+		self::append( $items, 'Serviço Afetado', (string) ( $fact_values['affected_service'] ?? '' ), 'fact' );
+		self::append( $items, 'Sistemas envolvidos', (string) ( $fact_values['systems_involved'] ?? '' ), 'fact' );
 
 		self::append_terms( $items, 'Público Alvo', $classification, 'audience' );
 		self::append( $items, 'Escalonamento', (string) ( $summary['escalation'] ?? '' ), 'fact' );
@@ -137,10 +134,6 @@ final class Public_Article_Read_Model {
 		self::append( $items, $label, implode( "\n", $names ), 'fact' );
 	}
 
-	private static function legacy_meta_string( int $post_id, string $key ): string {
-		$value = get_post_meta( $post_id, $key, true );
-		return is_scalar( $value ) ? trim( sanitize_textarea_field( (string) $value ) ) : '';
-	}
 
 	private static function source_kind( int $post_id ): string {
 		$extracted = Content_Extractor::extract( $post_id );

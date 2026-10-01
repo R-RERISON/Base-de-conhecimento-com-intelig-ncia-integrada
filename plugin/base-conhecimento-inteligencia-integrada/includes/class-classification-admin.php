@@ -22,8 +22,9 @@ final class Classification_Admin {
 	private const NONCE_PREFIX = 'bdc_kb_save_classification_';
 
 	public static function handle_save(): void {
-		if ( 'POST' !== strtoupper( (string) ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) {
-			wp_die( esc_html__( 'Método HTTP não permitido.', 'bdc-knowledge-base' ), '', array( 'response' => 405 ) );
+		$request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_key( wp_unslash( (string) $_SERVER['REQUEST_METHOD'] ) ) : '';
+		if ( 'POST' !== strtoupper( $request_method ) ) {
+			wp_die( esc_html__( 'Método HTTP não permitido.', 'base-conhecimento-inteligencia-integrada' ), '', array( 'response' => 405 ) );
 		}
 
 		$post_id = isset( $_POST['post_id'] ) && is_scalar( $_POST['post_id'] )
@@ -40,7 +41,7 @@ final class Classification_Admin {
 		}
 
 		$nonce = isset( $_POST[ self::NONCE_FIELD ] ) && is_scalar( $_POST[ self::NONCE_FIELD ] )
-			? wp_unslash( (string) $_POST[ self::NONCE_FIELD ] )
+			? sanitize_text_field( wp_unslash( (string) $_POST[ self::NONCE_FIELD ] ) )
 			: '';
 
 		if ( ! wp_verify_nonce( $nonce, self::NONCE_PREFIX . $post_id ) ) {
@@ -51,14 +52,14 @@ final class Classification_Admin {
 			self::redirect( $post_id, 'invalid_payload' );
 		}
 
-		$raw_present = wp_unslash( $_POST['classification_present'] );
+		$raw_present = map_deep( wp_unslash( $_POST['classification_present'] ), 'sanitize_text_field' );
 
 		if ( isset( $_POST['classification'] ) && ! is_array( $_POST['classification'] ) ) {
 			self::redirect( $post_id, 'invalid_payload' );
 		}
 
 		$raw_classification = isset( $_POST['classification'] )
-			? wp_unslash( $_POST['classification'] )
+			? map_deep( wp_unslash( $_POST['classification'] ), 'sanitize_text_field' )
 			: array();
 
 		$changes = self::normalize_form_payload( $raw_present, $raw_classification );
@@ -112,14 +113,14 @@ final class Classification_Admin {
 	public static function render_panel( int $post_id ): void {
 		$snapshot = Classification_Store::read( $post_id );
 		if ( is_wp_error( $snapshot ) ) {
-			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar a classificação deste artigo.', 'bdc-knowledge-base' ) . '</p></div>';
+			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'Não foi possível carregar a classificação deste artigo.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 			return;
 		}
 
 		echo '<hr class="bdc-kb-section-separator">';
 		echo '<section class="bdc-kb-classification" aria-labelledby="bdc-kb-classification-title">';
-		echo '<h2 id="bdc-kb-classification-title">' . esc_html__( 'Classificação de Conhecimento', 'bdc-knowledge-base' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Selecione os termos padronizados que representam este artigo. Informações antigas aparecem apenas como referência e não são alteradas automaticamente.', 'bdc-knowledge-base' ) . '</p>';
+		echo '<h2 id="bdc-kb-classification-title">' . esc_html__( 'Classificação de Conhecimento', 'base-conhecimento-inteligencia-integrada' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Selecione os termos padronizados que representam este artigo. Informações antigas aparecem apenas como referência e não são alteradas automaticamente.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 
 		self::render_vocabulary_links( $post_id );
 
@@ -132,7 +133,7 @@ final class Classification_Admin {
 			self::render_field( $post_id, $field, $definition, $snapshot['terms'][ $field ] ?? array() );
 		}
 
-		submit_button( __( 'Salvar Classificação', 'bdc-knowledge-base' ), 'primary' );
+		submit_button( __( 'Salvar Classificação', 'base-conhecimento-inteligencia-integrada' ), 'primary' );
 		echo '</form>';
 		echo '</section>';
 	}
@@ -158,28 +159,30 @@ final class Classification_Admin {
 		echo '<input type="hidden" name="classification_present[' . esc_attr( $field ) . ']" value="1">';
 
 		if ( is_wp_error( $terms ) ) {
-			echo '<p class="notice notice-error inline"><span>' . esc_html__( 'Não foi possível carregar o vocabulário.', 'bdc-knowledge-base' ) . '</span></p>';
+			echo '<p class="notice notice-error inline"><span>' . esc_html__( 'Não foi possível carregar o vocabulário.', 'base-conhecimento-inteligencia-integrada' ) . '</span></p>';
 		} else {
 			$multiple = (bool) $definition['multiple'];
 			$name     = 'classification[' . $field . '][]';
-			$attrs    = $multiple ? ' multiple size="6"' : '';
-			echo '<select class="regular-text bdc-kb-term-select" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $name ) . '"' . $attrs . '>';
+			echo '<select class="regular-text bdc-kb-term-select" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $name ) . '"';
+			if ( $multiple ) {
+				echo ' multiple size="6"';
+			}
+			echo '>';
 
 			if ( ! $multiple ) {
-				echo '<option value="">' . esc_html__( '— Sem classificação —', 'bdc-knowledge-base' ) . '</option>';
+				echo '<option value="">' . esc_html__( '— Sem classificação —', 'base-conhecimento-inteligencia-integrada' ) . '</option>';
 			}
 
 			foreach ( $terms as $term ) {
-				$term_id  = (int) $term->term_id;
-				$selected = in_array( $term_id, $selected_ids, true ) ? ' selected' : '';
-				echo '<option value="' . esc_attr( (string) $term_id ) . '"' . $selected . '>' . esc_html( (string) $term->name ) . '</option>';
+				$term_id = (int) $term->term_id;
+				echo '<option value="' . esc_attr( (string) $term_id ) . '"' . selected( in_array( $term_id, $selected_ids, true ), true, false ) . '>' . esc_html( (string) $term->name ) . '</option>';
 			}
 			echo '</select>';
 
 			if ( array() === $terms ) {
-				echo '<p class="description">' . esc_html__( 'Nenhum termo foi cadastrado neste vocabulário. Cadastre os termos antes de associá-los ao artigo.', 'bdc-knowledge-base' ) . '</p>';
+				echo '<p class="description">' . esc_html__( 'Nenhum termo foi cadastrado neste vocabulário. Cadastre os termos antes de associá-los ao artigo.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 			} elseif ( $multiple ) {
-				echo '<p class="description">' . esc_html__( 'Use Ctrl (Windows/Linux) ou Command (macOS) para selecionar ou remover vários termos.', 'bdc-knowledge-base' ) . '</p>';
+				echo '<p class="description">' . esc_html__( 'Use Ctrl (Windows/Linux) ou Command (macOS) para selecionar ou remover vários termos.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 			}
 		}
 
@@ -213,7 +216,7 @@ final class Classification_Admin {
 		}
 
 		echo '<details class="bdc-kb-legacy-reference">';
-		echo '<summary>' . esc_html__( 'Referência do conteúdo anterior', 'bdc-knowledge-base' ) . '</summary>';
+		echo '<summary>' . esc_html__( 'Referência do conteúdo anterior', 'base-conhecimento-inteligencia-integrada' ) . '</summary>';
 		echo '<pre>' . esc_html( implode( "\n", $lines ) ) . '</pre>';
 		echo '</details>';
 	}
@@ -224,7 +227,7 @@ final class Classification_Admin {
 		}
 
 		echo '<div class="bdc-kb-vocabulary-links">';
-		echo '<span class="bdc-kb-vocabulary-links__label">' . esc_html__( 'Gerenciar vocabulários', 'bdc-knowledge-base' ) . '</span>';
+		echo '<span class="bdc-kb-vocabulary-links__label">' . esc_html__( 'Gerenciar vocabulários', 'base-conhecimento-inteligencia-integrada' ) . '</span>';
 		echo '<div class="bdc-kb-vocabulary-actions">';
 		foreach ( Classification_Contract::fields() as $definition ) {
 			$url = add_query_arg(

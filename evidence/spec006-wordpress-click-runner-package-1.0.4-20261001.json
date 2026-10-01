@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-WORDPRESS-GATES",
+  "phase": "CLICK_RUNNER_STATIC_FALLBACK_AND_ROLLBACK_HARDENING",
+  "status": "PASS_PACKAGE_READY",
+  "date": "2026-10-01",
+  "artifact": {
+    "name": "bdc-spec006-final-gates-runner-1.0.4.zip",
+    "sha256": "dcf56d59c384b6f3e0180d0a4a77083f8e0efe24375e1973846a094f9d5027b1",
+    "bytes": 457456,
+    "files": 9,
+    "zip_integrity": true,
+    "php_lint": "2/2 PASS",
+    "javascript_syntax": "PASS",
+    "static_contract": "18/18 PASS"
+  },
+  "changes": {
+    "core_temp_table_contract_only": true,
+    "custom_tables_not_required": true,
+    "official_static_plugin_check_fallback": true,
+    "official_runtime_limitation_explicit": true,
+    "native_runtime_evidence_preserved": true,
+    "persisted_report_runner_version_refreshed": true,
+    "rollback_elementor_data_fingerprint": true,
+    "rollback_search_projection_table_fingerprint": true,
+    "rollback_search_projection_state_fingerprint": true
+  },
+  "candidate_sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231",
+  "previous_sha256": "1d48ecc25d2f1bbe173ab83e6368f46306c5de054cdd19b411945c328b6051f7",
+  "bdc_runtime_modified": false,
+  "gate_closure_authorized": false
+}

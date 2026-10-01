@@ -128,6 +128,7 @@ final class Elementor_Migration_Journal_Store {
 			$post_id,
 			self::META_KEY
 		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query was prepared immediately above with fixed WordPress table identifier.
 		$event_id = (int) $wpdb->get_var( $sql );
 		if ( $event_id <= 0 ) {
 			return new \WP_Error( 'bdc_kb_journal_store_no_events', 'Nenhum evento durável encontrado para o post.' );

@@ -44,6 +44,7 @@ final class Block_Migration_Journal_Store {
 		if($post_id<=0)return new \WP_Error('bdc_kb_block_store_post','post_id inválido.');
 		global $wpdb;if(!is_object($wpdb)||!isset($wpdb->postmeta))return new \WP_Error('bdc_kb_block_store_db','DB indisponível.');
 		$sql=$wpdb->prepare("SELECT meta_id FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = %s ORDER BY meta_id DESC LIMIT 1",$post_id,self::META_KEY);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query was prepared immediately above with fixed WordPress table identifier.
 		$id=(int)$wpdb->get_var($sql);if($id<=0)return new \WP_Error('bdc_kb_block_store_empty','Sem eventos.');return self::read_event($id);
 	}
 	private static function append_event(array $record,int $parent):array|\WP_Error{

@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 DEFAULT_ZIP = ROOT / "dist" / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
-EXPECTED_SHA256 = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
+EXPECTED_SHA256 = "a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2"
 OUTPUT = ROOT / "evidence" / "spec006-p650-p660-plugin-check-current.json"
 
 

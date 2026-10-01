@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "P-640",
+  "phase": "MODULAR_RUNTIME_CLOSEOUT",
+  "status": "CLOSED_WITH_ACCEPTED_TOOLING_EXCEPTION",
+  "date": "2026-10-01",
+  "artifact": {"name":"base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip","sha256":"a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2"},
+  "proven": {
+    "native_modular_runtime": true,
+    "core_loader": true,
+    "module_registry": true,
+    "engineering_loader_absent_in_distribution": true,
+    "search_module": true,
+    "public_experience_module": true,
+    "word_cloud_module": true,
+    "environmental_reconciliation": true
+  },
+  "tooling_exception": {
+    "phpcs_wpcs": "NOT_RUN_ACCEPTED_TOOLING_EXCEPTION",
+    "phpunit": "NOT_RUN_ACCEPTED_TOOLING_EXCEPTION",
+    "evidence": "evidence/spec006-accepted-tooling-exception-20261001.json"
+  },
+  "ledger_effect": {
+    "PROD-003": "PARTIAL",
+    "PROD-005": "ELIGIBLE_FOR_IMPROVED_VERIFIED"
+  },
+  "premium_done": false,
+  "cutover_authorized": false,
+  "retirement_authorized": false
+}

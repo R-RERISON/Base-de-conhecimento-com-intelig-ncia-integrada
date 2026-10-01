@@ -128,3 +128,52 @@ Novo candidato:
 - PHP lint 83/83 PASS;
 - 15/15 blobs de runtime alterados (não-bootstrap) correspondem ao source GitHub;
 - exige nova execução ambiental/Plugin Check/rollback antes de qualquer closeout.
+
+
+## Final disposition — p650.4 / runner 1.0.5 / 2026-10-01
+
+Environmental evidence:
+- exact artifact SHA-256: `a76addbace25a8b00d8a0646ba7034952dfa941c3636e21c5162644a5b4636c2`;
+- installed identity: 102/102 PASS;
+- native modular runtime: PASS;
+- rollback p650.4 -> p650.3 -> p650.4: PASS;
+- data preservation: PASS for post_content, BDC metadata, _elementor_data, Search Projection rows and Search Projection state option;
+- final p650.4 identity: PASS.
+
+Official Plugin Check 2.1.0 static result:
+- 29/29 static checks completed;
+- errors: 2;
+- warnings: 84;
+- official runtime sandbox: ENVIRONMENT_LIMITATION, not represented as PASS;
+- native runtime validation: PASS;
+- runtime cleanup: PASS.
+
+Error disposition:
+1. `WordPress.DB.PreparedSQL.NotPrepared` in `Search_Projection_Repository::schema_exists()`
+   - query is built immediately with `$wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) )`;
+   - `$table` derives only from the WordPress prefix + fixed plugin suffix;
+   - the finding results from static flow tracking across the prepared SQL variable;
+   - disposition: FALSE_POSITIVE_PREPARED_QUERY / non-blocking.
+
+2. `plugin_updater_detected`
+   - caused by the intentional `Update URI` header;
+   - package is privately distributed and is not a WordPress.org submission;
+   - disposition: PRIVATE_DISTRIBUTION_WAIVER / non-blocking.
+
+Warning groups:
+- NonceVerification.Recommended=37: read-only request consumers or already-verified mutation flows;
+- DirectDatabaseQuery.DirectQuery=14 and NoCaching=14: plugin-owned journals/rebuildable projection/admin operations;
+- NonceVerification.Missing=12: Word Cloud handlers call the shared `guard()`, which executes `check_admin_referer()` before the request values are read;
+- error_log=5: critical fail-safe diagnostics without secret payload;
+- unexpected_markdown_file=1: `UPGRADE.md` is intentionally required by the P650 distribution contract;
+- InputNotSanitized=1: Review Store sanitizes `target_state` with `sanitize_key()` and `note` with `sanitize_textarea_field()` before validation/persistence.
+
+Final classification:
+- unresolved blocking errors = 0;
+- unresolved high/critical = 0;
+- global ignore = false;
+- PCP Ignore = false;
+- new runtime package required = false;
+- p650.4 remains frozen.
+
+P660 still requires the current-tree local WPCS/PHPCS gate before formal closeout.

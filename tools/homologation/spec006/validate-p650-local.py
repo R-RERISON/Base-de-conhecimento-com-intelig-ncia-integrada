@@ -22,9 +22,9 @@ P640_EVIDENCE = ROOT / "evidence" / "spec006-p640-local-validation-current.json"
 P650_EVIDENCE = ROOT / "evidence" / "spec006-p650-local-package-validation-current.json"
 P650_BUILDER = ROOT / "tools" / "homologation" / "spec006" / "build-p650-production.py"
 P650_STATIC = ROOT / "tests" / "unit" / "spec006-p650-package-contract.php"
-PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip"
+PACKAGE = DIST / "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.4.zip"
 PACKAGE_REPORT = DIST / "p650-package-validation.json"
-EXPECTED_PACKAGE_SHA256 = "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231"
+EXPECTED_PACKAGE_SHA256 = "0e4860ed0be34033c63358c9f0798d7c9564420dd738fc66d587180fbf14cf77"
 
 
 def sha256(path: pathlib.Path) -> str:

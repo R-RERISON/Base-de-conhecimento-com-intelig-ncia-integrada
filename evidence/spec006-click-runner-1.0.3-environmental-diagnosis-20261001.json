@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "SPEC-006-FINAL-WORDPRESS-GATES",
+  "phase": "RUNNER_1_0_3_ENVIRONMENTAL_DIAGNOSIS",
+  "status": "FAIL_CONTROLLED_UPSTREAM_RUNTIME_SANDBOX",
+  "date": "2026-10-01",
+  "source": "human_uploaded_runner_json",
+  "artifact": {
+    "name": "base-conhecimento-inteligencia-integrada-0.6.0-dev-p650.3.zip",
+    "sha256": "985091a289f11c0ae449e6f93e2f4090ddd3790762df42cff4a8a97fc775c231",
+    "installed_identity": "PASS",
+    "runtime_modular": "PASS"
+  },
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.10",
+    "database": "12.2.2",
+    "multisite": false,
+    "plugin_check": "2.1.0"
+  },
+  "plugin_check_runtime_setup": {
+    "http_status": 200,
+    "body_length": 0,
+    "can_set_up": true,
+    "is_set_up": true,
+    "temporary_tables_actual": 12,
+    "runner_1_0_3_expected_tables": 13,
+    "false_required_custom_table": "wp_pc_snippets",
+    "temporary_active_plugins_option_exists": true,
+    "temporary_active_plugins_count": 0,
+    "target_plugin_present": false,
+    "plugin_check_present": false,
+    "object_cache_exists": false,
+    "plugin_check_dropin_active": false,
+    "disposition": "UPSTREAM_SETUP_ABORTED_BEFORE_ACTIVE_PLUGINS_FINALIZATION"
+  },
+  "cleanup": {
+    "pass": true,
+    "temporary_tables_after": 0,
+    "object_cache_after": false,
+    "runtime_is_set_up_after": false
+  },
+  "runner_findings": {
+    "custom_table_false_requirement": true,
+    "stale_runner_version_in_persisted_report": true,
+    "rollback_fingerprint_missing_elementor_and_search_projection": true
+  },
+  "decision": {
+    "do_not_force_runtime_sandbox_recovery": true,
+    "official_plugin_check_static_fallback": true,
+    "native_runtime_evidence_remains_separate": true,
+    "official_runtime_plugin_check_status": "ENVIRONMENT_LIMITATION",
+    "upstream_reference": "WordPress/plugin-check#1127"
+  },
+  "gate_closure_authorized": false,
+  "next_action": "Use runner 1.0.4: official static Plugin Check fallback, native runtime evidence, strengthened rollback fingerprints."
+}

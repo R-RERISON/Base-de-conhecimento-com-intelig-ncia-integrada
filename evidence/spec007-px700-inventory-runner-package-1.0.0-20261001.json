@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-700",
+  "phase": "ENVIRONMENTAL_INVENTORY_RUNNER_PACKAGE",
+  "status": "PASS_PACKAGE_READY",
+  "date": "2026-10-01",
+  "artifact": {
+    "name": "bdc-spec007-px700-inventory-runner-1.0.0.zip",
+    "sha256": "1cea9cab8e846883b8b476c11166061a740b48e8851b59cf752e2c1189a87fa9",
+    "bytes": 7758,
+    "files": 2,
+    "zip_integrity": true,
+    "php_lint": "1/1 PASS"
+  },
+  "source_snapshot": {
+    "php_sha256": "4322e958d80870f09a687f5d113f3a8abe65b775017da356a25bd4dde29595c0",
+    "readme_sha256": "acef74b9ecf5695b3066f9552354868f580dfb97a73aac39481c06371545f5db"
+  },
+  "static_contract": {
+    "manage_options": true,
+    "nonce": true,
+    "post_only": true,
+    "no_nopriv_ajax": true,
+    "no_post_write": true,
+    "no_option_write": true,
+    "no_theme_change": true,
+    "no_plugin_change": true,
+    "no_shortcode_execution": true,
+    "no_the_content_apply": true,
+    "no_external_network": true,
+    "no_callback_removal": true
+  },
+  "collects": [
+    "WordPress/PHP/database/BDC environment",
+    "front page ownership",
+    "theme and Custom CSS fingerprint/signals",
+    "GRE/ASI/GAC/WP Unified Indexer/Entra/Code Snippets inventory",
+    "Home snippet metadata/hash/behavior signals without code export",
+    "target shortcode callback ownership",
+    "public hook callback ownership",
+    "published corpus source-kind counts/sample IDs",
+    "Helpful Tips shape/coverage without values",
+    "BDC Public Experience Preview structural readiness",
+    "drift against historical P580 baseline",
+    "Master Ledger review inputs"
+  ],
+  "invariants": {
+    "read_only": true,
+    "production_bdc_modified": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false
+  },
+  "next_action": "Install the companion in homologation WordPress, run PX-700, return the downloaded JSON."
+}

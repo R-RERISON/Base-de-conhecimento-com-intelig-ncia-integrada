@@ -125,3 +125,39 @@ Next exact action:
 5. click Executar inventário e baixar JSON;
 6. return the JSON for PX-700 review;
 7. do not change Home/Astra/snippets/GRE/ASI before review.
+
+
+## PX-700 environmental run — 2026-10-02
+
+Uploaded artifact:
+- `spec007-px700-environmental-inventory-20261002-175054.json`;
+- SHA-256 `587ee8296515a0d62b54ae869ca676cf6a8c7b794000c45896ba801603a7717c`;
+- runner status `PASS_DISCOVERY`.
+
+Automated result:
+- `TECHNICAL_PASS / HUMAN_SMOKE_PENDING`.
+
+Stable historical elements:
+- WordPress 6.9.4 unchanged;
+- DB 12.2.2 unchanged;
+- Home snippet ID 9 exact SHA unchanged;
+- corpus remains 606;
+- GRE/GAC/WPUI/Entra ownership remains present.
+
+Material current facts:
+- PHP 8.5.11;
+- Astra 4.14.0;
+- Additional CSS 36,804 bytes with BDC/ASI/GRE/Elementor/single-post/Astra signals;
+- ASI target plugin not detected;
+- `asi_search_form` not registered;
+- Home remains page 41395 / Elementor Header Footer with bc_home_config + bc_ultimas + bc_populares;
+- BDC preview structural PASS;
+- Article pipeline still contains GAC -> GRE Tips -> WPUI anchors -> BDC anchors -> GRE Rail.
+
+Manual smoke still required before formal PX-700 closeout:
+1. Home preview visual/navigation;
+2. representative Reader previews;
+3. authenticated Entra profile menu.
+
+PX-710 contract preparation is allowed.
+PX-710 runtime implementation remains blocked until PX-700 human smoke is accepted.

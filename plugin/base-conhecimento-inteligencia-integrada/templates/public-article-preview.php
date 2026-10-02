@@ -27,6 +27,7 @@ if ( is_wp_error( $model ) ) {
 </head>
 <body <?php body_class( 'bdc-reader-source-' . sanitize_html_class( (string) $model['source_kind'] ) ); ?>>
 <?php wp_body_open(); ?>
+<?php Public_Experience::render_skip_link(); ?>
 <?php
 $content_html = '';
 while ( have_posts() ) {
@@ -35,11 +36,11 @@ while ( have_posts() ) {
 	break;
 }
 ?>
-<div class="bdc-public">
+<div class="bdc-public" data-bdc-public-shell="<?php echo esc_attr( Public_Experience::SHELL_VERSION ); ?>">
 	<?php Public_Experience::render_header(); ?>
 	<?php Public_Experience::render_preview_banner( 'UX-005 / reader-premium v6 · ' . (string) $model['source_kind'] ); ?>
 
-	<main class="bdc-public-main bdc-reader">
+	<main id="bdc-public-main" class="bdc-public-main bdc-reader" tabindex="-1">
 		<nav class="bdc-reader-breadcrumb" aria-label="Caminho do artigo"><a href="<?php echo esc_url( Public_Experience::home_preview_url() ); ?>">Base</a><span>/</span><?php if ( '' !== (string) $model['category'] ) : ?><span><?php echo esc_html( (string) $model['category'] ); ?></span><span>/</span><?php endif; ?><strong><?php echo esc_html( (string) $model['title'] ); ?></strong></nav>
 
 		<header class="bdc-reader-heading">

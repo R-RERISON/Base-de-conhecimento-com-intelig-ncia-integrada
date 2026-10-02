@@ -4,14 +4,14 @@
 
 - [x] PX700-00 activate SPEC-007 / branch / inherited foundation.
 - [x] PX700-01 contract — `px700-environmental-inventory-contract-v1.md`.
-- [ ] PX700-02 current WordPress/theme/front-page inventory.
-- [ ] PX700-03 external plugin ownership refresh.
-- [ ] PX700-04 Home Code Snippet fingerprint/behavior refresh.
-- [ ] PX700-05 Astra Additional CSS fingerprint/dependency refresh.
-- [ ] PX700-06 public hook/article pipeline refresh.
-- [ ] PX700-07 corpus/source-kind + Helpful Tips refresh.
-- [ ] PX700-08 BDC preview structural/manual acceptance.
-- [ ] PX700-09 Ledger input review.
+- [x] PX700-02 current WordPress/theme/front-page inventory.
+- [x] PX700-03 external plugin ownership refresh.
+- [x] PX700-04 Home Code Snippet fingerprint/behavior refresh.
+- [x] PX700-05 Astra Additional CSS fingerprint/dependency refresh.
+- [x] PX700-06 public hook/article pipeline refresh.
+- [x] PX700-07 corpus/source-kind + Helpful Tips refresh.
+- [ ] PX700-08 BDC preview manual smoke — structural PASS; 3 human checks pending.
+- [x] PX700-09 Ledger input review — no promotions; dependencies confirmed.
 - [ ] PX700-10 close PX-700.
 
 ## PX-710 Information Architecture
@@ -47,3 +47,7 @@ PX-700 click-to-run runner prepared — 2026-10-01:
 - read-only static contract 12/12 PASS;
 - BDC p650.4 is not modified by this companion;
 - [ ] execute runner in homologation WordPress and return JSON.
+
+
+PX-700 automated state: `TECHNICAL_PASS / HUMAN_SMOKE_PENDING`.
+Evidence review: `evidence/spec007-px700-environmental-inventory-review-20261002.md`.

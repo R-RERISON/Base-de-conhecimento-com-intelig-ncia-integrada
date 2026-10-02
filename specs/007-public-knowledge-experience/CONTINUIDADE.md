@@ -230,3 +230,55 @@ Next:
 4. smoke Home/Reader/Entra/keyboard shell;
 5. close PX-720;
 6. open PX-730 Live Search.
+
+
+## PX-720 package candidate — 2026-10-02
+
+Source hardening:
+- commit `11017d10ef326bfaf80fdef46a091c56446c3dcd`;
+- skip-link styling constrained to `body.bdc-public-preview`;
+- shell body class normalized to `bdc-public-shell-v1-0-0`;
+- deterministic local builder: `tools/homologation/spec007/build-px720.py`;
+- package contract: `tests/unit/spec007-px720-package-contract.php`.
+
+Published homologation candidate:
+- artifact branch: `spec007-px720-homologation-artifact`;
+- artifact commit: `044f106869df0acc81b46eb454cfea7229dc88e5`;
+- ZIP: `dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-px720.1.zip`;
+- SHA-256: `360d4d6cfaf78ffb1b78238ad34fb96b65154a400397554fd9c523006bc28fd9`;
+- size: 762,408 bytes;
+- 102 files distributed;
+- 48 engineering files excluded by the inherited P-650 pruning contract;
+- deterministic double-build PASS;
+- single-root / required files / forbidden engineering paths PASS;
+- PX-720 shell static-equivalent checks PASS.
+
+Execution note:
+- PHP lint of the exact published ZIP is still PENDING.
+- The current local execution sandbox cannot resolve external GitHub DNS, so the exact artifact cannot be downloaded here for `php -l`.
+- A remote CI pipeline was deliberately NOT introduced because the accepted packaging contract is local-only.
+
+Evidence:
+- `evidence/spec007-px720-package-ready-20261002.json`;
+- artifact-side `dist/px720-package-validation.json`;
+- artifact-side manifest next to the ZIP.
+
+PX-720 status:
+- `STATIC_STRUCTURAL_PASS / PHP_LINT_PENDING / WORDPRESS_SMOKE_PENDING`.
+
+Next exact action:
+1. run `python tools/homologation/spec007/build-px720.py` from a local checkout with PHP available, or lint the exact published ZIP;
+2. require PHP lint PASS for the exact candidate;
+3. install that same `px720.1` candidate in homologation;
+4. smoke Home preview visual/navigation;
+5. smoke representative Article Readers;
+6. smoke authenticated Entra profile/menu;
+7. smoke keyboard shell: skip link, Tab order, Ctrl/Cmd+K, Escape and mobile quick-nav;
+8. if all PASS, close PX-720;
+9. only then open PX-730 Live Search.
+
+Still not authorized:
+- public cutover;
+- Home/Astra/snippet mutation;
+- Search ranker/schema change;
+- ASI/GRE/GAC/WPUI/Entra retirement or ownership change.

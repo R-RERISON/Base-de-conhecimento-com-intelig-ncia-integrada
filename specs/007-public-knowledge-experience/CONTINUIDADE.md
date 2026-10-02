@@ -161,3 +161,72 @@ Manual smoke still required before formal PX-700 closeout:
 
 PX-710 contract preparation is allowed.
 PX-710 runtime implementation remains blocked until PX-700 human smoke is accepted.
+
+
+## PX-700 FINAL — 2026-10-02
+
+Product Owner confirmed the 3 required smoke checks:
+- Home preview PASS;
+- representative Article Reader PASS;
+- authenticated Entra profile PASS.
+
+PX-700 status: PASS.
+
+Evidence:
+- `evidence/spec007-px700-pass-20261002.json`;
+- `evidence/spec007-px700-human-smoke-pass-20261002.json`;
+- `specs/007-public-knowledge-experience/px700-closeout-20261002.md`.
+
+## PX-710 FINAL — 2026-10-02
+
+Information Architecture & Ownership contract closed PASS.
+
+Frozen:
+- BDC owns public candidate shell/UI/read models;
+- WordPress owns request/session/canonical content/the_content;
+- Entra Gateway owns auth protocol;
+- GAC/WPUI remain external pipeline dependencies;
+- GRE duplicate renderers may be suppressed only in candidate Reader requests;
+- Search remains canonical Public_Search_Facade;
+- popular compatibility semantic remains comment_count DESC;
+- Helpful Tips canonical store remains _bdc_es_helpful_tips;
+- environmental dependencies ENV-001..004 remain explicit;
+- no cutover/retirement.
+
+Closeout:
+- `px710-closeout-20261002.md`.
+
+## PX-720 ACTIVE — Public Shell
+
+Contract:
+- `px720-public-shell-contract-v1.md`.
+
+Implemented first slice:
+- `Public_Experience::SHELL_VERSION = public-shell-v1.0.0`;
+- five quick links centralized in `Public_Experience::quick_links()`;
+- Home/Reader candidate roots expose shell version;
+- consistent `#bdc-public-main` landmark;
+- skip-to-content link on Home/Reader;
+- quick-nav ID + toggle `aria-controls`;
+- shell version localized to public JS;
+- shell-specific body class;
+- scoped skip-link styling;
+- static contract `tests/unit/spec007-px720-public-shell-contract.php`.
+
+Not changed:
+- page 41395;
+- page_on_front;
+- Home snippet;
+- Astra Additional CSS;
+- Search ranker/schema;
+- editorial content/storage;
+- GRE/GAC/WPUI/Entra state;
+- public cutover.
+
+Next:
+1. build PX-720 candidate package;
+2. run static/lint package checks;
+3. install in homologation;
+4. smoke Home/Reader/Entra/keyboard shell;
+5. close PX-720;
+6. open PX-730 Live Search.

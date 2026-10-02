@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-720",
+  "phase": "PACKAGE_BUILD",
+  "recorded_at": "2026-10-02",
+  "source": {
+    "branch": "spec007-public-knowledge-experience",
+    "commit": "11017d10ef326bfaf80fdef46a091c56446c3dcd",
+    "plugin_tree_sha": "8606e3d18e647661c0581913edf1de7399d358b3"
+  },
+  "artifact": {
+    "branch": "spec007-px720-homologation-artifact",
+    "commit": "044f106869df0acc81b46eb454cfea7229dc88e5",
+    "file": "dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-px720.1.zip",
+    "sha256": "360d4d6cfaf78ffb1b78238ad34fb96b65154a400397554fd9c523006bc28fd9",
+    "bytes": 762408,
+    "manifest": "dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-px720.1.manifest.json",
+    "validation": "dist/px720-package-validation.json"
+  },
+  "results": {
+    "deterministic_double_build": "PASS",
+    "single_root": "PASS",
+    "distributed_files": 102,
+    "excluded_engineering_files": 48,
+    "missing_distribution_files": 0,
+    "engineering_files_present": 0,
+    "bootstrap_forbidden_tokens": 0,
+    "shell_version": "PASS",
+    "exact_quick_links": "PASS",
+    "skip_link_scope": "PASS",
+    "ctrl_cmd_k": "PASS",
+    "escape_closes_quicknav": "PASS",
+    "php_lint": "PENDING_LOCAL_EXECUTION"
+  },
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "rationale": "The connector build completed and the exact ZIP was published. The current local execution environment cannot resolve external GitHub DNS, so the exact artifact cannot be downloaded here for php -l without adding a remote CI pipeline, which is explicitly outside the accepted packaging contract.",
+  "invariants": {
+    "source_content_mutation": false,
+    "editorial_mutation": false,
+    "theme_customizer_mutation": false,
+    "page_on_front_mutation": false,
+    "search_ranker_schema_mutation": false,
+    "public_cutover": false,
+    "retirement": false
+  },
+  "next": "Run tools/homologation/spec007/build-px720.py in a local checkout with PHP available (or lint the published exact ZIP), then install that same candidate in homologation and execute the PX-720 Home/Reader/Entra/keyboard smoke."
+}

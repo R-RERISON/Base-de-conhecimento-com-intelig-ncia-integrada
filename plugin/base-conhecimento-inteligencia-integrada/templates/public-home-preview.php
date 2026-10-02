@@ -28,11 +28,12 @@ $cloud = Public_Home_Read_Model::preview_word_cloud();
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
-<div class="bdc-public">
+<?php Public_Experience::render_skip_link(); ?>
+<div class="bdc-public" data-bdc-public-shell="<?php echo esc_attr( Public_Experience::SHELL_VERSION ); ?>">
 	<?php Public_Experience::render_header(); ?>
 	<?php Public_Experience::render_preview_banner( 'UX-004 / Word Cloud BDC v1.1' ); ?>
 
-	<main class="bdc-public-main bdc-home">
+	<main id="bdc-public-main" class="bdc-public-main bdc-home" tabindex="-1">
 		<section class="bdc-home-search-stage" aria-labelledby="bdc-home-title">
 			<p class="bdc-home-overline">BASE DE CONHECIMENTO</p>
 			<h1 id="bdc-home-title">O que você precisa encontrar?</h1>

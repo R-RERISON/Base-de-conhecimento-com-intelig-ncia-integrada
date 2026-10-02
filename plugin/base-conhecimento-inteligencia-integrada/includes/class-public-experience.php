@@ -137,7 +137,7 @@ final class Public_Experience {
 		if ( null === $kind ) { return $classes; }
 		$classes[] = 'bdc-public-preview';
 		$classes[] = 'bdc-public-preview--' . $kind;
-		$classes[] = 'bdc-public-shell-' . sanitize_html_class( str_replace( '.', '-', self::SHELL_VERSION ) );
+		$classes[] = 'bdc-' . sanitize_html_class( str_replace( '.', '-', self::SHELL_VERSION ) );
 		return $classes;
 	}
 

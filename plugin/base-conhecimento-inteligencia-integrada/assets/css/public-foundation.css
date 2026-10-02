@@ -14,4 +14,4 @@
 @media(prefers-reduced-motion:reduce){.bdc-home-live-panel.is-loading::before,.bdc-global-search-panel.is-loading::before{animation:none;width:100%;opacity:.55}.bdc-live-result,.bdc-live-result>.dashicons{transition:none}}
 
 /* PX-720 public shell accessibility baseline. */
-.bdc-public-skip-link{position:fixed;z-index:99999;top:8px;left:8px;transform:translateY(-150%);padding:10px 14px;border-radius:8px;background:#fff;color:#0b1f4d;font:700 13px/1.2 Inter,"Segoe UI",Roboto,Arial,sans-serif;text-decoration:none;box-shadow:0 8px 24px rgba(11,31,77,.16)}.bdc-public-skip-link:focus{transform:translateY(0);outline:0;box-shadow:var(--bdc-focus),0 8px 24px rgba(11,31,77,.16)}
+body.bdc-public-preview .bdc-public-skip-link{position:fixed;z-index:99999;top:8px;left:8px;transform:translateY(-150%);padding:10px 14px;border-radius:8px;background:#fff;color:#0b1f4d;font:700 13px/1.2 Inter,"Segoe UI",Roboto,Arial,sans-serif;text-decoration:none;box-shadow:0 8px 24px rgba(11,31,77,.16)}body.bdc-public-preview .bdc-public-skip-link:focus{transform:translateY(0);outline:0;box-shadow:0 0 0 3px rgba(22,119,255,.24),0 8px 24px rgba(11,31,77,.16)}

@@ -47,7 +47,7 @@ $checks = array(
 
 	'body_shell_class' =>
 		is_string( $source['public_experience'] )
-		&& str_contains( $source['public_experience'], "'bdc-public-shell-' . sanitize_html_class" ),
+		&& str_contains( $source['public_experience'], "'bdc-' . sanitize_html_class" ),
 
 	'home_skip_link' =>
 		is_string( $source['home'] )
@@ -63,8 +63,8 @@ $checks = array(
 
 	'skip_link_css_scoped' =>
 		is_string( $source['foundation_css'] )
-		&& str_contains( $source['foundation_css'], '.bdc-public-skip-link' )
-		&& str_contains( $source['foundation_css'], '.bdc-public-skip-link:focus' ),
+		&& str_contains( $source['foundation_css'], 'body.bdc-public-preview .bdc-public-skip-link' )
+		&& str_contains( $source['foundation_css'], 'body.bdc-public-preview .bdc-public-skip-link:focus' ),
 
 	'preview_gate_preserved' =>
 		is_string( $source['public_experience'] )

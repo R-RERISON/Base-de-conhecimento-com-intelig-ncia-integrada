@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-700",
+  "phase": "HUMAN_SMOKE",
+  "status": "PASS",
+  "date": "2026-10-02",
+  "decision_source": "PRODUCT_OWNER_EXPLICIT_ACCEPTANCE",
+  "checks": {
+    "home_preview_layout_navigation": true,
+    "article_reader_representative_sources": true,
+    "entra_profile_menu_authenticated": true
+  },
+  "cutover_authorized": false,
+  "retirement_authorized": false
+}

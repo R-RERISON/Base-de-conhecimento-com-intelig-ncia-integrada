@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-720",
+  "phase": "PACKAGE_BUILD",
+  "status": "PACKAGE_READY_FOR_PHP_LINT",
+  "execution_mode": "CONNECTOR_DETERMINISTIC_BUILD",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px720.1",
+  "shell_version": "public-shell-v1.0.0",
+  "zip": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px720.1.zip",
+  "zip_sha256": "360d4d6cfaf78ffb1b78238ad34fb96b65154a400397554fd9c523006bc28fd9",
+  "manifest_sha256": "d5a147f9e37b281ea783c52f307d83a32d56f8786204da69ff24bda878ab223a",
+  "deterministic_equal": true,
+  "inspection": {
+    "single_root": true,
+    "missing_required_distribution_files": [],
+    "engineering_files_present": [],
+    "forbidden_paths": [],
+    "bootstrap_forbidden_tokens": [],
+    "file_count": 102,
+    "shell_version": true,
+    "quick_links_exact": true,
+    "skip_link_scoped": true,
+    "ctrl_cmd_k": true,
+    "escape_closes_quicknav": true,
+    "pass": true
+  },
+  "pruning": {
+    "source_files": 150,
+    "distributed_files": 102,
+    "excluded_files": 48,
+    "engineering_files_declared": 46,
+    "engineering_flags_declared": 37
+  },
+  "checks": {
+    "zip_integrity_structural": "PASS",
+    "p650_pruning_equivalent": "PASS",
+    "px720_static_equivalent": "PASS",
+    "php_lint": "PENDING_LOCAL_EXECUTION"
+  },
+  "invariants": {
+    "source_checkout_modified": false,
+    "content_mutation": false,
+    "theme_mutation": false,
+    "page_on_front_mutation": false,
+    "ranker_schema_mutation": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false
+  },
+  "next_gate": "PX720_LOCAL_PHP_LINT_THEN_WORDPRESS_CANDIDATE_SMOKE"
+}

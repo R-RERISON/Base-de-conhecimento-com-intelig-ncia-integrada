@@ -1,0 +1,527 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-720",
+  "source_branch": "spec007-public-knowledge-experience",
+  "source_commit": "11017d10ef326bfaf80fdef46a091c56446c3dcd",
+  "plugin_tree_sha": "8606e3d18e647661c0581913edf1de7399d358b3",
+  "purpose": "SPEC-007 PX-720 Public Shell homologation package",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px720.1",
+  "shell_version": "public-shell-v1.0.0",
+  "root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "360d4d6cfaf78ffb1b78238ad34fb96b65154a400397554fd9c523006bc28fd9",
+  "file_count": 102,
+  "files": [
+    {
+      "path": "base-conhecimento-inteligencia-integrada/assets/css/admin.css",
+      "bytes": 6529,
+      "sha256": "d6be9da7a09c006cfbebcc79b8c24103ee198955eed4f7c17dcc688ee98c072c"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/assets/css/history.css",
+      "bytes": 1706,
+      "sha256": "581696215211b273618b985ae18850055586bf5e221a353fff0617d9b81a3020"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/assets/css/public-article.css",
+      "bytes": 10773,
+      "sha256": "10e7f27aa9229a5fab739067efecbec6c9bd2dd0ed665755c4d45c88b30972f5"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/assets/css/public-foundation.css",
+      "bytes": 6572,
+      "sha256": "7a37cf52443e18c321e1d036685c55ae423f4ca1c575d9ddf946805982e06864"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/assets/css/public-header.css",
+      "bytes": 8791,
+      "sha256": "6da3218493cfdcd1fc218a1efbd1384a2fa369d6bbd084b13ac675752c3250f0"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/assets/css/public-home.css",
+      "bytes": 7315,
+      "sha256": "806a243b29ec7f98fd4391597807b6b0d3b73829179b0dbc86fa04ca0053c900"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/assets/css/visual-foundation.css",
+      "bytes": 27373,
+      "sha256": "c1589eaaf0cf4ee4e54a0d92e9b54eefe2a5c545f0fc7d59a633fb5396bbfa8c"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/assets/css/workspace.css",
+      "bytes": 6212,
+      "sha256": "59524bd09bffdeececcf9190de551af5af0a516c46bbd70f800fb183feeaa995"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/assets/js/public-search.js",
+      "bytes": 9498,
+      "sha256": "ca8ea16fd95452be8c806475c2d3835b8dcf85c26f9e144919e3e1c1ced01f51"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/assets/js/search-section-g590.js",
+      "bytes": 4177,
+      "sha256": "1dc17ba300a0a38d30fa6c03ed09b24f8db093f0318040172391f064d755089a"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/assets/js/workspace.js",
+      "bytes": 1009,
+      "sha256": "1303ab67da456ac13ee3491e0843e3f6da9900ca86e7563d67639779e4de0f91"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/base-conhecimento-inteligencia-integrada.php",
+      "bytes": 2165,
+      "sha256": "ba10ac58208ae73a460645affde429dedfc0e30ed9e0ec0ebdab3d1de7e528c3"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/CHANGELOG.md",
+      "bytes": 517,
+      "sha256": "da1d41bbe6da2d0b813ac3fa8de2a769a9ee717f6b8393407b8a775082c1277e"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/CONTRIBUTING.md",
+      "bytes": 638,
+      "sha256": "3de6a4c93170b905736b738285b299c40f6b8a64b2679e886579c0d53c8d8cc4"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-admin-page.php",
+      "bytes": 35871,
+      "sha256": "2c593f8b9fd87fab14f9e951da26bc713b7eb97b676d8fa17a595e98508831df"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-block-migration-batch-plan.php",
+      "bytes": 4668,
+      "sha256": "0edac5a8821e7f9fb97e2693a6929dbbbe9cb6c9b8bfad1372cd7d08e3c496c1"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-block-migration-dry-run.php",
+      "bytes": 5362,
+      "sha256": "56aba9d368129ab888626379bfcf2aa800b231632af9eb75170ed41dd979c9b1"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-block-migration-journal-store.php",
+      "bytes": 8168,
+      "sha256": "a61ec19114f36a826bd8a9d501b066018a1cd0a0e4eb2c65c76741dc88680388"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-block-migration-journal.php",
+      "bytes": 12900,
+      "sha256": "9bc80a4340eb7ebc86f705190b5c2de9c0c63339e1258bf3e9ed9c1ba69d5840"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-block-migration-lock.php",
+      "bytes": 4254,
+      "sha256": "91bd5624b9f4b7d01cc5debc0b91af68566668685b635b801c8af4f63a9c6af7"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-block-migration-stale-source-guard.php",
+      "bytes": 2409,
+      "sha256": "22eb34822d4c0f6a38c9789fb0d0a8c7f1deab7ffb4670a571cad772edad07b1"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-block-projection-plan.php",
+      "bytes": 7452,
+      "sha256": "c6857867f4c4c0fad8ce2a34731ba7531d0bbeba8e1e5f83affb168870c6048e"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-canonical-json.php",
+      "bytes": 1382,
+      "sha256": "d581885224d6c2eaa4935a19bbb9537fdac2f38ef1b7bd12357241acbbbb630e"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-classification-admin.php",
+      "bytes": 11843,
+      "sha256": "c171b1b8b8e359b67e298c6e3accb0d1dd47d2181e8e49b152565317aa6bddd1"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-classification-contract.php",
+      "bytes": 2963,
+      "sha256": "86b6968198421db7222cddb4405dde56ada9f5ad9471164fe425cbbae10e68a4"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-classification-store.php",
+      "bytes": 9223,
+      "sha256": "f557e6c083ff05bd88b2dd3404744aa6da2928950492ce36dff3f6242932510e"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-content-extractor.php",
+      "bytes": 9910,
+      "sha256": "2b0ec3f14a6b958f48589a6f02bd31a28993e9b14833ba7410490919e45fadec"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-content-normalizer.php",
+      "bytes": 3062,
+      "sha256": "09214701ac66f6053375d3d2d5b2b88e0ce11ef3f1738724fa71bb22bbbfc657"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-content-source.php",
+      "bytes": 3325,
+      "sha256": "aa687ab5b9366c15c49652f9a3f20a73fa51ee2f15331afb3b9c7d6b11673051"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-core-block-editorial-parity.php",
+      "bytes": 4610,
+      "sha256": "6687a2adfbff327e774131b73fafe6d904f5b1655920fd7048566ed5085dce1e"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-core-block-lossless-serializer.php",
+      "bytes": 5049,
+      "sha256": "5cffecb2811daa3637d8f196a6e839fe8f518cf17feeee16bcb64a3842304bc4"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-core-runtime-loader.php",
+      "bytes": 2838,
+      "sha256": "016bef4d05101eda181ef02bf51ea328de858988ff23c0aea6ef19ba587d3553"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-coverage-read-model.php",
+      "bytes": 2317,
+      "sha256": "07dc14c0ab393de02636c9d684d69d4110732bccf26f083a9e62234762771c9f"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-elementor-adapter.php",
+      "bytes": 4539,
+      "sha256": "fe635368226e4053c071ce7995e6e7afda1ebdb1dae70777496645fce7bfdaab"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-elementor-canary-readiness.php",
+      "bytes": 4216,
+      "sha256": "e49a5ac89addb28ae7dfea8c7588a565a3c597567715748b7a67516517a26872"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-elementor-gateway.php",
+      "bytes": 4888,
+      "sha256": "b7677094eb51ade59b56010eb19eafd02aae577732460fba19e2e0d28747aab7"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-elementor-migration-batch-plan.php",
+      "bytes": 6831,
+      "sha256": "87fd8bb29140158e67784ac620532cafdf0db3f938d3cc79dead1661e19f461e"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-elementor-migration-dry-run.php",
+      "bytes": 6015,
+      "sha256": "d0af62e2f831c5ee13b1e449c6302caff25f9300319166c0f5dd2d6187d5a7b7"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-elementor-migration-journal-store.php",
+      "bytes": 11282,
+      "sha256": "0d616db4e1579aab15de1df203c25f14a7b0be58f68079bf1b19f49761ef80c0"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-elementor-migration-journal.php",
+      "bytes": 13127,
+      "sha256": "d341eac5da9f2aa92fc3f7027e13595fe776f3b869e26166b85695b45d9c6bbd"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-elementor-migration-lock.php",
+      "bytes": 5769,
+      "sha256": "a507e9d10a945b241f50691086e6f1df712ad4c2273ea07c30da1add0ac7a302"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-elementor-projection-plan.php",
+      "bytes": 12112,
+      "sha256": "bc43bf3b947389a5e0b44504da6ec670e24de3975996b018cd8d90eab782c2b4"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-elementor-stale-source-guard.php",
+      "bytes": 2695,
+      "sha256": "e71a789e4cf68d2f103e380fb71c3214f47947adf7224f6612607d81972399a7"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-gutenberg-adapter.php",
+      "bytes": 4683,
+      "sha256": "5cc0975030121a23755286a1e1e55c99f0d27d0af98de0d2728784d3db321a70"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-helpful-tips-store.php",
+      "bytes": 6818,
+      "sha256": "bc9b4abeb1eae07177163b349d9b61ee46eb2505025f50fbc83f7ed3d8d729f4"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-hierarchy-relationships.php",
+      "bytes": 19931,
+      "sha256": "5aa3480d09eba7c39d080a6a6e5819efbd61c578fe6dcbb18c2576bb629a5156"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-knowledge-details-admin.php",
+      "bytes": 10193,
+      "sha256": "1124ed0e60d9711f86fd11232a3354f3410fe01aab4b4d7f8b2226df6afc8ccd"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-knowledge-document.php",
+      "bytes": 10875,
+      "sha256": "486207770c3da1017275fd2e76e09ec56367d9c911d445340299af8fa0746039"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-knowledge-facts-contract.php",
+      "bytes": 3129,
+      "sha256": "9ea593cecac193b361e9d730e160283b9b0b4021cb2f30a172dd33f3c59b62bd"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-knowledge-facts-store.php",
+      "bytes": 5905,
+      "sha256": "2c14f55a34a4f658a0575cf7dc0e68eceacc81bcc073697103d110c2643dc6cf"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-legacy-html-adapter.php",
+      "bytes": 25809,
+      "sha256": "c5ded16342d84356ee0ddad0322732c875f03204a6ff3025e009632ff2102b1a"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-lexical-ranker.php",
+      "bytes": 5344,
+      "sha256": "47787ee0fcf6845c264fcc77b8ae0d5d5657e1e3f66e0d0939fe1940fecaad78"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-meta-contract.php",
+      "bytes": 2416,
+      "sha256": "5a30e81420a336945cac6569abb1ce85570ddd1f6e0ef1bd1e82bae5880212f7"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-migration-fidelity-source.php",
+      "bytes": 7705,
+      "sha256": "9727dcb311a1781c578bdb97763c8e370860d731a11de36262c0d54c15ca83dd"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-numbered-hierarchy-resolver.php",
+      "bytes": 9186,
+      "sha256": "ca91456f9b2cd78b2937d0d274bd071f3a72afdba5825dda439796822e0801cb"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-plugin.php",
+      "bytes": 1757,
+      "sha256": "5aaac7fc42c97410397459f3ae05c5383e247299b9fa73db30d7e0ae6209599f"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-post-activity-registry.php",
+      "bytes": 2241,
+      "sha256": "c60cd84aea61e6978adc1906f4a24e8d1259c0bbef52be8c8eabfd554fa85e45"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-post-core-blocks-activity.php",
+      "bytes": 10505,
+      "sha256": "77ddff56f376eb340422c60a68cb6bd0799b65c98a00528a7d7ca2bbe55e8c92"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-post-management-activities.php",
+      "bytes": 12587,
+      "sha256": "b3a3d0dbae7754193dbcd58b561eb33b7fcb508a4f6c885c5b2f0c9ff92e47f8"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-post-management-context.php",
+      "bytes": 4343,
+      "sha256": "f200762762bafaa14d03188147ed5f36f7af587c67317c25aa02449f06294c35"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-public-article-content.php",
+      "bytes": 3865,
+      "sha256": "cb7787c41d06a474f018384c2f71895d7b6e637867270ade8ed92d68e2f2f88a"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-public-article-read-model.php",
+      "bytes": 4334,
+      "sha256": "a6a91cdd9737f257a6fa84626b69d24e16d731bfcadbefef0883e4a84cf481e5"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-public-auth-bridge.php",
+      "bytes": 4278,
+      "sha256": "faac94cbb50716d18d919b3dee3dd25fe33410c0d0aaae15c39068e5b89ca18f"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-public-experience.php",
+      "bytes": 18419,
+      "sha256": "b64ac7ee38d5fd4771e737649edfc035c3fbc254fdad8b020f2e8de4259e21b9"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-public-home-read-model.php",
+      "bytes": 3789,
+      "sha256": "1daf3f0501c6092ab2dbad20e32d1e46edfa04baab409724afee9d76888a619c"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-public-navigation.php",
+      "bytes": 3509,
+      "sha256": "45e1b23c80f00ba1cb71d3a6255a814a2bbeaa8350aa392798fb3eecc83ba520"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-public-search-facade.php",
+      "bytes": 12424,
+      "sha256": "ba38e7920a277cc70c82b8cbe1ae1a3788e98cde8af91d013212ffc8d431c7c1"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-r260-contextual-anchor-resolver.php",
+      "bytes": 5948,
+      "sha256": "972689f9b69a5c3d43c5e7d8c4cad316c0eb4d9eeebdc17dda0e374feec69c2c"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-r260-structural-projector.php",
+      "bytes": 9841,
+      "sha256": "f44ecb41effbd84d7157ea7d0eb5b96fa5b3c66c108f386603b93886660995b4"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-review-admin.php",
+      "bytes": 14176,
+      "sha256": "25149701d150ac898422c703c84d120ee84fe699e95f5a497206dce4c25209cd"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-review-contract.php",
+      "bytes": 2618,
+      "sha256": "2e7a81d7ac680c954b997621bc6eab6f4af8e48a80c51d88ec844555eb032cf4"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-review-store.php",
+      "bytes": 9787,
+      "sha256": "64fa3e02a3a581a0443b7e5fc3f597562a6298e19c07eb36189785c588e491bf"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-runtime-module-registry.php",
+      "bytes": 5705,
+      "sha256": "645c2042126180c35f3f62314c8973691b68a277c14dec203c6bd12d9c766570"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-search-anchor-manager.php",
+      "bytes": 3926,
+      "sha256": "ccf854ca87d08691d3384739663653361da7effb963bd6fc2d1360f9fe027c03"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-search-document-builder.php",
+      "bytes": 11020,
+      "sha256": "406a0d0391a29151e0dd3e9fdb2f60aa24ecbf2c57cf433a52e8d2cf0838feba"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-search-lifecycle.php",
+      "bytes": 5496,
+      "sha256": "cf870d0faef0ebf861ffced494d410a185ea757e5ffde1338801e226043bc877"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-search-projection-repository.php",
+      "bytes": 19118,
+      "sha256": "c36594aebfab4b4fe33a09268fd1d1ea5ed11cd2da4f4812c60d34f7813c8d69"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-search-query-normalizer.php",
+      "bytes": 3842,
+      "sha256": "030bd0d4d50391817dcb7e82181636dacc8bee2b1fac443d69cb43119b37440c"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-search-rebuild-service.php",
+      "bytes": 10175,
+      "sha256": "8370623ad56d7cfac6b72bef45b44da56bf7b672693976d4698e1f61f63967b4"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-search-section-projector.php",
+      "bytes": 8448,
+      "sha256": "351e369f4c3e0ae7b7a670a3818ec0f952b68657d95dc73568630025ff5b4baf"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-search-section-ranker.php",
+      "bytes": 4016,
+      "sha256": "dbcc6f5735aaf4162fc9810f1c5004a2fa668c3ffb11bb9909cad980aec3d7c3"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-search-section-service.php",
+      "bytes": 3201,
+      "sha256": "4f214fe33e58e06f02b3ff50f7a07da1bd26f5a675c81506988771a6975b17f5"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-search-service.php",
+      "bytes": 10948,
+      "sha256": "8308b426105be02fc4fe3ac097f7e34c4f4c7d0b56c1ee522452d96b5c3904ce"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-semantic-dom-expectation.php",
+      "bytes": 13872,
+      "sha256": "cbce3c18f35772a966eab1adc3bc1ed88b8b1c142521e201776fb3ee025153ec"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-semantic-structure.php",
+      "bytes": 12209,
+      "sha256": "5c8dfe0c683b2d8083146caf27cb2e22a85c529a3d3e11f092fd05a9c41ec6c4"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-shortcode-inspector.php",
+      "bytes": 3820,
+      "sha256": "cd93952ec3e311940d0f0704b237a44554405c401b1d23e9c40ba6968b2bba36"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-summary-store.php",
+      "bytes": 7038,
+      "sha256": "fa983888891fd020a24314ce139a91a8cc08d8f037dfda396c3bd49f86e37403"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-visual-foundation.php",
+      "bytes": 4030,
+      "sha256": "2054b26ce599c66001488e56a74e47bf4798ec2ee3e64d8fd69f1576ed3ed892"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-word-cloud-admin.php",
+      "bytes": 9640,
+      "sha256": "55ff3d9c3d873684bd596e2a02f41d3241606c04d453005e9a305ec69b4772fb"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-word-cloud-consultations.php",
+      "bytes": 8776,
+      "sha256": "3f37967740c972835d6bf94a97adfdb1ee7baf1dfc1332ac015f204f5a365b1a"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-word-cloud-contract.php",
+      "bytes": 3180,
+      "sha256": "e2b436b2ba82a652e711f40ff21989d810894f352fb2541b890a865eb218d491"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-word-cloud-quality.php",
+      "bytes": 6246,
+      "sha256": "6c3ea8eecdf977f85d2e971bd433d0e74d1db68f9c8f816e47e20f384f0c7474"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/includes/class-word-cloud-service.php",
+      "bytes": 20146,
+      "sha256": "33ecb37c7ecc2f8984034aca9580705695a665c02b1c0c368ae7c615db64ba15"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/LICENSE",
+      "bytes": 552,
+      "sha256": "22e08e64d4a1dfdb544b69f3f28326b91183471c3bf6fca2927c892a2e8f6803"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/readme.txt",
+      "bytes": 1591,
+      "sha256": "a5cc71d782b661d3ab4640992878546fc88928eeb64e769aebf84995ad4550a2"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/resources/search/golden-relevance-v1.0.0.json",
+      "bytes": 3465,
+      "sha256": "59a0b76139cc85b288b29d4ca0730a80fd0d5b9bde7938acf10d5b34cc9b7c0e"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/resources/search/technical-challenge-v1.0.0.json",
+      "bytes": 4470,
+      "sha256": "d0d0d4e8e06b9cf0599f13490cfb7b8d4a5af2a010eac5636f2a4eae6b9d32e2"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/SECURITY.md",
+      "bytes": 625,
+      "sha256": "82fb3cd5f633601dab59e7135c5bc2a2f6ada02bbaacaba15932c8576bdc11ba"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/templates/public-article-preview.php",
+      "bytes": 4763,
+      "sha256": "36a260bc5e40fb8c11e04b9931405e31d51cafe7aee941346f2adc106a6eeaf2"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/templates/public-home-preview.php",
+      "bytes": 6801,
+      "sha256": "4822702cb19aa494348059769bc3ea00c693552954e88c5f576f456d30cbe9b0"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/uninstall.php",
+      "bytes": 538,
+      "sha256": "a49a379b4a831899b72b3f622c7f6f522b722211172632846f19b9ee16895319"
+    },
+    {
+      "path": "base-conhecimento-inteligencia-integrada/UPGRADE.md",
+      "bytes": 2359,
+      "sha256": "6ce4cf212d81106450d577bebd65f3e586d7379b398cffacfaa99ffb1b5cfce5"
+    }
+  ]
+}

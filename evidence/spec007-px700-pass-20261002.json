@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-700",
+  "phase": "ENVIRONMENTAL_INVENTORY_CLOSEOUT",
+  "status": "PASS",
+  "date": "2026-10-02",
+  "automated_evidence": {
+    "source_file": "spec007-px700-environmental-inventory-20261002-175054.json",
+    "source_sha256": "587ee8296515a0d62b54ae869ca676cf6a8c7b794000c45896ba801603a7717c",
+    "runner_status": "PASS_DISCOVERY"
+  },
+  "human_smoke": {
+    "home_preview": "PASS",
+    "article_reader_representative_sources": "PASS",
+    "entra_profile_menu_authenticated": "PASS",
+    "decision_source": "PRODUCT_OWNER_EXPLICIT_ACCEPTANCE"
+  },
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.11",
+    "database": "12.2.2",
+    "bdc_version": "0.6.0-dev"
+  },
+  "key_findings": {
+    "home_page_id": 41395,
+    "home_snippet_id": 9,
+    "home_snippet_sha256": "a465269e50c069dd945c55c3ba5488a32664589d8bdb79755cbcbe23c3c42c5a",
+    "published_posts": 606,
+    "astra_additional_css_bytes": 36804,
+    "astra_additional_css_sha256": "b44b57c6a86df6b35ec1df5dfcba86c60e17555ecc2dd7d836c81c36499303a2",
+    "bdc_preview_structural_pass": true
+  },
+  "dependency_state": {
+    "ENV-001_home_code_snippet": "ACTIVE_DEPENDENCY",
+    "ENV-002_astra_additional_css": "ACTIVE_DEPENDENCY",
+    "ENV-003_entra_gateway": "ACTIVE_DEPENDENCY",
+    "ENV-004_gac_wpui": "ACTIVE_DEPENDENCY",
+    "asi_plugin_detected": false,
+    "asi_search_shortcode_registered": false
+  },
+  "invariants": {
+    "public_cutover_authorized": false,
+    "plugin_retirement_authorized": false,
+    "snippet_deletion_authorized": false,
+    "astra_css_removal_authorized": false
+  },
+  "next_gate": "PX-710"
+}

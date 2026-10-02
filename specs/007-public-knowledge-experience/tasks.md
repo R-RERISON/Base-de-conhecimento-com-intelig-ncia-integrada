@@ -45,7 +45,7 @@ Historical planned items:
 - [x] PX720-05 header toggle aria-controls/nav ID.
 - [x] PX720-06 candidate shell markers/body class.
 - [x] PX720-07 static regression contract added.
-- [ ] PX720-08 package/build for homologation.
+- [ ] PX720-08 package/build for homologation — ZIP/static PASS; exact-package PHP lint pending.
 - [ ] PX720-09 WordPress candidate smoke.
 - [ ] PX720-10 close PX-720.
 
@@ -76,3 +76,20 @@ Evidence review: `evidence/spec007-px700-environmental-inventory-review-20261002
 
 PX-700 human evidence: `evidence/spec007-px700-human-smoke-pass-20261002.json`.
 PX-710 closeout: `specs/007-public-knowledge-experience/px710-closeout-20261002.md`.
+
+
+### PX720-08 package evidence — 2026-10-02
+
+- [x] source hardening commit `11017d10ef326bfaf80fdef46a091c56446c3dcd`;
+- [x] deterministic candidate `px720.1` materialized;
+- [x] artifact branch `spec007-px720-homologation-artifact`;
+- [x] artifact commit `044f106869df0acc81b46eb454cfea7229dc88e5`;
+- [x] ZIP SHA-256 `360d4d6cfaf78ffb1b78238ad34fb96b65154a400397554fd9c523006bc28fd9`;
+- [x] 102 distributed files / 48 engineering files excluded;
+- [x] static + structural package checks PASS;
+- [ ] PHP lint of the exact published ZIP in an execution environment with the artifact available;
+- [ ] WordPress candidate smoke.
+
+Evidence: `evidence/spec007-px720-package-ready-20261002.json`.
+
+PX-720 remains ACTIVE. No cutover or retirement is authorized.

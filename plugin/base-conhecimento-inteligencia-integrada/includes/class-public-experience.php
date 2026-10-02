@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Public_Experience {
 
+	public const SHELL_VERSION = 'public-shell-v1.0.0';
 	public const PAGE_SLUG = 'bdc-kb-public-experience-preview';
 	private const QUERY_KEY = 'bdc_kb_preview';
 	private const NONCE_KEY = 'bdc_kb_preview_nonce';
@@ -123,6 +124,7 @@ final class Public_Experience {
 				'minChars' => Public_Search_Facade::MIN_QUERY_LENGTH,
 				'debounceMs' => 180,
 				'uiVersion' => 'premium-v6',
+				'shellVersion' => self::SHELL_VERSION,
 				'consultAction' => class_exists( Word_Cloud_Consultations::class ) ? Word_Cloud_Consultations::AJAX_ACTION : '',
 				'consultNonce' => class_exists( Word_Cloud_Consultations::class ) ? wp_create_nonce( Word_Cloud_Consultations::NONCE_ACTION ) : '',
 			)
@@ -135,25 +137,35 @@ final class Public_Experience {
 		if ( null === $kind ) { return $classes; }
 		$classes[] = 'bdc-public-preview';
 		$classes[] = 'bdc-public-preview--' . $kind;
+		$classes[] = 'bdc-public-shell-' . sanitize_html_class( str_replace( '.', '-', self::SHELL_VERSION ) );
 		return $classes;
 	}
 
-	public static function render_header(): void {
-		$kind = self::preview_kind() ?? 'home';
-		$links = array(
+	/** @return array<int,array{label:string,url:string,icon:string,external:bool}> */
+	public static function quick_links(): array {
+		return array(
 			array( 'label' => 'Página Inicial', 'url' => self::home_preview_url(), 'icon' => 'dashicons-admin-home', 'external' => false ),
 			array( 'label' => 'Consulta Avançada', 'url' => home_url( '/consulta-avancada/' ), 'icon' => 'dashicons-media-document', 'external' => false ),
 			array( 'label' => 'Telefones', 'url' => home_url( '/telefones-importantes/' ), 'icon' => 'dashicons-phone', 'external' => false ),
 			array( 'label' => 'Links Úteis', 'url' => home_url( '/links-uteis/' ), 'icon' => 'dashicons-admin-links', 'external' => false ),
 			array( 'label' => 'POSTI', 'url' => 'https://vok-smb2.cloud-p.bcnet.bcb.gov.br/app/manual/posti/publico', 'icon' => 'dashicons-external', 'external' => true ),
 		);
+	}
+
+	public static function render_skip_link(): void {
+		echo '<a class="bdc-public-skip-link" href="#bdc-public-main">' . esc_html__( 'Pular para o conteúdo', 'base-conhecimento-inteligencia-integrada' ) . '</a>';
+	}
+
+	public static function render_header(): void {
+		$kind = self::preview_kind() ?? 'home';
+		$links = self::quick_links();
 
 		echo '<header class="bdc-public-header" data-bdc-header><div class="bdc-public-header__inner">';
 		echo '<a class="bdc-public-brand" href="' . esc_url( self::home_preview_url() ) . '" aria-label="Página inicial da Base de Conhecimento">';
 		self::render_brand_visual();
 		echo '<span class="bdc-public-brand__copy"><strong>Base de Conhecimento</strong><small>Central de apoio operacional</small></span></a>';
 
-		echo '<nav class="bdc-public-quicknav" aria-label="Links rápidos"><span class="bdc-public-quicknav__label">Links rápidos</span><div class="bdc-public-quicknav__links">';
+		echo '<nav id="bdc-public-quicknav" class="bdc-public-quicknav" aria-label="Links rápidos"><span class="bdc-public-quicknav__label">Links rápidos</span><div class="bdc-public-quicknav__links">';
 		foreach ( $links as $item ) {
 			$external = ! empty( $item['external'] );
 			echo '<a class="bdc-public-quicknav__link' . ( $external ? ' is-external' : '' ) . '" href="' . esc_url( (string) $item['url'] ) . '"' . ( $external ? ' target="_blank" rel="noopener noreferrer"' : '' ) . '>';
@@ -164,7 +176,7 @@ final class Public_Experience {
 		echo '<div class="bdc-public-header__profile">';
 		Public_Auth_Bridge::render();
 		echo '</div>';
-		echo '<button class="bdc-public-header__toggle" type="button" data-bdc-header-toggle aria-label="Abrir links rápidos" aria-expanded="false"><span></span><span></span><span></span></button>';
+		echo '<button class="bdc-public-header__toggle" type="button" data-bdc-header-toggle aria-controls="bdc-public-quicknav" aria-label="Abrir links rápidos" aria-expanded="false"><span></span><span></span><span></span></button>';
 		echo '</div>';
 
 		if ( 'article' === $kind ) {

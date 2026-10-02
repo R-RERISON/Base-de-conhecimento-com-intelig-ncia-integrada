@@ -36,7 +36,7 @@ Historical planned items:
 - freeze Article Reader/Tips/Rail composition;
 - preserve canonical Search Service.
 
-## PX-720 Public Shell — ACTIVE
+## PX-720 Public Shell — CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION
 
 - [x] PX720-01 contract — `px720-public-shell-contract-v1.md`.
 - [x] PX720-02 shell version constant `public-shell-v1.0.0`.
@@ -45,13 +45,22 @@ Historical planned items:
 - [x] PX720-05 header toggle aria-controls/nav ID.
 - [x] PX720-06 candidate shell markers/body class.
 - [x] PX720-07 static regression contract added.
-- [ ] PX720-08 package/build for homologation — ZIP/static PASS; exact-package PHP lint pending.
-- [ ] PX720-09 WordPress candidate smoke.
-- [ ] PX720-10 close PX-720.
+- [x] PX720-08 package/build for homologation — deterministic ZIP/static/structural PASS; exact-artifact PHP lint accepted as recorded exception.
+- [x] PX720-09 WordPress candidate smoke — accepted validation exception by Product Owner for gate progression; not recorded as PASS.
+- [x] PX720-10 close PX-720 — `CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION`.
+
+## PX-730 Live Search — ACTIVE / DISCOVERY
+
+- [x] PX730-01 contract — `px730-live-search-contract-v1.md`.
+- [ ] PX730-02 reconcile existing `public-search.js` against canonical Search facade.
+- [ ] PX730-03 freeze Home/Reader live-search interaction states.
+- [ ] PX730-04 freeze candidate result navigation and accessibility behavior.
+- [ ] PX730-05 define static regression contract.
+- [ ] PX730-06 implement first bounded runtime slice only after contract review.
+- [ ] PX730-07 package/smoke/closeout.
 
 ## Explicitly not active yet
 
-- PX-730 Live Search;
 - PX-740 Reader/Tips/Rail;
 - PX-750 Theme/Snippet Independence;
 - PX-760 Accessibility/Responsive;
@@ -93,3 +102,23 @@ PX-710 closeout: `specs/007-public-knowledge-experience/px710-closeout-20261002.
 Evidence: `evidence/spec007-px720-package-ready-20261002.json`.
 
 PX-720 remains ACTIVE. No cutover or retirement is authorized.
+
+
+### PX-720 FINAL closeout — 2026-10-02
+
+- closure status: `CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION`;
+- final ZIP: `base-conhecimento-inteligencia-integrada-0.6.0-dev-px720-final.zip`;
+- artifact branch: `spec007-px720-homologation-artifact`;
+- artifact commit: `3e3074825b85eaa1476744046591c17513a08162`;
+- SHA-256: `360d4d6cfaf78ffb1b78238ad34fb96b65154a400397554fd9c523006bc28fd9`;
+- byte-identical to accepted structural candidate `px720.1`;
+- exact-artifact PHP lint: accepted exception, NOT PASS;
+- WordPress Home/Reader/Entra/keyboard smoke: accepted exception, NOT PASS;
+- exceptions remain release-readiness debt and must be discharged before PX-790/cutover readiness;
+- no public cutover, retirement, ranker/schema change or legacy mutation authorized.
+
+Closeout:
+- `px720-closeout-20261002.md`;
+- `evidence/spec007-px720-closeout-20261002.json`.
+
+PX-730 Live Search is now ACTIVE / DISCOVERY.

@@ -282,3 +282,78 @@ Still not authorized:
 - Home/Astra/snippet mutation;
 - Search ranker/schema change;
 - ASI/GRE/GAC/WPUI/Entra retirement or ownership change.
+
+
+## PX-720 FINAL — 2026-10-02
+
+Product Owner explicitly authorized production of the PX-720 closure ZIP and progression to the next SPEC-007 gate.
+
+Closure status:
+- `CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION`.
+
+Final closure artifact:
+- file: `base-conhecimento-inteligencia-integrada-0.6.0-dev-px720-final.zip`;
+- artifact branch: `spec007-px720-homologation-artifact`;
+- artifact commit: `3e3074825b85eaa1476744046591c17513a08162`;
+- Git blob: `57c1f5511f2c542c03568670bc87750f4eb7dc95`;
+- SHA-256: `360d4d6cfaf78ffb1b78238ad34fb96b65154a400397554fd9c523006bc28fd9`;
+- size: 762,408 bytes;
+- byte-identical to `px720.1`;
+- 102 distributed files / 48 engineering files excluded.
+
+Verified:
+- deterministic double-build PASS;
+- single-root PASS;
+- required distribution files PASS;
+- engineering pruning PASS;
+- forbidden repository-only paths PASS;
+- bootstrap pruning PASS;
+- shell version PASS;
+- five quick links contract PASS;
+- skip-link scope PASS;
+- Ctrl/Cmd+K PASS by static behavior contract;
+- Escape quick-nav close PASS by static behavior contract.
+
+Accepted validation exceptions:
+- PX720-EX-001 — exact published ZIP PHP lint was not executed in this session and is NOT recorded as PASS;
+- PX720-EX-002 — WordPress candidate Home/Reader/Entra/keyboard smoke was not executed after `px720.1` publication and is NOT recorded as PASS.
+
+Disposition:
+- exceptions do not block PX-730 discovery/runtime evolution by explicit Product Owner closure authorization;
+- both remain release-readiness debt;
+- they MUST be discharged before PX-790 Cutover Readiness and before any 1.0/public cutover decision.
+
+Still frozen:
+- no public cutover;
+- no `page_on_front` write;
+- no Home snippet mutation;
+- no Astra Additional CSS mutation;
+- no Search ranker/schema change;
+- no editorial storage mutation;
+- no GRE/GAC/WPUI/Entra retirement.
+
+Evidence:
+- `specs/007-public-knowledge-experience/px720-closeout-20261002.md`;
+- `evidence/spec007-px720-closeout-20261002.json`.
+
+## PX-730 ACTIVE — Live Search
+
+Status:
+- `ACTIVE / DISCOVERY`.
+
+Contract:
+- `px730-live-search-contract-v1.md`.
+
+Purpose:
+- formalize and harden the already-existing candidate live-search behavior;
+- preserve `Public_Search_Facade` as canonical;
+- do not create a new ranker;
+- do not change Search schema or ranking semantics;
+- do not introduce semantic/vector/AI search in PX-730;
+- keep Home/Reader candidate navigation and preview gating intact.
+
+Next:
+1. reconcile existing `public-search.js` and server fallback against the PX-730 contract;
+2. map live-search states and failure behavior;
+3. add PX-730 static regression contract;
+4. only then implement the first bounded runtime slice.

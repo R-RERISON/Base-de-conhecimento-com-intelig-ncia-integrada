@@ -1,6 +1,6 @@
 # PX-720 — Public Shell Contract v1
 
-**Status:** ACTIVE  
+**Status:** CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION  
 **Date:** 2026-10-02  
 **SPEC:** 007 — Public Knowledge Experience
 
@@ -146,3 +146,18 @@ PX-720 PASS requires:
 
 Next:
 - PX-730 Live Search.
+
+
+## Closeout disposition — 2026-10-02
+
+PX-720 closed as `CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION` by explicit Product Owner authorization to freeze the closure ZIP and proceed to PX-730.
+
+Closure artifact:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-px720-final.zip`;
+- SHA-256 `360d4d6cfaf78ffb1b78238ad34fb96b65154a400397554fd9c523006bc28fd9`.
+
+Accepted exceptions, not PASS:
+- exact-artifact PHP lint;
+- post-package WordPress Home/Reader/Entra/keyboard smoke.
+
+These exceptions are carried to PX-790 Cutover Readiness and cannot be inferred as satisfied by later feature work.

@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-720",
+  "artifact_kind": "closure_package",
+  "closure_status": "CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION",
+  "product_version": "0.6.0-dev",
+  "shell_version": "public-shell-v1.0.0",
+  "filename": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px720-final.zip",
+  "sha256": "360d4d6cfaf78ffb1b78238ad34fb96b65154a400397554fd9c523006bc28fd9",
+  "bytes": 762408,
+  "git_blob_sha": "57c1f5511f2c542c03568670bc87750f4eb7dc95",
+  "source_branch": "spec007-public-knowledge-experience",
+  "source_runtime_commit": "11017d10ef326bfaf80fdef46a091c56446c3dcd",
+  "source_plugin_tree_sha": "8606e3d18e647661c0581913edf1de7399d358b3",
+  "derived_from_candidate": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px720.1.zip",
+  "byte_identity_with_candidate": true,
+  "distributed_files": 102,
+  "excluded_engineering_files": 48,
+  "validation": {
+    "deterministic_double_build": "PASS",
+    "structural_package_contract": "PASS",
+    "px720_static_contract_equivalent": "PASS",
+    "exact_artifact_php_lint": "ACCEPTED_EXCEPTION_NOT_EXECUTED",
+    "wordpress_candidate_smoke": "ACCEPTED_EXCEPTION_NOT_EXECUTED"
+  },
+  "product_owner_authorization": {
+    "date": "2026-10-02",
+    "purpose": "produce the PX-720 closure ZIP and proceed to the next SPEC-007 gate"
+  },
+  "invariants": {
+    "public_cutover": false,
+    "page_on_front_mutation": false,
+    "editorial_storage_mutation": false,
+    "theme_customizer_mutation": false,
+    "search_ranker_schema_mutation": false,
+    "legacy_plugin_retirement": false
+  },
+  "next_gate": "PX-730 Live Search"
+}

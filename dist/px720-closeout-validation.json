@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-720",
+  "phase": "CLOSEOUT",
+  "status": "CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION",
+  "closure_zip": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px720-final.zip",
+  "closure_zip_sha256": "360d4d6cfaf78ffb1b78238ad34fb96b65154a400397554fd9c523006bc28fd9",
+  "candidate_and_closure_byte_identical": true,
+  "accepted_validation_exceptions": [
+    {
+      "id": "PX720-EX-001",
+      "check": "exact published ZIP PHP lint",
+      "disposition": "accepted for gate closure by Product Owner; remains release-readiness debt and is not recorded as PASS"
+    },
+    {
+      "id": "PX720-EX-002",
+      "check": "WordPress Home/Reader/Entra/keyboard candidate smoke",
+      "disposition": "accepted for gate closure by Product Owner; remains environmental acceptance debt and is not recorded as PASS"
+    }
+  ],
+  "proven_checks": {
+    "deterministic_build": "PASS",
+    "single_root": "PASS",
+    "required_distribution_files": "PASS",
+    "engineering_pruning": "PASS",
+    "forbidden_paths": "PASS",
+    "bootstrap_pruning": "PASS",
+    "public_shell_version": "PASS",
+    "quick_links_contract": "PASS",
+    "skip_link_scope": "PASS",
+    "ctrl_cmd_k": "PASS",
+    "escape_quicknav": "PASS"
+  },
+  "no_cutover": true,
+  "next_gate": "PX-730"
+}

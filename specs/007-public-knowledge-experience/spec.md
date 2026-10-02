@@ -1,6 +1,6 @@
 # SPEC-007 — Public Knowledge Experience
 
-**Status:** ATIVA / DISCOVERY
+**Status:** ATIVA / IMPLEMENTATION
 
 Os candidatos UX-004/UX-005 existentes serão reutilizados; não serão reescritos por princípio.
 
@@ -81,3 +81,12 @@ First active gate:
 - `PX-700 Environmental Inventory`.
 
 No public cutover is authorized by SPEC-007 activation.
+
+
+## Gate state — 2026-10-02
+
+- PX-700 Environmental Inventory: PASS.
+- PX-710 Information Architecture & Ownership: PASS.
+- PX-720 Public Shell: ACTIVE.
+
+PX-720 remains candidate/preview only. No public cutover is authorized.

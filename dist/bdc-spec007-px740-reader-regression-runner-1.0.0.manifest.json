@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "artifact": "PX-740 Reader Regression Runner",
+  "version": "1.0.0",
+  "source_commit": "7f12601db4d4dc7a6bf13e796126773c2f12b4d9",
+  "source_blob_sha": "c204629d4ec89d2828b4f239ae43ef5dc1940faf",
+  "filename": "bdc-spec007-px740-reader-regression-runner-1.0.0.zip",
+  "sha256": "0a52bcc7d4560eb108a044b48067d5bcbbd569ff8681f6f2efccebb9375abd68",
+  "bytes": 13931,
+  "files": 1,
+  "deterministic_equal": true,
+  "static_contract": "20/20 PASS",
+  "php_lint": "NOT_EXECUTED_IN_CONNECTOR_ENVIRONMENT",
+  "safety": {
+    "read_only": true,
+    "executes_the_content": false,
+    "executes_shortcodes": false,
+    "writes_posts": false,
+    "writes_meta": false,
+    "writes_options": false,
+    "changes_plugins": false,
+    "changes_theme": false,
+    "external_network": false
+  }
+}

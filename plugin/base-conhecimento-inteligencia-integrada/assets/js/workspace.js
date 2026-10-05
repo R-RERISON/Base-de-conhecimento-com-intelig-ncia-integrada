@@ -23,10 +23,10 @@
 			return;
 		}
 
-		if (event.key === 'ArrowRight') {
+		if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
 			event.preventDefault();
 			moveFocus(tabs, index, 1);
-		} else if (event.key === 'ArrowLeft') {
+		} else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
 			event.preventDefault();
 			moveFocus(tabs, index, -1);
 		} else if (event.key === 'Home') {

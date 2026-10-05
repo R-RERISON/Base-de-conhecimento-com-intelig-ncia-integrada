@@ -179,6 +179,7 @@ final class Admin_Page {
 		Classification_Admin::render_feedback();
 		Knowledge_Details_Admin::render_feedback();
 		Review_Admin::render_feedback();
+		echo '<div class="bdc-kb-product-shell">';
 		self::render_tabs( $post_id, $tab );
 
 		$layout_class = 'bdc-kb-workspace-layout' . ( 'overview' === $tab ? ' bdc-kb-workspace-layout--full' : '' );
@@ -214,6 +215,7 @@ final class Admin_Page {
 		if ( 'overview' !== $tab ) {
 			self::render_context_sidebar( $post_id, $post, $summary, $context );
 		}
+		echo '</div>';
 		echo '</div>';
 	}
 
@@ -271,16 +273,29 @@ final class Admin_Page {
 
 	private static function render_tabs( int $post_id, string $active_tab ): void {
 		$tabs = Post_Activity_Registry::definitions();
+		$groups = array(
+			'Artigo' => array( 'overview', 'content', 'summary', 'classification', 'details' ),
+			'Governança' => array( 'intelligence', 'core_blocks', 'review', 'history' ),
+		);
 
 		echo '<nav class="bdc-kb-tabs" aria-label="' . esc_attr__( 'Áreas do artigo', 'base-conhecimento-inteligencia-integrada' ) . '" data-bdc-workspace-tabs>';
-		foreach ( $tabs as $tab => $definition ) {
-			$url = self::workspace_url( $post_id, $tab );
-			$class = 'bdc-kb-tab' . ( $tab === $active_tab ? ' is-active' : '' );
-			echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '"';
-			if ( $tab === $active_tab ) {
-				echo ' aria-current="page"';
+		foreach ( $groups as $group_label => $items ) {
+			echo '<div class="bdc-kb-tab-group">';
+			echo '<span class="bdc-kb-tab-group__label">' . esc_html( $group_label ) . '</span>';
+			foreach ( $items as $tab ) {
+				if ( ! isset( $tabs[ $tab ] ) ) {
+					continue;
+				}
+				$definition = $tabs[ $tab ];
+				$url = self::workspace_url( $post_id, $tab );
+				$class = 'bdc-kb-tab' . ( $tab === $active_tab ? ' is-active' : '' );
+				echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '"';
+				if ( $tab === $active_tab ) {
+					echo ' aria-current="page"';
+				}
+				echo '><span class="dashicons dashicons-' . esc_attr( (string) $definition['icon'] ) . '" aria-hidden="true"></span><span>' . esc_html( (string) $definition['label'] ) . '</span></a>';
 			}
-			echo '><span class="dashicons dashicons-' . esc_attr( (string) $definition['icon'] ) . '" aria-hidden="true"></span><span>' . esc_html( (string) $definition['label'] ) . '</span></a>';
+			echo '</div>';
 		}
 		echo '</nav>';
 	}
@@ -304,20 +319,29 @@ final class Admin_Page {
 		$coverage      = Coverage_Read_Model::read( $post_id );
 		$coverage_text = is_wp_error( $coverage ) ? 'Indisponível' : (string) ( $coverage['filled'] ?? 0 ) . ' de ' . (string) ( $coverage['total'] ?? 8 ) . ' campos';
 
-		echo '<section class="bdc-kb-overview" aria-labelledby="bdc-kb-overview-title">';
+		echo '<section class="bdc-kb-overview bdc-kb-health" aria-labelledby="bdc-kb-overview-title">';
 		echo '<div class="bdc-kb-domain-heading">';
-		echo '<h3 id="bdc-kb-overview-title">' . esc_html__( 'Visão geral', 'base-conhecimento-inteligencia-integrada' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Acompanhe a situação atual do artigo sem repetir a navegação disponível acima.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
+		echo '<p class="bdc-kb-section-kicker">' . esc_html__( 'Saúde do conhecimento', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
+		echo '<h3 id="bdc-kb-overview-title">' . esc_html__( 'Visão geral do artigo', 'base-conhecimento-inteligencia-integrada' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Uma leitura consolidada do conteúdo, estrutura de conhecimento e governança.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
 		echo '</div>';
 
-		echo '<div class="bdc-kb-overview-status-grid">';
-		self::render_overview_status( 'Situação editorial', $status_label, 'Estado atual do artigo no WordPress.', 'yes-alt' );
-		self::render_overview_status( 'Conteúdo', (string) ( $source['label'] ?? 'Indisponível' ), 'Origem editorial identificada.', 'text-page' );
-		self::render_overview_status( 'Sumário', $filled . ' de ' . $total_fields . ' campos preenchidos', 'Completude das informações resumidas.', 'media-text' );
-		self::render_overview_status( 'Classificação', $term_count > 0 ? $term_count . ' conceito(s)' : 'Ainda não classificado', 'Organização por conceitos padronizados.', 'tag' );
-		self::render_overview_status( 'Cobertura', $coverage_text, 'Cobertura dos oito campos estruturados herdados do GRE.', 'chart-pie' );
+		echo '<div class="bdc-kb-health-groups">';
+		echo '<section class="bdc-kb-health-group"><header><span>01</span><div><strong>' . esc_html__( 'Conteúdo editorial', 'base-conhecimento-inteligencia-integrada' ) . '</strong><small>' . esc_html__( 'Origem e estrutura do documento', 'base-conhecimento-inteligencia-integrada' ) . '</small></div></header><div class="bdc-kb-health-list">';
+		self::render_overview_status( 'Situação editorial', $status_label, 'Estado atual no WordPress.', 'yes-alt' );
+		self::render_overview_status( 'Fonte', (string) ( $source['label'] ?? 'Indisponível' ), 'Origem editorial identificada.', 'text-page' );
+		self::render_overview_status( 'Blocos do WordPress', self::overview_core_status( (string) ( $core['operational_status'] ?? '' ) ), 'Estrutura editorial e preparação.', 'block-default' );
+		echo '</div></section>';
+
+		echo '<section class="bdc-kb-health-group"><header><span>02</span><div><strong>' . esc_html__( 'Estrutura de conhecimento', 'base-conhecimento-inteligencia-integrada' ) . '</strong><small>' . esc_html__( 'Resumo, classificação e cobertura', 'base-conhecimento-inteligencia-integrada' ) . '</small></div></header><div class="bdc-kb-health-list">';
+		self::render_overview_status( 'Sumário', $filled . ' de ' . $total_fields . ' campos', 'Informações executivas estruturadas.', 'media-text' );
+		self::render_overview_status( 'Classificação', $term_count > 0 ? $term_count . ' conceito(s)' : 'Ainda não classificado', 'Organização por conceitos canônicos.', 'tag' );
+		self::render_overview_status( 'Cobertura', $coverage_text, 'Cobertura dos campos estruturados.', 'chart-pie' );
+		echo '</div></section>';
+
+		echo '<section class="bdc-kb-health-group bdc-kb-health-group--governance"><header><span>03</span><div><strong>' . esc_html__( 'Governança', 'base-conhecimento-inteligencia-integrada' ) . '</strong><small>' . esc_html__( 'Revisão e ciclo de vida', 'base-conhecimento-inteligencia-integrada' ) . '</small></div></header><div class="bdc-kb-health-list">';
 		self::render_overview_status( 'Revisão', $review_label, 'Estado atual de revisão e governança.', 'yes' );
-		self::render_overview_status( 'Blocos do WordPress', self::overview_core_status( (string) ( $core['operational_status'] ?? '' ) ), 'Situação da estrutura editorial.', 'block-default' );
+		echo '</div></section>';
 		echo '</div>';
 		echo '</section>';
 	}
@@ -458,10 +482,14 @@ final class Admin_Page {
 		foreach ( array( 'publish', 'draft', 'pending', 'private', 'future' ) as $status ) {
 			$total += isset( $counts->{$status} ) ? (int) $counts->{$status} : 0;
 		}
-		echo '<div class="bdc-kb-metrics" aria-label="' . esc_attr__( 'Resumo da Base de Conhecimento', 'base-conhecimento-inteligencia-integrada' ) . '">';
-		self::render_metric( (string) $total, 'artigos no escopo editorial' );
-		self::render_metric( (string) count( Meta_Contract::fields() ), 'campos do sumário' );
-		self::render_metric( (string) count( Classification_Contract::fields() ), 'conceitos de classificação' );
+		$published = isset( $counts->publish ) ? (int) $counts->publish : 0;
+		$drafts = isset( $counts->draft ) ? (int) $counts->draft : 0;
+		$pending = isset( $counts->pending ) ? (int) $counts->pending : 0;
+		echo '<div class="bdc-kb-list-summary" aria-label="' . esc_attr__( 'Resumo editorial', 'base-conhecimento-inteligencia-integrada' ) . '">';
+		echo '<div><strong>' . esc_html( number_format_i18n( $total ) ) . '</strong><span>' . esc_html__( 'artigos no workspace', 'base-conhecimento-inteligencia-integrada' ) . '</span></div>';
+		echo '<span class="bdc-kb-list-summary__item"><b>' . esc_html( number_format_i18n( $published ) ) . '</b> ' . esc_html__( 'publicados', 'base-conhecimento-inteligencia-integrada' ) . '</span>';
+		echo '<span class="bdc-kb-list-summary__item"><b>' . esc_html( number_format_i18n( $drafts ) ) . '</b> ' . esc_html__( 'rascunhos', 'base-conhecimento-inteligencia-integrada' ) . '</span>';
+		echo '<span class="bdc-kb-list-summary__item"><b>' . esc_html( number_format_i18n( $pending ) ) . '</b> ' . esc_html__( 'pendentes', 'base-conhecimento-inteligencia-integrada' ) . '</span>';
 		echo '</div>';
 
 		echo '<div class="bdc-kb-table-wrap">';

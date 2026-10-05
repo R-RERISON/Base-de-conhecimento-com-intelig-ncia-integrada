@@ -275,50 +275,5 @@
     }
   });
 
-  function initReaderRail() {
-    var slot = document.querySelector('[data-bdc-summary-slot]');
-    var rail = document.querySelector('[data-bdc-summary-rail]');
-    if (!slot || !rail) return;
 
-    var ticking = false;
-
-    function topOffset() {
-      var admin = document.getElementById('wpadminbar');
-      var adminHeight = admin ? admin.getBoundingClientRect().height : 0;
-      var header = document.querySelector('[data-bdc-header]');
-      var headerBottom = header ? header.getBoundingClientRect().bottom : 0;
-      return Math.max(adminHeight + 18, headerBottom > adminHeight ? headerBottom + 18 : adminHeight + 18);
-    }
-
-    function update() {
-      ticking = false;
-      if (window.innerWidth <= 1040) {
-        rail.style.transform = '';
-        return;
-      }
-      var pageY = window.scrollY || window.pageYOffset || 0;
-      var slotRect = slot.getBoundingClientRect();
-      var slotTop = slotRect.top + pageY;
-      var max = Math.max(0, slot.offsetHeight - rail.offsetHeight);
-      var desired = pageY + topOffset() - slotTop;
-      var y = Math.max(0, Math.min(max, desired));
-      rail.style.transform = 'translate3d(0,' + Math.round(y) + 'px,0)';
-    }
-
-    function requestUpdate() {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(update);
-    }
-
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
-    requestUpdate();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initReaderRail);
-  } else {
-    initReaderRail();
-  }
 })();

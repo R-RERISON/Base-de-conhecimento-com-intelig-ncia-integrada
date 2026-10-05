@@ -161,3 +161,21 @@ Disposition:
 `Public_Article_Content::strip_duplicate_legacy_chrome()` post-processes canonical `the_content` HTML using a DOM/text heuristic.
 
 It is retained for compatibility in this gate until regression evidence proves it can be narrowed or removed. PX-740 must not broaden this heuristic.
+
+
+## PX740-GAP-001 resolution — 2026-10-05
+
+Implemented bounded correction:
+- removed `initReaderRail()` from Search JS;
+- removed scroll/resize listeners and `translate3d` Rail movement;
+- restored CSS-native `position: sticky` as the only desktop follow behavior;
+- retained mobile `position: static` reflow at <=1040px;
+- retained print static flow.
+
+Not changed:
+- canonical `the_content`;
+- `strip_duplicate_legacy_chrome()`;
+- Helpful Tips/Summary data;
+- Reader template structure;
+- GAC/WPUI callbacks;
+- GRE candidate-only duplicate suppression.

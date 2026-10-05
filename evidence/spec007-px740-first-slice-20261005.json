@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "FIRST_BOUNDED_SLICE",
+  "date": "2026-10-05",
+  "status": "SOURCE_IMPLEMENTED_STATIC_VALIDATION_PENDING",
+  "resolved_gap": "PX740-GAP-001",
+  "changes": [
+    "remove Reader rail scroll/resize/translate3d behavior from public-search.js",
+    "use CSS-native sticky as single desktop Summary Rail strategy"
+  ],
+  "unchanged": [
+    "public article template",
+    "Public_Article_Content",
+    "Public_Article_Read_Model",
+    "Helpful_Tips_Store",
+    "Summary_Store",
+    "GAC/WPUI callback preservation",
+    "GRE candidate-only suppression"
+  ],
+  "invariants": {
+    "editorial_storage_mutation": false,
+    "public_cutover": false,
+    "ranker_schema_mutation": false,
+    "legacy_retirement": false
+  },
+  "next": "Run PX-740 static-equivalent regression and package px740.1."
+}

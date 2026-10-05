@@ -67,8 +67,8 @@ Historical planned items:
 - [x] PX740-04 freeze Executive Summary Rail ownership/rendering boundary.
 - [x] PX740-05 freeze Reader canonical-content/the_content compatibility matrix.
 - [x] PX740-06 define static regression contract — `tests/unit/spec007-px740-reader-contract.php`.
-- [ ] PX740-07 implement first bounded runtime slice only after contract review.
-- [ ] PX740-08 package/smoke/closeout.
+- [x] PX740-07 implement first bounded runtime slice — resolve PX740-GAP-001 with CSS-native sticky Rail; Search JS decoupled from Reader scroll.
+- [ ] PX740-08 package/smoke/closeout — source slice implemented; package pending.
 
 ## Explicitly not active yet
 - PX-750 Theme/Snippet Independence;
@@ -212,3 +212,18 @@ Known gaps:
 
 Inventory:
 - `px740-reader-inventory-20261005.md`.
+
+
+### PX-740 first bounded runtime slice — 2026-10-05
+
+Resolved:
+- PX740-GAP-001;
+- removed `initReaderRail()` scroll/resize/translate3d logic from `public-search.js`;
+- restored CSS-native `position:sticky` as the single desktop Rail strategy;
+- retained <=1040px static reflow and print static flow;
+- no changes to Reader template, content capture, Tips/Summary stores, GAC/WPUI hooks or GRE candidate suppression.
+
+Pending:
+- static-equivalent regression verification;
+- deterministic `px740.1` package;
+- WordPress representative Reader smoke.

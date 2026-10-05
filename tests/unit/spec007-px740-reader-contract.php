@@ -91,24 +91,25 @@ $checks = array(
 		&& ! str_contains( $source['experience'], "update_post_meta(" ),
 );
 
-$known_gaps = array(
-	'PX740-GAP-001' =>
+$resolved = array(
+	'PX740-GAP-001_native_sticky_only' =>
 		is_string( $source['css'] )
 		&& str_contains( $source['css'], '.bdc-reader-summary{position:sticky;' )
-		&& str_contains( $source['css'], '.bdc-reader-summary{position:relative;' )
+		&& ! str_contains( $source['css'], '.bdc-reader-summary{position:relative;' )
 		&& is_string( $source['js'] )
-		&& str_contains( $source['js'], 'function initReaderRail()' )
-		&& str_contains( $source['js'], "translate3d(0,' + Math.round(y) + 'px,0)" ),
+		&& ! str_contains( $source['js'], 'function initReaderRail()' )
+		&& ! str_contains( $source['js'], 'translate3d(' ),
 );
 
 $failed = array_keys( array_filter( $checks, static fn ( bool $pass ): bool => ! $pass ) );
+$failed = array_merge( $failed, array_keys( array_filter( $resolved, static fn ( bool $pass ): bool => ! $pass ) ) );
 
 echo json_encode(
 	array(
 		'gate' => 'PX-740-DISCOVERY',
 		'status' => empty( $failed ) ? 'PASS_DISCOVERY' : 'FAIL',
 		'checks' => $checks,
-		'known_gaps' => $known_gaps,
+		'resolved' => $resolved,
 		'failed' => $failed,
 	),
 	JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE

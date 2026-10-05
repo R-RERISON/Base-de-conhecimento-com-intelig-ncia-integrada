@@ -497,3 +497,14 @@ Next:
 1. run PX-740 static contract;
 2. if PASS, implement only PX740-GAP-001 as the first bounded slice;
 3. package candidate and smoke representative Reader source kinds.
+
+
+## PX-740 first bounded slice — 2026-10-05
+
+PX740-GAP-001 resolved:
+- Summary Rail desktop movement is now CSS-native sticky only;
+- `public-search.js` no longer owns Reader scroll/resize/translate behavior;
+- mobile and print static reflow preserved.
+
+No content/storage/hook ownership change.
+Next: static verification -> `px740.1` -> representative Reader smoke.

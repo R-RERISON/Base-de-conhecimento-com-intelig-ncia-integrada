@@ -582,3 +582,19 @@ Expected desktop behavior:
 
 Next blocking check:
 - Product Owner confirms Rail follows scroll in real WordPress.
+
+
+## PX-740 px740.2 visual validation
+
+Product Owner:
+- PASS: Summary Rail follows scroll;
+- FAIL visual: Rail flickers on each scroll step.
+
+New defect:
+- `PX740-VIS-001` — continuous transform repaint.
+
+Correction:
+- eliminate `translate3d`;
+- use state machine `flow -> fixed -> bottom`;
+- no per-pixel reposition while state remains fixed;
+- preserve bounded slot behavior and mobile flow.

@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "candidate": "px740.2",
+  "date": "2026-10-05",
+  "evidence_type": "PRODUCT_OWNER_VISUAL_SMOKE",
+  "status": "FUNCTIONAL_PASS_VISUAL_FAIL",
+  "passed": [
+    "Executive Summary Rail follows scroll correctly"
+  ],
+  "failed": [
+    {
+      "id": "PX740-VIS-001",
+      "requirement": "Rail scroll motion is visually stable without flicker",
+      "status": "FAIL"
+    }
+  ],
+  "disposition": "SUPERSEDED_BY_PX740_3",
+  "corrective_strategy": "Discrete flow/fixed/bottom rail states; no per-pixel transform writes."
+}

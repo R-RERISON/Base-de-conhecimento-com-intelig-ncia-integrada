@@ -95,19 +95,28 @@ $checks = array(
 $resolved = array(
 	'PX740-GAP-001_dedicated_reader_follow_rail' =>
 		is_string( $source['css'] )
-		&& str_contains( $source['css'], '.bdc-reader-summary{position:relative;' )
+		&& str_contains( $source['css'], '.bdc-reader-summary[data-bdc-rail-state="fixed"]{position:fixed;' )
+		&& str_contains( $source['css'], '.bdc-reader-summary[data-bdc-rail-state="bottom"]{position:absolute;' )
 		&& is_string( $source['js'] )
 		&& ! str_contains( $source['js'], 'function initReaderRail()' )
 		&& ! str_contains( $source['js'], 'translate3d(' )
 		&& is_string( $source['reader_js'] )
 		&& str_contains( $source['reader_js'], 'function initReaderRail()' )
-		&& str_contains( $source['reader_js'], "translate3d(0,' + Math.round(y) + 'px,0)" )
+		&& ! str_contains( $source['reader_js'], 'translate3d(' )
+		&& str_contains( $source['reader_js'], "setState('flow')" )
+		&& str_contains( $source['reader_js'], "setState('fixed'" )
+		&& str_contains( $source['reader_js'], "setState('bottom')" )
 		&& str_contains( $source['reader_js'], 'window.innerWidth <= 1040' )
 		&& str_contains( $source['reader_js'], "window.addEventListener('scroll', requestUpdate, { passive: true })" )
 		&& str_contains( $source['reader_js'], 'new ResizeObserver(requestUpdate)' )
 		&& is_string( $source['experience'] )
 		&& str_contains( $source['experience'], "if ( 'article' === $kind )" )
 		&& str_contains( $source['experience'], "'assets/js/public-reader.js'" ),
+	'PX740-VIS-001_no_per_pixel_transform' =>
+		is_string( $source['reader_js'] )
+		&& ! str_contains( $source['reader_js'], 'rail.style.transform' )
+		&& ! str_contains( $source['reader_js'], 'translate3d(' )
+		&& str_contains( $source['reader_js'], 'currentState !== nextState' ),
 );
 
 $failed = array_keys( array_filter( $checks, static fn ( bool $pass ): bool => ! $pass ) );

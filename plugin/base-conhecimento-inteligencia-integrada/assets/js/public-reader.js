@@ -7,24 +7,56 @@
     if (!slot || !rail) return;
 
     var ticking = false;
+    var currentState = '';
+    var fixedLeft = null;
+    var fixedWidth = null;
 
     function topOffset() {
       var admin = document.getElementById('wpadminbar');
       var adminHeight = admin ? admin.getBoundingClientRect().height : 0;
       var header = document.querySelector('[data-bdc-header]');
-      var headerBottom = header ? header.getBoundingClientRect().bottom : 0;
-      var viewportGap = 18;
+      var headerBottom = header ? header.getBoundingClientRect().bottom : adminHeight;
+      return Math.max(adminHeight, headerBottom) + 18;
+    }
 
-      if (headerBottom > adminHeight) {
-        return headerBottom + viewportGap;
+    function clearInlineGeometry() {
+      rail.style.top = '';
+      rail.style.left = '';
+      rail.style.width = '';
+      rail.style.bottom = '';
+    }
+
+    function setState(nextState, geometry) {
+      if (currentState !== nextState) {
+        rail.setAttribute('data-bdc-rail-state', nextState);
+        currentState = nextState;
       }
 
-      return adminHeight + viewportGap;
+      if (nextState === 'fixed' && geometry) {
+        var left = Math.round(geometry.left * 100) / 100;
+        var width = Math.round(geometry.width * 100) / 100;
+
+        if (fixedLeft !== left) {
+          rail.style.left = left + 'px';
+          fixedLeft = left;
+        }
+        if (fixedWidth !== width) {
+          rail.style.width = width + 'px';
+          fixedWidth = width;
+        }
+
+        rail.style.top = Math.round(geometry.top) + 'px';
+        rail.style.bottom = '';
+        return;
+      }
+
+      fixedLeft = null;
+      fixedWidth = null;
+      clearInlineGeometry();
     }
 
     function resetForFlow() {
-      rail.style.transform = '';
-      rail.removeAttribute('data-bdc-rail-following');
+      setState('flow');
     }
 
     function update() {
@@ -35,17 +67,25 @@
         return;
       }
 
-      var pageY = window.scrollY || window.pageYOffset || 0;
+      var offset = topOffset();
       var slotRect = slot.getBoundingClientRect();
-      var slotTop = slotRect.top + pageY;
-      var slotHeight = slot.offsetHeight;
       var railHeight = rail.offsetHeight;
-      var max = Math.max(0, slotHeight - railHeight);
-      var desired = pageY + topOffset() - slotTop;
-      var y = Math.max(0, Math.min(max, desired));
 
-      rail.style.transform = 'translate3d(0,' + Math.round(y) + 'px,0)';
-      rail.setAttribute('data-bdc-rail-following', y > 0 ? 'true' : 'false');
+      if (slotRect.top >= offset) {
+        setState('flow');
+        return;
+      }
+
+      if (slotRect.bottom - railHeight <= offset) {
+        setState('bottom');
+        return;
+      }
+
+      setState('fixed', {
+        top: offset,
+        left: slotRect.left,
+        width: slotRect.width
+      });
     }
 
     function requestUpdate() {

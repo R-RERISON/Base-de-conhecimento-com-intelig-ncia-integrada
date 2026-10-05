@@ -278,3 +278,16 @@ Disposition:
 - [ ] Product Owner Rail-follow retest;
 - [ ] representative Reader smoke;
 - [ ] PX-740 closeout.
+
+
+### PX-740 visual stability regression — px740.2
+
+Product Owner confirmed:
+- PASS: Executive Summary Rail follows scroll;
+- FAIL: visible flicker on scroll, perceived as repeated reload/repaint.
+
+Disposition:
+- `px740.2` is functionally correct but visually SUPERSEDED;
+- new visual defect `PX740-VIS-001`;
+- per-pixel `translate3d` strategy rejected for premium closeout;
+- `px740.3` uses discrete `flow -> fixed -> bottom` state transitions.

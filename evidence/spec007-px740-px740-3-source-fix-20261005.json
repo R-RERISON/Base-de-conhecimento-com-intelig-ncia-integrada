@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "PX740_3_SOURCE_FIX",
+  "date": "2026-10-05",
+  "status": "SOURCE_IMPLEMENTED_STATIC_VALIDATION_PENDING",
+  "resolved_target": "PX740-VIS-001",
+  "strategy": {
+    "states": [
+      "flow",
+      "fixed",
+      "bottom"
+    ],
+    "per_pixel_transform": false,
+    "search_js_decoupled": true,
+    "mobile_flow_max_width": 1040
+  },
+  "next": "Static validation and px740.3 package build."
+}

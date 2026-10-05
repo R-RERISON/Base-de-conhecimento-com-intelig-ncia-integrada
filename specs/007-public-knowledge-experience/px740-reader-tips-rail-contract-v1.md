@@ -200,3 +200,25 @@ Revised frozen approach:
 - the Rail may not escape the vertical bounds of its slot.
 
 `px740.1` is superseded and cannot close PX-740.
+
+
+## PX740-VIS-001 — Rail flicker after px740.2 human validation
+
+Observed:
+- Rail follow behavior is functionally correct;
+- Rail visibly blinks/repaints while scrolling.
+
+Diagnosis:
+- `px740.2` rewrites a `translate3d` transform on every scroll animation frame;
+- this creates avoidable compositor/repaint activity in the real WordPress/browser environment.
+
+Revised final movement contract:
+- no per-pixel transform;
+- `flow`: Rail remains in natural slot position;
+- `fixed`: Rail uses viewport-fixed positioning below sticky Header/Admin Bar;
+- `bottom`: Rail becomes absolute at the bottom of its slot;
+- CSS/inline geometry changes only when state/width/left/top materially changes;
+- <=1040px remains normal document flow;
+- Search JS remains fully decoupled.
+
+`px740.2` is functionally validated but superseded for visual quality.

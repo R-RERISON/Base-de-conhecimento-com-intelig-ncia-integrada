@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "evidence_type": "SUPPLEMENTAL_CURRENT_PX700_ENVIRONMENTAL_RUN",
+  "source_artifact": {
+    "filename": "spec007-px700-environmental-inventory-20261005-120703.json",
+    "sha256": "e7092aeb9339a05daafedd644f7eb4f0e2804e65eb311f2697af7a36b02b9867",
+    "bytes": 38443,
+    "source_gate": "PX-700",
+    "source_status": "PASS_DISCOVERY",
+    "generated_at": "2026-10-05T12:07:03+00:00"
+  },
+  "accepted_for_px740": {
+    "corpus": {
+      "published_posts": 606,
+      "source_kind_counts": {
+        "legacy_html": 528,
+        "plain_text": 41,
+        "elementor": 32,
+        "mixed": 2,
+        "gutenberg": 3,
+        "empty": 0,
+        "error": 0,
+        "unknown": 0
+      },
+      "representative_ids": {
+        "gutenberg": [
+          358,
+          606,
+          44283
+        ],
+        "legacy_html": [
+          359,
+          360,
+          362,
+          363,
+          364,
+          365,
+          368,
+          369
+        ],
+        "plain_text": [
+          367,
+          393,
+          1102,
+          1113,
+          1126,
+          14192,
+          14737,
+          14972
+        ],
+        "elementor": [
+          385,
+          464,
+          485,
+          572,
+          574,
+          579,
+          583,
+          586
+        ],
+        "mixed": [
+          515,
+          45782
+        ]
+      }
+    },
+    "helpful_tips": {
+      "post_count": 7,
+      "sample_post_ids": [
+        36431,
+        36492,
+        36549,
+        41383,
+        45031,
+        45178,
+        45782
+      ],
+      "item_count_min": 1,
+      "item_count_max": 4,
+      "canonical_item_keys": [
+        "title",
+        "content"
+      ]
+    },
+    "the_content_pipeline": [
+      "GAC PostActions priority 12",
+      "GAC KnowledgeBridge priority 13",
+      "GRE Helpful Tips priority 15",
+      "WPUI anchors priority 20",
+      "BDC Search Anchor Manager priority 25",
+      "GRE Summary priority 30"
+    ],
+    "safety": "READ_ONLY_NO_THE_CONTENT_EXECUTION_NO_MUTATION"
+  },
+  "not_proven": [
+    "current Summary present/absent sample selection",
+    "px740.3 public-reader.js flow/fixed/bottom asset checks",
+    "final representative visual sample"
+  ],
+  "disposition": "PARTIAL_PX740_EVIDENCE_ACCEPTED_DEDICATED_RUNNER_STILL_REQUIRED"
+}

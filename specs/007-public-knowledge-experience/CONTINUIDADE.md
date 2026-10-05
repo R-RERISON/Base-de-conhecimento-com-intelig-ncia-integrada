@@ -686,3 +686,34 @@ Next exact action:
 4. return the JSON;
 5. after review, inspect only the small representative visual set selected by the current corpus;
 6. close PX-740 if PASS.
+
+
+## PX-740 supplemental evidence from fresh PX-700 run — 2026-10-05
+
+A new PX-700 environmental inventory was returned after px740.3 validation.
+
+Artifact:
+- `spec007-px700-environmental-inventory-20261005-120703.json`;
+- SHA-256 `e7092aeb9339a05daafedd644f7eb4f0e2804e65eb311f2697af7a36b02b9867`;
+- generated `2026-10-05T12:07:03+00:00`;
+- status `PASS_DISCOVERY`.
+
+This is not the PX-740 runner, but it is accepted as current supplemental evidence for:
+- corpus 606;
+- source kinds: legacy_html 528, plain_text 41, elementor 32, mixed 2, gutenberg 3;
+- zero empty/error/unknown;
+- current representative IDs per source kind;
+- Helpful Tips 7 posts, list items with title/content;
+- current GAC/GRE/WPUI/BDC `the_content` callback pipeline;
+- read-only environmental safety.
+
+It does NOT prove:
+- Summary present/absent sample selection;
+- px740.3 Reader JS state machine presence;
+- final representative visual sample.
+
+Next exact action remains:
+1. run the dedicated PX-740 Reader Regression Runner 1.0.0;
+2. return its JSON;
+3. use its small selected sample set for the final visual pass;
+4. close PX-740 if PASS.

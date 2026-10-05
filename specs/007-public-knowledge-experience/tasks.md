@@ -341,3 +341,29 @@ Runner source:
 - [ ] execute in homologation and return JSON;
 - [ ] review selected visual sample;
 - [ ] PX-740 closeout.
+
+
+### PX-740 supplemental current evidence — PX-700 environmental run 2026-10-05
+
+Uploaded artifact:
+- `spec007-px700-environmental-inventory-20261005-120703.json`;
+- SHA-256 `e7092aeb9339a05daafedd644f7eb4f0e2804e65eb311f2697af7a36b02b9867`;
+- runner gate `PX-700`;
+- runner status `PASS_DISCOVERY`;
+- generated `2026-10-05T12:07:03+00:00`.
+
+Accepted as supplemental PX-740 evidence:
+- [x] current corpus count: 606;
+- [x] current source kinds present: legacy_html 528 / plain_text 41 / elementor 32 / mixed 2 / gutenberg 3;
+- [x] no empty/error/unknown posts in scan;
+- [x] representative post IDs exported per source kind;
+- [x] Helpful Tips current coverage: 7 posts, canonical shape `{title,content}`;
+- [x] current `the_content` pipeline contains GAC PostActions, GAC KnowledgeBridge, GRE Helpful Tips, WPUI anchors, BDC Search Anchor Manager and GRE Summary renderer;
+- [x] runner safety read-only / no `the_content` execution / no mutation.
+
+Not proven by this PX-700 artifact:
+- [ ] current Summary present/absent sample selection;
+- [ ] px740.3 `public-reader.js` flow/fixed/bottom asset checks;
+- [ ] final visual sample across source kinds/data states.
+
+Therefore the dedicated PX-740 runner remains required, but only for the remaining evidence.

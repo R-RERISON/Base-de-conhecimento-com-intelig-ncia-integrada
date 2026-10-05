@@ -624,3 +624,25 @@ Expected behavior:
 - anchored to bottom of slot near article end;
 - no transform/repaint on each scroll pixel;
 - <=1040px normal document flow.
+
+
+## PX-740 px740.3 human visual PASS
+
+Product Owner confirmed the corrected Rail:
+- follows scroll;
+- no longer flickers;
+- behaves correctly in real WordPress homologation.
+
+This closes PX740-VIS-001.
+
+PX-740 is not yet formally closed because UX-005 A030 corpus/source-kind coverage is still not current evidence.
+
+A read-only runner is being prepared to:
+- scan the current published corpus;
+- classify source kinds;
+- select representative samples;
+- verify Tips/Summary present/absent states;
+- verify GAC/WPUI/BDC/GRE hook signals;
+- verify px740.3 Reader assets and no-transform state machine.
+
+No `the_content` execution and no writes.

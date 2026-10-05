@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "HUMAN_VISUAL_STABILITY_PASS",
+  "date": "2026-10-05",
+  "candidate": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.3.zip",
+  "sha256": "7c64e939ce82b3b5ad2988c152bea95e7111578916ce897753d37944ddf7c606",
+  "status": "PASS",
+  "confirmed_by": "Product Owner",
+  "confirmed_behavior": [
+    "Executive Summary Rail follows scroll correctly",
+    "Rail movement is visually stable",
+    "No visible flicker during scroll"
+  ],
+  "remaining_before_closeout": [
+    "current corpus/source-kind technical regression",
+    "representative visual sample across source kinds/data states",
+    "exact-package PHP lint remains tracked validation debt"
+  ]
+}

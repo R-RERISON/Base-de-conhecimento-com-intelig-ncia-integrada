@@ -68,7 +68,7 @@ Historical planned items:
 - [x] PX740-05 freeze Reader canonical-content/the_content compatibility matrix.
 - [x] PX740-06 define static regression contract — `tests/unit/spec007-px740-reader-contract.php`.
 - [x] PX740-07 implement first bounded runtime slice — resolve PX740-GAP-001 with CSS-native sticky Rail; Search JS decoupled from Reader scroll.
-- [ ] PX740-08 package/smoke/closeout — `px740.3` visual-stability package ready; flicker retest + Reader smoke pending.
+- [ ] PX740-08 package/smoke/closeout — `px740.3` Rail visual PASS; corpus/source-kind regression runner pending.
 
 ## Explicitly not active yet
 - PX-750 Theme/Snippet Independence;
@@ -308,3 +308,19 @@ Disposition:
 - [ ] Product Owner visual-stability retest;
 - [ ] representative Reader smoke;
 - [ ] PX-740 closeout.
+
+
+### PX-740 px740.3 human visual validation — 2026-10-05
+
+Product Owner confirmed:
+- PASS: Summary Rail follows scroll;
+- PASS: flicker eliminated;
+- PASS: visual motion considered correct.
+
+Remaining before closeout:
+- current corpus/source-kind technical regression;
+- representative visual samples selected from the current corpus;
+- exact-package PHP lint remains tracked debt.
+
+Runner source:
+- `tools/homologation/spec007/px740-reader-regression-runner.php`.

@@ -583,3 +583,24 @@ px740.6.1:
 - artifact commit `7f1b840b02b26fe3add3285bdf8cb1cf485e6305`;
 - SHA-256 `b9c72325c25e8bce121b521cda469b0a094d1e4958e0d1e105c27b36a0917e06`;
 - 103 distributed files.
+
+
+### PX-740 runtime incident escalation — px740.6.1
+
+Product Owner result:
+- [x] px740.6.1 activation = FATAL / DO NOT USE.
+
+Diagnostic:
+- [x] exact px740.6.1 ZIP extracted in GitHub Actions;
+- [x] all source PHP lint PASS on PHP 8.5;
+- [x] all exact-artifact PHP lint PASS on PHP 8.5;
+- [ ] clean WordPress 7.1.2 / PHP 8.5 activation diagnostic queued;
+- [ ] environment-specific fatal stack trace pending.
+
+Safe recovery:
+- [x] branch `spec007-px740-safe-recovery` created from known-good px740.5 source;
+- [x] only `assets/css/visual-foundation.css` changed;
+- [x] all 83 PHP files byte-identical to px740.5;
+- [x] deterministic package `px740.5.1-safe-recovery`;
+- [x] SHA-256 `9609c9f45dbd4f2f27d80a6282b35516a1cd3afc9fba7d2632ec3ba46c746d3a`;
+- [ ] Product Owner activation re-test.

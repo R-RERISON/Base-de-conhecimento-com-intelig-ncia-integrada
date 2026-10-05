@@ -938,3 +938,23 @@ Hotfix artifact:
 - source checks PASS 21/21;
 - runtime re-test required;
 - exact-package PHP lint pending.
+
+
+## PX-740 runtime escalation and safe recovery
+
+px740.6.1 also failed activation in the Product Owner environment.
+
+Important diagnostic result:
+- exact px740.6.1 artifact PHP lint PASS under PHP 8.5;
+- therefore the observed fatal is not a PHP parse error;
+- clean WP 7.1.2 / PHP 8.5 activation reproduction remains queued.
+
+Safe recovery path:
+- base = px740.5, previously activated successfully by Product Owner;
+- package = `base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.5.1-safe-recovery.zip`;
+- only `assets/css/visual-foundation.css` differs from px740.5;
+- all 83 PHP files are byte-identical to px740.5;
+- deterministic package;
+- SHA-256 `9609c9f45dbd4f2f27d80a6282b35516a1cd3afc9fba7d2632ec3ba46c746d3a`.
+
+px740.6 and px740.6.1 remain DO NOT USE.

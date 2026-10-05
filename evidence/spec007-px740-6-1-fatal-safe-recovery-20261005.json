@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "incident": "PX740_6_1_ACTIVATION_FATAL",
+  "date": "2026-10-05",
+  "px740_6_1": {
+    "status": "RUNTIME_FAIL_DO_NOT_USE",
+    "exact_artifact_php_lint": "PASS_PHP_8_5",
+    "parse_error": false,
+    "clean_activation_reproduction": "QUEUED"
+  },
+  "safe_recovery": {
+    "build": "px740.5.1-safe-recovery",
+    "source_branch": "spec007-px740-safe-recovery",
+    "source_commit": "b7f22761ca38e16f130135d2879655f897e787a1",
+    "artifact_commit": "fdb70e5933a01aeba5931f6ffa09292a52f6f263",
+    "git_blob_sha": "26549fbb2d1f2fa3ad042fc8d179457d65b2922b",
+    "sha256": "9609c9f45dbd4f2f27d80a6282b35516a1cd3afc9fba7d2632ec3ba46c746d3a",
+    "bytes": 805578,
+    "distributed_files": 103,
+    "php_files": 83,
+    "all_php_byte_identical_to_px740_5": true,
+    "changed_entries": [
+      "assets/css/visual-foundation.css"
+    ],
+    "deterministic": true
+  }
+}

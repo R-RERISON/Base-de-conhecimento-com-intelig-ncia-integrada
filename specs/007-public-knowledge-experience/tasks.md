@@ -492,3 +492,45 @@ Contract:
 - [ ] Product Owner visual homologation;
 - [ ] exact-package PHP lint;
 - [ ] PX-740 closeout.
+
+
+### PX-740 v8.1 Premium Designer Regression Audit — 2026-10-05
+
+Product Owner screenshots exposed a real v8 regression.
+
+Critical findings:
+- [x] CSS ownership conflict: `visual-foundation.css` loads after `workspace.css` and re-applied horizontal tab overflow to the v8 narrow navigation column;
+- [x] three simultaneous columns violated the existing design-system rule of at most two desktop columns;
+- [x] homologation assets used the unchanged `0.6.0-dev` query version, allowing stale CSS/JS across px740 candidates.
+
+High findings:
+- [x] sticky table header removed because it could occlude first-row article title inside clipped rounded wrapper;
+- [x] article title/meta rendering hardened as explicit block rows;
+- [x] empty classification vocabularies no longer render large empty listboxes;
+- [x] multi-select height now adapts to term count;
+- [x] sticky submit overlay removed;
+- [x] Helpful Tips initial blank rows reduced from 8 to 3 and grouped into responsive task sections.
+
+Architecture recovery:
+- [x] local navigation returns to top horizontal product navigation;
+- [x] five primary domains remain directly visible;
+- [x] four secondary domains move to accessible `Mais` overflow;
+- [x] main + context is the maximum desktop column count;
+- [x] context reflows below main at <=1180px;
+- [x] final cascade ownership explicitly resides in the last-loaded visual foundation layer;
+- [x] asset versions use SHA-256 file fingerprints.
+
+Static/source validation:
+- [x] 26/26 PASS;
+- [x] Workspace JS syntax PASS;
+- [x] Reader JS syntax PASS;
+- [x] Search JS syntax PASS and byte-identical;
+- [x] public article template byte-identical;
+- [x] Public_Article_Content byte-identical;
+- [x] Reader Rail flow/fixed/bottom preserved;
+- [x] no cutover/storage mutation.
+
+- [ ] deterministic px740.6 recovery package;
+- [ ] exact-package PHP lint;
+- [ ] Product Owner visual regression re-test;
+- [ ] PX-740 closeout.

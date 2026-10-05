@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "PREMIUM_DESIGNER_REGRESSION_AUDIT_V8_1",
+  "date": "2026-10-05",
+  "status": "REGRESSION_CONFIRMED_RECOVERY_SOURCE_PASS",
+  "source_commit": "53d409d02d23df881421be701e05ba55d01301f7",
+  "findings": {
+    "critical": [
+      "last-loaded visual-foundation.css overrode workspace v8 navigation behavior",
+      "three simultaneous workspace columns violated existing design-system width contract",
+      "unchanged BDC_KB_VERSION asset query allowed stale assets between px740 candidates"
+    ],
+    "high": [
+      "navigation clipping/horizontal scrollbar",
+      "first-row title occlusion risk from sticky table header",
+      "oversized empty classification listboxes",
+      "sticky submit overlay",
+      "eight default Helpful Tips rows"
+    ]
+  },
+  "recovery": [
+    "horizontal primary navigation plus accessible More overflow",
+    "maximum two-column workspace",
+    "last-loaded final cascade ownership",
+    "SHA-256 asset fingerprints",
+    "static table header",
+    "classification empty states and adaptive listbox size",
+    "normal-flow submit actions",
+    "Helpful Tips default rows reduced to three"
+  ],
+  "source_validation": "PASS_26_OF_26",
+  "next": "Build px740.6, lint exact package, Product Owner visual re-test."
+}

@@ -870,3 +870,29 @@ Controlled runtime replacements:
 - assets/js/public-reader.js.
 
 No Search/ranker/schema/content-store/cutover changes.
+
+
+## PX-740 v8.1 — Premium Designer Regression Recovery
+
+The px740.5 screenshots exposed a real visual regression, not merely a taste issue.
+
+Root cause:
+1. `workspace.css` introduced the v8 narrow vertical nav.
+2. `visual-foundation.css`, loaded later, still owned legacy `.bdc-kb-tabs` rules and restored horizontal flex/overflow.
+3. This created a mixed-mode navigation: a horizontal tab row forced into a narrow vertical grid column.
+4. The v8 shell also nested navigation + main + context, violating the project design-system rule of at most two desktop columns.
+5. All px740 candidates shared asset URL version `0.6.0-dev`, so browser/proxy cache could retain stale CSS/JS between candidates.
+
+v8.1 recovery:
+- removes the nested 3-column shell;
+- uses horizontal primary navigation + `Mais` overflow;
+- restores max two-column workspace;
+- fixes final cascade ownership in the last-loaded visual layer;
+- fingerprints CSS/JS versions by SHA-256 file hash;
+- removes sticky table header;
+- replaces empty classification listboxes with explicit empty states;
+- makes classification multi-select height adaptive;
+- removes sticky save overlay;
+- reduces default Helpful Tips slots 8 -> 3 and groups writer sections.
+
+Source validation: 26/26 PASS.

@@ -896,3 +896,20 @@ v8.1 recovery:
 - reduces default Helpful Tips slots 8 -> 3 and groups writer sections.
 
 Source validation: 26/26 PASS.
+
+
+## PX-740 v8.1 candidate px740.6
+
+Artifact:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.6.zip`;
+- source `e2815f0400e6f899df1085935cda77ed7566df2c`;
+- artifact commit `43e977cfc45d6ebc8f04fcb3f23173533c1c3bee`;
+- Git blob `b17e27c22f2bba7b09b3b79307e2241c27acf95c`;
+- SHA-256 `247da4302e384a1442790ca9e0d4b97e5566787d5a616137346868e2fb4a4caf`;
+- size 815,090 bytes;
+- 103 distributed files;
+- deterministic build PASS;
+- source contract PASS 26/26;
+- exact-package PHP lint pending.
+
+This candidate supersedes rejected px740.5 for visual regression recovery.

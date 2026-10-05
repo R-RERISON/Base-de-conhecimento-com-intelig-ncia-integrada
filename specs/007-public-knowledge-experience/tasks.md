@@ -530,7 +530,32 @@ Static/source validation:
 - [x] Reader Rail flow/fixed/bottom preserved;
 - [x] no cutover/storage mutation.
 
-- [ ] deterministic px740.6 recovery package;
+- [x] deterministic px740.6 recovery package;
 - [ ] exact-package PHP lint;
 - [ ] Product Owner visual regression re-test;
 - [ ] PX-740 closeout.
+
+
+### PX-740 v8.1 regression recovery candidate — px740.6
+
+- [x] source commit `e2815f0400e6f899df1085935cda77ed7566df2c`;
+- [x] source validation PASS 26/26;
+- [x] deterministic package;
+- [x] artifact branch `spec007-px740-homologation-artifact`;
+- [x] artifact commit `43e977cfc45d6ebc8f04fcb3f23173533c1c3bee`;
+- [x] Git blob `b17e27c22f2bba7b09b3b79307e2241c27acf95c`;
+- [x] SHA-256 `247da4302e384a1442790ca9e0d4b97e5566787d5a616137346868e2fb4a4caf`;
+- [x] 103 distributed files;
+- [x] seven controlled replacements over px740.5;
+- [ ] exact-package PHP lint;
+- [ ] Product Owner visual regression re-test;
+- [ ] PX-740 closeout.
+
+Visual re-test focus:
+1. list first article title visible;
+2. no horizontal scrollbar/truncation in workspace nav;
+3. workspace never renders three simultaneous product columns;
+4. Classification empty vocabularies use compact empty state;
+5. save action does not overlay the last field;
+6. Helpful Tips does not render eight blank rows;
+7. browser hard refresh is not required to receive changed BDC assets because URLs are fingerprinted.

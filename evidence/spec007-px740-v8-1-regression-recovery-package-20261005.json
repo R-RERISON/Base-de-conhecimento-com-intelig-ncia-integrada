@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "PREMIUM_DESIGNER_REGRESSION_RECOVERY_PACKAGE_READY",
+  "date": "2026-10-05",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "source_commit": "e2815f0400e6f899df1085935cda77ed7566df2c",
+  "artifact": {
+    "filename": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.6.zip",
+    "branch": "spec007-px740-homologation-artifact",
+    "commit": "43e977cfc45d6ebc8f04fcb3f23173533c1c3bee",
+    "git_blob_sha": "b17e27c22f2bba7b09b3b79307e2241c27acf95c",
+    "sha256": "247da4302e384a1442790ca9e0d4b97e5566787d5a616137346868e2fb4a4caf",
+    "bytes": 815090,
+    "distributed_files": 103,
+    "deterministic_equal": true
+  },
+  "validation": {
+    "source_contract": "PASS_26_OF_26",
+    "package_structure": "PASS",
+    "exact_package_php_lint": "PENDING",
+    "product_owner_visual_regression_retest": "PENDING"
+  },
+  "visual_retest": [
+    "first article title visible",
+    "no clipped nav or horizontal scrollbar at desktop width",
+    "maximum two simultaneous product columns",
+    "classification empty vocabularies use explicit empty state",
+    "submit action does not overlap form controls",
+    "Helpful Tips initial empty rows reduced to three",
+    "changed CSS/JS assets receive fingerprinted URLs"
+  ]
+}

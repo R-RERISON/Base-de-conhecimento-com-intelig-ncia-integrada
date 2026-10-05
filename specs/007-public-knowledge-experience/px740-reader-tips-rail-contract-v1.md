@@ -179,3 +179,24 @@ Not changed:
 - Reader template structure;
 - GAC/WPUI callbacks;
 - GRE candidate-only duplicate suppression.
+
+
+## Human smoke correction — px740.1
+
+Observed in real WordPress homologation:
+- Reader renders;
+- Summary Rail renders;
+- Summary Rail does not follow scroll.
+
+Therefore the CSS-native sticky-only resolution of PX740-GAP-001 is rejected.
+
+Revised frozen approach:
+- Search JS must remain free of Reader scroll logic;
+- Reader follow behavior belongs in dedicated `assets/js/public-reader.js`;
+- desktop Rail uses bounded relative translation inside `bdc-reader-summary-slot`;
+- scroll work is requestAnimationFrame-throttled;
+- ResizeObserver refreshes limits when article/Rail dimensions change;
+- <=1040px Rail returns to normal document flow;
+- the Rail may not escape the vertical bounds of its slot.
+
+`px740.1` is superseded and cannot close PX-740.

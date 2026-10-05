@@ -247,3 +247,16 @@ Pending:
 
 Evidence:
 - `evidence/spec007-px740-package-ready-20261005.json`.
+
+
+### PX-740 homologation regression — px740.1
+
+Product Owner visual smoke identified:
+- Reader content renders correctly;
+- Executive Summary Rail renders;
+- FAIL: Summary Rail does not accompany page scroll.
+
+Disposition:
+- `px740.1` is SUPERSEDED / NOT CLOSABLE;
+- CSS-native sticky-only strategy rejected by real WordPress homologation;
+- correction moved to `px740.2` architecture: dedicated Reader JS, separate from Search JS.

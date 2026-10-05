@@ -539,3 +539,17 @@ Recommended smoke:
 - desktop sticky Rail;
 - <=1040px Rail reflow;
 - confirm GAC actions/bridge and WPUI anchors remain present.
+
+
+## PX-740 px740.1 human smoke regression
+
+User-confirmed:
+- page/Reader loaded correctly;
+- Summary Rail visible;
+- FAIL: Rail did not follow scroll.
+
+Disposition:
+- `px740.1` superseded;
+- native sticky-only approach rejected for this real environment;
+- next candidate uses dedicated `public-reader.js` for bounded follow behavior;
+- Search JS remains decoupled.

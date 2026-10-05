@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "candidate": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.1.zip",
+  "sha256": "bb55c4fd7f89e7cdccbb1e9feb3ae3eb225f4190ff6bf4e90e5c620552646fd7",
+  "date": "2026-10-05",
+  "evidence_type": "PRODUCT_OWNER_VISUAL_SMOKE",
+  "status": "FAIL",
+  "passed": [
+    "Reader renders",
+    "Executive Summary Rail renders"
+  ],
+  "failed": [
+    {
+      "requirement": "Executive Summary Rail follows page scroll on desktop",
+      "status": "FAIL"
+    }
+  ],
+  "disposition": "SUPERSEDED_BY_PX740_2",
+  "root_cause": "CSS-native sticky-only strategy does not provide follow behavior in the real WordPress homologation environment.",
+  "corrective_architecture": "Dedicated public-reader.js with bounded requestAnimationFrame scroll translation; public-search.js remains search-only."
+}

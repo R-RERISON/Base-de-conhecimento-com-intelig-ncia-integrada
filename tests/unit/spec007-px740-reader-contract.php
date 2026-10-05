@@ -15,6 +15,7 @@ $paths = array(
 	'summary' => $plugin . '/includes/class-summary-store.php',
 	'css' => $plugin . '/assets/css/public-article.css',
 	'js' => $plugin . '/assets/js/public-search.js',
+	'reader_js' => $plugin . '/assets/js/public-reader.js',
 );
 
 $source = array();
@@ -92,13 +93,21 @@ $checks = array(
 );
 
 $resolved = array(
-	'PX740-GAP-001_native_sticky_only' =>
+	'PX740-GAP-001_dedicated_reader_follow_rail' =>
 		is_string( $source['css'] )
-		&& str_contains( $source['css'], '.bdc-reader-summary{position:sticky;' )
-		&& ! str_contains( $source['css'], '.bdc-reader-summary{position:relative;' )
+		&& str_contains( $source['css'], '.bdc-reader-summary{position:relative;' )
 		&& is_string( $source['js'] )
 		&& ! str_contains( $source['js'], 'function initReaderRail()' )
-		&& ! str_contains( $source['js'], 'translate3d(' ),
+		&& ! str_contains( $source['js'], 'translate3d(' )
+		&& is_string( $source['reader_js'] )
+		&& str_contains( $source['reader_js'], 'function initReaderRail()' )
+		&& str_contains( $source['reader_js'], "translate3d(0,' + Math.round(y) + 'px,0)" )
+		&& str_contains( $source['reader_js'], 'window.innerWidth <= 1040' )
+		&& str_contains( $source['reader_js'], "window.addEventListener('scroll', requestUpdate, { passive: true })" )
+		&& str_contains( $source['reader_js'], 'new ResizeObserver(requestUpdate)' )
+		&& is_string( $source['experience'] )
+		&& str_contains( $source['experience'], "if ( 'article' === $kind )" )
+		&& str_contains( $source['experience'], "'assets/js/public-reader.js'" ),
 );
 
 $failed = array_keys( array_filter( $checks, static fn ( bool $pass ): bool => ! $pass ) );

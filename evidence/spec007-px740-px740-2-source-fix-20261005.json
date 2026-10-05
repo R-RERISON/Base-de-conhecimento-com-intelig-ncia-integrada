@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "PX740_2_SOURCE_FIX",
+  "date": "2026-10-05",
+  "status": "SOURCE_IMPLEMENTED_STATIC_VALIDATION_PENDING",
+  "changes": [
+    "added assets/js/public-reader.js",
+    "article-only enqueue from Public_Experience",
+    "rail positioning restored to relative bounded transform model",
+    "Search JS remains free of Reader Rail movement",
+    "ResizeObserver added to recompute rail bounds after layout changes"
+  ],
+  "invariants": {
+    "canonical_the_content": true,
+    "tips_summary_storage_unchanged": true,
+    "gac_wpui_hooks_unchanged": true,
+    "gre_candidate_only_suppression_unchanged": true,
+    "editorial_storage_mutation": false,
+    "cutover": false
+  },
+  "next": "Validate static contract and build px740.2."
+}

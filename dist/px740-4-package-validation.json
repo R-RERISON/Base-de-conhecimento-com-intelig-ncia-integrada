@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "phase": "PREMIUM_VISUAL_PACKAGE",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "build": "px740.4",
+  "zip": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.4.zip",
+  "zip_sha256": "b55c23026beb5721c1b22644af9909ebc84f7ee7a6e0e8132cd7dae343d4934a",
+  "bytes": 782701,
+  "deterministic_equal": true,
+  "inspection": {
+    "pass": true,
+    "file_count": 103,
+    "single_root": true,
+    "required_missing": [],
+    "forbidden_paths": [],
+    "replaced": [
+      "base-conhecimento-inteligencia-integrada/assets/css/public-foundation.css",
+      "base-conhecimento-inteligencia-integrada/assets/css/public-header.css",
+      "base-conhecimento-inteligencia-integrada/assets/css/public-home.css",
+      "base-conhecimento-inteligencia-integrada/assets/css/public-article.css",
+      "base-conhecimento-inteligencia-integrada/assets/css/visual-foundation.css",
+      "base-conhecimento-inteligencia-integrada/includes/class-public-experience.php"
+    ]
+  },
+  "visual_contract": "PASS_12_OF_12",
+  "reader_javascript_syntax": "PASS",
+  "search_javascript_syntax": "PASS",
+  "php_lint": "PENDING_EXACT_ARTIFACT",
+  "invariants": {
+    "search_ranker_schema_unchanged": true,
+    "content_capture_unchanged": true,
+    "gac_wpui_unchanged": true,
+    "tips_summary_data_unchanged": true,
+    "reader_rail_state_machine_unchanged": true,
+    "cutover_authorized": false
+  },
+  "next_gate": "PX740_PRODUCT_OWNER_VISUAL_V7"
+}

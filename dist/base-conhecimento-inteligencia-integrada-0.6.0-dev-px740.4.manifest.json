@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "purpose": "SPEC-007 PX-740 premium visual v7 homologation package",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px740.4",
+  "ui_version": "premium-v7",
+  "source_commit": "625a5606d1ea66a95f8e5875cdb5c6cce758a252",
+  "root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "b55c23026beb5721c1b22644af9909ebc84f7ee7a6e0e8132cd7dae343d4934a",
+  "bytes": 782701,
+  "file_count": 103,
+  "supersedes": "px740.3 for visual evaluation only; functional contracts inherited",
+  "replacements": {
+    "assets/css/public-foundation.css": {
+      "blob_sha": "6e86a04f87906b4c2a4a12fa0d7c184c7f7e49d1",
+      "bytes": 8483
+    },
+    "assets/css/public-header.css": {
+      "blob_sha": "4183f61a55120cba4d1b307b803e51ecfb4bea72",
+      "bytes": 10806
+    },
+    "assets/css/public-home.css": {
+      "blob_sha": "5f98a73f4b6b91048f885127e0a224d555f40dae",
+      "bytes": 10357
+    },
+    "assets/css/public-article.css": {
+      "blob_sha": "5f5c14aac44e1cf2e53b9e1f17ffac61589eaa73",
+      "bytes": 16301
+    },
+    "assets/css/visual-foundation.css": {
+      "blob_sha": "cb0d83217b5897701134c5c3022cdd08c916ad55",
+      "bytes": 29820
+    },
+    "includes/class-public-experience.php": {
+      "blob_sha": "875af2f07c705353332126572ea5f61917be10dc",
+      "bytes": 19404
+    }
+  }
+}

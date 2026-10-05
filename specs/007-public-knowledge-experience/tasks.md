@@ -68,7 +68,7 @@ Historical planned items:
 - [x] PX740-05 freeze Reader canonical-content/the_content compatibility matrix.
 - [x] PX740-06 define static regression contract — `tests/unit/spec007-px740-reader-contract.php`.
 - [x] PX740-07 implement first bounded runtime slice — resolve PX740-GAP-001 with CSS-native sticky Rail; Search JS decoupled from Reader scroll.
-- [ ] PX740-08 package/smoke/closeout — source slice implemented; package pending.
+- [ ] PX740-08 package/smoke/closeout — `px740.1` package ready; WordPress Reader smoke pending.
 
 ## Explicitly not active yet
 - PX-750 Theme/Snippet Independence;
@@ -227,3 +227,23 @@ Pending:
 - static-equivalent regression verification;
 - deterministic `px740.1` package;
 - WordPress representative Reader smoke.
+
+
+### PX-740 package candidate — 2026-10-05
+
+- [x] source commit `ff578126b7f9fc83d8a66715282dba463751aac5`;
+- [x] Reader static-equivalent contract PASS;
+- [x] JavaScript syntax PASS;
+- [x] PX740-GAP-001 resolved;
+- [x] deterministic candidate `px740.1`;
+- [x] artifact branch `spec007-px740-homologation-artifact`;
+- [x] artifact commit `1357749409f3add6e3c4243d930b5f3044630cb8`;
+- [x] ZIP SHA-256 `bb55c4fd7f89e7cdccbb1e9feb3ae3eb225f4190ff6bf4e90e5c620552646fd7`;
+- [x] 102 distributed files;
+- [x] exactly 2 runtime replacements: `public-search.js` + `public-article.css`;
+- [ ] exact-package PHP lint;
+- [ ] WordPress representative Reader smoke;
+- [ ] PX-740 closeout.
+
+Evidence:
+- `evidence/spec007-px740-package-ready-20261005.json`.

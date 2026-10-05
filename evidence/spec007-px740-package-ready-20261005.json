@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "PACKAGE_READY",
+  "date": "2026-10-05",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "source_commit": "ff578126b7f9fc83d8a66715282dba463751aac5",
+  "artifact": {
+    "filename": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.1.zip",
+    "branch": "spec007-px740-homologation-artifact",
+    "commit": "1357749409f3add6e3c4243d930b5f3044630cb8",
+    "git_blob_sha": "64764e7426919ea2c5047d6de5973558704fcfea",
+    "sha256": "bb55c4fd7f89e7cdccbb1e9feb3ae3eb225f4190ff6bf4e90e5c620552646fd7",
+    "bytes": 764772,
+    "distributed_files": 102,
+    "deterministic_equal": true,
+    "single_root": true,
+    "forbidden_engineering_paths": []
+  },
+  "runtime_replacements": [
+    "assets/js/public-search.js",
+    "assets/css/public-article.css"
+  ],
+  "resolved": [
+    "PX740-GAP-001"
+  ],
+  "unchanged": {
+    "article_template_blob": "6e0ba354c672a65e11c4d757eca045ad5b2a9e93",
+    "article_content_blob": "c88fdc4520bc785b002b544782438938aa896b62",
+    "tips_store_blob": "644a6f7f402823b36aaf23cc559c7c6e52451564",
+    "summary_store_blob": "d1d986d7b82989581899d5be8d416673d8f1a8e8"
+  },
+  "validation": {
+    "reader_static_equivalent": "PASS",
+    "javascript_syntax": "PASS",
+    "structural_package": "PASS",
+    "exact_package_php_lint": "PENDING",
+    "wordpress_reader_smoke": "PENDING"
+  },
+  "next": "Install px740.1 and execute representative Reader smoke."
+}

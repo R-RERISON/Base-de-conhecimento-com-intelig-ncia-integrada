@@ -508,3 +508,34 @@ PX740-GAP-001 resolved:
 
 No content/storage/hook ownership change.
 Next: static verification -> `px740.1` -> representative Reader smoke.
+
+
+## PX-740 package candidate — 2026-10-05
+
+Candidate:
+- file `base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.1.zip`;
+- artifact branch `spec007-px740-homologation-artifact`;
+- artifact commit `1357749409f3add6e3c4243d930b5f3044630cb8`;
+- Git blob `64764e7426919ea2c5047d6de5973558704fcfea`;
+- SHA-256 `bb55c4fd7f89e7cdccbb1e9feb3ae3eb225f4190ff6bf4e90e5c620552646fd7`;
+- size 764,772 bytes;
+- 102 distributed files;
+- deterministic rebuild PASS;
+- structural package PASS;
+- only `assets/js/public-search.js` and `assets/css/public-article.css` differ from `px730-final`.
+
+Pending:
+- exact-package PHP lint;
+- WordPress representative Reader smoke.
+
+Recommended smoke:
+- Reader with Summary Rail;
+- Reader without Summary;
+- Reader with Helpful Tips;
+- representative legacy HTML;
+- representative plain text;
+- representative Elementor;
+- representative Gutenberg;
+- desktop sticky Rail;
+- <=1040px Rail reflow;
+- confirm GAC actions/bridge and WPUI anchors remain present.

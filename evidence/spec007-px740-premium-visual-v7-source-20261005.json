@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "PREMIUM_VISUAL_V7_SOURCE",
+  "date": "2026-10-05",
+  "status": "SOURCE_IMPLEMENTED_STATIC_VALIDATION_PENDING",
+  "trigger": "Product Owner screenshots show functional experience still looks like development rather than final premium product.",
+  "changes": [
+    "public foundation visual depth",
+    "header/navigation chrome",
+    "Home hero/search/explore composition",
+    "Reader editorial canvas and typography",
+    "Summary Rail visual hierarchy",
+    "internal Preview admin presentation",
+    "preview sample matrix aligned to final PX-740 visual set"
+  ],
+  "invariants": {
+    "search_ranker_schema_unchanged": true,
+    "article_content_capture_unchanged": true,
+    "gac_wpui_hooks_unchanged": true,
+    "tips_summary_data_unchanged": true,
+    "reader_rail_state_machine_unchanged": true,
+    "editorial_storage_mutation": false,
+    "public_cutover": false
+  },
+  "next": "Static validation -> px740.4 -> Product Owner visual comparison."
+}

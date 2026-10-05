@@ -766,3 +766,26 @@ Minimal final visual matrix selected by overlap:
 This 5-post set covers every required source kind and every structured Reader state with no redundant test article.
 
 After Product Owner visual PASS on these five, PX-740 can close with only the already tracked exact-ZIP PHP-lint exception.
+
+
+## PX-740 premium visual refinement v7
+
+Product Owner feedback after technical PASS:
+- functional behavior is correct;
+- visual presentation still reads as development rather than final premium product.
+
+Decision:
+- PX-740 remains OPEN;
+- do not freeze px740-final yet;
+- implement v7 purely as presentation refinement.
+
+v7 scope:
+- less cardification;
+- stronger Home hero/search composition;
+- quieter enterprise header;
+- editorial Reader surface;
+- stronger Summary Rail hierarchy;
+- normalized legacy-link/heading rhythm;
+- product-quality internal Preview admin page.
+
+No Search/data/hook/storage/Rail-state changes.

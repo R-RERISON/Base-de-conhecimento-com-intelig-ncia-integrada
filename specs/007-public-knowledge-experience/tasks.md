@@ -408,3 +408,26 @@ These 5 replace the original 8-condition matrix by overlap and still cover:
 - Summary absent.
 
 PX-740 closeout requires only Product Owner visual PASS for this 5-post matrix plus the already accepted Rail PASS.
+
+
+### PX-740 premium visual refinement v7 — 2026-10-05
+
+Product Owner rejected visual closeout as not yet premium/final.
+
+Status:
+- [x] screenshot-driven visual diagnosis;
+- [x] v7 design direction frozen;
+- [x] Home visual system refinement implemented;
+- [x] Header/chrome refinement implemented;
+- [x] Reader editorial refinement implemented;
+- [x] Summary Rail visual integration implemented;
+- [x] internal Preview admin refinement implemented;
+- [x] functional ownership boundaries preserved;
+- [x] final visual sample matrix aligned to 396 / 367 / 36431 / 515 / 358;
+- [ ] static visual contract;
+- [ ] deterministic px740.4 package;
+- [ ] Product Owner visual comparison;
+- [ ] PX-740 closeout.
+
+Contract:
+- `px740-premium-visual-refinement-v7.md`.

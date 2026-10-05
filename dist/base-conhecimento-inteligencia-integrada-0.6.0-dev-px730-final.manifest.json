@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-730",
+  "artifact_kind": "closure_package",
+  "closure_status": "CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION",
+  "product_version": "0.6.0-dev",
+  "shell_version": "public-shell-v1.0.0",
+  "live_search_contract": "px730-live-search-v1.0.0",
+  "filename": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px730-final.zip",
+  "sha256": "5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6",
+  "bytes": 766344,
+  "git_blob_sha": "f6185e07e86658b84a7245bdd3d790dc901ea603",
+  "derived_from_candidate": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px730.1.zip",
+  "byte_identity_with_candidate": true,
+  "distributed_files": 102,
+  "human_smoke": "PASS_PRODUCT_OWNER_2026-10-05",
+  "validation": {
+    "deterministic_build": "PASS",
+    "structural_package_contract": "PASS",
+    "live_search_static_contract_equivalent": "PASS",
+    "javascript_syntax": "PASS",
+    "wordpress_candidate_smoke": "PASS",
+    "exact_artifact_php_lint": "ACCEPTED_EXCEPTION_NOT_EXECUTED"
+  },
+  "invariants": {
+    "public_cutover": false,
+    "page_on_front_mutation": false,
+    "home_snippet_mutation": false,
+    "astra_custom_css_mutation": false,
+    "editorial_storage_mutation": false,
+    "search_ranker_schema_mutation": false,
+    "legacy_plugin_retirement": false
+  },
+  "next_gate": "PX-740 Reader / Tips / Rail"
+}

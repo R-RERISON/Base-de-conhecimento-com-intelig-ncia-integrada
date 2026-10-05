@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-730",
+  "phase": "CLOSEOUT",
+  "status": "CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION",
+  "closure_zip": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px730-final.zip",
+  "closure_zip_sha256": "5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6",
+  "candidate_and_closure_byte_identical": true,
+  "human_smoke": {
+    "status": "PASS",
+    "confirmed_by": "Product Owner",
+    "date": "2026-10-05",
+    "scenarios": [
+      "Home live search with results",
+      "Home zero-results state",
+      "Reader compact live search",
+      "stale-response protection under rapid query changes",
+      "Ctrl/Cmd+K keyboard entry",
+      "Escape cancel/dismiss",
+      "Clear/reset behavior",
+      "candidate Reader navigation from results"
+    ]
+  },
+  "accepted_validation_exceptions": [
+    {
+      "id": "PX730-EX-001",
+      "check": "exact published ZIP PHP lint",
+      "disposition": "accepted for gate closure; remains release-readiness debt and is not recorded as PASS",
+      "must_discharge_before": "PX-790"
+    }
+  ],
+  "no_cutover": true,
+  "next_gate": "PX-740"
+}

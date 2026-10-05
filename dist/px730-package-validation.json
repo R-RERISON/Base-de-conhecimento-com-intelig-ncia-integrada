@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-730",
+  "phase": "PACKAGE_BUILD",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "execution_mode": "CONNECTOR_DETERMINISTIC_EQUIVALENT",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px730.1",
+  "zip": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px730.1.zip",
+  "zip_sha256": "5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6",
+  "bytes": 766344,
+  "deterministic_equal": true,
+  "inspection": {
+    "pass": true,
+    "file_count": 102,
+    "single_root": true,
+    "required_missing": [],
+    "forbidden_paths": [],
+    "replaced": [
+      "base-conhecimento-inteligencia-integrada/assets/js/public-search.js",
+      "base-conhecimento-inteligencia-integrada/includes/class-public-experience.php",
+      "base-conhecimento-inteligencia-integrada/assets/css/public-foundation.css"
+    ]
+  },
+  "source_static_contract_equivalent": "PASS",
+  "javascript_syntax": "PASS",
+  "php_lint": "PENDING_EXACT_ARTIFACT",
+  "invariants": {
+    "content_mutation": false,
+    "theme_mutation": false,
+    "page_on_front_mutation": false,
+    "ranker_schema_mutation": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false
+  },
+  "next_gate": "PX730_WORDPRESS_CANDIDATE_SMOKE"
+}

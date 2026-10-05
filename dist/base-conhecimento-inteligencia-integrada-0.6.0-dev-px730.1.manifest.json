@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-730",
+  "purpose": "SPEC-007 PX-730 Live Search homologation package",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px730.1",
+  "shell_version": "public-shell-v1.0.0",
+  "live_search_contract": "px730-live-search-v1.0.0",
+  "source_commit": "231bd82e7d0f8bf02b044c7385f25a4d5f40be8d",
+  "root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6",
+  "bytes": 766344,
+  "file_count": 102,
+  "inherited_pruning_from": "px720-final",
+  "replacements": {
+    "assets/js/public-search.js": {
+      "blob_sha": "1eaad5929efa0baade231b4dd520fb721c9a87a6",
+      "bytes": 12369
+    },
+    "includes/class-public-experience.php": {
+      "blob_sha": "d071d55616635d187a99d9b0f056bcc7660e39d0",
+      "bytes": 18978
+    },
+    "assets/css/public-foundation.css": {
+      "blob_sha": "b3ebcdfed9a697a7f187524ffb38d54d7e5fab91",
+      "bytes": 7078
+    }
+  },
+  "facade_blob_sha": "def1156ff0ce4f66a1b633353a9d1d5804f4bc18"
+}

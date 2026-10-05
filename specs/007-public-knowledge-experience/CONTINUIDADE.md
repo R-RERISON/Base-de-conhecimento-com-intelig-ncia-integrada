@@ -814,3 +814,32 @@ Visual delta only:
 - class-public-experience.php (admin preview markup / visual sample IDs / uiVersion only).
 
 Functional contracts inherited unchanged from px740.3.
+
+
+## PX-740 Premium Product UI v8
+
+px740.4 improved polish but Product Owner correctly rejected it as still visually resembling a styled WordPress/admin implementation.
+
+v8 changes the interaction architecture without changing business contracts.
+
+Admin product workspace:
+- list uses editorial state summary instead of implementation metrics;
+- article activities remain the same registry/URLs/handlers, but are grouped in a local product navigation;
+- desktop uses a product-shell composition;
+- overview is grouped by Content / Knowledge Structure / Governance;
+- forms are treated as task surfaces with persistent save action;
+- context panel remains read-only.
+
+Public:
+- Home discovery is visible by default, using already-existing category/latest/popular read models;
+- category icons from the current read model are now rendered;
+- Reader removes one redundant visual shell;
+- GAC integrated actions are tagged client-side only for presentation; GAC callbacks/data remain untouched.
+
+Static validation:
+- 19/19 PASS;
+- Search JS unchanged;
+- article template unchanged;
+- Public_Article_Content unchanged;
+- Reader flow/fixed/bottom preserved;
+- no cutover/storage mutation.

@@ -448,3 +448,32 @@ Contract:
 - [ ] Product Owner visual comparison;
 - [ ] exact-package PHP lint;
 - [ ] PX-740 closeout.
+
+
+### PX-740 Premium Product UI v8 — 2026-10-05
+
+Trigger:
+- Product Owner rejected px740.4 as visually polished but still not a premium final knowledge product.
+
+Structural remediation:
+- [x] article list: ornamental metrics removed; editorial summary strip added;
+- [x] workspace: grouped local product navigation;
+- [x] workspace: product shell introduced;
+- [x] overview: seven independent cards replaced by three domain health groups;
+- [x] forms: task-oriented field surfaces and sticky save action;
+- [x] Home: discovery area open by default;
+- [x] Home: category icons activated;
+- [x] Reader: one visual framing layer removed;
+- [x] Reader: integrated GAC actions tagged and visually normalized without changing GAC renderer;
+- [x] keyboard navigation supports vertical and horizontal product nav;
+- [x] Search JS unchanged;
+- [x] article template/content capture unchanged;
+- [x] Rail state machine preserved;
+- [x] structural/static checks PASS 19/19;
+- [ ] deterministic px740.5 package;
+- [ ] Product Owner visual homologation;
+- [ ] exact-package PHP lint;
+- [ ] PX-740 closeout.
+
+Contract:
+- `px740-premium-product-ui-v8.md`.

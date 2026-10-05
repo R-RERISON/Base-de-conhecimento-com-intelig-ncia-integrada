@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "PREMIUM_PRODUCT_UI_V8_SOURCE",
+  "date": "2026-10-05",
+  "status": "STATIC_PASS_PACKAGE_PENDING",
+  "trigger": "Product Owner visual rejection of px740.4 as polished but still not premium product UI.",
+  "source_commit": "19bc5605e03ea573f1f3724b25b10058922eb098",
+  "checks": "PASS_19_OF_19",
+  "scope": {
+    "admin": [
+      "article list",
+      "workspace local navigation",
+      "overview health groups",
+      "task-oriented forms"
+    ],
+    "public": [
+      "Home discovery",
+      "category icons",
+      "Reader framing",
+      "GAC presentation integration"
+    ]
+  },
+  "preserved": [
+    "Post_Activity_Registry keys/routes",
+    "Search JS and Search facade semantics",
+    "article template",
+    "Public_Article_Content",
+    "Summary/Classificação/Review writers",
+    "GAC/WPUI/GRE ownership",
+    "Reader flow/fixed/bottom state machine",
+    "no cutover/storage mutation"
+  ],
+  "next": "Build deterministic px740.5 and Product Owner visual homologation."
+}

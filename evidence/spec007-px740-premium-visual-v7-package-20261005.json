@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "PREMIUM_VISUAL_V7_PACKAGE_READY",
+  "date": "2026-10-05",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "source_commit": "625a5606d1ea66a95f8e5875cdb5c6cce758a252",
+  "artifact": {
+    "filename": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.4.zip",
+    "branch": "spec007-px740-homologation-artifact",
+    "commit": "cf455bdd5bc7d1c7068d8a302188be85c0dbfde4",
+    "git_blob_sha": "f9682a1ae805d1b7979b4a5aab96f5671dedf988",
+    "sha256": "b55c23026beb5721c1b22644af9909ebc84f7ee7a6e0e8132cd7dae343d4934a",
+    "bytes": 782701,
+    "distributed_files": 103,
+    "deterministic_equal": true
+  },
+  "validation": {
+    "visual_contract": "PASS_12_OF_12",
+    "search_js_syntax": "PASS",
+    "reader_js_syntax": "PASS",
+    "package_structure": "PASS",
+    "exact_package_php_lint": "PENDING",
+    "product_owner_visual_comparison": "PENDING"
+  },
+  "next": "Install px740.4 and compare Home, Search results, Reader and Preview admin visually."
+}

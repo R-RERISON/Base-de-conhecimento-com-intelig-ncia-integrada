@@ -789,3 +789,28 @@ v7 scope:
 - product-quality internal Preview admin page.
 
 No Search/data/hook/storage/Rail-state changes.
+
+
+## PX-740 premium visual candidate px740.4
+
+Artifact:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.4.zip`;
+- source commit `625a5606d1ea66a95f8e5875cdb5c6cce758a252`;
+- artifact commit `cf455bdd5bc7d1c7068d8a302188be85c0dbfde4`;
+- Git blob `f9682a1ae805d1b7979b4a5aab96f5671dedf988`;
+- SHA-256 `b55c23026beb5721c1b22644af9909ebc84f7ee7a6e0e8132cd7dae343d4934a`;
+- size 782,701 bytes;
+- 103 distributed files;
+- deterministic build PASS;
+- visual contract PASS 12/12;
+- exact-package PHP lint pending.
+
+Visual delta only:
+- public-foundation.css;
+- public-header.css;
+- public-home.css;
+- public-article.css;
+- visual-foundation.css;
+- class-public-experience.php (admin preview markup / visual sample IDs / uiVersion only).
+
+Functional contracts inherited unchanged from px740.3.

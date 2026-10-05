@@ -424,10 +424,27 @@ Status:
 - [x] internal Preview admin refinement implemented;
 - [x] functional ownership boundaries preserved;
 - [x] final visual sample matrix aligned to 396 / 367 / 36431 / 515 / 358;
-- [ ] static visual contract;
-- [ ] deterministic px740.4 package;
+- [x] static visual contract — PASS 12/12;
+- [x] deterministic px740.4 package;
 - [ ] Product Owner visual comparison;
 - [ ] PX-740 closeout.
 
 Contract:
 - `px740-premium-visual-refinement-v7.md`.
+
+
+### PX-740 premium visual candidate — px740.4
+
+- [x] source commit `625a5606d1ea66a95f8e5875cdb5c6cce758a252`;
+- [x] visual contract PASS 12/12;
+- [x] Search JS syntax PASS;
+- [x] Reader JS syntax PASS;
+- [x] deterministic package;
+- [x] artifact branch `spec007-px740-homologation-artifact`;
+- [x] artifact commit `cf455bdd5bc7d1c7068d8a302188be85c0dbfde4`;
+- [x] SHA-256 `b55c23026beb5721c1b22644af9909ebc84f7ee7a6e0e8132cd7dae343d4934a`;
+- [x] 103 distributed files;
+- [x] six visual/runtime replacements only;
+- [ ] Product Owner visual comparison;
+- [ ] exact-package PHP lint;
+- [ ] PX-740 closeout.

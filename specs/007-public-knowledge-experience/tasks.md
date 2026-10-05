@@ -68,7 +68,7 @@ Historical planned items:
 - [x] PX740-05 freeze Reader canonical-content/the_content compatibility matrix.
 - [x] PX740-06 define static regression contract — `tests/unit/spec007-px740-reader-contract.php`.
 - [x] PX740-07 implement first bounded runtime slice — resolve PX740-GAP-001 with CSS-native sticky Rail; Search JS decoupled from Reader scroll.
-- [ ] PX740-08 package/smoke/closeout — `px740.1` package ready; WordPress Reader smoke pending.
+- [ ] PX740-08 package/smoke/closeout — `px740.2` corrected package ready; Rail follow retest + Reader smoke pending.
 
 ## Explicitly not active yet
 - PX-750 Theme/Snippet Independence;
@@ -260,3 +260,21 @@ Disposition:
 - `px740.1` is SUPERSEDED / NOT CLOSABLE;
 - CSS-native sticky-only strategy rejected by real WordPress homologation;
 - correction moved to `px740.2` architecture: dedicated Reader JS, separate from Search JS.
+
+
+### PX-740 corrected candidate — px740.2
+
+- [x] `px740.1` marked SUPERSEDED after human smoke FAIL on Rail follow;
+- [x] dedicated `assets/js/public-reader.js`;
+- [x] Search JS remains Reader-free;
+- [x] bounded requestAnimationFrame Rail translation;
+- [x] ResizeObserver layout recalculation;
+- [x] <=1040px normal document flow preserved;
+- [x] deterministic package `px740.2`;
+- [x] artifact commit `6375d13dbfe8689e62bd30b427bcc5a5d74a450b`;
+- [x] SHA-256 `c6dc316f5b51342410cbbc47521a6bd39b170a4bd188366c34c420375eb509be`;
+- [x] 103 distributed files;
+- [ ] exact-package PHP lint;
+- [ ] Product Owner Rail-follow retest;
+- [ ] representative Reader smoke;
+- [ ] PX-740 closeout.

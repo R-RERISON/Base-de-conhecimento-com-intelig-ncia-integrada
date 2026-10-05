@@ -553,3 +553,32 @@ Disposition:
 - native sticky-only approach rejected for this real environment;
 - next candidate uses dedicated `public-reader.js` for bounded follow behavior;
 - Search JS remains decoupled.
+
+
+## PX-740 corrected candidate px740.2
+
+`px740.1` is not acceptable for closeout because real WordPress homologation showed the Summary Rail did not accompany scroll.
+
+Corrected candidate:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.2.zip`;
+- source commit `49860f1e357f1d0ac4792639c20c5cae82e79b2d`;
+- artifact branch `spec007-px740-homologation-artifact`;
+- artifact commit `6375d13dbfe8689e62bd30b427bcc5a5d74a450b`;
+- Git blob `013c5f8d813b68f17007069e8944346a0b9ba7dc`;
+- SHA-256 `c6dc316f5b51342410cbbc47521a6bd39b170a4bd188366c34c420375eb509be`;
+- 767,241 bytes;
+- 103 distributed files.
+
+Runtime delta from px740.1:
+- replace `includes/class-public-experience.php`;
+- replace `assets/css/public-article.css`;
+- add `assets/js/public-reader.js`.
+
+Expected desktop behavior:
+- Rail begins in its natural position;
+- after scrolling past the Rail's natural top, it follows the viewport below Admin Bar/Header;
+- Rail is clamped to its summary slot and stops before escaping the article grid;
+- responsive <=1040px returns Rail to normal document flow.
+
+Next blocking check:
+- Product Owner confirms Rail follows scroll in real WordPress.

@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "CORRECTED_PACKAGE_READY",
+  "date": "2026-10-05",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "supersedes": {
+    "candidate": "px740.1",
+    "status": "HUMAN_SMOKE_FAIL",
+    "failed_requirement": "Executive Summary Rail follows page scroll"
+  },
+  "source_commit": "49860f1e357f1d0ac4792639c20c5cae82e79b2d",
+  "artifact": {
+    "filename": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.2.zip",
+    "branch": "spec007-px740-homologation-artifact",
+    "commit": "6375d13dbfe8689e62bd30b427bcc5a5d74a450b",
+    "git_blob_sha": "013c5f8d813b68f17007069e8944346a0b9ba7dc",
+    "sha256": "c6dc316f5b51342410cbbc47521a6bd39b170a4bd188366c34c420375eb509be",
+    "bytes": 767241,
+    "distributed_files": 103,
+    "deterministic_equal": true
+  },
+  "runtime_delta": {
+    "replaced": [
+      "includes/class-public-experience.php",
+      "assets/css/public-article.css"
+    ],
+    "added": [
+      "assets/js/public-reader.js"
+    ]
+  },
+  "validation": {
+    "source_contract_equivalent": "PASS",
+    "public_search_js_syntax": "PASS",
+    "public_reader_js_syntax": "PASS",
+    "structural_package": "PASS",
+    "exact_package_php_lint": "PENDING",
+    "product_owner_rail_follow_retest": "PENDING"
+  },
+  "next": "Install px740.2 and confirm Executive Summary Rail follows scroll on desktop."
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "purpose": "SPEC-007 PX-740 premium designer regression recovery v8.1",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px740.6",
+  "ui_version": "premium-v8-1",
+  "source_commit": "e2815f0400e6f899df1085935cda77ed7566df2c",
+  "root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "247da4302e384a1442790ca9e0d4b97e5566787d5a616137346868e2fb4a4caf",
+  "bytes": 815090,
+  "file_count": 103,
+  "supersedes": "px740.5 rejected for visual regression",
+  "replacements": {
+    "base-conhecimento-inteligencia-integrada.php": {
+      "blob_sha": "c7c553632c2d7bd5f56bcc9c5a4325b00745daa9",
+      "bytes": 5347
+    },
+    "includes/class-admin-page.php": {
+      "blob_sha": "71769cef2b7975d2b9ddd37702eb098bad222ce4",
+      "bytes": 39630
+    },
+    "includes/class-classification-admin.php": {
+      "blob_sha": "abf205b0bc2ecfaedf852992b683e2ebf3013cb5",
+      "bytes": 12146
+    },
+    "includes/class-knowledge-details-admin.php": {
+      "blob_sha": "f0077daacfd55a04f30f24e86fed2d0825f890a6",
+      "bytes": 10541
+    },
+    "includes/class-public-experience.php": {
+      "blob_sha": "90e9efa26a034688470798c4a6892692b560220a",
+      "bytes": 19663
+    },
+    "includes/class-visual-foundation.php": {
+      "blob_sha": "7e4443d7f343a74791157afbe952e2adf67f6442",
+      "bytes": 4120
+    },
+    "assets/css/visual-foundation.css": {
+      "blob_sha": "20657582f3c9496260e5964678bed65aa70f267c",
+      "bytes": 38096
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "phase": "PREMIUM_DESIGNER_REGRESSION_RECOVERY_PACKAGE",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "build": "px740.6",
+  "zip": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.6.zip",
+  "zip_sha256": "247da4302e384a1442790ca9e0d4b97e5566787d5a616137346868e2fb4a4caf",
+  "bytes": 815090,
+  "deterministic_equal": true,
+  "inspection": {
+    "pass": true,
+    "file_count": 103,
+    "single_root": true,
+    "required_missing": [],
+    "forbidden_paths": [],
+    "replaced": [
+      "base-conhecimento-inteligencia-integrada/base-conhecimento-inteligencia-integrada.php",
+      "base-conhecimento-inteligencia-integrada/includes/class-admin-page.php",
+      "base-conhecimento-inteligencia-integrada/includes/class-classification-admin.php",
+      "base-conhecimento-inteligencia-integrada/includes/class-knowledge-details-admin.php",
+      "base-conhecimento-inteligencia-integrada/includes/class-public-experience.php",
+      "base-conhecimento-inteligencia-integrada/includes/class-visual-foundation.php",
+      "base-conhecimento-inteligencia-integrada/assets/css/visual-foundation.css"
+    ]
+  },
+  "source_contract": "PASS_26_OF_26",
+  "php_lint": "PENDING_EXACT_ARTIFACT",
+  "product_owner_visual": "PENDING",
+  "regression_fixes": [
+    "final CSS cascade ownership",
+    "two-column maximum workspace",
+    "horizontal primary nav + More overflow",
+    "asset SHA fingerprinting",
+    "non-sticky table header",
+    "classification empty states",
+    "normal-flow submit actions",
+    "Helpful Tips progressive density"
+  ]
+}

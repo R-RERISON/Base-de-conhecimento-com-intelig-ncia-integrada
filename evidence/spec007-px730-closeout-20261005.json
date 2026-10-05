@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-730",
+  "date": "2026-10-05",
+  "status": "CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION",
+  "human_smoke": "PASS",
+  "closure_artifact": {
+    "filename": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px730-final.zip",
+    "artifact_branch": "spec007-px730-homologation-artifact",
+    "artifact_commit": "bf4410f6c107e3daeffa4a2f2faf539dc123e2d2",
+    "git_blob_sha": "f6185e07e86658b84a7245bdd3d790dc901ea603",
+    "sha256": "5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6",
+    "bytes": 766344,
+    "byte_identical_to_tested_candidate": true
+  },
+  "accepted_exceptions": [
+    {
+      "id": "PX730-EX-001",
+      "check": "exact_artifact_php_lint",
+      "status": "ACCEPTED_EXCEPTION_NOT_PASS",
+      "must_discharge_before": "PX-790"
+    }
+  ],
+  "invariants": {
+    "public_cutover": false,
+    "page_on_front_mutation": false,
+    "home_snippet_mutation": false,
+    "astra_custom_css_mutation": false,
+    "editorial_storage_mutation": false,
+    "ranker_schema_mutation": false,
+    "legacy_retirement": false
+  },
+  "next_gate": "PX-740"
+}

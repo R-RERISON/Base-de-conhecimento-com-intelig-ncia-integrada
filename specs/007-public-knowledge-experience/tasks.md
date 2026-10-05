@@ -49,7 +49,7 @@ Historical planned items:
 - [x] PX720-09 WordPress candidate smoke — accepted validation exception by Product Owner for gate progression; not recorded as PASS.
 - [x] PX720-10 close PX-720 — `CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION`.
 
-## PX-730 Live Search — ACTIVE / DISCOVERY
+## PX-730 Live Search — CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION
 
 - [x] PX730-01 contract — `px730-live-search-contract-v1.md`.
 - [x] PX730-02 reconcile existing `public-search.js` against canonical Search facade.
@@ -57,11 +57,20 @@ Historical planned items:
 - [x] PX730-04 freeze candidate result navigation and accessibility behavior.
 - [x] PX730-05 define static regression contract — `tests/unit/spec007-px730-live-search-contract.php`.
 - [x] PX730-06 implement first bounded runtime slice — UI state hardening only; ranker/schema untouched.
-- [ ] PX730-07 package/smoke/closeout — package `px730.1` ready; WordPress smoke pending.
+- [x] PX730-07 package/smoke/closeout — WordPress smoke PASS; exact ZIP PHP lint carried as accepted exception.
+
+## PX-740 Reader / Tips / Rail — ACTIVE / DISCOVERY
+
+- [x] PX740-01 contract — `px740-reader-tips-rail-contract-v1.md`.
+- [ ] PX740-02 inventory current Reader composition and external hook ownership.
+- [ ] PX740-03 freeze Helpful Tips ownership/rendering boundary.
+- [ ] PX740-04 freeze Executive Summary Rail ownership/rendering boundary.
+- [ ] PX740-05 freeze Reader canonical-content/the_content compatibility matrix.
+- [ ] PX740-06 define static regression contract.
+- [ ] PX740-07 implement first bounded runtime slice only after contract review.
+- [ ] PX740-08 package/smoke/closeout.
 
 ## Explicitly not active yet
-
-- PX-740 Reader/Tips/Rail;
 - PX-750 Theme/Snippet Independence;
 - PX-760 Accessibility/Responsive;
 - PX-770 Performance;
@@ -164,3 +173,24 @@ Evidence:
 - `evidence/spec007-px730-package-ready-20261005.json`.
 
 PX-730 remains ACTIVE.
+
+
+### PX-730 FINAL closeout — 2026-10-05
+
+- Product Owner human smoke: PASS;
+- closure status: `CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION`;
+- final ZIP: `base-conhecimento-inteligencia-integrada-0.6.0-dev-px730-final.zip`;
+- artifact branch: `spec007-px730-homologation-artifact`;
+- artifact commit: `bf4410f6c107e3daeffa4a2f2faf539dc123e2d2`;
+- SHA-256: `5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6`;
+- byte-identical to tested candidate `px730.1`;
+- exact-artifact PHP lint: accepted exception, NOT PASS;
+- exception remains release-readiness debt and must be discharged before PX-790/cutover readiness;
+- no cutover/ranker/schema/editorial/legacy-retirement mutation authorized.
+
+Closeout:
+- `px730-closeout-20261005.md`;
+- `evidence/spec007-px730-human-smoke-pass-20261005.json`;
+- `evidence/spec007-px730-closeout-20261005.json`.
+
+PX-740 Reader / Tips / Rail is now ACTIVE / DISCOVERY.

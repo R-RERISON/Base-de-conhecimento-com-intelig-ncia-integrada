@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-730",
+  "date": "2026-10-05",
+  "evidence_type": "PRODUCT_OWNER_HUMAN_SMOKE",
+  "status": "PASS",
+  "artifact": {
+    "candidate": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px730.1.zip",
+    "sha256": "5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6"
+  },
+  "scenarios": [
+    {
+      "id": "PX730-SMOKE-01",
+      "name": "Home live search with results",
+      "status": "PASS"
+    },
+    {
+      "id": "PX730-SMOKE-02",
+      "name": "Home zero-results state",
+      "status": "PASS"
+    },
+    {
+      "id": "PX730-SMOKE-03",
+      "name": "Reader compact live search",
+      "status": "PASS"
+    },
+    {
+      "id": "PX730-SMOKE-04",
+      "name": "rapid-query stale-response protection",
+      "status": "PASS"
+    },
+    {
+      "id": "PX730-SMOKE-05",
+      "name": "Ctrl/Cmd+K keyboard entry",
+      "status": "PASS"
+    },
+    {
+      "id": "PX730-SMOKE-06",
+      "name": "Escape cancel/dismiss",
+      "status": "PASS"
+    },
+    {
+      "id": "PX730-SMOKE-07",
+      "name": "clear/reset behavior",
+      "status": "PASS"
+    },
+    {
+      "id": "PX730-SMOKE-08",
+      "name": "candidate Reader result navigation",
+      "status": "PASS"
+    }
+  ],
+  "confirmed_by": "Product Owner"
+}

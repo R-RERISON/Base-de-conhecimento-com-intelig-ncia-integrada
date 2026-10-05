@@ -414,3 +414,58 @@ Next exact action:
 3. verify Reader compact Search;
 4. verify Ctrl/Cmd+K, Escape and clear;
 5. return environmental evidence for PX-730 closeout.
+
+
+## PX-730 FINAL — 2026-10-05
+
+Product Owner confirmed all requested PX-730 WordPress candidate smoke scenarios as PASS:
+- Home live search with results;
+- Home zero-results state;
+- Reader compact live search;
+- rapid-query stale-response protection;
+- Ctrl/Cmd+K;
+- Escape;
+- clear/reset;
+- candidate Reader navigation from results.
+
+Closure:
+- status `CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION`;
+- final ZIP `base-conhecimento-inteligencia-integrada-0.6.0-dev-px730-final.zip`;
+- artifact branch `spec007-px730-homologation-artifact`;
+- artifact commit `bf4410f6c107e3daeffa4a2f2faf539dc123e2d2`;
+- Git blob `f6185e07e86658b84a7245bdd3d790dc901ea603`;
+- SHA-256 `5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6`;
+- byte-identical to tested `px730.1`.
+
+Accepted exception:
+- PX730-EX-001 — exact published ZIP PHP lint was not executed in this session and is NOT recorded as PASS.
+- This debt must be discharged before PX-790/public cutover.
+
+Evidence:
+- `specs/007-public-knowledge-experience/px730-closeout-20261005.md`;
+- `evidence/spec007-px730-human-smoke-pass-20261005.json`;
+- `evidence/spec007-px730-closeout-20261005.json`.
+
+## PX-740 ACTIVE — Reader / Tips / Rail
+
+Status:
+- `ACTIVE / DISCOVERY`.
+
+Contract:
+- `px740-reader-tips-rail-contract-v1.md`.
+
+Purpose:
+- harden Article Reader composition without replacing canonical WordPress content rendering;
+- preserve `the_content` compatibility;
+- preserve GAC/WPUI callbacks;
+- preserve Helpful Tips canonical storage `_bdc_es_helpful_tips`;
+- preserve GRE as current external owner of Helpful Tips/Summary data until explicitly migrated;
+- prevent duplicate Tips/Rail rendering only inside candidate Reader;
+- do not perform public cutover or plugin retirement.
+
+Next:
+1. inventory current Reader render path and model composition;
+2. map Helpful Tips and Executive Summary source/renderer ownership;
+3. map `the_content` callback compatibility requirements;
+4. identify duplication/isolation gaps;
+5. add static regression contract before runtime changes.

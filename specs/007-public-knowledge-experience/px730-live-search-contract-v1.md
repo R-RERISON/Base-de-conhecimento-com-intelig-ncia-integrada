@@ -1,6 +1,6 @@
 # PX-730 — Live Search Contract v1
 
-**Status:** ACTIVE / DISCOVERY  
+**Status:** CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION  
 **Date:** 2026-10-02  
 **SPEC:** 007 — Public Knowledge Experience  
 **Prerequisite:** PX-720 `CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION`
@@ -150,3 +150,18 @@ Regression contract:
 - `tests/unit/spec007-px730-live-search-contract.php`.
 
 PX-730 remains ACTIVE until package + WordPress candidate smoke are complete.
+
+
+## Closeout disposition — 2026-10-05
+
+PX-730 closed after Product Owner confirmed all requested WordPress candidate smoke scenarios as PASS.
+
+Closure artifact:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-px730-final.zip`;
+- SHA-256 `5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6`;
+- byte-identical to tested `px730.1`.
+
+Accepted exception, not PASS:
+- exact-artifact PHP lint.
+
+This exception is carried to PX-790 Cutover Readiness and cannot be inferred as satisfied by later feature work.

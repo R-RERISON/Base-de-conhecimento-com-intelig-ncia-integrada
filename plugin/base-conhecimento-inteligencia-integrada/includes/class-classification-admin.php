@@ -163,26 +163,30 @@ final class Classification_Admin {
 		} else {
 			$multiple = (bool) $definition['multiple'];
 			$name     = 'classification[' . $field . '][]';
-			echo '<select class="regular-text bdc-kb-term-select" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $name ) . '"';
-			if ( $multiple ) {
-				echo ' multiple size="6"';
-			}
-			echo '>';
-
-			if ( ! $multiple ) {
-				echo '<option value="">' . esc_html__( '— Sem classificação —', 'base-conhecimento-inteligencia-integrada' ) . '</option>';
-			}
-
-			foreach ( $terms as $term ) {
-				$term_id = (int) $term->term_id;
-				echo '<option value="' . esc_attr( (string) $term_id ) . '"' . selected( in_array( $term_id, $selected_ids, true ), true, false ) . '>' . esc_html( (string) $term->name ) . '</option>';
-			}
-			echo '</select>';
 
 			if ( array() === $terms ) {
-				echo '<p class="description">' . esc_html__( 'Nenhum termo foi cadastrado neste vocabulário. Cadastre os termos antes de associá-los ao artigo.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
-			} elseif ( $multiple ) {
-				echo '<p class="description">' . esc_html__( 'Use Ctrl (Windows/Linux) ou Command (macOS) para selecionar ou remover vários termos.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
+				echo '<div class="bdc-kb-classification-empty"><span class="dashicons dashicons-tag" aria-hidden="true"></span><div><strong>' . esc_html__( 'Vocabulário sem termos', 'base-conhecimento-inteligencia-integrada' ) . '</strong><p>' . esc_html__( 'Cadastre termos em “Gerenciar vocabulários” antes de associá-los ao artigo.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div></div>';
+			} else {
+				echo '<select class="regular-text bdc-kb-term-select" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $name ) . '"';
+				if ( $multiple ) {
+					$size = min( 6, max( 2, count( $terms ) ) );
+					echo ' multiple size="' . esc_attr( (string) $size ) . '"';
+				}
+				echo '>';
+
+				if ( ! $multiple ) {
+					echo '<option value="">' . esc_html__( '— Sem classificação —', 'base-conhecimento-inteligencia-integrada' ) . '</option>';
+				}
+
+				foreach ( $terms as $term ) {
+					$term_id = (int) $term->term_id;
+					echo '<option value="' . esc_attr( (string) $term_id ) . '"' . selected( in_array( $term_id, $selected_ids, true ), true, false ) . '>' . esc_html( (string) $term->name ) . '</option>';
+				}
+				echo '</select>';
+
+				if ( $multiple ) {
+					echo '<p class="description">' . esc_html__( 'Use Ctrl (Windows/Linux) ou Command (macOS) para selecionar ou remover vários termos.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
+				}
 			}
 		}
 

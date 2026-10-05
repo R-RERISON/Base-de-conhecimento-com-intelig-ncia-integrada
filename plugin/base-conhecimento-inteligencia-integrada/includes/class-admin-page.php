@@ -45,28 +45,28 @@ final class Admin_Page {
 			'bdc-kb-admin',
 			BDC_KB_URL . 'assets/css/admin.css',
 			array(),
-			BDC_KB_VERSION
+			\bdc_kb_asset_version( 'assets/css/admin.css' )
 		);
 
 		wp_enqueue_style(
 			'bdc-kb-workspace',
 			BDC_KB_URL . 'assets/css/workspace.css',
 			array( 'bdc-kb-admin' ),
-			BDC_KB_VERSION
+			\bdc_kb_asset_version( 'assets/css/workspace.css' )
 		);
 
 		wp_enqueue_style(
 			'bdc-kb-history',
 			BDC_KB_URL . 'assets/css/history.css',
 			array( 'bdc-kb-workspace' ),
-			BDC_KB_VERSION
+			\bdc_kb_asset_version( 'assets/css/history.css' )
 		);
 
 		wp_enqueue_script(
 			'bdc-kb-workspace',
 			BDC_KB_URL . 'assets/js/workspace.js',
 			array(),
-			BDC_KB_VERSION,
+			\bdc_kb_asset_version( 'assets/js/workspace.js' ),
 			true
 		);
 	}
@@ -179,7 +179,6 @@ final class Admin_Page {
 		Classification_Admin::render_feedback();
 		Knowledge_Details_Admin::render_feedback();
 		Review_Admin::render_feedback();
-		echo '<div class="bdc-kb-product-shell">';
 		self::render_tabs( $post_id, $tab );
 
 		$layout_class = 'bdc-kb-workspace-layout' . ( 'overview' === $tab ? ' bdc-kb-workspace-layout--full' : '' );
@@ -215,7 +214,6 @@ final class Admin_Page {
 		if ( 'overview' !== $tab ) {
 			self::render_context_sidebar( $post_id, $post, $summary, $context );
 		}
-		echo '</div>';
 		echo '</div>';
 	}
 
@@ -273,30 +271,53 @@ final class Admin_Page {
 
 	private static function render_tabs( int $post_id, string $active_tab ): void {
 		$tabs = Post_Activity_Registry::definitions();
-		$groups = array(
-			'Artigo' => array( 'overview', 'content', 'summary', 'classification', 'details' ),
-			'Governança' => array( 'intelligence', 'core_blocks', 'review', 'history' ),
+		$primary = array(
+			'overview' => 'Visão geral',
+			'content' => 'Conteúdo',
+			'summary' => 'Sumário',
+			'classification' => 'Classificação',
+			'details' => 'Detalhes',
 		);
+		$secondary = array( 'intelligence', 'core_blocks', 'review', 'history' );
+		$secondary_active = in_array( $active_tab, $secondary, true );
 
-		echo '<nav class="bdc-kb-tabs" aria-label="' . esc_attr__( 'Áreas do artigo', 'base-conhecimento-inteligencia-integrada' ) . '" data-bdc-workspace-tabs>';
-		foreach ( $groups as $group_label => $items ) {
-			echo '<div class="bdc-kb-tab-group">';
-			echo '<span class="bdc-kb-tab-group__label">' . esc_html( $group_label ) . '</span>';
-			foreach ( $items as $tab ) {
-				if ( ! isset( $tabs[ $tab ] ) ) {
-					continue;
-				}
-				$definition = $tabs[ $tab ];
-				$url = self::workspace_url( $post_id, $tab );
-				$class = 'bdc-kb-tab' . ( $tab === $active_tab ? ' is-active' : '' );
-				echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '"';
-				if ( $tab === $active_tab ) {
-					echo ' aria-current="page"';
-				}
-				echo '><span class="dashicons dashicons-' . esc_attr( (string) $definition['icon'] ) . '" aria-hidden="true"></span><span>' . esc_html( (string) $definition['label'] ) . '</span></a>';
+		echo '<nav class="bdc-kb-tabs bdc-kb-workspace-nav" aria-label="' . esc_attr__( 'Áreas do artigo', 'base-conhecimento-inteligencia-integrada' ) . '" data-bdc-workspace-tabs>';
+		echo '<div class="bdc-kb-workspace-nav__primary">';
+		foreach ( $primary as $tab => $label ) {
+			if ( ! isset( $tabs[ $tab ] ) ) {
+				continue;
 			}
-			echo '</div>';
+			$url = self::workspace_url( $post_id, $tab );
+			$class = 'bdc-kb-tab' . ( $tab === $active_tab ? ' is-active' : '' );
+			echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '"';
+			if ( $tab === $active_tab ) {
+				echo ' aria-current="page"';
+			}
+			echo '><span class="dashicons dashicons-' . esc_attr( (string) $tabs[ $tab ]['icon'] ) . '" aria-hidden="true"></span><span>' . esc_html( $label ) . '</span></a>';
 		}
+		echo '</div>';
+
+		$more_class = 'bdc-kb-more' . ( $secondary_active ? ' is-active' : '' );
+		echo '<details class="' . esc_attr( $more_class ) . '">';
+		echo '<summary class="bdc-kb-more__trigger"><span class="dashicons dashicons-ellipsis" aria-hidden="true"></span><span>' . esc_html__( 'Mais', 'base-conhecimento-inteligencia-integrada' ) . '</span>';
+		if ( $secondary_active && isset( $tabs[ $active_tab ] ) ) {
+			echo '<small>' . esc_html( (string) $tabs[ $active_tab ]['label'] ) . '</small>';
+		}
+		echo '<span class="dashicons dashicons-arrow-down-alt2 bdc-kb-more__chevron" aria-hidden="true"></span></summary>';
+		echo '<div class="bdc-kb-more__menu">';
+		foreach ( $secondary as $tab ) {
+			if ( ! isset( $tabs[ $tab ] ) ) {
+				continue;
+			}
+			$url = self::workspace_url( $post_id, $tab );
+			$class = 'bdc-kb-menu-link' . ( $tab === $active_tab ? ' is-active' : '' );
+			echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '"';
+			if ( $tab === $active_tab ) {
+				echo ' aria-current="page"';
+			}
+			echo '><span class="dashicons dashicons-' . esc_attr( (string) $tabs[ $tab ]['icon'] ) . '" aria-hidden="true"></span><span>' . esc_html( (string) $tabs[ $tab ]['label'] ) . '</span></a>';
+		}
+		echo '</div></details>';
 		echo '</nav>';
 	}
 

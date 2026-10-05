@@ -19,7 +19,7 @@ final class Knowledge_Details_Admin {
 	public const ACTION        = 'bdc_kb_save_knowledge_details';
 	private const NONCE_FIELD  = 'bdc_kb_knowledge_details_nonce';
 	private const NONCE_PREFIX = 'bdc_kb_save_knowledge_details_';
-	private const UI_TIP_ROWS  = 8;
+	private const UI_TIP_ROWS  = 3;
 
 	/**
 	 * Handle the canonical writer.
@@ -130,7 +130,8 @@ final class Knowledge_Details_Admin {
 		echo '<input type="hidden" name="post_id" value="' . esc_attr( (string) $post_id ) . '">';
 		wp_nonce_field( self::NONCE_PREFIX . $post_id, self::NONCE_FIELD );
 
-		echo '<div class="bdc-kb-domain-heading"><h4>' . esc_html__( 'Contexto operacional', 'base-conhecimento-inteligencia-integrada' ) . '</h4></div>';
+		echo '<section class="bdc-kb-form-section bdc-kb-form-section--facts">';
+		echo '<div class="bdc-kb-domain-heading"><h4>' . esc_html__( 'Contexto operacional', 'base-conhecimento-inteligencia-integrada' ) . '</h4><p>' . esc_html__( 'Informações estruturadas usadas para orientar a leitura e a operação.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 		foreach ( Knowledge_Facts_Contract::fields() as $field => $definition ) {
 			$field_id = 'bdc-kb-fact-' . $field;
 			$value    = (string) ( $values[ $field ] ?? '' );
@@ -147,9 +148,10 @@ final class Knowledge_Details_Admin {
 			}
 			echo '</div>';
 		}
+		echo '</section>';
 
-		echo '<hr>';
-		echo '<div class="bdc-kb-domain-heading"><h4>' . esc_html__( 'Helpful Tips', 'base-conhecimento-inteligencia-integrada' ) . '</h4><p>' . esc_html__( 'Dicas ordenadas exibidas na experiência pública do artigo.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
+		echo '<section class="bdc-kb-form-section bdc-kb-form-section--tips">';
+		echo '<div class="bdc-kb-domain-heading"><h4>' . esc_html__( 'Helpful Tips', 'base-conhecimento-inteligencia-integrada' ) . '</h4><p>' . esc_html__( 'Dicas curtas e ordenadas exibidas na experiência pública do artigo.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div>';
 
 		$row_count = max( self::UI_TIP_ROWS, min( Helpful_Tips_Store::MAX_ITEMS, count( $tips ) + 1 ) );
 		for ( $index = 0; $index < $row_count; ++$index ) {
@@ -161,7 +163,7 @@ final class Knowledge_Details_Admin {
 			$content = (string) ( $row['content'] ?? '' );
 			$number  = $index + 1;
 
-			echo '<fieldset class="bdc-kb-field">';
+			echo '<fieldset class="bdc-kb-field bdc-kb-tip-row">';
 			/* translators: %d: Helpful Tip position in the ordered list. */
 			echo '<legend><strong>' . esc_html( sprintf( __( 'Dica %d', 'base-conhecimento-inteligencia-integrada' ), $number ) ) . '</strong></legend>';
 			echo '<label for="bdc-kb-tip-title-' . esc_attr( (string) $index ) . '">' . esc_html__( 'Título', 'base-conhecimento-inteligencia-integrada' ) . '</label>';
@@ -170,6 +172,7 @@ final class Knowledge_Details_Admin {
 			echo '<textarea class="large-text" rows="3" id="bdc-kb-tip-content-' . esc_attr( (string) $index ) . '" name="tips[' . esc_attr( (string) $index ) . '][content]" maxlength="' . esc_attr( (string) Helpful_Tips_Store::MAX_CONTENT_BYTES ) . '">' . esc_textarea( $content ) . '</textarea>';
 			echo '</fieldset>';
 		}
+		echo '</section>';
 
 		submit_button( __( 'Salvar detalhes de conhecimento', 'base-conhecimento-inteligencia-integrada' ) );
 		echo '</form>';

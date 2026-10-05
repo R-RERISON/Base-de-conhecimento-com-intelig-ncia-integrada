@@ -1,0 +1,89 @@
+name: PX740.6.1 activation on WP 7.1 PHP 8.5
+
+on:
+  push:
+    branches:
+      - diagnostic/px740-6-1-php-lint-20261005
+  workflow_dispatch:
+
+jobs:
+  activation:
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:12.2
+        env:
+          MARIADB_DATABASE: wordpress
+          MARIADB_USER: wordpress
+          MARIADB_PASSWORD: wordpress
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP 8.5 and WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mysqli, mbstring, curl, zip
+          tools: wp-cli
+          coverage: none
+
+      - name: Extract exact px740.6.1 artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin spec007-px740-homologation-artifact
+          git show origin/spec007-px740-homologation-artifact:dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.6.1.zip > /tmp/px740.6.1.zip
+          rm -rf /tmp/px740-plugin
+          mkdir -p /tmp/px740-plugin
+          unzip -q /tmp/px740.6.1.zip -d /tmp/px740-plugin
+
+      - name: Install WordPress 7.1.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/wp
+          mkdir -p /tmp/wp
+          cd /tmp/wp
+          wp core download --version=7.1.2 --force
+          wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=127.0.0.1:3306 --skip-check
+          for i in $(seq 1 30); do
+            if wp db check >/dev/null 2>&1; then break; fi
+            sleep 2
+          done
+          wp core install --url=http://localhost --title=BDC --admin_user=admin --admin_password=admin1234 --admin_email=admin@example.com --skip-email
+          cp -R /tmp/px740-plugin/base-conhecimento-inteligencia-integrada /tmp/wp/wp-content/plugins/
+
+      - name: Activate exact artifact with debug
+        shell: bash
+        run: |
+          set -o pipefail
+          cd /tmp/wp
+          wp config set WP_DEBUG true --raw
+          wp config set WP_DEBUG_LOG true --raw
+          wp config set WP_DEBUG_DISPLAY true --raw
+          wp plugin activate base-conhecimento-inteligencia-integrada --debug 2>&1 | tee /tmp/activate.log
+          status=${PIPESTATUS[0]}
+          echo "activation_exit=${status}"
+          echo "=== wp-content/debug.log ==="
+          cat /tmp/wp/wp-content/debug.log 2>/dev/null || true
+          echo "=== activation output ==="
+          cat /tmp/activate.log
+          exit "${status}"
+
+      - name: Verify plugin status
+        if: success()
+        shell: bash
+        run: |
+          cd /tmp/wp
+          wp plugin status base-conhecimento-inteligencia-integrada

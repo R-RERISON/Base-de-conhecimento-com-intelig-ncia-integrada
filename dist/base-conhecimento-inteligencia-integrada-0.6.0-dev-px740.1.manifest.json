@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "purpose": "SPEC-007 PX-740 Reader/Tips/Rail homologation package",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px740.1",
+  "shell_version": "public-shell-v1.0.0",
+  "source_commit": "ff578126b7f9fc83d8a66715282dba463751aac5",
+  "root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "bb55c4fd7f89e7cdccbb1e9feb3ae3eb225f4190ff6bf4e90e5c620552646fd7",
+  "bytes": 764772,
+  "file_count": 102,
+  "inherited_pruning_from": "px730-final",
+  "replacements": {
+    "assets/js/public-search.js": {
+      "blob_sha": "9d1ae6e413289182be34626e710ee1966358dc44",
+      "bytes": 10755
+    },
+    "assets/css/public-article.css": {
+      "blob_sha": "95f2ba63fb3cfaed75edd5a021a53c562e1650b1",
+      "bytes": 10815
+    }
+  },
+  "resolved_gap": "PX740-GAP-001"
+}

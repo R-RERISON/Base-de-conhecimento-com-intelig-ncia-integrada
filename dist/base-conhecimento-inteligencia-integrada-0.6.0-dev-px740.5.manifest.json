@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "purpose": "SPEC-007 PX-740 Premium Product UI v8 homologation package",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px740.5",
+  "ui_version": "premium-product-v8",
+  "source_commit": "f9f6ef9fd2e55f24ff3c33a8711acf9fedca56e1",
+  "root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "95fdc74d0d5a40ee9c43498fbdcb0a4f63bfd5887d9c1febf6b79bcf796c7fd7",
+  "bytes": 801342,
+  "file_count": 103,
+  "supersedes": "px740.4 for visual/product architecture evaluation",
+  "replacements": {
+    "includes/class-admin-page.php": {
+      "blob_sha": "a36bf9f40a6299ebdbafde26a1a37b8cc212d83b",
+      "bytes": 38340
+    },
+    "assets/js/workspace.js": {
+      "blob_sha": "804c9cf5ec8097fb8fa3da4ece6bb4b33f5df340",
+      "bytes": 1065
+    },
+    "assets/css/admin.css": {
+      "blob_sha": "b7df2049f70bc29475b323888f8888c87ca7fa80",
+      "bytes": 13228
+    },
+    "assets/css/workspace.css": {
+      "blob_sha": "eac40ccfeb67eb7ff7f54e1b4831a6f0051f1e5e",
+      "bytes": 11192
+    },
+    "templates/public-home-preview.php": {
+      "blob_sha": "1e8bd895324553a311b49bb7c4591db5810ce066",
+      "bytes": 6986
+    },
+    "assets/css/public-home.css": {
+      "blob_sha": "6d94675f63a47cb407a3bad24f05127b5f21de6d",
+      "bytes": 12993
+    },
+    "assets/css/public-article.css": {
+      "blob_sha": "e7e858d4316104179e2c9e501b0472c6ffc5f977",
+      "bytes": 17368
+    },
+    "assets/js/public-reader.js": {
+      "blob_sha": "0775c91132c41a0cf808154b2581565020e1ceab",
+      "bytes": 3447
+    }
+  }
+}

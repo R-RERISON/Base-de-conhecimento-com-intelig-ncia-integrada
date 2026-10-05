@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "purpose": "CSS-only safe recovery from known-good px740.5 runtime",
+  "build": "px740.5.1-safe-recovery",
+  "version": "0.6.0-dev",
+  "source_branch": "spec007-px740-safe-recovery",
+  "source_commit": "b7f22761ca38e16f130135d2879655f897e787a1",
+  "base_artifact": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.5.zip",
+  "root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "9609c9f45dbd4f2f27d80a6282b35516a1cd3afc9fba7d2632ec3ba46c746d3a",
+  "bytes": 805578,
+  "file_count": 103,
+  "runtime_safety": {
+    "all_php_byte_identical_to_px740_5": true,
+    "php_file_count": 83,
+    "changed_entries": [
+      "base-conhecimento-inteligencia-integrada/assets/css/visual-foundation.css"
+    ]
+  },
+  "note": "No PHP or JS bytes changed versus px740.5."
+}

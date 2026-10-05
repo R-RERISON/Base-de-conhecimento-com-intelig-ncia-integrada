@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "status": "SAFE_RECOVERY_PACKAGE_READY",
+  "build": "px740.5.1-safe-recovery",
+  "deterministic_equal": true,
+  "all_php_byte_identical_to_px740_5": true,
+  "php_file_count": 83,
+  "changed_entries": [
+    "base-conhecimento-inteligencia-integrada/assets/css/visual-foundation.css"
+  ],
+  "runtime_baseline": "px740.5 activated successfully in Product Owner environment",
+  "exact_package_php_lint": "INHERITED_BYTE_IDENTICAL_TO_PX740_5_PHP"
+}

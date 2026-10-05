@@ -717,3 +717,52 @@ Next exact action remains:
 2. return its JSON;
 3. use its small selected sample set for the final visual pass;
 4. close PX-740 if PASS.
+
+
+## PX-740 dedicated runner TECHNICAL PASS — 2026-10-05
+
+Returned artifact:
+- `spec007-px740-reader-regression-20261005-142157.json`;
+- status `TECHNICAL_PASS_VISUAL_SAMPLE_PENDING`.
+
+Confirmed current environment:
+- WordPress 6.9.4;
+- PHP 8.5.11;
+- BDC 0.6.0-dev;
+- 606 published posts.
+
+Current corpus:
+- elementor 32;
+- gutenberg 3;
+- legacy_html 528;
+- mixed 2;
+- plain_text 41;
+- no required source kind missing.
+
+Structured Reader states:
+- Tips present;
+- Summary present;
+- Summary absent.
+
+Pipeline signals:
+- GAC PASS;
+- WPUI PASS;
+- BDC Search Anchor PASS;
+- GRE Tips PASS;
+- GRE Summary PASS.
+
+px740.3 asset state:
+- all Reader assets present;
+- flow/fixed/bottom PASS;
+- no translate3d PASS.
+
+Minimal final visual matrix selected by overlap:
+1. post 396 — legacy_html + Summary;
+2. post 367 — plain_text;
+3. post 36431 — elementor + Helpful Tips;
+4. post 515 — mixed;
+5. post 358 — gutenberg + no Summary.
+
+This 5-post set covers every required source kind and every structured Reader state with no redundant test article.
+
+After Product Owner visual PASS on these five, PX-740 can close with only the already tracked exact-ZIP PHP-lint exception.

@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "evidence_type": "DEDICATED_READER_REGRESSION",
+  "generated_at": "2026-10-05T14:21:57+00:00",
+  "status": "TECHNICAL_PASS_VISUAL_SAMPLE_PENDING",
+  "environment": {
+    "wordpress": "6.9.4",
+    "php": "8.5.11",
+    "bdc_version": "0.6.0-dev",
+    "published_posts": 606
+  },
+  "corpus": {
+    "elementor": 32,
+    "gutenberg": 3,
+    "legacy_html": 528,
+    "mixed": 2,
+    "plain_text": 41,
+    "missing_required_source_kinds": []
+  },
+  "structured_reader_data": {
+    "tips_present": true,
+    "summary_present": true,
+    "summary_absent": true
+  },
+  "pipeline_signals": {
+    "gac": true,
+    "wpui": true,
+    "bdc_anchor": true,
+    "gre_tips": true,
+    "gre_summary": true
+  },
+  "reader_assets": {
+    "all_required_files_present": true,
+    "flow": true,
+    "fixed": true,
+    "bottom": true,
+    "no_translate3d": true
+  },
+  "minimal_visual_matrix": [
+    {
+      "post_id": 396,
+      "coverage": [
+        "legacy_html",
+        "summary_present"
+      ]
+    },
+    {
+      "post_id": 367,
+      "coverage": [
+        "plain_text"
+      ]
+    },
+    {
+      "post_id": 36431,
+      "coverage": [
+        "elementor",
+        "helpful_tips_present"
+      ]
+    },
+    {
+      "post_id": 515,
+      "coverage": [
+        "mixed"
+      ]
+    },
+    {
+      "post_id": 358,
+      "coverage": [
+        "gutenberg",
+        "summary_absent"
+      ]
+    }
+  ],
+  "disposition": "TECHNICAL_PASS_FINAL_5_POST_VISUAL_MATRIX_PENDING"
+}

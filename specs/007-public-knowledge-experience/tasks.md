@@ -367,3 +367,44 @@ Not proven by this PX-700 artifact:
 - [ ] final visual sample across source kinds/data states.
 
 Therefore the dedicated PX-740 runner remains required, but only for the remaining evidence.
+
+
+### PX-740 dedicated runner result — 2026-10-05T14:21:57Z
+
+Artifact:
+- `spec007-px740-reader-regression-20261005-142157.json`;
+- runner status: `TECHNICAL_PASS_VISUAL_SAMPLE_PENDING`;
+- WordPress 6.9.4 / PHP 8.5.11 / BDC 0.6.0-dev;
+- 606 published posts.
+
+Technical PASS:
+- [x] required source kinds present;
+- [x] Tips sample present;
+- [x] Summary sample present;
+- [x] no-Summary sample present;
+- [x] GAC signal present;
+- [x] WPUI signal present;
+- [x] BDC Search Anchor signal present;
+- [x] GRE Tips signal present;
+- [x] GRE Summary signal present;
+- [x] all Reader files present;
+- [x] `flow` state present;
+- [x] `fixed` state present;
+- [x] `bottom` state present;
+- [x] no `translate3d`;
+- [x] runner safety read-only / no `the_content` execution / no mutation.
+
+Minimal final visual matrix:
+- [ ] #396 — legacy_html + Summary;
+- [ ] #367 — plain_text;
+- [ ] #36431 — elementor + Helpful Tips;
+- [ ] #515 — mixed;
+- [ ] #358 — gutenberg + no Summary.
+
+These 5 replace the original 8-condition matrix by overlap and still cover:
+- all 5 source kinds;
+- Tips present;
+- Summary present;
+- Summary absent.
+
+PX-740 closeout requires only Product Owner visual PASS for this 5-post matrix plus the already accepted Rail PASS.

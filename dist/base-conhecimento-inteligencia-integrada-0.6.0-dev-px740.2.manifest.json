@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "purpose": "SPEC-007 PX-740 Reader/Tips/Rail corrected homologation package",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px740.2",
+  "source_commit": "49860f1e357f1d0ac4792639c20c5cae82e79b2d",
+  "root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "c6dc316f5b51342410cbbc47521a6bd39b170a4bd188366c34c420375eb509be",
+  "bytes": 767241,
+  "file_count": 103,
+  "supersedes": "px740.1",
+  "superseded_reason": "Executive Summary Rail did not follow page scroll in real WordPress homologation",
+  "replacements": {
+    "includes/class-public-experience.php": {
+      "blob_sha": "254b5b95d42195af5e41abd5d66f5cce58cb3f5c",
+      "bytes": 19135
+    },
+    "assets/css/public-article.css": {
+      "blob_sha": "b49540831d0fd4920831d5eddf4a518e5938861c",
+      "bytes": 10773
+    },
+    "assets/js/public-reader.js": {
+      "blob_sha": "633283125776ff729e807837bbeab0cdfc27318f",
+      "bytes": 2144,
+      "new_file": true
+    }
+  },
+  "rail_strategy": "dedicated public-reader.js bounded translate3d"
+}

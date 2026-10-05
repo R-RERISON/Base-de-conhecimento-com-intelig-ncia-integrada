@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "phase": "PACKAGE_BUILD",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "execution_mode": "CONNECTOR_DETERMINISTIC_EQUIVALENT",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px740.2",
+  "zip": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.2.zip",
+  "zip_sha256": "c6dc316f5b51342410cbbc47521a6bd39b170a4bd188366c34c420375eb509be",
+  "bytes": 767241,
+  "deterministic_equal": true,
+  "inspection": {
+    "pass": true,
+    "file_count": 103,
+    "single_root": true,
+    "required_missing": [],
+    "forbidden_paths": [],
+    "replaced": [
+      "base-conhecimento-inteligencia-integrada/includes/class-public-experience.php",
+      "base-conhecimento-inteligencia-integrada/assets/css/public-article.css"
+    ],
+    "added": [
+      "base-conhecimento-inteligencia-integrada/assets/js/public-reader.js"
+    ]
+  },
+  "source_static_contract_equivalent": "PASS",
+  "search_javascript_syntax": "PASS",
+  "reader_javascript_syntax": "PASS",
+  "php_lint": "PENDING_EXACT_ARTIFACT",
+  "supersedes": "px740.1",
+  "invariants": {
+    "canonical_content_unchanged": true,
+    "tips_summary_storage_unchanged": true,
+    "gac_wpui_preserved": true,
+    "cutover_authorized": false,
+    "retirement_authorized": false
+  },
+  "next_gate": "PX740_WORDPRESS_RAIL_FOLLOW_SMOKE"
+}

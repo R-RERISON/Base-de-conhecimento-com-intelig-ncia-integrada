@@ -1,0 +1,137 @@
+name: PX740.6.1 PHP and activation diagnostic
+
+on:
+  push:
+    branches:
+      - diagnostic/px740-6-1-php-lint-20261005
+  workflow_dispatch:
+
+jobs:
+  php-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP 8.5
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          tools: none
+          coverage: none
+
+      - name: Lint source PHP
+        shell: bash
+        run: |
+          set -euo pipefail
+          find plugin/base-conhecimento-inteligencia-integrada -type f -name '*.php' -print0 |
+            xargs -0 -n1 php -l
+
+      - name: Extract exact px740.6.1 artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin spec007-px740-homologation-artifact
+          git show origin/spec007-px740-homologation-artifact:dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.6.1.zip > /tmp/px740.6.1.zip
+          rm -rf /tmp/px740-plugin
+          mkdir -p /tmp/px740-plugin
+          unzip -q /tmp/px740.6.1.zip -d /tmp/px740-plugin
+          test -f /tmp/px740-plugin/base-conhecimento-inteligencia-integrada/base-conhecimento-inteligencia-integrada.php
+
+      - name: Lint exact artifact PHP
+        shell: bash
+        run: |
+          set -euo pipefail
+          find /tmp/px740-plugin/base-conhecimento-inteligencia-integrada -type f -name '*.php' -print0 |
+            xargs -0 -n1 php -l
+
+  wordpress-activation:
+    runs-on: ubuntu-latest
+    needs: php-lint
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract exact artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin spec007-px740-homologation-artifact
+          git show origin/spec007-px740-homologation-artifact:dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.6.1.zip > /tmp/px740.6.1.zip
+          rm -rf /tmp/px740-plugin
+          mkdir -p /tmp/px740-plugin
+          unzip -q /tmp/px740.6.1.zip -d /tmp/px740-plugin
+
+      - name: Start WordPress and MariaDB
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker network create bdc-net
+          docker volume create bdc-wp
+          docker run -d --name bdc-db --network bdc-net \
+            -e MARIADB_DATABASE=wordpress \
+            -e MARIADB_USER=wordpress \
+            -e MARIADB_PASSWORD=wordpress \
+            -e MARIADB_ROOT_PASSWORD=root \
+            mariadb:11
+          docker run -d --name bdc-wp --network bdc-net \
+            -e WORDPRESS_DB_HOST=bdc-db:3306 \
+            -e WORDPRESS_DB_USER=wordpress \
+            -e WORDPRESS_DB_PASSWORD=wordpress \
+            -e WORDPRESS_DB_NAME=wordpress \
+            -v bdc-wp:/var/www/html \
+            wordpress:php8.4-apache
+          for i in $(seq 1 60); do
+            if docker exec bdc-wp test -f /var/www/html/wp-includes/version.php; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs bdc-wp
+          exit 1
+
+      - name: Install WordPress
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 60); do
+            if docker run --rm --network bdc-net -v bdc-wp:/var/www/html wordpress:cli \
+              wp core install --path=/var/www/html --url=http://localhost --title=BDC \
+              --admin_user=admin --admin_password=admin1234 --admin_email=admin@example.com --skip-email; then
+              exit 0
+            fi
+            sleep 2
+          done
+          exit 1
+
+      - name: Copy exact plugin into WordPress
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker cp /tmp/px740-plugin/base-conhecimento-inteligencia-integrada bdc-wp:/var/www/html/wp-content/plugins/
+          docker exec bdc-wp chown -R www-data:www-data /var/www/html/wp-content/plugins/base-conhecimento-inteligencia-integrada
+
+      - name: Activate exact artifact
+        shell: bash
+        run: |
+          set -o pipefail
+          docker run --rm --network bdc-net -v bdc-wp:/var/www/html wordpress:cli \
+            wp plugin activate base-conhecimento-inteligencia-integrada --path=/var/www/html --debug 2>&1 | tee /tmp/activation.log
+          status=${PIPESTATUS[0]}
+          echo "activation_exit=${status}"
+          if [ "${status}" -ne 0 ]; then
+            echo "=== WordPress container logs ==="
+            docker logs bdc-wp || true
+            echo "=== Activation output ==="
+            cat /tmp/activation.log
+            exit "${status}"
+          fi
+
+      - name: Verify plugin status
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm --network bdc-net -v bdc-wp:/var/www/html wordpress:cli \
+            wp plugin status base-conhecimento-inteligencia-integrada --path=/var/www/html

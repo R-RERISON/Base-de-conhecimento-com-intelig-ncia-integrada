@@ -45,28 +45,28 @@ final class Admin_Page {
 			'bdc-kb-admin',
 			BDC_KB_URL . 'assets/css/admin.css',
 			array(),
-			\bdc_kb_asset_version( 'assets/css/admin.css' )
+			BDC_KB_ASSET_VERSION
 		);
 
 		wp_enqueue_style(
 			'bdc-kb-workspace',
 			BDC_KB_URL . 'assets/css/workspace.css',
 			array( 'bdc-kb-admin' ),
-			\bdc_kb_asset_version( 'assets/css/workspace.css' )
+			BDC_KB_ASSET_VERSION
 		);
 
 		wp_enqueue_style(
 			'bdc-kb-history',
 			BDC_KB_URL . 'assets/css/history.css',
 			array( 'bdc-kb-workspace' ),
-			\bdc_kb_asset_version( 'assets/css/history.css' )
+			BDC_KB_ASSET_VERSION
 		);
 
 		wp_enqueue_script(
 			'bdc-kb-workspace',
 			BDC_KB_URL . 'assets/js/workspace.js',
 			array(),
-			\bdc_kb_asset_version( 'assets/js/workspace.js' ),
+			BDC_KB_ASSET_VERSION,
 			true
 		);
 	}

@@ -40,7 +40,7 @@ final class Public_Experience {
 		if ( 'base-de-conhecimento_page_' . self::PAGE_SLUG !== $hook_suffix ) {
 			return;
 		}
-		wp_enqueue_style( 'bdc-kb-public-preview-admin', BDC_KB_URL . 'assets/css/visual-foundation.css', array(), \bdc_kb_asset_version( 'assets/css/visual-foundation.css' ) );
+		wp_enqueue_style( 'bdc-kb-public-preview-admin', BDC_KB_URL . 'assets/css/visual-foundation.css', array(), BDC_KB_ASSET_VERSION );
 		wp_enqueue_style( 'dashicons' );
 	}
 
@@ -109,12 +109,12 @@ final class Public_Experience {
 		if ( null === $kind ) { return; }
 		Public_Auth_Bridge::prime();
 		wp_enqueue_style( 'dashicons' );
-		wp_enqueue_style( 'bdc-kb-public-foundation', BDC_KB_URL . 'assets/css/public-foundation.css', array(), \bdc_kb_asset_version( 'assets/css/public-foundation.css' ) );
-		wp_enqueue_style( 'bdc-kb-public-header', BDC_KB_URL . 'assets/css/public-header.css', array( 'bdc-kb-public-foundation' ), \bdc_kb_asset_version( 'assets/css/public-header.css' ) );
-		wp_enqueue_style( 'bdc-kb-public-' . $kind, BDC_KB_URL . 'assets/css/public-' . $kind . '.css', array( 'bdc-kb-public-header' ), \bdc_kb_asset_version( 'assets/css/public-' . $kind . '.css' ) );
-		wp_enqueue_script( 'bdc-kb-public-search', BDC_KB_URL . 'assets/js/public-search.js', array(), \bdc_kb_asset_version( 'assets/js/public-search.js' ), true );
+		wp_enqueue_style( 'bdc-kb-public-foundation', BDC_KB_URL . 'assets/css/public-foundation.css', array(), BDC_KB_ASSET_VERSION );
+		wp_enqueue_style( 'bdc-kb-public-header', BDC_KB_URL . 'assets/css/public-header.css', array( 'bdc-kb-public-foundation' ), BDC_KB_ASSET_VERSION );
+		wp_enqueue_style( 'bdc-kb-public-' . $kind, BDC_KB_URL . 'assets/css/public-' . $kind . '.css', array( 'bdc-kb-public-header' ), BDC_KB_ASSET_VERSION );
+		wp_enqueue_script( 'bdc-kb-public-search', BDC_KB_URL . 'assets/js/public-search.js', array(), BDC_KB_ASSET_VERSION, true );
 		if ( 'article' === $kind ) {
-			wp_enqueue_script( 'bdc-kb-public-reader', BDC_KB_URL . 'assets/js/public-reader.js', array(), \bdc_kb_asset_version( 'assets/js/public-reader.js' ), true );
+			wp_enqueue_script( 'bdc-kb-public-reader', BDC_KB_URL . 'assets/js/public-reader.js', array(), BDC_KB_ASSET_VERSION, true );
 		}
 		wp_localize_script(
 			'bdc-kb-public-search',

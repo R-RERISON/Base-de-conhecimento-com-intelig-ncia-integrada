@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'BDC_KB_VERSION', '0.6.0-dev' );
+define( 'BDC_KB_ASSET_VERSION', '0.6.0-dev-px740.6.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -72,30 +73,6 @@ define( 'BDC_KB_FILE', __FILE__ );
 define( 'BDC_KB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
 
-/**
- * Build a cache-safe asset version while preserving the product version.
- */
-function bdc_kb_asset_version( string $relative_path ): string {
-	static $versions = array();
-	$relative_path = ltrim( str_replace( '\\', '/', $relative_path ), '/' );
-
-	if ( isset( $versions[ $relative_path ] ) ) {
-		return $versions[ $relative_path ];
-	}
-
-	$path = BDC_KB_DIR . $relative_path;
-	if ( ! is_file( $path ) ) {
-		$versions[ $relative_path ] = BDC_KB_VERSION;
-		return $versions[ $relative_path ];
-	}
-
-	$hash = hash_file( 'sha256', $path );
-	$versions[ $relative_path ] = is_string( $hash ) && '' !== $hash
-		? BDC_KB_VERSION . '-' . substr( $hash, 0, 12 )
-		: BDC_KB_VERSION;
-
-	return $versions[ $relative_path ];
-}
 
 require_once BDC_KB_DIR . 'includes/class-core-runtime-loader.php';
 require_once BDC_KB_DIR . 'includes/class-runtime-module-registry.php';

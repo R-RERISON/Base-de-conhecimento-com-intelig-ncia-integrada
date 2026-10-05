@@ -20,7 +20,7 @@ final class Public_Experience {
 	private const GLOBAL_QUERY_KEY = 'bdc_global_q';
 
 	/** @var array<int,int> */
-	private const ARTICLE_SAMPLES = array( 359, 367, 385, 515, 358, 36431, 45782 );
+	private const ARTICLE_SAMPLES = array( 396, 367, 36431, 515, 358 );
 
 	public static function register(): void {
 		add_action( 'admin_menu', array( self::class, 'register_admin_page' ), 55 );
@@ -48,10 +48,10 @@ final class Public_Experience {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'Permissão insuficiente.', 'base-conhecimento-inteligencia-integrada' ), '', array( 'response' => 403 ) );
 		}
-		echo '<div class="wrap bdc-kb-admin">';
-		echo '<h1>' . esc_html__( 'Prévia da Experiência Pública', 'base-conhecimento-inteligencia-integrada' ) . '</h1>';
-		echo '<p>' . esc_html__( 'Exploração visual em homologação. A Home e os artigos públicos atuais permanecem intactos até aceite explícito.', 'base-conhecimento-inteligencia-integrada' ) . '</p>';
-		echo '<div class="bdc-kb-overview-grid">';
+		echo '<div class="wrap bdc-kb-admin bdc-kb-admin--public-preview">';
+		echo '<section class="bdc-kb-preview-hero"><div><p class="bdc-kb-preview-hero__eyebrow">Base de Conhecimento</p><h1>' . esc_html__( 'Prévia da Experiência Pública', 'base-conhecimento-inteligencia-integrada' ) . '</h1><p>' . esc_html__( 'Homologação visual do Home Search-first e do Article Reader antes do cutover público.', 'base-conhecimento-inteligencia-integrada' ) . '</p></div><span class="bdc-kb-preview-state">Homologação ativa</span></section>';
+		echo '<div class="bdc-kb-preview-guardrail"><span class="dashicons dashicons-shield" aria-hidden="true"></span><span><strong>Sem cutover:</strong> page_on_front, post_content, _elementor_data, ASI, GRE, GAC, WPUI e Astra permanecem inalterados.</span></div>';
+		echo '<div class="bdc-kb-overview-grid bdc-kb-preview-grid">';
 		echo '<section class="bdc-kb-overview-card"><span class="bdc-kb-card-icon"><span class="dashicons dashicons-search" aria-hidden="true"></span></span><h4>Home Search-first</h4><p>Home minimalista, busca como ação principal e navegação secundária sob demanda.</p><a class="button button-primary bdc-kb-button-with-icon" target="_blank" rel="noopener" href="' . esc_url( self::home_preview_url() ) . '"><span class="dashicons dashicons-visibility" aria-hidden="true"></span><span>Abrir Home</span></a></section>';
 		echo '<section class="bdc-kb-overview-card"><span class="bdc-kb-card-icon"><span class="dashicons dashicons-media-document" aria-hidden="true"></span></span><h4>Article Reader</h4><p>Leitura limpa com busca persistente, Dicas úteis, Resumo Executivo e pipeline legado preservado.</p><div class="bdc-kb-vocabulary-actions">';
 		foreach ( self::ARTICLE_SAMPLES as $post_id ) {
@@ -60,7 +60,7 @@ final class Public_Experience {
 			echo '<a class="bdc-kb-vocabulary-action" target="_blank" rel="noopener" href="' . esc_url( self::article_preview_url( $post_id ) ) . '"><span class="dashicons dashicons-external" aria-hidden="true"></span><span>#' . esc_html( (string) $post_id ) . ' — ' . esc_html( wp_trim_words( (string) $post->post_title, 7 ) ) . '</span></a>';
 		}
 		echo '</div></section></div>';
-		echo '<div class="notice notice-info"><p><strong>Sem cutover:</strong> page_on_front, post_content, _elementor_data, ASI, GRE, GAC, WPUI e Astra permanecem inalterados.</p></div></div>';
+		echo '</div>';
 	}
 
 	public static function home_preview_url( int $category_id = 0, string $query = '' ): string {
@@ -126,7 +126,7 @@ final class Public_Experience {
 				'previewMode' => true,
 				'minChars' => Public_Search_Facade::MIN_QUERY_LENGTH,
 				'debounceMs' => 180,
-				'uiVersion' => 'premium-v6',
+				'uiVersion' => 'premium-v7',
 				'shellVersion' => self::SHELL_VERSION,
 				'consultAction' => class_exists( Word_Cloud_Consultations::class ) ? Word_Cloud_Consultations::AJAX_ACTION : '',
 				'consultNonce' => class_exists( Word_Cloud_Consultations::class ) ? wp_create_nonce( Word_Cloud_Consultations::NONCE_ACTION ) : '',

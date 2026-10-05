@@ -24,17 +24,19 @@ Frozen:
 
 Frozen baseline:
 - canonical storage remains `_bdc_es_helpful_tips`;
-- current data ownership remains external to the BDC shell;
-- BDC Reader may read and present canonical Tips data;
+- BDC `Helpful_Tips_Store` is the canonical API/physical-key owner inside the current plugin runtime;
+- GRE remains an external legacy renderer over compatible data and is not the canonical Reader owner;
+- BDC Reader reads and presents canonical Tips data;
 - PX-740 must not migrate, rewrite or normalize stored Tips values;
 - no duplicate Helpful Tips renderer may appear in the candidate Reader.
 
 ## Executive Summary Rail ownership
 
-PX-740 must inventory and freeze:
-- canonical source of summary items;
-- GRE renderer ownership;
-- BDC Reader read-model projection;
+Frozen after discovery:
+- BDC `Summary_Store`, `Classification_Store` and `Knowledge_Facts_Store` provide the canonical sources used by the Reader summary projection;
+- `Public_Article_Read_Model::summary_items()` is the BDC-owned read-model composition boundary;
+- GRE remains the external legacy renderer on the legacy surface;
+- BDC Reader owns candidate Summary Rail presentation;
 - candidate-only duplicate suppression behavior;
 - empty/missing summary behavior;
 - responsive rail behavior.
@@ -106,3 +108,56 @@ Before runtime changes:
 7. add static regression coverage.
 
 No speculative redesign.
+
+
+## Discovery freeze — 2026-10-05
+
+### Current Reader pipeline
+
+Candidate Reader:
+1. enters the real WordPress loop;
+2. calls `Public_Article_Content::capture_current_loop()`;
+3. that method calls canonical `the_content()`;
+4. BDC candidate request suppresses only GRE duplicate Helpful Tips / Summary renderers;
+5. GAC and WPUI callbacks remain in `the_content`;
+6. BDC renders Tips and Summary from BDC read-model/store APIs.
+
+### Current hook compatibility
+
+Current homologation inventory confirms:
+- GAC PostActions at priority 12;
+- GAC KnowledgeBridge at priority 13;
+- GRE Helpful Tips legacy renderer at priority 15;
+- WP Unified Indexer anchors at priority 20;
+- BDC Search Anchor Manager at priority 25;
+- GRE legacy Summary renderer at priority 30.
+
+Candidate-only suppression removes GRE priority 15/30 duplication while preserving GAC/WPUI/BDC content-pipeline callbacks.
+
+### Ownership correction
+
+Earlier wording that treated Helpful Tips data ownership as external was imprecise.
+
+Frozen:
+- `Helpful_Tips_Store` owns the BDC canonical API for `_bdc_es_helpful_tips`;
+- `Summary_Store` + Classification/Facts stores own BDC summary inputs;
+- GRE is an external legacy renderer/compatibility dependency, not the candidate Reader data owner.
+
+### Known gap PX740-GAP-001 — dual Rail movement strategy
+
+Current assets contain two competing movement strategies:
+- base Reader CSS defines `.bdc-reader-summary { position: sticky; ... }`;
+- later v5 CSS overrides the rail to `position: relative`;
+- `public-search.js::initReaderRail()` then moves the rail using scroll/resize listeners and `translate3d()`.
+
+This creates unnecessary coupling between Search JavaScript and Reader layout, duplicates browser-native sticky behavior, and increases regression surface.
+
+Disposition:
+- do not change until the regression contract is frozen;
+- preferred bounded correction is CSS-native sticky with no scroll-driven transform if homologation confirms parity.
+
+### Known risk PX740-RISK-002 — legacy chrome stripping heuristic
+
+`Public_Article_Content::strip_duplicate_legacy_chrome()` post-processes canonical `the_content` HTML using a DOM/text heuristic.
+
+It is retained for compatibility in this gate until regression evidence proves it can be narrowed or removed. PX-740 must not broaden this heuristic.

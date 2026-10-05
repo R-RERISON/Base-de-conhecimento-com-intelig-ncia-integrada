@@ -62,11 +62,11 @@ Historical planned items:
 ## PX-740 Reader / Tips / Rail — ACTIVE / DISCOVERY
 
 - [x] PX740-01 contract — `px740-reader-tips-rail-contract-v1.md`.
-- [ ] PX740-02 inventory current Reader composition and external hook ownership.
-- [ ] PX740-03 freeze Helpful Tips ownership/rendering boundary.
-- [ ] PX740-04 freeze Executive Summary Rail ownership/rendering boundary.
-- [ ] PX740-05 freeze Reader canonical-content/the_content compatibility matrix.
-- [ ] PX740-06 define static regression contract.
+- [x] PX740-02 inventory current Reader composition and external hook ownership.
+- [x] PX740-03 freeze Helpful Tips ownership/rendering boundary.
+- [x] PX740-04 freeze Executive Summary Rail ownership/rendering boundary.
+- [x] PX740-05 freeze Reader canonical-content/the_content compatibility matrix.
+- [x] PX740-06 define static regression contract — `tests/unit/spec007-px740-reader-contract.php`.
 - [ ] PX740-07 implement first bounded runtime slice only after contract review.
 - [ ] PX740-08 package/smoke/closeout.
 
@@ -194,3 +194,21 @@ Closeout:
 - `evidence/spec007-px730-closeout-20261005.json`.
 
 PX-740 Reader / Tips / Rail is now ACTIVE / DISCOVERY.
+
+
+### PX-740 discovery — 2026-10-05
+
+Frozen inventory:
+- candidate uses canonical WordPress loop + `the_content()`;
+- GAC/WPUI/BDC anchor callbacks remain preserved;
+- GRE duplicate Tips/Summary renderers are suppressed only in candidate Article requests;
+- BDC `Helpful_Tips_Store` owns `_bdc_es_helpful_tips` API;
+- BDC Summary/Classification/Facts stores feed the Reader Summary projection;
+- all observed source kinds remain in regression scope.
+
+Known gaps:
+- PX740-GAP-001: dual Summary Rail movement strategy (CSS sticky + later relative + JS transform);
+- PX740-RISK-002: legacy chrome stripping heuristic retained but must not broaden.
+
+Inventory:
+- `px740-reader-inventory-20261005.md`.

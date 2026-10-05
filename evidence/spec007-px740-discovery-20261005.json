@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "DISCOVERY",
+  "date": "2026-10-05",
+  "status": "DISCOVERY_FROZEN_STATIC_VALIDATION_PENDING",
+  "ownership": {
+    "helpful_tips_api": "BDC Helpful_Tips_Store",
+    "helpful_tips_key": "_bdc_es_helpful_tips",
+    "summary_projection": "BDC Public_Article_Read_Model",
+    "legacy_renderer": "GRE",
+    "canonical_content": "WordPress the_content"
+  },
+  "preserved_callbacks": [
+    "GAC PostActions",
+    "GAC KnowledgeBridge",
+    "WPUI anchors",
+    "BDC Search Anchor Manager"
+  ],
+  "candidate_suppression": [
+    "GRE Helpful Tips renderer",
+    "GRE Summary renderer"
+  ],
+  "known_gaps": [
+    {
+      "id": "PX740-GAP-001",
+      "summary": "dual Summary Rail positioning: CSS sticky + relative override + JS translate3d"
+    },
+    {
+      "id": "PX740-RISK-002",
+      "summary": "legacy chrome stripping heuristic retained unchanged"
+    }
+  ],
+  "next": "Run PX-740 discovery static contract, then implement only the bounded Rail strategy correction if PASS."
+}

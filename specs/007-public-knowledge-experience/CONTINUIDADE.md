@@ -469,3 +469,31 @@ Next:
 3. map `the_content` callback compatibility requirements;
 4. identify duplication/isolation gaps;
 5. add static regression contract before runtime changes.
+
+
+## PX-740 discovery inventory — 2026-10-05
+
+Reader boundary confirmed:
+- real WordPress loop;
+- canonical `the_content()`;
+- BDC-owned candidate shell;
+- GAC/WPUI callbacks preserved;
+- GRE duplicate Tips/Rail renderers suppressed only during candidate Reader request.
+
+Ownership corrected/frozen:
+- BDC `Helpful_Tips_Store` is canonical API owner for `_bdc_es_helpful_tips`;
+- BDC Summary/Classification/Facts stores are canonical inputs to the BDC Reader summary projection;
+- GRE remains legacy renderer compatibility, not candidate data owner.
+
+Concrete gap:
+- PX740-GAP-001: Summary Rail currently combines CSS sticky declarations, a later `position:relative` override and scroll-driven JS `translate3d`;
+- this behavior currently lives inside `public-search.js`, coupling Search and Reader layout.
+
+Risk retained:
+- PX740-RISK-002: `strip_duplicate_legacy_chrome()` heuristically post-processes `the_content` output;
+- no expansion of this heuristic is authorized.
+
+Next:
+1. run PX-740 static contract;
+2. if PASS, implement only PX740-GAP-001 as the first bounded slice;
+3. package candidate and smoke representative Reader source kinds.

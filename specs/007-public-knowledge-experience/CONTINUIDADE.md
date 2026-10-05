@@ -843,3 +843,30 @@ Static validation:
 - Public_Article_Content unchanged;
 - Reader flow/fixed/bottom preserved;
 - no cutover/storage mutation.
+
+
+## PX-740 Premium Product UI v8 candidate px740.5
+
+Artifact:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.5.zip`;
+- source commit `f9f6ef9fd2e55f24ff3c33a8711acf9fedca56e1`;
+- artifact commit `fc9faa6336af4673a92cf5862f60b6a6ffeb7e86`;
+- Git blob `4a05e3872d7353b2c763972ed49ff1dcb67084df`;
+- SHA-256 `95fdc74d0d5a40ee9c43498fbdcb0a4f63bfd5887d9c1febf6b79bcf796c7fd7`;
+- size 801,342 bytes;
+- 103 distributed files;
+- deterministic build PASS;
+- source checks PASS 19/19;
+- exact-package PHP lint pending.
+
+Controlled runtime replacements:
+- includes/class-admin-page.php;
+- assets/js/workspace.js;
+- assets/css/admin.css;
+- assets/css/workspace.css;
+- templates/public-home-preview.php;
+- assets/css/public-home.css;
+- assets/css/public-article.css;
+- assets/js/public-reader.js.
+
+No Search/ranker/schema/content-store/cutover changes.

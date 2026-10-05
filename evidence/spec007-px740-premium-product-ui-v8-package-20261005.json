@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "PREMIUM_PRODUCT_UI_V8_PACKAGE_READY",
+  "date": "2026-10-05",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "source_commit": "f9f6ef9fd2e55f24ff3c33a8711acf9fedca56e1",
+  "artifact": {
+    "filename": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.5.zip",
+    "branch": "spec007-px740-homologation-artifact",
+    "commit": "fc9faa6336af4673a92cf5862f60b6a6ffeb7e86",
+    "git_blob_sha": "4a05e3872d7353b2c763972ed49ff1dcb67084df",
+    "sha256": "95fdc74d0d5a40ee9c43498fbdcb0a4f63bfd5887d9c1febf6b79bcf796c7fd7",
+    "bytes": 801342,
+    "distributed_files": 103,
+    "deterministic_equal": true
+  },
+  "validation": {
+    "source_contract": "PASS_19_OF_19",
+    "package_structure": "PASS",
+    "exact_package_php_lint": "PENDING",
+    "product_owner_visual_homologation": "PENDING"
+  },
+  "next": "Install px740.5 and visually compare admin list, workspace overview/forms, Home default state and Reader."
+}

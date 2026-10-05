@@ -470,10 +470,25 @@ Structural remediation:
 - [x] article template/content capture unchanged;
 - [x] Rail state machine preserved;
 - [x] structural/static checks PASS 19/19;
-- [ ] deterministic px740.5 package;
+- [x] deterministic px740.5 package;
 - [ ] Product Owner visual homologation;
 - [ ] exact-package PHP lint;
 - [ ] PX-740 closeout.
 
 Contract:
 - `px740-premium-product-ui-v8.md`.
+
+
+### PX-740 Premium Product UI v8 candidate — px740.5
+
+- [x] source `f9f6ef9fd2e55f24ff3c33a8711acf9fedca56e1`;
+- [x] source checks PASS 19/19;
+- [x] deterministic package;
+- [x] artifact branch `spec007-px740-homologation-artifact`;
+- [x] artifact commit `fc9faa6336af4673a92cf5862f60b6a6ffeb7e86`;
+- [x] ZIP SHA-256 `95fdc74d0d5a40ee9c43498fbdcb0a4f63bfd5887d9c1febf6b79bcf796c7fd7`;
+- [x] 103 distributed files;
+- [x] 8 controlled replacements;
+- [ ] Product Owner visual homologation;
+- [ ] exact-package PHP lint;
+- [ ] PX-740 closeout.

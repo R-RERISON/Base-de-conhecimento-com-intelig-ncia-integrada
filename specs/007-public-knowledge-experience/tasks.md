@@ -57,7 +57,7 @@ Historical planned items:
 - [x] PX730-04 freeze candidate result navigation and accessibility behavior.
 - [x] PX730-05 define static regression contract — `tests/unit/spec007-px730-live-search-contract.php`.
 - [x] PX730-06 implement first bounded runtime slice — UI state hardening only; ranker/schema untouched.
-- [ ] PX730-07 package/smoke/closeout.
+- [ ] PX730-07 package/smoke/closeout — package `px730.1` ready; WordPress smoke pending.
 
 ## Explicitly not active yet
 
@@ -142,3 +142,25 @@ Next:
 - package deterministic `px730.1`;
 - install/smoke Home + Reader Search;
 - close PX-730 only after candidate evidence.
+
+
+### PX-730 package candidate — 2026-10-05
+
+- [x] source commit `231bd82e7d0f8bf02b044c7385f25a4d5f40be8d`;
+- [x] static-equivalent Live Search contract PASS;
+- [x] JavaScript syntax PASS;
+- [x] canonical `Public_Search_Facade` blob unchanged: `def1156ff0ce4f66a1b633353a9d1d5804f4bc18`;
+- [x] deterministic candidate `px730.1`;
+- [x] artifact branch `spec007-px730-homologation-artifact`;
+- [x] artifact commit `a500bfc1f07c162c145cbf38890b535be27c03e5`;
+- [x] ZIP SHA-256 `5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6`;
+- [x] 102 distributed files / inherited P-650 pruning preserved;
+- [x] exactly 3 runtime replacements: JS orchestrator, Public Experience renderer, foundation CSS;
+- [ ] exact-package PHP lint;
+- [ ] WordPress Home/Reader Live Search smoke;
+- [ ] PX-730 closeout.
+
+Evidence:
+- `evidence/spec007-px730-package-ready-20261005.json`.
+
+PX-730 remains ACTIVE.

@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-730",
+  "phase": "PACKAGE_READY",
+  "date": "2026-10-05",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "source_commit": "231bd82e7d0f8bf02b044c7385f25a4d5f40be8d",
+  "artifact": {
+    "filename": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px730.1.zip",
+    "branch": "spec007-px730-homologation-artifact",
+    "commit": "a500bfc1f07c162c145cbf38890b535be27c03e5",
+    "git_blob_sha": "f6185e07e86658b84a7245bdd3d790dc901ea603",
+    "sha256": "5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6",
+    "bytes": 766344,
+    "distributed_files": 102,
+    "deterministic_equal": true,
+    "single_root": true,
+    "forbidden_engineering_paths": []
+  },
+  "canonical_search": {
+    "public_search_facade_blob_sha": "def1156ff0ce4f66a1b633353a9d1d5804f4bc18",
+    "modified": false,
+    "ranker_schema_mutation": false
+  },
+  "runtime_replacements": [
+    "assets/js/public-search.js",
+    "includes/class-public-experience.php",
+    "assets/css/public-foundation.css"
+  ],
+  "validation": {
+    "live_search_static_equivalent": "PASS",
+    "javascript_syntax": "PASS",
+    "structural_package": "PASS",
+    "exact_package_php_lint": "PENDING",
+    "wordpress_smoke": "PENDING"
+  },
+  "next": "Install px730.1 in homologation and execute Home/Reader Live Search smoke."
+}

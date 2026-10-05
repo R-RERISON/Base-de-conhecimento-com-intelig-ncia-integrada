@@ -357,3 +357,60 @@ Next:
 2. map live-search states and failure behavior;
 3. add PX-730 static regression contract;
 4. only then implement the first bounded runtime slice.
+
+
+## PX-730 package candidate — 2026-10-05
+
+Source:
+- commit `231bd82e7d0f8bf02b044c7385f25a4d5f40be8d`.
+
+Runtime scope:
+- `assets/js/public-search.js`;
+- `includes/class-public-experience.php`;
+- `assets/css/public-foundation.css`.
+
+Canonical Search remains frozen:
+- `Public_Search_Facade` blob `def1156ff0ce4f66a1b633353a9d1d5804f4bc18` unchanged;
+- no Lexical_Ranker change;
+- no Search projection/schema change;
+- no vector/semantic/LLM retrieval.
+
+Candidate:
+- file `base-conhecimento-inteligencia-integrada-0.6.0-dev-px730.1.zip`;
+- artifact branch `spec007-px730-homologation-artifact`;
+- artifact commit `a500bfc1f07c162c145cbf38890b535be27c03e5`;
+- Git blob `f6185e07e86658b84a7245bdd3d790dc901ea603`;
+- SHA-256 `5993f7d329ea2c161c5cc885d4bbc06771716997cedae7f3335cef23ca56beb6`;
+- size 766,344 bytes;
+- 102 distributed files;
+- deterministic rebuild PASS;
+- single root PASS;
+- required distribution files PASS;
+- forbidden engineering paths absent.
+
+PX-730 UI-state changes:
+- request state isolated per form;
+- debounce and AbortController retained;
+- request sequence guard prevents stale results;
+- technical/AJAX failure no longer renders as valid zero-results;
+- Reader and Home use consistent live/busy state;
+- Escape cancels/dismisses the active live panel;
+- clear cancels pending request before reset/navigation;
+- server-side renderer differentiates invalid/technical failures from empty result.
+
+Pending:
+- exact ZIP PHP lint in an environment with the artifact materialized;
+- WordPress candidate smoke for Home and Reader live search.
+
+Still frozen:
+- no cutover;
+- no Home/Astra/snippet mutation;
+- no editorial storage mutation;
+- no legacy retirement.
+
+Next exact action:
+1. install `px730.1` over the current candidate in homologation;
+2. verify Home live search success, zero-results and recoverable failure behavior;
+3. verify Reader compact Search;
+4. verify Ctrl/Cmd+K, Escape and clear;
+5. return environmental evidence for PX-730 closeout.

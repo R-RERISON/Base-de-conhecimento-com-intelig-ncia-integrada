@@ -646,3 +646,43 @@ A read-only runner is being prepared to:
 - verify px740.3 Reader assets and no-transform state machine.
 
 No `the_content` execution and no writes.
+
+
+## PX-740 corpus regression runner 1.0.0
+
+Prepared a temporary read-only WordPress companion to close the remaining current-corpus evidence.
+
+Artifact:
+- `bdc-spec007-px740-reader-regression-runner-1.0.0.zip`;
+- artifact branch `spec007-px740-regression-runner-artifact`;
+- artifact commit `7e9282d905c29ccccacc8346cb98bf78f8943066`;
+- Git blob `822c83843cd4d4105827de2edacfbfe0fe12c2e4`;
+- SHA-256 `0a52bcc7d4560eb108a044b48067d5bcbbd569ff8681f6f2efccebb9375abd68`;
+- size 13,931 bytes;
+- deterministic build PASS;
+- static safety contract 20/20 PASS;
+- PHP lint not executed in connector environment.
+
+Runner validates without rendering editorial content:
+- current published source-kind counts and representative IDs;
+- Tips present;
+- Summary present/absent;
+- GAC/WPUI/BDC/GRE `the_content` hook signals;
+- px740.3 Reader files;
+- `flow/fixed/bottom` Rail state machine;
+- absence of `translate3d`.
+
+Safety:
+- no `the_content` execution;
+- no shortcode execution;
+- no content/meta/option/theme/plugin mutation;
+- no external network;
+- no editorial values exported.
+
+Next exact action:
+1. install/activate the temporary runner;
+2. open Tools -> SPEC-007 PX-740;
+3. click `Executar PX-740 e baixar JSON`;
+4. return the JSON;
+5. after review, inspect only the small representative visual set selected by the current corpus;
+6. close PX-740 if PASS.

@@ -324,3 +324,20 @@ Remaining before closeout:
 
 Runner source:
 - `tools/homologation/spec007/px740-reader-regression-runner.php`.
+
+
+### PX-740 corpus regression runner — 1.0.0
+
+- [x] read-only source: `tools/homologation/spec007/px740-reader-regression-runner.php`;
+- [x] static safety contract: 20/20 PASS;
+- [x] deterministic ZIP;
+- [x] artifact branch `spec007-px740-regression-runner-artifact`;
+- [x] artifact commit `7e9282d905c29ccccacc8346cb98bf78f8943066`;
+- [x] ZIP `bdc-spec007-px740-reader-regression-runner-1.0.0.zip`;
+- [x] SHA-256 `0a52bcc7d4560eb108a044b48067d5bcbbd569ff8681f6f2efccebb9375abd68`;
+- [x] no `the_content`/shortcode execution;
+- [x] no post/meta/option/theme/plugin writes;
+- [ ] PHP lint in executable environment;
+- [ ] execute in homologation and return JSON;
+- [ ] review selected visual sample;
+- [ ] PX-740 closeout.

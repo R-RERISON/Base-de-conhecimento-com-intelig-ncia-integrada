@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "artifact_type": "READ_ONLY_CORPUS_REGRESSION_RUNNER",
+  "version": "1.0.0",
+  "source_commit": "7f12601db4d4dc7a6bf13e796126773c2f12b4d9",
+  "artifact": {
+    "filename": "bdc-spec007-px740-reader-regression-runner-1.0.0.zip",
+    "branch": "spec007-px740-regression-runner-artifact",
+    "commit": "7e9282d905c29ccccacc8346cb98bf78f8943066",
+    "git_blob_sha": "822c83843cd4d4105827de2edacfbfe0fe12c2e4",
+    "sha256": "0a52bcc7d4560eb108a044b48067d5bcbbd569ff8681f6f2efccebb9375abd68",
+    "bytes": 13931,
+    "deterministic_equal": true
+  },
+  "validation": {
+    "static_safety_contract": "PASS_20_OF_20",
+    "php_lint": "NOT_EXECUTED_IN_CONNECTOR_ENVIRONMENT",
+    "wordpress_execution": "PENDING"
+  },
+  "safety": {
+    "read_only": true,
+    "executes_the_content": false,
+    "executes_shortcodes": false,
+    "writes_post_content": false,
+    "writes_post_meta": false,
+    "writes_options": false,
+    "mutates_theme": false,
+    "mutates_plugins": false,
+    "external_network": false
+  },
+  "next": "Install runner in homologation, execute once, and return JSON."
+}

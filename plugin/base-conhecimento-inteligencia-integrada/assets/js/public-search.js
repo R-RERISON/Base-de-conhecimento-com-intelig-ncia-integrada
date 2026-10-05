@@ -2,12 +2,44 @@
   'use strict';
 
   var config = window.BDC_KB_PUBLIC_SEARCH || {};
-  var controller = null;
-  var timer = null;
+  var searchStates = new WeakMap();
   var consultationEvents = new WeakSet();
 
   function searchTarget() {
     return document.querySelector('[data-bdc-primary-search]') || document.querySelector('[data-bdc-global-search]');
+  }
+
+  function panelForForm(form) {
+    var surface = form.closest('.bdc-public') || document;
+    var panel = form.parentElement && form.parentElement.querySelector('[data-bdc-live-search-panel]');
+    if (!panel && form.classList.contains('bdc-global-search')) {
+      panel = surface.querySelector('.bdc-global-search-panel[data-bdc-live-search-panel]');
+    }
+    return panel;
+  }
+
+  function stateForForm(form) {
+    var state = searchStates.get(form);
+    if (!state) {
+      state = { timer: null, controller: null, requestId: 0 };
+      searchStates.set(form, state);
+    }
+    return state;
+  }
+
+  function cancelPending(form) {
+    if (!form) return null;
+    var state = stateForForm(form);
+    if (state.timer) {
+      window.clearTimeout(state.timer);
+      state.timer = null;
+    }
+    if (state.controller) {
+      state.controller.abort();
+      state.controller = null;
+    }
+    state.requestId += 1;
+    return state;
   }
 
   function escapeHtml(value) {
@@ -26,31 +58,44 @@
   }
 
   function setPanel(form, payload, query) {
-    var surface = form.closest('.bdc-public') || document;
-    var panel = form.parentElement && form.parentElement.querySelector('[data-bdc-live-search-panel]');
-    if (!panel && form.classList.contains('bdc-global-search')) {
-      panel = surface.querySelector('.bdc-global-search-panel[data-bdc-live-search-panel]');
-    }
+    var panel = panelForForm(form);
     if (!panel) return;
     var target = panel.querySelector('[data-bdc-live-search-results]');
     var title = panel.querySelector('[data-bdc-live-search-title]');
     if (!target) return;
+
+    target.setAttribute('aria-live', 'polite');
     target.setAttribute('aria-busy', 'false');
-    panel.classList.remove('is-loading');
+    panel.classList.remove('is-loading', 'is-error');
 
     if (!query || query.length < Number(config.minChars || 2)) {
       panel.hidden = true;
+      panel.setAttribute('data-bdc-live-search-state', 'idle');
       target.innerHTML = '';
+      if (title) title.textContent = 'Resultados';
       return;
     }
 
+    var state = payload && payload.state ? String(payload.state) : 'empty';
     panel.hidden = false;
+    panel.setAttribute('data-bdc-live-search-state', state);
+
+    if (state === 'request_error' || state === 'technical_error' || state === 'rate_limited' || state === 'invalid_query') {
+      var message = payload && payload.message
+        ? String(payload.message)
+        : 'Não foi possível concluir a pesquisa agora.';
+      panel.classList.add('is-error');
+      if (title) title.textContent = 'Pesquisa indisponível';
+      target.innerHTML = '<div class="bdc-search-error" role="status"><strong>' + escapeHtml(message) + '</strong><span>Tente novamente ou pressione Enter para usar a pesquisa completa.</span></div>';
+      return;
+    }
+
+    var count = payload && Array.isArray(payload.results) ? payload.results.length : 0;
     if (title) {
-      var count = payload && Array.isArray(payload.results) ? payload.results.length : 0;
       title.textContent = count + (count === 1 ? ' resultado' : ' resultados') + ' para “' + query + '”';
     }
 
-    if (!payload || payload.state === 'empty' || !Array.isArray(payload.results) || !payload.results.length) {
+    if (!payload || state === 'empty' || state === 'zero_results' || !Array.isArray(payload.results) || !payload.results.length) {
       target.innerHTML = '<div class="bdc-search-empty">Nenhum resultado encontrado.</div>';
       return;
     }
@@ -59,33 +104,38 @@
   }
 
   function setLoading(form, query) {
-    var surface = form.closest('.bdc-public') || document;
-    var panel = form.parentElement && form.parentElement.querySelector('[data-bdc-live-search-panel]');
-    if (!panel && form.classList.contains('bdc-global-search')) {
-      panel = surface.querySelector('.bdc-global-search-panel[data-bdc-live-search-panel]');
-    }
+    var panel = panelForForm(form);
     if (!panel) return;
     var target = panel.querySelector('[data-bdc-live-search-results]');
     var title = panel.querySelector('[data-bdc-live-search-title]');
     panel.hidden = false;
+    panel.classList.remove('is-error');
     panel.classList.add('is-loading');
-    if (target) target.setAttribute('aria-busy', 'true');
+    panel.setAttribute('data-bdc-live-search-state', 'loading');
+    if (target) {
+      target.setAttribute('aria-live', 'polite');
+      target.setAttribute('aria-busy', 'true');
+    }
     if (title) title.textContent = 'Buscando “' + query + '”';
   }
 
   function liveSearch(form, input) {
     var query = input.value.trim();
-    if (timer) window.clearTimeout(timer);
-    if (controller) controller.abort();
+    var state = cancelPending(form);
+    if (!state) return;
+    var requestId = state.requestId;
 
     if (query.length < Number(config.minChars || 2)) {
       setPanel(form, null, query);
       return;
     }
 
-    timer = window.setTimeout(function () {
+    state.timer = window.setTimeout(function () {
+      state.timer = null;
+      if (requestId !== state.requestId || input.value.trim() !== query) return;
+
       setLoading(form, query);
-      controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      state.controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
       var data = new URLSearchParams();
       data.append('action', String(config.action || 'bdc_kb_public_search'));
       data.append('nonce', String(config.nonce || ''));
@@ -97,15 +147,29 @@
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
         body: data.toString(),
-        signal: controller ? controller.signal : undefined
+        signal: state.controller ? state.controller.signal : undefined
       }).then(function (response) {
-        return response.json();
-      }).then(function (json) {
-        if (!json || !json.success) throw new Error('search_failed');
-        setPanel(form, json.data || {}, query);
+        return response.json().then(function (json) {
+          return { ok: response.ok, json: json };
+        });
+      }).then(function (result) {
+        if (requestId !== state.requestId || input.value.trim() !== query) return;
+        if (!result.ok || !result.json || !result.json.success) {
+          var failure = new Error('search_failed');
+          failure.payload = result.json && result.json.data ? result.json.data : {};
+          throw failure;
+        }
+        state.controller = null;
+        setPanel(form, result.json.data || {}, query);
       }).catch(function (error) {
         if (error && error.name === 'AbortError') return;
-        setPanel(form, { state: 'empty', results: [] }, query);
+        if (requestId !== state.requestId || input.value.trim() !== query) return;
+        state.controller = null;
+        var payload = error && error.payload ? error.payload : {};
+        setPanel(form, {
+          state: payload.state || 'request_error',
+          message: payload.message || 'Não foi possível concluir a pesquisa agora.'
+        }, query);
       });
     }, Number(config.debounceMs || 180));
   }
@@ -127,6 +191,16 @@
       if (typeof input.select === 'function') input.select();
     }
     if (event.key === 'Escape') {
+      var active = document.activeElement;
+      var liveInput = active && typeof active.closest === 'function' ? active.closest('[data-bdc-live-search-input]') : null;
+      if (liveInput) {
+        var liveForm = liveInput.closest('[data-bdc-live-search-form]');
+        if (liveForm) {
+          cancelPending(liveForm);
+          setPanel(liveForm, null, '');
+        }
+      }
+
       var header = document.querySelector('[data-bdc-header]');
       var toggle = document.querySelector('[data-bdc-header-toggle]');
       if (header) header.classList.remove('is-menu-open');
@@ -188,7 +262,16 @@
     var clear = event.target.closest('[data-bdc-live-search-clear]');
     if (clear) {
       var input = searchTarget();
-      if (input) input.value = '';
+      if (input) {
+        var form = input.closest('[data-bdc-live-search-form]');
+        if (form) {
+          cancelPending(form);
+          input.value = '';
+          setPanel(form, null, '');
+        } else {
+          input.value = '';
+        }
+      }
     }
   });
 

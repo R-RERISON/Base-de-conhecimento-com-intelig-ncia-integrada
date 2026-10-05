@@ -15,3 +15,7 @@
 
 /* PX-720 public shell accessibility baseline. */
 body.bdc-public-preview .bdc-public-skip-link{position:fixed;z-index:99999;top:8px;left:8px;transform:translateY(-150%);padding:10px 14px;border-radius:8px;background:#fff;color:#0b1f4d;font:700 13px/1.2 Inter,"Segoe UI",Roboto,Arial,sans-serif;text-decoration:none;box-shadow:0 8px 24px rgba(11,31,77,.16)}body.bdc-public-preview .bdc-public-skip-link:focus{transform:translateY(0);outline:0;box-shadow:0 0 0 3px rgba(22,119,255,.24),0 8px 24px rgba(11,31,77,.16)}
+
+
+/* PX-730 Live Search state contract. */
+.bdc-search-error{display:grid;gap:4px;padding:14px 16px;border:1px solid #f0c7c7;border-radius:12px;background:#fff8f8;color:#713434;font-size:12px;line-height:1.45}.bdc-search-error strong{font-size:12.5px}.bdc-search-error span{color:#815151}.bdc-home-live-panel.is-error,.bdc-global-search-panel.is-error{border-color:#edcccc}.bdc-home-live-panel[data-bdc-live-search-state="idle"],.bdc-global-search-panel[data-bdc-live-search-state="idle"]{box-shadow:none}

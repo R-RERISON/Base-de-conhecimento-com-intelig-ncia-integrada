@@ -119,3 +119,34 @@ Before runtime change:
 5. implement only the gaps required by this contract.
 
 No speculative redesign.
+
+
+## Discovery findings — 2026-10-05
+
+Baseline review identified bounded UI-state gaps without any need to change retrieval:
+- AJAX/network/JSON failures were rendered as `Nenhum resultado encontrado`, conflating technical failure with a valid zero-result query;
+- request cancellation relied only on AbortController, leaving a stale-response race in environments where abort is unavailable or a response wins the abort race;
+- Reader result container did not declare the same initial `aria-live` / `aria-busy` state as Home;
+- server-rendered empty handling did not distinguish invalid/technical states from a valid empty result.
+
+Disposition:
+- fix only client/server presentation-state orchestration;
+- do not modify `Public_Search_Facade::search()`, `Lexical_Ranker`, projection schema or ranking semantics.
+
+## First bounded runtime slice — implemented
+
+The slice adds:
+- per-form request state;
+- monotonic request IDs;
+- stale-response suppression;
+- explicit recoverable failure state;
+- zero-result/failure separation;
+- consistent live/busy semantics;
+- Escape cancellation/dismissal;
+- pending-request cancellation on clear;
+- server-rendered error-state differentiation.
+
+Regression contract:
+- `tests/unit/spec007-px730-live-search-contract.php`.
+
+PX-730 remains ACTIVE until package + WordPress candidate smoke are complete.

@@ -52,11 +52,11 @@ Historical planned items:
 ## PX-730 Live Search — ACTIVE / DISCOVERY
 
 - [x] PX730-01 contract — `px730-live-search-contract-v1.md`.
-- [ ] PX730-02 reconcile existing `public-search.js` against canonical Search facade.
-- [ ] PX730-03 freeze Home/Reader live-search interaction states.
-- [ ] PX730-04 freeze candidate result navigation and accessibility behavior.
-- [ ] PX730-05 define static regression contract.
-- [ ] PX730-06 implement first bounded runtime slice only after contract review.
+- [x] PX730-02 reconcile existing `public-search.js` against canonical Search facade.
+- [x] PX730-03 freeze Home/Reader live-search interaction states.
+- [x] PX730-04 freeze candidate result navigation and accessibility behavior.
+- [x] PX730-05 define static regression contract — `tests/unit/spec007-px730-live-search-contract.php`.
+- [x] PX730-06 implement first bounded runtime slice — UI state hardening only; ranker/schema untouched.
 - [ ] PX730-07 package/smoke/closeout.
 
 ## Explicitly not active yet
@@ -122,3 +122,23 @@ Closeout:
 - `evidence/spec007-px720-closeout-20261002.json`.
 
 PX-730 Live Search is now ACTIVE / DISCOVERY.
+
+
+### PX-730 first bounded slice
+
+Implemented:
+- per-form live-search request state via WeakMap;
+- debounce + AbortController preserved;
+- monotonic request ID/stale-response guard;
+- recoverable request failure separated from zero-results;
+- Home/Reader aria-live + aria-busy consistency;
+- Escape cancels/hides active live panel;
+- clear action cancels pending request before reset/navigation;
+- server-rendered invalid/technical state distinct from empty result;
+- canonical Public_Search_Facade/Lexical_Ranker unchanged.
+
+Next:
+- run PX-730 static contract;
+- package deterministic `px730.1`;
+- install/smoke Home + Reader Search;
+- close PX-730 only after candidate evidence.

@@ -211,8 +211,17 @@ final class Public_Experience {
 	public static function render_search_results( ?array $search, string $class = 'bdc-search-results' ): void {
 		if ( ! is_array( $search ) ) { return; }
 		$results = (array) ( $search['results'] ?? array() );
+		$state = sanitize_key( (string) ( $search['state'] ?? '' ) );
 		echo '<div class="' . esc_attr( $class ) . '" aria-live="polite">';
 		if ( empty( $results ) ) {
+			if ( in_array( $state, array( 'invalid_query', 'technical_error', 'rate_limited', 'request_error' ), true ) ) {
+				$message = trim( (string) ( $search['message'] ?? '' ) );
+				if ( '' === $message ) {
+					$message = 'Não foi possível concluir a pesquisa agora.';
+				}
+				echo '<div class="bdc-search-error" role="status"><strong>' . esc_html( $message ) . '</strong><span>Tente novamente ou ajuste a consulta.</span></div></div>';
+				return;
+			}
 			echo '<div class="bdc-search-empty">Nenhum resultado encontrado.</div></div>';
 			return;
 		}
@@ -241,7 +250,7 @@ final class Public_Experience {
 		}
 		echo '><div class="bdc-global-search-panel__inner">';
 		echo '<div class="bdc-global-search-panel__head"><strong data-bdc-live-search-title>Resultados</strong><a href="' . esc_url( self::article_preview_url( (int) get_queried_object_id() ) ) . '" data-bdc-live-search-clear>Limpar</a></div>';
-		echo '<div data-bdc-live-search-results>';
+		echo '<div data-bdc-live-search-results aria-live="polite" aria-busy="false">';
 		if ( is_array( $search ) ) {
 			self::render_search_results( $search, 'bdc-search-results bdc-search-results--header' );
 		}

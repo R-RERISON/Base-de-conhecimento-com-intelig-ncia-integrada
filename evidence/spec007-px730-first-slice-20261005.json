@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-730",
+  "phase": "FIRST_BOUNDED_SLICE",
+  "date": "2026-10-05",
+  "status": "SOURCE_IMPLEMENTED_STATIC_VALIDATION_PENDING",
+  "baseline_head": "0d75887a272cc600285ab8d26723cdc5f6454909",
+  "modified_surfaces": [
+    "plugin/base-conhecimento-inteligencia-integrada/assets/js/public-search.js",
+    "plugin/base-conhecimento-inteligencia-integrada/includes/class-public-experience.php",
+    "plugin/base-conhecimento-inteligencia-integrada/assets/css/public-foundation.css"
+  ],
+  "canonical_search": {
+    "facade_file": "plugin/base-conhecimento-inteligencia-integrada/includes/class-public-search-facade.php",
+    "facade_blob_before": "def1156ff0ce4f66a1b633353a9d1d5804f4bc18",
+    "modified": false,
+    "ranker_semantics_modified": false,
+    "projection_schema_modified": false
+  },
+  "gaps_closed": [
+    "failure_vs_zero_results",
+    "stale_response_guard",
+    "per_form_request_state",
+    "reader_live_region",
+    "escape_cancel_and_dismiss",
+    "server_rendered_failure_state"
+  ],
+  "invariants": {
+    "public_cutover": false,
+    "page_on_front_mutation": false,
+    "home_snippet_mutation": false,
+    "astra_custom_css_mutation": false,
+    "editorial_storage_mutation": false,
+    "legacy_plugin_retirement": false
+  },
+  "next": "Run static contract and build px730.1 candidate."
+}

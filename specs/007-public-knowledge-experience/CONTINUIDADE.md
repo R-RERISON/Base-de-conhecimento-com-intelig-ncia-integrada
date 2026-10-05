@@ -913,3 +913,28 @@ Artifact:
 - exact-package PHP lint pending.
 
 This candidate supersedes rejected px740.5 for visual regression recovery.
+
+
+## PX-740 runtime incident and hotfix px740.6.1
+
+px740.6 produced a WordPress critical error in Product Owner homologation and is formally rejected.
+
+Most likely high-radius runtime change:
+- dynamic asset fingerprint helper introduced in plugin bootstrap;
+- helper executed filesystem/hash work during enqueue.
+
+Recovery:
+- helper removed entirely;
+- all asset enqueues use static build token `BDC_KB_ASSET_VERSION`;
+- visual v8.1 CSS/layout changes remain intact;
+- no Search/content/registry/cutover changes.
+
+Hotfix artifact:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.6.1.zip`;
+- source `3d5fd8c9811d028af2cf7d3d28a06bc6ec4092e9`;
+- artifact `7f1b840b02b26fe3add3285bdf8cb1cf485e6305`;
+- SHA-256 `b9c72325c25e8bce121b521cda469b0a094d1e4958e0d1e105c27b36a0917e06`;
+- deterministic package PASS;
+- source checks PASS 21/21;
+- runtime re-test required;
+- exact-package PHP lint pending.

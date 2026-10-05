@@ -559,3 +559,27 @@ Visual re-test focus:
 5. save action does not overlay the last field;
 6. Helpful Tips does not render eight blank rows;
 7. browser hard refresh is not required to receive changed BDC assets because URLs are fingerprinted.
+
+
+### PX-740 runtime incident — px740.6
+
+Observed by Product Owner:
+- WordPress critical error after installing/testing px740.6.
+
+Disposition:
+- [x] px740.6 = RUNTIME FAIL / DO NOT USE;
+- [x] runtime delta isolated;
+- [x] dynamic asset hash helper removed completely;
+- [x] no `hash_file()` / `filemtime()` dependency remains;
+- [x] cache busting replaced by static build constant `BDC_KB_ASSET_VERSION = 0.6.0-dev-px740.6.1`;
+- [x] source hotfix checks PASS 21/21;
+- [x] deterministic px740.6.1 package;
+- [ ] Product Owner runtime re-test;
+- [ ] exact-package PHP lint;
+- [ ] visual regression re-test.
+
+px740.6.1:
+- source `3d5fd8c9811d028af2cf7d3d28a06bc6ec4092e9`;
+- artifact commit `7f1b840b02b26fe3add3285bdf8cb1cf485e6305`;
+- SHA-256 `b9c72325c25e8bce121b521cda469b0a094d1e4958e0d1e105c27b36a0917e06`;
+- 103 distributed files.

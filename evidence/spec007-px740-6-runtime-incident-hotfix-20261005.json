@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "incident": "PX740_6_RUNTIME_CRITICAL",
+  "date": "2026-10-05",
+  "px740_6": {
+    "status": "RUNTIME_FAIL_DO_NOT_USE",
+    "symptom": "WordPress critical error reported by Product Owner"
+  },
+  "analysis": {
+    "dynamic_asset_hash_helper": "removed",
+    "hash_file_dependency": "removed",
+    "filemtime_dependency": "not_used",
+    "cache_busting": "static build token"
+  },
+  "hotfix": {
+    "build": "px740.6.1",
+    "source_commit": "3d5fd8c9811d028af2cf7d3d28a06bc6ec4092e9",
+    "artifact_commit": "7f1b840b02b26fe3add3285bdf8cb1cf485e6305",
+    "git_blob_sha": "df3e900c00a6d0391fc0e6458bb8b2b7b05cbb2b",
+    "sha256": "b9c72325c25e8bce121b521cda469b0a094d1e4958e0d1e105c27b36a0917e06",
+    "bytes": 814020,
+    "files": 103,
+    "deterministic": true,
+    "source_checks": "PASS_21_OF_21",
+    "runtime_retest": "REQUIRED",
+    "exact_package_php_lint": "PENDING"
+  }
+}

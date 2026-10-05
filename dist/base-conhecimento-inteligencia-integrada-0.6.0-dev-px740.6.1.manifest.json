@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "purpose": "Emergency hotfix for px740.6 runtime critical error",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px740.6.1",
+  "ui_version": "premium-v8-1",
+  "source_commit": "3d5fd8c9811d028af2cf7d3d28a06bc6ec4092e9",
+  "root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "b9c72325c25e8bce121b521cda469b0a094d1e4958e0d1e105c27b36a0917e06",
+  "bytes": 814020,
+  "file_count": 103,
+  "supersedes": "px740.6 runtime FAIL",
+  "changes": [
+    "remove runtime hash_file asset fingerprint helper",
+    "use static BDC_KB_ASSET_VERSION=0.6.0-dev-px740.6.1"
+  ],
+  "replacements": {
+    "base-conhecimento-inteligencia-integrada.php": {
+      "blob_sha": "83685286e3861871812743b8012dc2875248ad67",
+      "bytes": 4692
+    },
+    "includes/class-admin-page.php": {
+      "blob_sha": "4e891995e3bc70587e0e039bbb9683c64e90462b",
+      "bytes": 39514
+    },
+    "includes/class-public-experience.php": {
+      "blob_sha": "996084a2537b399163f074941cbcc47665ffad27",
+      "bytes": 19442
+    },
+    "includes/class-visual-foundation.php": {
+      "blob_sha": "3d41df23810aa5326c38e512a382b4696c46bbd9",
+      "bytes": 4042
+    }
+  }
+}

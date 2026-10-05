@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "phase": "PX740_6_1_RUNTIME_HOTFIX_PACKAGE",
+  "status": "STATIC_SOURCE_PASS_RUNTIME_RETEST_REQUIRED",
+  "build": "px740.6.1",
+  "zip": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.6.1.zip",
+  "zip_sha256": "b9c72325c25e8bce121b521cda469b0a094d1e4958e0d1e105c27b36a0917e06",
+  "bytes": 814020,
+  "deterministic_equal": true,
+  "inspection": {
+    "pass": true,
+    "file_count": 103,
+    "single_root": true,
+    "forbidden_paths": [],
+    "replaced": [
+      "base-conhecimento-inteligencia-integrada/base-conhecimento-inteligencia-integrada.php",
+      "base-conhecimento-inteligencia-integrada/includes/class-admin-page.php",
+      "base-conhecimento-inteligencia-integrada/includes/class-public-experience.php",
+      "base-conhecimento-inteligencia-integrada/includes/class-visual-foundation.php"
+    ]
+  },
+  "source_contract": "PASS_21_OF_21",
+  "exact_package_php_lint": "PENDING",
+  "runtime_retest": "REQUIRED",
+  "px740_6_disposition": "RUNTIME_FAIL_DO_NOT_USE"
+}

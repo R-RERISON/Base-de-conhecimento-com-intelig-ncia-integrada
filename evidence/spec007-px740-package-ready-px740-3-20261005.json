@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "phase": "VISUAL_STABILITY_PACKAGE_READY",
+  "date": "2026-10-05",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "supersedes": {
+    "candidate": "px740.2",
+    "status": "FUNCTIONAL_PASS_VISUAL_FAIL",
+    "defect": "PX740-VIS-001"
+  },
+  "source_commit": "a7eaf0cec4e4dcee6a75514ed9c73dfc56fbebad",
+  "artifact": {
+    "filename": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.3.zip",
+    "branch": "spec007-px740-homologation-artifact",
+    "commit": "2154901dc35075b8bf63f1b0e39e1a59d9329e83",
+    "git_blob_sha": "da1ec775620ebd71e1c38139596a60dcb240bb44",
+    "sha256": "7c64e939ce82b3b5ad2988c152bea95e7111578916ce897753d37944ddf7c606",
+    "bytes": 768195,
+    "distributed_files": 103,
+    "deterministic_equal": true
+  },
+  "strategy": {
+    "states": [
+      "flow",
+      "fixed",
+      "bottom"
+    ],
+    "per_pixel_transform": false,
+    "search_js_decoupled": true
+  },
+  "validation": {
+    "source_contract_equivalent": "PASS",
+    "public_search_js_syntax": "PASS",
+    "public_reader_js_syntax": "PASS",
+    "no_per_pixel_transform": "PASS",
+    "structural_package": "PASS",
+    "exact_package_php_lint": "PENDING",
+    "product_owner_visual_stability_retest": "PENDING"
+  },
+  "next": "Install px740.3 and verify smooth Rail follow without flicker."
+}

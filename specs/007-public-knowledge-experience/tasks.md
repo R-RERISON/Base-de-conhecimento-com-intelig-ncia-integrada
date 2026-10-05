@@ -68,7 +68,7 @@ Historical planned items:
 - [x] PX740-05 freeze Reader canonical-content/the_content compatibility matrix.
 - [x] PX740-06 define static regression contract — `tests/unit/spec007-px740-reader-contract.php`.
 - [x] PX740-07 implement first bounded runtime slice — resolve PX740-GAP-001 with CSS-native sticky Rail; Search JS decoupled from Reader scroll.
-- [ ] PX740-08 package/smoke/closeout — `px740.2` corrected package ready; Rail follow retest + Reader smoke pending.
+- [ ] PX740-08 package/smoke/closeout — `px740.3` visual-stability package ready; flicker retest + Reader smoke pending.
 
 ## Explicitly not active yet
 - PX-750 Theme/Snippet Independence;
@@ -291,3 +291,20 @@ Disposition:
 - new visual defect `PX740-VIS-001`;
 - per-pixel `translate3d` strategy rejected for premium closeout;
 - `px740.3` uses discrete `flow -> fixed -> bottom` state transitions.
+
+
+### PX-740 visual-stability candidate — px740.3
+
+- [x] `px740.2` functional PASS for follow behavior;
+- [x] `px740.2` superseded due `PX740-VIS-001` flicker;
+- [x] removed per-pixel transform writes;
+- [x] discrete `flow / fixed / bottom` states;
+- [x] Search JS remains decoupled;
+- [x] deterministic candidate `px740.3`;
+- [x] artifact commit `2154901dc35075b8bf63f1b0e39e1a59d9329e83`;
+- [x] SHA-256 `7c64e939ce82b3b5ad2988c152bea95e7111578916ce897753d37944ddf7c606`;
+- [x] 103 distributed files;
+- [ ] exact-package PHP lint;
+- [ ] Product Owner visual-stability retest;
+- [ ] representative Reader smoke;
+- [ ] PX-740 closeout.

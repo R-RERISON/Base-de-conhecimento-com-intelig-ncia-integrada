@@ -598,3 +598,29 @@ Correction:
 - use state machine `flow -> fixed -> bottom`;
 - no per-pixel reposition while state remains fixed;
 - preserve bounded slot behavior and mobile flow.
+
+
+## PX-740 visual-stability candidate px740.3
+
+The px740.2 follow behavior was functionally validated, but it was superseded because the continuous transform produced visible flicker.
+
+Current candidate:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.3.zip`;
+- source commit `a7eaf0cec4e4dcee6a75514ed9c73dfc56fbebad`;
+- artifact branch `spec007-px740-homologation-artifact`;
+- artifact commit `2154901dc35075b8bf63f1b0e39e1a59d9329e83`;
+- Git blob `da1ec775620ebd71e1c38139596a60dcb240bb44`;
+- SHA-256 `7c64e939ce82b3b5ad2988c152bea95e7111578916ce897753d37944ddf7c606`;
+- size 768,195 bytes;
+- 103 distributed files.
+
+Runtime delta from px740.2:
+- replace `assets/js/public-reader.js`;
+- replace `assets/css/public-article.css`.
+
+Expected behavior:
+- normal position before threshold;
+- fixed below sticky Header/Admin Bar during article scroll;
+- anchored to bottom of slot near article end;
+- no transform/repaint on each scroll pixel;
+- <=1040px normal document flow.

@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "purpose": "SPEC-007 PX-740 Reader visual-stability homologation package",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px740.3",
+  "source_commit": "a7eaf0cec4e4dcee6a75514ed9c73dfc56fbebad",
+  "root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "7c64e939ce82b3b5ad2988c152bea95e7111578916ce897753d37944ddf7c606",
+  "bytes": 768195,
+  "file_count": 103,
+  "supersedes": "px740.2",
+  "superseded_reason": "Rail follow functional PASS but visual flicker under continuous translate3d updates",
+  "replacements": {
+    "assets/js/public-reader.js": {
+      "blob_sha": "8fe6476d2ba7c02a746fb8c5e95803d6dda4ac2c",
+      "bytes": 2898
+    },
+    "assets/css/public-article.css": {
+      "blob_sha": "125fb3c9c81de35cf63401c175e362c10d8626c6",
+      "bytes": 10973
+    }
+  },
+  "rail_strategy": "discrete flow/fixed/bottom states; no per-pixel transform"
+}

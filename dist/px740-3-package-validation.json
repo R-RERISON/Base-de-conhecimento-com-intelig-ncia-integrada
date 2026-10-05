@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "phase": "PACKAGE_BUILD",
+  "status": "STATIC_STRUCTURAL_PASS_PHP_LINT_PENDING",
+  "execution_mode": "CONNECTOR_DETERMINISTIC_EQUIVALENT",
+  "homologation_candidate": true,
+  "version": "0.6.0-dev",
+  "build": "px740.3",
+  "zip": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.3.zip",
+  "zip_sha256": "7c64e939ce82b3b5ad2988c152bea95e7111578916ce897753d37944ddf7c606",
+  "bytes": 768195,
+  "deterministic_equal": true,
+  "inspection": {
+    "pass": true,
+    "file_count": 103,
+    "single_root": true,
+    "required_missing": [],
+    "forbidden_paths": [],
+    "replaced": [
+      "base-conhecimento-inteligencia-integrada/assets/js/public-reader.js",
+      "base-conhecimento-inteligencia-integrada/assets/css/public-article.css"
+    ]
+  },
+  "source_static_contract_equivalent": "PASS",
+  "search_javascript_syntax": "PASS",
+  "reader_javascript_syntax": "PASS",
+  "no_per_pixel_transform": "PASS",
+  "php_lint": "PENDING_EXACT_ARTIFACT",
+  "supersedes": "px740.2",
+  "invariants": {
+    "canonical_content_unchanged": true,
+    "tips_summary_storage_unchanged": true,
+    "gac_wpui_preserved": true,
+    "search_js_decoupled": true,
+    "cutover_authorized": false,
+    "retirement_authorized": false
+  },
+  "next_gate": "PX740_WORDPRESS_VISUAL_STABILITY_SMOKE"
+}

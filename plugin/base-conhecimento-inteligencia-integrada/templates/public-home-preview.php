@@ -66,13 +66,13 @@ $cloud = Public_Home_Read_Model::preview_word_cloud();
 			<?php endif; ?>
 		</section>
 
-		<details class="bdc-home-explore"<?php echo $category_id > 0 ? ' open' : ''; ?>>
+		<details class="bdc-home-explore bdc-home-explore--product" open>
 			<summary><span class="dashicons dashicons-grid-view" aria-hidden="true"></span><span>Explorar a Base</span><small>Categorias, recentes e populares</small><span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span></summary>
 			<div class="bdc-home-explore__body">
 				<nav class="bdc-home-categories" aria-label="Categorias da Base de Conhecimento">
-					<a class="<?php echo 0 === $category_id ? 'is-active' : ''; ?>" href="<?php echo esc_url( Public_Experience::home_preview_url() ); ?>">Todos</a>
+					<a class="<?php echo 0 === $category_id ? 'is-active' : ''; ?>" href="<?php echo esc_url( Public_Experience::home_preview_url() ); ?>"><span class="dashicons dashicons-grid-view" aria-hidden="true"></span><span>Todos</span></a>
 					<?php foreach ( $categories as $category ) : ?>
-						<a class="<?php echo (int) $category['id'] === $category_id ? 'is-active' : ''; ?>" href="<?php echo esc_url( Public_Experience::home_preview_url( (int) $category['id'] ) ); ?>"><?php echo esc_html( (string) $category['name'] ); ?></a>
+						<a class="<?php echo (int) $category['id'] === $category_id ? 'is-active' : ''; ?>" href="<?php echo esc_url( Public_Experience::home_preview_url( (int) $category['id'] ) ); ?>"><span class="dashicons <?php echo esc_attr( (string) $category['icon'] ); ?>" aria-hidden="true"></span><span><?php echo esc_html( (string) $category['name'] ); ?></span></a>
 					<?php endforeach; ?>
 				</nav>
 

@@ -362,3 +362,190 @@
 		width: 180px;
 	}
 }
+
+
+/* premium-v8 — product shell and domain-oriented workspace. */
+.bdc-kb-product-shell{
+	display:grid;
+	grid-template-columns:218px minmax(0,1fr);
+	gap:20px;
+	align-items:start;
+}
+.bdc-kb-tabs{
+	position:sticky;
+	top:46px;
+	display:block;
+	margin:0;
+	padding:10px;
+	overflow:visible;
+	border:1px solid rgba(20,45,80,.09);
+	border-radius:16px;
+	background:rgba(255,255,255,.92);
+	box-shadow:0 12px 34px rgba(20,43,78,.055);
+	backdrop-filter:blur(12px);
+}
+.bdc-kb-tab-group+.bdc-kb-tab-group{margin-top:10px;padding-top:10px;border-top:1px solid #edf1f5}
+.bdc-kb-tab-group__label{
+	display:block;
+	padding:4px 9px 7px;
+	color:#8692a2;
+	font-size:9px;
+	font-weight:850;
+	letter-spacing:.10em;
+	text-transform:uppercase;
+}
+.bdc-kb-tab{
+	position:relative;
+	display:flex!important;
+	align-items:center;
+	gap:9px;
+	min-height:38px;
+	margin:1px 0;
+	padding:0 10px;
+	border-radius:10px;
+	color:#4a5b72;
+	font-size:11.5px;
+	font-weight:680;
+}
+.bdc-kb-tab .dashicons{width:16px;height:16px;font-size:15px;line-height:16px;color:#8090a5}
+.bdc-kb-tab:hover,.bdc-kb-tab:focus{background:#f3f7fb;color:#174f96}
+.bdc-kb-tab.is-active{
+	background:linear-gradient(90deg,#edf5ff,#f7faff);
+	color:#0c58ae;
+	box-shadow:inset 0 0 0 1px rgba(64,126,207,.12);
+}
+.bdc-kb-tab.is-active::before{
+	content:"";
+	position:absolute;
+	left:0;
+	top:9px;
+	bottom:9px;
+	width:3px;
+	border-radius:0 3px 3px 0;
+	background:#1677ff;
+}
+.bdc-kb-tab.is-active .dashicons{color:#0b63e5}
+
+.bdc-kb-workspace-layout{
+	grid-template-columns:minmax(0,1fr) 280px;
+	gap:18px;
+	margin:0;
+}
+.bdc-kb-workspace-layout--full{grid-template-columns:minmax(0,1fr)}
+.bdc-kb-context-panel{top:46px}
+
+.bdc-kb-health{padding:24px 26px!important}
+.bdc-kb-health-groups{
+	display:grid;
+	grid-template-columns:repeat(2,minmax(0,1fr));
+	gap:14px;
+	margin-top:18px;
+}
+.bdc-kb-health-group{
+	overflow:hidden;
+	border:1px solid rgba(20,45,80,.09);
+	border-radius:15px;
+	background:#fff;
+}
+.bdc-kb-health-group--governance{grid-column:1/-1}
+.bdc-kb-health-group>header{
+	display:flex;
+	align-items:center;
+	gap:11px;
+	padding:14px 15px;
+	border-bottom:1px solid #edf1f5;
+	background:#f7f9fc;
+}
+.bdc-kb-health-group>header>span{
+	display:grid;
+	place-items:center;
+	width:28px;
+	height:28px;
+	border-radius:9px;
+	background:#eaf3ff;
+	color:#1765bd;
+	font-size:9px;
+	font-weight:850;
+}
+.bdc-kb-health-group>header strong{display:block;color:#1d3557;font-size:12px}
+.bdc-kb-health-group>header small{display:block;margin-top:2px;color:#8793a2;font-size:9.5px}
+.bdc-kb-health-list{display:grid}
+.bdc-kb-overview-status{
+	display:grid;
+	grid-template-columns:28px minmax(100px,.65fr) minmax(0,1.35fr);
+	align-items:center;
+	gap:11px;
+	min-height:62px;
+	padding:11px 14px;
+	border:0;
+	border-bottom:1px solid #eef2f5;
+	border-radius:0;
+	background:#fff;
+}
+.bdc-kb-overview-status:last-child{border-bottom:0}
+.bdc-kb-overview-status .bdc-kb-card-icon{
+	width:28px;
+	height:28px;
+	margin:0;
+	border-radius:8px;
+	background:#f0f5fb;
+	color:#557493;
+}
+.bdc-kb-overview-status .bdc-kb-card-icon .dashicons{width:15px;height:15px;font-size:15px;line-height:15px}
+.bdc-kb-overview-status__label{
+	margin:0;
+	color:#77869a;
+	font-size:9.5px;
+	font-weight:800;
+	letter-spacing:.04em;
+	text-transform:uppercase;
+}
+.bdc-kb-overview-status__value{
+	color:#213a5c;
+	font-size:12px;
+	line-height:1.35;
+}
+.bdc-kb-overview-status p{
+	grid-column:3;
+	margin:-5px 0 0;
+	color:#8a95a4;
+	font-size:9.5px;
+	line-height:1.4;
+}
+
+.bdc-kb-domain-panel{padding:24px 26px}
+.bdc-kb-domain-panel>.bdc-kb-form{margin-top:18px}
+.bdc-kb-detail-table{overflow:hidden;border:1px solid rgba(20,45,80,.09);border-radius:13px}
+.bdc-kb-detail-table th,.bdc-kb-detail-table td{padding:11px 12px!important;border-color:#edf1f5!important}
+.bdc-kb-detail-table th{background:#f7f9fb!important;color:#5d6d82!important;font-size:10.5px!important}
+.bdc-kb-detail-table td{background:#fff!important;color:#263c5a!important;font-size:11.5px!important}
+
+@media(max-width:1280px){
+	.bdc-kb-product-shell{grid-template-columns:190px minmax(0,1fr);gap:16px}
+	.bdc-kb-workspace-layout{grid-template-columns:minmax(0,1fr) 255px}
+	.bdc-kb-tab{font-size:11px;padding:0 8px}
+}
+@media(max-width:1100px){
+	.bdc-kb-product-shell{display:block}
+	.bdc-kb-tabs{
+		position:static;
+		display:flex;
+		gap:8px;
+		margin:0 0 14px;
+		padding:7px;
+		overflow-x:auto;
+	}
+	.bdc-kb-tab-group{display:flex;gap:3px;flex:0 0 auto}
+	.bdc-kb-tab-group+.bdc-kb-tab-group{margin:0;padding:0 0 0 8px;border-top:0;border-left:1px solid #edf1f5}
+	.bdc-kb-tab-group__label{display:none}
+	.bdc-kb-tab{min-height:36px;white-space:nowrap}
+	.bdc-kb-tab.is-active::before{display:none}
+	.bdc-kb-workspace-layout{grid-template-columns:1fr}
+	.bdc-kb-context-panel{position:static}
+}
+@media(max-width:782px){
+	.bdc-kb-health{padding:20px!important}
+	.bdc-kb-health-groups{grid-template-columns:1fr}
+	.bdc-kb-health-group--governance{grid-column:auto}
+	.bdc-kb-overview-status{grid-template-columns:28px minmax(90px,.8fr) minmax(0,1.2fr)}
+}

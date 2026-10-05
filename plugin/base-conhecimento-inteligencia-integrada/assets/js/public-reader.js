@@ -1,6 +1,17 @@
 (function () {
   'use strict';
 
+  function tagIntegratedActions() {
+    var documentBody = document.querySelector('.bdc-reader-document');
+    if (!documentBody || !documentBody.firstElementChild) return;
+
+    var first = documentBody.firstElementChild;
+    var text = (first.textContent || '').replace(/\s+/g, ' ').trim();
+    if (text.indexOf('Ações do conteúdo') !== -1 && text.indexOf('Registrar leitura') !== -1) {
+      first.classList.add('bdc-reader-integrated-actions');
+    }
+  }
+
   function initReaderRail() {
     var slot = document.querySelector('[data-bdc-summary-slot]');
     var rail = document.querySelector('[data-bdc-summary-rail]');
@@ -107,8 +118,12 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initReaderRail);
+    document.addEventListener('DOMContentLoaded', function () {
+      tagIntegratedActions();
+      initReaderRail();
+    });
   } else {
+    tagIntegratedActions();
     initReaderRail();
   }
 })();

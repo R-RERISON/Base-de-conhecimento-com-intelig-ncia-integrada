@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-750",
+  "build": "px750.1",
+  "version": "0.6.0-dev",
+  "purpose": "Theme/Snippet Independence preview-only isolation candidate",
+  "source_commit": "1da2a22fac1628798d964786d03827c217b65467",
+  "base_artifact": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740-final.zip",
+  "root": "base-conhecimento-inteligencia-integrada",
+  "zip_sha256": "dd42eacabfa0b277d9853713b3ca61e9d0979dc74c798a4683871d75ab6be1c0",
+  "bytes": 809751,
+  "file_count": 103,
+  "replacements": {
+    "includes/class-public-experience.php": {
+      "blob_sha": "1bd949f5561a3dce54afe73c90516e17931c9e5e",
+      "bytes": 23383
+    },
+    "templates/public-home-preview.php": {
+      "blob_sha": "dc17d918439bf5c72238af0638f90e4f2ad6d69f",
+      "bytes": 7117
+    },
+    "assets/js/public-search.js": {
+      "blob_sha": "a53875b4dcb7a96f4e131431dad7907c14bda688",
+      "bytes": 10818
+    }
+  },
+  "safety": {
+    "preview_only": true,
+    "admin_nonce_gated": true,
+    "persistent_mutation": false,
+    "public_cutover": false
+  }
+}

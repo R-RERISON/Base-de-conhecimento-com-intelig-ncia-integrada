@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-750",
+  "build": "px750.1",
+  "status": "PACKAGE_READY_EXACT_PHP_LINT_PENDING",
+  "source_php_lint": "PASS",
+  "source_static_contract": "PASS_22_OF_22",
+  "deterministic_equal": true,
+  "inspection": {
+    "pass": true,
+    "file_count": 103,
+    "single_root": true,
+    "forbidden_paths": [],
+    "replaced": [
+      "base-conhecimento-inteligencia-integrada/includes/class-public-experience.php",
+      "base-conhecimento-inteligencia-integrada/templates/public-home-preview.php",
+      "base-conhecimento-inteligencia-integrada/assets/js/public-search.js"
+    ]
+  },
+  "exact_package_php_lint": "PENDING",
+  "runtime_smoke": "PENDING"
+}

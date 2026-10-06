@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-750",
+  "phase": "PREVIEW_ONLY_ISOLATION_SOURCE",
+  "date": "2026-10-06",
+  "source_commit": "da429ae582cd7e99832f63e704ac78fc5e8e0e4b",
+  "status": "SOURCE_STATIC_PASS_PHP_LINT_PASS",
+  "static_checks": "PASS_22_OF_22",
+  "php_lint": {
+    "runtime": "GitHub Actions",
+    "php": "8.5",
+    "result": "PASS_ALL_PLUGIN_PHP",
+    "workflow_run": 37452901354,
+    "job": 112233440148
+  },
+  "changes": [
+    "request-scoped Custom CSS suppression",
+    "request-scoped legacy Home shortcode suppression",
+    "late dequeue of active-theme CSS and JS",
+    "isolation propagation through Home/Reader URLs and live search",
+    "admin isolation entry points",
+    "isolation body/banner markers"
+  ],
+  "invariants": {
+    "option_mutation": false,
+    "theme_mod_mutation": false,
+    "plugin_activation_deactivation": false,
+    "page_on_front_mutation": false,
+    "search_facade_unchanged": true,
+    "article_template_unchanged": true,
+    "reader_js_unchanged": true,
+    "public_cutover": false
+  },
+  "next": "Build deterministic px750.1 from px740-final and lint exact package."
+}

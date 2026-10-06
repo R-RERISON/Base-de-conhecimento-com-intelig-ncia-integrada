@@ -958,3 +958,41 @@ Safe recovery path:
 - SHA-256 `9609c9f45dbd4f2f27d80a6282b35516a1cd3afc9fba7d2632ec3ba46c746d3a`.
 
 px740.6 and px740.6.1 remain DO NOT USE.
+
+
+## PX-740 FINAL closeout — 2026-10-06
+
+Approved runtime:
+- `px740.5.1-safe-recovery`;
+- activation PASS;
+- functional PASS;
+- premium visual PASS.
+
+Final artifact is byte-identical:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-px740-final.zip`;
+- SHA-256 `9609c9f45dbd4f2f27d80a6282b35516a1cd3afc9fba7d2632ec3ba46c746d3a`;
+- artifact commit `cef11ca0f9d4dfef23e6e27e9093ef36c17ec8f0`.
+
+Rejected:
+- px740.6 — runtime fatal;
+- px740.6.1 — activation fatal.
+
+The main SPEC runtime was reconverged to the approved safe-recovery plugin tree before PX-750 activation.
+
+PX-740 closure status:
+`CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION`
+because exact-final-ZIP PHP lint remains explicit debt for PX-790. Human runtime/visual acceptance is PASS.
+
+## PX-750 activated
+
+Target:
+- prove candidate Public Home/Reader independent from ENV-001 legacy Home snippet and ENV-002 Astra/Additional CSS dependencies;
+- do not retire ENV-003 Entra Gateway or ENV-004 GAC/WPUI;
+- no public cutover.
+
+Initial static audit:
+- candidate Home/Reader CSS/JS/templates contain no direct Astra dependency;
+- no candidate reference to `bc_home_config`, `bc_ultimas`, `bc_populares` or `bdc_home_filter_v270`;
+- candidate templates call `wp_head()` / `wp_footer()`, therefore theme/custom CSS can still influence candidate rendering;
+- `page_on_front` is used only to resolve preview/form URLs, not to render legacy Home content;
+- candidate templates do not call `do_shortcode()`.

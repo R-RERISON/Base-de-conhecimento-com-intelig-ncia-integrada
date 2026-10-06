@@ -90,3 +90,15 @@ No public cutover is authorized by SPEC-007 activation.
 - PX-720 Public Shell: ACTIVE.
 
 PX-720 remains candidate/preview only. No public cutover is authorized.
+
+
+## Gate state — 2026-10-06
+
+- PX-700: PASS.
+- PX-710: PASS.
+- PX-720: CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION.
+- PX-730: CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION.
+- PX-740: CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION; runtime/visual PASS on safe final candidate.
+- PX-750 Theme/Snippet Independence: ACTIVE / DISCOVERY.
+
+No public cutover is authorized.

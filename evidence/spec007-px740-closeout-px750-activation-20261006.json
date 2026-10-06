@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "closeout": {
+    "gate": "PX-740",
+    "status": "CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION",
+    "final_artifact": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740-final.zip",
+    "sha256": "9609c9f45dbd4f2f27d80a6282b35516a1cd3afc9fba7d2632ec3ba46c746d3a",
+    "product_owner_runtime_pass": true,
+    "product_owner_visual_pass": true,
+    "rejected": [
+      "px740.6",
+      "px740.6.1"
+    ],
+    "exact_final_zip_php_lint": "ACCEPTED_EXCEPTION_NOT_PASS"
+  },
+  "next_gate": {
+    "gate": "PX-750",
+    "status": "ACTIVE_DISCOVERY",
+    "env_001_candidate_direct_dependency": "NOT_DETECTED",
+    "env_002_candidate_direct_dependency": "NOT_DETECTED",
+    "ambient_theme_css_influence": "PRESENT_VIA_WP_HEAD",
+    "first_slice": "PREVIEW_ONLY_REQUEST_SCOPED_ISOLATION"
+  }
+}

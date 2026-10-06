@@ -59,7 +59,7 @@ Historical planned items:
 - [x] PX730-06 implement first bounded runtime slice — UI state hardening only; ranker/schema untouched.
 - [x] PX730-07 package/smoke/closeout — WordPress smoke PASS; exact ZIP PHP lint carried as accepted exception.
 
-## PX-740 Reader / Tips / Rail — ACTIVE / DISCOVERY
+## PX-740 Reader / Tips / Rail — CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION
 
 - [x] PX740-01 contract — `px740-reader-tips-rail-contract-v1.md`.
 - [x] PX740-02 inventory current Reader composition and external hook ownership.
@@ -68,10 +68,19 @@ Historical planned items:
 - [x] PX740-05 freeze Reader canonical-content/the_content compatibility matrix.
 - [x] PX740-06 define static regression contract — `tests/unit/spec007-px740-reader-contract.php`.
 - [x] PX740-07 implement first bounded runtime slice — resolve PX740-GAP-001 with CSS-native sticky Rail; Search JS decoupled from Reader scroll.
-- [ ] PX740-08 package/smoke/closeout — `px740.3` Rail visual PASS; corpus/source-kind regression runner pending.
+- [x] PX740-08 package/smoke/closeout — final runtime/visual PASS on `px740.5.1-safe-recovery`; exact-final-ZIP PHP lint retained as accepted PX-790 debt.
+
+## PX-750 Theme/Snippet Independence — ACTIVE / DISCOVERY
+
+- [x] PX750-01 contract — `px750-theme-snippet-independence-contract-v1.md`.
+- [x] PX750-02 baseline dependency inventory — ENV-001/ENV-002 reconciled from PX-700/PX-710 plus current candidate static audit.
+- [ ] PX750-03 implement preview-only isolation mode; no persistent theme/snippet mutation.
+- [ ] PX750-04 static regression contract for isolation boundary.
+- [ ] PX750-05 package deterministic `px750.1`.
+- [ ] PX750-06 Product Owner Home/Reader isolation smoke.
+- [ ] PX750-07 closeout.
 
 ## Explicitly not active yet
-- PX-750 Theme/Snippet Independence;
 - PX-760 Accessibility/Responsive;
 - PX-770 Performance;
 - PX-780 Human Product Acceptance;
@@ -604,3 +613,18 @@ Safe recovery:
 - [x] deterministic package `px740.5.1-safe-recovery`;
 - [x] SHA-256 `9609c9f45dbd4f2f27d80a6282b35516a1cd3afc9fba7d2632ec3ba46c746d3a`;
 - [ ] Product Owner activation re-test.
+
+
+### PX-740 FINAL closeout — 2026-10-06
+
+- Product Owner activation/runtime: PASS on `px740.5.1-safe-recovery`;
+- Product Owner visual acceptance: PASS;
+- final ZIP: `base-conhecimento-inteligencia-integrada-0.6.0-dev-px740-final.zip`;
+- SHA-256: `9609c9f45dbd4f2f27d80a6282b35516a1cd3afc9fba7d2632ec3ba46c746d3a`;
+- artifact commit: `cef11ca0f9d4dfef23e6e27e9093ef36c17ec8f0`;
+- byte-identical to approved safe-recovery candidate;
+- px740.6 / px740.6.1 remain rejected / DO NOT USE;
+- exact-final-ZIP PHP lint: accepted exception, NOT PASS;
+- no cutover authorized.
+
+PX-750 Theme/Snippet Independence is now ACTIVE / DISCOVERY.

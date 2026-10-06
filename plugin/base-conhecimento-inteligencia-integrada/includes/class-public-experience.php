@@ -167,7 +167,7 @@ final class Public_Experience {
 		wp_enqueue_style( 'bdc-kb-public-foundation', BDC_KB_URL . 'assets/css/public-foundation.css', array(), BDC_KB_VERSION );
 		wp_enqueue_style( 'bdc-kb-public-header', BDC_KB_URL . 'assets/css/public-header.css', array( 'bdc-kb-public-foundation' ), BDC_KB_VERSION );
 		wp_enqueue_style( 'bdc-kb-public-' . $kind, BDC_KB_URL . 'assets/css/public-' . $kind . '.css', array( 'bdc-kb-public-header' ), BDC_KB_VERSION );
-		wp_enqueue_script( 'bdc-kb-public-search', BDC_KB_URL . 'assets/js/public-search.js', array(), BDC_KB_VERSION, true );
+		wp_enqueue_script( 'bdc-kb-public-search', BDC_KB_URL . 'assets/js/public-search.js', array(), BDC_KB_VERSION . '-px750.1.1', true );
 		if ( 'article' === $kind ) {
 			wp_enqueue_script( 'bdc-kb-public-reader', BDC_KB_URL . 'assets/js/public-reader.js', array(), BDC_KB_VERSION, true );
 		}

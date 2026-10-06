@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-750",
+  "build": "px750.1.1",
+  "version": "0.6.0-dev",
+  "purpose": "PX-750 isolation candidate with static search asset cache token",
+  "source_commit": "880ee3e75cb9dffc03cfc178bc9ad9bfe36a34de",
+  "base_artifact": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px750.1.zip",
+  "zip_sha256": "459f10dfd7d245429385be6f68e232cdd02d5b7318afdb3e97bcd77382c9c971",
+  "bytes": 809766,
+  "file_count": 103,
+  "replacements": [
+    "base-conhecimento-inteligencia-integrada/includes/class-public-experience.php"
+  ],
+  "public_search_asset_version": "0.6.0-dev-px750.1.1"
+}

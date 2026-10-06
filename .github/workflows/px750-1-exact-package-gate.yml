@@ -1,0 +1,94 @@
+name: PX750.1 exact package gate
+
+on:
+  push:
+    branches:
+      - diagnostic/px750-isolation-php-lint-20261006
+  workflow_dispatch:
+
+jobs:
+  exact-package:
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:12.2
+        env:
+          MARIADB_DATABASE: wordpress
+          MARIADB_USER: wordpress
+          MARIADB_PASSWORD: wordpress
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP 8.5 and WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mysqli, mbstring, curl, zip
+          tools: wp-cli
+          coverage: none
+
+      - name: Extract exact px750.1 artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin spec007-px750-homologation-artifact
+          git show origin/spec007-px750-homologation-artifact:dist/base-conhecimento-inteligencia-integrada-0.6.0-dev-px750.1.zip > /tmp/px750.1.zip
+          rm -rf /tmp/px750-plugin
+          mkdir -p /tmp/px750-plugin
+          unzip -q /tmp/px750.1.zip -d /tmp/px750-plugin
+          test -f /tmp/px750-plugin/base-conhecimento-inteligencia-integrada/base-conhecimento-inteligencia-integrada.php
+
+      - name: Lint exact artifact PHP
+        shell: bash
+        run: |
+          set -euo pipefail
+          find /tmp/px750-plugin/base-conhecimento-inteligencia-integrada -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Install WordPress 6.9.4
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/wp
+          mkdir -p /tmp/wp
+          cd /tmp/wp
+          wp core download --version=6.9.4 --force
+          wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=127.0.0.1:3306 --skip-check
+          for i in $(seq 1 30); do
+            if wp db check >/dev/null 2>&1; then break; fi
+            sleep 2
+          done
+          wp core install --url=http://localhost --title=BDC --admin_user=admin --admin_password=admin1234 --admin_email=admin@example.com --skip-email
+          cp -R /tmp/px750-plugin/base-conhecimento-inteligencia-integrada /tmp/wp/wp-content/plugins/
+
+      - name: Activate exact artifact
+        shell: bash
+        run: |
+          set -o pipefail
+          cd /tmp/wp
+          wp config set WP_DEBUG true --raw
+          wp config set WP_DEBUG_LOG true --raw
+          wp plugin activate base-conhecimento-inteligencia-integrada --debug 2>&1 | tee /tmp/activation.log
+          status=${PIPESTATUS[0]}
+          echo "activation_exit=${status}"
+          cat /tmp/wp/wp-content/debug.log 2>/dev/null || true
+          if [ "${status}" -ne 0 ]; then
+            cat /tmp/activation.log
+            exit "${status}"
+          fi
+
+      - name: Verify plugin active
+        shell: bash
+        run: |
+          cd /tmp/wp
+          wp plugin status base-conhecimento-inteligencia-integrada

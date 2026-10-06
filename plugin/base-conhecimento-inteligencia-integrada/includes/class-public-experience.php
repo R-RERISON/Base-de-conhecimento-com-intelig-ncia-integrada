@@ -18,6 +18,8 @@ final class Public_Experience {
 	private const QUERY_KEY = 'bdc_kb_preview';
 	private const NONCE_KEY = 'bdc_kb_preview_nonce';
 	private const GLOBAL_QUERY_KEY = 'bdc_global_q';
+	private const ISOLATION_KEY = 'bdc_kb_isolation';
+	private const LEGACY_HOME_SHORTCODES = array( 'bc_home_config', 'bc_ultimas', 'bc_populares' );
 
 	/** @var array<int,int> */
 	private const ARTICLE_SAMPLES = array( 396, 367, 36431, 515, 358 );
@@ -28,6 +30,7 @@ final class Public_Experience {
 		add_filter( 'template_include', array( self::class, 'template_include' ), 99 );
 		add_action( 'template_redirect', array( self::class, 'prepare_preview_request' ), 1 );
 		add_action( 'wp_enqueue_scripts', array( self::class, 'enqueue_assets' ), 40 );
+		add_action( 'wp_enqueue_scripts', array( self::class, 'apply_isolation_assets' ), 999 );
 		add_filter( 'body_class', array( self::class, 'body_class' ) );
 		add_action( 'wp_ajax_bdc_kb_public_search_preview', array( self::class, 'ajax_search_preview' ) );
 	}
@@ -59,24 +62,35 @@ final class Public_Experience {
 			if ( ! is_object( $post ) || 'post' !== (string) ( $post->post_type ?? '' ) || 'publish' !== (string) ( $post->post_status ?? '' ) ) { continue; }
 			echo '<a class="bdc-kb-vocabulary-action" target="_blank" rel="noopener" href="' . esc_url( self::article_preview_url( $post_id ) ) . '"><span class="dashicons dashicons-external" aria-hidden="true"></span><span>#' . esc_html( (string) $post_id ) . ' — ' . esc_html( wp_trim_words( (string) $post->post_title, 7 ) ) . '</span></a>';
 		}
+		echo '</div></section>';
+		echo '<section class="bdc-kb-overview-card"><span class="bdc-kb-card-icon"><span class="dashicons dashicons-shield-alt" aria-hidden="true"></span></span><h4>PX-750 — Isolamento</h4><p>Valida a experiência candidata sem estilos do tema, Custom CSS e shortcodes legados da Home, somente nesta requisição.</p><div class="bdc-kb-vocabulary-actions">';
+		echo '<a class="button button-secondary bdc-kb-button-with-icon" target="_blank" rel="noopener" href="' . esc_url( self::home_preview_url( 0, '', true ) ) . '"><span class="dashicons dashicons-admin-home" aria-hidden="true"></span><span>Home isolada</span></a>';
+		$sample_id = self::ARTICLE_SAMPLES[0] ?? 0;
+		if ( $sample_id > 0 ) {
+			echo '<a class="button button-secondary bdc-kb-button-with-icon" target="_blank" rel="noopener" href="' . esc_url( self::article_preview_url( $sample_id, '', true ) ) . '"><span class="dashicons dashicons-media-document" aria-hidden="true"></span><span>Reader isolado</span></a>';
+		}
 		echo '</div></section></div>';
 		echo '</div>';
 	}
 
-	public static function home_preview_url( int $category_id = 0, string $query = '' ): string {
+	public static function home_preview_url( int $category_id = 0, string $query = '', ?bool $isolated = null ): string {
 		$front_id = absint( get_option( 'page_on_front', 0 ) );
 		$url = $front_id > 0 ? get_permalink( $front_id ) : home_url( '/' );
 		if ( ! is_string( $url ) || '' === $url ) { $url = home_url( '/' ); }
 		$args = array( self::QUERY_KEY => 'home', self::NONCE_KEY => wp_create_nonce( 'bdc_kb_public_preview_home' ) );
+		if ( null === $isolated ) { $isolated = self::is_isolation_mode(); }
+		if ( $isolated ) { $args[ self::ISOLATION_KEY ] = '1'; }
 		if ( $category_id > 0 ) { $args['bdc_category'] = $category_id; }
 		if ( '' !== trim( $query ) ) { $args[ self::GLOBAL_QUERY_KEY ] = trim( $query ); }
 		return add_query_arg( $args, $url );
 	}
 
-	public static function article_preview_url( int $post_id, string $query = '' ): string {
+	public static function article_preview_url( int $post_id, string $query = '', ?bool $isolated = null ): string {
 		$url = get_permalink( $post_id );
 		if ( ! is_string( $url ) || '' === $url ) { $url = home_url( '/' ); }
 		$args = array( self::QUERY_KEY => 'article', self::NONCE_KEY => wp_create_nonce( 'bdc_kb_public_preview_article' ) );
+		if ( null === $isolated ) { $isolated = self::is_isolation_mode(); }
+		if ( $isolated ) { $args[ self::ISOLATION_KEY ] = '1'; }
 		if ( '' !== trim( $query ) ) { $args[ self::GLOBAL_QUERY_KEY ] = trim( $query ); }
 		return add_query_arg( $args, $url );
 	}
@@ -98,10 +112,51 @@ final class Public_Experience {
 		$kind = self::preview_kind();
 		if ( null === $kind ) { return; }
 		nocache_headers();
+
+		if ( self::is_isolation_mode() ) {
+			remove_action( 'wp_head', 'wp_custom_css_cb', 101 );
+			foreach ( self::LEGACY_HOME_SHORTCODES as $shortcode ) {
+				remove_shortcode( $shortcode );
+			}
+		}
+
 		if ( 'article' !== $kind ) { return; }
 		remove_filter( 'the_content', array( 'BDC\\ExecutiveSummary\\Helpful_Tips_Renderer', 'prepend_to_content' ), 15 );
 		remove_filter( 'the_content', array( 'BDC\\ExecutiveSummary\\Frontend_Renderer', 'append_side_panel' ), 30 );
 		remove_action( 'wp_footer', array( 'BDC\\ExecutiveSummary\\Frontend_Renderer', 'render_side_panel' ) );
+	}
+
+	public static function apply_isolation_assets(): void {
+		if ( ! self::is_isolation_mode() ) { return; }
+
+		$theme_uris = array_filter(
+			array(
+				untrailingslashit( get_template_directory_uri() ),
+				untrailingslashit( get_stylesheet_directory_uri() ),
+			)
+		);
+
+		global $wp_styles;
+		if ( $wp_styles instanceof \WP_Styles ) {
+			foreach ( (array) $wp_styles->queue as $handle ) {
+				$registered = $wp_styles->registered[ $handle ] ?? null;
+				$src = is_object( $registered ) ? (string) ( $registered->src ?? '' ) : '';
+				if ( self::is_theme_asset_source( $src, $theme_uris ) ) {
+					wp_dequeue_style( (string) $handle );
+				}
+			}
+		}
+
+		global $wp_scripts;
+		if ( $wp_scripts instanceof \WP_Scripts ) {
+			foreach ( (array) $wp_scripts->queue as $handle ) {
+				$registered = $wp_scripts->registered[ $handle ] ?? null;
+				$src = is_object( $registered ) ? (string) ( $registered->src ?? '' ) : '';
+				if ( self::is_theme_asset_source( $src, $theme_uris ) ) {
+					wp_dequeue_script( (string) $handle );
+				}
+			}
+		}
 	}
 
 	public static function enqueue_assets(): void {
@@ -124,6 +179,7 @@ final class Public_Experience {
 				'action' => Public_Search_Facade::AJAX_ACTION,
 				'nonce' => wp_create_nonce( Public_Search_Facade::NONCE_ACTION ),
 				'previewMode' => true,
+				'isolationMode' => self::is_isolation_mode(),
 				'minChars' => Public_Search_Facade::MIN_QUERY_LENGTH,
 				'debounceMs' => 180,
 				'uiVersion' => 'premium-v7',
@@ -141,6 +197,7 @@ final class Public_Experience {
 		$classes[] = 'bdc-public-preview';
 		$classes[] = 'bdc-public-preview--' . $kind;
 		$classes[] = 'bdc-' . sanitize_html_class( str_replace( '.', '-', self::SHELL_VERSION ) );
+		if ( self::is_isolation_mode() ) { $classes[] = 'bdc-public-isolation'; }
 		return $classes;
 	}
 
@@ -200,6 +257,7 @@ final class Public_Experience {
 		echo '<form class="bdc-global-search' . ( $compact ? ' bdc-global-search--compact' : '' ) . '" method="get" action="' . esc_url( $action ) . '" role="search" data-bdc-live-search-form data-bdc-search-context="article">';
 		echo '<input type="hidden" name="' . esc_attr( self::QUERY_KEY ) . '" value="' . esc_attr( $kind ) . '">';
 		echo '<input type="hidden" name="' . esc_attr( self::NONCE_KEY ) . '" value="' . esc_attr( wp_create_nonce( 'bdc_kb_public_preview_' . $kind ) ) . '">';
+		if ( self::is_isolation_mode() ) { echo '<input type="hidden" name="' . esc_attr( self::ISOLATION_KEY ) . '" value="1">'; }
 		echo '<span class="dashicons dashicons-search" aria-hidden="true"></span>';
 		echo '<label class="screen-reader-text" for="bdc-global-search-input">Buscar na Base de Conhecimento</label>';
 		echo '<input id="bdc-global-search-input" data-bdc-global-search data-bdc-live-search-input type="search" name="' . esc_attr( self::GLOBAL_QUERY_KEY ) . '" value="' . esc_attr( $query ) . '" placeholder="Buscar na Base de Conhecimento">';
@@ -266,6 +324,8 @@ final class Public_Experience {
 			wp_send_json_error( array( 'message' => 'Permissão insuficiente.' ), 403 );
 		}
 
+		$isolated = isset( $_POST['isolation'] ) && '1' === sanitize_text_field( wp_unslash( (string) $_POST['isolation'] ) );
+
 		$query = isset( $_POST['query'] ) && is_scalar( $_POST['query'] )
 			? sanitize_text_field( wp_unslash( (string) $_POST['query'] ) )
 			: '';
@@ -291,7 +351,7 @@ final class Public_Experience {
 				'title' => (string) $post->post_title,
 				'category' => $category,
 				'excerpt' => wp_trim_words( wp_strip_all_tags( strip_shortcodes( $raw_excerpt ) ), 22, '…' ),
-				'url' => self::article_preview_url( $post_id ),
+				'url' => self::article_preview_url( $post_id, '', $isolated ),
 				'rank' => (int) ( $result['rank'] ?? 0 ),
 			);
 		}
@@ -307,7 +367,26 @@ final class Public_Experience {
 	}
 
 	public static function render_preview_banner( string $label ): void {
-		echo '<div class="bdc-public-preview-banner" role="status"><strong>Prévia</strong><span>' . esc_html( $label ) . ' · sem cutover</span></div>';
+		$suffix = self::is_isolation_mode() ? ' · isolamento PX-750' : '';
+		echo '<div class="bdc-public-preview-banner" role="status"><strong>Prévia</strong><span>' . esc_html( $label . $suffix ) . ' · sem cutover</span></div>';
+	}
+
+	public static function is_isolation_mode(): bool {
+		if ( null === self::preview_kind() ) { return false; }
+		$value = isset( $_GET[ self::ISOLATION_KEY ] ) && is_scalar( $_GET[ self::ISOLATION_KEY ] )
+			? sanitize_text_field( wp_unslash( (string) $_GET[ self::ISOLATION_KEY ] ) )
+			: '';
+		return '1' === $value;
+	}
+
+	/** @param array<int,string> $theme_uris */
+	private static function is_theme_asset_source( string $src, array $theme_uris ): bool {
+		if ( '' === $src ) { return false; }
+		if ( false !== strpos( $src, '/wp-content/themes/' ) ) { return true; }
+		foreach ( $theme_uris as $theme_uri ) {
+			if ( '' !== $theme_uri && 0 === strpos( $src, $theme_uri ) ) { return true; }
+		}
+		return false;
 	}
 
 	private static function render_brand_visual(): void {

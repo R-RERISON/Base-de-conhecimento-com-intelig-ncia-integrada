@@ -141,6 +141,7 @@
       data.append('nonce', String(config.nonce || ''));
       data.append('query', query);
       if (config.previewMode) data.append('preview', '1');
+      if (config.isolationMode) data.append('isolation', '1');
 
       fetch(String(config.ajaxUrl || ''), {
         method: 'POST',

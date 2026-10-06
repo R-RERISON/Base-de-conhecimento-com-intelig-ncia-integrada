@@ -42,6 +42,7 @@ $cloud = Public_Home_Read_Model::preview_word_cloud();
 			<form class="bdc-home-search" method="get" role="search" data-bdc-live-search-form data-bdc-search-context="home">
 				<input type="hidden" name="bdc_kb_preview" value="home">
 				<input type="hidden" name="bdc_kb_preview_nonce" value="<?php echo esc_attr( wp_create_nonce( 'bdc_kb_public_preview_home' ) ); ?>">
+				<?php if ( Public_Experience::is_isolation_mode() ) : ?><input type="hidden" name="bdc_kb_isolation" value="1"><?php endif; ?>
 				<?php if ( $category_id > 0 ) : ?><input type="hidden" name="bdc_category" value="<?php echo esc_attr( (string) $category_id ); ?>"><?php endif; ?>
 				<span class="dashicons dashicons-search" aria-hidden="true"></span>
 				<label class="screen-reader-text" for="bdc-home-query">Buscar na Base de Conhecimento</label>

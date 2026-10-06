@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-740",
+  "status": "CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION",
+  "final_artifact": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740-final.zip",
+  "source_candidate": "base-conhecimento-inteligencia-integrada-0.6.0-dev-px740.5.1-safe-recovery.zip",
+  "byte_identical_to_source_candidate": true,
+  "sha256": "9609c9f45dbd4f2f27d80a6282b35516a1cd3afc9fba7d2632ec3ba46c746d3a",
+  "bytes": 805578,
+  "distributed_files": 103,
+  "php_files": 83,
+  "php_byte_identical_to_known_good_px740_5": true,
+  "product_owner_runtime_pass": true,
+  "product_owner_visual_pass": true,
+  "exact_final_zip_php_lint": "ACCEPTED_EXCEPTION_NOT_PASS",
+  "rejected_candidates": [
+    "px740.6",
+    "px740.6.1"
+  ],
+  "no_cutover": true
+}

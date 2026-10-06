@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "gate": "PX-740",
+  "result": "CLOSED_WITH_ACCEPTED_VALIDATION_EXCEPTION",
+  "technical_runner": "PASS",
+  "rail_follow": "PASS",
+  "rail_flicker": "PASS",
+  "premium_visual_runtime": "PASS",
+  "activation_runtime": "PASS",
+  "exact_final_zip_php_lint": "ACCEPTED_EXCEPTION_NOT_PASS",
+  "debt_destination": "PX-790",
+  "final_sha256": "9609c9f45dbd4f2f27d80a6282b35516a1cd3afc9fba7d2632ec3ba46c746d3a"
+}

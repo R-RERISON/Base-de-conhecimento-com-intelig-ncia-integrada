@@ -74,9 +74,9 @@ Historical planned items:
 
 - [x] PX750-01 contract — `px750-theme-snippet-independence-contract-v1.md`.
 - [x] PX750-02 baseline dependency inventory — ENV-001/ENV-002 reconciled from PX-700/PX-710 plus current candidate static audit.
-- [ ] PX750-03 implement preview-only isolation mode; no persistent theme/snippet mutation.
-- [ ] PX750-04 static regression contract for isolation boundary.
-- [ ] PX750-05 package deterministic `px750.1`.
+- [x] PX750-03 implement preview-only isolation mode; no persistent theme/snippet mutation.
+- [x] PX750-04 static regression contract for isolation boundary — source checks PASS 22/22 + PHP lint PASS.
+- [x] PX750-05 package deterministic `px750.1` — exact ZIP PHP lint + clean WP 6.9.4 activation PASS.
 - [ ] PX750-06 Product Owner Home/Reader isolation smoke.
 - [ ] PX750-07 closeout.
 
@@ -628,3 +628,22 @@ Safe recovery:
 - no cutover authorized.
 
 PX-750 Theme/Snippet Independence is now ACTIVE / DISCOVERY.
+
+
+### PX-750 candidate — px750.1
+
+- source commit: `1da2a22fac1628798d964786d03827c217b65467`;
+- artifact branch: `spec007-px750-homologation-artifact`;
+- artifact commit: `307fd11e19c3bb0723d04bf70bed10ad98475c9a`;
+- ZIP: `base-conhecimento-inteligencia-integrada-0.6.0-dev-px750.1.zip`;
+- SHA-256: `dd42eacabfa0b277d9853713b3ca61e9d0979dc74c798a4683871d75ab6be1c0`;
+- 103 distributed files;
+- exactly 3 runtime replacements over `px740-final`;
+- deterministic build PASS;
+- source static checks PASS 22/22;
+- source PHP lint PASS;
+- exact ZIP PHP lint PASS;
+- clean WordPress 6.9.4 install PASS;
+- exact ZIP activation PASS;
+- plugin ACTIVE after activation;
+- pending only Product Owner isolated Home/Reader smoke.

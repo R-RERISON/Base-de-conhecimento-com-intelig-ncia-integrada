@@ -996,3 +996,36 @@ Initial static audit:
 - candidate templates call `wp_head()` / `wp_footer()`, therefore theme/custom CSS can still influence candidate rendering;
 - `page_on_front` is used only to resolve preview/form URLs, not to render legacy Home content;
 - candidate templates do not call `do_shortcode()`.
+
+
+## PX-750 px750.1 — TECHNICAL PASS / HUMAN ISOLATION SMOKE PENDING
+
+Candidate:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-px750.1.zip`;
+- SHA-256 `dd42eacabfa0b277d9853713b3ca61e9d0979dc74c798a4683871d75ab6be1c0`;
+- source `1da2a22fac1628798d964786d03827c217b65467`;
+- artifact `307fd11e19c3bb0723d04bf70bed10ad98475c9a`.
+
+Technical gates:
+- source contract 22/22 PASS;
+- all plugin PHP lint PASS on PHP 8.5;
+- exact packaged ZIP PHP lint PASS;
+- clean WordPress 6.9.4 install PASS;
+- exact artifact activation PASS;
+- plugin status ACTIVE after activation.
+
+Isolation behavior:
+- candidate preview only;
+- admin + existing preview nonce boundary;
+- active-theme CSS/JS dequeued only in isolated request;
+- WordPress Custom CSS suppressed only in isolated request;
+- legacy Home shortcodes removed only in isolated request;
+- no option/theme/plugin/page_on_front mutation;
+- normal candidate preview remains available for side-by-side comparison.
+
+Human gate:
+1. open Home isolada;
+2. confirm Search, category navigation, latest/popular and layout;
+3. open Reader isolado;
+4. confirm canonical article content, GAC/WPUI integrations, Search and Summary Rail;
+5. compare against normal preview for material visual/functional drift.

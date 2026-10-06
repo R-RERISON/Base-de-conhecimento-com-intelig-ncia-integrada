@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "spec": "SPEC-007",
+  "gate": "PX-750",
+  "build": "px750.1.1",
+  "date": "2026-10-06",
+  "status": "TECHNICAL_PASS_HUMAN_ISOLATION_SMOKE_PENDING",
+  "supersedes": "px750.1_pre_human_only",
+  "source_commit": "880ee3e75cb9dffc03cfc178bc9ad9bfe36a34de",
+  "artifact_commit": "9d51803caef902d28e23e424c7a0cb942508d7b4",
+  "sha256": "459f10dfd7d245429385be6f68e232cdd02d5b7318afdb3e97bcd77382c9c971",
+  "exact_package_gate": {
+    "php_lint": "PASS",
+    "wordpress": "6.9.4",
+    "php": "8.5",
+    "install": "PASS",
+    "activation": "PASS",
+    "workflow_run": 37454233452,
+    "job": 112237789294
+  },
+  "cache_safety": {
+    "changed_asset": "assets/js/public-search.js",
+    "token": "0.6.0-dev-px750.1.1",
+    "dynamic_hashing": false
+  },
+  "pending": [
+    "home_isolated_human_smoke",
+    "reader_isolated_human_smoke"
+  ]
+}

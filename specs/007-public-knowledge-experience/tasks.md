@@ -647,3 +647,26 @@ PX-750 Theme/Snippet Independence is now ACTIVE / DISCOVERY.
 - exact ZIP activation PASS;
 - plugin ACTIVE after activation;
 - pending only Product Owner isolated Home/Reader smoke.
+
+
+### PX-750 current homologation candidate — px750.1.1
+
+`px750.1` is superseded before human homologation only to guarantee fresh loading of the changed live-search JavaScript.
+
+Candidate:
+- source `880ee3e75cb9dffc03cfc178bc9ad9bfe36a34de`;
+- artifact branch `spec007-px750-homologation-artifact`;
+- artifact commit `9d51803caef902d28e23e424c7a0cb942508d7b4`;
+- ZIP `base-conhecimento-inteligencia-integrada-0.6.0-dev-px750.1.1.zip`;
+- SHA-256 `459f10dfd7d245429385be6f68e232cdd02d5b7318afdb3e97bcd77382c9c971`;
+- deterministic build PASS;
+- exact ZIP PHP lint PASS;
+- clean WordPress 6.9.4 install PASS;
+- exact ZIP activation PASS;
+- public-search.js uses static asset token `0.6.0-dev-px750.1.1`;
+- no dynamic filesystem/hash cache logic.
+
+Pending:
+- Product Owner Home isolada smoke;
+- Product Owner Reader isolado smoke;
+- PX-750 closeout.

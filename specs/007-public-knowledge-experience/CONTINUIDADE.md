@@ -1029,3 +1029,21 @@ Human gate:
 3. open Reader isolado;
 4. confirm canonical article content, GAC/WPUI integrations, Search and Summary Rail;
 5. compare against normal preview for material visual/functional drift.
+
+
+## PX-750 current candidate px750.1.1
+
+px750.1 was technically valid, but was superseded before Product Owner testing to avoid stale browser/proxy reuse of the changed public-search.js.
+
+px750.1.1:
+- `base-conhecimento-inteligencia-integrada-0.6.0-dev-px750.1.1.zip`;
+- SHA-256 `459f10dfd7d245429385be6f68e232cdd02d5b7318afdb3e97bcd77382c9c971`;
+- source `880ee3e75cb9dffc03cfc178bc9ad9bfe36a34de`;
+- artifact commit `9d51803caef902d28e23e424c7a0cb942508d7b4`;
+- deterministic build PASS;
+- exact package PHP lint PASS;
+- clean WP 6.9.4 activation PASS;
+- static cache token only for changed public-search.js;
+- no bootstrap/filesystem hash logic.
+
+Human isolation smoke is the only current gate before PX-750 closeout.

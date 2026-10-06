@@ -32,7 +32,7 @@ final class Visual_Foundation {
 				'bdc-kb-visual-foundation',
 				BDC_KB_URL . 'assets/css/visual-foundation.css',
 				array( 'bdc-kb-history' ),
-				BDC_KB_ASSET_VERSION
+				BDC_KB_VERSION
 			);
 			return;
 		}
@@ -45,7 +45,7 @@ final class Visual_Foundation {
 			'bdc-kb-visual-foundation',
 			BDC_KB_URL . 'assets/css/visual-foundation.css',
 			array(),
-			BDC_KB_ASSET_VERSION
+			BDC_KB_VERSION
 		);
 	}
 

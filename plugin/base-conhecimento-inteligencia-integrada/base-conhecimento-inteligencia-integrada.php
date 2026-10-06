@@ -20,7 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'BDC_KB_VERSION', '0.6.0-dev' );
-define( 'BDC_KB_ASSET_VERSION', '0.6.0-dev-px740.6.1' );
 define( 'BDC_KB_SPEC004_PROFILE_BUILD', false );
 define( 'BDC_KB_SPEC004_G220_SMOKE_BUILD', false );
 define( 'BDC_KB_SPEC004_G230_SMOKE_BUILD', false );
@@ -72,7 +71,6 @@ if ( ! defined( 'BDC_KB_ELEMENTOR_WRITER_ENABLED' ) ) {
 define( 'BDC_KB_FILE', __FILE__ );
 define( 'BDC_KB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BDC_KB_URL', plugin_dir_url( __FILE__ ) );
-
 
 require_once BDC_KB_DIR . 'includes/class-core-runtime-loader.php';
 require_once BDC_KB_DIR . 'includes/class-runtime-module-registry.php';
